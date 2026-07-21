@@ -1,0 +1,61 @@
+digraph HoTT_Basics_Numeral {
+  graph [ratio=0.5]
+  node [style=filled]
+Numeral_int_of_int [label="int_of_int", URL=<Numeral.html#int_of_int>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_uint_of_uint [label="uint_of_uint", URL=<Numeral.html#uint_of_uint>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_numeral_sind [label="numeral_sind", URL=<Numeral.html#numeral_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_numeral_rec [label="numeral_rec", URL=<Numeral.html#numeral_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_numeral_ind [label="numeral_ind", URL=<Numeral.html#numeral_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Numeral_numeral_rect [label="numeral_rect", URL=<Numeral.html#numeral_rect>, fillcolor="#F070D1"] ;
+Numeral_Hex [label="Hex", URL=<Numeral.html#Hex>, fillcolor="#7FAAFF"] ;
+Numeral_Dec [label="Dec", URL=<Numeral.html#Dec>, fillcolor="#7FAAFF"] ;
+Numeral_numeral [label="numeral", URL=<Numeral.html#numeral>, fillcolor="#E2CDFA"] ;
+Numeral_int_sind [label="int_sind", URL=<Numeral.html#int_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_int_rec [label="int_rec", URL=<Numeral.html#int_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_int_ind [label="int_ind", URL=<Numeral.html#int_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Numeral_int_rect [label="int_rect", URL=<Numeral.html#int_rect>, fillcolor="#F070D1"] ;
+Numeral_IntHex [label="IntHex", URL=<Numeral.html#IntHex>, fillcolor="#7FAAFF"] ;
+Numeral_IntDec [label="IntDec", URL=<Numeral.html#IntDec>, fillcolor="#7FAAFF"] ;
+Numeral_int [label="int", URL=<Numeral.html#int>, fillcolor="#E2CDFA"] ;
+Numeral_uint_sind [label="uint_sind", URL=<Numeral.html#uint_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_uint_rec [label="uint_rec", URL=<Numeral.html#uint_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Numeral_uint_ind [label="uint_ind", URL=<Numeral.html#uint_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Numeral_uint_rect [label="uint_rect", URL=<Numeral.html#uint_rect>, fillcolor="#F070D1"] ;
+Numeral_UIntHex [label="UIntHex", URL=<Numeral.html#UIntHex>, fillcolor="#7FAAFF"] ;
+Numeral_UIntDec [label="UIntDec", URL=<Numeral.html#UIntDec>, fillcolor="#7FAAFF"] ;
+Numeral_uint [label="uint", URL=<Numeral.html#uint>, fillcolor="#E2CDFA"] ;
+  Numeral_int_of_int -> Numeral_int [] ;
+  Numeral_uint_of_uint -> Numeral_uint [] ;
+  Numeral_numeral_sind -> Numeral_Hex [] ;
+  Numeral_numeral_sind -> Numeral_Dec [] ;
+  Numeral_numeral_sind -> Numeral_numeral [] ;
+  Numeral_numeral_rec -> Numeral_numeral_rect [] ;
+  Numeral_numeral_ind -> Numeral_Hex [] ;
+  Numeral_numeral_ind -> Numeral_Dec [] ;
+  Numeral_numeral_ind -> Numeral_numeral [] ;
+  Numeral_numeral_rect -> Numeral_Hex [] ;
+  Numeral_numeral_rect -> Numeral_Dec [] ;
+  Numeral_numeral_rect -> Numeral_numeral [] ;
+  Numeral_int_sind -> Numeral_IntHex [] ;
+  Numeral_int_sind -> Numeral_IntDec [] ;
+  Numeral_int_sind -> Numeral_int [] ;
+  Numeral_int_rec -> Numeral_int_rect [] ;
+  Numeral_int_ind -> Numeral_IntHex [] ;
+  Numeral_int_ind -> Numeral_IntDec [] ;
+  Numeral_int_ind -> Numeral_int [] ;
+  Numeral_int_rect -> Numeral_IntHex [] ;
+  Numeral_int_rect -> Numeral_IntDec [] ;
+  Numeral_int_rect -> Numeral_int [] ;
+  Numeral_uint_sind -> Numeral_UIntHex [] ;
+  Numeral_uint_sind -> Numeral_UIntDec [] ;
+  Numeral_uint_sind -> Numeral_uint [] ;
+  Numeral_uint_rec -> Numeral_uint_rect [] ;
+  Numeral_uint_ind -> Numeral_UIntHex [] ;
+  Numeral_uint_ind -> Numeral_UIntDec [] ;
+  Numeral_uint_ind -> Numeral_uint [] ;
+  Numeral_uint_rect -> Numeral_UIntHex [] ;
+  Numeral_uint_rect -> Numeral_UIntDec [] ;
+  Numeral_uint_rect -> Numeral_uint [] ;
+subgraph cluster_Numeral { label="Numeral"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Numeral_uint; Numeral_UIntDec; Numeral_UIntHex; Numeral_uint_rect; Numeral_uint_ind; Numeral_uint_rec; Numeral_uint_sind; Numeral_int; Numeral_IntDec; Numeral_IntHex; Numeral_int_rect; Numeral_int_ind; Numeral_int_rec; Numeral_int_sind; Numeral_numeral; Numeral_Dec; Numeral_Hex; Numeral_numeral_rect; Numeral_numeral_ind; Numeral_numeral_rec; Numeral_numeral_sind; Numeral_uint_of_uint; Numeral_int_of_int; };
+} /* END */

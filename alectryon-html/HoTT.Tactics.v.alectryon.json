@@ -1,0 +1,2595 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Contractible Basics.Equivalences.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Contractible Basics.Equivalences.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Prod Types.Forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Tactics.BinderApply.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Extra tactics for homotopy type theory. *)\n\n(** ** Tactics for dealing with [Funext] *)\n(** *** Tactics about [transport]ing with [path_forall] *)\n\n(** Given using the variable names from [transport : forall {A : Type} (P : A -> Type) {x y : A}, x = y -> P x -> P y] and [path_forall : {Funext} -> forall {A B} (f g : forall x : A, B x), (forall x : A, f x = g x) -> f = g]:\n\nThe high-level idea is that we don't really need functional extensionality if we end up just applying the functions to arguments anyway.  That is, if we have that [forall x, f x = g x], and we only talk about [f y] and [f z], then we don't actually need to transport across [f = g], just [f y = g y] and [f z = g z].\n\nIn a bit more detail, if we are transporting across [path_forall f g H], and in the function [P], all instances of [f] are applied to some expressions, say we only see [f x], [f y], ..., [f z], then we can eliminate the [path_forall] by explicitly transporting across [H x], [H y], ..., [H z].  The lemma [path_forall_1_beta] expresses this fact in the case that we see [f] applied to only a single argument in [P], and the tactic [transport_path_forall_hammer] is some fancy Ltac to auto-infer what [P] is and what the argument to [f] is.\n\nThe way the tactic does this is by creating an evar for [P] and an evar for the argument to [f], and then using a combination of [assert], [pattern], etc to figure out what each should be.  If you want to see how it works, you can step through each step of [transport_path_forall_hammer] when trying to prove [path_forall_2_beta]. *)\n\n(** First, we prove some helpful lemmas about [path_forall] and [transport] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac path_forall_beta_t :=\n  lazymatch goal with\n    | [ |- context[@path_forall ?H ?A ?B ?f ?g ?e] ]\n      => let X := fresh in\n         pose proof (eissect (@path_forall H A B f g) e) as X;\n           case X;\n           generalize (@path_forall H A B f g e);\n           clear X; clear e;\n           intro X; destruct X;\n           cbn;\n           unfold apD10;\n           rewrite !(path_forall_1 f)\n  end;\n  reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The basic idea is expressed in the type of this lemma. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_forall_1_beta `{Funext} A B x P f g e Px\n: @transport (forall a : A, B a) (fun f => P (f x)) f g (@path_forall _ _ _ _ _ e) Px\n  = @transport (B x) P (f x) (g x) (e x) Px.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P (f0 x)) (path_forall f g e) Px =\ntransport P (e x) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P (f0 x)) (path_forall f g e) Px =\ntransport P (e x) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_forall_beta_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The powerful recursive case *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_forall_recr_beta' `{Funext} A B x0 P f g e Px\n: @transport (forall a : A, B a)\n             (fun f => P f (f x0))\n             f\n             g\n             (@path_forall _ _ _ _ _ e)\n             Px\n  = @transport ((forall a, B a) * B x0)\n               (fun x => P (fst x) (snd x))\n               (f, f x0)\n               (g, g x0)\n               (path_prod' (@path_forall _ _ _ _ _ e) (e x0))\n               Px.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P f0 (f0 x0)) (path_forall f g e) Px =\ntransport (fun x : (forall a : A, B a) * B x0 => P (fst x) (snd x))\n  (path_prod' (path_forall f g e) (e x0)) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P f0 (f0 x0)) (path_forall f g e) Px =\ntransport (fun x : (forall a : A, B a) * B x0 => P (fst x) (snd x))\n  (path_prod' (path_forall f g e) (e x0)) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_forall_beta_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Rewrite the recursive case after clean-up *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_forall_recr_beta `{Funext} A B x0 P f g e Px\n: @transport (forall a : A, B a)\n             (fun f => P f (f x0))\n             f\n             g\n             (@path_forall _ _ _ _ _ e)\n             Px\n  = @transport (forall x : A, B x)\n               (fun x => P x (g x0))\n               f\n               g\n               (@path_forall H A B f g e)\n               (@transport (B x0)\n                           (fun y => P f y)\n                           (f x0)\n                           (g x0)\n                           (e x0)\n                           Px).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P f0 (f0 x0)) (path_forall f g e) Px =\ntransport (fun x : forall x : A, B x => P x (g x0)) \n  (path_forall f g e) (transport (fun y : B x0 => P f y) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P f0 (f0 x0)) (path_forall f g e) Px =\ntransport (fun x : forall x : A, B x => P x (g x0)) \n  (path_forall f g e) (transport (fun y : B x0 => P f y) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P f0 (f0 x0)) (path_forall f g e) Px =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal =\ntransport (fun x : forall x : A, B x => P x (g x0)) \n  (path_forall f g e) (transport (fun y : B x0 => P f y) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P f0 (f0 x0)) (path_forall f g e) Px =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall_recr_beta'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : (forall a : A, B a) * B x0 => P (fst x) (snd x))\n  (path_prod' (path_forall f g e) (e x0)) Px =\ntransport (fun x : forall x : A, B x => P x (g x0)) \n  (path_forall f g e) (transport (fun y : B x0 => P f y) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "(forall a : A, B a) -> B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P f (f x0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (transport_path_prod' _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(** The sledge-hammer for computing with [transport]ing across a [path_forall].  Note that it uses [rewrite], and so should only be used in opaque proofs. *)\n\n(** This helper tactic takes a [term] and a function [f], finds [f x] in [term] and patterns that, returning a pair [(x, term')] such that [term' (f x) \u2261 term]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac pull_app term f :=\n  let term' := (eval cbv beta in term) in\n  match term' with\n    | context[f ?x]\n      => match eval pattern (f x) in term' with\n           | ?term' (f x) => constr:((x, term'))\n         end\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac infer_path_forall_recr_beta term :=\n  let path_forall_recr_beta' :=\n      match term with\n        | @transport _ (fun x => @?P0 x) _ _ (@path_forall ?H ?A ?B ?f ?g ?e) _\n          => constr:(fun x0 P Px => @path_forall_recr_beta H A B x0 P f g e Px)\n      end in\n  let Px := match term with @transport _ _ _ _ _ ?Px => constr:(Px) end in\n  let P0 := match term with @transport _ (fun f => @?P0 f) _ _ _ _ => constr:(P0) end in\n  (** pattern some [f x0] in [P0] *)\n  (** Hopefully, no goal will have a variable called [WORKAROUND_FOR_BUG_3458] in the context.  At least not until bug #3458 is fixed. *)\n  let P0f := constr:(fun WORKAROUND_FOR_BUG_3458 => ltac:(\n                                                      let ret := pull_app (P0 WORKAROUND_FOR_BUG_3458) WORKAROUND_FOR_BUG_3458 in\n                                                      exact ret)) in\n  let x0 := match P0f with fun f => (?x0, @?P f) => constr:(x0) end in\n  let P := match P0f with fun f => (?x0, @?P f) => constr:(P) end in\n  let ret := constr:(path_forall_recr_beta' x0 P Px) in\n  let retT := type of ret in\n  let ret' := (eval cbv beta in ret) in\n  let retT' := (eval cbv beta in retT) in\n  constr:(ret' : retT').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac transport_path_forall_hammer_helper :=\n  let term := match goal with\n                | |- context[@transport ?At (fun x => @?Bt x) ?ft ?gt (@path_forall ?H ?A ?B ?f ?g ?e) ?Px]\n                  => constr:(@transport At Bt ft gt (@path_forall H A B f g e) Px)\n              end in\n  let lem := infer_path_forall_recr_beta term in\n  pattern term;\n    refine (transport _ lem^ _);\n    cbv beta.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac transport_path_forall_hammer :=\n  transport_path_forall_hammer_helper;\n  rewrite ?transport_const;\n  repeat (\n      transport_path_forall_hammer_helper;\n      rewrite ?transport_const\n    ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** An example showing that it works *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_forall_2_beta' `{Funext} A B x0 x1 P f g e Px\n: @transport (forall a : A, B a) (fun f => P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px\n  = @transport (B x0 * B x1) (fun x => P (fst x) (snd x)) (f x0, f x1) (g x0, g x1) (path_prod' (e x0) (e x1)) Px.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P (f0 x0) (f0 x1))\n  (path_forall f g e) Px =\ntransport (fun x : B x0 * B x1 => P (fst x) (snd x))\n  (path_prod' (e x0) (e x1)) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P (f0 x0) (f0 x1))\n  (path_forall f g e) Px =\ntransport (fun x : B x0 * B x1 => P (fst x) (snd x))\n  (path_prod' (e x0) (e x1)) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_path_forall_hammer.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : B x1 => P (g x0) y) (e x1)\n  (transport (fun y : B x0 => P y (f x1)) (e x0) Px) =\ntransport (fun x : B x0 * B x1 => P (fst x) (snd x))\n  (path_prod' (e x0) (e x1)) Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat match goal with\n           | [ |- context[e ?x] ] => induction (e x)\n         end;\n    cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Px = Px",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_forall_2_beta `{Funext} A B x0 x1 P f g e Px\n: @transport (forall a : A, B a) (fun f => P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px\n  = transport (fun y : B x1 => P (g x0) y) (e x1)\n     (transport (fun y : B x0 => P y (f x1)) (e x0) Px).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P (f0 x0) (f0 x1))\n  (path_forall f g e) Px =\ntransport (fun y : B x1 => P (g x0) y) (e x1)\n  (transport (fun y : B x0 => P y (f x1)) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun f0 : forall a : A, B a => P (f0 x0) (f0 x1))\n  (path_forall f g e) Px =\ntransport (fun y : B x1 => P (g x0) y) (e x1)\n  (transport (fun y : B x0 => P y (f x1)) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_path_forall_hammer.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : B x1 => P (g x0) y) (e x1)\n  (transport (fun y : B x0 => P y (f x1)) (e x0) Px) =\ntransport (fun y : B x1 => P (g x0) y) (e x1)\n  (transport (fun y : B x0 => P y (f x1)) (e x0) Px)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "B x0 -> B x1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Px"
+              ],
+              "body": null,
+              "type": "P (f x0) (f x1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** A more powerful variant of [path_induction] *)\n(** We first define some helper tactics, and then define [path_induction_hammer], which has poor computational behavior, but is vastly more powerful than [path_induction], and removes paths which are discoverably contractible, and paths which only appear in the goal, etc. *)\n\n(** A variant of [induction] which also tries [destruct] and [case], and may be extended to using other [destruct]-like tactics. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac induction_hammer H :=\n  destruct H || induction H || (case H; clear H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Takes a term of type [_ = _], and tries to replace it by [idpath] by trying to prove that it's an hProp.  The ordering of attempts is tuned for speed. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_contr_path p :=\n  let H := fresh in\n  let T := type of p in\n  progress (\n      first [ assert (H : idpath = p) by exact (center _)\n            | assert (H : idpath = p)\n              by (\n                  let a := match goal with |- @paths (?x = ?y) ?a ?b => constr:(a) end in\n                  let b := match goal with |- @paths (?x = ?y) ?a ?b => constr:(b) end in\n                  let x := match goal with |- @paths (?x = ?y) ?a ?b => constr:(x) end in\n                  let y := match goal with |- @paths (?x = ?y) ?a ?b => constr:(y) end in\n                  apply (@equiv_inv _ _ _ (@equiv_ap _ _ _ (@isequiv_apD10 _ _ _ x y) a b));\n                  exact (center _)\n                )\n            | pose proof (@path_contr T _ idpath p) as H ];\n      destruct H;\n      (* now reduce any matches on [idpath] (and on other things too) *)\n      cbv iota in *\n    ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Use both [induction_hammer] and [clear_contr_path] on a path, to try to get rid of it *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_path_no_check p :=\n  induction_hammer p || clear_contr_path p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_path p :=\n  let t := type of p in\n  lazymatch eval hnf in t with\n    | @paths _ _ _ => clear_path_no_check p || fail 1 \"cannot clear path\" p\n    | _ => fail 0 \"clear_path only works on paths;\" p \"is not a path\"\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Run [clear_path] on hypotheses *)\n(** We don't match only on things of type [_ = _], because maybe that's the head normal form, but it's hiding behind something else; [clear_path] will make sure it's of the right type.  We include some redundant cases at the top, for speed; it is faster to try to destruct everything first, and then do the full battery of tactics, than to just run the hammer. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac step_clear_paths :=\n  idtac;\n  match goal with\n    | [ p : _ = _ |- _ ] => destruct p\n    | [ p : _ = _ |- _ ] => clear_path_no_check p\n    | [ p : _ |- _ ] => clear_path p\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_paths := progress repeat step_clear_paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Run [clear_path] on anything inside a [match] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac step_clear_paths_in_match :=\n  idtac;\n  match goal with\n    | [ |- context[match ?p with idpath => _ end] ] => progress destruct p\n    | [ |- context[match ?p with idpath => _ end] ] => clear_path_no_check p\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_paths_in_match := progress repeat step_clear_paths_in_match.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Now some lemmas about trivial [match]es *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition match_eta {T} {x y : T} (H0 : x = y)\n: (H0 = match H0 in (_ = y) return (x = y) with\n          | idpath => idpath\n        end)\n  := match H0 with idpath => idpath end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition match_eta1 {T} {x : T} (E : x = x)\n: (match E in (_ = y) return (x = y) with\n     | idpath => idpath\n   end = idpath)\n  -> idpath = E\n  := fun H => ((H # match_eta E) ^)%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition match_eta2 {T} {x : T} (E : x = x)\n: (idpath\n   = match E in (_ = y) return (x = y) with\n       | idpath => idpath\n     end)\n  -> idpath = E\n  := fun H => match_eta1 E (H ^)%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** And now the actual tactic.  Note that the order of the cases in the [match goal with ... end] is somewhat finely tuned for speed. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac step_path_induction_hammer :=\n  idtac;\n  match goal with\n    | _ => reflexivity\n    | _ => intro\n    | _ => progress cbn in *\n    | _ => exact (contr _)\n    | [ p : _ = _ |- _ ]\n      => progress destruct p (* placed up here for speed *)\n    | [ H : _ |- _ ]\n      => let H' := fresh in assert (H' := match_eta1 _ H); destruct H'\n    | [ H : _ |- _ ]\n      => let H' := fresh in assert (H' := match_eta2 _ H); destruct H'\n    | _ => step_clear_paths\n    | _ => expand; step_clear_paths_in_match\n    | _ => progress auto with path_hints\n    | _ => done\n    | _ => exact (center _)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac path_induction_hammer := progress repeat step_path_induction_hammer.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Miscellaneous tactics *)\n\n(** Substitute all hypotheses with bodies, i.e., of the form [H := _]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac subst_body :=\n  repeat match goal with\n           | [ H := _ |- _ ] => subst H\n         end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Some tactics to do things with some arbitrary hypothesis in the context.  These tactics are similar to, e.g., [assumption]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac do_with_hyp tac :=\n  idtac;\n  match goal with\n    | [ H : _ |- _ ] => tac H\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rewrite_hyp' := do_with_hyp ltac:(fun H => rewrite H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rewrite_hyp := repeat rewrite_hyp'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rewrite_rev_hyp' := do_with_hyp ltac:(fun H => rewrite <- H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rewrite_rev_hyp := repeat rewrite_rev_hyp'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac apply_hyp' := do_with_hyp ltac:(fun H => apply H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac apply_hyp := repeat apply_hyp'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac eapply_hyp' := do_with_hyp ltac:(fun H => eapply H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac eapply_hyp := repeat eapply_hyp'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Run [simpl] on a hypothesis before rewriting with it. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac simpl_do_clear tac term :=\n  let H := fresh in\n  assert (H := term);\n    cbn in H |- *;\n    tac H;\n    clear H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The behavior of [simpl rewrite] with respect to implicit arguments is slightly different from that of [rewrite].  In some ways, it is a little more like [erewrite], but in fact both [rewrite] and [erewrite] use magic that we are unable to exactly duplicate with a user-defined tactic.\n\nThe point is that for a user-defined tactic, Coq has to resolve the meaning of the term passed to it in some way before the tactic begins executing.  In particular, if that term involves maximally inserted implicit arguments, then it will have to fill them in; but often there will be no way to do that.  If we declared the argument of [simpl rewrite] as a [constr], then this would cause it to fail.  Instead, we declare it as an [open_constr], which allows Coq to fill in those implicit arguments with existential variables, which can then be instantiated later during the rewriting. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      open_constr(term) := simpl_do_clear ltac:(fun H => rewrite    H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite -> H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite <- H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite    H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite -> H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite <- H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite    H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite -> H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite <- H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite    H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite -> H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite <- H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite    H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite -> H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite <- H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"!\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite    !H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"!\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite -> !H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"!\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite <- !H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"!\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite    !H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"!\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite -> !H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"!\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite <- !H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"!\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite    !H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"!\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite -> !H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"!\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite <- !H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"!\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite    !H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"!\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite -> !H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"!\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite <- !H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"!\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite    !H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"!\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite -> !H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"!\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite <- !H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"?\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite    ?H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"?\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite -> ?H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"?\" open_constr(term) := simpl_do_clear ltac:(fun H => rewrite <- ?H) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"?\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite    ?H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"?\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite -> ?H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"?\" open_constr(term) \"in\" hyp(hyp) := simpl_do_clear ltac:(fun H => rewrite <- ?H in hyp) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"?\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite    ?H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"?\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite -> ?H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"?\" open_constr(term) \"in\" \"*\" := simpl_do_clear ltac:(fun H => rewrite <- ?H in * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"?\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite    ?H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"?\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite -> ?H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"?\" open_constr(term) \"in\" hyp(hyp) \"|-\" \"*\" := simpl_do_clear ltac:(fun H => rewrite <- ?H in hyp |- * ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\"      \"?\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite    ?H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"->\" \"?\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite -> ?H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"simpl\" \"rewrite\" \"<-\" \"?\" open_constr(term) \"in\" \"*\" \"|-\" := simpl_do_clear ltac:(fun H => rewrite <- ?H in * |- ) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac head_hnf expr := let expr' := eval hnf in expr in head expr'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* given a [matcher] that succeeds on some hypotheses and fails on\n   others, destruct any matching hypotheses, and then execute [tac]\n   after each [destruct].\n\n   The [tac] part exists so that you can, e.g., [simpl in *], to\n   speed things up. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_all_matches_then matcher tac :=\n  repeat match goal with\n           | [ H : ?T |- _ ] => matcher T; destruct H; tac\n         end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_all_matches matcher := destruct_all_matches_then matcher ltac:(simpl in *).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_all_matches' matcher := destruct_all_matches_then matcher idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** matches anything whose type has a [T] in it *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_type_matcher T HT :=\n  match HT with\n    | context[T] => idtac\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_type T := destruct_all_matches ltac:(destruct_type_matcher T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_type' T := destruct_all_matches' ltac:(destruct_type_matcher T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_head_matcher T HT :=\n  match head HT with\n    | T => idtac\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_head T := destruct_all_matches ltac:(destruct_head_matcher T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_head' T := destruct_all_matches' ltac:(destruct_head_matcher T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_head_hnf_matcher T HT :=\n  match head_hnf HT with\n    | T => idtac\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_head_hnf T := destruct_all_matches ltac:(destruct_head_hnf_matcher T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_head_hnf' T := destruct_all_matches' ltac:(destruct_head_hnf_matcher T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Turns a context object, obtained via, e.g., [match goal with |- context G[...] => ... end], into a lambda / Gallina function. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac context_to_lambda G :=\n  let ret := constr:(fun x => let k := x in\n                              ltac:(\n                                let ret := context G[k] in\n                                exact ret)) in\n  (eval cbv zeta in ret).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The [rewrite <-] tactic uses [internal_paths_rew], which is definitionally equal to [transport], except for the order of the arguments.  The following replaces the former with the latter. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac internal_paths_rew_to_transport :=\n  repeat match goal with |- context [ internal_paths_rew ?P ?u ?p ] =>\n                           change (internal_paths_rew P u p) with (transport P p u) end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Unfortunately, the more common [rewrite ->] uses [internal_paths_rew_r], which is not definitionally equal to something involving [transport].  However, we do have a propositional equality. The arguments here match the arguments that [internal_paths_rew_r] takes. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition internal_paths_rew_r_to_transport {A : Type} {x y : A} (P : A -> Type) (u : P y) (p : x = y)\n  : internal_paths_rew_r P u p = transport P p^ u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "internal_paths_rew_r P u p = transport P p^ u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "P y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "internal_paths_rew_r P u p = transport P p^ u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "P y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This tactic replaces both [internal_paths_rew] and [internal_paths_rew_r] with [transport], using [rewrite] for the latter. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rewrite_to_transport :=\n  internal_paths_rew_to_transport;\n  rewrite ! internal_paths_rew_r_to_transport.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

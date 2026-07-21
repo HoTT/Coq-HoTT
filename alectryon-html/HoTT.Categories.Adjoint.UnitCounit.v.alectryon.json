@@ -1,0 +1,474 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Adjunctions by units and counits *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual Functor.Dual NaturalTransformation.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Unit + UMP definition of adjunction *)\n  (** Quoting from Awodey's \"Category Theory\":\n\n      An adjunction between categories [C] and [D] consists of\n      functors\n\n      [F : C <-> D : G]\n\n      and a natural transformation\n\n      [T : 1_C -> G \u2218 F]\n\n      with the property:\n\n      (o) For any [c : C], [d : D], and [f : c -> G d], there exists a\n          unique [g : F c -> d] such that [f = (G g) \u2218 (T c)] as\n          indicated in\n\n<<\n                g\n     F c ..................> d\n\n                 G g\n     G (F c) --------------> G d\n       ^                    _\n       |                    /|\n       |                  /\n       |                /\n       |              /\n       | T c        /\n       |          /  f\n       |        /\n       |      /\n       |    /\n       |  /\n        c\n>>\n\n     Terminology and notation:\n\n     - [F] is called the left adjoint, [G] is called the right\n       adjoint, and [T] is called the unit of the adjunction.\n\n     - One sometimes writes [F -| G] for ``[F] is left and [G] right\n       adjoint.''\n\n     - The statement (o) is the UMP of the unit [T].\n\n     Note that the situation [F \u22a3 G] is a generalization of\n     equivalence of categories, in that a pseudo-inverse is an\n     adjoint. In that case, however, it is the relation between\n     categories that one is interested in. Here, one is concerned with\n     the relation between special functors. That is to say, it is not\n     the relation on categories ``there exists an adjunction,'' but\n     rather ``this functor has an adjoint'' that we are concerned\n     with. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition AdjunctionUnit :=\n      { T : NaturalTransformation 1 (G o F)\n      | forall (c : C) (d : D) (f : morphism C c (G d)),\n          Contr { g : morphism D (F c) d | G _1 g o T c = f }\n      }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Counit + UMP definition of adjunction *)\n  (**\n     Paraphrasing and quoting from Awodey's \"Category Theory\":\n\n     An adjunction between categories [C] and [D] consists of functors\n\n     [F : C <-> D : G]\n\n     and a natural transformation\n\n     [U : F \u2218 G -> 1_D]\n\n     with the property:\n\n     (o) For any [c : C], [d : D], and [g : F c -> d], there exists a\n         unique [f : c -> G d] such that [g = (U d) \u2218 (F f)] as\n         indicated in the diagram\n\n<<\n                f\n     c ..................> G d\n\n               F f\n     F c --------------> F (G d)\n      \\                    |\n        \\                  |\n          \\                |\n            \\              |\n              \\            | U d\n             g  \\          |\n                  \\        |\n                    \\      |\n                      \\    |\n                       _\\| V\n                          d\n>>\n\n    Terminology and notation:\n\n    - The statement (o) is the UMP of the counit [U].\n    *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section counit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition AdjunctionCounit :=\n      { U : NaturalTransformation (F o G) 1\n      | forall (c : C) (d : D) (g : morphism D (F c) d),\n          Contr { f : morphism C c (G d) | U d o F _1 f = g }\n      }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End counit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The counit is just the dual of the unit.  We formalize this here\n      so that we can use it to make coercions easier. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section unit_counit_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition adjunction_counit__op__adjunction_unit (A : AdjunctionUnit G^op F^op)\n    : AdjunctionCounit F G\n      := exist\n           (fun U : NaturalTransformation (F o G) 1 =>\n              forall (c : C) (d : D) (g : morphism D (F c) d),\n                Contr {f : morphism C c (G d)\n                      | U d o F _1 f = g })\n           (A.1^op)%natural_transformation\n           (fun c d g => A.2 d c g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition adjunction_counit__op__adjunction_unit__inv (A : AdjunctionUnit G F)\n    : AdjunctionCounit F^op G^op\n      := exist\n           (fun U : NaturalTransformation (F^op o G^op) 1\n            => forall (c : C^op) (d : D^op) (g : morphism D^op ((F^op)%functor c) d),\n                 Contr {f : morphism C^op c ((G^op)%functor d)\n                       | U d o F^op _1 f = g })\n           (A.1^op)%natural_transformation\n           (fun c d g => A.2 d c g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition adjunction_unit__op__adjunction_counit (A : AdjunctionCounit G^op F^op)\n    : AdjunctionUnit F G\n      := exist\n           (fun T : NaturalTransformation 1 (G o F) =>\n              forall (c : C) (d : D) (f : morphism C c (G d)),\n                Contr { g : morphism D (F c) d\n                      | G _1 g o T c = f })\n           (A.1^op)%natural_transformation\n           (fun c d g => A.2 d c g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition adjunction_unit__op__adjunction_counit__inv (A : AdjunctionCounit G F)\n    : AdjunctionUnit F^op G^op\n      := exist\n           (fun T : NaturalTransformation 1 (G^op o F^op)\n            => forall (c : C^op) (d : D^op) (f : morphism C^op c ((G^op)%functor d)),\n                 Contr {g : morphism D^op ((F^op)%functor c) d\n                       | G^op _1 g o T c = f })\n           (A.1^op)%natural_transformation\n           (fun c d g => A.2 d c g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End unit_counit_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Unit + Counit + Zig + Zag definition of adjunction *)\n  (** Quoting Wikipedia on Adjoint Functors:\n\n      A counit-unit adjunction between two categories [C] and [D]\n      consists of two functors [F : C \u2190 D] and [G : C \u2192 D] and two\n      natural transformations\n\n<<\n      \u03b5 : FG \u2192 1_C\n      \u03b7 : 1_D \u2192 GF\n>>\n\n      respectively called the counit and the unit of the adjunction\n      (terminology from universal algebra), such that the compositions\n\n<<\n          F \u03b7            \u03b5 F\n      F -------> F G F -------> F\n\n          \u03b7 G            G \u03b5\n      G -------> G F G -------> G\n>>\n\n      are the identity transformations [1_F] and [1_G] on [F] and [G]\n      respectively.\n\n      In this situation we say that ``[F] is left adjoint to [G]'' and\n      ''[G] is right adjoint to [F]'', and may indicate this\n      relationship by writing [(\u03b5, \u03b7) : F \u22a3 G], or simply [F \u22a3 G].\n\n      In equation form, the above conditions on (\u03b5, \u03b7) are the\n      counit-unit equations\n\n<<\n      1_F = \u03b5 F \u2218 F \u03b7\n      1_G = G \u03b5 \u2218 \u03b7 G\n>>\n\n      which mean that for each [X] in [C] and each [Y] in [D],\n\n<<\n      1_{FY} = \u03b5_{FY} \u2218 F(\u03b7_Y)\n      1_{GX} = G(\u03b5_X) \u2218 \u03b7_{GX}\n>>\n\n      These equations are useful in reducing proofs about adjoint\n      functors to algebraic manipulations.  They are sometimes called\n      the ``zig-zag equations'' because of the appearance of the\n      corresponding string diagrams.  A way to remember them is to\n      first write down the nonsensical equation [1 = \u03b5 \u2218 \u03b7] and then\n      fill in either [F] or [G] in one of the two simple ways which\n      make the compositions defined.\n\n      Note: The use of the prefix ``co'' in counit here is not\n      consistent with the terminology of limits and colimits, because\n      a colimit satisfies an initial property whereas the counit\n      morphisms will satisfy terminal properties, and dually.  The\n      term unit here is borrowed from the theory of monads where it\n      looks like the insertion of the identity 1 into a monoid.  *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section unit_counit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (*Local Reserved Notation \"'\u03b5'\".\n    Local Reserved Notation \"'\u03b7'\".*)\n\n    (** Use the per-object version of the equations, so that we don't\n        need the associator in the middle.  Also, explicitly simplify\n        some of the types so that [rewrite] works better. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record AdjunctionUnitCounit :=\n      {\n        unit : NaturalTransformation (identity C) (G o F)\n        (*where \"'\u03b7'\" := unit*);\n        counit : NaturalTransformation (F o G) (identity D)\n        (*where \"'\u03b5'\" := counit*);\n        unit_counit_equation_1\n        : forall Y : C, (*\u03b5 (F Y) \u2218 F \u2081 (\u03b7 Y) = identity (F Y);*)\n            Category.Core.compose (C := D) (s := F Y) (d := F (G (F Y))) (d' := F Y)\n                                  (counit (F Y))\n                                  (F _1 (unit Y : morphism _ Y (G (F Y))))\n            = 1;\n        unit_counit_equation_2\n        : forall X : D, (* G \u2081 (\u03b5 X) \u2218 \u03b7 (G X) = identity (G X) *)\n            Category.Core.compose (C := C) (s := G X) (d := G (F (G X))) (d' := G X)\n                                  (G _1 (counit X : morphism _ (F (G X)) X))\n                                  (unit (G X))\n            = 1\n      }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End unit_counit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope adjunction_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope adjunction_scope with adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope adjunction_scope with AdjunctionUnit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope adjunction_scope with AdjunctionCounit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope adjunction_scope with AdjunctionUnitCounit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments unit [C D]%_category [F G]%_functor _%_adjunction / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments counit [C D]%_category [F G]%_functor _%_adjunction / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments AdjunctionUnitCounit [C D]%_category (F G)%_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments unit_counit_equation_1 [C D]%_category [F G]%_functor _%_adjunction _%_object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments unit_counit_equation_2 [C D]%_category [F G]%_functor _%_adjunction _%_object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

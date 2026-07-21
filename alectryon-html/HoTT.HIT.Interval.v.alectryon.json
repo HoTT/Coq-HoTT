@@ -1,0 +1,394 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Theorems about the homotopical interval. *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export Interval.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Private Inductive interval : Type0 :=\n  | zero : interval\n  | one : interval.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Axiom seg : zero = one.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition interval_ind (P : interval -> Type)\n  (a : P zero) (b : P one) (p : seg # a = b)\n  : forall x:interval, P x\n  := fun x => (match x return _ -> P x with\n                | zero => fun _ => a\n                | one  => fun _ => b\n              end) p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Axiom interval_ind_beta_seg : forall (P : interval -> Type)\n  (a : P zero) (b : P one) (p : seg # a = b),\n  apD (interval_ind P a b p) seg = p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Interval.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition interval_rec (P : Type) (a b : P) (p : a = b)\n  : interval -> P\n  := interval_ind (fun _ => P) a b (transport_const _ _ @ p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition interval_rec_beta_seg (P : Type) (a b : P) (p : a = b)\n  : ap (interval_rec P a b p) seg = p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (interval_rec P a b p) seg = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (interval_rec P a b p) seg = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cancelL (transport_const seg a) _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport_const seg a @ ap (interval_rec P a b p) seg =\ntransport_const seg a @ p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((apD_const (interval_ind (fun _ => P) a b _) seg)^ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "apD (interval_ind (fun _ : interval => P) a b (transport_const seg a @ p))\n  seg =\ntransport_const seg a @ p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (interval_ind_beta_seg (fun _ => P) _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The interval is contractible. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance contr_interval : Contr interval | 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr interval",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr interval",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Build_Contr _ zero).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : interval, zero = y",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (interval_ind _ 1 seg _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (paths zero) seg 1 = seg",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (transport_paths_r _ _ @ concat_1p _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

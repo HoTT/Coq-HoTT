@@ -1,0 +1,5778 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Decidable Spaces.Nat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Decidable Spaces.Nat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Rings.Ring.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Polymorphic Inductive Cumulativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Kronecker Delta *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section AssumeDecidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Throughout this section, we assume that we have a type [A] with decidable equality. This will be our indexing type and can be thought of as [nat] for reading purposes. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universes u v.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type@{u}} `{DecidablePaths@{u} A} {R : Ring@{v}}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The Kronecker delta function is a function of elements of [A] that is 1 when the two numbers are equal and 0 otherwise. It is useful for working with finite sums of ring elements. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta@{} (i j : A) : R\n    := if dec (i = j) then 1 else 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Kronecker delta with the same index is 1. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_refl@{} (i : A)\n    : kronecker_delta i i = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i i = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i i = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold kronecker_delta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (i = i) then 1 else 0) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize (dec (i = i)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall s : (i = i) + (i <> i), (if s then 1 else 0) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rapply decidable_paths_refl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Kronecker delta with differing indices is 0. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_neq@{} {i j : A} (p : i <> j)\n    : kronecker_delta i j = 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold kronecker_delta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (i = j) then 1 else 0) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by decidable_false (dec (i = j)) p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Kronecker delta is symmetric in its arguments. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_symm@{} (i j : A)\n    : kronecker_delta i j = kronecker_delta j i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = kronecker_delta j i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = kronecker_delta j i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold kronecker_delta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (i = j) then 1 else 0) = (if dec (j = i) then 1 else 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (i = j)) as [p|q].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = (if dec (j = i) then 1 else 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 = (if dec (j = i) then 1 else 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = (if dec (j = i) then 1 else 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by decidable_true (dec (j = i)) p^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 = (if dec (j = i) then 1 else 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by decidable_false (dec (j = i)) (symmetric_neq q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** An injective endofunction on [A] preserves the Kronecker delta. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_map_inj@{} (i j : A) (f : A -> A)\n    `{!IsInjective f}\n    : kronecker_delta (f i) (f j) = kronecker_delta i j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta (f i) (f j) = kronecker_delta i j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta (f i) (f j) = kronecker_delta i j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold kronecker_delta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (f i = f j) then 1 else 0) = (if dec (i = j) then 1 else 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (i = j)) as [p|p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (f i = f j) then 1 else 0) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (f i = f j) then 1 else 0) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (f i = f j) then 1 else 0) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by decidable_true (dec (f i = f j)) (ap f p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if dec (f i = f j) then 1 else 0) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (f i = f j)) as [q|q].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f i = f j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f i <> f j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f i = f j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (injective f) in q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "contradiction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f i <> f j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Kronecker delta commutes with any ring element. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_comm@{} (i j : A) (r : R)\n    : r * kronecker_delta i j = kronecker_delta i j * r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * kronecker_delta i j = kronecker_delta i j * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * kronecker_delta i j = kronecker_delta i j * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold kronecker_delta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * (if dec (i = j) then 1 else 0) = (if dec (i = j) then 1 else 0) * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (i = j)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * 1 = 1 * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * 0 = 0 * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * 1 = 1 * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (rng_mult_one_r _ @ (rng_mult_one_l _)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r * 0 = 0 * r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "DecidablePaths A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (rng_mult_zero_r _ @ (rng_mult_zero_l _)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    \n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End AssumeDecidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following lemmas are specialised to when the indexing type is [nat]. *)\n\n(** Kronecker delta where the first index is strictly less than the second is 0. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_lt {R : Ring} {i j : nat} (p : (i < j)%nat)\n  : kronecker_delta (R:=R) i j = 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(i < j)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(i < j)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply kronecker_delta_neq.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i <> j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(i < j)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros q; destruct q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(i < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply lt_irrefl in p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Kronecker delta where the first index is strictly greater than the second is 0. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition kronecker_delta_gt {R : Ring} {i j : nat} (p : (j < i)%nat)\n  : kronecker_delta (R:=R) i j = 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(j < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i j = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(j < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply kronecker_delta_neq.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i <> j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(j < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros q; destruct q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(i < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply lt_irrefl in p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Kronecker delta can be used to extract a single term from a finite sum. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition rng_sum_kronecker_delta_l {R : Ring} (n i : nat) (Hi : (i < n)%nat)\n  (f : forall k, (k < n)%nat -> R)\n  : ab_sum n (fun j Hj => kronecker_delta i j * f j Hj) = f i Hi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert i Hi f; simple_induction n n IHn; intros i Hi f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum 0 (fun (j : nat) (Hj : (j < 0)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < 0)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> R"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: destruct (not_lt_zero_r _ Hi).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (i = n)) as [p|p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (kronecker_delta i i * f i (leq_refl i.+1))\n  (ab_sum i\n     (fun (k : nat) (Hk : (k < i)%nat) =>\n      kronecker_delta i k * f k (leq_succ_r Hk))) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite kronecker_delta_refl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (1 * f i (leq_refl i.+1))\n  (ab_sum i\n     (fun (k : nat) (Hk : (k < i)%nat) =>\n      kronecker_delta i k * f k (leq_succ_r Hk))) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite rng_mult_one_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (f i (leq_refl i.+1))\n  (ab_sum i\n     (fun (k : nat) (Hk : (k < i)%nat) =>\n      kronecker_delta i k * f k (leq_succ_r Hk))) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- rng_plus_zero_r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (f i (leq_refl i.+1))\n  (ab_sum i\n     (fun (k : nat) (Hk : (k < i)%nat) =>\n      kronecker_delta i k * f k (leq_succ_r Hk))) =\nf i Hi + 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap11.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (f i (leq_refl i.+1)) = plus (f i Hi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum i\n  (fun (k : nat) (Hk : (k < i)%nat) =>\n   kronecker_delta i k * f k (leq_succ_r Hk)) =\n0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (f i (leq_refl i.+1)) = plus (f i Hi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (ap (fun h => plus (f i h))), path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum i\n  (fun (k : nat) (Hk : (k < i)%nat) =>\n   kronecker_delta i k * f k (leq_succ_r Hk)) =\n0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply ab_sum_zero.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < i)%nat),\nkronecker_delta i k * f k (leq_succ_r Hk) = mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k : nat, (k < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros k Hk.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta i k * f k (leq_succ_r Hk) = mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k0 : nat, (k0 < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (kronecker_delta_gt Hk).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 * f k (leq_succ_r Hk) = mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < i.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < i.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < i)%nat)\n(f0 : forall k0 : nat, (k0 < i)%nat -> R),\nab_sum i (fun (j : nat) (Hj : (j < i)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < i)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply rng_mult_zero_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) => kronecker_delta i j * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; lhs napply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n\n  (fun (k : nat) (Hk : (k < n)%nat) =>\n   kronecker_delta i k * f k (leq_succ_r Hk)) =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (kronecker_delta i n * f n (leq_refl n.+1)) ?Goal = f i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n\n  (fun (k : nat) (Hk : (k < n)%nat) =>\n   kronecker_delta i k * f k (leq_succ_r Hk)) =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i < n)%nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply neq_iff_lt_or_gt in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i < n)%nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "(i < n)%nat + (i > n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p; [assumption|].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i < n)%nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "(i > n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply gt_iff_not_leq in Hi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i < n)%nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "~ (n.+1 <= i)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "(i > n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "contradiction Hi.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (kronecker_delta i n * f n (leq_refl n.+1))\n  (f i\n     (leq_succ_r\n        (let H := fst neq_iff_lt_or_gt in\n         let p0 := H p in\n         match p0 with\n         | inl l => idmap l\n         | inr g =>\n             (fun g0 : (i > n)%nat =>\n              let H0 := snd gt_iff_not_leq in\n              let Hi0 := H0 Hi in Overture.Empty_rec (i < n)%nat (Hi0 g0)) g\n         end))) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (kronecker_delta_neq p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (0 * f n (leq_refl n.+1))\n  (f i\n     (leq_succ_r\n        (let H := fst neq_iff_lt_or_gt in\n         let p0 := H p in\n         match p0 with\n         | inl l => l\n         | inr g =>\n             let H0 := snd gt_iff_not_leq in\n             let Hi0 := H0 Hi in Overture.Empty_rec (i < n)%nat (Hi0 g)\n         end))) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite rng_mult_zero_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op 0\n  (f i\n     (leq_succ_r\n        (let H := fst neq_iff_lt_or_gt in\n         let p0 := H p in\n         match p0 with\n         | inl l => l\n         | inr g =>\n             let H0 := snd gt_iff_not_leq in\n             let Hi0 := H0 Hi in Overture.Empty_rec (i < n)%nat (Hi0 g)\n         end))) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite grp_unit_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f i\n  (leq_succ_r\n     (let H := fst neq_iff_lt_or_gt in\n      let p0 := H p in\n      match p0 with\n      | inl l => l\n      | inr g =>\n          let H0 := snd gt_iff_not_leq in\n          let Hi0 := H0 Hi in Overture.Empty_rec (i < n)%nat (Hi0 g)\n      end)) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (i0 : nat) (Hi0 : (i0 < n)%nat)\n(f0 : forall k : nat, (k < n)%nat -> R),\nab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i0 j * f0 j Hj) =\nf0 i0 Hi0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n.+1)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i <> n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Variant of [rng_sum_kronecker_delta_l] where the indexing is swapped. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition rng_sum_kronecker_delta_l' {R : Ring} (n i : nat) (Hi : (i < n)%nat)\n  (f : forall k, (k < n)%nat -> R)\n  : ab_sum n (fun j Hj => kronecker_delta j i * f j Hj) = f i Hi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta j i * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta j i * f j Hj) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply path_ab_sum.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat),\nkronecker_delta k i * f k Hk = ?Goal k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n ?Goal = f i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: napply rng_sum_kronecker_delta_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat),\nkronecker_delta k i * f k Hk =\n(fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i j * f j Hj) k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros k Hk.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "kronecker_delta k i * f k Hk =\n(fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i j * f j Hj) k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < n)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; f_ap; apply kronecker_delta_symm.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Variant of [rng_sum_kronecker_delta_l] where the Kronecker delta appears on the right. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition rng_sum_kronecker_delta_r {R : Ring} (n i : nat) (Hi : (i < n)%nat)\n  (f : forall k, (k < n)%nat -> R)\n  : ab_sum n (fun j Hj => f j Hj * kronecker_delta i j) = f i Hi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f j Hj * kronecker_delta i j) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f j Hj * kronecker_delta i j) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply path_ab_sum.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat),\nf k Hk * kronecker_delta i k = ?Goal k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n ?Goal = f i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: napply rng_sum_kronecker_delta_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat),\nf k Hk * kronecker_delta i k =\n(fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i j * f j Hj) k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros k Hk.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f k Hk * kronecker_delta i k =\n(fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta i j * f j Hj) k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < n)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply kronecker_delta_comm.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Variant of [rng_sum_kronecker_delta_r] where the indexing is swapped. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition rng_sum_kronecker_delta_r' {R : Ring} (n i : nat) (Hi : (i < n)%nat)\n  (f : forall k, (k < n)%nat -> R)\n  : ab_sum n (fun j Hj => f j Hj * kronecker_delta j i) = f i Hi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f j Hj * kronecker_delta j i) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f j Hj * kronecker_delta j i) =\nf i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply path_ab_sum.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat),\nf k Hk * kronecker_delta k i = ?Goal k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n ?Goal = f i Hi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: napply rng_sum_kronecker_delta_l'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat),\nf k Hk * kronecker_delta k i =\n(fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta j i * f j Hj) k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros k Hk.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f k Hk * kronecker_delta k i =\n(fun (j : nat) (Hj : (j < n)%nat) => kronecker_delta j i * f j Hj) k Hk",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Ring"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "i"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hi"
+              ],
+              "body": null,
+              "type": "(i < n)%nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < n)%nat -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply kronecker_delta_comm.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

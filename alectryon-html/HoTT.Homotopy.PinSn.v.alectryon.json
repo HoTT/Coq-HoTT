@@ -1,0 +1,1417 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.WildCat Require Import Core Equiv NatTrans Yoneda.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core Truncations.Connectedness.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Int Spaces.Circle Spaces.Spheres.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Algebra.AbGroups Require Import AbelianGroup Z.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.HomotopyGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.HSpaceS1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.Hopf.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * We show that the nth homotopy group of the n-sphere is the integers, for n >= 1. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope wc_iso_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The fundamental group of the 1-sphere / circle. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Pi1S1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem pi1_circle : Pi 1 [Circle, base] \u2245 abgroup_Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [Circle, base] \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [Circle, base] \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abgroup_Z \u2245 Pi 1 [Circle, base]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_GroupIsomorphism'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abgroup_Z <~> Pi 1 [Circle, base]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving ?f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abgroup_Z <~> Pi 1 [Circle, base]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "equiv_via (base = base).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abgroup_Z <~> base = base",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "base = base <~> Pi 1 [Circle, base]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: exact (equiv_tr 0 (loops [Circle, base])).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abgroup_Z <~> base = base",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "base = base <~> abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact equiv_loopCircle_int.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving\n  (equiv_composeR' equiv_loopCircle_int^-1\n     (equiv_tr 0 (loops [Circle, base])))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_composeR' equiv_loopCircle_int^-1 (equiv_tr 0 (loops [Circle, base]))\n  (sg_op a b) =\nsg_op\n  (equiv_composeR' equiv_loopCircle_int^-1\n     (equiv_tr 0 (loops [Circle, base])) a)\n  (equiv_composeR' equiv_loopCircle_int^-1\n     (equiv_tr 0 (loops [Circle, base])) b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle_decode base (a + b)%int = Circle_decode base a @ Circle_decode base b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply loopexp_add.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem pi1_s1 : Pi 1 (psphere 1) \u2245 abgroup_Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 (psphere 1) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 (psphere 1) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 (psphere 1) \u2245 ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: exact pi1_circle.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 (psphere 1) \u2245 Pi 1 [Circle, base]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply groupiso_pi_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psphere 1 <~>* [Circle, base]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply pequiv_S1_Circle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Pi1S1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The second homotopy group of the 2-sphere is the integers. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Pi2S2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ptr_loops_s2_s1 `{Univalence}\n    : pTr 1 (loops (psphere 2)) <~>* psphere 1\n    := (licata_finster (psphere 1))^-1*.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pi2_s2 `{Univalence}\n    : Pi 2 (psphere 2) $<~> abgroup_Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 2 (psphere 2) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 2 (psphere 2) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (pi1_s1 $oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 2 (psphere 2) \u2245 Pi 1 (psphere 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (Pi 2 ?X) with (Pi 1 (loops X)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 (loops (psphere 2)) \u2245 Pi 1 (psphere 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; exact (grp_iso_Pi_connected_hspace (psphere 1)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The last line can also be replaced with\n         exact (compose_cate (A:=Group) (emap (Pi 1) ptr_loops_s2_s1)\n                                        (grp_iso_pi_Tr _ _)). *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Pi2S2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For n >= 1, the nth homotopy group of the n-sphere is the integers. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section PinSn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pin_sn `{Univalence} (n : nat)\n    : Pi n.+1 (psphere n.+1) $<~> abgroup_Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+1 (psphere n.+1) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+1 (psphere n.+1) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 (psphere 1) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact pi1_s1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 2 (psphere 2) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+3 (psphere n.+3) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact pi2_s2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+3 (psphere n.+3) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $oE groupiso_pi_loops n.+1 (psphere n.+3)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+2 (loops (psphere n.+3)) \u2245 abgroup_Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (IHn $oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+2 (loops (psphere n.+3)) \u2245 Pi n.+2 (psphere n.+2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi n.+2 (psphere n.+2) \u2245 Pi n.+2 (loops (psphere n.+3))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (grp_iso_pi_connmap _ (loop_susp_unit (psphere n.+2))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr n.+2%nat) (loop_susp_unit (psphere n.+2))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The (n+2)-sphere is (n+1)-connected, so [loop_susp_unit] is [n +2+ n]-connected.  Since [n.+2 <= n +2+ n], we're done, after some [trunc_index] juggling. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (isconnmap_pred_add n.-2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (n.-2 +2+ n.+2%nat)) (loop_susp_unit (psphere n.+2))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite 2 trunc_index_add_succ.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (n.-2 +2+ trunc_index_inc (-2) n.+2).+2)\n  (loop_susp_unit (psphere n.+2))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (IsConnMap (Tr (n +2+ n)) (loop_susp_unit (psphere n.+2))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (n +2+ n)) (loop_susp_unit (psphere n.+2))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Pi n.+2 (psphere n.+2) \u2245 abgroup_Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply conn_map_loop_susp_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End PinSn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

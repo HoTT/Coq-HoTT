@@ -1,0 +1,4354 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 37.037037037037%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv NatTrans Yoneda.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 2
+Time: 0.032s">
+<div class="time" style="width: 29.62962962963%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0.019s">
+<div class="time" style="width: 17.592592592593%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpace.Core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import TruncType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.WhiteheadsPrinciple.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Classifying spaces of groups *)
+
+(** We define the classifying space of a group to be the following HIT:
+
+&lt;&lt;
+  HIT ClassifyingSpace (G : Group) : 1-Type
+   | bbase : ClassifyingSpace
+   | bloop : X -&gt; bbase = bbase
+   | bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.
+&gt;&gt;
+
+  We implement this is a private inductive type. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Export ClassifyingSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section ClassifyingSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** [ClassifyingSpace] is a cumulative inductive, so that WildCat machinery (e.g. [fmap B]) relates groups in different universes. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Set Polymorphic Inductive Cumulativity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Private Inductive ClassifyingSpace@{u} (G : Group@{u}) : Type@{u} :=
+      | bbase : ClassifyingSpace G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Context {G : Group}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Axiom bloop : G -&gt; bbase G = bbase G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Global Arguments bbase {_}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Axiom bloop_pp : forall x y, bloop (x * y) = bloop x @ bloop y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    #[export] Instance istrunc_ClassifyingSpace
+      : IsTrunc 1 (ClassifyingSpace G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Admitted.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End ClassifyingSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Arguments bloop {G} _%_mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we can state the expected dependent elimination principle, and derive other versions of the elimination principle from it. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ClassifyingSpace_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Local Open Scope dpath_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Context {G : Group}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** Note that since our classifying space is 1-truncated, we can only eliminate into 1-truncated type families. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 61
+Time: 0.006s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>Definition ClassifyingSpace_ind
+      (P : ClassifyingSpace G -&gt; Type)
+      `{forall b, IsTrunc 1 (P b)}
+      (bbase' : P bbase)
+      (bloop' : forall x, DPath P (bloop x) bbase' bbase')
+      (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
+        (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1)
+      (b : ClassifyingSpace G)
+      : P b
+      := match b with
+            bbase =&gt; (fun _ _ =&gt; bbase')
+         end bloop' bloop_pp'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** Here we state the computation rule for [ClassifyingSpace_ind] over [bloop] as an axiom. We don't need one for [bloop_pp] since we have a 1-type. We leave this as admitted since the computation rule is an axiom. **)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 75
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>Definition ClassifyingSpace_ind_beta_bloop
+      (P : ClassifyingSpace G -&gt; Type)
+     `{forall b, IsTrunc 1 (P b)}
+      (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
+      (bloop_pp' : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
+        (bloop' (x * y)) ((bloop' x) @Dp (bloop' y)) 1 1)
+      (x : G)
+      : apD (ClassifyingSpace_ind P bbase' bloop' bloop_pp') (bloop x) = bloop' x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Admitted.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End ClassifyingSpace_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End ClassifyingSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Other eliminators *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Eliminators.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Open Scope dpath_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {G : Group}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The non-dependent eliminator *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ClassifyingSpace_rec
+    (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -&gt; bbase' = bbase')
+    (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
+    : ClassifyingSpace G -&gt; P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    srefine (ClassifyingSpace_ind (fun _ =&gt; P) bbase' _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intro x; apply dp_const, bloop', x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    apply ds_const'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply sq_GGcc.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: refine (_ @ ap _ (dp_const_pp _ _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    1,2: symmetry; apply eissect.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply sq_G1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Computation rule for non-dependent eliminator *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition ClassifyingSpace_rec_beta_bloop
+    (P : Type) `{IsTrunc 1 P} (bbase' : P) (bloop' : G -&gt; bbase' = bbase')
+    (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y) (x : G)
+    : ap (ClassifyingSpace_rec P bbase' bloop' bloop_pp') (bloop x) = bloop' x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    lhs_V napply dp_apD_const'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 118
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    napply ClassifyingSpace_ind_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 119
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Sometimes we want to induct into a set which means we can ignore the bloop_pp arguments. Since this is a routine argument, we turn it into a special case of our induction principle. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition ClassifyingSpace_ind_hset
+    (P : ClassifyingSpace G -&gt; Type)
+    `{forall b, IsTrunc 0 (P b)}
+    (bbase' : P bbase) (bloop' : forall x, DPath P (bloop x) bbase' bbase')
+    : forall b, P b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ClassifyingSpace_ind P bbase' bloop' _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ds_G1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 131
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ClassifyingSpace_rec_hset
+    (P : Type) `{IsTrunc 0 P} (bbase' : P) (bloop' : G -&gt; bbase' = bbase')
+    : ClassifyingSpace G -&gt; P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply (ClassifyingSpace_rec P bbase' bloop' _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    intros; apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Similarly, when eliminating into an hprop, we only have to handle the basepoint. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ClassifyingSpace_ind_hprop (P : ClassifyingSpace G -&gt; Type)
+    `{forall b, IsTrunc (-1) (P b)} (bbase' : P bbase)
+    : forall b, P b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ClassifyingSpace_ind_hset P bbase' _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    intros; rapply dp_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** To eliminate into a Pi-type [forall x, P x], you might expect to need [Funext] twice, once to show that the Pi-type is 1-truncated, and once to provide the path [bbase' = bbase'].  But by using the usual intro-revert trick, one can completely avoid [Funext].  This computes definitionally on [bbase]: [ClassifyingSpace_rec_forall P bbase' bloop' bloop_pp' bbase = bbase']. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition ClassifyingSpace_rec_forall
+    {X : Type} (P : X -&gt; Type) `{forall x, IsTrunc 1 (P x)}
+    (bbase' : forall x, P x)
+    (bloop' : G -&gt; bbase' == bbase')
+    (bloop_pp' : forall x : X, forall g h : G, bloop' (g * h) x = bloop' g x @ bloop' h x)
+    : ClassifyingSpace G -&gt; (forall x, P x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros bg x; revert bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ClassifyingSpace_rec (P x) (bbase' x) (fun g =&gt; bloop' g x) (bloop_pp' x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** To give a homotopy between two functions defined using induction we need to provide [p] and [bloop_comm] below; note that [bloop1_pp] and [bloop2_pp] are not involved. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 165
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>Definition ClassifyingSpace_ind_homotopy
+    (P : ClassifyingSpace G -&gt; Type) `{forall b, IsTrunc 1 (P b)}
+    (bbase1 : P bbase) (bloop1 : forall x, DPath P (bloop x) bbase1 bbase1)
+    (bloop1_pp : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
+      (bloop1 (x * y)) ((bloop1 x) @Dp (bloop1 y)) 1 1)
+    (bbase2 : P bbase) (bloop2 : forall x, DPath P (bloop x) bbase2 bbase2)
+    (bloop2_pp : forall x y,  DPathSquare P (sq_G1 (bloop_pp x y))
+      (bloop2 (x * y)) ((bloop2 x) @Dp (bloop2 y)) 1 1)
+    (p : bbase1 = bbase2)
+    (bloop_comm : forall g, bloop1 g @ p = ap (transport P (bloop g)) p @ bloop2 g)
+    : ClassifyingSpace_ind P bbase1 bloop1 bloop1_pp
+      == ClassifyingSpace_ind P bbase2 bloop2 bloop2_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 177
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply ClassifyingSpace_ind_hset; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold DPath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 181
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+      transport_paths FlFr_D.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      rewrite 2 ClassifyingSpace_ind_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply bloop_comm.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 184
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And here is the same result for functions defined using the recursion principle. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 188
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition ClassifyingSpace_rec_homotopy
+    (P : Type) `{IsTrunc 1 P}
+    (bbase1 : P) (bloop1 : G -&gt; bbase1 = bbase1)
+    (bloop1_pp : forall x y : G, bloop1 (x * y) = bloop1 x @ bloop1 y)
+    (bbase2 : P) (bloop2 : G -&gt; bbase2 = bbase2)
+    (bloop2_pp : forall x y : G, bloop2 (x * y) = bloop2 x @ bloop2 y)
+    (p : bbase1 = bbase2)
+    (bloop_comm : forall g, p @ bloop2 g = bloop1 g @ p)
+    : ClassifyingSpace_rec P bbase1 bloop1 bloop1_pp
+      == ClassifyingSpace_rec P bbase2 bloop2 bloop2_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* It's just as easy to prove this directly as it is to use the dependent version. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 200
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>srapply ClassifyingSpace_ind_hset; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      rewrite 2 ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; apply bloop_comm.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 205
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 206
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+End Eliminators.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We close the section, so we can use the above eliminators for different groups. *)
+
+(** A two-variable version of the non-dependent eliminator.  We could also have a dependent version, but since it is harder to state, we'll omit it for now. This definitionally computes to the expected recursors *as functions* when either variable is fixed to [bbase]: [ClassifyingSpace_rec2 P bbase' bloop1 bloop1_pp bloop2 bloop2_pp bloop_comm bbase = ClassifyingSpace_rec P bbase' bloop2 bloop2_pp] and [(fun bg =&gt; ClassifyingSpace_rec2 P bbase' bloop1 bloop1_pp bloop2 bloop2_pp bloop_comm bg bbase) = ClassifyingSpace_rec P bbase' bloop1 bloop1_pp]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 212
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition ClassifyingSpace_rec2 {G H : Group}
+  (P : Type) `{IsTrunc 1 P} (bbase' : P)
+  (bloop1 : G -&gt; bbase' = bbase')
+  (bloop1_pp : forall x y : G, bloop1 (x * y) = bloop1 x @ bloop1 y)
+  (bloop2 : H -&gt; bbase' = bbase')
+  (bloop2_pp : forall x y : H, bloop2 (x * y) = bloop2 x @ bloop2 y)
+  (bloop_comm : forall g h, bloop1 g @ bloop2 h = bloop2 h @ bloop1 g)
+  : ClassifyingSpace G -&gt; ClassifyingSpace H -&gt; P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  srapply ClassifyingSpace_rec_forall.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ClassifyingSpace_rec P bbase' bloop2 bloop2_pp).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply ClassifyingSpace_rec_homotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bloop1 g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bloop_comm g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x g h; revert x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 227
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+    srapply ClassifyingSpace_ind_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply bloop1_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 229
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Computation rule for ClassifyingSpace_rec2. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 232
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>Definition ClassifyingSpace_rec2_beta_bloop1_bbase {G H : Group}
+  (P : Type) `{IsTrunc 1 P} (bbase' : P)
+  (bloop1 : G -&gt; bbase' = bbase')
+  (bloop1_pp : forall x y : G, bloop1 (x * y) = bloop1 x @ bloop1 y)
+  (bloop2 : H -&gt; bbase' = bbase')
+  (bloop2_pp : forall x y : H, bloop2 (x * y) = bloop2 x @ bloop2 y)
+  (bloop_comm : forall g h, bloop1 g @ bloop2 h = bloop2 h @ bloop1 g)
+  (g : G)
+  : ap10 (ap (ClassifyingSpace_rec2 P bbase' bloop1 bloop1_pp bloop2 bloop2_pp bloop_comm)
+          (bloop g))
+      bbase = bloop1 g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  lhs_V napply ap_apply_Fl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  unfold ClassifyingSpace_rec2, ClassifyingSpace_rec_forall; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 245
+Time: 0.031s">
+<div class="time" style="width: 28.703703703704%"></div>
+<pre>
+  rapply ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 246
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The classifying space is 0-connected. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isconnected_classifyingspace {G : Group}
+  : IsConnected 0 (ClassifyingSpace G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (tr bbase)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 252
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  srapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 253
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  srapply ClassifyingSpace_ind_hprop; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The classifying space of a group is pointed. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointed_classifyingspace (G : Group)
+  : IsPointed (ClassifyingSpace G)
+  := bbase.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pClassifyingSpace (G : Group) := [ClassifyingSpace G, bbase].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** To use the [B G] notation for [pClassifyingSpace] import this module. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Import ClassifyingSpaceNotation.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition B G := pClassifyingSpace G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End ClassifyingSpaceNotation.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [bloop] takes the unit of the group to reflexivity. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition bloop_id {G : Group} : bloop (mon_unit : G) = idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (cancelL (bloop mon_unit)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ bloop_pp _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  refine (_ @ ap _ (left_identity _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [bloop] "preserves inverses" by taking inverses in [G] to inverses of paths in [BG]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition bloop_inv {G : Group} (x : G) : bloop x^ = (bloop x)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveL_Vp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ bloop_id).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((bloop_pp _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap, right_inverse.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The underlying pointed map of [pequiv_g_loops_bg]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pbloop {G : Group} : G -&gt;* loops (B G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact bloop_id.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This says that [B] is left adjoint to the loop space functor from pointed 1-types to groups. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 292
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition pClassifyingSpace_rec {G : Group} (P : pType) `{IsTrunc 1 P}
+           (bloop' : G -&gt; loops P)
+           (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
+  : B G -&gt;* P
+  := Build_pMap (ClassifyingSpace_rec P (point P) bloop' bloop_pp') idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And this is one of the standard facts about adjoint functors: [(R h') o eta = h], where [h : G -&gt; R P], [h' : L G -&gt; P] is the adjunct, and eta ([bloop]) is the unit. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 298
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition pClassifyingSpace_rec_beta_bloop {G : Group} (P : pType)
+  `{IsTrunc 1 P} (bloop' : G -&gt; loops P)
+  (bloop_pp' : forall x y : G, bloop' (x * y) = bloop' x @ bloop' y)
+  : fmap loops (pClassifyingSpace_rec P bloop' bloop_pp') o bloop == bloop'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_1p _ @ concat_p1 _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 305
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here we prove that [BG] is a delooping of [G], i.e. that [loops BG &lt;~&gt; G]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section EncodeDecode.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Univalence} {G : Group}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition codes : B G -&gt; HSet.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply ClassifyingSpace_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 315
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> exact (Build_HSet G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_trunctype.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 317
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      exact (Build_Equiv _ _ (fun t =&gt; t * x) _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ path_trunctype_pp _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap, path_equiv, path_forall.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 322
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      apply associativity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition encode : forall b, bbase = b -&gt; codes b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (transport codes p mon_unit).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition codes_transport
+    : forall x y : G, transport codes (bloop x) y = y * x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply (transport_idmap_ap _ (bloop x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rhs_V rapply (transport_path_universe (.* x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (transport2 idmap).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    lhs napply (ap_compose _ trunctype_type (bloop x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply ap_trunctype; apply ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 340
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    napply ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 341
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition decode : forall (b : B G), codes b -&gt; bbase = b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 345
+Time: 0.01s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+    srapply ClassifyingSpace_ind_hset.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply dp_arrow.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro y; cbn in *.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply dp_paths_r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 351
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+      refine ((bloop_pp _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap, codes_transport.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Lemma decode_encode : forall b p, decode b (encode b p) = p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact bloop_id.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_bloop : IsEquiv (@bloop G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (encode _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply decode_encode.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (codes_transport _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      apply left_identity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The defining property of BG. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_g_loops_bg : G &lt;~&gt; loops (B G)
+    := Build_Equiv _ _ bloop _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Pointed version of the defining property. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pequiv_g_loops_bg : G &lt;~&gt;* loops (B G)
+    := Build_pEquiv pbloop _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pequiv_loops_bg_g := pequiv_g_loops_bg^-1*%equiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We also have that the equivalence is a group isomorphism. *)
+
+  (** First we show that the loop space of a pointed 1-type is a group. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 387
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>Definition LoopGroup (X : pType) `{IsTrunc 1 X} : Group
+    := Build_Group (loops X) concat idpath inverse
+      (Build_IsGroup _ _ _ _
+        (Build_IsMonoid _ _ _
+          (Build_IsSemiGroup _ _ _ concat_p_pp) concat_1p concat_p1)
+        concat_Vp concat_pV).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_iso_g_loopgroup_bg : GroupIsomorphism G (LoopGroup (B G)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact equiv_g_loops_bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply bloop_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_iso_g_pi1_bg : GroupIsomorphism G (Pi1 (B G)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (transitive_groupisomorphism _ _ _ grp_iso_g_loopgroup_bg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 406
+Time: 0.01s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre> rapply equiv_tr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* We also record this fact. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 411
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition grp_homo_loops {X Y : pType} `{IsTrunc 1 X} `{IsTrunc 1 Y}
+    : (X -&gt;** Y) -&gt;* [LoopGroup X $-&gt; LoopGroup Y, grp_homo_const].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> exact (fmap loops f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply fmap_loops_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (pointed_htpy fmap_loops_pconst).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 421
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 422
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+End EncodeDecode.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We generally don't want [bloop^-1] to unfold to [encode bbase], so we make this instance opaque. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Opaque isequiv_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The classifying space of a contractible group is contractible. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance contr_pclassifyingspace `{Univalence} (G : Group) `{Contr G}
+  : Contr (B G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 430
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+  rapply (contr_equiv' pUnit (Build_Equiv _ _ pconst _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The map from [pUnit] is an equivalence, since it is one on loops, as both have contractible loop spaces. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose proof (contr_equiv' G equiv_g_loops_bg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 433
+Time: 0.008s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  rapply isequiv_is0connected_isequiv_loops.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Functoriality of B(-) *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_pclassifyingspace : Is0Functor B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros G H f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 441
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  snapply pClassifyingSpace_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bloop o f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap bloop (grp_homo_op f x y) @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply bloop_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 448
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+
+Definition ap_fmap_b_beta_bloop {G H : Group} (u : G $-&gt; H) (g : G)
+  : ap (fmap B u) (bloop g) = bloop (u g)
+  := ClassifyingSpace_rec_beta_bloop _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 452
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+Definition bloop_natural (G H : Group) (f : G $-&gt; H)
+  : fmap loops (fmap B f) o bloop == bloop o f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply pClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 458
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+Lemma pbloop_natural (G K : Group) (f : G $-&gt; K)
+  : fmap loops (fmap B f) o* pbloop ==* pbloop o* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 462
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  srapply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 463
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  apply bloop_natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 465
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+Definition natequiv_g_loops_bg `{Univalence}
+  : NatEquiv ptype_group (loops o B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros G; exact pequiv_g_loops_bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pbloop_natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fmap B] of a surjective group homomorphism is a 0-connected map. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 478
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Instance isconnmap_fmap_pclassifyingspace `{Univalence} {G K : Group}
+  (f : GroupHomomorphism G K) `{!IsSurjection f}
+  : IsConnMap 0 (fmap B f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* By [isconnmap_isconnmap_ap_surj] it suffices to show that [fmap B f] and its [ap]s are surjective; both follow from surjectivity of [f]. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 483
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>snapply isconnmap_isconnmap_ap_surj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 484
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> rapply (isconnmap_isconnected (-1)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 485
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre> rapply (conn_point_elim (-1) (A:=B G)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 485
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    rapply (conn_point_elim (-1) (A:=B G)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 486
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    srapply (equiv_ind equiv_g_loops_bg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 488
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 489
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+    pose proof (m := center (Tr (-1) (hfiber f h))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 490
+Time: 0.017s">
+<div class="time" style="width: 15.740740740741%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct m as [g p].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 492
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    exact (tr (bloop g;
+               ClassifyingSpace_rec_beta_bloop _ _ _ _ g @ ap bloop p)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 494
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 495
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+Instance is1functor_pclassifyingspace : Is1Functor B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Action on 2-cells *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H f g p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply ClassifyingSpace_ind_hset.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 503
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+      1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 506
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      rapply equiv_sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 508
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+      rewrite 2 ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply sq_1G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (p x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Preservation of identity map *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply ClassifyingSpace_ind_hset.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 517
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+      1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro g; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 520
+Time: 0.006s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+      transport_paths (transport_paths_Flr (f:=ClassifyingSpace_rec _ _ _ _) (bloop g) _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Preservation of composition *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H K g f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply ClassifyingSpace_ind_hset.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 528
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+      1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 531
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+      rapply equiv_sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 532
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 533
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      rapply sq_ccGG.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 534
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      1,2: symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 535
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+      2: refine (ap_compose (ClassifyingSpace_rec _ _ _ (fun x y =&gt;
+        ap bloop (grp_homo_op g x y) @ bloop_pp (g x) (g y))) _ (bloop x)
+        @ ap _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 538
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+      1-3: napply ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply sq_1G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 541
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 542
+Time: 0.019s">
+<div class="time" style="width: 17.592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Interestingly, [fmap B] is an equivalence *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 545
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Instance isequiv_fmap_pclassifyingspace `{U : Univalence} (G H : Group)
+  : IsEquiv (fmap B (a := G) (b := H)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (grp_homo_compose (grp_iso_inverse _) (grp_homo_compose _ _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,3: exact grp_iso_g_loopgroup_bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (grp_homo_loops f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply equiv_path_pforall.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply ClassifyingSpace_ind_hset.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 556
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+      1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rapply (point_eq f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 560
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+        rapply equiv_sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 561
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+        rewrite ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 563
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+        rapply sq_ccGc.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 564
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+        1: symmetry; rapply decode_encode.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite concat_pp_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 569
+Time: 0.011s">
+<div class="time" style="width: 10.185185185185%"></div>
+<pre>
+      symmetry; apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 573
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  rapply (moveR_equiv_V' equiv_g_loops_bg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply pClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 575
+Time: 0.032s">
+<div class="time" style="width: 29.62962962963%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Hence we have that group homomorphisms are equivalent to pointed maps between their deloopings. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem equiv_grp_homo_pmap_bg `{U : Univalence} (G H : Group)
+  : (G $-&gt; H) &lt;~&gt; (B G $-&gt; B H).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Equiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: apply isequiv_fmap_pclassifyingspace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 583
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Instance is1natural_grp_homo_pmap_bg_r {U : Univalence} (G : Group)
+  : Is1Natural (opyon G) (opyon (B G) o B) (equiv_grp_homo_pmap_bg G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros K H f h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_hom.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 590
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  rapply (fmap_comp B h f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 591
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 592
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+
+Theorem natequiv_grp_homo_pmap_bg `{U : Univalence} (G : Group)
+  : NatEquiv (opyon G) (opyon (B G) o B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 596
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  rapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [B(Pi 1 X) &lt;~&gt;* X] for a 0-connected 1-truncated [X]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem pequiv_pclassifyingspace_pi1 `{Univalence}
+  (X : pType) `{IsConnected 0 X} `{IsTrunc 1 X}
+  : B (Pi1 X) &lt;~&gt;* X.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The pointed map [f] is the adjunct to the inverse of the natural map [loops X -&gt; Pi1 X]. We define it first, to make the later goals easier to read. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>transparent assert (f : (B (Pi1 X) -&gt;* X)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply pClassifyingSpace_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 607
+Time: 0.006s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    1: exact (equiv_tr 0 _)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 609
+Time: 0.108s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_pEquiv f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** [f] is an equivalence since [loops_functor f o bloop == tr^-1], and the other two maps are equivalences. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply isequiv_is0connected_isequiv_loops.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (cancelR_isequiv bloop).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 615
+Time: 0.019s">
+<div class="time" style="width: 17.592592592593%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 616
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  rapply isequiv_homotopic'; symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 617
+Time: 0.034s">
+<div class="time" style="width: 31.481481481481%"></div>
+<pre>
+  napply pClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 618
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The classifying space functor and the fundamental group functor form an adjunction ([pType] needs to be restricted to the subcategory of 0-connected pointed types). Note that the full adjunction should also be natural in [X], but this was not needed yet. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 621
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
+  : NatEquiv (opyon (Pi1 X)) (opyon X o B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (natequiv_compose _ (natequiv_grp_homo_pmap_bg _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 624
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 626
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intro; exact pequiv_ptr_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 627
+Time: 0.006s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    exact (is1natural_prewhisker (G:=opyon X) B (opyoneda _ _ _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 629
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> refine (natequiv_prewhisker _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 629
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    refine (natequiv_opyon_equiv _^-1$).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 630
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    refine (pequiv_pclassifyingspace_pi1 (pTr 1 X) o*E (emap B _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 631
+Time: 0.015s">
+<div class="time" style="width: 13.888888888889%"></div>
+<pre>
+    exact (grp_iso_pi_Tr 0 X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 632
+Time: 0.012s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 633
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+Theorem equiv_bg_pi1_adjoint `{Univalence} (X : pType)
+  `{IsConnected 0 X} (G : Group)
+  : (Pi 1 X $-&gt; G) &lt;~&gt; (X $-&gt; B G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 638
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  rapply natequiv_bg_pi1_adjoint.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 640
+Time: 0.02s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+
+Lemma is1natural_equiv_bg_pi1_adjoint_r `{Univalence}
+  (X : pType) `{IsConnected 0 X}
+  : Is1Natural (opyon (Pi1 X)) (opyon X o B)
+      (equiv_bg_pi1_adjoint X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 646
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  rapply (is1natural_natequiv (natequiv_bg_pi1_adjoint X)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Why so slow? Fixed by making this opaque. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Opaque equiv_bg_pi1_adjoint.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 649
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Transparent equiv_bg_pi1_adjoint.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There is also a natural equivalence for unpointed function types, which computes to the map defined above on pointed functions: [equiv_bg_pi1_adjoint X G f] is definitionally equal to [equiv_map_bg X G (fmap B f)] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 653
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>Definition natequiv_map_bg `{Univalence}
+  (X : pType) `{IsConnected 0 X}
+  : NatEquiv (opyon (A:=Type) (B (Pi 1 X)) o B) (opyon (A:=Type) X o B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold opyon.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 657
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  refine (natequiv_compose (G := opyon (Tr 1 X) o B) _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 659
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 659
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+    1: intro; rapply (equiv_o_to_O (Tr 1) X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 660
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+    by srapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 662
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> refine (natequiv_prewhisker _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 662
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    refine (natequiv_opyon_equiv _^-1$).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 663
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    refine (pequiv_pclassifyingspace_pi1 (pTr 1 X) o*E (emap B _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 664
+Time: 0.013s">
+<div class="time" style="width: 12.037037037037%"></div>
+<pre>
+    exact (grp_iso_pi_Tr 0 X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 665
+Time: 0.011s">
+<div class="time" style="width: 10.185185185185%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_map_bg `{Univalence}
+  (X : pType) `{IsConnected 0 X} (G : Group)
+  : (B (Pi 1 X) -&gt; B G) &lt;~&gt; (X -&gt; B G).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 671
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  rapply natequiv_map_bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** H-space structure on [B G] when [G] is abelian *)
+
+(** This will be used to prove that [B G] is an H-space when [G] is abelian, and has other uses as well. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 677
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition fmap11_B {G H K : Group}
+  (f1 : G $-&gt; K) (f2 : H $-&gt; K)
+  (comm: forall g h, f1 g * f2 h = f2 h * f1 g)
+  : B G -&gt; B H -&gt; B K.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 681
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  srapply ClassifyingSpace_rec2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact bbase.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bloop o f1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g1 g2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply bloop_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bloop o f2).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h1 h2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply bloop_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((bloop_pp _ _)^ @ _ @ bloop_pp _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, comm.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 694
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 695
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+
+Definition fmap11_B_bbase {G H K : Group}
+  (f1 : G $-&gt; K) (f2 : H $-&gt; K)
+  (comm: forall g h, f1 g * f2 h = f2 h * f1 g)
+  : fmap11_B f1 f2 comm bbase = fmap B f2
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 701
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+Definition fmap11_B_bbase' `{funext : Funext} {G H K : Group}
+  (f1 : G $-&gt; K) (f2 : H $-&gt; K)
+  (comm: forall g h, f1 g * f2 h = f2 h * f1 g)
+  : (fun x =&gt; fmap11_B f1 f2 comm x bbase) == fmap B f1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 707
+Time: 0.029s">
+<div class="time" style="width: 26.851851851852%"></div>
+<pre>
+  srapply ClassifyingSpace_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 710
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  cbn; apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 711
+Time: 0.102s">
+<div class="time" style="width: 94.444444444444%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When [G] is an abelian group, [BG] is an H-space. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section HSpace_bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {G : AbGroup}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The multiplication follows from [fmap11_B].  One can also construct it directly, which replaces some subterms that are essentially [fmap B pmap_idmap] with [idmap].  The approach using [fmap11_B] actually makes the proof of [bg_mul_symm] simpler, but [bg_mul_right_id] no longer holds definitionally. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 719
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>Definition bg_mul : B G -&gt; B G -&gt; B G
+    := fmap11_B grp_homo_id grp_homo_id commutativity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition bg_mul_symm : forall x y, bg_mul x y = bg_mul y x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 724
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply ClassifyingSpace_ind_hset; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* [bg_mul x bbase] and [bg_mul bbase x] are definitionally equal! *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intros g; revert x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 727
+Time: 0.013s">
+<div class="time" style="width: 12.037037037037%"></div>
+<pre>
+    srapply ClassifyingSpace_ind_hprop; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold DPath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Rocq rewrites the output of this step using the above definitional equality again: *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 731
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 732
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is not definitionally true, but [bg_mul b bbase] is definitionally equal to [fmap B grp_homo_id], so we can use [fmap_id] to prove this. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 736
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>Definition bg_mul_right_id : forall b : B G, bg_mul b bbase = b
+    := fmap_id B G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It may be surprising, but the lhs here is *also* definitionally equal to [fmap B grp_homo_id]. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 740
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition bg_mul_left_id : forall b : B G, bg_mul bbase b = b
+    := fmap_id B G.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance ishspace_bg : IsHSpace (B G)
+    := Build_IsHSpace _
+          bg_mul
+          bg_mul_left_id
+          bg_mul_right_id.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 747
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+End HSpace_bg.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

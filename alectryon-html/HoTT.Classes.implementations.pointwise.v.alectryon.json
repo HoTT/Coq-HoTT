@@ -1,0 +1,4680 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [B] is a (bounded) lattice, then so is [A -> B], pointwise.\n    This relies on functional extensionality. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B : Type}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{BJoin : Join B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{BMeet : Meet B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{BBottom : Bottom B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{BTop : Top B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance bot_fun : Bottom (A -> B)\n    := fun _ => \u22a5.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance top_fun : Top (A -> B)\n    := fun _ => \u22a4.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance join_fun : Join (A -> B) :=\n    fun (f g : A -> B) (a : A) => (f a) \u2294 (g a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance meet_fun : Meet (A -> B) :=\n    fun (f g : A -> B) (a : A) => (f a) \u2293 (g a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Try to solve some of the lattice obligations automatically *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb lattice_hints.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[local]\n  Hint Resolve\n       associativity\n       absorption\n       commutativity | 1 : lattice_hints.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac reduce_fun := compute; intros; apply path_forall; intro.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance lattice_fun `{!IsLattice B} : IsLattice (A -> B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat split; try apply _; reduce_fun.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BJoin (y x0) (z x0)) = BJoin (BJoin (x x0) (y x0)) (z x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (y x0) = BJoin (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BMeet (y x0) (z x0)) = BMeet (BMeet (x x0) (y x0)) (z x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (y x0) = BMeet (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BMeet (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BJoin (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,4: apply associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (y x0) = BJoin (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (y x0) = BMeet (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BMeet (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BJoin (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,3: apply commutativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BMeet (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BJoin (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: apply binary_idempotent.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BMeet (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BJoin (x x0) (y x0)) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsLattice0"
+              ],
+              "body": null,
+              "type": "IsLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: apply absorption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance boundedjoinsemilattice_fun\n   `{!IsBoundedJoinSemiLattice B} :\n    IsBoundedJoinSemiLattice (A -> B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBoundedJoinSemiLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBoundedJoinSemiLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat split; try apply _; reduce_fun.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BJoin (y x0) (z x0)) = BJoin (BJoin (x x0) (y x0)) (z x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin BBottom (y x) = y x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) BBottom = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (y x0) = BJoin (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (BJoin (y x0) (z x0)) = BJoin (BJoin (x x0) (y x0)) (z x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply associativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin BBottom (y x) = y x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) BBottom = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply right_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (y x0) = BJoin (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply commutativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BJoin (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedJoinSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedJoinSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply binary_idempotent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance boundedmeetsemilattice_fun\n   `{!IsBoundedMeetSemiLattice B} :\n    IsBoundedMeetSemiLattice (A -> B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBoundedMeetSemiLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBoundedMeetSemiLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat split; try apply _; reduce_fun.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BMeet (y x0) (z x0)) = BMeet (BMeet (x x0) (y x0)) (z x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet BTop (y x) = y x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) BTop = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (y x0) = BMeet (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (BMeet (y x0) (z x0)) = BMeet (BMeet (x x0) (y x0)) (z x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply associativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet BTop (y x) = y x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) BTop = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply right_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (y x0) = BMeet (y x0) (x x0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply commutativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BMeet (x x0) (x x0) = x x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedMeetSemiLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedMeetSemiLattice B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply binary_idempotent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance boundedlattice_fun\n   `{!IsBoundedLattice B} : IsBoundedLattice (A -> B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBoundedLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBoundedLattice (A -> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BJoin"
+              ],
+              "body": null,
+              "type": "Join B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BMeet"
+              ],
+              "body": null,
+              "type": "Meet B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BBottom"
+              ],
+              "body": null,
+              "type": "Bottom B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BTop"
+              ],
+              "body": null,
+              "type": "Top B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBoundedLattice0"
+              ],
+              "body": null,
+              "type": "IsBoundedLattice B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat split; try apply _; reduce_fun; apply absorption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\n  Hint Resolve\n       associativity\n       absorption\n       commutativity | 1 : lattice_hints.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

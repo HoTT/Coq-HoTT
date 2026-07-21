@@ -1,0 +1,74 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Initial and terminal categories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Definitions *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require InitialTerminalCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include InitialTerminalCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)\n(** ** Functors to and from initial and terminal categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require InitialTerminalCategory.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Natural transformations between functors from initial categories and to terminal categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require InitialTerminalCategory.NaturalTransformations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Pseudofunctors from initial and terminal categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require InitialTerminalCategory.Pseudofunctors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export InitialTerminalCategory.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

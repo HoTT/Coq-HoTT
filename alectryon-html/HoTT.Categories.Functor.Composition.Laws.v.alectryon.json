@@ -1,0 +1,1126 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Laws about composition of functors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.PathGroupoids Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section identity_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** left identity : [1 \u2218 F = F] *)\n  (** If we had that [match (p : a = b) in (_ = y) return (a = y) with idpath => idpath end \u2261 p] (a form of eta for paths), this would be judgemental. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma left_identity (F : Functor C D) : 1 o F = F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 o F = F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 o F = F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by path_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** right identity : [F \u2218 1 = F] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma right_identity (F : Functor C D) : F o 1 = F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F o 1 = F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F o 1 = F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by path_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Action of left and right identity laws on objects *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_identity_fst F\n  : ap object_of (left_identity F) = idpath\n    := @path_functor_uncurried_fst _ _ _ (1 o F) F 1 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_identity_fst F\n  : ap object_of (right_identity F) = idpath\n    := @path_functor_uncurried_fst _ _ _ (F o 1) F 1 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End identity_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Rewrite @left_identity @right_identity : category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Rewrite @left_identity @right_identity : functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Immediate left_identity right_identity : category functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{fs : Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables B C D E : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** associativity : [(H \u2218 G) \u2218 F = H \u2218 (G \u2218 F)] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma associativity\n        (F : Functor B C) (G : Functor C D) (H : Functor D E)\n  : (H o G) o F = H o (G o F).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H o G o F = H o (G o F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor D E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H o G o F = H o (G o F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor D E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by path_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Action of associativity on objects *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition associativity_fst F G H\n  : ap object_of (associativity F G H) = idpath\n    := @path_functor_uncurried_fst _ _ _ ((H o G) o F) (H o (G o F)) 1%path 1%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Resolve associativity : category functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section coherence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{fs : Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac coherence_t :=\n    repeat match goal with\n             | [ |- _ = _ :> (_ = _ :> Functor _ _) ] => apply path_path_functor_uncurried\n             | _ => reflexivity\n             | _ => progress rewrite ?ap_pp, ?concat_1p, ?concat_p1\n             | _ => progress rewrite ?associativity_fst, ?left_identity_fst, ?right_identity_fst\n             | _ => progress push_ap_object_of\n           end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** coherence triangle *)\n  (** The following triangle is coherent\n<<\n      G \u2218 (1 \u2218 F) === (G \u2218 1) \u2218 F\n            \\\\           //\n             \\\\         //\n              \\\\       //\n               \\\\     //\n                \\\\   //\n                 \\\\ //\n                 G \u2218 F\n>>\n*)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma triangle C D E (F : Functor C D) (G : Functor D E)\n  : (associativity F 1 G @ ap (compose G) (left_identity F))\n    = (ap (fun G' : Functor D E => G' o F) (right_identity G)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "associativity F 1 G @ ap (compose G) (left_identity F) =\nap (fun G' : Functor D E => G' o F) (right_identity G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "associativity F 1 G @ ap (compose G) (left_identity F) =\nap (fun G' : Functor D E => G' o F) (right_identity G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "coherence_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** coherence pentagon *)\n  (** The following pentagon is coherent\n<<\n                  K \u2218 (H \u2218 (G \u2218 F))\n                  //             \\\\\n                 //               \\\\\n                //                 \\\\\n               //                   \\\\\n              //                     \\\\\n      (K \u2218 H) \u2218 (G \u2218 F)        K \u2218 ((H \u2218 G) \u2218 F)\n              ||                      ||\n              ||                      ||\n              ||                      ||\n              ||                      ||\n              ||                      ||\n      ((K \u2218 H) \u2218 G) \u2218 F ====== (K \u2218 (H \u2218 G)) \u2218 F\n>>\n*)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pentagon A B C D E\n        (F : Functor A B) (G : Functor B C) (H : Functor C D) (K : Functor D E)\n  : (associativity F G (K o H) @ associativity (G o F) H K)\n    = (ap (fun KHG => KHG o F) (associativity G H K) @ associativity F (H o G) K @ ap (compose K) (associativity F G H)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "associativity F G (K o H) @ associativity (G o F) H K =\n(ap (fun KHG : Functor B E => KHG o F) (associativity G H K) @\n associativity F (H o G) K) @\nap (compose K) (associativity F G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "Functor D E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "associativity F G (K o H) @ associativity (G o F) H K =\n(ap (fun KHG : Functor B E => KHG o F) (associativity G H K) @\n associativity F (H o G) K) @\nap (compose K) (associativity F G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "Functor D E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "coherence_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End coherence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments associativity : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments left_identity : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments right_identity : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

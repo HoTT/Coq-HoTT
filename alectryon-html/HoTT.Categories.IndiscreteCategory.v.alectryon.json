@@ -1,0 +1,335 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Indiscrete category *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core Category.Strict Category.Univalent Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Unit Trunc HoTT.Tactics Equivalences.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition of an indiscrete category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section indiscrete_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** The indiscrete category has exactly one morphism between any two\n      objects. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** We define the symmetrized version of associativity differently\n      so that the dual of an indiscrete category is convertible with\n      the indiscrete category. *)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition indiscrete_category : PreCategory\n      := @Build_PreCategory' X\n                             (fun _ _ => Unit)\n                             (fun _ => tt)\n                             (fun _ _ _ _ _ => tt)\n                             (fun _ _ _ _ _ _ _ => idpath)\n                             (fun _ _ _ _ _ _ _ => idpath)\n                             (fun _ _ f => match f with tt => idpath end)\n                             (fun _ _ f => match f with tt => idpath end)\n                             (fun _ => idpath)\n                             _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End indiscrete_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** Indiscrete categories are strict categories *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isstrict_indiscrete_category `{H : IsHSet X}\n  : IsStrictCategory (indiscrete_category X)\n    := H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** Indiscrete categories are (saturated/univalent) categories *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance iscategory_indiscrete_category `{H : IsHProp X}\n  : IsCategory (indiscrete_category X).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCategory (indiscrete_category X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHProp X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCategory (indiscrete_category X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHProp X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (idtoiso (indiscrete_category X) (y:=d))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHProp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "indiscrete_category X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply (isequiv_adjointify\n              (idtoiso (indiscrete_category X) (x := s) (y := d))\n              (fun _ => center _));\n      abstract (\n          repeat intro;\n          destruct_head_hnf @Isomorphic;\n          destruct_head_hnf @IsIsomorphism;\n          destruct_head_hnf @Unit;\n          path_induction_hammer\n        ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Functors to an indiscrete category are given by their action on objects *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section to.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable objOf : C -> X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition to : Functor C (indiscrete_category X)\n      := Build_Functor C (indiscrete_category X)\n                       objOf\n                       (fun _ _ _ => tt)\n                       (fun _ _ _ _ _ => idpath)\n                       (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End to.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

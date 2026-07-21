@@ -1,0 +1,179 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Option types *)\n\n(** Option types are a simple way to represent a value that may or may not be present. They are also known as the Maybe monad in functional programming. *)\n\n(** [option] is functorial. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor_option {A B} (f : A -> B) (x : option A) : option B :=\n  match x with\n  | None => None\n  | Some a => Some (f a)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The [Some] constructor is injective. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isinj_some {A} {x y : A} (p : Some x = Some y)\n  : x = y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Some x = Some y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Some x = Some y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "injection p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = y -> x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Some x = Some y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

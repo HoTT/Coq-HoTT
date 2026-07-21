@@ -1,0 +1,7498 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core Homotopy.ExactSequence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import AbGroups.AbelianGroup AbSES.Core AbGroups.Biproduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_add_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * The direct sum of short exact sequences *)\n\n(** Biproducts of abelian groups preserve exactness. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma ab_biprod_exact {A E B X F Y : AbGroup}\n      (i : A $-> E) (p : E $-> B) `{ex0 : IsExact (Tr (-1)) _ _ _ i p}\n      (j : X $-> F) (q : F $-> Y) `{ex1 : IsExact (Tr (-1)) _ _ _ j q}\n  : IsExact (Tr (-1)) (functor_ab_biprod i j)\n            (functor_ab_biprod p q).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) (functor_ab_biprod i j) (functor_ab_biprod p q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact (Tr (-1)) (functor_ab_biprod i j) (functor_ab_biprod p q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_IsExact.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsComplex (functor_ab_biprod i j) (functor_ab_biprod p q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectiveSubuniverse.IsConnMap (Tr (-1)) (cxfib ?cx_isexact)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsComplex (functor_ab_biprod i j) (functor_ab_biprod p q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply phomotopy_homotopy_hset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (ab_biprod B Y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_ab_biprod p q o* functor_ab_biprod i j == pconst",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_ab_biprod p q o* functor_ab_biprod i j == pconst",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x; apply path_prod; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p (i (fst x)) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ab_biprod A X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "q (j (snd x)) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ab_biprod A X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p (i (fst x)) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ab_biprod A X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ex0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "q (j (snd x)) = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ab_biprod A X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ex1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectiveSubuniverse.IsConnMap (Tr (-1))\n  (cxfib\n     (phomotopy_homotopy_hset\n        ((fun x : ab_biprod A X =>\n          path_prod ((functor_ab_biprod p q o* functor_ab_biprod i j) x)\n            (pconst x)\n            ((let X0 := cx_isexact in let X1 := pointed_fun X0 in X1 (fst x))\n             :\n             fst ((functor_ab_biprod p q o* functor_ab_biprod i j) x) =\n             fst (pconst x))\n            ((let X0 := cx_isexact in let X1 := pointed_fun X0 in X1 (snd x))\n             :\n             snd ((functor_ab_biprod p q o* functor_ab_biprod i j) x) =\n             snd (pconst x)))\n         :\n         functor_ab_biprod p q o* functor_ab_biprod i j == pconst)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[e f] u]; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectiveSubuniverse.IsConnected (Tr (-1))\n  (hfiber\n     (fun x : A * X =>\n      ((i (fst x), j (snd x));\n      path_prod (p (i (fst x)), q (j (snd x))) (0, 0) \n        (cx_isexact (fst x)) (cx_isexact (snd x))))\n     ((e, f); u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply contr_inhabited_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1)\n  (hfiber\n     (fun x : A * X =>\n      ((i (fst x), j (snd x));\n      path_prod (p (i (fst x)), q (j (snd x))) (0, 0) \n        (cx_isexact (fst x)) (cx_isexact (snd x))))\n     ((e, f); u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (U := (equiv_path_prod _ _)^-1 u); cbn in U.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1)\n  (hfiber\n     (fun x : A * X =>\n      ((i (fst x), j (snd x));\n      path_prod (p (i (fst x)), q (j (snd x))) (0, 0) \n        (cx_isexact (fst x)) (cx_isexact (snd x))))\n     ((e, f); u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (a := isexact_preimage _ i p e (fst U)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1)\n  (hfiber\n     (fun x : A * X =>\n      ((i (fst x), j (snd x));\n      path_prod (p (i (fst x)), q (j (snd x))) (0, 0) \n        (cx_isexact (fst x)) (cx_isexact (snd x))))\n     ((e, f); u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "Tr (-1) (hfiber i e)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (x := isexact_preimage _ j q f (snd U)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1)\n  (hfiber\n     (fun x0 : A * X =>\n      ((i (fst x0), j (snd x0));\n      path_prod (p (i (fst x0)), q (j (snd x0))) (0, 0) \n        (cx_isexact (fst x0)) (cx_isexact (snd x0))))\n     ((e, f); u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "Tr (-1) (hfiber i e)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Tr (-1) (hfiber j f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hfiber\n  (fun x0 : A * X =>\n   ((i (fst x0), j (snd x0));\n   path_prod (p (i (fst x0)), q (j (snd x0))) (0, 0) \n     (cx_isexact (fst x0)) (cx_isexact (snd x0))))\n  ((e, f); u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (ab_biprod_inl a.1 + ab_biprod_inr x.1); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((i (a.1 + group_unit), j (group_unit + x.1));\npath_prod (p (i (a.1 + group_unit)), q (j (group_unit + x.1))) \n  (0, 0) (cx_isexact (a.1 + group_unit)) (cx_isexact (group_unit + x.1))) =\n((e, f); u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (IS := sg_set (ab_biprod B Y)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((i (a.1 + group_unit), j (group_unit + x.1));\npath_prod (p (i (a.1 + group_unit)), q (j (group_unit + x.1))) \n  (0, 0) (cx_isexact (a.1 + group_unit)) (cx_isexact (group_unit + x.1))) =\n((e, f); u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* This hint speeds up the next line. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i (a.1 + group_unit), j (group_unit + x.1)) = (e, f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_prod; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i (a.1 + group_unit) = e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j (group_unit + x.1) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i (a.1 + group_unit) = e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite right_identity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i a.1 = e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact a.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j (group_unit + x.1) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite left_identity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j x.1 = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "E"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "F"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "E $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex0"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "X $-> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "F $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex1"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) j q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "functor_ab_biprod p q (e, f) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": "(ap fst u, ap snd u)",
+              "type": "(p e = 0) * (q f = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "hfiber j f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "hfiber i e"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IS"
+              ],
+              "body": "sg_set (ab_biprod B Y)",
+              "type": "IsHSet (ab_biprod B Y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact x.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The pointwise direct sum of two short exact sequences. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_direct_sum `{Funext} {B A B' A' : AbGroup} (E : AbSES B A) (F : AbSES B' A')\n  : AbSES (ab_biprod B B') (ab_biprod A A')\n  := Build_AbSES (ab_biprod E F)\n                 (functor_ab_biprod (inclusion E) (inclusion F))\n                 (functor_ab_biprod (projection E) (projection F))\n                 (functor_ab_biprod_embedding _ _)\n                 (functor_ab_biprod_surjection _ _)\n                 (ab_biprod_exact _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For any short exact sequences [E], [E'], [F], [F'], and morphisms [f : E -> E'] and [g : F -> F'] there is a morphism [E + F -> E' + F']. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma functor_abses_directsum `{Funext} {A A' B B' C C' D D' : AbGroup}\n      {E : AbSES B A} {E' : AbSES B' A'} {F : AbSES D C} {F' : AbSES D' C'}\n      (f : AbSESMorphism E E') (g : AbSESMorphism F F')\n  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum E' F').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum E F) (abses_direct_sum E' F')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum E F) (abses_direct_sum E' F')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_AbSESMorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod A C $-> ab_biprod A' C'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_direct_sum E F $-> abses_direct_sum E' F'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod B D $-> ab_biprod B' D'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum E' F') $o ?component1 ==\n?component2 $o inclusion (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum E' F') $o ?component2 ==\n?component3 $o projection (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod A C $-> ab_biprod A' C'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (functor_ab_biprod (component1 f) (component1 g)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_direct_sum E F $-> abses_direct_sum E' F'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (functor_ab_biprod (component2 f) (component2 g)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod B D $-> ab_biprod B' D'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (functor_ab_biprod (component3 f) (component3 g)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum E' F') $o\nfunctor_ab_biprod (component1 f) (component1 g) ==\nfunctor_ab_biprod (component2 f) (component2 g) $o\ninclusion (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(inclusion (abses_direct_sum E' F') $o\n functor_ab_biprod (component1 f) (component1 g)) x =\n(functor_ab_biprod (component2 f) (component2 g) $o\n inclusion (abses_direct_sum E F)) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ab_biprod A C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_prod; apply left_square.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum E' F') $o\nfunctor_ab_biprod (component2 f) (component2 g) ==\nfunctor_ab_biprod (component3 f) (component3 g) $o\nprojection (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(projection (abses_direct_sum E' F') $o\n functor_ab_biprod (component2 f) (component2 g)) x =\n(functor_ab_biprod (component3 f) (component3 g) $o\n projection (abses_direct_sum E F)) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E'"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "AbSES D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "AbSESMorphism E E'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "AbSESMorphism F F'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "abses_direct_sum E F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_prod; apply right_square.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For any short exact sequence [E], there is a morphism [E -> abses_direct_sum E E], where each component is ab_diagonal. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_diagonal `{Funext} {A B : AbGroup} (E : AbSES B A)\n  : AbSESMorphism E (abses_direct_sum E E).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism E (abses_direct_sum E E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism E (abses_direct_sum E E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_AbSESMorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A $-> ab_biprod A A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "E $-> abses_direct_sum E E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "B $-> ab_biprod B B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum E E) $o ?component1 == ?component2 $o inclusion E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum E E) $o ?component2 ==\n?component3 $o projection E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,3: exact ab_diagonal.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum E E) $o ab_diagonal == ab_diagonal $o inclusion E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum E E) $o ab_diagonal ==\nab_diagonal $o projection E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For any short exact sequence [E], there is dually a morphism [abses_direct_sum E E -> E], with each component being the codiagonal. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_codiagonal `{Funext} {A B : AbGroup} (E : AbSES B A)\n  : AbSESMorphism (abses_direct_sum E E) E.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum E E) E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum E E) E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_AbSESMorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod A A $-> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_direct_sum E E $-> E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod B B $-> B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion E $o ?component1 == ?component2 $o inclusion (abses_direct_sum E E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection E $o ?component2 ==\n?component3 $o projection (abses_direct_sum E E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,3: exact ab_codiagonal.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion E $o ab_codiagonal ==\nab_codiagonal $o inclusion (abses_direct_sum E E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection E $o ab_codiagonal ==\nab_codiagonal $o projection (abses_direct_sum E E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: intro x; cbn; apply grp_homo_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** There is always a morphism [abses_direct_sum E F -> abses_direct_sum F E] of short exact sequences, for any [E : AbSES B A] and [F : AbSES B' A']. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abses_swap_morphism `{Funext} {A A' B B' : AbGroup}\n           (E : AbSES B A) (F : AbSES B' A')\n  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum F E).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum E F) (abses_direct_sum F E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum E F) (abses_direct_sum F E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_AbSESMorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod A A' $-> ab_biprod A' A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_direct_sum E F $-> abses_direct_sum F E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod B B' $-> ab_biprod B' B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum F E) $o ?component1 ==\n?component2 $o inclusion (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum F E) $o ?component2 ==\n?component3 $o projection (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,3: exact direct_sum_swap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum F E) $o direct_sum_swap ==\ndirect_sum_swap $o inclusion (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum F E) $o direct_sum_swap ==\ndirect_sum_swap $o projection (abses_direct_sum E F)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "AbSES B' A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For [E, F, G : AbSES B A], there is a morphism [(E + F) + G -> (G + F) + E] induced by the above map, where [+] denotes [abses_direct_sum]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma abses_twist_directsum `{Funext} {A B : AbGroup} (E F G : AbSES B A)\n  : AbSESMorphism (abses_direct_sum (abses_direct_sum E F) G)\n                  (abses_direct_sum (abses_direct_sum G F) E).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum (abses_direct_sum E F) G)\n  (abses_direct_sum (abses_direct_sum G F) E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbSESMorphism (abses_direct_sum (abses_direct_sum E F) G)\n  (abses_direct_sum (abses_direct_sum G F) E)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_AbSESMorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod (ab_biprod A A) A $-> ab_biprod (ab_biprod A A) A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abses_direct_sum (abses_direct_sum E F) G $->\nabses_direct_sum (abses_direct_sum G F) E",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_biprod (ab_biprod B B) B $-> ab_biprod (ab_biprod B B) B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum (abses_direct_sum G F) E) $o ?component1 ==\n?component2 $o inclusion (abses_direct_sum (abses_direct_sum E F) G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum (abses_direct_sum G F) E) $o ?component2 ==\n?component3 $o projection (abses_direct_sum (abses_direct_sum E F) G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,3: exact ab_biprod_twist.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inclusion (abses_direct_sum (abses_direct_sum G F) E) $o ab_biprod_twist ==\nab_biprod_twist $o inclusion (abses_direct_sum (abses_direct_sum E F) G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "projection (abses_direct_sum (abses_direct_sum G F) E) $o ab_biprod_twist ==\nab_biprod_twist $o projection (abses_direct_sum (abses_direct_sum E F) G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E",
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "AbSES B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

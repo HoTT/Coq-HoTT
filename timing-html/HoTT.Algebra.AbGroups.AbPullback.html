@@ -1,0 +1,372 @@
+<html>
+<head>
+<title>AbPullback.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for AbPullback.v</h1>
+
+<div class="code" title="File: AbPullback.v
+Line: 1
+Time: 0.035s">
+<div class="time" style="width: 87.5%"></div>
+<pre>From HoTT Require Import Basics Types.Universe.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 72.5%"></div>
+<pre>
+Require Import Truncations.Core HIT.epi Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Limits.Pullback Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 3
+Time: 0.04s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Export Algebra.Groups.GrpPullback.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 4
+Time: 0.021s">
+<div class="time" style="width: 52.5%"></div>
+<pre>
+Require Import AbelianGroup AbHom.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Pullbacks WildCat.EpiStable.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pullbacks of abelian groups *)
+
+</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AbPullback.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Variables are named to correspond with Limits.Pullback. *)
+ </pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A B C : AbGroup} (f : B $-&gt; A) (g : C $-&gt; A).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance ab_pullback_commutative
+    : Commutative (@group_sgop (grp_pullback f g)).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold Commutative.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    intros [b [c p]] [d [e q]].</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 19
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (commutativity _ _; commutativity _ _; _).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 22
+Time: 0.007s">
+<div class="time" style="width: 17.5%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 23
+Time: 0.004s">
+<div class="time" style="width: 10%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ab_pullback : AbGroup := Build_AbGroup (grp_pullback f g) _.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The corecursion principle is inherited from [Group]; use [grp_pullback_corec] and friends from Groups/GrpPullback.v. *)
+
+</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 5%"></div>
+<pre>End AbPullback.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance haspullbacks_abgroup : HasPullbacks AbGroup.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  rapply (haspullbacks_induced abgroup_group).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B C f g.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (ab_pullback f g).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isepistable_abgroup `{Univalence} : IsEpiStable AbGroup.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 40
+Time: 0.002s">
+<div class="time" style="width: 5%"></div>
+<pre>
+  srapply Build_IsEpiStable.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* By the above, [AbGroup] has pullbacks. *)
+  (* We have to show that the categorical epimorphisms are stable under pullback. *)
+ </pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intros A B C f g ef.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Z k1 k2.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Since surjections are epimorphisms in [Type], it's enough to show that the pulled back map is a surjection. *)
+ </pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 47
+Time: 0.028s">
+<div class="time" style="width: 70%"></div>
+<pre>rapply issurj_isepi_funext.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Since surjections are stable under pullback, it's enough to show that [f] is a surjection. *)
+ </pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply issurj_pullback_pr2.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* This follows from the fact the epimorphisms of abelian groups are surjections. *)
+ </pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>by apply ab_issurj_epi.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Combining [isepistable_abgroup] with [abenriched_abgroup] from AbHom.v gives: *)</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isabepistable_abgroup `{Univalence} : IsAbEpiStable AbGroup := {}.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

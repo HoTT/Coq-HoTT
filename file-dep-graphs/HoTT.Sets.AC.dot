@@ -1,0 +1,15 @@
+digraph HoTT_Sets_AC {
+  graph [ratio=0.5]
+  node [style=filled]
+AC_WO_AC [label="WO_AC", URL=<AC.html#WO_AC>, peripheries=3, fillcolor="#F070D1"] ;
+AC_is_global_axiom_propresizing [label="is_global_axiom_propresizing", URL=<AC.html#is_global_axiom_propresizing>, peripheries=3, fillcolor="#F070D1"] ;
+AC_AC [label="AC", URL=<AC.html#AC>, peripheries=3, fillcolor="#FACDEF"] ;
+AC_Choice_type [label="Choice_type", URL=<AC.html#Choice_type>, fillcolor="#F070D1"] ;
+AC_Choice [label="Choice", URL=<AC.html#Choice>, fillcolor="#FACDEF"] ;
+  AC_WO_AC -> AC_Choice_type [] ;
+  AC_is_global_axiom_propresizing -> AC_Choice [] ;
+  AC_AC -> AC_Choice_type [] ;
+  AC_AC -> AC_Choice [] ;
+subgraph cluster_AC { label="AC"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+AC_Choice; AC_Choice_type; AC_AC; AC_is_global_axiom_propresizing; AC_WO_AC; };
+} /* END */

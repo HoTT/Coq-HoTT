@@ -1,0 +1,5809 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables A B f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section AssumeFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * n-Path-split maps.\n\nA map is n-path-split if its induced maps on the first n iterated path-spaces are split surjections.  Thus every map is 0-path-split, the 1-path-split maps are the split surjections, and so on.  It turns out that for n>1, being n-path-split is the same as being an equivalence. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint PathSplit (n : nat) `(f : A -> B) : Type\n  := match n with\n       | 0 => Unit\n       | S n => (forall a, hfiber f a) *\n                forall (x y : A), PathSplit n (@ap _ _ f x y)\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isequiv_pathsplit (n : nat) `{f : A -> B}\n: PathSplit n.+2 f -> IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [g k].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "forall x y : A, PathSplit n.+1 (ap f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (h := fun x y p => (fst (k x y) p).1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "forall x y : A, PathSplit n.+1 (ap f)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "fun (x y : A) (p : f x = f y) => (fst (k x y) p).1",
+              "type": "forall x y : A, f x = f y -> x = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (hs := fun x y => (fun p => (fst (k x y) p).2)\n                         : (ap f) o (h x y) == idmap).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "forall x y : A, PathSplit n.+1 (ap f)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "fun (x y : A) (p : f x = f y) => (fst (k x y) p).1",
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": "fun x y : A =>\n(fun p : f x = f y => (fst (k x y) p).2) : ap f o h x y == idmap",
+              "type": "forall x y : A, ap f o h x y == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clearbody hs; clearbody h; clear k.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_contr_map; intros b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (hfiber f b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply contr_inhabited_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (hfiber f b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hfiber f b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2:exact (g b).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (hfiber f b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : B, hfiber f a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_allpath; intros [a p] [a' p'].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a; p) = (a'; p')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (path_sigma' _ (h a a' (p @ p'^)) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : A => f x = b) (h a a' (p @ p'^)) p = p'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport_paths_Fl _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap f (h a a' (p @ p'^)))^ @ p = p'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((inverse2 (hs a a' (p @ p'^)) @@ 1) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(p @ p'^)^ @ p = p'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((inv_pp p p'^ @@ 1) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((p'^)^ @ p^) @ p = p'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (concat_pp_p _ _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(p'^)^ @ (p^ @ p) = p'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((1 @@ concat_Vp _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(p'^)^ @ 1 = p'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : B, hfiber f a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x = f y -> x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hs"
+              ],
+              "body": null,
+              "type": "forall x y : A, ap f o h x y == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f a = b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f a' = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((inv_V p' @@ 1) @ concat_p1 _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance contr_pathsplit_isequiv\n           (n : nat) `(f : A -> B) `{IsEquiv _ _ f}\n: Contr (PathSplit n f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit n f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit n f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize dependent B; revert A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A B : Type) (f : A -> B), IsEquiv f -> Contr (PathSplit n f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple_induction n n IHn; intros A B f ?.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit 0 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit n.+1 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0), IsEquiv f0 -> Contr (PathSplit n f0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit 0 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit n.+1 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0), IsEquiv f0 -> Contr (PathSplit n f0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact contr_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_pathsplit (n : nat) `(f : A -> B)\n: IsHProp (PathSplit n.+2 f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (PathSplit n.+2 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (PathSplit n.+2 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_inhabited_contr; intros ps.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit n.+2 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ps"
+              ],
+              "body": null,
+              "type": "PathSplit n.+2 f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (isequiv_pathsplit n ps).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (PathSplit n.+2 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ps"
+              ],
+              "body": null,
+              "type": "PathSplit n.+2 f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "isequiv_pathsplit n ps",
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_pathsplit_isequiv (n : nat) `(f : A -> B)\n: PathSplit n.+2 f <~> IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f <~> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f <~> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_iff_hprop _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> PathSplit n.+2 f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_pathsplit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> PathSplit n.+2 f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ?; exact (center _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Path-splitness transfers across commutative squares of equivalences. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma equiv_functor_pathsplit (n : nat) {A B C D}\n      (f : A -> B) (g : C -> D) (h : A <~> C) (k : B <~> D)\n      (p : g o h == k o f)\n: PathSplit n f <~> PathSplit n g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n f <~> PathSplit n g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n f <~> PathSplit n g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n as [|n].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit 0 f <~> PathSplit 0 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+1 f <~> PathSplit n.+1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1:exact equiv_idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+1 f <~> PathSplit n.+1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n as [|n].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit 1 f <~> PathSplit 1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f <~> PathSplit n.+2 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit 1 f <~> PathSplit 1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall a : B, hfiber f a) * (A -> A -> Unit) <~>\n(forall a : D, hfiber g a) * (C -> C -> Unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ *E equiv_contr_contr).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall a : B, hfiber f a) <~> (forall a : D, hfiber g a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_functor_forall' k^-1 _); intros d.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hfiber f (k^-1%equiv d) <~> hfiber g d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold hfiber.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : A & f x = k^-1%equiv d} <~> {x : C & g x = d}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_functor_sigma' h _); intros a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f a = k^-1%equiv d <~> g (h a) = d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_concat_l (p a) d oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f a = k^-1%equiv d <~> k (f a) = d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; apply equiv_moveR_equiv_M.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSplit n.+2 f <~> PathSplit n.+2 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_pathsplit_isequiv n f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f <~> PathSplit n.+2 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((equiv_pathsplit_isequiv n g)^-1 oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f <~> IsEquiv g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_iff_hprop; intros e.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "IsEquiv g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (isequiv_commsq f g h k (fun a => (p a)^)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A <~> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B <~> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g o h == k o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "IsEquiv g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (isequiv_commsq' f g h k p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A map is oo-path-split if it is n-path-split for all n.  This is also equivalent to being an equivalence. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ooPathSplit `(f : A -> B) : Type\n  := forall n, PathSplit n f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isequiv_oopathsplit `{f : A -> B}\n: ooPathSplit f -> IsEquiv f\n  := fun ps => isequiv_pathsplit 0 (ps 2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]  Instance contr_oopathsplit_isequiv\n           `(f : A -> B) `{IsEquiv _ _ f}\n: Contr (ooPathSplit f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (ooPathSplit f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (ooPathSplit f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact contr_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]  Instance ishprop_oopathsplit `(f : A -> B)\n: IsHProp (ooPathSplit f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (ooPathSplit f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (ooPathSplit f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_inhabited_contr; intros ps.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (ooPathSplit f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ps"
+              ],
+              "body": null,
+              "type": "ooPathSplit f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (isequiv_oopathsplit ps).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (ooPathSplit f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ps"
+              ],
+              "body": null,
+              "type": "ooPathSplit f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "isequiv_oopathsplit ps",
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_oopathsplit_isequiv `(f : A -> B)\n: ooPathSplit f <~> IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooPathSplit f <~> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooPathSplit f <~> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_iff_hprop _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooPathSplit f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> ooPathSplit f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooPathSplit f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact isequiv_oopathsplit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> ooPathSplit f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ?; exact (center _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End AssumeFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

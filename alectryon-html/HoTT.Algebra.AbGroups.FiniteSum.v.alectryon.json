@@ -1,0 +1,2371 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core Spaces.Int.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Classes.interfaces.canonical_names (Commutative).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import AbelianGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_add_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Finite Sums *)\n\n(** Indexed finite sum of abelian group elements. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ab_sum {A : AbGroup} (n : nat) (f : forall k, (k < n)%nat -> A) : A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(forall k : nat, (k < n)%nat -> A) -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(forall k : nat, (k < n)%nat -> A) -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (f n _ + IHn _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall k : nat, (k < n)%nat -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(forall k : nat, (k < n)%nat -> A) -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros k Hk.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(forall k0 : nat, (k0 < n)%nat -> A) -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (f k _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ab_sum_const {A : AbGroup} (n : nat) (a : A)\n  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = a)\n  : ab_sum n f = ab_mul n a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n f = ab_mul n a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n f = ab_mul n a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn] in f, p |- *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum 0 f = ab_mul 0%nat a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < 0)%nat), f k Hk = a"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 f = ab_mul n.+1%nat a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum 0 f = ab_mul 0%nat a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < 0)%nat), f k Hk = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 f = ab_mul n.+1%nat a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V napply (ap@{Set _} _ (int_nat_succ n)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 f = grp_pow a n.+1%int",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs napply grp_pow_succ.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 f = a + grp_pow a n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f n (leq_refl n.+1) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k (leq_succ_r Hk)) =\na + grp_pow a n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k (leq_succ_r Hk)) =\ngrp_pow a n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (k : nat) (Hk : (k < n)%nat), f k (leq_succ_r Hk) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = a) ->\nab_sum n f0 = ab_mul n a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f k (leq_succ_r Hk) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k0 : nat, (k0 < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k0 : nat) (Hk0 : (k0 < n.+1)%nat), f k0 Hk0 = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 : forall k0 : nat, (k0 < n)%nat -> A,\n(forall (k0 : nat) (Hk0 : (k0 < n)%nat), f0 k0 Hk0 = a) ->\nab_sum n f0 = ab_mul n a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hk"
+              ],
+              "body": null,
+              "type": "(k < n)%nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If the function is zero in the range of a finite sum then the sum is zero. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ab_sum_zero {A : AbGroup} (n : nat)\n  (f : forall k, (k < n)%nat -> A) (p : forall k Hk, f k Hk = 0)\n  : ab_sum n f = 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n f = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n f = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs exact (ab_sum_const _ 0 f p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_mul n 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply grp_pow_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Finite sums distribute over addition. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ab_sum_plus {A : AbGroup} (n : nat) (f g : forall k, (k < n)%nat -> A)\n  : ab_sum n (fun k Hk => f k Hk + g k Hk)\n    = ab_sum n (fun k Hk => f k Hk) + ab_sum n (fun k Hk => g k Hk).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k Hk + g k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g k Hk)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k Hk + g k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g k Hk)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum 0 (fun (k : nat) (Hk : (k < 0)%nat) => f k Hk + g k Hk) =\nab_sum 0 (fun (k : nat) (Hk : (k < 0)%nat) => f k Hk) +\nab_sum 0 (fun (k : nat) (Hk : (k < 0)%nat) => g k Hk)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 (fun (k : nat) (Hk : (k < n.+1)%nat) => f k Hk + g k Hk) =\nab_sum n.+1 (fun (k : nat) (Hk : (k < n.+1)%nat) => f k Hk) +\nab_sum n.+1 (fun (k : nat) (Hk : (k < n.+1)%nat) => g k Hk)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk + g0 k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g0 k Hk)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: by rewrite grp_unit_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 (fun (k : nat) (Hk : (k < n.+1)%nat) => f k Hk + g k Hk) =\nab_sum n.+1 (fun (k : nat) (Hk : (k < n.+1)%nat) => f k Hk) +\nab_sum n.+1 (fun (k : nat) (Hk : (k < n.+1)%nat) => g k Hk)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk + g0 k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g0 k Hk)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f n (leq_refl n.+1) + g n (leq_refl n.+1) +\nab_sum n\n  (fun (k : nat) (Hk : (k < n)%nat) =>\n   f k (leq_succ_r Hk) + g k (leq_succ_r Hk)) =\nf n (leq_refl n.+1) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k (leq_succ_r Hk)) +\n(g n (leq_refl n.+1) +\n ab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g k (leq_succ_r Hk)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk + g0 k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g0 k Hk)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- !grp_assoc; f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g n (leq_refl n.+1) +\nab_sum n\n  (fun (k : nat) (Hk : (k < n)%nat) =>\n   f k (leq_succ_r Hk) + g k (leq_succ_r Hk)) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f k (leq_succ_r Hk)) +\n(g n (leq_refl n.+1) +\n ab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g k (leq_succ_r Hk)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk + g0 k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g0 k Hk)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite IHn, abgroup_commutative, <- grp_assoc; f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g k (leq_succ_r Hk)) +\ng n (leq_refl n.+1) =\ng n (leq_refl n.+1) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g k (leq_succ_r Hk))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk + g0 k Hk) =\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => f0 k Hk) +\nab_sum n (fun (k : nat) (Hk : (k < n)%nat) => g0 k Hk)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rewrite abgroup_commutative.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Double finite sums commute. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ab_sum_sum {A : AbGroup} (m n : nat)\n  (f : forall i j, (i < m)%nat -> (j < n)%nat -> A)\n  : ab_sum m (fun i Hi => ab_sum n (fun j Hj => f i j Hi Hj))\n   = ab_sum n (fun j Hj => ab_sum m (fun i Hi => f i j Hi Hj)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum m\n  (fun (i : nat) (Hi : (i < m)%nat) =>\n   ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f i j Hi Hj)) =\nab_sum n\n  (fun (j : nat) (Hj : (j < n)%nat) =>\n   ab_sum m (fun (i : nat) (Hi : (i < m)%nat) => f i j Hi Hj))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m",
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall i j : nat, (i < m)%nat -> (j < n)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum m\n  (fun (i : nat) (Hi : (i < m)%nat) =>\n   ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f i j Hi Hj)) =\nab_sum n\n  (fun (j : nat) (Hj : (j < n)%nat) =>\n   ab_sum m (fun (i : nat) (Hi : (i < m)%nat) => f i j Hi Hj))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m",
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall i j : nat, (i < m)%nat -> (j < n)%nat -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn] in m, f |- *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum m\n  (fun (i : nat) (Hi : (i < m)%nat) =>\n   ab_sum 0 (fun (j : nat) (Hj : (j < 0)%nat) => f i j Hi Hj)) =\nab_sum 0\n  (fun (j : nat) (Hj : (j < 0)%nat) =>\n   ab_sum m (fun (i : nat) (Hi : (i < m)%nat) => f i j Hi Hj))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall i j : nat, (i < m)%nat -> (j < 0)%nat -> A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum m\n  (fun (i : nat) (Hi : (i < m)%nat) =>\n   ab_sum n.+1 (fun (j : nat) (Hj : (j < n.+1)%nat) => f i j Hi Hj)) =\nab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) =>\n   ab_sum m (fun (i : nat) (Hi : (i < m)%nat) => f i j Hi Hj))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m",
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall i j : nat, (i < m)%nat -> (j < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (m0 : nat) (f0 : forall i j : nat, (i < m0)%nat -> (j < n)%nat -> A),\nab_sum m0\n  (fun (i : nat) (Hi : (i < m0)%nat) =>\n   ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f0 i j Hi Hj)) =\nab_sum n\n  (fun (j : nat) (Hj : (j < n)%nat) =>\n   ab_sum m0 (fun (i : nat) (Hi : (i < m0)%nat) => f0 i j Hi Hj))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: by napply ab_sum_zero.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum m\n  (fun (i : nat) (Hi : (i < m)%nat) =>\n   ab_sum n.+1 (fun (j : nat) (Hj : (j < n.+1)%nat) => f i j Hi Hj)) =\nab_sum n.+1\n  (fun (j : nat) (Hj : (j < n.+1)%nat) =>\n   ab_sum m (fun (i : nat) (Hi : (i < m)%nat) => f i j Hi Hj))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m",
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall i j : nat, (i < m)%nat -> (j < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (m0 : nat) (f0 : forall i j : nat, (i < m0)%nat -> (j < n)%nat -> A),\nab_sum m0\n  (fun (i : nat) (Hi : (i < m0)%nat) =>\n   ab_sum n (fun (j : nat) (Hj : (j < n)%nat) => f0 i j Hi Hj)) =\nab_sum n\n  (fun (j : nat) (Hj : (j < n)%nat) =>\n   ab_sum m0 (fun (i : nat) (Hi : (i < m0)%nat) => f0 i j Hi Hj))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply ab_sum_plus; cbn; f_ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Finite sums are equal if the functions are equal in the range. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_ab_sum {A : AbGroup} {n : nat} {f g : forall k, (k < n)%nat -> A}\n  (p : forall k Hk, f k Hk = g k Hk)\n  : ab_sum n f = ab_sum n g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n f = ab_sum n g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = g k Hk"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n f = ab_sum n g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n)%nat), f k Hk = g k Hk"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum 0 f = ab_sum 0 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < 0)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < 0)%nat), f k Hk = g k Hk"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 f = ab_sum n.+1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = g k Hk"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = g0 k Hk) ->\nab_sum n f0 = ab_sum n g0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_sum n.+1 f = ab_sum n.+1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = g k Hk"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = g0 k Hk) ->\nab_sum n f0 = ab_sum n g0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat_rect (fun n0 : nat => (forall k : nat, (k < n0)%nat -> A) -> A)\n  (fun _ : forall k : nat, (k < 0)%nat -> A => 0)\n  (fun (n0 : nat) (IHn0 : (forall k : nat, (k < n0)%nat -> A) -> A)\n     (f0 : forall k : nat, (k < n0.+1)%nat -> A) =>\n   f0 n0 (leq_refl n0.+1) +\n   IHn0 (fun (k : nat) (Hk : (k < n0)%nat) => f0 k (leq_succ_r Hk)))\n  n (fun (k : nat) (Hk : (k < n)%nat) => f k (leq_succ_r Hk)) =\nnat_rect (fun n0 : nat => (forall k : nat, (k < n0)%nat -> A) -> A)\n  (fun _ : forall k : nat, (k < 0)%nat -> A => 0)\n  (fun (n0 : nat) (IHn0 : (forall k : nat, (k < n0)%nat -> A) -> A)\n     (f0 : forall k : nat, (k < n0.+1)%nat -> A) =>\n   f0 n0 (leq_refl n0.+1) +\n   IHn0 (fun (k : nat) (Hk : (k < n0)%nat) => f0 k (leq_succ_r Hk)))\n  n (fun (k : nat) (Hk : (k < n)%nat) => g k (leq_succ_r Hk))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall k : nat, (k < n.+1)%nat -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall (k : nat) (Hk : (k < n.+1)%nat), f k Hk = g k Hk"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall f0 g0 : forall k : nat, (k < n)%nat -> A,\n(forall (k : nat) (Hk : (k < n)%nat), f0 k Hk = g0 k Hk) ->\nab_sum n f0 = ab_sum n g0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply IHn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

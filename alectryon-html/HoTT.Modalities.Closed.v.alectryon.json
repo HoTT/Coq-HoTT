@@ -1,0 +1,4127 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Extensions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modality Accessible Nullification Lex Topological.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Colimits.Pushout Homotopy.Join.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(** * Closed modalities *)\n\n(** We begin by characterizing the modal types. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ClosedModalTypes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (U : HProp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_inO_closed (A : Type)\n  : (U -> Contr A) <-> IsEquiv (fun a:A => push (inr a) : Join U A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(U -> Contr A) <-> IsEquiv (fun a : A => push (inr a) : Join U A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(U -> Contr A) <-> IsEquiv (fun a : A => push (inr a) : Join U A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(U -> Contr A) -> IsEquiv (fun a : A => push (inr a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun a : A => push (inr a)) -> U -> Contr A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(U -> Contr A) -> IsEquiv (fun a : A => push (inr a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros uac.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun a : A => push (inr a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (isequiv_adjointify _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Join U A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun a : A => push (inr a)) o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o (fun a : A => push (inr a)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Join U A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Pushout_rec A _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "U -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : U * A, ?pushb (fst a) = ?pushc (snd a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "U -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros u; pose (uac u); exact (center A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : U * A,\n(fun u : U => let i := uac u in center A) (fst a) = idmap (snd a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [u a].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(let i := uac (fst (u, a)) in center A) = snd (u, a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "center A = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (uac u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "center A = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "uac u",
+              "type": "Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun a : A => push (inr a))\no Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n    (fun a0 : U * A =>\n     (fun (u : U) (a : A) =>\n      (let i := uac u in contr a)\n      :\n      (let i := uac (fst (u, a)) in center A) = snd (u, a)) \n       (fst a0) (snd a0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "push\n  (inr\n     (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n        (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) z)) =\nz",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pattern z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n         (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n j) z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Pushout_ind _ _ _ _ z).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : U,\n(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n         (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n j) (pushl b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall c : A,\n(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n         (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n j) (pushr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : U * A,\ntransport\n  (fun j : Join U A =>\n   push\n     (inr\n        (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n           (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n   j)\n  (pglue a) (?pushb (fst a)) =\n?pushc (snd a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : U,\n(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n         (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n j) (pushl b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u0 : U => let i := uac u0 in center A) idmap\n         (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n j) (pushl u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (contr_inhabited_hprop U u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u0 : U => let i0 := uac u0 in center A) idmap\n         (fun a0 : U * A => let i0 := uac (fst a0) in contr (snd a0)) j)) =\n j) (pushl u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "contr_inhabited_hprop U u",
+              "type": "Contr U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall c : A,\n(fun j : Join U A =>\n push\n   (inr\n      (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n         (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n j) (pushr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : U * A,\ntransport\n  (fun j : Join U A =>\n   push\n     (inr\n        (Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n           (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) j)) =\n   j)\n  (pglue a)\n  ((fun u : U =>\n    let i := contr_inhabited_hprop U u in\n    path_contr\n      (push\n         (inr\n            (Pushout_rec A (fun u0 : U => let i0 := uac u0 in center A) idmap\n               (fun a0 : U * A => let i0 := uac (fst a0) in contr (snd a0))\n               (pushl u))))\n      (pushl u))\n     (fst a)) =\n(fun a0 : A => 1) (snd a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [u a]; pose (contr_inhabited_hprop U u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun j : Join U A =>\n   push\n     (inr\n        (Pushout_rec A (fun u0 : U => let i0 := uac u0 in center A) idmap\n           (fun a0 : U * A => let i0 := uac (fst a0) in contr (snd a0)) j)) =\n   j)\n  (pglue (u, a))\n  (let i0 := contr_inhabited_hprop U (fst (u, a)) in\n   path_contr\n     (push\n        (inr\n           (Pushout_rec A (fun u0 : U => let i1 := uac u0 in center A) idmap\n              (fun a0 : U * A => let i1 := uac (fst a0) in contr (snd a0))\n              (pushl (fst (u, a))))))\n     (pushl (fst (u, a)))) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "Join U A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "contr_inhabited_hprop U u",
+              "type": "Contr U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n  (fun a0 : U * A =>\n   (fun (u : U) (a : A) =>\n    (let i := uac u in contr a)\n    :\n    (let i := uac (fst (u, a)) in center A) = snd (u, a)) \n     (fst a0) (snd a0))\no (fun a : A => push (inr a)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pushout_rec A (fun u : U => let i := uac u in center A) idmap\n  (fun a0 : U * A => let i := uac (fst a0) in contr (snd a0)) \n  (push (inr a)) =\na",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uac"
+              ],
+              "body": null,
+              "type": "U -> Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun a : A => push (inr a)) -> U -> Contr A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ? u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEquiv (fun a : A => push (inr a))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (contr_equiv (Join U A) (fun a:A => push (inr a))^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (Join U A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEquiv (fun a : A => push (inr a))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (contr_inhabited_hprop U u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (Join U A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEquiv (fun a : A => push (inr a))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "contr_inhabited_hprop U u",
+              "type": "Contr U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ClosedModalTypes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Exercise 7.13(ii): Closed modalities *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Cl (U : HProp) : Modality.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Modality",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Modality",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Modality.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Funext -> forall T : Type, IsHProp (?In' T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T U0 : Type, ?In' T -> forall f : T -> U0, IsEquiv f -> ?In' U0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type, ?In' (?O_reflector' T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type, T -> ?O_reflector' T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : ?O_reflector' A -> Type),\n(forall oa : ?O_reflector' A, ?In' (B oa)) ->\n(forall a : A, B (?to' A a)) -> forall z : ?O_reflector' A, B z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : ?O_reflector' A -> Type)\n(B_inO : forall oa : ?O_reflector' A, ?In' (B oa))\n(f : forall a : A, B (?to' A a)) (a : A),\n?O_ind' A B B_inO f (?to' A a) = f a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A : Type, ?In' A -> forall z z' : A, ?In' (z = z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X; exact (U -> Contr X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Funext -> forall T : Type, IsHProp ((fun X : Type => U -> Contr X) T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T U0 : Type,\n(fun X : Type => U -> Contr X) T ->\nforall f : T -> U0, IsEquiv f -> (fun X : Type => U -> Contr X) U0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros T B T_inO f feq.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X : Type => U -> Contr X) B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T_inO"
+              ],
+              "body": null,
+              "type": "(fun X : Type => U -> Contr X) T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "T -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "feq"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; intros u; pose (T_inO u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T_inO"
+              ],
+              "body": null,
+              "type": "(fun X : Type => U -> Contr X) T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "T -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "feq"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "T_inO u",
+              "type": "Contr T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (contr_equiv _ f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ; exact (Join U X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type,\n(fun X : Type => U -> Contr X) ((fun H : Type => Join U H) T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros T u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (Join U T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (contr_inhabited_hprop _ u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (Join U T)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "contr_inhabited_hprop U u",
+              "type": "Contr U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type, T -> (fun H : Type => Join U H) T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros T x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun H : Type => Join U H) T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (push (inr x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : (fun H : Type => Join U H) A -> Type),\n(forall oa : (fun H : Type => Join U H) A,\n (fun X : Type => U -> Contr X) (B oa)) ->\n(forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)) ->\nforall z : (fun H : Type => Join U H) A, B z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B B_inO f z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "B z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (Pushout_ind B _ _ _ z).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : U, B (pushl b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall c : A, B (pushr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : U * A, transport B (pglue a) (?pushb (fst a)) = ?pushc (snd a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : U, B (pushl b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros u; apply center, B_inO, u.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall c : A, B (pushr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a; apply f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : U * A,\ntransport B (pglue a) ((fun u : U => center (B (pushl u))) (fst a)) =\n(fun a0 : A => f a0) (snd a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [u a].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport B (pglue (u, a)) (center (B (pushl (fst (u, a))))) = f (snd (u, a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a0 : A, B ((fun (T : Type) (x : T) => push (inr x)) A a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (B_inO (push (inr a)) u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport B (pglue (u, a)) (center (B (pushl (fst (u, a))))) = f (snd (u, a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : (fun H : Type => Join U H) A,\n(fun X : Type => U -> Contr X) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall a0 : A, B ((fun (T : Type) (x : T) => push (inr x)) A a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "(fun H : Type => Join U H) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "B_inO (push (inr a)) u",
+              "type": "Contr (B (push (inr a)))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : (fun H : Type => Join U H) A -> Type)\n(B_inO : forall oa : (fun H : Type => Join U H) A,\n         (fun X : Type => U -> Contr X) (B oa))\n(f : forall a : A, B ((fun (T : Type) (x : T) => push (inr x)) A a)) \n(a : A),\n(fun (A0 : Type) (B0 : (fun H : Type => Join U H) A0 -> Type)\n   (B_inO0 : forall oa : (fun H : Type => Join U H) A0,\n             (fun X : Type => U -> Contr X) (B0 oa))\n   (f0 : forall a0 : A0, B0 ((fun (T : Type) (x : T) => push (inr x)) A0 a0))\n   (z : (fun H : Type => Join U H) A0) =>\n Pushout_ind B0 (fun u : U => center (B0 (pushl u))) \n   (fun a0 : A0 => f0 a0)\n   (fun a0 : U * A0 =>\n    (fun (u : U) (a1 : A0) =>\n     let i := B_inO0 (push (inr a1)) u in\n     path_contr\n       (transport B0 (pglue (u, a1)) (center (B0 (pushl (fst (u, a1))))))\n       (f0 (snd (u, a1))))\n      (fst a0) (snd a0))\n   z)\n  A B B_inO f ((fun (T : Type) (x : T) => push (inr x)) A a) =\nf a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A : Type,\n(fun X : Type => U -> Contr X) A ->\nforall z z' : A, (fun X : Type => U -> Contr X) (z = z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A A_inO z z' u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (z = z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A_inO"
+              ],
+              "body": null,
+              "type": "(fun X : Type => U -> Contr X) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z",
+                "z'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (A_inO u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (z = z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A_inO"
+              ],
+              "body": null,
+              "type": "(fun X : Type => U -> Contr X) A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z",
+                "z'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "A_inO u",
+              "type": "Contr A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply contr_paths_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The closed modality is accessible. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance accmodality_closed (U : HProp)\n  : IsAccModality (Cl U).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAccModality (Cl U)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAccModality (Cl U)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unshelve econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullGenerators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, In (Cl U) X <-> IsNull_Internal.IsNull ?acc_ngen X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullGenerators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?ngen_indices -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun _:U => Empty).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type,\nIn (Cl U) X <->\nIsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X; split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In (Cl U) X ->\nIsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X ->\nIn (Cl U) X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In (Cl U) X ->\nIsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X_inO u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong\n  (null_to_local_generators\n     {| ngen_indices := U; ngen_type := fun _ : U => Empty |} u)\n  (fun\n     _ : lgen_codomain\n           (null_to_local_generators\n              {| ngen_indices := U; ngen_type := fun _ : U => Empty |})\n           u =>\n   X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X_inO"
+              ],
+              "body": null,
+              "type": "In (Cl U) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "lgen_indices\n  (null_to_local_generators\n     {| ngen_indices := U; ngen_type := fun _ : U => Empty |})"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (X_inO u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong\n  (null_to_local_generators\n     {| ngen_indices := U; ngen_type := fun _ : U => Empty |} u)\n  (fun\n     _ : lgen_codomain\n           (null_to_local_generators\n              {| ngen_indices := U; ngen_type := fun _ : U => Empty |})\n           u =>\n   X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X_inO"
+              ],
+              "body": null,
+              "type": "In (Cl U) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "lgen_indices\n  (null_to_local_generators\n     {| ngen_indices := U; ngen_type := fun _ : U => Empty |})"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "X_inO u",
+              "type": "Contr X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_contr; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X ->\nIn (Cl U) X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ext u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "IsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Build_Contr _ ((fst (ext u 1%nat) Empty_rec).1 tt)); intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fst (ext u 1) Empty_rec).1 tt = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "IsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold const in ext.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fst (ext u 1) Empty_rec).1 tt = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "IsNull_Internal.IsNull\n  {| ngen_indices := U; ngen_type := fun _ : U => Empty |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "U"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((fst (snd (ext u 2) (fst (ext u 1%nat) Empty_rec).1\n                       (fun _ => x)) (Empty_ind _)).1 tt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In fact, it is topological, and therefore (assuming univalence) lex.  As for topological modalities generally, we don't need to declare these as global instances, but we prove them here as local instances for exposition. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance topological_closed (U : HProp)\n  : Topological (Cl U)\n  := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lex_closed `{Univalence} (U : HProp)\n  : Lex (Cl U).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Lex (Cl U)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Lex (Cl U)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply lex_topological.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Thus, it also has the following alternative version. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Cl' (U : HProp) : Modality\n  := Nul (Build_NullGenerators U (fun _ => Empty)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

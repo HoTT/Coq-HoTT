@@ -1,0 +1,2478 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types TruncType.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types TruncType.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Universes.Smallness.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Spaces.Card Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Definition of Power types *)\n\n(* The definition is only used in Hartogs.v to allow defining a coercion, and one place below.  Everywhere else we prefer to write out the definition for clarity. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition power_type (A : Type) : Type\n  := A -> HProp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Iterated powers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma Injection_power {PR : PropResizing} X\n  : IsHSet X -> Injection X (X -> HProp).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet X -> Injection X (X -> HProp)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet X -> Injection X (X -> HProp)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros HX.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (X -> HProp)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (f (x : X) := fun y => Build_HProp (smalltype (x = y))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (X -> HProp)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x y : X => Build_HProp (smalltype (x = y))",
+              "type": "X -> X -> HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInjective f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x y : X => Build_HProp (smalltype (x = y))",
+              "type": "X -> X -> HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x x' H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = x'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x0 y : X => Build_HProp (smalltype (x0 = y))",
+              "type": "X -> X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f x = f x'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply equiv_smalltype.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smalltype (x = x')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x0 y : X => Build_HProp (smalltype (x0 = y))",
+              "type": "X -> X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f x = f x'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (f x x').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f x x'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x0 y : X => Build_HProp (smalltype (x0 = y))",
+              "type": "X -> X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f x = f x'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f x' x'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x0 y : X => Build_HProp (smalltype (x0 = y))",
+              "type": "X -> X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f x = f x'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smalltype (x' = x')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x0 y : X => Build_HProp (smalltype (x0 = y))",
+              "type": "X -> X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f x = f x'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_smalltype.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x' = x'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "IsHSet X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun x0 y : X => Build_HProp (smalltype (x0 = y))",
+              "type": "X -> X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f x = f x'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition power_iterated X n := nat_iter n power_type X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition power_iterated_shift X n\n  : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)\n  := (nat_iter_succ_r _ _ _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hset_power {UA : Univalence} (X : HSet)\n  : IsHSet (X -> HProp).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (X -> HProp)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (X -> HProp)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply istrunc_S.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_mere_relation (X -> HProp) paths",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros p q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (p = q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_allpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : p = q, x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H = H'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H",
+                "H'"
+              ],
+              "body": null,
+              "type": "p = q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (equiv_path_arrow p q) as [f [g Hfg Hgf _]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H = H'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H",
+                "H'"
+              ],
+              "body": null,
+              "type": "p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "p == q -> p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "p = q -> p == q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hfg"
+              ],
+              "body": null,
+              "type": "(fun x : p = q => f (g x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hgf"
+              ],
+              "body": null,
+              "type": "(fun x : p == q => g (f x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (Hfg H), <- (Hfg H').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (g H) = f (g H')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H",
+                "H'"
+              ],
+              "body": null,
+              "type": "p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "p == q -> p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "p = q -> p == q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hfg"
+              ],
+              "body": null,
+              "type": "(fun x : p = q => f (g x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hgf"
+              ],
+              "body": null,
+              "type": "(fun x : p == q => g (f x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g H = g H'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H",
+                "H'"
+              ],
+              "body": null,
+              "type": "p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "p == q -> p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "p = q -> p == q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hfg"
+              ],
+              "body": null,
+              "type": "(fun x : p = q => f (g x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hgf"
+              ],
+              "body": null,
+              "type": "(fun x : p == q => g (f x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g H == g H'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H",
+                "H'"
+              ],
+              "body": null,
+              "type": "p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "p == q -> p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "p = q -> p == q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hfg"
+              ],
+              "body": null,
+              "type": "(fun x : p = q => f (g x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hgf"
+              ],
+              "body": null,
+              "type": "(fun x : p == q => g (f x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g H x = g H' x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "X -> HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H",
+                "H'"
+              ],
+              "body": null,
+              "type": "p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "p == q -> p = q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "p = q -> p == q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hfg"
+              ],
+              "body": null,
+              "type": "(fun x0 : p = q => f (g x0)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hgf"
+              ],
+              "body": null,
+              "type": "(fun x0 : p == q => g (f x0)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hset_power_iterated {UA : Univalence} (X : HSet) n\n  : IsHSet (power_iterated X n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (nat_iter_invariant n power_type (fun A => IsHSet A)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Type, IsHSet x -> IsHSet (power_type x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Type, IsHSet x -> IsHSet (power_type x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros Y HS.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (power_type Y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HS"
+              ],
+              "body": null,
+              "type": "IsHSet Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply hset_power.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma Injection_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n\n  : Injection X (power_iterated X n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X n.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Injection X (power_iterated X n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X 0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X n.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Injection X (power_iterated X n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply Injection_trans; try exact IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection (power_iterated X n) (power_iterated X n.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Injection X (power_iterated X n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Injection_power.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "Injection X (power_iterated X n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma infinite_inject X Y\n  : infinite X -> Injection X Y -> infinite Y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "infinite X -> Injection X Y -> infinite Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "infinite X -> Injection X Y -> infinite Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Injection_trans.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma infinite_power_iterated {UA : Univalence} {PR : PropResizing} (X : HSet) n\n  : infinite X -> infinite (power_iterated X n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "infinite X -> infinite (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "infinite X -> infinite (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "infinite (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "infinite X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply infinite_inject; try apply H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Injection X (power_iterated X n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "UA"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "PR"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "infinite X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Injection_power_iterated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

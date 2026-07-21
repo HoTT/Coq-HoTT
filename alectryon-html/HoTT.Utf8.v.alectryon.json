@@ -1,0 +1,410 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Basics.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Basics.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Utf8Minimal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modalities.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Circle Spaces.TwoSphere HoTT.Truncations Homotopy.Suspension.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Some Unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation Type\u2080 := Type0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation pr\u2081 := pr1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation pr\u2082 := pr2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope fibration_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*Notation \"f \u2192 g\" := (f -> g)%equiv : equiv_scope.*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2081\" := (x.1) : fibration_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2082\" := (x.2) : fibration_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"g \u2218 f\" := (g o f)%function : function_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Notation \"g \u2218\u1d31 f\" := (g oE f)%equiv : equiv_scope. *)\n(* Notation \"f *\u1d31 g\" := (f *E g)%equiv : equiv_scope. *)\n(* Notation \"f \u00d7\u1d31 g\" := (f *E g)%equiv : equiv_scope. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"A \u00d7 B\" := (A * B)%type : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"f +\u1d31 g\" := (f +E g)%equiv : equiv_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We copy the HoTT-Agda library with regard to path concatenation. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"p \u2022 q\" := (p @ q)%path : path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"p '\u207b\u00b9'\" := (p^)%path : path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"p \u2022' q\" := (p @ q)%path : long_path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Add error messages so people aren't intensely confused by using an almost identical character. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"\u2219\" := ltac:(fail \"You used '\u2219' (BULLET OPERATOR, #x2219) when you probably meant to use '\u2022' (BULLET, #x2022)\") (only parsing) : path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*Notation \"p # x\" := (transport _ p x) : path_scope.*)\n(*Notation \"f == g\" := (pointwise_paths f g) : type_scope.*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"A \u2243 B\" := (A <~> B) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"f '\u207b\u00b9'\" := (f^-1)%function : function_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"f '\u207b\u00b9'\" := (f^-1)%equiv : equiv_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u00ac x\" := (~x) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2260 y\" := (x <> y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*Notation \"p @@ q\" := (concat2 p q)%path  : path_scope.*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"m \u2264 n\" := (m <= n)%trunc : trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*Infix \"||\" := orb : bool_scope.*)\n(*Infix \"&&\" := andb : bool_scope.*)\n(*Notation \"p ..1\" := (pr1_path p) : fibration_scope.*)\n(*Notation \"p ..2\" := (pr2_path p) : fibration_scope.*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"'S\u00b9'\" := Circle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"'S\u00b2'\" := TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2225 A \u2225\u208b\u2082\" := (Trunc (-2) A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2758 a \u2758\u208b\u2082\" := (@tr (-2) _ a) : trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2225 A \u2225\" := (Trunc (-1) A) (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2225 A \u2225\u208b\u2081\" := (Trunc (-1) A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2758 a \u2758\u208b\u2081\" := (@tr (-1) _ a) : trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2228 y\" := (hor x y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Notation \"x \u2294 y\" := (sum x y) : type_scope. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2225 A \u2225\u2080\" := (Trunc 0 A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2758 a \u2758\u2080\" := (@tr 0 _ a) : trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2225 A \u2225\u2081\" := (Trunc 1 A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2758 a \u2758\u2081\" := (@tr 1 _ a) : trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2225 A \u2225\u2082\" := (Trunc 2 A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2758 a \u2758\u2082\" := (@tr 2 _ a) : trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u221e\" := purely.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \u03a3 := Susp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

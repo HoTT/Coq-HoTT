@@ -1,0 +1,2176 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functoriality of the construction of adjunctions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Dual NaturalTransformation.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Functorial.Parts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Some tactics to handle all the proofs.  The tactics deal with\n      the \"obvious\" commutativity requirements by writing back and\n      forth with associativity and respectfulness of composition,\n      trying to find applications of the adjunction laws. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac try_various_ways tac :=\n    progress repeat first [ progress tac\n                          | rewrite <- ?Functor.Core.composition_of;\n                            progress try_associativity_quick tac\n                          | rewrite -> ?Functor.Core.composition_of;\n                            progress try_associativity_quick tac ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** This is suboptimal, because we keep rewriting back and forth\n      with associativity and [composition_of].  But it only takes 0.74\n      seconds total, so it's probably not worth optimizing. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac handle_laws' :=\n    idtac;\n    match goal with\n      | _ => reflexivity\n      | _ => progress rewrite ?identity_of, ?Category.Core.left_identity, ?Category.Core.right_identity\n      | _ => try_various_ways ltac:(f_ap)\n      | [ |- context[components_of ?T ?x] ]\n        => try_various_ways ltac:(simpl rewrite <- (commutes T))\n      | [ |- context[unit ?A] ]\n        => try_various_ways ltac:(rewrite (unit_counit_equation_1 A))\n      | [ |- context[unit ?A] ]\n        => try_various_ways ltac:(rewrite (unit_counit_equation_2 A))\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac t :=\n    apply path_natural_transformation; intro;\n    cbn;\n    repeat handle_laws'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section left.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Arguments unit : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Arguments counit : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_identity_of\n      : @left_morphism_of C C 1 D D 1 G F A G F A 1\n        = ((left_identity_natural_transformation_2 _)\n             o (right_identity_natural_transformation_1 _))%natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of A A 1 =\n(left_identity_natural_transformation_2 F\n o right_identity_natural_transformation_1 F)%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of A A 1 =\n(left_identity_natural_transformation_2 F\n o right_identity_natural_transformation_1 F)%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_identity_of_nondep\n      : @left_morphism_of_nondep C D G F A G F A 1 = 1%natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of_nondep A A 1 = 1%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of_nondep A A 1 = 1%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition_of_dep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C C' C'' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF : Functor C C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF' : Functor C' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables D D' D'' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable DF : Functor D D'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable DF' : Functor D' D''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G' : Functor D' C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F' : Functor C' D'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A' : F' -| G'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G'' : Functor D'' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F'' : Functor C'' D''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A'' : F'' -| G''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation (CF o G) (G' o DF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : NaturalTransformation (CF' o G') (G'' o DF').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_composition_of\n      : (@left_morphism_of\n           _ _ _ _ _ _ _ _\n           A _ _ A''\n           ((associator_1 _ _ _)\n              o (T' oR DF)\n              o (associator_2 _ _ _)\n              o (CF' oL T)\n              o (associator_1 _ _ _)))\n        = (associator_2 _ _ _)\n            o (DF' oL left_morphism_of A A' T)\n            o (associator_1 _ _ _)\n            o (left_morphism_of A' A'' T' oR CF)\n            o (associator_2 _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of A A''\n  (associator_1 G'' DF' DF o (T' oR DF) o associator_2 CF' G' DF o (CF' oL T)\n   o associator_1 CF' CF G) =\nassociator_2 DF' DF F o (DF' oL left_morphism_of A A' T)\no associator_1 DF' F' CF o (left_morphism_of A' A'' T' oR CF)\no associator_2 F'' CF' CF",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DF"
+              ],
+              "body": null,
+              "type": "Functor D D'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DF'"
+              ],
+              "body": null,
+              "type": "Functor D' D''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G'"
+              ],
+              "body": null,
+              "type": "Functor D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "Functor C' D'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "F' -| G'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G''"
+              ],
+              "body": null,
+              "type": "Functor D'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F''"
+              ],
+              "body": null,
+              "type": "Functor C'' D''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "F'' -| G''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o G) (G' o DF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o G') (G'' o DF')"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of A A''\n  (associator_1 G'' DF' DF o (T' oR DF) o associator_2 CF' G' DF o (CF' oL T)\n   o associator_1 CF' CF G) =\nassociator_2 DF' DF F o (DF' oL left_morphism_of A A' T)\no associator_1 DF' F' CF o (left_morphism_of A' A'' T' oR CF)\no associator_2 F'' CF' CF",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DF"
+              ],
+              "body": null,
+              "type": "Functor D D'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DF'"
+              ],
+              "body": null,
+              "type": "Functor D' D''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G'"
+              ],
+              "body": null,
+              "type": "Functor D' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "Functor C' D'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "F' -| G'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G''"
+              ],
+              "body": null,
+              "type": "Functor D'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F''"
+              ],
+              "body": null,
+              "type": "Functor C'' D''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "F'' -| G''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o G) (G' o DF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o G') (G'' o DF')"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition_of_dep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G' : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F' : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A' : F' -| G'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G'' : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F'' : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A'' : F'' -| G''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation G G'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : NaturalTransformation G' G''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_composition_of_nondep\n      : (@left_morphism_of_nondep _ _ _ _ A _ _ A'' (T' o T))\n        = ((left_morphism_of_nondep A A' T)\n             o (left_morphism_of_nondep A' A'' T')).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of_nondep A A'' (T' o T) =\nleft_morphism_of_nondep A A' T o left_morphism_of_nondep A' A'' T'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G'"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "F' -| G'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G''"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F''"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "F'' -| G''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "NaturalTransformation G G'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation G' G''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "left_morphism_of_nondep A A'' (T' o T) =\nleft_morphism_of_nondep A A' T o left_morphism_of_nondep A' A'' T'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "F -| G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G'"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "F' -| G'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G''"
+              ],
+              "body": null,
+              "type": "Functor D C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F''"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "F'' -| G''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "NaturalTransformation G G'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation G' G''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End left.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section right.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_identity_of\n      : @right_morphism_of C C 1 D D 1 F G A F G A 1\n        = ((right_identity_natural_transformation_2 _)\n             o (left_identity_natural_transformation_1 _))%natural_transformation\n        := ap (@NaturalTransformation.Dual.opposite _ _ _ _)\n              (@left_identity_of _ _ _ F^op G^op A^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_identity_of_nondep\n      : @right_morphism_of_nondep C D F G A F G A 1 = 1%natural_transformation\n        := ap (@NaturalTransformation.Dual.opposite _ _ _ _)\n              (@left_identity_of_nondep _ _ _ F^op G^op A^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition_of_dep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C C' C'' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF : Functor C C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF' : Functor C' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables D D' D'' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable DF : Functor D D'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable DF' : Functor D' D''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F' : Functor C' D'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G' : Functor D' C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A' : F' -| G'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F'' : Functor C'' D''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G'' : Functor D'' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A'' : F'' -| G''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation (F' o CF) (DF o F).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : NaturalTransformation (F'' o CF') (DF' o F').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      (** This is slow, at about 3.8 s.  It also requires the opposite\n          association to unify. *)\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_composition_of\n      : right_morphism_of\n          A A''\n          ((associator_2 DF' DF F)\n             o ((DF' oL T)\n                  o ((associator_1 DF' F' CF)\n                       o ((T' oR CF)\n                            o (associator_2 F'' CF' CF)))))\n        = (associator_1 G'' DF' DF)\n            o ((right_morphism_of A' A'' T' oR DF)\n                 o ((associator_2 CF' G' DF)\n                      o ((CF' oL right_morphism_of A A' T)\n                           o (associator_1 CF' CF G))))\n        := ap (@NaturalTransformation.Dual.opposite _ _ _ _)\n              (@left_composition_of\n                 _ _ _ _ (DF^op) (DF'^op) _ _ _ (CF^op) (CF'^op)\n                 _ _ A^op _ _ A'^op _ _ A''^op T^op T'^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition_of_dep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : F -| G.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F' : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G' : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A' : F' -| G'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F'' : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G'' : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A'' : F'' -| G''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation F F'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : NaturalTransformation F' F''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_composition_of_nondep\n      : (@right_morphism_of_nondep _ _ _ _ A'' _ _ A (T' o T))\n        = ((right_morphism_of_nondep A' A T)\n             o (right_morphism_of_nondep A'' A' T'))\n        := ap (@NaturalTransformation.Dual.opposite _ _ _ _)\n              (@left_composition_of_nondep _ _ _ _ _ A''^op _ _ A'^op _ _ A^op T'^op T^op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End right.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

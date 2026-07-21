@@ -1,0 +1,1322 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** TODO: Clean up *)\n\n(** * Basic tactics *)\n\n(** This module implements various tactics used in the library. *)\n\n(** If the goal is [x = z], [path_via y] will replace this with two goals, [x = y] and [y = z]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac path_via mid :=\n  apply @concat with (y := mid); auto with path_hints.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following tactic is designed to be more or less interchangeable with [induction n as [ | n' IH ]] whenever [n] is a [nat] or a [trunc_index].  The difference is that it produces proof terms involving [fix] explicitly rather than [nat_ind] or [trunc_index_ind], and therefore does not introduce higher universe parameters. It works if [n] is in the context or in the goal. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac simple_induction n n' IH :=\n  try generalize dependent n;\n  fix IH 1;\n  intros [| n'];\n  [ clear IH | specialize (IH n') ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac simple_induction' n :=\n  let IH := fresh \"IH\" in\n  simple_induction n n IH.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Debugging tactics to show the goal during evaluation. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac show_goal := match goal with [ |- ?T ] => idtac T end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac show_hyp id :=\n  match goal with\n    | [ H := ?b : ?T |- _ ] =>\n      match H with\n        | id => idtac id \":=\" b \":\" T\n      end\n    | [ H : ?T |- _ ] =>\n      match H with\n        | id => idtac id  \":\"  T\n      end\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac show_hyps :=\n  try match reverse goal with\n        | [ H : ?T |- _ ] => show_hyp H ; fail\n      end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Do something on the last hypothesis, or fail *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac on_last_hyp tac :=\n  match goal with [ H : _ |- _ ] => first [ tac H | fail 1 ] end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Revert the last hypothesis. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac revert_last :=\n  match goal with\n    [ H : _ |- _ ] => revert H\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Repeatedly reverse the last hypothesis, putting everything in the goal. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac reverse := repeat revert_last.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Reverse everything up to hypothesis id (not included). *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac revert_until id :=\n  on_last_hyp ltac:(fun id' =>\n    match id' with\n      | id => idtac\n      | _ => revert id' ; revert_until id\n    end).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Clear duplicated hypotheses *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_dup :=\n  match goal with\n    | [ H : ?X |- _ ] =>\n      match goal with\n        | [ H' : ?Y |- _ ] =>\n          match H with\n            | H' => fail 2\n            | _ => unify X Y ; (clear H' || clear H)\n          end\n      end\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_dups := repeat clear_dup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Try to clear everything except some hypothesis *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac clear_except hyp :=\n  repeat match goal with [ H : _ |- _ ] =>\n           match H with\n             | hyp => fail 1\n             | _ => clear H\n           end\n         end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac on_application f tac T :=\n  match T with\n    | context [f ?x ?y ?z ?w ?v ?u ?a ?b ?c] => tac (f x y z w v u a b c)\n    | context [f ?x ?y ?z ?w ?v ?u ?a ?b] => tac (f x y z w v u a b)\n    | context [f ?x ?y ?z ?w ?v ?u ?a] => tac (f x y z w v u a)\n    | context [f ?x ?y ?z ?w ?v ?u] => tac (f x y z w v u)\n    | context [f ?x ?y ?z ?w ?v] => tac (f x y z w v)\n    | context [f ?x ?y ?z ?w] => tac (f x y z w)\n    | context [f ?x ?y ?z] => tac (f x y z)\n    | context [f ?x ?y] => tac (f x y)\n    | context [f ?x] => tac (f x)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Tactical [on_call f tac] applies [tac] on any application of [f] in the hypothesis or goal. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac on_call f tac :=\n  match goal with\n    | |- ?T  => on_application f tac T\n    | H : ?T |- _  => on_application f tac T\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Destructs calls to f in hypothesis or conclusion, useful if f creates a subset object. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_call f :=\n  let tac t := (destruct t) in on_call f tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_calls f := repeat destruct_call f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_call_in f H :=\n  let tac t := (destruct t) in\n  let T := type of H in\n    on_application f tac T.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_call_as f l :=\n  let tac t := (destruct t as l) in on_call f tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_call_as_in f l H :=\n  let tac t := (destruct t as l) in\n  let T := type of H in\n    on_application f tac T.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"destruct_call\" constr(f) := destruct_call f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Permit to name the results of destructing the call to [f]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"destruct_call\" constr(f) \"as\" simple_intropattern(l) :=\n  destruct_call_as f l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Specify the hypothesis in which the call occurs as well. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"destruct_call\" constr(f) \"in\" hyp(id) :=\n  destruct_call_in f id.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"destruct_call\" constr(f) \"as\" simple_intropattern(l) \"in\" hyp(id) :=\n  destruct_call_as_in f l id.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A marker for prototypes to destruct. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fix_proto {A : Type} (a : A) := a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_rec_calls :=\n  match goal with\n    | [ H : fix_proto _ |- _ ] => destruct_calls H ; clear H\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_all_rec_calls :=\n  repeat destruct_rec_calls ; unfold fix_proto in *.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Try to inject any potential constructor equality hypothesis. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac inject H := progress (inversion H ; clear_dups) ; clear H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac autoinjections := repeat (clear_dups ; ltac:(inject)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Destruct an hypothesis by first copying it to avoid dependencies. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac destruct_nondep H := let H0 := fresh \"H\" in assert(H0 := H); destruct H0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A tactic to show contradiction by first asserting an automatically provable hypothesis. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"contradiction\" \"by\" constr(t) :=\n  let H := fresh in assert t as H by auto with * ; contradiction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A tactic that adds [H:=p:typeof(p)] to the context if no hypothesis of the same type appears in the goal.\n   Useful to do saturation using tactics. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac add_hypothesis H' p :=\n  match type of p with\n    ?X =>\n    match goal with\n      | [ H : X |- _ ] => fail 1\n      | _ => set (H':=p) ; try (change p with H') ; clearbody H'\n    end\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A tactic to replace an hypothesis by another term. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac replace_hyp H c :=\n  let H' := fresh \"H\" in\n    assert(H' := c) ; clear H ; rename H' into H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A tactic to refine an hypothesis by supplying some of its arguments. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac refine_hyp c :=\n  let tac H := replace_hyp H c in\n    match c with\n      | ?H _ => tac H\n      | ?H _ _ => tac H\n      | ?H _ _ _ => tac H\n      | ?H _ _ _ _ => tac H\n      | ?H _ _ _ _ _ => tac H\n      | ?H _ _ _ _ _ _ => tac H\n      | ?H _ _ _ _ _ _ _ => tac H\n      | ?H _ _ _ _ _ _ _ _ => tac H\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** TODO: From here comes from Overture.v *)\n\n(** Clear a hypothesis and also its dependencies.  Taken from Coq Stdlib, with the performance-enhancing change to [lazymatch] suggested at [https://github.com/coq/coq/issues/11689]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"clear\" \"dependent\" hyp(h) :=\n  let rec depclear h :=\n  clear h ||\n  lazymatch goal with\n   | H : context [ h ] |- _ => depclear H; depclear h\n  end ||\n  fail \"hypothesis to clear is used in the conclusion (maybe indirectly)\"\n in depclear h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(** A version of [generalize dependent] that applies only to a hypothesis.  Taken from Coq Stdlib. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"revert\" \"dependent\" hyp(h) :=\n  generalize dependent h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Applying a tactic to a term with increasingly many arguments *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"do_with_holes\" tactic3(x) uconstr(p) :=\n  x uconstr:(p) ||\n  x uconstr:(p _) ||\n  x uconstr:(p _ _) ||\n  x uconstr:(p _ _ _) ||\n  x uconstr:(p _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Same thing but starting with many holes first *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"do_with_holes'\" tactic3(x) uconstr(p) :=\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _ _) ||\n  x uconstr:(p _ _ _ _) ||\n  x uconstr:(p _ _ _) ||\n  x uconstr:(p _ _) ||\n  x uconstr:(p _) ||\n  x uconstr:(p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We keep a list of global axioms that we will solve automatically, even when not using typeclass search. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Unset Primitive Projections.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsGlobalAxiom (A : Type) : Type0 := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Primitive Projections.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Hint Mode IsGlobalAxiom + : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We add [Funext] to the list here, and will later add [Univalence]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is_global_axiom_funext : IsGlobalAxiom Funext := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Add [PropResizing] to the list of global axioms. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is_global_axiom_propresizing : IsGlobalAxiom PropResizing := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac is_global_axiom A := let _ := constr:(_ : IsGlobalAxiom A) in idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac global_axiom := try match goal with\n    | |- ?G  => is_global_axiom G; exact _\nend.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A shorter name for [simple refine]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"srefine\" uconstr(term) := simple refine term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** A shorter name for [notypeclasses refine]; also handles global axioms. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"nrefine\" uconstr(term) := notypeclasses refine term; global_axiom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** A shorter name for [simple notypeclasses refine]; also handles global axioms. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"snrefine\" uconstr(term) := simple notypeclasses refine term; global_axiom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The tactics [napply], [rapply] and [tapply] are similar but they differ in their reliance on typeclass search. [napply t] tries [nrefine t], [nrefine (t _)], [nrefine (t _ _)], so on until it succeeds in unifying with the goal. At each iteration, [nrefine] computes the type of the given term and tries to unify it with the goal; if it succeeds, all holes remaining in the term after unification are new goals. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"napply\" uconstr(term)\n  := do_with_holes ltac:(fun x => nrefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"napply'\" uconstr(term)\n  := do_with_holes' ltac:(fun x => nrefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[deprecated(note=\"nrapply was renamed to napply and will be removed soon\",\n  since=\"2025-03-11\")]\nTactic Notation \"nrapply\" uconstr(term) := napply term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [rapply] is equivalent in strength to [napply], i.e., it should succeed iff [napply] succeeds, but it solves all possible typeclasses after successful unification with the goal. The implementation is: try [nrefine t, t _, t _ _], ... until success; upon success, revert the last (successful) application of [nrefine] and call [refine (t _ _ _)]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rapply\" uconstr(term)\n  := do_with_holes ltac:(fun x => assert_succeeds (nrefine x); refine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rapply'\" uconstr(term)\n  := do_with_holes' ltac:(fun x => assert_succeeds (nrefine x); refine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The [tapply] tactic is strictly stronger than [rapply], because if the type of the argument term [t] (with holes) cannot be successfully computed or unified with the goal type, it calls typeclass search on all typeclass holes within [t] (independently of the goal) and then tries to unify with the goal again. Our implementation of [rapply] requires that the type (with holes) of the argument term unifies with the goal directly, without any help from typeclass search to fill in the holes in the type. The typeclass search after unification is more robust than the typeclass search before unification, because there is more information available to guide the typeclass search. If [rapply] succeeds, then [tapply] succeeds and their outcomes are equivalent. Note that the Coq standard library has a [rapply], of these six tactics it is closest to our [tapply'] with many-holes first. We prefer fewer-holes first, for instance so that a theorem producing an equivalence will by preference be used to produce an equivalence rather than to apply the coercion of that equivalence to a function. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"tapply\" uconstr(term)\n  := do_with_holes ltac:(fun x => refine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"tapply'\" uconstr(term)\n  := do_with_holes' ltac:(fun x => refine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Each of the tactics [napply], [rapply], [tapply] has a \"simple\" variant prefixed with s. The simple variants do not perform beta reduction when unifying with the goal, and they do not shelve any of the holes created by unification with the goal. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"snapply\" uconstr(term)\n  := do_with_holes ltac:(fun x => snrefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"snapply'\" uconstr(term)\n  := do_with_holes' ltac:(fun x => snrefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** TODO: remove when min Coq/Rocq version is 9.1 (~ end of 2026). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[deprecated(note=\"snrapply was renamed to snapply and will be removed soon\",\n  since=\"2025-03-11\")]\nTactic Notation \"snrapply\" uconstr(term) := snapply term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** See comment for [rapply]. This cannot be simplified to [snrefine x] because we don't want the [global_axiom] tactic to run here. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"srapply\" uconstr(term)\n  := do_with_holes ltac:(fun x => assert_succeeds (simple notypeclasses refine x); srefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"srapply'\" uconstr(term)\n:= do_with_holes' ltac:(fun x => assert_succeeds (simple notypeclasses refine x); srefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"stapply\" uconstr(term)\n  := do_with_holes ltac:(fun x => srefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"stapply'\" uconstr(term)\n  := do_with_holes' ltac:(fun x => srefine x) term.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Apply a tactic to one side of an equation.  For example, [lhs rapply lemma].  [tac] should produce a path. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"lhs\" tactic3(tac) := nrefine (ltac:(tac) @ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"lhs_V\" tactic3(tac) := nrefine (ltac:(tac)^ @ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rhs\" tactic3(tac) := nrefine (_ @ ltac:(tac)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rhs_V\" tactic3(tac) := nrefine (_ @ ltac:(tac)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here are versions that work for a general relation.  The relation needs to be transitive and, in two cases, symmetric.  These versions also work for paths in most cases, but due to slightly different behaviours, don't work quite as well as the previous versions. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"lhs'\" tactic3(tac) := etransitivity; [tac|].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"lhs_V'\" tactic3(tac) := etransitivity; [symmetry; tac|].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rhs'\" tactic3(tac) := etransitivity; [|symmetry; tac].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rhs_V'\" tactic3(tac) := etransitivity; [|tac].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** SSReflect tactics, adapted by Robbert Krebbers *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac done :=\n  trivial; intros; solve\n    [ repeat first\n      [ solve [trivial]\n      | solve [symmetry; trivial]\n      | reflexivity\n      (* Discriminate should be here, but it doesn't work yet *)\n      (* | discriminate *)\n      | contradiction\n      | split ]\n    | match goal with\n      H : ~ _ |- _ => solve [destruct H; trivial]\n      end ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"by\" tactic(tac) :=\n  tac; done.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Apply using the same opacity information as typeclass proof search. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac class_apply c := autoapply c with typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A convenient tactic for using function extensionality. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac by_extensionality x :=\n  intros;\n  match goal with\n  | [ |- ?f = ?g ] => eapply path_forall; intro x;\n      match goal with\n        | [ |- forall (_ : prod _ _), _ ] => intros [? ?]\n        | [ |- forall (_ : sig _ _), _ ] => intros [? ?]\n        | _ => intros\n    end;\n    simpl; auto with path_hints\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [funext] apply functional extensionality ([path_forall]) to the goal and the introduce the arguments in the context. *)\n(** For instance, if you have to prove [f = g] where [f] and [g] take two arguments, you can use [funext x y], and the goal become [f x y = g x y]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"funext\" simple_intropattern(a)\n  := apply path_forall; intros a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"funext\" simple_intropattern(a)  simple_intropattern(b)\n  := funext a; funext b.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"funext\" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c)\n  := funext a; funext b; funext c.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"funext\" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d)\n  := funext a; funext b; funext c; funext d.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"funext\" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e)\n  := funext a; funext b; funext c; funext d; funext e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"funext\" simple_intropattern(a) simple_intropattern(b) simple_intropattern(c) simple_intropattern(d) simple_intropattern(e) simple_intropattern(f)\n  := funext a; funext b; funext c; funext d; funext e; funext f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Test whether a tactic fails or succeeds, without actually doing anything.  Taken from Coq Stdlib. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac assert_fails tac :=\n  tryif (once tac) then gfail 0 tac \"succeeds\" else idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"assert_succeeds\" tactic3(tac) :=\n  tryif (assert_fails tac) then gfail 0 tac \"fails\" else idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"assert_succeeds\" tactic3(tac) :=\n  assert_succeeds tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"assert_fails\" tactic3(tac) :=\n  assert_fails tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This tactic doesn't end with [auto], but you can always write \"by (path_induction;auto with path_hints)\" if you want.*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac path_induction :=\n  intros; repeat progress (\n    match goal with\n      | [ p : ?x = ?y  |- _ ] => assert_fails constr_eq x y; induction p\n    end\n  ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The tactic [f_ap] is a replacement for the previously existing standard library tactic [f_equal].  This tactic works by repeatedly applying the fact that [f = g -> x = y -> f x = g y] to turn, e.g., [f x y = f z w] first into [f x = f z] and [y = w], and then turns the first of these into [f = f] and [x = z].  The [done] tactic is used to detect the [f = f] case and finish, and the [trivial] is used to solve, e.g., [x = x] when using [f_ap] on [f y x = f z x].  This tactic only works for non-dependently-typed functions; we cannot express [y = w] in the first example if [y] and [w] have different types.  If and when Arnaud's new-tacticals branch lands, and we can have a goal which depends on the term used to discharge another goal, then this tactic should probably be generalized to deal with dependent functions. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac f_ap :=\n  idtac;\n  lazymatch goal with\n    | [ |- ?f ?x = ?g ?x ] => apply (@apD10 _ _ f g);\n                             try (done || f_ap)\n    | _ => apply ap11;\n          [ done || f_ap\n          | trivial ]\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [expand] replaces both terms of an equality (either [paths] or [pointwise_paths] in the goal with their head normal forms *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac expand :=\n  idtac;\n  match goal with\n    | [ |- ?X = ?Y ] =>\n      let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' = Y')\n    | [ |- ?X == ?Y ] =>\n      let X' := eval hnf in X in let Y' := eval hnf in Y in change (X' == Y')\n  end; simpl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [atomic x] is the same as [idtac] if [x] is a variable or hypothesis, but is [fail 0] if [x] has internal structure.  This is useful, for example, to easily destruct all variables that show up as the discriminees of [match] statements, without destructing more complicated terms whose structures might matter. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac atomic x :=\n  idtac;\n  match x with\n    | _ => is_evar x; fail 1 x \"is not atomic (evar)\"\n    | ?f _ => fail 1 x \"is not atomic (application)\"\n    | (fun _ => _) => fail 1 x \"is not atomic (fun)\"\n    | forall _, _ => fail 1 x \"is not atomic (forall)\"\n    | let x := _ in _ => fail 1 x \"is not atomic (let in)\"\n    | match _ with _ => _ end => fail 1 x \"is not atomic (match)\"\n    | _ => is_fix x; fail 1 x \"is not atomic (fix)\"\n    | _ => is_cofix x; fail 1 x \"is not atomic (cofix)\"\n    | context[?E] => (* catch-all *) (assert_fails constr_eq E x); fail 1 x \"is not atomic (has subterm\" E \")\"\n    | _ => idtac\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Find the head of the given expression. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac head expr :=\n  match expr with\n    | ?f _ => head f\n    | _ => expr\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This tactic gets the constructor of any one-constructor inductive type. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac get_constructor_head T :=\n  let x := fresh in\n  let x' := fresh in\n  let h := open_constr:(_) in\n  let __ := constr:(fun (x : T)\n                    => let x' := x in\n                       ltac:(destruct x;\n                             let x' := (eval cbv delta [x'] in x') in\n                             let x' := head x' in\n                             unify h x';\n                             exact tt)) in\n  h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* A version of econstructor that doesn't resolve typeclasses. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac ntc_constructor :=\n  lazymatch goal with\n  | [ |- ?G ] => let build := get_constructor_head G in\n                 napply build\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [case_path] is a HoTT replacement for [case_eq]; [case_path x] is like [destruct x], but it remembers the original value of [x] in an equation to be introduced. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac case_path x :=\n  let x' := fresh \"x\" in\n  set (x' := x);\n    generalize (idpath : x' = x);\n    clearbody x';\n    destruct x'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [revert_opaque x] is like [revert x], except that it fails if [x] is not an opaque variable (i.e. if it has a [:=] definition rather than just a type). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac revert_opaque x :=\n  revert x;\n  match goal with\n    | [ |- forall _, _ ] => idtac\n    | _ => fail 1 \"Reverted constant is not an opaque variable\"\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [transparent assert (H : T)] is like [assert (H : T)], but leaves the body transparent. *)\n(** Since binders don't respect [fresh], we use a name unlikely to be reused. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"transparent\" \"assert\" \"(\" ident(name) \":\" constr(type) \")\" :=\n  simple refine (let __transparent_assert_hypothesis := (_ : type) in _);\n  [\n  | ((* We cannot use the name [__transparent_assert_hypothesis], due to some infelicities in the naming of bound variables.  So instead we pull the bottommost hypothesis. *)\n    let H := match goal with H := _ |- _ => constr:(H) end in\n    rename H into name) ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [transparent eassert] is like [transparent assert], but allows holes in the type, which will be turned into evars. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"transparent\" \"assert\" \"(\" ident(name) \":\" constr(type) \")\" \"by\" tactic3(tac) := let name := fresh \"H\" in transparent assert (name : type); [ solve [ tac ] | ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"transparent\" \"eassert\" \"(\" ident(name) \":\" open_constr(type) \")\" := transparent assert (name : type).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"transparent\" \"eassert\" \"(\" ident(name) \":\" open_constr(type) \")\" \"by\" tactic3(tac) := transparent assert (name : type) by tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A version of Coq's [remember] that uses our equality. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac remember_as term name eqname :=\n  set (name := term) in *;\n  pose (eqname := idpath : term = name);\n  clearbody eqname name.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"remember\" constr(term) \"as\" ident(name) \"eqn:\" ident(eqname) :=\n  remember_as term name eqname.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A variant that doesn't substitute in the goal and hypotheses. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac recall_as term name eqname :=\n  pose (name := term);\n  pose (eqname := idpath : term = name);\n  clearbody eqname name.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"recall\" constr(term) \"as\" ident(name) \"eqn:\" ident(eqname) :=\n  recall_as term name eqname.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [rel_hnf], when given a goal of the form [R x y] for any relation [R], puts [x] and [y] in head normal form. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rel_hnf :=\n  idtac;\n  match goal with\n    | [ |- ?R ?x ?y ] => let x' := (eval hnf in x) in\n                         let y' := (eval hnf in y) in\n                         change (R x' y')\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This tactic is a version of [tryif require () then if_yes () else if_no ()] which is suitable for use in constructing constrs by virtue of being evaluated during the Ltac expression evaluation phase rather than during the tactic running phase.\nAll three arguments are expected to be tactic thunks which will be passed a dummy unit argument.*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac tryif_cps require if_yes if_no :=\n  let res := match constr:(Set) with\n             | _ => let __ := match constr:(Set) with _ => require () end in\n                    ltac:(if_yes)\n             | _ => ltac:(if_no)\n             end in res ().",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following tactic [issig] proves automatically that a record type is equivalent to a nested Sigma-type. Specifically, it proves a goal that looks like\n\n<<\n   { x : A & B x } <~> Some_Record\n>>\n\nIn fact you don't even have to write down the sigma type. Though it is good practice to write it out anyway, this tactic can work out the sigma type and tell you what it should look like.\n\nThe following should generate the desired equivalence. You can check the definition to see what type it has and therefore what the sigma type should be.\n\n<<\n  Definition issig_myrecord\n    : _ <~> MyRecord := ltac:(issig).\n\n  Check issig_myrecord.\n>>\n\nIn order to define this tactic we have many helper tactics.\n\n*)\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac peel_evars term :=\n  lazymatch term with\n  | ?f ?x\n    => tryif_cps\n         ltac:(fun _ => has_evar x)\n         ltac:(fun _ => peel_evars f)\n         ltac:(fun _ => term)\n  | _ => term\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac pi_to_sig ty :=\n  lazymatch (eval cbv beta in ty) with\n  | forall (x : ?T) (y : @?A x), @?P x y\n    => let x' := fresh in\n       constr:(@sig T (fun x' : T =>\n        ltac:(let res := pi_to_sig\n          (forall y : A x', P x' y) in exact res)))\n  | ?T -> _ => T\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac ctor_to_sig ctor :=\n  let ctor := peel_evars ctor in\n  let t := type of ctor in\n  pi_to_sig t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac unify_first_evar_with term u :=\n  lazymatch term with\n  | ?f ?x\n    => tryif has_evar f\n    then unify_first_evar_with f u\n    else unify x u\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac unify_with_projections term u :=\n  (unify_first_evar_with term u.1; unify_with_projections term u.2) +\n  (unify_first_evar_with term u;\n   tryif has_evar term then fail 0 term \"has evars remaining\" else idtac).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Completely destroys [v] into its pieces and tries to put pieces in a sigma type. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac refine_with_exist_as_much_as_needed_then_destruct v :=\n  ((destruct v; shelve) +\n   (snrefine (_ ; _);\n    [ destruct v; shelve\n    | refine_with_exist_as_much_as_needed_then_destruct v ])).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(* Finally we can define our issig tactic: *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac issig :=\n  hnf; (* First we make sure things are normalised. *)\n  (* We get the types either side of the equivalence. *)\n  let A := match goal with |- ?sigma <~> ?record => constr:(sigma) end in\n  let B := match goal with |- ?sigma <~> ?record => constr:(record) end in\n  let u := fresh \"u\" in\n  let v := fresh \"v\" in\n  (** We build an equivalence with 5 holes. *)\n  snrefine  (* We don't want typeclass search running. *)\n    (Build_Equiv A B _ (Build_IsEquiv A B (fun u => _) (fun v => _)\n      (fun v => _) (fun u => _) (fun _ => _)));\n  (** Going from a sigma type to a record *)\n  [ (* let built be the constructor of T *)\n    let T := match goal with |- ?T => T end in\n    (* We want to get the constructor of the record. Note that we use [ntc_constructor] instead of [econstructor] since we don't want to resolve typeclasses. If we used [econstructor] then the constructor would be wrong for many records whose fields are classes. [ntc_constructor] is defined in Overture.v. *)\n    let built := open_constr:(ltac:(ntc_constructor) : T) in\n    let A' := ctor_to_sig built in\n    unify A A';\n    unify_with_projections built u;\n    refine built\n  (** Going from a record to a sigma type *)\n  | refine_with_exist_as_much_as_needed_then_destruct v\n  (** Proving [eissect] *)\n  | destruct v; cbn [pr1 pr2]; reflexivity\n  (** Proving [eisretr] *)\n  | reflexivity\n  (** Proving [eisadj] *)\n  | reflexivity ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We show how the tactic works in a couple of examples. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_equiv (A B : Type)\n  : {f : A -> B & IsEquiv f} <~> Equiv A B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : A -> B & IsEquiv f} <~> (A <~> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : A -> B & IsEquiv f} <~> (A <~> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_isequiv {A B : Type} (f : A -> B)\n  : {g : B -> A & {r : f o g == idmap & { s : g o f == idmap\n    & forall x : A, r (f x) = ap f (s x)}}}\n  <~> IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g : B -> A &\n{r : f o g == idmap &\n{s : g o f == idmap & forall x : A, r (f x) = ap f (s x)}}} <~> \nIsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g : B -> A &\n{r : f o g == idmap &\n{s : g o f == idmap & forall x : A, r (f x) = ap f (s x)}}} <~> \nIsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The general reasoning behind the [issig] tactic is: if we know the type of the record, [econstructor] will give us the constructor applied to evars for each field. If we assume that there are no evars in the type, we can unify the first evar with [u.1], the next evar with [u.2.1], the next with [u.2.2.1], etc, and if we run out of evars or projections, we backtrack and instead fill the final evar with [u.2.2....2]. (Note that if we strip the trailing evars from the constructor before unifying them, we get a term with a Pi type, and if we drop the final codomain and turn the Pi type into a Sigma, this lets us autogenerate the Sigma type we should be using; this is how the versions that don't need a hand-crafted Sigma type work: they unify the generated type with the term in the goal that should be the Sigma type.)\n\nGenerating the function the other way is a bit trickier, because there's no easy way to get our hands on all the projections of the record, and moreover we don't even know how many pairings we'll need. The thing we want to do is introduce the right number of pairings, destruct the variable of record type in the goal for each component, and then magically use the right projection. I'll get back to the magic in a moment; first we need to take care of the \"right number\" of pairings. We could pull a trick where we infer the number by looking at the term we get from [econstructor] in a goal whose type is the record. Instead, I chose the more concise route of coding a tactic that introduces the minimum number of pairings needed to make the magic work. How does it know the minimum number? It doesn't need to! The wonder of (recursive) multisuccess tactics is that you can say \"try no pairings, and if that makes any future tactic fail, backtrack and try one pairing, and if that doesn't work, backtrack and try two pairings, etc\". (The downside is that the error messages you get when you set things up wrong are truly incomprehensible, because if you make a typo in any of the fields of the Sigma type the error message you end up getting is something like \"(_; _) is a Sigma type but it was expected to have the type of the final field\" (and it's always about the final field, regardless of which field you made a typo in). So plausibly it's worth it to still do the small [issig] tactics by hand, and only use this tactic for >= 5 fields or something.)\n\nOkay, now onto the magic. How do we know which field is the right one? Well, there's only one answer that lets us prove the section and retraction by [destruct] + [reflexivity], so we can let unification solve this problem for us. It's important to have destructed the record variable in each of the pair-component evars, because unification is not (yet) smart enough to invert records for us; this is what the [destruct] before [shelve] in the inverse function generation tactic is. We [cbn] [pr1] and [pr2] to make the unification problem be completely syntactic (no need to unfold anything during unification). This is probably not strictly necessary, but seems like good form to me.\n\nFinally, we can prove the other one of the section/retraction pair (I can never recall which is which), and the adjoint, by [reflexivity]. (Perhaps it would be better to use [exact idpath], if we want to not have to unfold [reflexivity] when using equivalences generated by these tactics.) *)\n"
+    }
+  ]
+]

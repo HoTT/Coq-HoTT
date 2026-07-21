@@ -1,0 +1,11 @@
+digraph HoTT_Colimits_Colimit_Prod {
+  graph [ratio=0.5]
+  node [style=filled]
+Colimit_Prod_iscolimit_prod [label="iscolimit_prod", URL=<Colimit_Prod.html#iscolimit_prod>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Prod_diagram_equiv_prod_sigma [label="diagram_equiv_prod_sigma", URL=<Colimit_Prod.html#diagram_equiv_prod_sigma>, fillcolor="#F070D1"] ;
+Colimit_Prod_prod_diagram [label="prod_diagram", URL=<Colimit_Prod.html#prod_diagram>, fillcolor="#F070D1"] ;
+  Colimit_Prod_iscolimit_prod -> Colimit_Prod_diagram_equiv_prod_sigma [] ;
+  Colimit_Prod_diagram_equiv_prod_sigma -> Colimit_Prod_prod_diagram [] ;
+subgraph cluster_Colimit_Prod { label="Colimit_Prod"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Colimit_Prod_prod_diagram; Colimit_Prod_diagram_equiv_prod_sigma; Colimit_Prod_iscolimit_prod; };
+} /* END */

@@ -1,0 +1,2265 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Classes *)\n\n(** ** Pointwise Lemmas *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Pointwise.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} {B : A -> Type} (R : forall a, Relation (B a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition relation_pointwise : Relation (forall x, B x)\n    := fun P Q => forall x, R x (P x) (Q x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition reflexive_pointwise `{!forall a, Reflexive (R a)}\n    : Reflexive relation_pointwise.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Reflexive relation_pointwise",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a : A, Relation (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, Reflexive (R a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Reflexive relation_pointwise",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a : A, Relation (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, Reflexive (R a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P a; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition transitive_pointwise `{!forall a, Transitive (R a)}\n    : Transitive relation_pointwise.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Transitive relation_pointwise",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a : A, Relation (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, Transitive (R a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Transitive relation_pointwise",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a : A, Relation (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, Transitive (R a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P Q S r s a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "R a (P a) (S a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a0 : A, Relation (B a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a0 : A, Transitive (R a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q",
+                "S"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise P Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "relation_pointwise Q S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by transitivity (Q a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition symmetric_pointwise `{!forall a, Symmetric (R a)}\n    : Symmetric relation_pointwise.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Symmetric relation_pointwise",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a : A, Relation (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, Symmetric (R a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Symmetric relation_pointwise",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a : A, Relation (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, Symmetric (R a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P Q r a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "R a (Q a) (P a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall a0 : A, Relation (B a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a0 : A, Symmetric (R a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise P Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by symmetry.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Pointwise.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Immediate reflexive_pointwise : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Immediate transitive_pointwise : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Immediate symmetric_pointwise : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pointwise_precomp {A' A : Type} {B : A -> Type} (R : forall a, Relation (B a))\n  (f : A' -> A) (P Q : forall x, B x)\n  : relation_pointwise R P Q -> relation_pointwise (R o f) (P o f) (Q o f)\n  := fun r => r o f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This is easiest to state when [B] is a constant type family. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pointwise_moveR_equiv {A A' B : Type} (R : Relation B)\n  `{Reflexive _ R} `{Transitive _ R}\n  (f : A' <~> A) (P : A -> B) (Q : A' -> B)\n  : relation_pointwise (fun _ => R) P (Q o f^-1) -> relation_pointwise (fun _ => R) (P o f) Q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "relation_pointwise (fun _ : A => R) P (Q o f^-1) ->\nrelation_pointwise (fun _ : A' => R) (P o f) Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "relation_pointwise (fun _ : A => R) P (Q o f^-1) ->\nrelation_pointwise (fun _ : A' => R) (P o f) Q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros r a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "R (P (f a)) (Q a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise (fun _ : A => R) P (Q o f^-1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity (Q (f^-1 (f a))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "R (P (f a)) (Q (f^-1 (f a)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise (fun _ : A => R) P (Q o f^-1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "R (Q (f^-1 (f a))) (Q a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise (fun _ : A => R) P (Q o f^-1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: apply r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "R (Q (f^-1 (f a))) (Q a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise (fun _ : A => R) P (Q o f^-1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply related_reflexive_path.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Q (f^-1 (f a)) = Q a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Relation B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Reflexive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Transitive R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A' <~> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "A' -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "relation_pointwise (fun _ : A => R) P (Q o f^-1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (ap Q), eissect.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pointwise_moveL_equiv {A A' B : Type} (R : Relation B)\n  `{Reflexive _ R} `{Transitive _ R}\n  (f : A <~> A') (P : A -> B) (Q : A' -> B)\n  : relation_pointwise (fun _ => R) (P o f^-1) Q -> relation_pointwise (fun _ => R) P (Q o f)\n  := pointwise_moveR_equiv (flip R) f Q P.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Injective Functions *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsInjective {A B : Type} (f : A -> B)\n  := injective : forall x y, f x = f y -> x = y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments injective {A B} f {_} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition neq_isinj {A B : Type} (f : A -> B) `{!IsInjective f}\n  : forall x y, x <> y -> f x <> f y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : A, x <> y -> f x <> f y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : A, x <> y -> f x <> f y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y np q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "np"
+              ],
+              "body": null,
+              "type": "x <> y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f x = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply np, (injective f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f x = f y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "np"
+              ],
+              "body": null,
+              "type": "x <> y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f x = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact q.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isinj_idmap A : @IsInjective A A idmap\n  := fun x y => idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Hint Unfold IsInjective : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isinj_compose {A B C f g} `{IsInjective B C g} `{IsInjective A B f}\n  : IsInjective (g o f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInjective (g o f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsInjective g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInjective (g o f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsInjective g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsInjective g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "g (f x) = g (f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply (injective f), (injective g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Hint Immediate isinj_compose : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isinj_cancelL {A B C : Type} (f : A -> B) (g : B -> C)\n  `{!IsInjective (g o f)}\n  : IsInjective f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInjective f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective (g o f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInjective f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective (g o f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective (g o f)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f x = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (injective (g o f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f x) = g (f y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInjective0"
+              ],
+              "body": null,
+              "type": "IsInjective (g o f)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f x = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap g p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Antisymmetric Relations *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class AntiSymmetric {A : Type} (R : A -> A -> Type) : Type\n  := antisymmetry : forall x y, R x y -> R y x -> x = y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments antisymmetry {A} R {AntiSymmetric} x y _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

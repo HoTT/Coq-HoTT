@@ -1,0 +1,30 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Export",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export\n  HoTT.Classes.interfaces.canonical_names.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Monad (M : Type -> Type) {Mret : Return M} {Mbind : Bind M} :=\n  { monad_ret_bind : forall {A B} a (f : A -> M B), bind (ret a) f = f a\n  ; monad_bind_ret : forall {A} (x : M A), bind x ret = x\n  ; monad_bind_assoc : forall {A B C} x (f : A -> M B) (g : B -> M C),\n    bind (bind x f) g = bind x (fun a => bind (f a) g) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

@@ -1,0 +1,3840 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.PathGroupoids",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Trunc Basics.PathGroupoids\n  Basics.Equivalences Basics.Decidable Basics.Classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Empty Types.Sigma Types.Sum Types.Prod Types.Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Finite.Fin.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition FinNat@{} (n : nat) : Type0 := {x : nat | x < n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition zero_finnat@{} (n : nat) : FinNat n.+1\n  := (0; _ : 0 < n.+1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition succ_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1\n  := (u.1.+1; leq_succ u.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_succ_finnat {n : nat} (x : nat) (h : x.+1 < n.+1)\n  : succ_finnat (x; leq_pred' h) = (x.+1; h).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "succ_finnat (x; leq_pred' h) = (x.+1; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "succ_finnat (x; leq_pred' h) = (x.+1; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply path_sigma_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition last_finnat@{} (n : nat) : FinNat n.+1\n  := exist (fun x => x < n.+1) n (leq_refl n.+1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition incl_finnat@{} {n : nat} (u : FinNat n) : FinNat n.+1\n  := (u.1; leq_trans u.2 (leq_succ_r (leq_refl n))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition finnat_ind@{u} (P : forall n : nat, FinNat n -> Type@{u})\n  (z : forall n : nat, P n.+1 (zero_finnat n))\n  (s : forall (n : nat) (u : FinNat n), P n u -> P n.+1 (succ_finnat u))\n  {n : nat} (u : FinNat n)\n  : P n u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u0 : FinNat n0), P n0 u0 -> P n0.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u0 : FinNat n0), P n0 u0 -> P n0.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple_induction n n IHn; intro u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P 0 u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n : nat, FinNat n -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n : nat, P n.+1 (zero_finnat n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n : nat) (u0 : FinNat n), P n u0 -> P n.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u0 : FinNat n0), P n0 u0 -> P n0.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u0 : FinNat n, P n u0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P 0 u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n : nat, FinNat n -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n : nat, P n.+1 (zero_finnat n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n : nat) (u0 : FinNat n), P n u0 -> P n.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim (not_lt_zero_r u.1 u.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u0 : FinNat n0), P n0 u0 -> P n0.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u0 : FinNat n, P n u0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct u as [x h].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (x; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x as [| x].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (0; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "0 < n.+1"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (x.+1; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (0; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "0 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (transport (P n.+1) _ (z _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "zero_finnat n = (0; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "0 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply path_sigma_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (x.+1; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport (P n.+1) (path_succ_finnat _ _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n.+1 (succ_finnat (x; leq_pred' h))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P n (x; leq_pred' h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, P n u"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition finnat_ind_beta_zero@{u} (P : forall n : nat, FinNat n -> Type@{u})\n  (z : forall n : nat, P n.+1 (zero_finnat n))\n  (s : forall (n : nat) (u : FinNat n), P n u -> P n.+1 (succ_finnat u))\n  (n : nat)\n  : finnat_ind P z s (zero_finnat n) = z n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_ind P z s (zero_finnat n) = z n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_ind P z s (zero_finnat n) = z n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (transport2 _ (q:=idpath@{Set})).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_sigma_hprop (zero_finnat n) (0; (zero_finnat n).2) 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition finnat_ind_beta_succ@{u} (P : forall n : nat, FinNat n -> Type@{u})\n  (z : forall n : nat, P n.+1 (zero_finnat n))\n  (s : forall (n : nat) (u : FinNat n),\n       P n u -> P n.+1 (succ_finnat u))\n  {n : nat} (u : FinNat n)\n  : finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u0 : FinNat n0), P n0 u0 -> P n0.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_ind P z s (succ_finnat u) = s n u (finnat_ind P z s u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u0 : FinNat n0), P n0 u0 -> P n0.+1 (succ_finnat u0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct u as [u1 u2]; simpl; unfold path_succ_finnat.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1)\n  (path_sigma_hprop (succ_finnat (u1; leq_pred' (leq_succ u2)))\n     (u1.+1; leq_succ u2) 1)\n  (s n (u1; leq_pred' (leq_succ u2))\n     (finnat_ind P z s (u1; leq_pred' (leq_succ u2)))) =\ns n (u1; u2) (finnat_ind P z s (u1; u2))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "u1"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u2"
+              ],
+              "body": null,
+              "type": "u1 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (path_ishprop u2 (leq_pred' (leq_succ u2))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (P n.+1)\n  (path_sigma_hprop (succ_finnat (u1; u2)) (u1.+1; leq_succ u2) 1)\n  (s n (u1; u2) (finnat_ind P z s (u1; u2))) =\ns n (u1; u2) (finnat_ind P z s (u1; u2))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "u1"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u2"
+              ],
+              "body": null,
+              "type": "u1 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport2 _ (q:=idpath@{Set}) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_sigma_hprop (succ_finnat (u1; u2)) (u1.+1; leq_succ u2) 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, FinNat n0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, P n0.+1 (zero_finnat n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall (n0 : nat) (u : FinNat n0), P n0 u -> P n0.+1 (succ_finnat u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "u1"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u2"
+              ],
+              "body": null,
+              "type": "u1 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition is_bounded_fin_to_nat@{} {n} (k : Fin n)\n  : fin_to_nat k < n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat k < n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat k < n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [| n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat k < 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat k < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, fin_to_nat k0 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat k < 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim k.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat k < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, fin_to_nat k0 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct k as [k | []].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat (inl k) < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, fin_to_nat k0 < n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat (inr tt) < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k : Fin n, fin_to_nat k < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat (inl k) < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, fin_to_nat k0 < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply lt_succ_r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* Typeclass search finds a different solution, but we want this one. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_nat (inr tt) < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k : Fin n, fin_to_nat k < n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fin_to_finnat {n} (k : Fin n) : FinNat n\n  := (fin_to_nat k; is_bounded_fin_to_nat k).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Because the proof of [is_bounded_fin_to_nat] was chosen carefully, we have the following definitional equality. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat {n} (k : Fin n)\n  : fin_to_finnat (fin_incl k) = incl_finnat (fin_to_finnat k)\n  := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint finnat_to_fin@{} {n : nat} : FinNat n -> Fin n\n  := match n with\n     | 0 => fun u => Empty_rec (not_lt_zero_r _ u.2)\n     | n.+1 => fun u =>\n        match u with\n        | (0; _) => fin_zero\n        | (x.+1; h) => fsucc (finnat_to_fin (x; leq_pred' h))\n        end\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fin_to_finnat_fsucc@{} {n : nat} (k : Fin n)\n  : fin_to_finnat (fsucc k) = succ_finnat (fin_to_finnat k).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (fsucc k) = succ_finnat (fin_to_finnat k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (fsucc k) = succ_finnat (fin_to_finnat k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat (fsucc k)).1 = (succ_finnat (fin_to_finnat k)).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_nat_fsucc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fin_to_finnat_fin_zero@{} (n : nat)\n  : fin_to_finnat (@fin_zero n) = zero_finnat n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat fin_zero = zero_finnat n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat fin_zero = zero_finnat n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat fin_zero).1 = (zero_finnat n).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact path_nat_fin_zero.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_finnat_to_fin_succ@{} {n : nat} (u : FinNat n)\n  : finnat_to_fin (succ_finnat u) = fsucc (finnat_to_fin u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (succ_finnat u) = fsucc (finnat_to_fin u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (succ_finnat u) = fsucc (finnat_to_fin u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fsucc\n  (finnat_to_fin\n     (u.1;\n     leq_rec u.1.+2 (fun (m : nat) (_ : u.1.+2 <= m) => u.1.+1 <= nat_pred m)\n       (leq_refl u.1.+1)\n       (fun (m : nat) (_ : u.1.+2 <= m) (IHleq : u.1.+1 <= nat_pred m) =>\n        leq_trans IHleq pred_leq)\n       n.+1 (leq_succ u.2))) =\nfsucc (finnat_to_fin u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "do 2 f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(u.1;\nleq_rec u.1.+2 (fun (m : nat) (_ : u.1.+2 <= m) => u.1.+1 <= nat_pred m)\n  (leq_refl u.1.+1)\n  (fun (m : nat) (_ : u.1.+2 <= m) (IHleq : u.1.+1 <= nat_pred m) =>\n   leq_trans IHleq pred_leq)\n  n.+1 (leq_succ u.2)) =\nu",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply path_sigma_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_finnat_to_fin_incl@{} {n : nat} (u : FinNat n)\n  : finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert n u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (n : nat) (u : FinNat n),\nfinnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply finnat_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall n : nat,\n(fun (n0 : nat) (u : FinNat n0) =>\n finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)) n.+1\n  (zero_finnat n)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (n : nat) (u : FinNat n),\n(fun (n0 : nat) (u0 : FinNat n0) =>\n finnat_to_fin (incl_finnat u0) = fin_incl (finnat_to_fin u0)) n u ->\n(fun (n0 : nat) (u0 : FinNat n0) =>\n finnat_to_fin (incl_finnat u0) = fin_incl (finnat_to_fin u0)) n.+1\n  (succ_finnat u)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (n : nat) (u : FinNat n),\n(fun (n0 : nat) (u0 : FinNat n0) =>\n finnat_to_fin (incl_finnat u0) = fin_incl (finnat_to_fin u0)) n u ->\n(fun (n0 : nat) (u0 : FinNat n0) =>\n finnat_to_fin (incl_finnat u0) = fin_incl (finnat_to_fin u0)) n.+1\n  (succ_finnat u)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros n u; cbn beta; intros p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (incl_finnat (succ_finnat u)) =\nfin_incl (finnat_to_fin (succ_finnat u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs exact (path_finnat_to_fin_succ (incl_finnat u)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fsucc (finnat_to_fin (incl_finnat u)) =\nfin_incl (finnat_to_fin (succ_finnat u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs exact (ap fsucc p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fsucc (fin_incl (finnat_to_fin u)) = fin_incl (finnat_to_fin (succ_finnat u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (incl_finnat u) = fin_incl (finnat_to_fin u)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap fin_incl (path_finnat_to_fin_succ _))^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_finnat_to_fin_last@{} (n : nat)\n  : finnat_to_fin (last_finnat n) = fin_last.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (last_finnat n) = fin_last",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (last_finnat n) = fin_last",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [| n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (last_finnat 0) = fin_last",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (last_finnat n.+1) = fin_last",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (last_finnat n) = fin_last"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (last_finnat 0) = fin_last",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (last_finnat n.+1) = fin_last",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (last_finnat n) = fin_last"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap fsucc IHn).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_finnat_to_fin_to_finnat@{} {n : nat} (u : FinNat n)\n  : fin_to_finnat (finnat_to_fin u) = u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin u) = u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin u) = u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [| n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin u) = u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin u) = u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u0 : FinNat n, fin_to_finnat (finnat_to_fin u0) = u0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin u) = u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim (not_lt_zero_r _ u.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin u) = u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "FinNat n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u0 : FinNat n, fin_to_finnat (finnat_to_fin u0) = u0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct u as [x h].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_to_finnat (finnat_to_fin (x; h)) = (x; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat (finnat_to_fin (x; h))).1 = (x; h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x as [| x].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat (finnat_to_fin (0; h))).1 = (0; h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "0 < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat (finnat_to_fin (x.+1; h))).1 = (x.+1; h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat (finnat_to_fin (0; h))).1 = (0; h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "0 < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap pr1 (path_fin_to_finnat_fin_zero n)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fin_to_finnat (finnat_to_fin (x.+1; h))).1 = (x.+1; h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((path_fin_to_finnat_fsucc _)..1 @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(succ_finnat\n   (fin_to_finnat\n      ((fix finnat_to_fin (n0 : nat) : FinNat n0 -> Fin n0 :=\n          match n0 as n1 return (FinNat n1 -> Fin n1) with\n          | 0 => fun u : FinNat 0 => Empty_rec (not_lt_zero_r u.1 u.2)\n          | n1.+1 =>\n              fun u : FinNat n1.+1 =>\n              let u0 := u in\n              let proj1 := u0.1 in\n              let h0 := u0.2 in\n              match proj1 as proj0 return (proj0 < n1.+1 -> Fin n1.+1) with\n              | 0 => fun _ : 0 < n1.+1 => fin_zero\n              | x0.+1 =>\n                  fun h1 : x0.+1 < n1.+1 =>\n                  fsucc (finnat_to_fin n1 (x0; leq_pred' h1))\n              end h0\n          end)\n         n (x; leq_pred' h)))).1 =\n(x.+1; h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "x"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "x.+1 < n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall u : FinNat n, fin_to_finnat (finnat_to_fin u) = u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap S (IHn (x; leq_pred' h))..1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_fin_to_finnat_to_fin@{} {n : nat} (k : Fin n)\n  : finnat_to_fin (fin_to_finnat k) = k.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat k) = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat k) = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [| n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat k) = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat k) = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, finnat_to_fin (fin_to_finnat k0) = k0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat k) = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim k.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat k) = k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, finnat_to_fin (fin_to_finnat k0) = k0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct k as [k | []].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat (inl k)) = inl k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, finnat_to_fin (fin_to_finnat k0) = k0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat (inr tt)) = inr tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k : Fin n, finnat_to_fin (fin_to_finnat k) = k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat (inl k)) = inl k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k0 : Fin n, finnat_to_fin (fin_to_finnat k0) = k0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "specialize (IHn k).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat (inl k)) = inl k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (fin_to_finnat k) = k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (path_finnat_to_fin_incl (fin_to_finnat k) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fin_incl (finnat_to_fin (fin_to_finnat k)) = inl k",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "Fin n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "finnat_to_fin (fin_to_finnat k) = k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap fin_incl IHn).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finnat_to_fin (fin_to_finnat (inr tt)) = inr tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall k : Fin n, finnat_to_fin (fin_to_finnat k) = k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_finnat_to_fin_last.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_fin_finnat@{} (n : nat) : Fin n <~> FinNat n\n  := equiv_adjointify fin_to_finnat finnat_to_fin\n      path_finnat_to_fin_to_finnat\n      path_fin_to_finnat_to_fin.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

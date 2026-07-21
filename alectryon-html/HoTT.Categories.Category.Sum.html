@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.Category.Sum.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * The coproduct of categories *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> Category.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** Definition of [+] for categories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">internals</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sum_morphism</span> (<span class="nv">s</span> <span class="nv">d</span> : C + D) : <span class="kt">Type</span>
+    := <span class="k">match</span> s, d <span class="k">with</span>
+         | inl s, inl d =&gt; morphism C s d
+         | inr s, inr d =&gt; morphism D s d
+         | _, _ =&gt; Empty
+       <span class="k">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> sum_morphism _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sum_identity</span> (<span class="nv">x</span> : C + D) : sum_morphism x x
+    := <span class="k">match</span> x <span class="k">with</span>
+         | inl x =&gt; identity x
+         | inr x =&gt; identity x
+       <span class="k">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> sum_identity _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sum-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sum-v-alectryon-json-chk0"><span class="kn">Definition</span> <span class="nf">sum_compose</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C + D)
+             (<span class="nv">m1</span> : sum_morphism d d&#39;) (<span class="nv">m2</span> : sum_morphism s d)
+  : sum_morphism s d&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>C + D</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>sum_morphism d d&#39;</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>sum_morphism s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">sum_morphism s d&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sum-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sum-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>C + D</span></span></span><br><span><var>m1</var><span class="hyp-type"><b>: </b><span>sum_morphism d d&#39;</span></span></span><br><span><var>m2</var><span class="hyp-type"><b>: </b><span>sum_morphism s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">sum_morphism s d&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">case</span> s, d, d&#39;; <span class="nb">simpl</span> <span class="k">in</span> *;
+    <span class="kp">solve</span> [ <span class="nb">case</span> m1
+          | <span class="nb">case</span> m2
+          | <span class="nb">eapply</span> compose; <span class="bp">eassumption</span> ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> sum_compose [_ _ _] _ _ / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">internals</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sum-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sum-v-alectryon-json-chk2"><span class="kn">Definition</span> <span class="nf">sum</span> (<span class="nv">C</span> <span class="nv">D</span> : PreCategory) : PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sum-v-alectryon-json-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sum-v-alectryon-json-chk3"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (@Build_PreCategory
+            (C + D)
+            (sum_morphism C D)
+            (sum_identity C D)
+            (sum_compose C D)
+            _
+            _
+            _
+            _);
+  <span class="kp">abstract</span> (
+      <span class="kp">repeat</span> (<span class="nb">simpl</span> || <span class="nb">apply</span> istrunc_S || <span class="nb">intros</span> [] || <span class="nb">intro</span>);
+      <span class="nb">auto with</span> morphism;
+      <span class="nb">typeclasses eauto</span>
+    ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> CategorySumNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;+&quot;</span> := sum : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">CategorySumNotations</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

@@ -1,0 +1,1390 @@
+<html>
+<head>
+<title>Maps.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Maps.v</h1>
+
+<div class="code" title="File: Maps.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 37.037037037037%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Universes.HSet.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 2
+Time: 0.034s">
+<div class="time" style="width: 31.481481481481%"></div>
+<pre>
+Require Import Truncations.Core Connectedness SeparatedTrunc.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 3
+Time: 0.029s">
+<div class="time" style="width: 26.851851851852%"></div>
+<pre>
+Require Import Algebra.Groups.Group Subgroup Algebra.AbGroups.Centralizer.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 4
+Time: 0.054s">
+<div class="time" style="width: 50%"></div>
+<pre>
+Require Import Pointed WildCat WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Require Import Homotopy.ClassifyingSpace.Core.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.Quotient GraphQuotient.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Export Homotopy.ClassifyingSpace.Core.ClassifyingSpaceNotation.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Mapping spaces between classifying spaces *)
+
+(** The type of pointed maps [B G -&gt;* B H] is known to be equivalent to the set [G $-&gt; H]. In this file, we compute [Pi 0] and [Pi 1] of the general function type [B G -&gt; B H]. *)
+
+(** ** Connected components of [B G -&gt; B H] *)
+
+(** The set of representations is the set of conjugacy classes of group homomorphisms. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition groupreps (G H : Group) : Type
+  := @Quotient (G $-&gt; H) (conj_grp_homo).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We show that the set of connected components of [B G -&gt; B H] is in bijection with [groupreps G H]. *)
+
+(** [fmap B] sends conjugation to the identity map. Therefore, it induces a map [groupreps G H -&gt; Trunc 0 (B G -&gt; B H)]. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 28
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition idmap_fmap_grp_conj {G : Group} (g : G)
+  : fmap B (grp_conj g) == idmap.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 30
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  srapply ClassifyingSpace_ind_hset.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bloop g).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 33
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    rapply equiv_sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rewrite ClassifyingSpace_rec_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V rapply bloop_pp.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_idmap.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V rapply bloop_pp.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; exact (ap bloop (grp_inv_gV_g _ g)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 40
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition groupreps_to_pi0_map_bg `{ua : Univalence} (G H : Group)
+  : groupreps G H -&gt; Trunc 0 (B G -&gt; B H).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (Quotient_rec _ _ _ _); cbn beta.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fmap B f).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b hr.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 50
+Time: 0.013s">
+<div class="time" style="width: 12.037037037037%"></div>
+<pre>
+    strip_truncations; destruct hr as [h r].</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 53
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+    lhs' exact (fmap2 (g:=grp_conj h $o b) B r).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 54
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    lhs' exact (fmap_comp B b (grp_conj h)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (idmap_fmap_grp_conj h _).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 57
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We first show that [groupreps_to_pi0_map_bg] is an embedding. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isemb_groupreps_to_pi0_map_bg `{ua : Univalence} {G H : Group}
+  : IsEmbedding (groupreps_to_pi0_map_bg G H).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isembedding_isinj_hset.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 63
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+  rapply Quotient_ind2_hprop.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v p.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 65
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  srapply path_quotient.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 66
+Time: 0.041s">
+<div class="time" style="width: 37.962962962963%"></div>
+<pre>
+  apply (equiv_path_Tr _ _)^-1 in p.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 67
+Time: 0.009s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  pose (h := equiv_g_loops_bg^-1 (ap10 p bbase)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists h.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  apply (equiv_inj equiv_g_loops_bg).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 bloop_pp.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite bloop_inv.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* [h] is defined by applying [equiv_g_loops_bg^-1] and [bloop] is the inverse of that function. *)
+ </pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 78
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  rewrite &lt;- 2 ap_fmap_b_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap_homotopic (ap10 p) (bloop x)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 80
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When [Y] is connected, every function [X -&gt; Y] is merely pointed, so [pointed_fun] is a surjection. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issurj_pointed_fun_conn `{Univalence} {X Y : pType} `{IsConnected 0 Y}
+  : IsSurjection (pointed_fun : (X -&gt;* Y) -&gt; (X -&gt; Y)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (cancelR_issurjection (issig_pmap X Y)); cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 86
+Time: 0.01s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+  rapply conn_map_pr1.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that [groupreps_to_pi0_map_bg] is surjective.  By definition, we have a commutative diagram
+&lt;&lt;
+               fmap B             pointed_fun
+        G $-&gt; H   &lt;~&gt;   (BG -&gt;* BH)  ----------&gt;  (BG -&gt; BH)
+           |                                      |
+  class_of |                                      | tr
+           v                                      v
+        groupreps G H ------------------&gt; Tr 0 (BG -&gt; BH)
+                     groupreps_to_pi0_map_bg
+&gt;&gt;
+    To show that [groupreps_to_pi0_map_bg] is surjective, it suffices to show that this is true after precomposition with [class_of] and so we just need to show that the other three maps are surjective.  Rocq can prove these by typeclass search, with one hint for [tr]. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issurj_groupreps_to_pi0_map_bg `{ua : Univalence} {G H : Group}
+  : IsSurjection (groupreps_to_pi0_map_bg G H).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (cancelR_issurjection (class_of _)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 103
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  change (IsConnMap (Tr (-1)) (tr (n:=0) o pointed_fun o fmap (a:=G) (b:=H) B)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (@isconnmap_pred' 0).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* [tr] is in fact 0-connected, so we give this hint. *)
+ </pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 106
+Time: 0.082s">
+<div class="time" style="width: 75.925925925926%"></div>
+<pre>exact _.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 106
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_groupreps_to_pi0_map_bg `{ua : Univalence} (G H : Group)
+  : IsEquiv (groupreps_to_pi0_map_bg G H).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact issurj_groupreps_to_pi0_map_bg.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact isemb_groupreps_to_pi0_map_bg.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+Definition equiv_groupreps_to_pi0_map_bg `{ua : Univalence} (G H : Group)
+  : (groupreps G H) &lt;~&gt; Pi 0 [B G -&gt; B H, fun x =&gt; bbase]
+  := Build_Equiv _ _ _ (isequiv_groupreps_to_pi0_map_bg G H).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The fundamental group of [B G -&gt; B H] *)
+
+(** We show that [Pi 1 [B G -&gt; B H, fmap B v]] is equivalent to the centralizer of the image of [v]. *)
+
+(** The map in one direction is induced by [fmap11_B] applied to the subgroup inclusion and [v]. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition b_centralizer_grp_image_to_map_bg {G H : Group} (v : G $-&gt; H)
+  : B (subtype_centralizer_subgroup (grp_image v)) -&gt; (B G -&gt; B H).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (fmap11_B (subgroup_incl _) v).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [h ch] g; cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 130
+Time: 0.023s">
+<div class="time" style="width: 21.296296296296%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ch (v g) (tr (g; idpath))).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 133
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition centralizer_grp_image_to_loops_map_bg {G H : Group} (v : G $-&gt; H)
+  : subtype_centralizer_subgroup (grp_image v)
+      -&gt; loops [B G -&gt; B H, fmap B v]
+  := fun x =&gt; ap (b_centralizer_grp_image_to_map_bg v) (bloop x).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 138
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition centralizer_grp_image_to_pi1_map_bg {G H : Group} (v : G $-&gt; H)
+  : subtype_centralizer_subgroup (grp_image v)
+      -&gt; Pi 1 [B G -&gt; B H, fmap B v]
+  := tr o (centralizer_grp_image_to_loops_map_bg v).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now define the inverse. *)</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition pi1_map_bg_to_centralizer_group_image `{ua : Univalence}
+  {G H : Group} (v : G $-&gt; H)
+  : Pi 1 [B G -&gt; B H, fmap B v]
+    $-&gt; subtype_centralizer_subgroup (grp_image v).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* It's enough to define a group homomorphism to [H] whose image is in the centralizer. *)
+ </pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply subgroup_corec.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> refine (_^-1$ $o _).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* For the homomorphism to [H], it's enough to define a homomorphism to [LoopGroup (B H)]. *)
+   </pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>1: exact grp_iso_g_loopgroup_bg.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* And for that, [ap10] does the trick. *)
+   </pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 157
+Time: 0.02s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+      strip_truncations; change (pointed_fun (fmap B v) = (fmap B v)) in p.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap10 p bbase).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p q.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 160
+Time: 0.066s">
+<div class="time" style="width: 61.111111111111%"></div>
+<pre>
+      strip_truncations; change (pointed_fun (fmap B v) = fmap B v) in p, q.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 161
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+      cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 162
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+      exact (ap10_pp p q bbase).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Now we need to show that the image of our homomorphism is in the centralizer. *)
+ </pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 165
+Time: 0.064s">
+<div class="time" style="width: 59.259259259259%"></div>
+<pre>
+    strip_truncations; change (pointed_fun (fmap B v) = (fmap B v)) in p.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros h sh.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply (centralizer_iso grp_iso_g_loopgroup_bg); cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rewrite (eisretr bloop).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 171
+Time: 0.026s">
+<div class="time" style="width: 24.074074074074%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    destruct sh as [g []]; clear h.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 173
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    rewrite &lt;- ap_fmap_b_beta_bloop.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold centralizer.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 175
+Time: 0.019s">
+<div class="time" style="width: 17.592592592593%"></div>
+<pre>
+    cbn; napply concat_Ap.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 176
+Time: 0.061s">
+<div class="time" style="width: 56.481481481481%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+Instance isequiv_pi1_map_bg_to_centralizer_group_image `{ua : Univalence}
+  {G H : Group} (v : G $-&gt; H)
+  : IsEquiv (pi1_map_bg_to_centralizer_group_image v).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (centralizer_grp_image_to_pi1_map_bg v).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 185
+Time: 0.029s">
+<div class="time" style="width: 26.851851851852%"></div>
+<pre> intros [h ch]; strip_truncations.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 185
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 187
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+    napply ClassifyingSpace_rec2_beta_bloop1_bbase.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro u.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 189
+Time: 0.019s">
+<div class="time" style="width: 17.592592592593%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    change (pointed_fun (fmap B v) = (fmap B v)) in u.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold centralizer_grp_image_to_pi1_map_bg.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold centralizer_grp_image_to_loops_map_bg.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 194
+Time: 0.015s">
+<div class="time" style="width: 13.888888888889%"></div>
+<pre>
+    apply (equiv_inj ap10).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 196
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+    rapply ClassifyingSpace_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 197
+Time: 0.009s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    lhs napply ClassifyingSpace_rec2_beta_bloop1_bbase.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 198
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eisretr.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 200
+Time: 0.027s">
+<div class="time" style="width: 25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 201
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+Definition equiv_pi1_map_bg_to_centralizer_group_image `{ua : Univalence}
+  {G H : Group} (v : G $-&gt; H)
+  : GroupIsomorphism
+    (Pi 1 [B G -&gt; B H, fmap B v])
+    (subtype_centralizer_subgroup (grp_image v))
+  := Build_GroupIsomorphism _ _ _ (isequiv_pi1_map_bg_to_centralizer_group_image v).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As a corollary, we can compute the homotopy groups of any function type of the form [X -&gt; B G], where [X] is a pointed connected type. *)
+
+</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pi0_map_bg_groupreps_pi1 `{Univalence}
+  (X : pType) (G : Group) `{IsConnected 0 X}
+  : groupreps (Pi 1 X) G &lt;~&gt; Tr 0 (X -&gt; B G).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Trunc_functor_equiv 0 (equiv_map_bg X G) oE _).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_groupreps_to_pi0_map_bg.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+Definition pi1_map_bg_groupreps_pi1 `{Univalence}
+  (X : pType) (G : Group) `{IsConnected 0 X} (v : Pi 1 X $-&gt; G)
+  : GroupIsomorphism
+      (Pi 1 [X -&gt; B G, equiv_bg_pi1_adjoint X G v])
+      (subtype_centralizer_subgroup (grp_image v)).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (grp_iso_compose (equiv_pi1_map_bg_to_centralizer_group_image v) _).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 225
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+  srapply groupiso_pi_functor.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_map_bg X G).</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold "pt".</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold ispointed_type.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 231
+Time: 0.108s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 232
+Time: 0.082s">
+<div class="time" style="width: 75.925925925926%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Maps.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

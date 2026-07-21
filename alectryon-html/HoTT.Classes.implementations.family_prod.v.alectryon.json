@@ -1,0 +1,416 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Utf8Minimal\n  HoTT.Basics.Overture Types.Unit\n  HoTT.Spaces.List.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following section implements a datatype [FamilyProd] which\n    is a kind of product/tuple. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section family_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {I : Type}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** [FamilyProd F \u2113] is a product type defined by\n  \n<<\n        FamilyProd F [i1;i2;...;in] = F i1 * F i2 * ... * F in * Unit\n>>\n\n      It is convenient to have the [Unit] in the end.\n  *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition FamilyProd (F : I \u2192 Type) : list I \u2192 Type\n    := fold_right (\u03bb (i:I) (A:Type), F i * A) Unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Map function for [FamilyProd F \u2113],\n\n<<\n        map_family_prod f (x1, x2, ..., xn, tt)\n        = (f x1, f x2, ..., f xn, tt)\n>>\n*)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint map_family_prod {F G : I \u2192 Type} {\u2113 : list I}\n      (f : \u2200 i, F i \u2192 G i)\n      : FamilyProd F \u2113 \u2192 FamilyProd G \u2113 :=\n    match \u2113 with\n    | nil => const_tt _\n    | i :: \u2113' => \u03bb '(x,s), (f i x, map_family_prod f s)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** [for_all_family_prod F P (x1, ..., xn, tt) = True] if\n      [P i1 x1 \u2227 P i2 x2 \u2227 ... \u2227 P in xn] holds. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint for_all_family_prod (F : I \u2192 Type) {\u2113 : list I}\n      (P : \u2200 i, F i -> Type) : FamilyProd F \u2113 \u2192 Type :=\n    match \u2113 with\n    | nil => \u03bb _, Unit\n    | i :: _ => \u03bb '(x,s), P i x \u2227 for_all_family_prod F P s\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** [for_all_2_family_prod F G R (x1,...,xn,tt) (y1,...,yn,tt) = True]\n      if [R i1 x1 y1 \u2227 R i2 x2 y2 \u2227 ... \u2227 P in xn yn] holds. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint for_all_2_family_prod (F G : I \u2192 Type) {\u2113 : list I}\n      (R : \u2200 i, F i -> G i -> Type)\n      : FamilyProd F \u2113 \u2192 FamilyProd G \u2113 \u2192 Type :=\n    match \u2113 with\n    | nil => \u03bb _ _, Unit \n    | i :: _ => \u03bb '(x,s) '(y,t), R i x y \u2227 for_all_2_family_prod F G R s t\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** If [R : \u2200 i, relation (F i)] is a family of relations indexed by\n      [i:I] and [R i] is reflexive for all [i], then\n\n<<\n        for_all_2_family_prod F F R s s\n>>\n\n      holds. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma reflexive_for_all_2_family_prod (F : I \u2192 Type)\n    (R : \u2200 i, Relation (F i)) `{!\u2200 i, Reflexive (R i)}\n    {\u2113 : list I} (s : FamilyProd F \u2113)\n    : for_all_2_family_prod F F R s s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "for_all_2_family_prod F F R s s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall i : I, Relation (F i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall i : I, Reflexive (R i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u2113"
+              ],
+              "body": null,
+              "type": "list I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "FamilyProd F \u2113"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof with try reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "for_all_2_family_prod F F R s s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall i : I, Relation (F i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall i : I, Reflexive (R i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u2113"
+              ],
+              "body": null,
+              "type": "list I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "FamilyProd F \u2113"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction \u2113...",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "for_all_2_family_prod F F R s s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall i : I, Relation (F i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall i : I, Reflexive (R i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u2113"
+              ],
+              "body": null,
+              "type": "list I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "FamilyProd F (a :: \u2113)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH\u2113"
+              ],
+              "body": null,
+              "type": "forall s0 : FamilyProd F \u2113, for_all_2_family_prod F F R s0 s0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split...",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "for_all_2_family_prod F F R (snd s) (snd s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "forall i : I, Relation (F i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall i : I, Reflexive (R i)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u2113"
+              ],
+              "body": null,
+              "type": "list I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "FamilyProd F (a :: \u2113)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH\u2113"
+              ],
+              "body": null,
+              "type": "forall s0 : FamilyProd F \u2113, for_all_2_family_prod F F R s0 s0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IH\u2113.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End family_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

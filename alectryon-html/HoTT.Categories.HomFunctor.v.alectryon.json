@@ -1,0 +1,296 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Hom Functor *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core SetCategory.Core Category.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Prod.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Category.Prod.CategoryProdNotations Functor.Prod.Core.FunctorProdCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition of [hom : C\u1d52\u1d56 \u00d7 C \u2192 Set] as a functor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section hom_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation obj_of c'c :=\n    (Build_HSet\n       (morphism\n          C\n          (fst (c'c : object (C^op * C)))\n          (snd (c'c : object (C^op * C))))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let hom_functor_morphism_of s's d'd (hf : morphism (C^op * C) s's d'd)\n  : morphism set_cat (obj_of s's) (obj_of d'd)\n    := fun g => snd hf o g o fst hf.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hom_functor : Functor (C^op * C) set_cat.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (C^op * C) set_cat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hom_functor_morphism_of"
+              ],
+              "body": "fun (s's d'd : (C^op * C)%category) (hf : morphism (C^op * C) s's d'd)\n  (g : obj_of s's) =>\nsnd hf o g o fst hf",
+              "type": "forall s's d'd : (C^op * C)%category,\nmorphism (C^op * C) s's d'd -> morphism set_cat (obj_of s's) (obj_of d'd)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Build_Functor (C^op * C) set_cat\n                          (fun c'c => obj_of c'c)\n                          hom_functor_morphism_of\n                          _\n                          _);\n    subst hom_functor_morphism_of;\n    simpl;\n    abstract (\n        repeat (apply path_forall || intros [] || intro);\n        simpl in *;\n        rewrite <- ?associativity, ?left_identity, ?right_identity;\n        reflexivity\n      ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End hom_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section covariant_contravariant.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Arguments Functor.Prod.Core.induced_snd / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Arguments Functor.Prod.Core.induced_fst / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Covariant hom functor [hom_C(A, \u2500) : C \u2192 set] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition covariant_hom_functor (A : object C^op)\n    := Eval simpl in Functor.Prod.Core.induced_snd (hom_functor C) A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Contravariant hom functor [hom_C(\u2500, A) : C\u1d52\u1d56 \u2192 set] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition contravariant_hom_functor (A : C)\n    := Eval simpl in Functor.Prod.Core.induced_fst (hom_functor C) A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End covariant_contravariant.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

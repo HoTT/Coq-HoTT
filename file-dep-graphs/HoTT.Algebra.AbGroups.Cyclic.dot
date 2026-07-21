@@ -1,0 +1,11 @@
+digraph HoTT_Algebra_AbGroups_Cyclic {
+  graph [ratio=0.5]
+  node [style=filled]
+Cyclic_ab_mul_cyclic_in [label="ab_mul_cyclic_in", URL=<Cyclic.html#ab_mul_cyclic_in>, peripheries=3, fillcolor="#F070D1"] ;
+Cyclic_cyclic_in [label="cyclic_in", URL=<Cyclic.html#cyclic_in>, fillcolor="#F070D1"] ;
+Cyclic_cyclic [label="cyclic", URL=<Cyclic.html#cyclic>, fillcolor="#F070D1"] ;
+  Cyclic_ab_mul_cyclic_in -> Cyclic_cyclic_in [] ;
+  Cyclic_cyclic_in -> Cyclic_cyclic [] ;
+subgraph cluster_Cyclic { label="Cyclic"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Cyclic_cyclic; Cyclic_cyclic_in; Cyclic_ab_mul_cyclic_in; };
+} /* END */

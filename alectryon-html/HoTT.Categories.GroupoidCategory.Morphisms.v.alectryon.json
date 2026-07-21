@@ -1,0 +1,245 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Morphisms in a groupoid *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Category.Morphisms Category.Univalent GroupoidCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Trunc Equivalences HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section groupoid_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{IsTrunc 1 X}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isotoid (s d : groupoid_category X)\n  : s <~=~> d -> s = d\n    := fun f => f : morphism _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** All groupoids are categories *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance iscategory_groupoid_category\n  : IsCategory (groupoid_category X).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCategory (groupoid_category X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc 1 X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCategory (groupoid_category X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc 1 X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat intro.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (idtoiso (groupoid_category X) (y:=d))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc 1 X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "groupoid_category X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (isequiv_adjointify (@idtoiso (groupoid_category X) _ _)\n                              (@isotoid _ _));\n      repeat intro;\n      destruct_head @Isomorphic;\n      destruct_head @IsIsomorphism;\n      compute in *;\n      path_induction_hammer.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End groupoid_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

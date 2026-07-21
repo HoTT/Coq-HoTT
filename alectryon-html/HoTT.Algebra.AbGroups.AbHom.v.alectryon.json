@@ -1,0 +1,4881 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.WildCat Require Import Core Opposite Bifunctor AbEnriched.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HSet Truncations.Core Modalities.ReflectiveSubuniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Groups.Group AbelianGroup Biproduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Homomorphisms from a group to an abelian group form an abelian group. *)\n\n(** In this file, we use additive notation for the group operation, even though some of the groups we deal with are not assumed to be abelian. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_add_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The sum of group homomorphisms [f] and [g] is [fun a => f(a) + g(a)].  While the group *laws* require [Funext], the operations do not, so we make them instances. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance sgop_hom {A : Group} {B : AbGroup} : SgOp (A $-> B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (A $-> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (A $-> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A $-> B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (grp_homo_compose ab_codiagonal (grp_prod_corec f g)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We can negate a group homomorphism [A -> B] by post-composing with [ab_homo_negation : B -> B]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance inverse_hom {A : Group} {B : AbGroup}\n  : Inverse (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Group",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Group",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (Build_Group' (GroupHomomorphism A B) sgop_hom grp_homo_const inverse_hom).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (GroupHomomorphism A B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Associative sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity sg_op 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftInverse sg_op inv 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Associative sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity sg_op 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftInverse sg_op inv 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x x0 + (y x0 + z x0) = x x0 + y x0 + z x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "group_unit + y x = y x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- x x0 + x x0 = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x x0 + (y x0 + z x0) = x x0 + y x0 + z x0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply associativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "group_unit + y x = y x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- x x0 + x x0 = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ab_hom `{Funext} (A : Group) (B : AbGroup) : AbGroup.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "AbGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (Build_AbGroup (grp_hom A B)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Commutative sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f g; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sgop_hom f g = sgop_hom g f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "grp_hom A B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_grouphomomorphism; intro x; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f x + g x = g x + f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "grp_hom A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply commutativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The bifunctor [ab_hom] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_ab_hom01 `{Funext} {A : Group^op}\n  : Is0Functor (ab_hom A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (ab_hom A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (ab_hom A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Is0Functor; intros B B' f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_hom A B $-> ab_hom A B'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_GroupHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ab_hom A B -> ab_hom A B'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving ?grp_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (fun g => grp_homo_compose f g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving (fun g : ab_hom A B => grp_homo_compose f g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros phi psi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_homo_compose f (phi + psi) =\ngrp_homo_compose f phi + grp_homo_compose f psi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi",
+                "psi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_grouphomomorphism; intro a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (phi a + psi a) = f (phi a) + f (psi a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi",
+                "psi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (grp_homo_op f _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_ab_hom10 `{Funext} {B : AbGroup@{u}}\n  : Is0Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Is0Functor; intros A A' f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "flip (ab_hom : Group^op -> AbGroup -> AbGroup) B A $->\nflip (ab_hom : Group^op -> AbGroup -> AbGroup) B A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_GroupHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "flip (ab_hom : Group^op -> AbGroup -> AbGroup) B A ->\nflip (ab_hom : Group^op -> AbGroup -> AbGroup) B A'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving ?grp_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (fun g => grp_homo_compose g f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving\n  (fun g : flip (ab_hom : Group^op -> AbGroup -> AbGroup) B A =>\n   grp_homo_compose g f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros phi psi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_homo_compose (phi + psi) f =\ngrp_homo_compose phi f + grp_homo_compose psi f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi",
+                "psi"
+              ],
+              "body": null,
+              "type": "flip ab_hom B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1functor_ab_hom01 `{Funext} {A : Group^op}\n  : Is1Functor (ab_hom A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (ab_hom A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (ab_hom A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply Build_Is1Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : AbGroup) (f g : a $-> b),\nf $== g -> fmap (ab_hom A) f $== fmap (ab_hom A) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : AbGroup, fmap (ab_hom A) (Id a) $== Id (ab_hom A a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : AbGroup) (f : a $-> b) (g : b $-> c),\nfmap (ab_hom A) (g $o f) $== fmap (ab_hom A) g $o fmap (ab_hom A) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : AbGroup) (f g : a $-> b),\nf $== g -> fmap (ab_hom A) f $== fmap (ab_hom A) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros B B' f g p phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (ab_hom A) f phi = fmap (ab_hom A) g phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_grouphomomorphism; intro a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (phi a) = g (phi a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p (phi a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : AbGroup, fmap (ab_hom A) (Id a) $== Id (ab_hom A a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros B phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (ab_hom A) (Id B) phi = Id (ab_hom A B) phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : AbGroup) (f : a $-> b) (g : b $-> c),\nfmap (ab_hom A) (g $o f) $== fmap (ab_hom A) g $o fmap (ab_hom A) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros B C D f g phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (ab_hom A) (g $o f) phi = (fmap (ab_hom A) g $o fmap (ab_hom A) f) phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C $-> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1functor_ab_hom10 `{Funext} {B : AbGroup@{u}}\n  : Is1Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply Build_Is1Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Group^op) (f g : a $-> b),\nf $== g ->\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) f $==\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : Group^op,\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) (Id a) $==\nId (flip ab_hom B a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : Group^op) (f : a $-> b) (g : b $-> c),\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) (g $o f) $==\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) g $o\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Group^op) (f g : a $-> b),\nf $== g ->\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) f $==\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A A' f g p phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) f phi =\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) g phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "flip ab_hom B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_grouphomomorphism; intro a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi (f a) = phi (g a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "flip ab_hom B A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap phi (p a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : Group^op,\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) (Id a) $==\nId (flip ab_hom B a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) (Id A) phi =\nId (flip ab_hom B A) phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "flip ab_hom B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : Group^op) (f : a $-> b) (g : b $-> c),\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) (g $o f) $==\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) g $o\nfmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A C D f g phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) (g $o f) phi =\n(fmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) g $o\n fmap (flip (ab_hom : Group^op -> AbGroup -> AbGroup) B) f) phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C $-> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "flip ab_hom B A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0bifunctor_ab_hom `{Funext}\n  : Is0Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup)\n  := Build_Is0Bifunctor'' _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1bifunctor_ab_hom `{Funext}\n  : Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Bifunctor (ab_hom : Group^op -> AbGroup -> AbGroup)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply Build_Is1Bifunctor''.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : Group^op, Is1Functor (ab_hom a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : AbGroup, Is1Functor (flip ab_hom b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a0 a1 : Group^op) (f : a0 $-> a1) (b0 b1 : AbGroup) \n(g : b0 $-> b1),\nfmap01 ab_hom a1 g $o fmap10 ab_hom f b0 $==\nfmap10 ab_hom f b1 $o fmap01 ab_hom a0 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a0 a1 : Group^op) (f : a0 $-> a1) (b0 b1 : AbGroup) \n(g : b0 $-> b1),\nfmap01 ab_hom a1 g $o fmap10 ab_hom f b0 $==\nfmap10 ab_hom f b1 $o fmap01 ab_hom a0 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A A' f B B' g phi; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_homo_compose g (grp_homo_compose phi f) =\ngrp_homo_compose (grp_homo_compose g phi) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "A'"
+              ],
+              "body": null,
+              "type": "Group^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "B'"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B $-> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ab_hom A B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [AbGroup] has a wild enrichment in wild abelian groups *)\n\n(** Using arguments very similar to the above, but without using [Funext], we can show that [AbGroup] is enriched in the wild sense.  We could use this combined with [Funext] to deduce the results above, but we wouldn't get the extra generality where the domain group does not need to be abelian.  And conversely we don't want to use the above results here, since we don't need to rely on [Funext]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance abenriched_abgroup : IsAbEnriched AbGroup.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAbEnriched AbGroup",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAbEnriched AbGroup",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_IsAbEnriched.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : AbGroup, IsAbGroup_0gpd (a $-> b)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : AbGroup) (g : b $-> c), IsGroupHom_0gpd (cat_postcomp a g)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : AbGroup) (f : a $-> b), IsGroupHom_0gpd (cat_precomp c f)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : AbGroup, IsAbGroup_0gpd (a $-> b)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAbGroup_0gpd (A $-> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (Build_IsAbGroup_0gpd _ _ _ _ sgop_hom grp_homo_const inverse_hom).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Bifunctor sgop_hom",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor inverse_hom",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b c : A $-> B, a + b + c $== a + (b + c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A $-> B, 0 + a $== a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A $-> B, a + 0 $== a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A $-> B, - a + a $== 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A $-> B, a - a $== 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : A $-> B, a + b $== b + a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "3-8: hnf; intros; intro; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Bifunctor sgop_hom",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor inverse_hom",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x + b x + c x = a x + (b x + c x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "group_unit + a x = a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x + group_unit = a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- a x + a x = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x - a x = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x + b x = b x + a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Bifunctor sgop_hom",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_Is0Bifunctor'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (uncurry sgop_hom)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Is0Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : (A $-> B) * (A $-> B),\n(a $-> b) -> uncurry sgop_hom a $-> uncurry sgop_hom b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [f f'] [g g'] [p p'] a; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f a + f' a = g a + g' a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "g",
+                "g'"
+              ],
+              "body": null,
+              "type": "GroupHomomorphism A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "f' == g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap011 _ (p a) (p' a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor inverse_hom",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Is0Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : A $-> B, (a $-> b) -> inverse_hom a $-> inverse_hom b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f g p a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- f a = - g a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $-> g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (ap _ (p a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x + b x + c x = a x + (b x + c x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; apply associativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "group_unit + a x = a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x + group_unit = a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply right_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- a x + a x = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x - a x = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply right_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a x + b x = b x + a x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply commutativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : AbGroup) (g : b $-> c), IsGroupHom_0gpd (cat_postcomp a g)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B C g f f' a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f a + f' a) = g (f a) + g (f' a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply grp_homo_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b c : AbGroup) (f : a $-> b), IsGroupHom_0gpd (cat_precomp c f)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B C f g g' a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f a) + g' (f a) = g (f a) + g' (f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Properties of [ab_hom] *)\n\n(** Precomposition with a surjection is an embedding. *)\n(* This could be deduced from [isembedding_precompose_surjection_hset], but relating precomposition of homomorphisms with precomposition of the underlying maps is tedious, so we give a direct proof. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isembedding_precompose_surjection_ab `{Funext} {A B C : AbGroup}\n  (f : A $-> B) `{IsSurjection f}\n  : IsEmbedding (fmap10 (A:=Group^op) ab_hom f C).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (fmap10 ab_hom f C)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSurjection0"
+              ],
+              "body": null,
+              "type": "IsConnMap (Tr (-1)) f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (fmap10 ab_hom f C)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSurjection0"
+              ],
+              "body": null,
+              "type": "IsConnMap (Tr (-1)) f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isembedding_isinj_hset; intros g0 g1 p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g0 = g1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSurjection0"
+              ],
+              "body": null,
+              "type": "IsConnMap (Tr (-1)) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g0",
+                "g1"
+              ],
+              "body": null,
+              "type": "ab_hom B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap10 ab_hom f C g0 = fmap10 ab_hom f C g1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_grouphomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g0 == g1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSurjection0"
+              ],
+              "body": null,
+              "type": "IsConnMap (Tr (-1)) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g0",
+                "g1"
+              ],
+              "body": null,
+              "type": "ab_hom B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap10 ab_hom f C g0 = fmap10 ab_hom f C g1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (conn_map_elim (Tr (-1)) f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : A, g0 (f a) = g1 (f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "AbGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSurjection0"
+              ],
+              "body": null,
+              "type": "IsConnMap (Tr (-1)) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g0",
+                "g1"
+              ],
+              "body": null,
+              "type": "ab_hom B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap10 ab_hom f C g0 = fmap10 ab_hom f C g1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_path_grouphomomorphism^-1 p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

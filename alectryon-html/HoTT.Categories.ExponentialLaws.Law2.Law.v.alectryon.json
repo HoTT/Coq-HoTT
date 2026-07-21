@@ -1,0 +1,804 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Exponential laws about products and sums in exponents *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Sum Functor.Sum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Prod ExponentialLaws.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import ExponentialLaws.Law2.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [y\u207f\u207a\u1d50 \u2245 y\u207f \u00d7 y\u1d50] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Law2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables D C1 C2 : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma helper1 (c : Functor C1 D * Functor C2 D)\n  : ((1 o (Basics.Overture.fst c + Basics.Overture.snd c) o inl C1 C2)%functor,\n     (1 o (Basics.Overture.fst c + Basics.Overture.snd c) o inr C1 C2)%functor)%core = c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(1 o (fst c + snd c) o inl C1 C2, 1 o (fst c + snd c) o inr C1 C2) = c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor C1 D * Functor C2 D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(1 o (fst c + snd c) o inl C1 C2, 1 o (fst c + snd c) o inr C1 C2) = c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor C1 D * Functor C2 D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_prod; simpl;\n    path_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma helper2_helper (c : Functor (C1 + C2) D) x\n  : (1 o c o inl C1 C2 + 1 o c o inr C1 C2) x = c x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((1 o c o inl C1 C2 + 1 o c o inr C1 C2) _0 x)%object = (c _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor (C1 + C2) D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(C1 + C2)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((1 o c o inl C1 C2 + 1 o c o inr C1 C2) _0 x)%object = (c _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor (C1 + C2) D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "(C1 + C2)%category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma helper2 (c : Functor (C1 + C2) D)\n  : 1 o c o inl C1 C2 + 1 o c o inr C1 C2 = c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 o c o inl C1 C2 + 1 o c o inr C1 C2 = c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor (C1 + C2) D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 o c o inl C1 C2 + 1 o c o inr C1 C2 = c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor (C1 + C2) D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: (fun cc' : C1 + C2 =>\n   match cc' with\n   | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n   | Overture.inr c' => (c _0 (Overture.inr c'))%object\n   end) =\n  c\n&\ntransport\n  (fun GO : C1 + C2 -> D =>\n   forall s d : C1 + C2,\n   match s with\n   | Overture.inl s0 =>\n       match d with\n       | Overture.inl d0 => morphism C1 s0 d0\n       | Overture.inr _ => Empty\n       end\n   | Overture.inr s0 =>\n       match d with\n       | Overture.inl _ => Empty\n       | Overture.inr d0 => morphism C2 s0 d0\n       end\n   end -> morphism D (GO s) (GO d))\n  HO\n  (fun s d : C1 + C2 =>\n   match\n     s as s0\n     return\n       (match s0 with\n        | Overture.inl s1 =>\n            match d with\n            | Overture.inl d0 => morphism C1 s1 d0\n            | Overture.inr _ => Empty\n            end\n        | Overture.inr s1 =>\n            match d with\n            | Overture.inl _ => Empty\n            | Overture.inr d0 => morphism C2 s1 d0\n            end\n        end ->\n        morphism D\n          match s0 with\n          | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n          | Overture.inr c' => (c _0 (Overture.inr c'))%object\n          end\n          match d with\n          | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n          | Overture.inr c' => (c _0 (Overture.inr c'))%object\n          end)\n   with\n   | Overture.inl cs =>\n       match\n         d as d0\n         return\n           (match d0 with\n            | Overture.inl d1 => morphism C1 cs d1\n            | Overture.inr _ => Empty\n            end ->\n            morphism D (c _0 (Overture.inl cs))%object\n              match d0 with\n              | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n              | Overture.inr c' => (c _0 (Overture.inr c'))%object\n              end)\n       with\n       | Overture.inl cd => fun m : morphism C1 cs cd => (c _1 m)%morphism\n       | Overture.inr o =>\n           fun m : Empty =>\n           match\n             m\n             return\n               (morphism D (c _0 (Overture.inl cs))%object\n                  (c _0 (Overture.inr o))%object)\n           with\n           end\n       end\n   | Overture.inr c's =>\n       match\n         d as d0\n         return\n           (match d0 with\n            | Overture.inl _ => Empty\n            | Overture.inr d1 => morphism C2 c's d1\n            end ->\n            morphism D (c _0 (Overture.inr c's))%object\n              match d0 with\n              | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n              | Overture.inr c' => (c _0 (Overture.inr c'))%object\n              end)\n       with\n       | Overture.inl o =>\n           fun m : Empty =>\n           match\n             m\n             return\n               (morphism D (c _0 (Overture.inr c's))%object\n                  (c _0 (Overture.inl o))%object)\n           with\n           end\n       | Overture.inr c'd => fun m : morphism C2 c's c'd => (c _1 m)%morphism\n       end\n   end) =\nmorphism_of c}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor (C1 + C2) D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "(exists (path_forall _ _ (@helper2_helper c))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : C1 + C2 -> D =>\n   forall s d : C1 + C2,\n   match s with\n   | Overture.inl s0 =>\n       match d with\n       | Overture.inl d0 => morphism C1 s0 d0\n       | Overture.inr _ => Empty\n       end\n   | Overture.inr s0 =>\n       match d with\n       | Overture.inl _ => Empty\n       | Overture.inr d0 => morphism C2 s0 d0\n       end\n   end -> morphism D (GO s) (GO d))\n  (path_forall (1 o c o inl C1 C2 + 1 o c o inr C1 C2) c (helper2_helper c))\n  (fun s d : C1 + C2 =>\n   match\n     s as s0\n     return\n       (match s0 with\n        | Overture.inl s1 =>\n            match d with\n            | Overture.inl d0 => morphism C1 s1 d0\n            | Overture.inr _ => Empty\n            end\n        | Overture.inr s1 =>\n            match d with\n            | Overture.inl _ => Empty\n            | Overture.inr d0 => morphism C2 s1 d0\n            end\n        end ->\n        morphism D\n          match s0 with\n          | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n          | Overture.inr c' => (c _0 (Overture.inr c'))%object\n          end\n          match d with\n          | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n          | Overture.inr c' => (c _0 (Overture.inr c'))%object\n          end)\n   with\n   | Overture.inl cs =>\n       match\n         d as d0\n         return\n           (match d0 with\n            | Overture.inl d1 => morphism C1 cs d1\n            | Overture.inr _ => Empty\n            end ->\n            morphism D (c _0 (Overture.inl cs))%object\n              match d0 with\n              | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n              | Overture.inr c' => (c _0 (Overture.inr c'))%object\n              end)\n       with\n       | Overture.inl cd => fun m : morphism C1 cs cd => (c _1 m)%morphism\n       | Overture.inr o =>\n           fun m : Empty =>\n           match\n             m\n             return\n               (morphism D (c _0 (Overture.inl cs))%object\n                  (c _0 (Overture.inr o))%object)\n           with\n           end\n       end\n   | Overture.inr c's =>\n       match\n         d as d0\n         return\n           (match d0 with\n            | Overture.inl _ => Empty\n            | Overture.inr d1 => morphism C2 c's d1\n            end ->\n            morphism D (c _0 (Overture.inr c's))%object\n              match d0 with\n              | Overture.inl c0 => (c _0 (Overture.inl c0))%object\n              | Overture.inr c' => (c _0 (Overture.inr c'))%object\n              end)\n       with\n       | Overture.inl o =>\n           fun m : Empty =>\n           match\n             m\n             return\n               (morphism D (c _0 (Overture.inr c's))%object\n                  (c _0 (Overture.inl o))%object)\n           with\n           end\n       | Overture.inr c'd => fun m : morphism C2 c's c'd => (c _1 m)%morphism\n       end\n   end) =\nmorphism_of c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Functor (C1 + C2) D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract exp_laws_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma law\n  : functor D C1 C2 o inverse D C1 C2 = 1\n    /\\ inverse D C1 C2 o functor D C1 C2 = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor D C1 C2 o inverse D C1 C2 = 1) *\n(inverse D C1 C2 o functor D C1 C2 = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor D C1 C2 o inverse D C1 C2 = 1) *\n(inverse D C1 C2 o functor D C1 C2 = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split;\n    path_functor;\n    [ (exists (path_forall _ _ helper1))\n    | (exists (path_forall _ _ helper2)) ];\n    exp_laws_t;\n    unfold helper1, helper2;\n    exp_laws_t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Law2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,40 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** To assume the Funext axiom outright, import this file. (Doing this instead of simply positing Funext directly avoids creating multiple witnesses for the axiom in different developments.) *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Axiom funext_axiom : Funext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Existing Instance funext_axiom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,11 @@
+N: 5 "Cl" [body=yes, kind=cnst, prop=no, path="Closed", ];
+N: 1 "Cl'" [body=yes, kind=cnst, prop=no, path="Closed", ];
+N: 4 "accmodality_closed" [body=yes, kind=cnst, prop=no, path="Closed", ];
+N: 6 "equiv_inO_closed" [body=yes, kind=cnst, prop=no, path="Closed", ];
+N: 2 "lex_closed" [body=yes, kind=cnst, prop=no, path="Closed", ];
+N: 3 "topological_closed" [body=yes, kind=cnst, prop=no, path="Closed", ];
+E: 2 3 [weight=1, ];
+E: 2 4 [weight=2, ];
+E: 2 5 [weight=4, ];
+E: 3 4 [weight=3, ];
+E: 4 5 [weight=6, ];

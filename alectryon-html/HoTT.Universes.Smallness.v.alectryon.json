@@ -1,0 +1,4367 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Equivalences Basics.Trunc Basics.Tactics",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Equivalences Basics.Trunc Basics.Tactics\n  Basics.Nat Types.Unit Types.Sigma Types.Universe Types.Equiv HFiber.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Facts about \"small\" types  *)\n\n(** This closely follows Section 2 of the paper \"Non-accessible localizations\", by Dan Christensen, https://arxiv.org/abs/2109.06670 *)\n\n(** Universe variables:  we most often use a subset of [i j k u].  We think of [Type@{i}] as containing the \"small\" types and [Type@{j}] the \"large\" types.  In some early results, there are no constraints between [i] and [j], and in others we require that [i <= j], as expected.  While the case [i = j] isn't particularly interesting, we put some effort into ensuring that it is permitted as well, as there is no semantic reason to exclude it.  The universe variable [k] should be thought of as max(i+1,j), and it is generally required to satisfy [i < k] and [j <= k].  If we assume that [i < j], then we can take [k = j], but we include [k] so that we also allow the case [i = j].  The universe variable [u] is only present because we occasionally use Univalence in [Type@{k}], so the equality types need a larger universe to live in.  Because of this, most results require [k < u].\n\nSummary of the most common situation:  [i < k < u, j <= k], where [i] is for the small types, [j] is for the large types, [k = max(i+1,j)] and [u] is an ambient universe for Univalence.\n\nWe include universe annotations when they clarify the meaning (e.g. in [IsSmall] and when using [PropResizing]), and also when it is required in order to keep control of the universe variables.\n\nNote that [IsSmall] is defined in Overture.v. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ishprop_issmall@{i j k | i < k, j <= k}\n  `{Univalence} (X : Type@{j})\n  : IsHProp (IsSmall@{i j} X).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsSmall X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsSmall X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_inhabited_contr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall X -> Contr (IsSmall X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [Z e].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (IsSmall X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* [IsSmall X] is equivalent to [IsSmall Z], which is contractible since it is a based path space. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (istrunc_equiv_istrunc { Y : Type@{i} & Y <~> Z } _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{Y : Type & Y <~> Z} <~> IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "equiv_via (sig@{k k} (fun Y : Type@{i} => Y <~> X)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{Y : Type & Y <~> Z} <~> {Y : Type & Y <~> X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{Y : Type & Y <~> X} <~> IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: issig.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{Y : Type & Y <~> Z} <~> {Y : Type & Y <~> X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_sigma_id.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : Type, (a <~> Z) <~> (a <~> X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro Y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Y <~> Z) <~> (Y <~> X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_functor_postcompose_equiv Y e).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A type in [Type@{i}] is clearly small. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance issmall_in@{i j | i <= j} (X : Type@{i}) : IsSmall@{i j} X | 10\n  := Build_IsSmall X X equiv_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The small types are closed under equivalence. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issmall_equiv_issmall@{i1 j1 i2 j2 | i1 <= i2} {A : Type@{j1}} {B : Type@{j2}}\n  (e : A <~> B) (sA : IsSmall@{i1 j1} A)\n  : IsSmall@{i2 j2} B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sA"
+              ],
+              "body": null,
+              "type": "IsSmall A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sA"
+              ],
+              "body": null,
+              "type": "IsSmall A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (smalltype A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smalltype A <~> B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sA"
+              ],
+              "body": null,
+              "type": "IsSmall A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (e oE (equiv_smalltype A)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The small types are closed under dependent sums. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sigma_closed_issmall@{i j | } {A : Type@{j}}\n  (B : A -> Type@{j}) (sA : IsSmall@{i j} A)\n  (sB : forall a, IsSmall@{i j} (B a))\n  : IsSmall@{i j} { a : A & B a }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sA"
+              ],
+              "body": null,
+              "type": "IsSmall A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsSmall (B a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sA"
+              ],
+              "body": null,
+              "type": "IsSmall A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsSmall (B a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists { a : (smalltype A) & (smalltype (B (equiv_smalltype A a))) }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{a : smalltype A & smalltype (B (equiv_smalltype A a))} <~> {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sA"
+              ],
+              "body": null,
+              "type": "IsSmall A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsSmall (B a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply equiv_functor_sigma'; intros; apply equiv_smalltype.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If a map has small codomain and fibers, then the domain is small. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issmall_issmall_codomain_fibers@{i j | } {X Y : Type@{j}}\n  (f : X -> Y)\n  (sY : IsSmall@{i j} Y)\n  (sF : forall y : Y, IsSmall@{i j} (hfiber f y))\n  : IsSmall@{i j} X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsSmall Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsSmall (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsSmall Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsSmall (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply issmall_equiv_issmall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsSmall Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsSmall (hfiber f y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsSmall Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsSmall (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsSmall Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsSmall (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_fibration_replacement f)^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall {y : Y & hfiber f y}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsSmall Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsSmall (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply sigma_closed_issmall; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Every contractible type is small. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issmall_contr@{i j| } (X : Type@{j}) (T : Contr X)\n  : IsSmall@{i j} X\n  := issmall_equiv_issmall (equiv_contr_unit)^-1 _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If we can show that [X] is small when it is inhabited, then it is in fact small. This is Remark 2.9 in the paper. It lets us simplify the statement of Proposition 2.8. Note that this implies propositional resizing, so the [PropResizing] assumption is necessary. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issmall_inhabited_issmall@{i j k | i < k, j <= k} `{PropResizing} `{Univalence}\n  (X : Type@{j})\n  (isX : X -> IsSmall@{i j} X)\n  : IsSmall@{i j} X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isX"
+              ],
+              "body": null,
+              "type": "X -> IsSmall X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isX"
+              ],
+              "body": null,
+              "type": "X -> IsSmall X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Since [IsSmall] is cumulative in the universe [j], it suffices to prove [IsSmall@{i k} X] for [k] the universe that [IsSmall@{i j}] lives in.  We think of [k] as max(i+1,j). *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (issmall_issmall_codomain_fibers@{i k} isX).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : IsSmall X, IsSmall (hfiber isX y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isX"
+              ],
+              "body": null,
+              "type": "X -> IsSmall X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro sX.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSmall (hfiber isX sX)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isX"
+              ],
+              "body": null,
+              "type": "X -> IsSmall X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sX"
+              ],
+              "body": null,
+              "type": "IsSmall X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply sigma_closed_issmall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If a type [X] is truncated, then so is [smalltype X]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance istrunc_smalltype@{i j | } (X : Type@{j}) (n : trunc_index)\n  `{IsSmall@{i j} X, IsTrunc n X}\n  : IsTrunc n (smalltype X)\n  := istrunc_equiv_istrunc X (equiv_smalltype@{i j} X)^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Locally small types *)\n\n(** We say that a type [X] is 0-locally small if it is small, and (n+1)-locally small if its identity types are n-locally small. *)\n(* TODO: Can we make this an inductive type and avoid the extra universe variable [k]? *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint IsLocallySmall@{i j k | i < k, j <= k} (n : nat) (X : Type@{j}) : Type@{k}\n  := match n with\n    | 0%nat => IsSmall@{i j} X\n    | S m => forall x y : X, IsLocallySmall m (x = y)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Existing Class IsLocallySmall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Unfold IsLocallySmall : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ishprop_islocallysmall@{i j k | i < k, j <= k} `{Univalence}\n  (n : nat) (X : Type@{j})\n  : IsHProp@{k} (IsLocallySmall@{i j k} n X).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsLocallySmall n X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsLocallySmall n X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Here and later we use [simple_induction] to control the universe variable. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert X; simple_induction n n IHn; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A small type is n-locally small for all [n]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance islocallysmall_in@{i j k | i <= j, j <= k, i < k}\n  (n : nat) (X : Type@{i})\n  : IsLocallySmall@{i j k} n X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, IsLocallySmall n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n; intro X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall 0 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall 0 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply issmall_in.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (IHn (x = y)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The n-locally small types are closed under equivalence. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition islocallysmall_equiv_islocallysmall\n  @{i j1 j2 k | i < k, j1 <= k, j2 <= k}\n  (n : nat) {A : Type@{j1}} {B : Type@{j2}}\n  (e : A <~> B) (lsA : IsLocallySmall@{i j1 k} n A)\n  : IsLocallySmall@{i j2 k} n B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert A B e lsA.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> IsLocallySmall n A -> IsLocallySmall n B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple_induction n n IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> IsLocallySmall 0 A -> IsLocallySmall 0 B",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> IsLocallySmall n.+1 A -> IsLocallySmall n.+1 B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A B : Type, A <~> B -> IsLocallySmall n A -> IsLocallySmall n B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> IsLocallySmall 0 A -> IsLocallySmall 0 B",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact @issmall_equiv_issmall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> IsLocallySmall n.+1 A -> IsLocallySmall n.+1 B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A B : Type, A <~> B -> IsLocallySmall n A -> IsLocallySmall n B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B e lsA b b'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (b = b')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> IsLocallySmall n A0 -> IsLocallySmall n B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> b = b'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> IsLocallySmall n A0 -> IsLocallySmall n B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> IsLocallySmall n A0 -> IsLocallySmall n B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> b = b'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> IsLocallySmall n A0 -> IsLocallySmall n B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_ap' (e^-1%equiv) b b')^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (e^-1%equiv b = e^-1%equiv b')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> IsLocallySmall n A0 -> IsLocallySmall n B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lsA.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A small type is n-locally small for all n. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance islocallysmall_issmall@{i j k | i < k, j <= k} (n : nat)\n  (X : Type@{j}) (sX : IsSmall@{i j} X)\n  : IsLocallySmall@{i j k} n X\n  := islocallysmall_equiv_islocallysmall n (equiv_smalltype X) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If a type is n-locally small, then it is (n+1)-locally small. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance islocallysmall_succ@{i j k | i < k, j <= k} (n : nat)\n  (X : Type@{j}) (lsX : IsLocallySmall@{i j k} n X)\n  : IsLocallySmall@{i j k} n.+1 X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsX"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsX"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert X lsX; simple_induction n n IHn; intros X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall 0 X -> IsLocallySmall 1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 X -> IsLocallySmall n.+2 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0 -> IsLocallySmall n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall 0 X -> IsLocallySmall 1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply islocallysmall_issmall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 X -> IsLocallySmall n.+2 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0 -> IsLocallySmall n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro lsX.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+2 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0 -> IsLocallySmall n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsX"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n.+1 (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsLocallySmall n X0 -> IsLocallySmall n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsX"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHn, lsX.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The n-locally small types are closed under dependent sums. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance sigma_closed_islocallysmall@{i j k | i < k, j <= k}\n  (n : nat) {A : Type@{j}} (B : A -> Type@{j})\n  (lsA : IsLocallySmall@{i j k} n A)\n  (lsB : forall a, IsLocallySmall@{i j k} n (B a))\n  : IsLocallySmall@{i j k} n { a : A & B a }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n (B a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n (B a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert A B lsA lsB.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : A -> Type),\nIsLocallySmall n A ->\n(forall a : A, IsLocallySmall n (B a)) -> IsLocallySmall n {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple_induction n n IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : A -> Type),\nIsLocallySmall 0 A ->\n(forall a : A, IsLocallySmall 0 (B a)) -> IsLocallySmall 0 {a : A & B a}",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : A -> Type),\nIsLocallySmall n.+1 A ->\n(forall a : A, IsLocallySmall n.+1 (B a)) ->\nIsLocallySmall n.+1 {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A : Type) (B : A -> Type),\nIsLocallySmall n A ->\n(forall a : A, IsLocallySmall n (B a)) -> IsLocallySmall n {a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : A -> Type),\nIsLocallySmall 0 A ->\n(forall a : A, IsLocallySmall 0 (B a)) -> IsLocallySmall 0 {a : A & B a}",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact @sigma_closed_issmall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (B : A -> Type),\nIsLocallySmall n.+1 A ->\n(forall a : A, IsLocallySmall n.+1 (B a)) ->\nIsLocallySmall n.+1 {a : A & B a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A : Type) (B : A -> Type),\nIsLocallySmall n A ->\n(forall a : A, IsLocallySmall n (B a)) -> IsLocallySmall n {a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B lsA lsB x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (islocallysmall_equiv_islocallysmall n (equiv_path_sigma _ x y)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n {p : x.1 = y.1 & transport (fun a : A => B a) p x.2 = y.2}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (x.1 = y.1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : x.1 = y.1,\nIsLocallySmall n (transport (fun a0 : A => B a0) a x.2 = y.2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (x.1 = y.1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lsA.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : x.1 = y.1,\nIsLocallySmall n (transport (fun a0 : A => B a0) a x.2 = y.2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n (transport (fun a : A => B a) p x.2 = y.2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (B0 : A0 -> Type),\nIsLocallySmall n A0 ->\n(forall a : A0, IsLocallySmall n (B0 a)) -> IsLocallySmall n {a : A0 & B0 a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsA"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n.+1 A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lsB"
+              ],
+              "body": null,
+              "type": "forall a : A, IsLocallySmall n.+1 (B a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "{a : A & B a}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x.1 = y.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lsB.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If a map has n-locally small codomain and fibers, then the domain is n-locally small. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition islocallysmall_islocallysmall_codomain_fibers@{i j k | i < k, j <= k}\n  (n : nat) {X Y : Type@{j}} (f : X -> Y)\n  (sY : IsLocallySmall@{i j k} n Y)\n  (sF : forall y : Y, IsLocallySmall@{i j k} n (hfiber f y))\n  : IsLocallySmall@{i j k} n X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsLocallySmall n (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsLocallySmall n (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply islocallysmall_equiv_islocallysmall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsLocallySmall n (hfiber f y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsLocallySmall n (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsLocallySmall n (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_fibration_replacement f)^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall n {y : Y & hfiber f y}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sY"
+              ],
+              "body": null,
+              "type": "IsLocallySmall n Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sF"
+              ],
+              "body": null,
+              "type": "forall y : Y, IsLocallySmall n (hfiber f y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply sigma_closed_islocallysmall; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Under propositional resizing, every (n+1)-truncated type is (n+2)-locally small. This is Lemma 2.3 in the paper. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance islocallysmall_trunc@{i j k | i < k, j <= k} `{PropResizing}\n  (n : trunc_index) (X : Type@{j}) (T : IsTrunc n.+1 X)\n  : IsLocallySmall@{i j k} (trunc_index_to_nat n) X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall (trunc_index_to_nat n) X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "IsTrunc n.+1 X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall (trunc_index_to_nat n) X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "IsTrunc n.+1 X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert n X T.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (n : trunc_index) (X : Type),\nIsTrunc n.+1 X -> IsLocallySmall (trunc_index_to_nat n) X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple_induction n n IHn; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, IsHProp X -> IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type,\nIsTrunc n.+2 X ->\nforall x y : X, IsLocallySmall (trunc_index_to_nat n) (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X : Type, IsTrunc n.+1 X -> IsLocallySmall (trunc_index_to_nat n) X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, IsHProp X -> IsSmall X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact issmall_hprop@{i j}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type,\nIsTrunc n.+2 X ->\nforall x y : X, IsLocallySmall (trunc_index_to_nat n) (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X : Type, IsTrunc n.+1 X -> IsLocallySmall (trunc_index_to_nat n) X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X T x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsLocallySmall (trunc_index_to_nat n) (x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "PropResizing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall X0 : Type, IsTrunc n.+1 X0 -> IsLocallySmall (trunc_index_to_nat n) X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "IsTrunc n.+2 X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply IHn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

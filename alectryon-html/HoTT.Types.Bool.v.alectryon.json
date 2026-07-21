@@ -1,0 +1,3363 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Theorems about the booleans *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Coq calls it \"bool\", we call it \"Bool\" *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Unset Elimination Schemes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive Bool : Type0 :=\n  | true : Bool\n  | false : Bool.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Scheme Bool_ind := Induction for Bool Sort Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Scheme Bool_rec := Minimality for Bool Sort Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* For compatibility with Coq's [induction] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Bool_rect := Bool_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register Bool as core.bool.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope bool_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope bool_scope with Bool.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope bool_scope with Bool.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition andb (b1 b2 : Bool) : Bool := if b1 then b2 else false.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition orb (b1 b2 : Bool) : Bool := if b1 then true else b2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition negb (b : Bool) := if b then false else true.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"||\" := orb : bool_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"&&\" := andb : bool_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"->\" := implb : bool_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition implb_true {b} : implb b true = true\n  := if b as b return implb b true = true then idpath else idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition implb_impl {a b} : (a -> b)%Bool = true <-> (a = true -> b = true).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a -> b)%Bool = true <-> (a = true -> b = true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a -> b)%Bool = true <-> (a = true -> b = true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct a; simpl; split; trivial using idpath with nocore;\n  destruct b; simpl; auto using idpath with nocore.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)\n: IsTrunc n (if b then A else B) | 100\n  := if b as b return (IsTrunc n (if b then A else B)) then _ else _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Decidability *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section BoolDecidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition false_ne_true : ~ (false = true)\n    := fun H => match H in (_ = y) return (if y return Set then Empty else Bool) with\n                  | 1%path => true\n                end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition true_ne_false : ~ (true = false)\n    := fun H => false_ne_true (symmetry _ _ H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance decidable_paths_bool : DecidablePaths Bool\n    := fun x y => match x as x, y as y return ((x = y) + ~(x = y)) with\n                    | true, true => inl idpath\n                    | false, false => inl idpath\n                    | true, false => inr true_ne_false\n                    | false, true => inr false_ne_true\n                  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hset_bool : IsHSet Bool := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End BoolDecidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In particular, [negb] has no fixed points *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition not_fixed_negb (b : Bool) : negb b <> b\n  := match b return negb b <> b with\n       | true => false_ne_true\n       | false => true_ne_false\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** And conversely, if two elements of [Bool] are unequal, they must be related by [negb]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition negb_ne {b1 b2 : Bool}\n: (b1 <> b2) -> (b1 = negb b2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b1 <> b2 -> b1 = negb b2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b1 <> b2 -> b1 = negb b2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct b1, b2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true <> true -> true = negb true",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true <> false -> true = negb false",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false <> true -> false = negb true",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false <> false -> false = negb false",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true <> true -> true = negb true",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros oops; case (oops idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true <> false -> true = negb false",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false <> true -> false = negb true",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false <> false -> false = negb false",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros oops; case (oops idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This version of [negb_ne] is more convenient to [destruct] against. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition negb_ne' {b1 b2 : Bool}\n  : (b1 <> b2) -> (negb b1 = b2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b1 <> b2 -> negb b1 = b2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b1 <> b2 -> negb b1 = b2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros oops.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negb b1 = b2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "oops"
+              ],
+              "body": null,
+              "type": "b1 <> b2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b2 = negb b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "oops"
+              ],
+              "body": null,
+              "type": "b1 <> b2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply negb_ne.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b2 <> b1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "oops"
+              ],
+              "body": null,
+              "type": "b1 <> b2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (symmetric_neq oops).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Products as [forall] over [Bool] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section BoolForall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : Bool -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let f (s : forall b, P b) := (s false, s true).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let g (u : P false * P true) (b : Bool) : P b :=\n    match b with\n      | false => fst u\n      | true => snd u\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_bool_forall_prod `{Funext} :\n    (forall b, P b) <~> P false * P true.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall b : Bool, P b) <~> P false * P true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Bool -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun s : forall b : Bool, P b => (s false, s true)",
+              "type": "(forall b : Bool, P b) -> P false * P true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun (u : P false * P true) (b : Bool) =>\nmatch b as b0 return (P b0) with\n| true => snd u\n| false => fst u\nend",
+              "type": "P false * P true -> forall b : Bool, P b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall b : Bool, P b) <~> P false * P true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Bool -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun s : forall b : Bool, P b => (s false, s true)",
+              "type": "(forall b : Bool, P b) -> P false * P true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun (u : P false * P true) (b : Bool) =>\nmatch b as b0 return (P b0) with\n| true => snd u\n| false => fst u\nend",
+              "type": "P false * P true -> forall b : Bool, P b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_adjointify f g);\n    repeat (reflexivity\n              || intros []\n              || intro\n              || apply path_forall).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End BoolForall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_bool_rec_uncurried `{Funext} (P : Type) : P * P <~> (Bool -> P)\n  := (equiv_bool_forall_prod (fun _ => P))^-1%equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The type [Bool <~> Bool] is equivalent to [Bool]. *)\n\n(** The non-identity equivalence is negation (the flip). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_negb : IsEquiv negb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv negb",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv negb",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@Build_IsEquiv\n            _ _\n            negb negb\n            (fun b => if b as b return negb (negb b) = b then idpath else idpath)\n            (fun b => if b as b return negb (negb b) = b then idpath else idpath)\n            _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Bool,\n(if negb x as b return (negb (negb b) = b) then 1 else 1) =\nap negb (if x as b return (negb (negb b) = b) then 1 else 1)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros []; simpl; exact idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_negb : Bool <~> Bool\n  := Build_Equiv Bool Bool negb _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Any equivalence [Bool <~> Bool] sends [true] and [false] to different things. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma eval_bool_isequiv (f : Bool -> Bool) `{IsEquiv Bool Bool f}\n: f false = negb (f true).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f false = negb (f true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f false = negb (f true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (eissect f true).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f false = negb (f true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(f^-1 o f) true = idmap true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (eissect f false).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f false = negb (f true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(f^-1 o f) true = idmap true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "(f^-1 o f) false = idmap false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f false = negb (f true)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 (f true) = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 (f false) = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (f true), (f false).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true = negb true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 true = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 true = false"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false = negb true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 true = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 false = false"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true = negb false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 false = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 true = false"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false = negb false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 false = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 false = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true = negb true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 true = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 true = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity; try (eassumption || (symmetry; eassumption)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false = negb true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 true = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 false = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false = false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 true = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 false = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true = negb false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 false = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 true = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "true = true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 false = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 true = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "false = negb false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f^-1 false = true"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "f^-1 false = false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity; try (eassumption || (symmetry; eassumption)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section EquivBoolEquiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We will identify the constant equivalence with [true] and the flip equivalence with [false], and do this by evaluating the equivalence function on [true]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let f : (Bool <~> Bool) -> Bool := fun e => e true.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let g : Bool -> (Bool <~> Bool) := fun b => if b\n                                              then (equiv_idmap Bool)\n                                              else equiv_negb.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition aut_bool_canonical (e : Bool <~> Bool)\n  : e == g (f e).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e == g (f e)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e == g (f e)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold f, g; clear f g; intros []; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e true = (if e true then 1%equiv else equiv_negb) true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e false = (if e true then 1%equiv else equiv_negb) false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e true = (if e true then 1%equiv else equiv_negb) true",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (e true); reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e false = (if e true then 1%equiv else equiv_negb) false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (eval_bool_isequiv e @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negb (e true) = (if e true then 1%equiv else equiv_negb) false",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (e true); reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma equiv_bool_aut_bool `{Funext} : Bool <~> (Bool <~> Bool).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Bool <~> (Bool <~> Bool)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Bool <~> (Bool <~> Bool)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_adjointify g f _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Bool <~> Bool => g (f x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Bool => f (g x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Bool <~> Bool => g (f x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro e.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f e) = e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_equiv, path_forall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f e) == e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros b; symmetry; apply aut_bool_canonical.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Bool => f (g x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros []; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** It follows that every automorphism of [Bool] is either [idmap] or [negb]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition aut_bool_idmap_or_negb `{Funext} (e : Bool <~> Bool)\n  : (e = equiv_idmap Bool) + (e = equiv_negb).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(e = 1%equiv) + (e = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(e = 1%equiv) + (e = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert e.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall e : Bool <~> Bool, (e = 1%equiv) + (e = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "equiv_intro equiv_bool_aut_bool e.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(equiv_bool_aut_bool e = 1%equiv) + (equiv_bool_aut_bool e = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e0 : Bool <~> Bool => e0 true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct e; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(1%equiv = 1%equiv) + (1%equiv = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(equiv_negb = 1%equiv) + (equiv_negb = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(1%equiv = 1%equiv) + (1%equiv = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inl idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(equiv_negb = 1%equiv) + (equiv_negb = equiv_negb)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** But, obviously, not both. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition idmap_bool_ne_negb : equiv_idmap Bool <> equiv_negb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1%equiv <> equiv_negb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1%equiv <> equiv_negb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros oops.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "oops"
+              ],
+              "body": null,
+              "type": "1%equiv = equiv_negb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (true_ne_false (ap10_equiv oops true)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** In particular, every pair of automorphisms of [Bool] commute with each other. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition abelian_aut_bool (e1 e2 : Bool <~> Bool)\n  : e1 o e2 == e2 o e1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e1 o e2 == e2 o e1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e1 o e2 == e2 o e1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b : Bool => if b then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e1 (e2 b) = e2 (e1 b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b0 : Bool => if b0 then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap e1 (aut_bool_canonical e2 b) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e1 (g (f e2) b) = e2 (e1 b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b0 : Bool => if b0 then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (aut_bool_canonical e1 _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f e1) (g (f e2) b) = e2 (e1 b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b0 : Bool => if b0 then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ ap e2 (aut_bool_canonical e1 b)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f e1) (g (f e2) b) = e2 (g (f e1) b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b0 : Bool => if b0 then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (aut_bool_canonical e2 _)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f e1) (g (f e2) b) = g (f e2) (g (f e1) b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b0 : Bool => if b0 then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold f, g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if e1 true then 1%equiv else equiv_negb)\n  ((if e2 true then 1%equiv else equiv_negb) b) =\n(if e2 true then 1%equiv else equiv_negb)\n  ((if e1 true then 1%equiv else equiv_negb) b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun e : Bool <~> Bool => e true",
+              "type": "Bool <~> Bool -> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": "fun b0 : Bool => if b0 then 1%equiv else equiv_negb",
+              "type": "Bool -> Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e1"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e2"
+              ],
+              "body": null,
+              "type": "Bool <~> Bool"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (e1 true), (e2 true), b; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End EquivBoolEquiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

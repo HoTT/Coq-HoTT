@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.Adjoint.Composition.AssociativityLaw.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Associativity of adjunction composition *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Adjoint.Composition.Core Adjoint.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Adjoint.Composition.LawsTactic.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Sigma Types.Prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> adjunction_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">composition_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">AdjunctionWithFunctors</span> C D :=
+    { fg : Functor C D * Functor D C
+    | fst fg -| snd fg }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{H0 : Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">E</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor B C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F&#39;</span> : Functor C B.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G&#39;</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">H</span> : Functor D E.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">H&#39;</span> : Functor E D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">AF</span> : F -| F&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">AG</span> : G -| G&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">AH</span> : H -| H&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> adjunction_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Adjoint-Composition-AssociativityLaw-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Adjoint-Composition-AssociativityLaw-v-alectryon-json-chk0"><span class="kn">Lemma</span> <span class="nf">associativity</span>
+  : ((_, _); (AH o AG) o AF) = ((_, _); AH o (AG o AF)) :&gt; AdjunctionWithFunctors B E.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C B</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>Functor E D</span></span></span><br><span><var>AF</var><span class="hyp-type"><b>: </b><span>F -| F&#39;</span></span></span><br><span><var>AG</var><span class="hyp-type"><b>: </b><span>G -| G&#39;</span></span></span><br><span><var>AH</var><span class="hyp-type"><b>: </b><span>H -| H&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((Functor.Composition.Core.compose (Functor.Composition.Core.compose H G) F,
+ Functor.Composition.Core.compose F&#39; (Functor.Composition.Core.compose G&#39; H&#39;));
+AH o AG o AF) =
+((Functor.Composition.Core.compose H (Functor.Composition.Core.compose G F),
+ Functor.Composition.Core.compose (Functor.Composition.Core.compose F&#39; G&#39;) H&#39;);
+AH o (AG o AF))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Adjoint-Composition-AssociativityLaw-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Adjoint-Composition-AssociativityLaw-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C B</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>Functor E D</span></span></span><br><span><var>AF</var><span class="hyp-type"><b>: </b><span>F -| F&#39;</span></span></span><br><span><var>AG</var><span class="hyp-type"><b>: </b><span>G -| G&#39;</span></span></span><br><span><var>AH</var><span class="hyp-type"><b>: </b><span>H -| H&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((Functor.Composition.Core.compose (Functor.Composition.Core.compose H G) F,
+ Functor.Composition.Core.compose F&#39; (Functor.Composition.Core.compose G&#39; H&#39;));
+AH o AG o AF) =
+((Functor.Composition.Core.compose H (Functor.Composition.Core.compose G F),
+ Functor.Composition.Core.compose (Functor.Composition.Core.compose F&#39; G&#39;) H&#39;);
+AH o (AG o AF))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Adjoint-Composition-AssociativityLaw-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Adjoint-Composition-AssociativityLaw-v-alectryon-json-chk2"><span class="nb">apply</span> path_sigma_uncurried; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H0</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C B</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>Functor E D</span></span></span><br><span><var>AF</var><span class="hyp-type"><b>: </b><span>F -| F&#39;</span></span></span><br><span><var>AG</var><span class="hyp-type"><b>: </b><span>G -| G&#39;</span></span></span><br><span><var>AH</var><span class="hyp-type"><b>: </b><span>H -| H&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{p
+: (Functor.Composition.Core.compose (Functor.Composition.Core.compose H G) F,
+  Functor.Composition.Core.compose F&#39;
+    (Functor.Composition.Core.compose G&#39; H&#39;)) =
+  (Functor.Composition.Core.compose H (Functor.Composition.Core.compose G F),
+  Functor.Composition.Core.compose (Functor.Composition.Core.compose F&#39; G&#39;)
+    H&#39;)
+&amp;
+transport (<span class="k">fun</span> <span class="nv">fg</span> : Functor B E * Functor E B =&gt; fst fg -| snd fg) p
+  (AH o AG o AF) =
+AH o (AG o AF)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">(<span class="k">exists</span> (<span class="nv">path_prod&#39;</span>
+               (Functor.Composition.Laws.associativity _ _ _)
+               (<span class="nb">symmetry</span> _ _ (Functor.Composition.Laws.associativity _ _ _))));
+      Adjoint.Composition.LawsTactic.law_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">composition_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> associativity : category.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

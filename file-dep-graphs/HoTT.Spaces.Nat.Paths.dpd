@@ -1,0 +1,13 @@
+N: 5 "code_nat" [body=yes, kind=cnst, prop=no, path="Paths", ];
+N: 1 "equiv_path_nat" [body=yes, kind=cnst, prop=no, path="Paths", ];
+N: 4 "idcode_nat" [body=yes, kind=cnst, prop=no, path="Paths", ];
+N: 2 "isequiv_path_nat" [body=yes, kind=cnst, prop=no, path="Paths", ];
+N: 3 "path_nat" [body=yes, kind=cnst, prop=no, path="Paths", ];
+E: 1 2 [weight=1, ];
+E: 1 3 [weight=1, ];
+E: 1 5 [weight=2, ];
+E: 2 3 [weight=14, ];
+E: 2 4 [weight=13, ];
+E: 2 5 [weight=16, ];
+E: 3 5 [weight=9, ];
+E: 4 5 [weight=3, ];

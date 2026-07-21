@@ -1,0 +1,554 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** This file implements algebra congruence relation. It serves as a",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    universal algebra generalization of normal subgroup, ring ideal, etc.\n\n    Congruence is used to construct quotients, in similarity with how\n    normal subgroup and ring ideal are used to construct quotients. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Algebra.Universal.Algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Universes.HProp\n  HoTT.Classes.interfaces.canonical_names\n  HoTT.Algebra.Universal.Homomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Unset Elimination Schemes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope Algebra_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section congruence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {\u03c3 : Signature} (A : Algebra \u03c3) (\u03a6 : forall s, Relation (A s)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A finitary operation [f : A s1 * A s2 * ... * A sn -> A t]\n    satisfies [OpCompatible f] iff\n\n<<\n      \u03a6 s1 x1 y1 * \u03a6 s2 x2 y2 * ... * \u03a6 sn xn yn\n>>\n\n    implies\n\n<<\n      \u03a6 t (f (x1, x2, ..., xn)) (f (y1, y2, ..., yn)).\n>>\n\n    The below definition generalizes this to infinitary operations.\n*)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition OpCompatible {w : SymbolType \u03c3} (f : Operation A w) : Type\n    := forall (a b : DomOperation A w),\n       (forall i : Arity w, \u03a6 (sorts_dom w i) (a i) (b i)) ->\n       \u03a6 (sort_cod w) (f a) (f b).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class OpsCompatible : Type\n    := ops_compatible : forall (u : Symbol \u03c3), OpCompatible u.#A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_ops_compatible `{Funext} {n : trunc_index}\n    `{!forall s x y, IsTrunc n (\u03a6 s x y)}\n    : IsTrunc n OpsCompatible.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n OpsCompatible",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03a6"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, Relation (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x y : A s), IsTrunc n (\u03a6 s x y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n OpsCompatible",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03a6"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, Relation (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x y : A s), IsTrunc n (\u03a6 s x y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact istrunc_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A family of relations [\u03a6] is a congruence iff it is a family of\n      mere equivalence relations and [OpsCompatible A \u03a6] holds. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsCongruence : Type := Build_IsCongruence\n   { is_mere_relation_cong :: forall (s : Sort \u03c3), is_mere_relation (A s) (\u03a6 s)\n   ; equiv_rel_cong :: forall (s : Sort \u03c3), EquivRel (\u03a6 s)\n   ; ops_compatible_cong :: OpsCompatible }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments Build_IsCongruence {is_mere_relation_cong}\n                                      {equiv_rel_cong}\n                                      {ops_compatible_cong}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance hprop_is_congruence `{Funext} : IsHProp IsCongruence.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp IsCongruence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03a6"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, Relation (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp IsCongruence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03a6"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, Relation (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_hprop_allpath _)^-1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : IsCongruence, x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03a6"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, Relation (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [C1 C2 C3] [D1 D2 D3].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  is_mere_relation_cong := C1;\n  equiv_rel_cong := C2;\n  ops_compatible_cong := C3\n|} =\n{|\n  is_mere_relation_cong := D1;\n  equiv_rel_cong := D2;\n  ops_compatible_cong := D3\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03a6"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, Relation (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C1"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x y : A s), IsHProp (\u03a6 s x y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C2"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, EquivRel (\u03a6 s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C3"
+              ],
+              "body": null,
+              "type": "OpsCompatible"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "forall (s : Sort \u03c3) (x y : A s), IsHProp (\u03a6 s x y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, EquivRel (\u03a6 s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D3"
+              ],
+              "body": null,
+              "type": "OpsCompatible"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct (path_ishprop C1 D1),\n                (path_ishprop C2 D2),\n                (path_ishprop C3 D3).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End congruence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A homomorphism [f : forall s, A s -> B s] is compatible\n    with a congruence [\u03a6] iff [\u03a6 s x y] implies [f s x = f s y]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition HomCompatible {\u03c3 : Signature} {A B : Algebra \u03c3}\n  (\u03a6 : forall s, Relation (A s)) `{!IsCongruence A \u03a6}\n  (f : forall s, A s -> B s) `{!IsHomomorphism f}\n  : Type\n  := forall s (x y : A s), \u03a6 s x y -> f s x = f s y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

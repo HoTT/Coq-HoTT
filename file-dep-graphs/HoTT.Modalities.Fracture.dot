@@ -1,0 +1,37 @@
+digraph HoTT_Modalities_Fracture {
+  graph [ratio=0.5]
+  node [style=filled]
+Fracture_disjoint_open_closed_ [label="disjoint_open_closed'", URL=<Fracture.html#disjoint_open_closed'>, peripheries=3, fillcolor="#F070D1"] ;
+Fracture_gluable_open_closed_ [label="gluable_open_closed'", URL=<Fracture.html#gluable_open_closed'>, peripheries=3, fillcolor="#F070D1"] ;
+Fracture_disjoint_open_closed [label="disjoint_open_closed", URL=<Fracture.html#disjoint_open_closed>, peripheries=3, fillcolor="#F070D1"] ;
+Fracture_gluable_open_closed [label="gluable_open_closed", URL=<Fracture.html#gluable_open_closed>, peripheries=3, fillcolor="#F070D1"] ;
+Fracture_equiv_fracture_unglue [label="equiv_fracture_unglue", URL=<Fracture.html#equiv_fracture_unglue>, peripheries=3, fillcolor="#F070D1"] ;
+Fracture_isequiv_fracture_unglue [label="isequiv_fracture_unglue", URL=<Fracture.html#isequiv_fracture_unglue>, fillcolor="#F070D1"] ;
+Fracture_fracture_unglue_issect [label="fracture_unglue_issect", URL=<Fracture.html#fracture_unglue_issect>, fillcolor="#F070D1"] ;
+Fracture_fracture_unglue_isretr [label="fracture_unglue_isretr", URL=<Fracture.html#fracture_unglue_isretr>, fillcolor="#F070D1"] ;
+Fracture_fracture_unglue [label="fracture_unglue", URL=<Fracture.html#fracture_unglue>, fillcolor="#F070D1"] ;
+Fracture_fracture_glue [label="fracture_glue", URL=<Fracture.html#fracture_glue>, peripheries=3, fillcolor="#F070D1"] ;
+Fracture_fracture_glue_uncurried [label="fracture_glue_uncurried", URL=<Fracture.html#fracture_glue_uncurried>, fillcolor="#F070D1"] ;
+Fracture_Disjoint [label="Disjoint", URL=<Fracture.html#Disjoint>, fillcolor="#F070D1"] ;
+Fracture_ispullback_fracture_square [label="ispullback_fracture_square", URL=<Fracture.html#ispullback_fracture_square>, fillcolor="#F070D1"] ;
+Fracture_Gluable [label="Gluable", URL=<Fracture.html#Gluable>, fillcolor="#F070D1"] ;
+Fracture_fracture_square [label="fracture_square", URL=<Fracture.html#fracture_square>, fillcolor="#F070D1"] ;
+  Fracture_disjoint_open_closed_ -> Fracture_Disjoint [] ;
+  Fracture_gluable_open_closed_ -> Fracture_Gluable [] ;
+  Fracture_disjoint_open_closed -> Fracture_Disjoint [] ;
+  Fracture_gluable_open_closed -> Fracture_Gluable [] ;
+  Fracture_equiv_fracture_unglue -> Fracture_isequiv_fracture_unglue [] ;
+  Fracture_isequiv_fracture_unglue -> Fracture_fracture_unglue_issect [] ;
+  Fracture_isequiv_fracture_unglue -> Fracture_fracture_unglue_isretr [] ;
+  Fracture_fracture_unglue_issect -> Fracture_fracture_unglue [] ;
+  Fracture_fracture_unglue_issect -> Fracture_fracture_glue_uncurried [] ;
+  Fracture_fracture_unglue_issect -> Fracture_ispullback_fracture_square [] ;
+  Fracture_fracture_unglue_isretr -> Fracture_fracture_unglue [] ;
+  Fracture_fracture_unglue_isretr -> Fracture_fracture_glue_uncurried [] ;
+  Fracture_fracture_unglue_isretr -> Fracture_Disjoint [] ;
+  Fracture_fracture_glue -> Fracture_fracture_glue_uncurried [] ;
+  Fracture_ispullback_fracture_square -> Fracture_Gluable [] ;
+  Fracture_ispullback_fracture_square -> Fracture_fracture_square [] ;
+subgraph cluster_Fracture { label="Fracture"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Fracture_fracture_square; Fracture_Gluable; Fracture_ispullback_fracture_square; Fracture_Disjoint; Fracture_fracture_glue_uncurried; Fracture_fracture_glue; Fracture_fracture_unglue; Fracture_fracture_unglue_isretr; Fracture_fracture_unglue_issect; Fracture_isequiv_fracture_unglue; Fracture_equiv_fracture_unglue; Fracture_gluable_open_closed; Fracture_disjoint_open_closed; Fracture_gluable_open_closed_; Fracture_disjoint_open_closed_; };
+} /* END */

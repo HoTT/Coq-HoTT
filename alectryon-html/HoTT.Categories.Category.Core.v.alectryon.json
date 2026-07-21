@@ -1,0 +1,605 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Definition of a [PreCategory] *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Overture Basics.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope object_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope morphism_scope with morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope category_scope with category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope object_scope with object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting the HoTT Book: *)\n(** Definition 9.1.1. A precategory [A] consists of the following.\n\n    (i) A type [A\u2080] of objects. We write [a : A] for [a : A\u2080].\n\n    (ii) For each [a, b : A], a set [hom_A(a, b)] of arrows or morphisms.\n\n    (iii) For each [a : A], a morphism [1\u2090 : hom_A(a, a)].\n\n    (iv) For each [a, b, c : A], a function\n\n         [hom_A(b, c) \u2192 hom_A(a, b) \u2192 hom_A(a, c)]\n\n         denoted infix by [g \u21a6 f \u21a6 g \u2218 f] , or sometimes simply by [g f].\n\n    (v) For each [a, b : A] and [f : hom_A(a, b)], we have [f = 1_b \u2218\n        f] and [f = f \u2218 1\u2090].\n\n    (vi) For each [a, b, c, d : A] and [f : hom_A(a, b)], [g :\n         hom_A(b, c)], [h : hom_A(c,d)], we have [h \u2218 (g \u2218 f) = (h \u2218\n         g) \u2218 f]. *)\n(** In addition to these laws, we ask for a few redundant laws to give\n    us more judgmental equalities.  For example, since [(p^)^ \u2262 p] for\n    paths [p], we ask for the symmetrized version of the associativity\n    law, so we can swap them when we take the dual. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record PreCategory :=\n  Build_PreCategory' {\n      object :> Type;\n      morphism : object -> object -> Type;\n\n      identity : forall x, morphism x x;\n      compose : forall s d d',\n                  morphism d d'\n                  -> morphism s d\n                  -> morphism s d'\n                              where \"f 'o' g\" := (compose f g);\n\n      associativity : forall x1 x2 x3 x4\n                             (m1 : morphism x1 x2)\n                             (m2 : morphism x2 x3)\n                             (m3 : morphism x3 x4),\n                        (m3 o m2) o m1 = m3 o (m2 o m1);\n      (** Ask for the symmetrized version of [associativity], so that [(C\u1d52\u1d56)\u1d52\u1d56] and [C] are equal without [Funext] *)\n      associativity_sym : forall x1 x2 x3 x4\n                                 (m1 : morphism x1 x2)\n                                 (m2 : morphism x2 x3)\n                                 (m3 : morphism x3 x4),\n                            m3 o (m2 o m1) = (m3 o m2) o m1;\n\n      left_identity : forall a b (f : morphism a b), identity b o f = f;\n      right_identity : forall a b (f : morphism a b), f o identity a = f;\n      (** Ask for the double-identity version so that [InitialTerminalCategory.Functors.from_terminal C\u1d52\u1d56 X] and [(InitialTerminalCategory.Functors.from_terminal C X)\u1d52\u1d56] are convertible. *)\n      identity_identity : forall x, identity x o identity x = identity x;\n\n      trunc_morphism :: forall s d, IsHSet (morphism s d)\n    }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope category_scope with PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope object_scope with object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope morphism_scope with morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We want eta-expanded primitive projections to [simpl] away. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments object !C%_category / : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments morphism !C%_category / s d : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments identity {!C%_category} / x%_object : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments compose {!C%_category} / {s d d'}%_object (m1 m2)%_morphism : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Infix \"o\" := compose : morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Perhaps we should consider making this notation more global. *)\n(** Perhaps we should pre-reserve all of the notations. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"x --> y\" := (morphism _ x y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"1\" := (identity _) : morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Define a convenience wrapper for building a precategory without\n    specifying the redundant proofs. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_PreCategory\n           object morphism identity compose\n           associativity left_identity right_identity\n  := @Build_PreCategory'\n       object\n       morphism\n       identity\n       compose\n       associativity\n       (fun _ _ _ _ _ _ _ => symmetry _ _ (associativity _ _ _ _ _ _ _))\n       left_identity\n       right_identity\n       (fun _ => left_identity _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** create a hint db for all category theory things *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb category discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** create a hint db for morphisms in categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb morphism discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Resolve left_identity right_identity associativity : category morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Rewrite left_identity right_identity : category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Rewrite left_identity right_identity : morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Simple laws about the identity morphism *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section identity_unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The identity morphism is unique. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma identity_unique (id0 id1 : forall x, morphism C x x)\n        (id1_left : forall s d (m : morphism C s d), id1 _ o m = m)\n        (id0_right : forall s d (m : morphism C s d), m o id0 _ = m)\n  : id0 == id1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "id0 == id1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id0",
+                "id1"
+              ],
+              "body": null,
+              "type": "forall x : C, x --> x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id1_left"
+              ],
+              "body": null,
+              "type": "forall (s d : C) (m : s --> d), id1 d o m = m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id0_right"
+              ],
+              "body": null,
+              "type": "forall (s d : C) (m : s --> d), m o id0 s = m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "id0 == id1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id0",
+                "id1"
+              ],
+              "body": null,
+              "type": "forall x : C, x --> x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id1_left"
+              ],
+              "body": null,
+              "type": "forall (s d : C) (m : s --> d), id1 d o m = m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id0_right"
+              ],
+              "body": null,
+              "type": "forall (s d : C) (m : s --> d), m o id0 s = m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "id0 x = id1 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id0",
+                "id1"
+              ],
+              "body": null,
+              "type": "forall x0 : C, x0 --> x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id1_left"
+              ],
+              "body": null,
+              "type": "forall (s d : C) (m : s --> d), id1 d o m = m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "id0_right"
+              ],
+              "body": null,
+              "type": "forall (s d : C) (m : s --> d), m o id0 s = m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity;\n      [ symmetry; apply id1_left\n      | apply id0_right ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Anything equal to the identity acts like it.  This is obvious,\n      but useful as a helper lemma for automation. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition concat_left_identity s d (m : morphism C s d) i\n  : i = 1 -> i o m = m\n    := fun H => (ap10 (ap _ H) _ @ left_identity _ _ _ m)%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition concat_right_identity s d (m : morphism C s d) i\n  : i = 1 -> m o i = m\n    := fun H => (ap _ H @ right_identity _ _ _ m)%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End identity_unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Make a separate module for Notations, which can be exported/imported separately. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export CategoryCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"o\" := compose : morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Perhaps we should consider making this notation more global. *)\n  (** Perhaps we should pre-reserve all of the notations. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"x --> y\" := (@morphism _ x y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"x --> y\" := (morphism _ x y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"1\" := (identity _) : morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End CategoryCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Transport lemmas for morphisms *)\n\n(** Transport distributes over composition. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition transport_compose_morphism {C : PreCategory} {X Y Z W : object C}\n  (p : X = W) (f : morphism C X Y) (g : morphism C Y Z)\n  : transport (fun U => morphism C U Z) p (g o f)%morphism =\n    (g o transport (fun U => morphism C U Y) p f)%morphism\n  := match p with idpath => idpath end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Transporting the middle object in a composition. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition transport_compose_middle {C : PreCategory} {W X Y Z : object C}\n  (p : W = X) (f : morphism C W Z) (g : morphism C Y W)\n  : (transport (fun U : object C => morphism C U Z) p f o \n     transport (fun U : object C => morphism C Y U) p g)%morphism =\n    (f o g)%morphism\n  := match p with idpath => idpath end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We have a tactic for trying to run a tactic after associating morphisms either all the way to the left, or all the way to the right *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"try_associativity_quick\" tactic(tac) :=\n  first [ rewrite <- ?associativity; tac\n        | rewrite -> ?associativity; tac ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

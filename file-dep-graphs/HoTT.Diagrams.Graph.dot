@@ -1,0 +1,23 @@
+digraph HoTT_Diagrams_Graph {
+  graph [ratio=0.5]
+  node [style=filled]
+Graph_graph1 [label="graph1", URL=<Graph.html#graph1>, peripheries=3, fillcolor="#F070D1"] ;
+Graph_graph0 [label="graph0", URL=<Graph.html#graph0>, peripheries=3, fillcolor="#F070D1"] ;
+Graph_Graph_sind [label="Graph_sind", URL=<Graph.html#Graph_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Graph_Graph_rec [label="Graph_rec", URL=<Graph.html#Graph_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Graph_Graph_ind [label="Graph_ind", URL=<Graph.html#Graph_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Graph_Graph_rect [label="Graph_rect", URL=<Graph.html#Graph_rect>, fillcolor="#F070D1"] ;
+Graph_Build_Graph [label="Build_Graph", URL=<Graph.html#Build_Graph>, fillcolor="#7FAAFF"] ;
+Graph_Graph [label="Graph", URL=<Graph.html#Graph>, fillcolor="#E2CDFA"] ;
+  Graph_graph1 -> Graph_Graph [] ;
+  Graph_graph0 -> Graph_Graph [] ;
+  Graph_Graph_sind -> Graph_Build_Graph [] ;
+  Graph_Graph_sind -> Graph_Graph [] ;
+  Graph_Graph_rec -> Graph_Graph_rect [] ;
+  Graph_Graph_ind -> Graph_Build_Graph [] ;
+  Graph_Graph_ind -> Graph_Graph [] ;
+  Graph_Graph_rect -> Graph_Build_Graph [] ;
+  Graph_Graph_rect -> Graph_Graph [] ;
+subgraph cluster_Graph { label="Graph"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Graph_Graph; Graph_Build_Graph; Graph_Graph_rect; Graph_Graph_ind; Graph_Graph_rec; Graph_Graph_sind; Graph_graph0; Graph_graph1; };
+} /* END */

@@ -1,0 +1,13 @@
+N: 12 "IsProper_GpdHom_from" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 9 "IsProper_GpdHom_from_a" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 11 "IsProper_GpdHom_to" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 10 "IsProper_GpdHom_to_a" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 2 "IsProper_Hom" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 4 "IsProper_catcomp" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 5 "IsProper_catcomp_g" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 6 "IsProper_fmap" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 3 "gpd_hom_to_hom_proper" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 13 "reflexive_proper_proxy" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 7 "symmetric_flip_snd" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 8 "symmetry_flip" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];
+N: 1 "transitive_hom" [body=yes, kind=cnst, prop=no, path="SetoidRewrite", ];

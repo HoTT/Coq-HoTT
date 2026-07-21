@@ -1,0 +1,54 @@
+digraph HoTT_Spaces_BAut_Cantor {
+  graph [ratio=0.5]
+  node [style=filled]
+Cantor_BAut_Cantor_Idempotent_impossible [label="impossible", URL=<Cantor.html#BAut_Cantor_Idempotent.impossible>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_J [label="J", URL=<Cantor.html#BAut_Cantor_Idempotent.J>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_I0_preserves_inr [label="I0_preserves_inr", URL=<Cantor.html#BAut_Cantor_Idempotent.I0_preserves_inr>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_I0_fixed_iff_fixed [label="I0_fixed_iff_fixed", URL=<Cantor.html#BAut_Cantor_Idempotent.I0_fixed_iff_fixed>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_ff_flip_fixed_iff_inr [label="ff_flip_fixed_iff_inr", URL=<Cantor.html#BAut_Cantor_Idempotent.ff_flip_fixed_iff_inr>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_f_flip_fixed_iff_inr [label="f_flip_fixed_iff_inr", URL=<Cantor.html#BAut_Cantor_Idempotent.f_flip_fixed_iff_inr>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_I0nat_flip [label="I0nat_flip", URL=<Cantor.html#BAut_Cantor_Idempotent.I0nat_flip>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_ff_flip [label="ff_flip", URL=<Cantor.html#BAut_Cantor_Idempotent.ff_flip>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_f_flip [label="f_flip", URL=<Cantor.html#BAut_Cantor_Idempotent.f_flip>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_Inat [label="Inat", URL=<Cantor.html#BAut_Cantor_Idempotent.Inat>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_I0 [label="I0", URL=<Cantor.html#BAut_Cantor_Idempotent.I0>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_I [label="I", URL=<Cantor.html#BAut_Cantor_Idempotent.I>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_ap_ff [label="ap_ff", URL=<Cantor.html#BAut_Cantor_Idempotent.ap_ff>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_ap_f [label="ap_f", URL=<Cantor.html#BAut_Cantor_Idempotent.ap_f>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_preidem_f [label="preidem_f", URL=<Cantor.html#BAut_Cantor_Idempotent.preidem_f>, fillcolor="#F070D1"] ;
+Cantor_BAut_Cantor_Idempotent_f [label="f", URL=<Cantor.html#BAut_Cantor_Idempotent.f>, fillcolor="#F070D1"] ;
+Cantor_not_qidem_baut_cantor_idem [label="not_qidem_baut_cantor_idem", URL=<Cantor.html#not_qidem_baut_cantor_idem>, peripheries=3, fillcolor="#F070D1"] ;
+Cantor_preidem_baut_cantor_idem [label="preidem_baut_cantor_idem", URL=<Cantor.html#preidem_baut_cantor_idem>, peripheries=3, fillcolor="#F070D1"] ;
+Cantor_baut_cantor_idem [label="baut_cantor_idem", URL=<Cantor.html#baut_cantor_idem>, fillcolor="#F070D1"] ;
+  Cantor_BAut_Cantor_Idempotent_impossible -> Cantor_BAut_Cantor_Idempotent_J [] ;
+  Cantor_BAut_Cantor_Idempotent_impossible -> Cantor_BAut_Cantor_Idempotent_I0_preserves_inr [] ;
+  Cantor_BAut_Cantor_Idempotent_J -> Cantor_BAut_Cantor_Idempotent_I [] ;
+  Cantor_BAut_Cantor_Idempotent_J -> Cantor_BAut_Cantor_Idempotent_ap_f [] ;
+  Cantor_BAut_Cantor_Idempotent_I0_preserves_inr -> Cantor_BAut_Cantor_Idempotent_I0_fixed_iff_fixed [] ;
+  Cantor_BAut_Cantor_Idempotent_I0_preserves_inr -> Cantor_BAut_Cantor_Idempotent_ff_flip_fixed_iff_inr [] ;
+  Cantor_BAut_Cantor_Idempotent_I0_preserves_inr -> Cantor_BAut_Cantor_Idempotent_f_flip_fixed_iff_inr [] ;
+  Cantor_BAut_Cantor_Idempotent_I0_fixed_iff_fixed -> Cantor_BAut_Cantor_Idempotent_I0nat_flip [] ;
+  Cantor_BAut_Cantor_Idempotent_ff_flip_fixed_iff_inr -> Cantor_BAut_Cantor_Idempotent_ff_flip [] ;
+  Cantor_BAut_Cantor_Idempotent_f_flip_fixed_iff_inr -> Cantor_BAut_Cantor_Idempotent_f_flip [] ;
+  Cantor_BAut_Cantor_Idempotent_I0nat_flip -> Cantor_BAut_Cantor_Idempotent_ff_flip [] ;
+  Cantor_BAut_Cantor_Idempotent_I0nat_flip -> Cantor_BAut_Cantor_Idempotent_f_flip [] ;
+  Cantor_BAut_Cantor_Idempotent_I0nat_flip -> Cantor_BAut_Cantor_Idempotent_Inat [] ;
+  Cantor_BAut_Cantor_Idempotent_I0nat_flip -> Cantor_BAut_Cantor_Idempotent_I0 [] ;
+  Cantor_BAut_Cantor_Idempotent_Inat -> Cantor_BAut_Cantor_Idempotent_I [] ;
+  Cantor_BAut_Cantor_Idempotent_Inat -> Cantor_BAut_Cantor_Idempotent_ap_ff [] ;
+  Cantor_BAut_Cantor_Idempotent_Inat -> Cantor_BAut_Cantor_Idempotent_ap_f [] ;
+  Cantor_BAut_Cantor_Idempotent_I0 -> Cantor_BAut_Cantor_Idempotent_I [] ;
+  Cantor_BAut_Cantor_Idempotent_I -> Cantor_BAut_Cantor_Idempotent_f [] ;
+  Cantor_BAut_Cantor_Idempotent_ap_ff -> Cantor_BAut_Cantor_Idempotent_f [] ;
+  Cantor_BAut_Cantor_Idempotent_ap_f -> Cantor_BAut_Cantor_Idempotent_f [] ;
+  Cantor_BAut_Cantor_Idempotent_preidem_f -> Cantor_BAut_Cantor_Idempotent_f [] ;
+  Cantor_not_qidem_baut_cantor_idem -> Cantor_BAut_Cantor_Idempotent_impossible [] ;
+  Cantor_not_qidem_baut_cantor_idem -> Cantor_baut_cantor_idem [] ;
+  Cantor_preidem_baut_cantor_idem -> Cantor_BAut_Cantor_Idempotent_preidem_f [] ;
+  Cantor_preidem_baut_cantor_idem -> Cantor_baut_cantor_idem [] ;
+  Cantor_baut_cantor_idem -> Cantor_BAut_Cantor_Idempotent_f [] ;
+subgraph cluster_Cantor { label="Cantor"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Cantor_BAut_Cantor_Idempotent { label="BAut_Cantor_Idempotent"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Cantor_BAut_Cantor_Idempotent_f; Cantor_BAut_Cantor_Idempotent_preidem_f; Cantor_BAut_Cantor_Idempotent_ap_f; Cantor_BAut_Cantor_Idempotent_ap_ff; Cantor_BAut_Cantor_Idempotent_I; Cantor_BAut_Cantor_Idempotent_I0; Cantor_BAut_Cantor_Idempotent_Inat; Cantor_BAut_Cantor_Idempotent_f_flip; Cantor_BAut_Cantor_Idempotent_ff_flip; Cantor_BAut_Cantor_Idempotent_I0nat_flip; Cantor_BAut_Cantor_Idempotent_f_flip_fixed_iff_inr; Cantor_BAut_Cantor_Idempotent_ff_flip_fixed_iff_inr; Cantor_BAut_Cantor_Idempotent_I0_fixed_iff_fixed; Cantor_BAut_Cantor_Idempotent_I0_preserves_inr; Cantor_BAut_Cantor_Idempotent_J; Cantor_BAut_Cantor_Idempotent_impossible; };
+Cantor_baut_cantor_idem; Cantor_preidem_baut_cantor_idem; Cantor_not_qidem_baut_cantor_idem; };
+} /* END */

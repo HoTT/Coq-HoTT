@@ -1,0 +1,2055 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** This file defines [Algebra]. *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export\n  HoTT.Utf8Minimal\n  HoTT.Basics\n  HoTT.Classes.implementations.ne_list\n  HoTT.Classes.implementations.family_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Types\n  HoTT.Universes.HSet\n  HoTT.Spaces.List.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import ne_list.notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope Algebra_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope Algebra_scope with Algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Open Scope Algebra_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SymbolType_internal : Type \u2192 Type := ne_list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A [Signature] is used to characterise [Algebra]s. In particular\n    a signature specifies which operations (functions) an algebra for\n    the signature is expected to provide. A signature consists of\n    - A type of [Sort]s. An algebra for the signature must provide\n      a type for each [s : Sort].\n    - A type of function symbols [Symbol]. For each function symbol\n      [u : Symbol], an algebra for the signature must provide a\n      corresponding operation.\n    - The field [symbol_types \u03c3 u] indicates which type the operation\n      corresponding to [u] should have. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record Signature : Type := BuildSignature\n  { Sort : Type\n  ; Symbol : Type\n  ; symbol_types : Symbol \u2192 SymbolType_internal Sort }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We have this implicit coercion allowing us to use a signature\n    [\u03c3:Signature] as a map [Symbol \u03c3 \u2192 SymbolType \u03c3]\n    (see [SymbolType] below). *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Coercion symbol_types : Signature >-> Funclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A single sorted [Signature] is a signature with [Sort = Unit]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition BuildSingleSortedSignature (sym : Type) (arities : sym \u2192 nat)\n  : Signature\n  := BuildSignature Unit sym (ne_list.replicate_Sn tt o arities).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Let [\u03c3:Signature]. For each symbol [u : Symbol \u03c3], [\u03c3 u]\n    associates [u] to a [SymbolType \u03c3]. This represents the required\n    type of the algebra operation corresponding to [u]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SymbolType (\u03c3 : Signature) : Type := ne_list (Sort \u03c3).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For [s : SymbolType \u03c3], [cod_symboltype \u03c3] is the codomain of the\n    symbol type [s]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cod_symboltype {\u03c3} : SymbolType \u03c3 \u2192 Sort \u03c3\n  := ne_list.last.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For [s : SymbolType \u03c3], [cod_symboltype \u03c3] is the domain of the\n    symbol type [s]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition dom_symboltype {\u03c3} : SymbolType \u03c3 \u2192 list (Sort \u03c3)\n  := ne_list.front.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For [s : SymbolType \u03c3], [cod_symboltype \u03c3] is the arity of the\n    symbol type [s]. That is the number [n:nat] of arguments of the\n    [SymbolType \u03c3]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition arity_symboltype {\u03c3} : SymbolType \u03c3 \u2192 nat\n  := length o dom_symboltype.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** An [Algebra] must provide a family of [Carriers \u03c3] indexed by\n    [Sort \u03c3]. These carriers are the \"objects\" (types) of the algebra. *)\n\n(* [Carriers] is a notation because it will be used for an implicit\n   coercion [Algebra >-> Funclass] below. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation Carriers \u03c3 := (Sort \u03c3 \u2192 Type).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The function [Operation] maps a family of carriers [A : Carriers \u03c3]\n    and [w : SymbolType \u03c3] to the corresponding function type.\n\n<<\n      Operation A [:s1; s2; ...; sn; t:] = A s1 \u2192 A s2 \u2192 ... \u2192 A sn \u2192 A t\n>>\n\n    where [[:s1; s2; ...; sn; t:] : SymbolType \u03c3] is a symbol type\n    with domain [[s1; s2; ...; sn]] and codomain [t]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint Operation {\u03c3} (A : Carriers \u03c3) (w : SymbolType \u03c3) : Type\n  := match w with\n     | [:s:] => A s\n     | s ::: w' => A s \u2192 Operation A w'\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance trunc_operation `{Funext} {\u03c3 : Signature}\n  (A : Carriers \u03c3) {n} `{!\u2200 s, IsTrunc n (A s)} (w : SymbolType \u03c3)\n  : IsTrunc n (Operation A w).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (Operation A w)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, IsTrunc n (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "SymbolType \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (Operation A w)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall s : Sort \u03c3, IsTrunc n (A s)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "SymbolType \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction w; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Uncurry of an [f : Operation A w], such that\n\n<<\n      ap_operation f (x1,x2,...,xn) = f x1 x2 ... xn\n>>\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint ap_operation {\u03c3} {A : Carriers \u03c3} {w : SymbolType \u03c3}\n    : Operation A w \u2192\n      FamilyProd A (dom_symboltype w) \u2192\n      A (cod_symboltype w)\n    := match w with\n       | [:s:] => \u03bb f _, f\n       | s ::: w' => \u03bb f '(x, l), ap_operation (f x) l\n       end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Funext for uncurried [Operation A w]. If\n\n<<\n      ap_operation f (x1,x2,...,xn) = ap_operation g (x1,x2,...,xn)\n>>\n\n    for all [(x1,x2,...,xn) : A s1 * A s2 * ... * A sn], then [f = g]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint path_forall_ap_operation `{Funext} {\u03c3 : Signature}\n  {A : Carriers \u03c3} {w : SymbolType \u03c3}\n  : \u2200 (f g : Operation A w),\n    (\u2200 a : FamilyProd A (dom_symboltype w),\n       ap_operation f a = ap_operation g a)\n    -> f = g\n  := match w with\n     | [:s:] => \u03bb (f g : A s) p, p tt\n     | s ::: w' =>\n         \u03bb (f g : A s \u2192 Operation A w') p,\n          path_forall f g\n            (\u03bb x, path_forall_ap_operation (f x) (g x) (\u03bb a, p (x,a)))\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** An [Algebra \u03c3] for a signature [\u03c3] consists of a family [carriers :\n    Carriers \u03c3] indexed by the sorts [s : Sort \u03c3], and for each symbol\n    [u : Symbol \u03c3], an operation of type [Operation carriers (\u03c3 u)],\n    where [\u03c3 u : SymbolType \u03c3] is the symbol type of [u]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record Algebra {\u03c3 : Signature} : Type := BuildAlgebra\n  { carriers : Carriers \u03c3\n  ; operations : \u2200 (u : Symbol \u03c3), Operation carriers (\u03c3 u) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments Algebra : clear implicits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments BuildAlgebra {\u03c3} carriers operations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We have a convenient implicit coercion from an algebra to the\n    family of carriers. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Coercion carriers : Algebra >-> Funclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope Algebra_scope with Algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SigAlgebra (\u03c3 : Signature) : Type\n  := {c : Carriers \u03c3 | \u2200 (u : Symbol \u03c3), Operation c (\u03c3 u) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma issig_algebra (\u03c3 : Signature) : SigAlgebra \u03c3 <~> Algebra \u03c3.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SigAlgebra \u03c3 <~> Algebra \u03c3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SigAlgebra \u03c3 <~> Algebra \u03c3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsTruncAlgebra (n : trunc_index) {\u03c3 : Signature} (A : Algebra \u03c3)\n  := trunc_carriers_algebra :: \u2200 (s : Sort \u03c3), IsTrunc n (A s).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation IsHSetAlgebra := (IsTruncAlgebra 0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hprop_is_trunc_algebra `{Funext} (n : trunc_index)\n  {\u03c3 : Signature} (A : Algebra \u03c3)\n  : IsHProp (IsTruncAlgebra n A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsTruncAlgebra n A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsTruncAlgebra n A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply istrunc_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance trunc_algebra_succ {\u03c3 : Signature} (A : Algebra \u03c3)\n  {n} `{!IsTruncAlgebra n A}\n  : IsTruncAlgebra n.+1 A | 1000.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTruncAlgebra n.+1 A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTruncAlgebra n.+1 A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTruncAlgebra0"
+              ],
+              "body": null,
+              "type": "IsTruncAlgebra n A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** To find a path between two algebras [A B : Algebra \u03c3] it suffices\n    to find paths between the carriers and the operations. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_algebra {\u03c3 : Signature} (A B : Algebra \u03c3)\n  (p : carriers A = carriers B)\n  (q : transport (\u03bb X, \u2200 u, Operation X (\u03c3 u)) p (operations A)\n       = operations B)\n  : A = B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  (operations A) =\noperations B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  (operations A) =\noperations B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct A,B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| carriers := carriers0; operations := operations0 |} =\n{| carriers := carriers1; operations := operations1 |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "carriers0"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "operations0"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation carriers0 (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "carriers1"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "operations1"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation carriers1 (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{| carriers := carriers0; operations := operations0 |} =\n{| carriers := carriers1; operations := operations1 |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  (operations {| carriers := carriers0; operations := operations0 |}) =\noperations {| carriers := carriers1; operations := operations1 |}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| carriers := carriers0; operations := operations0 |} =\n{| carriers := carriers1; operations := operations1 |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "carriers0"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "operations0"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation carriers0 (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "carriers1"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "operations1"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation carriers1 (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "carriers0 = carriers1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  operations0 =\noperations1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by path_induction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_ap_carriers_path_algebra {\u03c3} (A B : Algebra \u03c3)\n  (p : carriers A = carriers B)\n  (q : transport (\u03bb X, \u2200 u, Operation X (\u03c3 u)) p (operations A)\n       = operations B)\n  : ap carriers (path_algebra A B p q) = p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap carriers (path_algebra A B p q) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  (operations A) =\noperations B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap carriers (path_algebra A B p q) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  (operations A) =\noperations B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct A as [A a], B as [B b].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap carriers\n  (path_algebra {| carriers := A; operations := a |}\n     {| carriers := B; operations := b |} p q) =\np",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation A (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation B (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{| carriers := A; operations := a |} = {| carriers := B; operations := b |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p\n  (operations {| carriers := A; operations := a |}) =\noperations {| carriers := B; operations := b |}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap carriers\n  (path_algebra {| carriers := A; operations := a |}\n     {| carriers := B; operations := b |} p q) =\np",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation A (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Carriers \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "forall u : Symbol \u03c3, Operation B (\u03c3 u)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "transport (\u03bb X : Carriers \u03c3, forall u : Symbol \u03c3, Operation X (\u03c3 u)) p a = b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct p,q.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Suppose [p],[q] are paths in [Algebra \u03c3]. To show that [p = q] it\n    suffices to find a path [r] between the paths corresponding to\n    [p] and [q] in [SigAlgebra \u03c3]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_path_algebra {\u03c3 : Signature} {A B : Algebra \u03c3} (p q : A = B)\n  (r : ap (issig_algebra \u03c3)^-1 p = ap (issig_algebra \u03c3)^-1 q)\n  : p = q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap (issig_algebra \u03c3)^-1 p = ap (issig_algebra \u03c3)^-1 q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap (issig_algebra \u03c3)^-1 p = ap (issig_algebra \u03c3)^-1 q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (e := (equiv_ap (issig_algebra \u03c3)^-1 A B)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap (issig_algebra \u03c3)^-1 p = ap (issig_algebra \u03c3)^-1 q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "equiv_ap (issig_algebra \u03c3)^-1 A B",
+              "type": "A = B <~> (issig_algebra \u03c3)^-1 A = (issig_algebra \u03c3)^-1 B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply (@equiv_inv _ _ (ap e) (Equivalences.isequiv_ap _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [p q : A = B] and [IsHSetAlgebra B].\n    Then [ap carriers p = ap carriers q] implies [p = q]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_path_hset_algebra `{Funext} {\u03c3 : Signature}\n  {A B : Algebra \u03c3} `{IsHSetAlgebra B}\n  (p q : A = B) (r : ap carriers p = ap carriers q)\n  : p = q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_path_algebra.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (issig_algebra \u03c3)^-1 p = ap (issig_algebra \u03c3)^-1 q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unshelve eapply path_path_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap (issig_algebra \u03c3)^-1 p) ..1 = (ap (issig_algebra \u03c3)^-1 q) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (\u03bb x : ((issig_algebra \u03c3)^-1 A).1 = ((issig_algebra \u03c3)^-1 B).1,\n   transport (\u03bb c : Carriers \u03c3, forall u : Symbol \u03c3, Operation c (\u03c3 u)) x\n     ((issig_algebra \u03c3)^-1 A).2 =\n   ((issig_algebra \u03c3)^-1 B).2)\n  ?r (ap (issig_algebra \u03c3)^-1 p) ..2 =\n(ap (issig_algebra \u03c3)^-1 q) ..2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap (issig_algebra \u03c3)^-1 p) ..1 = (ap (issig_algebra \u03c3)^-1 q) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity (ap carriers p); [by destruct p |].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap carriers p = (ap (issig_algebra \u03c3)^-1 q) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity (ap carriers q); [exact r | by destruct q].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (\u03bb x : ((issig_algebra \u03c3)^-1 A).1 = ((issig_algebra \u03c3)^-1 B).1,\n   transport (\u03bb c : Carriers \u03c3, forall u : Symbol \u03c3, Operation c (\u03c3 u)) x\n     ((issig_algebra \u03c3)^-1 A).2 =\n   ((issig_algebra \u03c3)^-1 B).2)\n  (match\n     p as p0 in (_ = a)\n     return\n       (IsHSetAlgebra a ->\n        forall q0 : A = a,\n        ap carriers p0 = ap carriers q0 ->\n        (ap (issig_algebra \u03c3)^-1 p0) ..1 = ap carriers p0)\n   with\n   | 1 =>\n       \u03bb (_ : IsHSetAlgebra A) (q0 : A = A)\n       (_ : ap carriers 1 = ap carriers q0), 1\n   end IsHSetAlgebra0 q r @\n   (r @\n    match\n      q as p0 in (_ = a)\n      return\n        (IsHSetAlgebra a ->\n         forall p1 : A = a,\n         ap carriers p1 = ap carriers p0 ->\n         ap carriers p0 = (ap (issig_algebra \u03c3)^-1 p0) ..1)\n    with\n    | 1 =>\n        \u03bb (_ : IsHSetAlgebra A) (p0 : A = A)\n        (_ : ap carriers p0 = ap carriers 1), 1\n    end IsHSetAlgebra0 p r))\n  (ap (issig_algebra \u03c3)^-1 p) ..2 =\n(ap (issig_algebra \u03c3)^-1 q) ..2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHSetAlgebra0"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "ap carriers p = ap carriers q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module algebra_notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Given [A : Algebra \u03c3] and function symbol [u : Symbol \u03c3], we use\n    the notation [u .# A] to refer to the corresponding algebra\n    operation of type [Operation A (\u03c3 u)]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Notation \"u .# A\" := (operations A u) : Algebra_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End algebra_notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

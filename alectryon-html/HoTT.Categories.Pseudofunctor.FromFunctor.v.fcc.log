@@ -1,0 +1,15 @@
+findlib: [WARNING] cannot read directory /home/runner/work/Coq-HoTT/Coq-HoTT/_build/install/default/lib: No such file or directory
+[message] Configuration loaded from ./_CoqProject
+ - findlib: 37 search paths active
+   + findlib config: /nix/store/fn77fqhl55ijd9zf4h324wccf2ngz8lv-ocaml4.14.3-findlib-1.9.8/etc/findlib.conf
+   + findlib default location: /home/runner/work/Coq-HoTT/Coq-HoTT/outputs/out/lib/ocaml/4.14.3/site-lib/
+ - coqlib is at: /nix/store/asz8l4xpdyq3dw8wilx4ffmh0lyw92y1-rocq-9.1.1/lib/coq
+   + 8 Coq path directory bindings in scope
+   + Modules [] will be loaded by default
+[message] compiling file ./theories/Categories/Pseudofunctor/FromFunctor.v
+[message] [goaldump plugin] dumping goals for ./theories/Categories/Pseudofunctor/FromFunctor.v ...
+[message] [goaldump plugin] dumping ast for ./theories/Categories/Pseudofunctor/FromFunctor.v was completed!
+[perfdata]
+{ num sentences: 45
+; stats: hashing: 0.000523 | parsing: 0.012478 | exec: 0.433705; cache: 
+   0 w 

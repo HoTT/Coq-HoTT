@@ -1,0 +1,2584 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Decidable",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Decidable\n  Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Binary Positive Integers *)\n\n(** Most of this file has been adapted from the Coq standard library for positive binary integers. *)\n\n(** Here we define the inductive type of positive binary numbers. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive Pos : Type0 :=\n  | xH : Pos\n  | x0 : Pos -> Pos\n  | x1 : Pos -> Pos.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope positive_scope with pos.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here are some notations that let us write binary positive integers more easily. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"1\" := xH : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"p ~ 1\" := (x1 p) : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"p ~ 0\" := (x0 p) : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Successor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_succ x :=\n  match x with\n    | p~1 => (pos_succ p)~0\n    | p~0 => p~1\n    | 1 => 1~0\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Peano induction (due to Daniel Schepler) *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_peano_ind (P : Pos -> Type) (a : P 1)\n  (f : forall p, P p -> P (pos_succ p)) (p : Pos) : P p\n  := let f2 := pos_peano_ind (fun p => P (p~0))\n    (f _ a) (fun p (x : P p~0) => f _ (f _ x))\n  in match p with\n      | q~1 => f _ (f2 q)\n      | q~0 => f2 q\n      | 1 => a\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Computation rules for Peano induction *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_peano_ind_beta_1 (P : Pos -> Type) (a : P 1)\n  (f : forall p, P p -> P (pos_succ p))\n  : pos_peano_ind P a f 1 = a := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_peano_ind_beta_pos_succ (P : Pos -> Type) (a : P 1)\n  (f : forall p, P p -> P (pos_succ p)) (p : Pos)\n  : pos_peano_ind P a f (pos_succ p) = f _ (pos_peano_ind P a f p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pos_peano_ind P a f (pos_succ p) = f p (pos_peano_ind P a f p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Pos -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall p0 : Pos, P p0 -> P (pos_succ p0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pos_peano_ind P a f (pos_succ p) = f p (pos_peano_ind P a f p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Pos -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall p0 : Pos, P p0 -> P (pos_succ p0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert P a f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (P : Pos -> Type) (a : P 1)\n(f : forall p0 : Pos, P p0 -> P (pos_succ p0)),\npos_peano_ind P a f (pos_succ p) = f p (pos_peano_ind P a f p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction p; trivial.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (P : Pos -> Type) (a : P 1)\n(f : forall p0 : Pos, P p0 -> P (pos_succ p0)),\npos_peano_ind P a f (pos_succ p~1) = f p~1 (pos_peano_ind P a f p~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHp"
+              ],
+              "body": null,
+              "type": "forall (P : Pos -> Type) (a : P 1)\n(f : forall p0 : Pos, P p0 -> P (pos_succ p0)),\npos_peano_ind P a f (pos_succ p) = f p (pos_peano_ind P a f p)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P a f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pos_peano_ind P a f (pos_succ p~1) = f p~1 (pos_peano_ind P a f p~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHp"
+              ],
+              "body": null,
+              "type": "forall (P0 : Pos -> Type) (a0 : P0 1)\n(f0 : forall p0 : Pos, P0 p0 -> P0 (pos_succ p0)),\npos_peano_ind P0 a0 f0 (pos_succ p) = f0 p (pos_peano_ind P0 a0 f0 p)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Pos -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "P 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall p0 : Pos, P p0 -> P (pos_succ p0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply IHp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_peano_rec (P : Type)\n  : P -> (Pos -> P -> P) -> Pos -> P\n  := pos_peano_ind (fun _ => P).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_peano_rec_beta_pos_succ (P : Type)\n  (a : P) (f : Pos -> P -> P) (p : Pos)\n  : pos_peano_rec P a f (pos_succ p) = f p (pos_peano_rec P a f p)\n  := pos_peano_ind_beta_pos_succ (fun _ => P) a f p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Properties of constructors *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition x0_inj {z w : Pos} (p : x0 z = x0 w) : z = w\n  := transport (fun s => z = (\n    match s with xH => w | x0 a => a | x1 a => w end)) p idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition x1_inj {z w : Pos} (p : x1 z = x1 w) : z = w\n  := transport (fun s => z = (\n    match s with xH => w | x0 a => w | x1 a => a end)) p idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition x0_neq_xH {z : Pos} : x0 z <> xH\n  := fun p => transport (fun s =>\n    match s with xH => Empty | x0 a => z = a | x1 a => Empty end) p idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition x1_neq_xH {z : Pos} : x1 z <> xH\n  := fun p => transport (fun s =>\n    match s with xH => Empty | x0 a => Empty | x1 a => z = a end) p idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition x0_neq_x1 {z w : Pos} : x0 z <> x1 w\n  := fun p => transport (fun s =>\n    match s with xH => Empty | x0 a => z = a | x1 _ => Empty end) p idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition xH_neq_x0 {z : Pos} : xH <> x0 z\n  := x0_neq_xH o symmetry _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition xH_neq_x1 {z : Pos} : xH <> x1 z\n  := x1_neq_xH o symmetry _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition x1_neq_x0 {z w : Pos} : x1 z <> x0 w\n  := x0_neq_x1 o symmetry _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Positive binary integers have decidable paths *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance decpaths_pos : DecidablePaths Pos.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DecidablePaths Pos",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DecidablePaths Pos",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros n; induction n as [|zn|on];\n  intros m; induction m as [|zm|om].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (1 = 1)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (1 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (1 = zm)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (1 = om)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = om)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = zm)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (1 = 1)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inl idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (1 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (1 = zm)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr xH_neq_x0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (1 = om)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr xH_neq_x1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr x0_neq_xH).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (IHzn zm) as [p|q].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "zn = zm"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "zn <> zm"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "zn = zm"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inl, ap, p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "zn <> zm"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inr; intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = zm)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "zn <> zm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "zn~0 = zm~0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply q, x0_inj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (zn~0 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zn"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzn"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (zn = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (zn~0 = om)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr x0_neq_x1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr x1_neq_xH).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = zm~0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zm"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHzm"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = zm)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr x1_neq_x0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (IHon om) as [p|q].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "on = om"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "on <> om"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "on = om"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inl, ap, p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable (on~1 = om~1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "on <> om"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inr; intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "on"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHon"
+              ],
+              "body": null,
+              "type": "forall y : Pos, Decidable (on = y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "om"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHom"
+              ],
+              "body": null,
+              "type": "Decidable (on~1 = om)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "on <> om"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "on~1 = om~1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply q, x1_inj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Decidable paths imply [Pos] is a hSet *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ishset_pos : IsHSet Pos := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Operations over positive numbers *)\n\n(** ** Addition *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_add x y :=\n  match x, y with\n    | p~1, q~1 => (pos_add_carry p q)~0\n    | p~1, q~0 => (pos_add p q)~1\n    | p~1, 1 => (pos_succ p)~0\n    | p~0, q~1 => (pos_add p q)~1\n    | p~0, q~0 => (pos_add p q)~0\n    | p~0, 1 => p~1\n    | 1, q~1 => (pos_succ q)~0\n    | 1, q~0 => q~1\n    | 1, 1 => 1~0\n  end\n\nwith pos_add_carry x y :=\n  match x, y with\n    | p~1, q~1 => (pos_add_carry p q)~1\n    | p~1, q~0 => (pos_add_carry p q)~0\n    | p~1, 1 => (pos_succ p)~1\n    | p~0, q~1 => (pos_add_carry p q)~0\n    | p~0, q~0 => (pos_add p q)~1\n    | p~0, 1 => (pos_succ p)~0\n    | 1, q~1 => (pos_succ q)~1\n    | 1, q~0 => (pos_succ q)~0\n    | 1, 1 => 1~1\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"+\" := pos_add : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Operation [x -> 2*x-1] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_pred_double x :=\n  match x with\n    | p~1 => p~0~1\n    | p~0 => (pos_pred_double p)~1\n    | 1 => 1\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Predecessor *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_pred x :=\n  match x with\n    | p~1 => p~0\n    | p~0 => pos_pred_double p\n    | 1 => 1\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** An auxiliary type for subtraction *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive Pos_mask : Set :=\n  | IsNul : Pos_mask\n  | IsPos : Pos -> Pos_mask\n  | IsNeg : Pos_mask.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Operation [x -> 2*x+1] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_mask_succ_double (x : Pos_mask) : Pos_mask :=\n  match x with\n    | IsNul => IsPos 1\n    | IsNeg => IsNeg\n    | IsPos p => IsPos p~1\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Operation [x -> 2*x] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_mask_double (x : Pos_mask) : Pos_mask :=\n  match x with\n    | IsNul => IsNul\n    | IsNeg => IsNeg\n    | IsPos p => IsPos p~0\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Operation [x -> 2*x-2] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_mask_double_pred x : Pos_mask :=\n  match x with\n    | p~1 => IsPos p~0~0\n    | p~0 => IsPos (pos_pred_double p)~0\n    | 1 => IsNul\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Predecessor with mask *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_mask_pred (p : Pos_mask) : Pos_mask :=\n  match p with\n    | IsPos 1 => IsNul\n    | IsPos q => IsPos (pos_pred q)\n    | IsNul => IsNeg\n    | IsNeg => IsNeg\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Subtraction, result as a mask *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_mask_sub (x y : Pos) {struct y} : Pos_mask :=\n  match x, y with\n    | p~1, q~1 => pos_mask_double (pos_mask_sub p q)\n    | p~1, q~0 => pos_mask_succ_double (pos_mask_sub p q)\n    | p~1, 1 => IsPos p~0\n    | p~0, q~1 => pos_mask_succ_double (pos_mask_sub_carry p q)\n    | p~0, q~0 => pos_mask_double (pos_mask_sub p q)\n    | p~0, 1 => IsPos (pos_pred_double p)\n    | 1, 1 => IsNul\n    | 1, _ => IsNeg\n  end\n\nwith pos_mask_sub_carry (x y : Pos) {struct y} : Pos_mask :=\n  match x, y with\n    | p~1, q~1 => pos_mask_succ_double (pos_mask_sub_carry p q)\n    | p~1, q~0 => pos_mask_double (pos_mask_sub p q)\n    | p~1, 1 => IsPos (pos_pred_double p)\n    | p~0, q~1 => pos_mask_double (pos_mask_sub_carry p q)\n    | p~0, q~0 => pos_mask_succ_double (pos_mask_sub_carry p q)\n    | p~0, 1 => pos_mask_double_pred p\n    | 1, _ => IsNeg\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Subtraction, result as a positive, returning 1 if [x<=y] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_sub x y :=\n  match pos_mask_sub x y with\n    | IsPos z => z\n    | _ => 1\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"-\" := pos_sub : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Multiplication *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_mul x y :=\n  match x with\n    | p~1 => y + (pos_mul p y)~0\n    | p~0 => (pos_mul p y)~0\n    | 1 => y\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"*\" := pos_mul : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Iteration over a positive number *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_iter {A : Type} (f : A -> A)\n  : Pos -> A -> A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pos -> A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pos -> A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (pos_peano_rec (A -> A) f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pos -> (A -> A) -> A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros n g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (f o g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Iteration of a two-variable function, with nesting reflecting the bits *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_iter_op {A} (op : A -> A -> A)\n  := fix p_iter (p : Pos) (a : A) : A\n    := match p with\n        | 1 => a\n        | p~0 => p_iter p (op a a)\n        | p~1 => op a (p_iter p (op a a))\n       end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Power *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_pow (x : Pos) := pos_iter (pos_mul x) 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Square *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_square p :=\n  match p with\n    | p~1 => (pos_square p + p)~0~1\n    | p~0 => (pos_square p)~0~0\n    | 1 => 1\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Division by 2 rounded below but for 1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_div2 p :=\n  match p with\n    | 1 => 1\n    | p~0 => p\n    | p~1 => p\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Division by 2 rounded up *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_div2_up p :=\n match p with\n   | 1 => 1\n   | p~0 => p\n   | p~1 => pos_succ p\n end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Number of digits in a positive number *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint nat_pos_size p : nat :=\n  match p with\n    | 1 => S O\n    | p~1 => S (nat_pos_size p)\n    | p~0 => S (nat_pos_size p)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Same, with positive output *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_size p :=\n  match p with\n    | 1 => 1\n    | p~1 => pos_succ (pos_size p)\n    | p~0 => pos_succ (pos_size p)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** From binary positive numbers to Peano natural numbers *)\n\n(** Sends [n] to [n], missing [0]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_of_pos (p : Pos) : nat\n  := pos_iter S p 0%nat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** From Peano natural numbers to binary positive numbers *)\n\n(** A version preserving positive numbers, and sending 0 to 1. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_of_nat (n : nat) : Pos :=\n match n with\n   | O => 1\n   | S O => 1\n   | S x => pos_succ (pos_of_nat x)\n end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Another version that converts [n] into [n+1] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_of_succ_nat (n : nat) : Pos :=\n  match n with\n    | O => 1\n    | S x => pos_succ (pos_of_succ_nat x)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Conversion with a decimal representation for printing/parsing *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation ten := 1~0~1~0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_of_uint_acc (d : Decimal.uint) (acc : Pos) :=\n  match d with\n  | Decimal.Nil => acc\n  | Decimal.D0 l => pos_of_uint_acc l (pos_mul ten acc)\n  | Decimal.D1 l => pos_of_uint_acc l (pos_add 1 (pos_mul ten acc))\n  | Decimal.D2 l => pos_of_uint_acc l (pos_add 1~0 (pos_mul ten acc))\n  | Decimal.D3 l => pos_of_uint_acc l (pos_add 1~1 (pos_mul ten acc))\n  | Decimal.D4 l => pos_of_uint_acc l (pos_add 1~0~0 (pos_mul ten acc))\n  | Decimal.D5 l => pos_of_uint_acc l (pos_add 1~0~1 (pos_mul ten acc))\n  | Decimal.D6 l => pos_of_uint_acc l (pos_add 1~1~0 (pos_mul ten acc))\n  | Decimal.D7 l => pos_of_uint_acc l (pos_add 1~1~1 (pos_mul ten acc))\n  | Decimal.D8 l => pos_of_uint_acc l (pos_add 1~0~0~0 (pos_mul ten acc))\n  | Decimal.D9 l => pos_of_uint_acc l (pos_add 1~0~0~1 (pos_mul ten acc))\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_of_uint (d : Decimal.uint) : option Pos :=\n  match d with\n    | Decimal.Nil => None\n    | Decimal.D0 l => pos_of_uint l\n    | Decimal.D1 l => Some (pos_of_uint_acc l 1)\n    | Decimal.D2 l => Some (pos_of_uint_acc l 1~0)\n    | Decimal.D3 l => Some (pos_of_uint_acc l 1~1)\n    | Decimal.D4 l => Some (pos_of_uint_acc l 1~0~0)\n    | Decimal.D5 l => Some (pos_of_uint_acc l 1~0~1)\n    | Decimal.D6 l => Some (pos_of_uint_acc l 1~1~0)\n    | Decimal.D7 l => Some (pos_of_uint_acc l 1~1~1)\n    | Decimal.D8 l => Some (pos_of_uint_acc l 1~0~0~0)\n    | Decimal.D9 l => Some (pos_of_uint_acc l 1~0~0~1)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_of_decimal_int (d:Decimal.int) : option Pos :=\n  match d with\n  | Decimal.Pos d => pos_of_uint d\n  | Decimal.Neg _ => None\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_of_number_uint (d:Numeral.int) : option Pos :=\n  match d with\n  | Numeral.IntDec d => pos_of_decimal_int d\n  | Numeral.IntHex _ => None\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint pos_to_little_uint p :=\n  match p with\n  | 1 => Decimal.D1 Decimal.Nil\n  | p~1 => Decimal.Little.succ_double (pos_to_little_uint p)\n  | p~0 => Decimal.Little.double (pos_to_little_uint p)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_to_uint p := Decimal.rev (pos_to_little_uint p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_to_decimal_int n := Decimal.Pos (pos_to_uint n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_to_number_uint p := Numeral.UIntDec (pos_to_uint p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pos_to_nat : Pos -> nat.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pos -> nat",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pos -> nat",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHp"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHp"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (S O).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHp"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (nat_add IHp IHp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pos"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHp"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (S (nat_add IHp IHp)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Number Notation Pos pos_of_number_uint pos_to_number_uint : positive_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

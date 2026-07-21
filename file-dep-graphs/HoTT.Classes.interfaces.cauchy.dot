@@ -1,0 +1,20 @@
+digraph HoTT_Classes_interfaces_cauchy {
+  graph [ratio=0.5]
+  node [style=filled]
+cauchy_modulus_close_limit [label="modulus_close_limit", URL=<cauchy.html#modulus_close_limit>, peripheries=3, fillcolor="#F070D1"] ;
+cauchy_is_complete [label="is_complete", URL=<cauchy.html#is_complete>, peripheries=3, fillcolor="#F070D1"] ;
+cauchy_IsComplete [label="IsComplete", URL=<cauchy.html#IsComplete>, fillcolor="#F070D1"] ;
+cauchy_is_limit [label="is_limit", URL=<cauchy.html#is_limit>, fillcolor="#F070D1"] ;
+cauchy_IsLimit [label="IsLimit", URL=<cauchy.html#IsLimit>, fillcolor="#F070D1"] ;
+cauchy_cauchy_convergence [label="cauchy_convergence", URL=<cauchy.html#cauchy_convergence>, fillcolor="#F070D1"] ;
+cauchy_CauchyModulus [label="CauchyModulus", URL=<cauchy.html#CauchyModulus>, fillcolor="#F070D1"] ;
+  cauchy_modulus_close_limit -> cauchy_is_limit [] ;
+  cauchy_modulus_close_limit -> cauchy_cauchy_convergence [] ;
+  cauchy_is_complete -> cauchy_IsComplete [] ;
+  cauchy_IsComplete -> cauchy_IsLimit [] ;
+  cauchy_IsComplete -> cauchy_CauchyModulus [] ;
+  cauchy_is_limit -> cauchy_IsLimit [] ;
+  cauchy_cauchy_convergence -> cauchy_CauchyModulus [] ;
+subgraph cluster_cauchy { label="cauchy"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+cauchy_CauchyModulus; cauchy_cauchy_convergence; cauchy_IsLimit; cauchy_is_limit; cauchy_IsComplete; cauchy_is_complete; cauchy_modulus_close_limit; };
+} /* END */

@@ -1,0 +1,7478 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Colimits.Pushout.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Colimits.Pushout.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Paths Types.Sigma Types.Prod HFiber Limits.Pullback.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Pushouts of \"dependent spans\". *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section SpanPushout.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {X Y : Type} (Q : X -> Y -> Type).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition SPushout := @Pushout@{up _ _ up} (sig@{up _} (fun (xy : X * Y) => Q (fst xy) (snd xy))) X Y\n                                  (fst o pr1) (snd o pr1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushl : X -> SPushout := pushl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushr : Y -> SPushout := pushr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spglue {x:X} {y:Y} : Q x y -> spushl x = spushr y\n    := fun q => pglue ((x,y) ; q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushout_rec (R : Type)\n             (spushl' : X -> R) (spushr' : Y -> R)\n             (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)\n    : SPushout -> R.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SPushout -> R",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "X -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "Y -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> spushl' x = spushr' y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SPushout -> R",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "X -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "Y -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> spushl' x = spushr' y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (@Pushout_rec {xy:X * Y & Q (fst xy) (snd xy)} X Y\n                          (fst o pr1) (snd o pr1) R spushl' spushr').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : {xy : X * Y & Q (fst xy) (snd xy)},\nspushl' ((fst o pr1) a) = spushr' ((snd o pr1) a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "X -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "Y -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> spushl' x = spushr' y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[x y] q]; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "spushl' x = spushr' y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "X -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "Y -> R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> spushl' x0 = spushr' y0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply spglue'; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushout_rec_beta_spglue (R : Type)\n             (spushl' : X -> R) (spushr' : Y -> R)\n             (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)\n             (x:X) (y:Y) (q:Q x y)\n    : ap (spushout_rec R spushl' spushr' spglue') (spglue q) = spglue' x y q\n    := Pushout_rec_beta_pglue _ _ _ _ ((x, y); q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushout_ind (R : SPushout -> Type)\n             (spushl' : forall x, R (spushl x))\n             (spushr' : forall y, R (spushr y))\n             (spglue' : forall x y (q : Q x y), \n                 transport R (spglue q) (spushl' x) = (spushr' y))\n    : forall p, R p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : SPushout, R p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "SPushout -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "forall x : X, R (spushl x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "forall y : Y, R (spushr y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\ntransport R (spglue q) (spushl' x) = spushr' y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : SPushout, R p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "SPushout -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "forall x : X, R (spushl x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "forall y : Y, R (spushr y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\ntransport R (spglue q) (spushl' x) = spushr' y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (@Pushout_ind {xy:X * Y & Q (fst xy) (snd xy)} X Y\n                          (fst o pr1) (snd o pr1) R spushl' spushr').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : {xy : X * Y & Q (fst xy) (snd xy)},\ntransport R (pglue a) (spushl' ((fst o pr1) a)) = spushr' ((snd o pr1) a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "SPushout -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "forall x : X, R (spushl x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "forall y : Y, R (spushr y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\ntransport R (spglue q) (spushl' x) = spushr' y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[x y] q]; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport R (pglue ((x, y); q)) (spushl' x) = spushr' y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "SPushout -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushl'"
+              ],
+              "body": null,
+              "type": "forall x0 : X, R (spushl x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spushr'"
+              ],
+              "body": null,
+              "type": "forall y0 : Y, R (spushr y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "spglue'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\ntransport R (spglue q0) (spushl' x0) = spushr' y0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply spglue'; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushout_ind_beta_spglue (R : SPushout -> Type)\n             (spushl' : forall x, R (spushl x))\n             (spushr' : forall y, R (spushr y))\n             (spglue' : forall x y (q : Q x y), \n                 transport R (spglue q) (spushl' x) = (spushr' y))\n             (x:X) (y:Y) (q:Q x y)\n    : apD (spushout_ind R spushl' spushr' spglue') (spglue q) = spglue'  x y q\n    := Pushout_ind_beta_pglue _ _ _ _ ((x,y);q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End SpanPushout.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor_spushout {X Y Z W : Type}\n  {Q : X -> Y -> Type} {Q' : Z -> W -> Type}\n  (f : X -> Z) (g : Y -> W) (h : forall x y, Q x y -> Q' (f x) (g y))\n  : SPushout Q -> SPushout Q'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SPushout Q -> SPushout Q'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SPushout Q -> SPushout Q'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply spushout_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X -> SPushout Q'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Y -> SPushout Q'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y), Q x y -> ?spushl' x = ?spushr' y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X -> SPushout Q'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun x => spushl Q' (f x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Y -> SPushout Q'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun y => spushr Q' (g y)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y),\nQ x y ->\n(fun x0 : X => spushl Q' (f x0)) x = (fun y0 : Y => spushr Q' (g y0)) y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x0 : X => spushl Q' (f x0)) x = (fun y0 : Y => spushr Q' (g y0)) y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply spglue.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Q' (f x) (g y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (h x y q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor_spushout_compose {X Y X' Y' X'' Y'' : Type}\n  {Q : X -> Y -> Type} {Q' : X' -> Y' -> Type} {Q'' : X'' -> Y'' -> Type}\n  (f : X -> X') (g : Y -> Y') (f' : X' -> X'') (g' : Y' -> Y'')\n  (h : forall x y, Q x y -> Q' (f x) (g y))\n  (h' : forall x y, Q' x y -> Q'' (f' x) (g' y))\n  : functor_spushout f' g' h' o functor_spushout f g h\n    == functor_spushout (f' o f) (g' o g) (fun x y => h' _ _ o h x y).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout f' g' h' o functor_spushout f g h ==\nfunctor_spushout (f' o f) (g' o g)\n  (fun (x : X) (y : Y) => h' (f x) (g y) o h x y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x : X') (y : Y'), Q' x y -> Q'' (f' x) (g' y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout f' g' h' o functor_spushout f g h ==\nfunctor_spushout (f' o f) (g' o g)\n  (fun (x : X) (y : Y) => h' (f x) (g y) o h x y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x : X') (y : Y'), Q' x y -> Q'' (f' x) (g' y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply spushout_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : X,\n(fun p : SPushout Q =>\n (functor_spushout f' g' h' o functor_spushout f g h) p =\n functor_spushout (f' o f) (g' o g)\n   (fun (x0 : X) (y : Y) => h' (f x0) (g y) o h x0 y) p)\n  (spushl Q x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x : X') (y : Y'), Q' x y -> Q'' (f' x) (g' y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : Y,\n(fun p : SPushout Q =>\n (functor_spushout f' g' h' o functor_spushout f g h) p =\n functor_spushout (f' o f) (g' o g)\n   (fun (x : X) (y0 : Y) => h' (f x) (g y0) o h x y0) p)\n  (spushr Q y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x : X') (y : Y'), Q' x y -> Q'' (f' x) (g' y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y) (q : Q x y),\ntransport\n  (fun p : SPushout Q =>\n   (functor_spushout f' g' h' o functor_spushout f g h) p =\n   functor_spushout (f' o f) (g' o g)\n     (fun (x0 : X) (y0 : Y) => h' (f x0) (g y0) o h x0 y0) p)\n  (spglue Q q) (?spushl' x) =\n?spushr' y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x : X') (y : Y'), Q' x y -> Q'' (f' x) (g' y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y) (q : Q x y),\ntransport\n  (fun p : SPushout Q =>\n   (functor_spushout f' g' h' o functor_spushout f g h) p =\n   functor_spushout (f' o f) (g' o g)\n     (fun (x0 : X) (y0 : Y) => h' (f x0) (g y0) o h x0 y0) p)\n  (spglue Q q) ((fun x0 : X => 1) x) =\n(fun y0 : Y => 1) y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (g y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x : X') (y : Y'), Q' x y -> Q'' (f' x) (g' y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y q; cbn beta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun p : SPushout Q =>\n   functor_spushout f' g' h' (functor_spushout f g h p) =\n   functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1))\n     p)\n  (spglue Q q) 1 =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_paths FFlFr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f' g' h') (ap (functor_spushout f g h) (spglue Q q)) @ 1 =\n1 @\nap\n  (functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1)))\n  (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_p1_1q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f' g' h') (ap (functor_spushout f g h) (spglue Q q)) =\nap\n  (functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1)))\n  (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f g h) (spglue Q q) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f' g' h') ?Goal =\nap\n  (functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1)))\n  (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: napply spushout_rec_beta_spglue.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f' g' h') (spglue Q' (h x y q)) =\nap\n  (functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1)))\n  (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply spushout_rec_beta_spglue.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "spglue Q'' (h' (f x) (g y) (h x y q)) =\nap\n  (functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1)))\n  (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (functor_spushout (fun x0 : X => f' (f x0)) (fun x0 : Y => g' (g x0))\n     (fun (x0 : X) (y0 : Y) (x1 : Q x0 y0) => h' (f x0) (g y0) (h x0 y0 x1)))\n  (spglue Q q) =\nspglue Q'' (h' (f x) (g y) (h x y q))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y''"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "X' -> Y' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q''"
+              ],
+              "body": null,
+              "type": "X'' -> Y'' -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> X'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "Y -> Y'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "X' -> X''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "Y' -> Y''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (g y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall (x0 : X') (y0 : Y'), Q' x0 y0 -> Q'' (f' x0) (g' y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (spushout_rec_beta_spglue Q).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor_spushout_idmap {X Y : Type} {Q : X -> Y -> Type}\n  : functor_spushout idmap idmap (fun x y (q : Q x y) => q) == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout idmap idmap (fun (x : X) (y : Y) => idmap) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout idmap idmap (fun (x : X) (y : Y) => idmap) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply spushout_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : X,\n(fun p : SPushout Q =>\n functor_spushout idmap idmap (fun (x0 : X) (y : Y) => idmap) p = idmap p)\n  (spushl Q x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : Y,\n(fun p : SPushout Q =>\n functor_spushout idmap idmap (fun (x : X) (y0 : Y) => idmap) p = idmap p)\n  (spushr Q y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y) (q : Q x y),\ntransport\n  (fun p : SPushout Q =>\n   functor_spushout idmap idmap (fun (x0 : X) (y0 : Y) => idmap) p = idmap p)\n  (spglue Q q) (?spushl' x) =\n?spushr' y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y) (q : Q x y),\ntransport\n  (fun p : SPushout Q =>\n   functor_spushout idmap idmap (fun (x0 : X) (y0 : Y) => idmap) p = idmap p)\n  (spglue Q q) ((fun x0 : X => 1) x) =\n(fun y0 : Y => 1) y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y q; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun p : SPushout Q =>\n   functor_spushout idmap idmap (fun (x0 : X) (y0 : Y) => idmap) p = p)\n  (spglue Q q) 1 =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_paths Flr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout idmap idmap (fun (x0 : X) (y0 : Y) => idmap))\n  (spglue Q q) @\n1 = 1 @ spglue Q q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_p1_1q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout idmap idmap (fun (x0 : X) (y0 : Y) => idmap))\n  (spglue Q q) =\nspglue Q q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply spushout_rec_beta_spglue.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor_spushout_homotopic {X Y Z W : Type}\n  {Q : X -> Y -> Type} {Q' : Z -> W -> Type}\n  {f g : X -> Z} (h : f == g)\n  {i j : Y -> W} (k : i == j)\n  (l : forall x y, Q x y -> Q' (f x) (i y))\n  (m : forall x y, Q x y -> Q' (g x) (j y))\n  (H : forall x y q,\n    spglue Q' (l x y q) @ ap (spushr Q') (k y)\n      = ap (spushl Q') (h x) @ spglue Q' (m x y q))\n  : functor_spushout f i l == functor_spushout g j m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout f i l == functor_spushout g j m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout f i l == functor_spushout g j m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply spushout_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : X,\n(fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spushl Q x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : Y,\n(fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spushr Q y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y) (q : Q x y),\ntransport\n  (fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spglue Q q) (?spushl' x) =\n?spushr' y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : X,\n(fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spushl Q x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout f i l (spushl Q x) = functor_spushout g j m (spushl Q x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y : Y), Q x0 y -> Q' (f x0) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y : Y), Q x0 y -> Q' (g x0) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y : Y) (q : Q x0 y),\nspglue Q' (l x0 y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y q)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (spushl Q') (h x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : Y,\n(fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spushr Q y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros y; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_spushout f i l (spushr Q y) = functor_spushout g j m (spushr Q y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y0 : Y), Q x y0 -> Q' (f x) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y0 : Y), Q x y0 -> Q' (g x) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y0 : Y) (q : Q x y0),\nspglue Q' (l x y0 q) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x) @ spglue Q' (m x y0 q)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (spushr Q') (k y)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x : X) (y : Y) (q : Q x y),\ntransport\n  (fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spglue Q q)\n  ((fun x0 : X =>\n    ap (spushl Q') (h x0)\n    :\n    (fun p : SPushout Q =>\n     functor_spushout f i l p = functor_spushout g j m p) \n      (spushl Q x0))\n     x) =\n(fun y0 : Y =>\n ap (spushr Q') (k y0)\n :\n (fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n   (spushr Q y0))\n  y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (f x) (i y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y), Q x y -> Q' (g x) (j y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x : X) (y : Y) (q : Q x y),\nspglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n  (spglue Q q)\n  ((fun x0 : X =>\n    ap (spushl Q') (h x0)\n    :\n    (fun p : SPushout Q =>\n     functor_spushout f i l p = functor_spushout g j m p) \n      (spushl Q x0))\n     x) =\n(fun y0 : Y =>\n ap (spushr Q') (k y0)\n :\n (fun p : SPushout Q => functor_spushout f i l p = functor_spushout g j m p)\n   (spushr Q y0))\n  y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_paths FlFr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f i l) (spglue Q q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ ap (functor_spushout g j m) (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout f i l) (spglue Q q) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ ap (functor_spushout g j m) (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: apply spushout_rec_beta_spglue.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "spglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ ap (functor_spushout g j m) (spglue Q q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs napply whiskerL.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "spglue Q' (l x y q) @ ap (spushr Q') (k y) = ap (spushl Q') (h x) @ ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (functor_spushout g j m) (spglue Q q) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: apply spushout_rec_beta_spglue.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "spglue Q' (l x y q) @ ap (spushr Q') (k y) =\nap (spushl Q') (h x) @ spglue Q' (m x y q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "W"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "X -> Y -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q'"
+              ],
+              "body": null,
+              "type": "Z -> W -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> W"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "i == j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (f x0) (i y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y), Q x0 y0 -> Q' (g x0) (j y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (x0 : X) (y0 : Y) (q0 : Q x0 y0),\nspglue Q' (l x0 y0 q0) @ ap (spushr Q') (k y0) =\nap (spushl Q') (h x0) @ spglue Q' (m x0 y0 q0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Q x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Any pushout is equivalent to a span pushout. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_pushout_spushout {X Y Z : Type} (f : X -> Y) (g : X -> Z)\n  : Pushout f g\n    <~> SPushout (fun (y : Y) (z : Z) => {x : X & f x = y /\\ g x = z}).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pushout f g <~>\nSPushout (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)})",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pushout f g <~>\nSPushout (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)})",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply equiv_pushout.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X <~>\n{xy : Y * Z &\n(fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) (fst xy) (snd xy)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Y <~> Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z <~> Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?eB o f ==\n(fun\n   x : {xy : Y * Z &\n       (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) \n         (fst xy) (snd xy)} =>\n fst x.1)\no ?eA",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?eC o g ==\n(fun\n   x : {xy : Y * Z &\n       (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) \n         (fst xy) (snd xy)} =>\n snd x.1)\no ?eA",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X <~>\n{xy : Y * Z &\n(fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) (fst xy) (snd xy)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (equiv_sigma_prod _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X <~> {a : Y & {b : Z & {x : X & (f x = fst (a, b)) * (g x = snd (a, b))}}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_double_fibration_replacement.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Y <~> Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z <~> Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?eB o f ==\n(fun\n   x : {xy : Y * Z &\n       (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) \n         (fst xy) (snd xy)} =>\n fst x.1)\no (equiv_sigma_prod\n     (fun xy : Y * Z =>\n      (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) \n        (fst xy) (snd xy))\n   oE equiv_double_fibration_replacement f g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?eC o g ==\n(fun\n   x : {xy : Y * Z &\n       (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) \n         (fst xy) (snd xy)} =>\n snd x.1)\no (equiv_sigma_prod\n     (fun xy : Y * Z =>\n      (fun (y : Y) (z : Z) => {x : X & (f x = y) * (g x = z)}) \n        (fst xy) (snd xy))\n   oE equiv_double_fibration_replacement f g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "X -> Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1-4: reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** There is a natural map from the total space of [Q] to the pushout product of [Q]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition spushout_sjoin_map {X Y : Type} (Q : X -> Y -> Type)\n  : {x : X & {y : Y & Q x y}} -> Pullback (spushl Q) (spushr Q)\n  := functor_sigma idmap (fun _ => functor_sigma idmap (fun _ => spglue Q)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]
