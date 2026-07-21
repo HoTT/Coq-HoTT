@@ -109,7 +109,7 @@ Other timing methods:
     ```
     make [-jJ]
     cd theories [or subdir to limit search]
-    find . -name '*.v.timing' -exec awk '{printf "%-55s %s\n", "{}:", $0}' {} \; | sort -nr -k7 | head -20 | sed 's/.v.timing//'
+    find . -name '*.v.timing' -exec awk '{printf "%-55s %s\n", FILENAME":", $0}' {} + | sort -nr -k7 | head -20 | sed 's/.v.timing//'
     ```
 
   Locations are indicated by character position with the file.  In emacs, can use `M-x goto-char NNN RET` to find the spot.
