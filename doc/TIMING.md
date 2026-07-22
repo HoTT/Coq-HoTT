@@ -112,6 +112,6 @@ Other timing methods:
     find . -name '*.v.timing' -exec awk '{printf "%-55s %s\n", FILENAME":", $0}' {} + | sort -nr -k7 | head -20 | sed 's/.v.timing//'
     ```
 
-  Locations are indicated by character position with the file.  In emacs, can use `M-x goto-char NNN RET` to find the spot.
+Locations are indicated by character position within the file.  In Emacs, you can use `M-x goto-char NNN RET` to find the spot.
 
 Currently, most fine-grained timing tests have to be done using `make` instead of `dune`.  See https://github.com/ocaml/dune/issues/11587 for a feature request to add this support to dune.
