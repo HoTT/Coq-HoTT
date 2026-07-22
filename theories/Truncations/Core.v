@@ -417,4 +417,4 @@ Proof.
   apply trunc_index_min_swap.
 Defined.
 
-(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)
+(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "doc/STYLE.md". *)

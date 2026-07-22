@@ -32,7 +32,7 @@ Platform][15] and can be installed using
 the installation instructions there.
 
 More detailed installation instructions are provided in the file
-[INSTALL.md](/INSTALL.md).
+[doc/INSTALL.md](/doc/INSTALL.md).
 
 # Usage
 
@@ -45,10 +45,10 @@ your `_CoqProject` file:
 -arg -indices-matter
 ```
 
-For more advanced use such as contribution see [INSTALL.md](/INSTALL.md).
+For more advanced use such as contribution see [doc/INSTALL.md](/doc/INSTALL.md).
 
 For **recommended text editors** see [our recommended editors
-list](./INSTALL.md#4-editors). Other methods of developing in `coq` will work as
+list](./doc/INSTALL.md#4-editors). Other methods of developing in `coq` will work as
 long as the correct arguments are passed.
 
 # Documentation
@@ -59,11 +59,11 @@ which is linked to from the [wiki][23].
 # Contributing
 
 Contributions to the HoTT library are very welcome! For style guidelines and
-further information, see the file [STYLE.md](/STYLE.md).
+further information, see the file [doc/STYLE.md](/doc/STYLE.md).
 
 # Timing
 
-See [TIMING.md](/TIMING.md) for tips about timing builds in various ways.
+See [doc/TIMING.md](/doc/TIMING.md) for tips about timing builds in various ways.
 
 # Licensing
 

@@ -571,4 +571,4 @@ Definition istrunc_inhabited_istrunc {n : trunc_index}
   : IsTrunc n.+1 A
   := istrunc_S _ (fun a b => H a a b).
 
-(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)
+(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "doc/STYLE.md". *)
