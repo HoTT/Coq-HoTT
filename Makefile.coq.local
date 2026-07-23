@@ -21,7 +21,7 @@
 include Makefile.coq.local-early
 .SECONDEXPANSION:
 
-# TODO(not yet ported from automake): install these files: theories etc LICENSE.txt CREDITS.txt INSTALL.md README.md
+# TODO(not yet ported from automake): install these files: theories etc LICENSE.txt CREDITS.txt README.md doc/INSTALL.md doc/STYLE.md doc/TIMING.md
 
 # the alectryon binary
 ALECTRYON = python3 etc/alectryon/alectryon.py
