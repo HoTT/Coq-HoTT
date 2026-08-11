@@ -57,6 +57,15 @@ Section EilenbergMacLane.
     rapply (is0connected_isconnected n.-2).
   Defined.
 
+  (** Variants of [isconnected_em] and [istrunc_em] whose indices are trunc_index successors of the coerced [n], as arise from hypotheses such as [IsConnected n.+1 X] stated in [trunc_scope].  Typeclass search cannot identify [(nat_to_trunc_index n).+1] with [nat_to_trunc_index n.+1], so these are not found from the originals. *)
+  #[export] Instance isconnected_em_succ {G : Group} (n : nat)
+    : IsConnected ((nat_to_trunc_index n).+1)%trunc K(G, n.+2)
+    := isconnected_em n.+1.
+
+  #[export] Instance istrunc_em_succ {G : Group} (n : nat)
+    : IsTrunc ((nat_to_trunc_index n).+2)%trunc K(G, n.+2)
+    := istrunc_em.
+
   Local Open Scope trunc_scope.
 
   (** This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
