@@ -12,9 +12,7 @@ Require Import Modalities.Identity Modalities.Descent.
 
 (** * Classification of short exact sequences
 
-    Short exact sequences [A -> E -> B] of abelian groups are classified by
-    pointed maps [K(B,2) ->* K(A,3)] (Christensen and Flaten, "Ext groups in
-    homotopy type theory", Theorem 2.2.2). *)
+Short exact sequences [A -> E -> B] of abelian groups are classified by pointed maps [K(B,2) ->* K(A,3)] (Christensen and Flaten, "Ext groups in homotopy type theory", Theorem 2.2.2). *)
 
 Local Open Scope pointed_scope.
 
@@ -35,8 +33,7 @@ Proof.
     rapply isconnected_loops.
 Defined.
 
-(** A successor-connectivity criterion: an [n.+1]-connected type with
-    trivial [Pi n.+2] is [n.+2]-connected. *)
+(** A successor-connectivity criterion: an [n.+1]-connected type with trivial [Pi n.+2] is [n.+2]-connected. *)
 Definition isconnected_succ_contr_pi `{Univalence} (n : nat) (X : pType)
   `{IsConnected n.+1 X} (c : Contr (Pi n.+2 X))
   : IsConnected n.+2 X.
@@ -54,8 +51,7 @@ Defined.
 
 (** ** Injectivity of homotopy groups of fiber inclusions
 
-    If the [n.+1]-st homotopy group of the double fiber of [g] vanishes,
-    then [Pi n.+1] of the fiber inclusion of [g] is an embedding. *)
+If the [n.+1]-st homotopy group of the double fiber of [g] vanishes, then [Pi n.+1] of the fiber inclusion of [g] is an embedding. *)
 Instance isembedding_pi_pfib `{Univalence} {X Y : pType} (g : X ->* Y)
   (n : nat) `{Contr (Pi n.+1 (pfiber (pfib g)))}
   : IsEmbedding (fmap (Pi n.+1) (pfib g)).
@@ -79,8 +75,7 @@ Section EMFiberSequence.
     exact (iscomplex_abses E a).
   Defined.
 
-  (** The [n.+1]-st homotopy group of the double fiber of
-      [fmap (K' n.+1) (projection E)] vanishes. *)
+  (** The [n.+1]-st homotopy group of the double fiber of [fmap (K' n.+1) (projection E)] vanishes. *)
   Local Instance contr_pi_pfiber_pfib
     : Contr (Pi n.+1 (pfiber (pfib (fmap (K' n.+1) (projection E))))).
   Proof.
@@ -132,8 +127,7 @@ Section EMFiberSequence.
     exact (ap (equiv_g_pi_n_em E n) (ap pr1 q) @ eisretr _ x).
   Defined.
 
-  (** Therefore the comparison map is an equivalence: it is an isomorphism
-      on [Pi n.+1], and both sides are [n]-connected and [n.+1]-truncated. *)
+  (** Therefore the comparison map is an equivalence: it is an isomorphism on [Pi n.+1], and both sides are [n]-connected and [n.+1]-truncated. *)
   Local Instance isequiv_pi_cxfib
     : IsEquiv (fmap (Pi n.+1) (cxfib iscomplex_em_abses)).
   Proof.
@@ -163,8 +157,7 @@ Section EMFiberSequence.
     exact (grp_homo_unit (equiv_g_pi_n_em E n))^.
   Defined.
 
-  (** Both sides of the comparison map are [n]-connected and
-      [n.+1]-truncated, so it is an equivalence. *)
+  (** Both sides of the comparison map are [n]-connected and [n.+1]-truncated, so it is an equivalence. *)
   Local Instance isequiv_cxfib_em : IsEquiv (cxfib iscomplex_em_abses).
   Proof.
     pose proof (isconnmap_em_fmap (projection E) n (point _)).
@@ -203,8 +196,7 @@ Section EMFiberSequence.
     - intro x; exact (eisretr omega _).
   Defined.
 
-  (** [K(-, n.+1)] sends short exact sequences of abelian groups to fiber
-      sequences of Eilenberg-Mac Lane spaces. *)
+  (** [K(-, n.+1)] sends short exact sequences of abelian groups to fiber sequences of Eilenberg-Mac Lane spaces. *)
   #[export] Instance isexact_em_abses
     : IsExact purely (fmap (K' n.+1) (inclusion E))
         (fmap (K' n.+1) (projection E)).
@@ -217,8 +209,7 @@ End EMFiberSequence.
 
 (** ** The classifying map of a short exact sequence
 
-    The connecting map of the fiber sequence [K(A,3) -> K(E,3) -> K(B,3)],
-    expressed as a pointed map [K(B,2) ->* K(A,3)]. *)
+The connecting map of the fiber sequence [K(A,3) -> K(E,3) -> K(B,3)], expressed as a pointed map [K(B,2) ->* K(A,3)]. *)
 Definition abses_classifying_map `{Univalence} {B A : AbGroup@{u}}
   (E : AbSES B A)
   : K(B, 2) ->* K(A, 3)
@@ -227,21 +218,17 @@ Definition abses_classifying_map `{Univalence} {B A : AbGroup@{u}}
 
 (** ** The short exact sequence of a pointed map
 
-    Conversely, a pointed map [f : K(B,2) ->* K(A,3)] yields a short exact
-    sequence [A -> Pi 2 (pfiber f) -> B], by rotating the fiber sequence of
-    [f] and taking homotopy groups. *)
+Conversely, a pointed map [f : K(B,2) ->* K(A,3)] yields a short exact sequence [A -> Pi 2 (pfiber f) -> B], by rotating the fiber sequence of [f] and taking homotopy groups. *)
 
 Section AbSESPfiber.
   Context `{Univalence} {B A : AbGroup@{u}} (n : nat)
     (f : K(B, n.+2) ->* K(A, n.+3)).
 
-  (** The middle group: [Pi n.+2] of the fiber, abelian by
-      Eckmann-Hilton. *)
+  (** The middle group: [Pi n.+2] of the fiber, abelian by Eckmann-Hilton. *)
   Definition abgroup_pi_pfiber : AbGroup
     := Build_AbGroup (Pi n.+2 (pfiber f)) _.
 
-  (** The inclusion, through the rotated fiber sequence
-      [loops K(A,n+3) -> pfiber f -> K(B,n+2)]. *)
+  (** The inclusion, through the rotated fiber sequence [loops K(A,n+3) -> pfiber f -> K(B,n+2)]. *)
   Definition abses_pfiber_incl : A $-> abgroup_pi_pfiber.
   Proof.
     nrefine (grp_homo_compose _
@@ -258,8 +245,7 @@ Section AbSESPfiber.
     exact (fmap (Pi n.+2) (pfib f)).
   Defined.
 
-  (** The [n.+2]-nd homotopy group of the double fiber of [pfib f]
-      vanishes. *)
+  (** The [n.+2]-nd homotopy group of the double fiber of [pfib f] vanishes. *)
   Local Instance contr_pi_pfiber2
     : Contr (Pi n.+2 (pfiber (pfib (pfib f)))).
   Proof.
@@ -390,9 +376,7 @@ Section PfiberDeloop.
   Local Instance istrunc_pfiber_em : IsTrunc 3 (pfiber psi)
     := _.
 
-  (** Its second homotopy group is trivial: it embeds in the trivial
-      [Pi 2 K(B,3)], since the second homotopy group of the double fiber
-      is [Pi 3 K(A,4)], which is also trivial. *)
+  (** Its second homotopy group is trivial: it embeds in the trivial [Pi 2 K(B,3)], since the second homotopy group of the double fiber is [Pi 3 K(A,4)], which is also trivial. *)
   Local Instance contr_pi2_pfiber_em : Contr (Pi 2 (pfiber psi)).
   Proof.
     assert (contr_pi2_pfib2 : Contr (Pi 2 (pfiber (pfib psi)))).
@@ -420,8 +404,7 @@ Section PfiberDeloop.
     - exact _.
   Defined.
 
-  (** The fiber is the Eilenberg-Mac Lane space of its third homotopy
-      group. *)
+  (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group. *)
   Local Definition pequiv_em_pfiber_psi
     : K(abgroup_pi_pfiber 1 psi, 3) <~>* pfiber psi
     := pequiv_em_connected_truncated (pfiber psi) 2.
@@ -462,8 +445,7 @@ Section PfiberDeloop.
     exact (eisretr eta_pfiber_psi _).
   Defined.
 
-  (** Through the bridge, [fmap (K' 3)] of the projection is the fiber
-      inclusion of [psi]. *)
+  (** Through the bridge, [fmap (K' 3)] of the projection is the fiber inclusion of [psi]. *)
   Local Definition path_em_proj_pfib_psi
     : fmap (K' 3) (abses_pfiber_proj 1 psi)
       = pfib psi o* pequiv_em_pfiber_psi'.
@@ -483,8 +465,7 @@ Section PfiberDeloop.
     exact (ap (fmap (Pi 3) (pfib psi)) (pi_bridge_psi x)^).
   Qed.
 
-  (** Through the bridge, [fmap (K' 3)] of the inclusion is the connecting
-      map of [psi], modulo the loop identification of [K(A,3)]. *)
+  (** Through the bridge, [fmap (K' 3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,3)]. *)
   Local Definition path_em_incl_delta_psi
     : pequiv_em_pfiber_psi' o* fmap (K' 3) (abses_pfiber_incl 1 psi)
       = connecting_map (pfib psi) psi o* pequiv_loops_em_em A 3.
@@ -520,15 +501,12 @@ Section PfiberDeloop.
       ==* pfib psi o* pequiv_em_pfiber_psi'
     := pmap_postcompose_idmap _ @* phomotopy_path path_em_proj_pfib_psi.
 
-  (** The third homotopy group of the double fiber of [pfib psi]
-      vanishes, so [Pi 3] of its fiber inclusion is an embedding. *)
+  (** The third homotopy group of the double fiber of [pfib psi] vanishes, so [Pi 3] of its fiber inclusion is an embedding. *)
   Local Instance contr_pi3_pfiber2_psi
     : Contr (Pi 3 (pfiber (pfib (pfib psi))))
     := contr_pi_pfiber2 1 psi.
 
-  (** Through the bridge, [cxfib] of the extracted sequence is the
-      connecting identification of [psi], modulo the loop identification
-      of [K(A,3)]. *)
+  (** Through the bridge, [cxfib] of the extracted sequence is the connecting identification of [psi], modulo the loop identification of [K(A,3)]. *)
   Local Definition path_cxfib_connect_psi
     : pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
         square_em_proj_pfib_psi
@@ -584,8 +562,7 @@ Section PfiberDeloop.
         ((connect_fiberseq (pfib psi) psi).2) x))^.
   Qed.
 
-  (** The connecting identification of [psi] inverts [pfiber2_loops],
-      since the underlying [pequiv_pfiber] square is tautological. *)
+  (** The connecting identification of [psi] inverts [pfiber2_loops], since the underlying [pequiv_pfiber] square is tautological. *)
   Local Definition pfiber2_loops_connect_psi
     : pfiber2_loops psi o* ((connect_fiberseq (pfib psi) psi).2)
       ==* pmap_idmap.
@@ -597,9 +574,7 @@ Section PfiberDeloop.
            @* pmap_precompose_idmap _)^*.
   Qed.
 
-  (** Through the loop identification of [K(A,3)], the connecting map of
-      the extracted fiber sequence is [loops psi], twisted by loop
-      inversion. *)
+  (** Through the loop identification of [K(A,3)], the connecting map of the extracted fiber sequence is [loops psi], twisted by loop inversion. *)
   Local Definition connecting_map_em_loops_psi
     : pequiv_loops_em_em A 3
       o* connecting_map (fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
@@ -609,8 +584,7 @@ Section PfiberDeloop.
     (* Insert the identity [pfiber2_loops psi o* connect] in front. *)
     refine ((pmap_postcompose_idmap _)^* @* _).
     refine (pmap_prewhisker _ pfiber2_loops_connect_psi^* @* _).
-    (* Reassociate to expose the connecting composite, then the cxfib
-       square. *)
+    (* Reassociate to expose the connecting composite, then the cxfib square. *)
     refine (pmap_compose_assoc _ _ _ @* _).
     refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_postwhisker _
@@ -627,8 +601,7 @@ Section PfiberDeloop.
     exact (connecting_map_pfib2 psi).
   Qed.
 
-  (** Negation on [K(B,2)], as loop inversion conjugated by the loop
-      identification. *)
+  (** Negation on [K(B,2)], as loop inversion conjugated by the loop identification. *)
   Local Definition pequiv_neg_em : K(B, 2) <~>* K(B, 2)
     := (pequiv_loops_em_em B 2)^-1*
        o*E (loops_inv K(B, 3) o*E pequiv_loops_em_em B 2).
@@ -643,8 +616,7 @@ Section PfiberDeloop.
     napply pmap_postcompose_idmap.
   Qed.
 
-  (** The classifying map of the extracted sequence is the delooping
-      equivalence applied to [psi], twisted by [pequiv_neg_em]. *)
+  (** The classifying map of the extracted sequence is the delooping equivalence applied to [psi], twisted by [pequiv_neg_em]. *)
   Local Definition abses_classifying_pfiber_deloop
     : abses_classifying_map (abses_pfiber 1 psi)
       ==* equiv_deloop_em_pmap B A 0 psi o* pequiv_neg_em.
@@ -666,14 +638,12 @@ End PfiberDeloop.
 
 (** ** The first round trip
 
-    The short exact sequence extracted from the classifying map of [E] is
-    [E] itself. *)
+The short exact sequence extracted from the classifying map of [E] is [E] itself. *)
 
 Section ClassifyingRoundTrip.
   Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A).
 
-  (** The classifying map equals the connecting map after the loop
-      identification, as a square. *)
+  (** The classifying map equals the connecting map after the loop identification, as a square. *)
   Local Definition rt1_square
     : pequiv_pmap_idmap o* abses_classifying_map E
       ==* connecting_map (fmap (K' 3) (inclusion E))
@@ -717,8 +687,7 @@ Section ClassifyingRoundTrip.
            o*E pequiv_pfiber (pequiv_loops_em_em B 2) pequiv_pmap_idmap
                 rt1_square)).
 
-  (** Through this identification, the fiber inclusion of the classifying
-      map is [loops] of the projection. *)
+  (** Through this identification, the fiber inclusion of the classifying map is [loops] of the projection. *)
   Local Definition rt1_pfib_square
     : pequiv_loops_em_em B 2 o* pfib (abses_classifying_map E)
       ==* fmap loops (fmap (K' 3) (projection E))
@@ -775,8 +744,7 @@ Section ClassifyingRoundTrip.
     - reflexivity.
   Qed.
 
-  (** Through [pequiv_pfiber_classifying], the connecting map of the
-      classifying map's fiber sequence is [loops] of the inclusion. *)
+  (** Through [pequiv_pfiber_classifying], the connecting map of the classifying map's fiber sequence is [loops] of the inclusion. *)
   Local Definition rt1_conn_square
     : pequiv_pfiber_classifying
       o* connecting_map (pfib (abses_classifying_map E))
@@ -870,8 +838,7 @@ Section ClassifyingRoundTrip.
     exact (eisretr (groupiso_pi_loops 1 K(B, 3)) _).
   Qed.
 
-  (** The first round trip: the short exact sequence extracted from the
-      classifying map of [E] is [E]. *)
+  (** The first round trip: the short exact sequence extracted from the classifying map of [E] is [E]. *)
   Definition abses_pfiber_classifying
     : abses_pfiber 0 (abses_classifying_map E) = E
     := path_abses (E := abses_pfiber 0 (abses_classifying_map E)) (F := E)
@@ -881,7 +848,7 @@ End ClassifyingRoundTrip.
 
 (** ** The classification theorem
 
-    [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
+[abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
 
 Section Classification.
   Context `{Univalence} {B A : AbGroup@{u}}.
@@ -915,15 +882,13 @@ Section Classification.
     - exact (abses_classifying_section f).
   Qed.
 
-  (** Short exact sequences [A -> E -> B] are classified by pointed maps
-      [K(B,2) ->* K(A,3)]. *)
+  (** Short exact sequences [A -> E -> B] are classified by pointed maps [K(B,2) ->* K(A,3)]. *)
   Definition equiv_abses_classifying_map
     : AbSES B A <~> (K(B, 2) ->* K(A, 3))
     := equiv_adjointify abses_classifying_map (abses_pfiber 0)
          abses_classifying_map_pfiber abses_pfiber_classifying.
 
-  (** Consequently [Ext B A] is the set of path components of the
-      classifying mapping type. *)
+  (** Consequently [Ext B A] is the set of path components of the classifying mapping type. *)
   Definition equiv_ext_classifying
     : Ext B A <~> Tr 0 (K(B, 2) ->* K(A, 3))
     := Trunc_functor_equiv 0 equiv_abses_classifying_map.
@@ -941,11 +906,9 @@ End Classification.
 
 (** ** Naturality of the classifying map
 
-    A morphism of short exact sequences induces a commuting square relating
-    the two classifying maps. *)
+A morphism of short exact sequences induces a commuting square relating the two classifying maps. *)
 
-(** Keep the [cxfib] equivalence witnesses opaque so their inverses stay
-    inert. *)
+(** Keep the [cxfib] equivalence witnesses opaque so their inverses stay inert. *)
 Opaque isequiv_cxfib_em isequiv_cxfib.
 
 Section Naturality.
@@ -985,8 +948,7 @@ Section Naturality.
     := @pequiv_cxfib _ _ _ (fmap (K' 3) (inclusion F))
          (fmap (K' 3) (projection F)) (isexact_em_abses F 2).
 
-  (** The fiber-inclusion comparison commutes with the morphism on
-      fibers. *)
+  (** The fiber-inclusion comparison commutes with the morphism on fibers. *)
   Local Definition em_cxfib_square
     : functor_pfiber (em_proj_square^*) o* em_cxfib_E
       = em_cxfib_F o* fmap (K' 3) (component1 phi).
@@ -1026,8 +988,7 @@ Section Naturality.
         (em_cxfib_F) x))^.
   Qed.
 
-  (** Hence the connecting maps of the two sequences are related by the
-      morphism, through the loop identification of the bases. *)
+  (** Hence the connecting maps of the two sequences are related by the morphism, through the loop identification of the bases. *)
   Local Definition cm_natural
     : fmap (K' 3) (component1 phi)
       o* connecting_map (fmap (K' 3) (inclusion E)) (fmap (K' 3) (projection E))
@@ -1055,8 +1016,7 @@ Section Naturality.
         (fmap (K' 3) (projection F)))^*).
   Qed.
 
-  (** A morphism of short exact sequences induces a commuting square of
-      classifying maps. *)
+  (** A morphism of short exact sequences induces a commuting square of classifying maps. *)
   Definition abses_classifying_map_natural
     : fmap (K' 3) (component1 phi) o* abses_classifying_map E
       ==* abses_classifying_map F o* fmap (K' 2) (component3 phi).
