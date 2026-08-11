@@ -57,7 +57,7 @@ Section EilenbergMacLane.
     rapply (is0connected_isconnected n.-2).
   Defined.
 
-  (** Variants of [isconnected_em] and [istrunc_em] whose indices are trunc_index successors of the coerced [n], as arise from hypotheses such as [IsConnected n.+1 X] stated in [trunc_scope].  Typeclass search cannot identify [(nat_to_trunc_index n).+1] with [nat_to_trunc_index n.+1], so these are not found from the originals. *)
+  (** Typeclass search cannot invert the [nat] to [trunc_index] coercion, so it does not find [isconnected_em] or [istrunc_em] when the index is written [n.+1] in [trunc_scope]. *)
   #[export] Instance isconnected_em_succ {G : Group} (n : nat)
     : IsConnected ((nat_to_trunc_index n).+1)%trunc K(G, n.+2)
     := isconnected_em n.+1.

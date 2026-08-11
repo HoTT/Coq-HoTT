@@ -2,7 +2,7 @@ From HoTT Require Import Basics Types Pointed.
 From HoTT Require Import Homotopy.EMSpace Algebra.AbGroups.AbelianGroup.
 From HoTT Require Import Truncations.Core Truncations.Connectedness.
 
-(** Typeclass search must find connectivity and truncatedness of Eilenberg-Mac Lane spaces at successor-shaped indices, such as those arising from hypotheses like [IsConnected n.+1 X], via [isconnected_em_succ] and [istrunc_em_succ]. *)
+(** Test that typeclass search finds [isconnected_em_succ] and [istrunc_em_succ]. *)
 
 Local Open Scope trunc_scope.
 
