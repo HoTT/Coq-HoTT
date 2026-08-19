@@ -347,13 +347,31 @@ Proof.
   by apply issurj_iterated_loops_connmap.
 Defined.
 
-(** The [n.+2]-nd homotopy group of an [n.+1]-truncated type vanishes. *)
+(** The homotopy groups of a contractible type vanish. *)
+Instance contr_pi_contr (n : nat) (X : pType) `{Contr X}
+  : Contr (Pi n X).
+Proof.
+  generalize dependent X; induction n; intros.
+  - exact _.
+  - exact (contr_equiv' _ (pi_loops n X)^-1%equiv).
+Defined.
+
+(** Homotopy groups below the connectivity vanish. *)
+Definition contr_pi_isconnected `{Univalence} (n : nat) (X : pType)
+  `{IsConnected n X}
+  : Contr (Pi n X).
+Proof.
+  rapply (contr_equiv' (Pi n (pTr n X))).
+  symmetry; rapply pequiv_pi_Tr.
+Defined.
+
+(** The [n.+1]-st homotopy group of an [n]-truncated type vanishes. *)
 Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
-  `{IsTrunc n.+1 X}
-  : Contr (Pi n.+2 X).
+  `{IsTrunc n X}
+  : Contr (Pi n.+1 X).
 Proof.
   rapply contr_O_contr.
-  rapply (equiv_istrunc_contr_iterated_loops n.+2).
+  rapply (equiv_istrunc_contr_iterated_loops n.+1).
 Defined.
 
 (** An [n.+1]-truncated pointed [0]-connected type whose [n.+1]-st homotopy group vanishes is [n]-truncated. *)
@@ -365,6 +383,21 @@ Proof.
   rapply (conn_point_elim (-1)%trunc).
   pose proof (istrunc_iterated_loops n.+1 X).
   exact (contr_equiv' (Pi n.+1 X) (equiv_tr 0 _)^-1%equiv).
+Defined.
+
+(** An [n.+1]-connected type whose [n.+2]-nd homotopy group vanishes is [n.+2]-connected. *)
+Definition isconnected_succ_contr_pi `{Univalence} (n : nat) (X : pType)
+  `{IsConnected n.+1 X} (c : Contr (Pi n.+2 X))
+  : IsConnected n.+2 X.
+Proof.
+  (** The [n.+2]-truncation of [X] is [n.+1]-truncated by [istrunc_contr_pi], and it is [n.+1]-connected, hence contractible. *)
+  napply (contr_trunc_conn (Tr n.+1)).
+  2: exact _.
+  napply (istrunc_contr_pi n.+1 (pTr n.+2 X)).
+  1: pose proof (isconnected_trunc n.+1 n.+2 (X:=X));
+     rapply is0connected_isconnected.
+  1: exact _.
+  rapply (contr_equiv' _ (grp_iso_pi_Tr n.+1 X)).
 Defined.
 
 (** Pointed sections induce embeddings on homotopy groups. *)

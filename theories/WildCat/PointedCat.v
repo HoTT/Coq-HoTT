@@ -106,6 +106,14 @@ Proof.
   rapply pfunctor_zero.
 Defined.
 
+(** A pointed functor takes complexes to complexes. *)
+Definition fmap_iscomplex {A B : Type} (F : A -> B)
+  `{IsPointedCat A, IsPointedCat B, !HasEquivs B,
+    !Is0Functor F, !Is1Functor F, !IsPointedFunctor F}
+  {x y z : A} (i : x $-> y) (f : y $-> z) (cx : f $o i $== zero_morphism x z)
+  : fmap F f $o fmap F i $== zero_morphism (F x) (F z)
+  := (fmap_comp F i f)^$ $@ fmap2 F cx $@ fmap_zero_morphism F.
+
 (** Opposite category of a pointed category is also pointed. *)
 Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
 Proof.

@@ -2,6 +2,7 @@ From HoTT Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import WildCat.Core Pointed.Core.
 Require Import Groups.Group Groups.Subgroup.
+Require Import Universes.HSet.
 Require Import Homotopy.ExactSequence Modalities.Identity.
 
 (** * Complexes of groups *)
@@ -65,6 +66,26 @@ Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
   : IsExact purely (grp_trivial_rec A) f <~> IsTrivialGroup (grp_kernel f)
   := (equiv_istrivial_kernel_isembedding f)^-1%equiv
        oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).
+
+(** If [i] factors through [j] as [j o k], and [i] and [j] are both exact at [B] with respect to the same [f], then [k] is an equivalence.  Both [A] and [C] are the kernel of [f], so they agree.  Only [cx] is needed for [j], and only [(-1)]-exactness for [i]. *)
+Definition isequiv_isexact_factor {A B C D : Group}
+  {i : A $-> B} {j : C $-> B} (k : A $-> C) {f : B $-> D}
+  (p : j $o k $== i) `{IsEmbedding i} `{IsEmbedding j}
+  (ex : IsExact (Tr (-1)) i f) (cx : IsComplex j f)
+  : IsEquiv k.
+Proof.
+  apply isequiv_surj_emb.
+  - intro c.
+    rapply contr_inhabited_hprop.
+    pose proof (m := isexact_preimage _ i f (j c) (cx c)).
+    strip_truncations.
+    destruct m as [a q].
+    exact (tr (a; isinj_embedding j _ _ _ (p a @ q))).
+  - apply isembedding_isinj_hset.
+    intros a a' q.
+    rapply (isinj_embedding i).
+    exact ((p a)^ @ ap j q @ p a').
+Defined.
 
 (** If [A -> B -> C -> D] is exact at [B] and [C], with [A] and [D] contractible, then the middle map is an isomorphism.  Only [B] and [C] need to be groups. *)
 Definition grp_iso_isexact {A : pType} {B C : Group} {D : pType}

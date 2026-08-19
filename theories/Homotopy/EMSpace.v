@@ -57,11 +57,6 @@ Section EilenbergMacLane.
     rapply (is0connected_isconnected n.-2).
   Defined.
 
-  (** Typeclass search cannot invert the [nat] to [trunc_index] coercion, so it does not find [isconnected_em] when the index is written [n.+1] in [trunc_scope]. *)
-  #[export] Instance isconnected_em_succ {G : Group} (n : nat)
-    : IsConnected ((nat_to_trunc_index n).+1)%trunc K(G, n.+2)
-    := isconnected_em n.+1.
-
   Local Open Scope trunc_scope.
 
   (** This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 <= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
@@ -332,8 +327,9 @@ Section EilenbergMacLane.
   Defined.
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
+  (** The hypotheses are stated with [nat]-scoped indices, so that the instances [isconnected_em] and [istrunc_em] are found by typeclass search at applications. *)
   Definition pequiv_em_connected_truncated (X : pType)
-    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    (n : nat) `{IsConnected n X} `{IsTrunc (n.+1)%nat X}
     : K(Pi n.+1 X, n.+1) <~>* X.
   Proof.
     generalize dependent X; induction n; intros X isC isT.
@@ -359,8 +355,8 @@ Section EilenbergMacLane.
 
   (** Pointed maps between [n.+1]-connected [n.+2]-truncated types which agree on homotopy groups are equal. *)
   Definition path_pmap_pi_connected (n : nat) {X Y : pType}
-    `{IsConnected n.+1 X} `{IsTrunc n.+2 X}
-    `{IsConnected n.+1 Y} `{IsTrunc n.+2 Y}
+    `{IsConnected (n.+1)%nat X} `{IsTrunc (n.+2)%nat X}
+    `{IsConnected (n.+1)%nat Y} `{IsTrunc (n.+2)%nat Y}
     (phi psi : X ->* Y)
     (h : fmap (Pi n.+2) phi == fmap (Pi n.+2) psi)
     : phi = psi.

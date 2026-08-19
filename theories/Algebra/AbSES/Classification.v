@@ -6,6 +6,7 @@ Require Import AbelianGroup.
 Require Import Algebra.AbSES.Core Algebra.AbSES.Ext.
 Require Import Universes.Smallness.
 Require Import Homotopy.HomotopyGroup Homotopy.EMSpace Homotopy.ExactSequence.
+Require Import Homotopy.WhiteheadsPrinciple.
 Require Import Groups.Group Groups.ShortExactSequence.
 Require Import HSet.
 Require Import Modalities.Identity Modalities.Descent.
@@ -18,182 +19,82 @@ Local Open Scope pointed_scope.
 
 (** TODO: The main results of this file, such as [equiv_abses_classifying_map] and [issmall_abses], have a large number of universe variables, inherited from the delooping layer in EMSpace.v.  See the TODO there. *)
 
-(** ** Vanishing of homotopy groups *)
-
-(** Homotopy groups below the connectivity vanish. *)
-Definition contr_pi_isconnected `{Univalence} (n : nat) (X : pType)
-  `{IsConnected n X}
-  : Contr (Pi n X).
-Proof.
-  revert X H0; induction n; intros X H0.
-  - exact H0.
-  - nrefine (contr_equiv' (Pi n (loops X)) _).
-    1: exact (pi_loops n X)^-1*.
-    napply IHn.
-    rapply isconnected_loops.
-Defined.
-
-(** A successor-connectivity criterion: an [n.+1]-connected type with trivial [Pi n.+2] is [n.+2]-connected. *)
-Definition isconnected_succ_contr_pi `{Univalence} (n : nat) (X : pType)
-  `{IsConnected n.+1 X} (c : Contr (Pi n.+2 X))
-  : IsConnected n.+2 X.
-Proof.
-  pose proof (isconnected_trunc n.+1 n.+2 (X := X)).
-  nrefine (contr_equiv' K(Build_AbGroup (Pi n.+2 (pTr n.+2 X)) _, n.+2) _).
-  1: exact (pequiv_em_connected_truncated (pTr n.+2 X) n.+1).
-  napply contr_em_contr.
-  nrefine (contr_equiv' (Pi n.+2 X) _).
-  1: exact (grp_iso_pi_Tr n.+1 X).
-  exact c.
-  Unshelve.
-  all: exact _.
-Defined.
-
-(** ** Injectivity of homotopy groups of fiber inclusions
-
-If the [n.+1]-st homotopy group of the double fiber of [g] vanishes, then [Pi n.+1] of the fiber inclusion of [g] is an embedding. *)
-Instance isembedding_pi_pfib `{Univalence} {X Y : pType} (g : X ->* Y)
-  (n : nat) `{Contr (Pi n.+1 (pfiber (pfib g)))}
-  : IsEmbedding (fmap (Pi n.+1) (pfib g)).
-Proof.
-  exact (isembedding_isexact (i := fmap (pPi n.+1) (pfib (pfib g)))
-           (isexact_pi_total (pfib (pfib g)) (pfib g) (n.+1)%nat)).
-Defined.
+(** [K(-, n)] is a pointed functor, so it takes the complex underlying a short exact sequence to a complex. *)
+Definition iscomplex_em_abses `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A)
+  (n : nat)
+  : IsComplex (fmap (K' n) (inclusion E)) (fmap (K' n) (projection E))
+  := fmap_iscomplex (K' n) _ _ (iscomplex_abses E).
 
 Section EMFiberSequence.
   Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A) (n : nat).
 
-  (** Applying [K(-,n.+1)] to a short exact sequence yields a complex. *)
-  Definition iscomplex_em_abses
-    : IsComplex (fmap (K' n.+1) (inclusion E)) (fmap (K' n.+1) (projection E)).
+  (** The identifications [equiv_g_pi_n_em] carry [Pi n.+1] of the sequence [K(-, n.+1)] applied to [E] back to [E] itself, so that sequence is exact. *)
+  Local Definition isexact_pi_em_abses
+    : IsExact (Tr (-1))
+        (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))
+        (fmap (Pi n.+1) (fmap (K' n.+1) (projection E))).
   Proof.
-    refine ((fmap_comp (K' n.+1) (inclusion E) (projection E))^* @* _).
-    refine (phomotopy_path
-      (ap (fun h => fmap (K' n.+1) h) (_ : _ = grp_homo_const))
-      @* fmap_zero_morphism (K' n.+1)).
-    apply equiv_path_grouphomomorphism; intro a.
-    exact (iscomplex_abses E a).
+    napply (isexact_square_if _ (i := inclusion E) (f := projection E)
+      (grp_iso_inverse (equiv_g_pi_n_em A n))
+      (grp_iso_inverse (equiv_g_pi_n_em E n))
+      (grp_iso_inverse (equiv_g_pi_n_em B n))).
+    - srapply phomotopy_homotopy_hset; intro x.
+      refine (ap (grp_iso_inverse (equiv_g_pi_n_em E n))
+        (ap (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))
+           (eisretr (equiv_g_pi_n_em A n) x)^
+         @ pi_em_fmap (inclusion E) n _) @ _).
+      exact (eissect (equiv_g_pi_n_em E n) _).
+    - srapply phomotopy_homotopy_hset; intro x.
+      refine (ap (grp_iso_inverse (equiv_g_pi_n_em B n))
+        (ap (fmap (Pi n.+1) (fmap (K' n.+1) (projection E)))
+           (eisretr (equiv_g_pi_n_em E n) x)^
+         @ pi_em_fmap (projection E) n _) @ _).
+      exact (eissect (equiv_g_pi_n_em B n) _).
+    - exact _.
   Defined.
 
-  (** The [n.+1]-st homotopy group of the double fiber of [fmap (K' n.+1) (projection E)] vanishes. *)
-  Local Instance contr_pi_pfiber_pfib
-    : Contr (Pi n.+1 (pfiber (pfib (fmap (K' n.+1) (projection E))))).
+  (** The fiber inclusion of [K(-, n.+1)] of the projection is an embedding on [Pi n.+1], since the homotopy group mapping into it vanishes. *)
+  Local Definition isembedding_pi_pfib_em
+    : IsEmbedding
+        (fmap (pPi n.+1) (pfib (fmap (K' n.+1) (projection E)))).
   Proof.
-    nrefine (contr_equiv' (Pi n.+2 K(B, n.+1)) _).
-    1: exact (grp_iso_compose
-      (groupiso_pi_functor n
-        (pequiv_inverse (pfiber2_loops (fmap (K' n.+1) (projection E)))))
-      (groupiso_pi_loops n K(B, n.+1))).
-    exact (contr_pi_succ_istrunc n K(B, n.+1)).
+    napply (isembedding_isexact (A := pPi n.+2 K(B, n.+1))).
+    1: exact (contr_pi_succ_istrunc n.+1 K(B, n.+1)).
+    exact (isexact_pi_fiber _ _ n.+1).
   Defined.
 
-  (** [Pi n.+1] of the comparison map [cxfib] is surjective. *)
-  Local Definition issurj_pi_cxfib
-    : IsSurjection (fmap (Pi n.+1) (cxfib iscomplex_em_abses)).
-  Proof.
-    intro y.
-    rapply contr_inhabited_hprop.
-    (* The image of [y] in [Pi n.+1 K(E, n.+1)] is killed by the projection. *)
-    pose (x := fmap (Pi n.+1) (pfib (fmap (K' n.+1) (projection E))) y).
-    pose proof (w := cx_isexact
-      (i := fmap (pTr 0) (fmap (iterated_loops n.+1)
-              (pfib (fmap (K' n.+1) (projection E)))))
-      (f := fmap (pTr 0) (fmap (iterated_loops n.+1)
-              (fmap (K' n.+1) (projection E))))
-      y).
-    (* Hence its preimage in [E] is killed by [projection E]. *)
-    pose (ee := (equiv_g_pi_n_em E n)^-1 x).
-    assert (pe : projection E ee = mon_unit).
-    { apply (equiv_inj (equiv_g_pi_n_em B n)).
-      refine ((pi_em_fmap (projection E) n ee)^ @ _).
-      refine (ap (fmap (Pi n.+1) (fmap (K' n.+1) (projection E)))
-                (eisretr (equiv_g_pi_n_em E n) x) @ _).
-      refine (w @ _).
-      exact (grp_homo_unit (equiv_g_pi_n_em B n))^. }
-    (* By exactness, [ee] merely comes from [A]. *)
-    pose proof (m := @center _ (conn_map_isexact
-      (i := inclusion E) (f := projection E) (ee; pe))).
-    strip_truncations.
-    destruct m as [a q].
-    apply tr.
-    exists (equiv_g_pi_n_em A n a).
-    (* The two candidates agree after the embedding [pi (pfib _)]. *)
-    refine (isinj_embedding _
-      (isembedding_pi_pfib (fmap (K' n.+1) (projection E)) n) _ _ _).
-    refine ((fmap_comp (Pi n.+1) (cxfib iscomplex_em_abses)
-              (pfib (fmap (K' n.+1) (projection E))) _)^ @ _).
-    refine (fmap2 (Pi n.+1) (pfib_cxfib _) _ @ _).
-    refine (pi_em_fmap (inclusion E) n a @ _).
-    exact (ap (equiv_g_pi_n_em E n) (ap pr1 q) @ eisretr _ x).
-  Defined.
-
-  (** Therefore the comparison map is an equivalence: it is an isomorphism on [Pi n.+1], and both sides are [n]-connected and [n.+1]-truncated. *)
+  (** Both [Pi n.+1 K(A, n.+1)] and [Pi n.+1] of the fiber are the kernel of [Pi n.+1] of the projection, so the comparison map identifies them. *)
   Local Instance isequiv_pi_cxfib
-    : IsEquiv (fmap (Pi n.+1) (cxfib iscomplex_em_abses)).
+    : IsEquiv (fmap (Pi n.+1) (cxfib (iscomplex_em_abses E n.+1))).
   Proof.
-    apply isequiv_surj_emb.
-    1: exact issurj_pi_cxfib.
-    snapply isembedding_istrivial_kernel.
-    intros z w.
-    (* [z] is killed by [Pi n.+1] of [fmap (K' n.+1) (inclusion E)]. *)
-    assert (wi : fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)) z = mon_unit).
-    { refine ((fmap2 (Pi n.+1) (pfib_cxfib _) z)^ @ _).
-      refine (fmap_comp (Pi n.+1) (cxfib iscomplex_em_abses)
-               (pfib (fmap (K' n.+1) (projection E))) z @ _).
-      refine (ap (fmap (Pi n.+1) (pfib (fmap (K' n.+1) (projection E)))) w @ _).
-      apply grp_homo_unit. }
-    (* Hence [z] vanishes, since the inclusion is an embedding. *)
-    pose (a := (equiv_g_pi_n_em A n)^-1 z).
-    refine ((eisretr (equiv_g_pi_n_em A n) z)^ @ _).
-    refine (ap (equiv_g_pi_n_em A n) (_ : a = mon_unit) @ _).
-    2: apply grp_homo_unit.
-    rapply (isinj_embedding (inclusion E)).
-    refine (_ @ (grp_homo_unit (inclusion E))^).
-    apply (equiv_inj (equiv_g_pi_n_em E n)).
-    refine ((pi_em_fmap (inclusion E) n a)^ @ _).
-    refine (ap (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))
-              (eisretr (equiv_g_pi_n_em A n) z) @ _).
-    refine (wi @ _).
-    exact (grp_homo_unit (equiv_g_pi_n_em E n))^.
+    napply isequiv_isexact_factor.
+    - intro x.
+      exact ((fmap_comp (Pi n.+1) (cxfib (iscomplex_em_abses E n.+1))
+                (pfib (fmap (K' n.+1) (projection E))) x)^
+             @ fmap2 (Pi n.+1) (pfib_cxfib _) x).
+    - (* [Pi n.+1] of [K(-, n.+1)] of the inclusion is conjugate to the inclusion. *)
+      apply isembedding_isinj_hset.
+      intros x y q.
+      apply (equiv_inj (equiv_g_pi_n_em A n)^-1%equiv).
+      rapply (isinj_embedding (inclusion E)).
+      apply (equiv_inj (equiv_g_pi_n_em E n)).
+      lhs_V napply (pi_em_fmap (inclusion E) n _).
+      rhs_V napply (pi_em_fmap (inclusion E) n _).
+      exact (ap _ (eisretr (equiv_g_pi_n_em A n) x) @ q
+             @ ap _ (eisretr (equiv_g_pi_n_em A n) y)^).
+    - exact isembedding_pi_pfib_em.
+    - exact isexact_pi_em_abses.
+    - exact (cx_isexact (IsExact := isexact_pi_total _ _ n.+1)).
   Defined.
 
-  (** Both sides of the comparison map are [n]-connected and [n.+1]-truncated, so it is an equivalence. *)
-  Local Instance isequiv_cxfib_em : IsEquiv (cxfib iscomplex_em_abses).
+  (** Both sides are [n]-connected and [n.+1]-truncated, so the comparison map is an equivalence by Whitehead's principle. *)
+  Local Instance isequiv_cxfib_em
+    : IsEquiv (cxfib (iscomplex_em_abses E n.+1)).
   Proof.
     pose proof (isconnmap_em_fmap (projection E) n (point _)).
-    (* The identification of [A] with the fiber's homotopy group. *)
-    pose (psi := grp_iso_compose
-      (Build_GroupIsomorphism _ _ _ isequiv_pi_cxfib)
-      (equiv_g_pi_n_em A n)).
-    (* The induced equivalence onto the fiber. *)
-    pose (omega := pequiv_em_connected_truncated
-        (pfiber (fmap (K' n.+1) (projection E))) n
-      o*E emap (K' n.+1) psi).
-    (* The conjugated comparison map is [fmap (K' n.+1)] of an isomorphism. *)
-    pose (chi := grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_em A n))
-      (grp_iso_compose (groupiso_pi_functor n (pequiv_inverse omega))
-        (grp_iso_compose (Build_GroupIsomorphism _ _ _ isequiv_pi_cxfib)
-          (equiv_g_pi_n_em A n)))).
-    assert (q : fmap (K' n.+1) chi
-                = pequiv_inverse omega o* cxfib iscomplex_em_abses).
-    { apply path_em_pmap_pi; intro u.
-      refine (ap (fmap (Pi n.+1) (fmap (K' n.+1) chi))
-                (eisretr (equiv_g_pi_n_em A n) u)^ @ _).
-      refine (pi_em_fmap chi n ((equiv_g_pi_n_em A n)^-1 u) @ _).
-      refine (eisretr (equiv_g_pi_n_em A n) _ @ _).
-      refine (ap (fun v => fmap (Pi n.+1) (pequiv_inverse omega)
-                  (fmap (Pi n.+1) (cxfib iscomplex_em_abses) v))
-                (eisretr (equiv_g_pi_n_em A n) u) @ _).
-      exact (fmap_comp (Pi n.+1) (cxfib iscomplex_em_abses)
-              (pequiv_inverse omega) u)^.
-    }
-    snapply (isequiv_homotopic
-      (omega o (pequiv_inverse omega o* cxfib iscomplex_em_abses))).
-    - napply isequiv_compose.
-      2: exact _.
-      exact (transport (fun (g : _ ->* _) => IsEquiv g) q
-              (pointed_isequiv _ _ (emap (K' n.+1) chi))).
-    - intro x; exact (eisretr omega _).
+    napply (isequiv_pi_connected_truncated n).
+    1,2,3,4: exact _.
+    exact isequiv_pi_cxfib.
   Defined.
 
   (** [K(-, n.+1)] sends short exact sequences of abelian groups to fiber sequences of Eilenberg-Mac Lane spaces. *)
@@ -201,7 +102,7 @@ Section EMFiberSequence.
     : IsExact purely (fmap (K' n.+1) (inclusion E))
         (fmap (K' n.+1) (projection E)).
   Proof.
-    exists iscomplex_em_abses.
+    exists (iscomplex_em_abses E n.+1).
     rapply conn_map_isequiv.
   Defined.
 
@@ -245,15 +146,13 @@ Section AbSESPfiber.
     exact (fmap (Pi n.+2) (pfib f)).
   Defined.
 
-  (** The [n.+2]-nd homotopy group of the double fiber of [pfib f] vanishes. *)
-  Local Instance contr_pi_pfiber2
-    : Contr (Pi n.+2 (pfiber (pfib (pfib f)))).
+  (** The fiber inclusion of [pfib f] is an embedding on [Pi n.+2], since the homotopy group mapping into it vanishes. *)
+  Local Definition isembedding_pi_pfib_pfib
+    : IsEmbedding (fmap (pPi n.+2) (pfib (pfib f))).
   Proof.
-    nrefine (contr_equiv' (Pi n.+3 K(B, n.+2)) _).
-    1: exact (grp_iso_compose
-      (groupiso_pi_functor n.+1 (pequiv_inverse (pfiber2_loops (pfib f))))
-      (groupiso_pi_loops n.+1 K(B, n.+2))).
-    exact (contr_pi_succ_istrunc n.+1 K(B, n.+2)).
+    napply (isembedding_isexact (A := pPi n.+3 K(B, n.+2))).
+    1: exact (contr_pi_succ_istrunc n.+2 K(B, n.+2)).
+    exact (isexact_pi_fiber _ _ n.+2).
   Defined.
 
   (** The [n.+2]-nd homotopy group of [K(A,n+3)] vanishes. *)
@@ -271,8 +170,7 @@ Section AbSESPfiber.
     pose (z := groupiso_pi_loops n.+1 K(A, n.+3) (equiv_g_pi_n_em A n.+2 a)).
     assert (wz : fmap (Pi n.+2) ((connect_fiberseq (pfib f) f).2) z
                  = mon_unit).
-    { napply (isinj_embedding _ (isembedding_pi_pfib (pfib f) n.+1)).
-      1: exact _.
+    { napply (isinj_embedding _ isembedding_pi_pfib_pfib).
       refine ((fmap_comp (Pi n.+2)
                 ((connect_fiberseq (pfib f) f).2)
                 (pfib (pfib f)) z)^ @ _).
@@ -372,23 +270,16 @@ End AbSESPfiber.
 Section PfiberDeloop.
   Context `{Univalence} {B A : AbGroup@{u}} (psi : K(B, 3) ->* K(A, 4)).
 
-  (** The fiber of a map [K(B,3) ->* K(A,4)] is 3-truncated. *)
-  Local Instance istrunc_pfiber_em : IsTrunc 3 (pfiber psi)
-    := _.
-
-  (** Its second homotopy group is trivial: it embeds in the trivial [Pi 2 K(B,3)], since the second homotopy group of the double fiber is [Pi 3 K(A,4)], which is also trivial. *)
+  (** The second homotopy group of the fiber is trivial, since it embeds into the trivial [Pi 2 K(B,3)]. *)
   Local Instance contr_pi2_pfiber_em : Contr (Pi 2 (pfiber psi)).
   Proof.
-    assert (contr_pi2_pfib2 : Contr (Pi 2 (pfiber (pfib psi)))).
-    { nrefine (contr_equiv' (Pi 3 K(A, 4)) _).
-      1: exact (grp_iso_compose
-           (groupiso_pi_functor 1 (pequiv_inverse (pfiber2_loops psi)))
-           (groupiso_pi_loops 1 K(A, 4))).
-      exact (contr_pi_isconnected 3 K(A, 4)). }
+    assert (emb : IsEmbedding (fmap (pPi 2) (pfib psi))).
+    { napply (isembedding_isexact (A := pPi 3 K(A, 4))).
+      1: exact (contr_pi_isconnected 3 K(A, 4)).
+      exact (isexact_pi_fiber _ _ 2). }
     apply (Build_Contr _ mon_unit).
     intro y.
-    napply (isinj_embedding _ (isembedding_pi_pfib psi 1)).
-    1: exact _.
+    napply (isinj_embedding _ emb).
     napply path_contr.
     exact (contr_pi_isconnected 2 K(B, 3)).
   Defined.
@@ -501,10 +392,14 @@ Section PfiberDeloop.
       ==* pfib psi o* pequiv_em_pfiber_psi'
     := pmap_postcompose_idmap _ @* phomotopy_path path_em_proj_pfib_psi.
 
-  (** The third homotopy group of the double fiber of [pfib psi] vanishes, so [Pi 3] of its fiber inclusion is an embedding. *)
-  Local Instance contr_pi3_pfiber2_psi
-    : Contr (Pi 3 (pfiber (pfib (pfib psi))))
-    := contr_pi_pfiber2 1 psi.
+  (** [Pi 3] of the fiber inclusion of [pfib psi] is an embedding, since the homotopy group mapping into it vanishes. *)
+  Local Definition isembedding_pi_pfib_pfib_psi
+    : IsEmbedding (fmap (pPi 3) (pfib (pfib psi))).
+  Proof.
+    napply (isembedding_isexact (A := pPi 4 K(B, 3))).
+    1: exact (contr_pi_succ_istrunc 3 K(B, 3)).
+    exact (isexact_pi_fiber _ _ 3).
+  Defined.
 
   (** Through the bridge, [cxfib] of the extracted sequence is the connecting identification of [psi], modulo the loop identification of [K(A,3)]. *)
   Local Definition path_cxfib_connect_psi
@@ -521,8 +416,7 @@ Section PfiberDeloop.
          (@isconnected_loops _ 2 K(A, 4) (isconnected_em 3))).
     1: exact _.
     intro x.
-    napply (isinj_embedding _ (isembedding_pi_pfib (pfib psi) 2)).
-    1: exact _.
+    napply (isinj_embedding _ isembedding_pi_pfib_pfib_psi).
     refine (ap (fmap (Pi 3) (pfib (pfib psi)))
       (fmap_comp (Pi 3)
         (pequiv_cxfib (i := fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
@@ -958,9 +852,7 @@ Section Naturality.
     1: exact (isconnected_equiv' 2 K(X, 3) em_cxfib_F (isconnected_em 2)).
     1: exact _.
     intro x.
-    refine (isinj_embedding _
-      (@isembedding_pi_pfib _ _ _ (fmap (K' 3) (projection F)) 2
-        (contr_pi_pfiber_pfib F 2)) _ _ _).
+    refine (isinj_embedding _ (isembedding_pi_pfib_em F 2) _ _ _).
     refine (ap (fmap (Pi 3) (pfib (fmap (K' 3) (projection F))))
       (fmap_comp (Pi 3) (em_cxfib_E)
         (functor_pfiber (em_proj_square^*)) x) @ _).

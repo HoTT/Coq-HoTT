@@ -112,3 +112,31 @@ Proof.
     2-3:exact (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
 Defined.
+
+(** A pointed map between [n]-connected, [n.+1]-truncated types which induces an equivalence on [Pi n.+1] is an equivalence.  Only the top homotopy group of such a type is non-trivial, so this is the only condition Whitehead's principle leaves to check. *)
+Definition isequiv_pi_connected_truncated `{Univalence} (n : nat) {X Y : pType}
+  (f : X ->* Y)
+  (cX : IsConnected n X) (tX : IsTrunc n.+1 X)
+  (cY : IsConnected n Y) (tY : IsTrunc n.+1 Y)
+  (e : IsEquiv (fmap (pPi n.+1) f))
+  : IsEquiv f.
+Proof.
+  revert X Y f cX tX cY tY e.
+  induction n as [|n IHn]; intros X Y f cX tX cY tY e.
+  - snapply (isequiv_is0connected_isequiv_loops (A:=X) (B:=Y) f).
+    1,2: assumption.
+    (** The loop spaces are sets, so [Tr 0] reflects the equivalence. *)
+    napply (@isequiv_O_inverts (Tr 0)).
+    1,2: rapply istrunc_loops.
+    exact e.
+  - snapply (isequiv_is0connected_isequiv_loops (A:=X) (B:=Y) f).
+    1,2: rapply is0connected_isconnected.
+    (** [fmap loops f] satisfies the hypotheses one level down, using that [Pi n.+1 o loops] is [Pi n.+2] up to the equivalences [pi_loops]. *)
+    assert (el : IsEquiv (fmap (pPi n.+1) (fmap loops f))).
+    { napply (isequiv_commsq _ _ (pi_loops n.+1 X) (pi_loops n.+1 Y)).
+      1: exact (fmap_pi_loops n.+1 f).
+      all: exact _. }
+    exact (IHn (loops X) (loops Y) (fmap loops f)
+             (isconnected_loops _) (istrunc_loops _)
+             (isconnected_loops _) (istrunc_loops _) el).
+Defined.

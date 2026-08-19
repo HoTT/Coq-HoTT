@@ -104,7 +104,7 @@ Section Pi3S2.
   (** Therefore its homotopy groups vanish in degrees 2 and above. *)
   Local Instance contr_pi_succ_succ_psphere_1 (n : nat)
     : Contr (Pi n.+2 (psphere 1))
-    := contr_pi_succ_istrunc n (psphere 1).
+    := contr_pi_succ_istrunc n.+1 (psphere 1).
 
   (** The Hopf construction on the circle gives a pointed family over [psusp (psphere 1)], which is definitionally [psphere 2].  The projection of its total space is the Hopf fibration. *)
   Definition hopf_pr1
