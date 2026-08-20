@@ -224,6 +224,16 @@ Section EilenbergMacLane.
       exact (ap _ (IHn g)).
   Defined.
 
+  (** Equivalently, on [Pi n.+1] the functor [K(-, n.+1)] is conjugation by the identifications [equiv_g_pi_n_em]. *)
+  Definition pi_em_fmap' {G G' : AbGroup}
+    (f : GroupHomomorphism G G') (n : nat) (x : Pi n.+1 K(G, n.+1))
+    : fmap (Pi n.+1) (fmap (K' n.+1) f) x
+      = equiv_g_pi_n_em G' n (f ((equiv_g_pi_n_em G n)^-1 x)).
+  Proof.
+    lhs_V napply (ap _ (eisretr (equiv_g_pi_n_em G n) x)).
+    napply (pi_em_fmap f n).
+  Defined.
+
   (** Eilenberg-Mac Lane spaces of a contractible group are contractible. *)
   #[export] Instance contr_em_contr {G : Group} `{Contr G} (n : nat)
     : Contr K(G, n).
@@ -352,6 +362,45 @@ Section EilenbergMacLane.
     refine ((IHn (loops X) _ _) o*E _).
     exact (emap (K' n.+1) (groupiso_pi_loops _ _)).
   Defined.
+
+  (** In this range the homotopy groups are abelian. *)
+  Definition abgroup_pi (n : nat) (X : pType) : AbGroup
+    := Build_AbGroup (Pi n.+2 X) _.
+
+  Section NormalizedEM.
+    Context (n : nat) (X : pType)
+      `{IsConnected (n.+1)%nat X} `{IsTrunc (n.+2)%nat X}.
+
+    (** The automorphism of [Pi n.+2 X] by which [pequiv_em_connected_truncated] differs from [equiv_g_pi_n_em]. *)
+    Local Definition eta_em_pi
+      : GroupIsomorphism (abgroup_pi n X) (abgroup_pi n X)
+      := grp_iso_compose
+           (groupiso_pi_functor n.+1 (pequiv_em_connected_truncated X n.+1))
+           (equiv_g_pi_n_em (abgroup_pi n X) n.+1).
+
+    (** The identification of [X] with an Eilenberg-Mac Lane space, normalized by that automorphism. *)
+    Definition pequiv_em_pi : K(abgroup_pi n X, n.+2) <~>* X.
+    Proof.
+      snapply Build_pEquiv.
+      1: exact (pequiv_em_connected_truncated X n.+1
+                o* emap (K' n.+2) (grp_iso_inverse eta_em_pi)).
+      exact (isequiv_compose (emap (K' n.+2) (grp_iso_inverse eta_em_pi))
+               (pequiv_em_connected_truncated X n.+1)).
+    Defined.
+
+    (** By construction it inverts [equiv_g_pi_n_em] on [Pi n.+2]. *)
+    Definition pi_pequiv_em_pi (x : Pi n.+2 K(abgroup_pi n X, n.+2))
+      : fmap (Pi n.+2) pequiv_em_pi x
+        = (equiv_g_pi_n_em (abgroup_pi n X) n.+1)^-1 x.
+    Proof.
+      refine (fmap_comp (Pi n.+2)
+        (fmap (K' n.+2) (grp_iso_inverse eta_em_pi))
+        (pequiv_em_connected_truncated X n.+1) x @ _).
+      refine (ap (fmap (Pi n.+2) (pequiv_em_connected_truncated X n.+1))
+        (pi_em_fmap' (grp_iso_inverse eta_em_pi) n.+1 x) @ _).
+      exact (eisretr eta_em_pi _).
+    Defined.
+  End NormalizedEM.
 
   (** Pointed maps between [n.+1]-connected [n.+2]-truncated types which agree on homotopy groups are equal. *)
   Definition path_pmap_pi_connected (n : nat) {X Y : pType}

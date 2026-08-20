@@ -616,6 +616,41 @@ Proof.
   napply pmap_postcompose_idmap.
 Defined.
 
+(** The fiber of the connecting map is the double fiber of [i], since the connecting map is [pfib i] composed with the identification of [loops Y] with [pfiber i]. *)
+Definition pequiv_pfiber_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : pfiber (connecting_map i f) <~>* pfiber (pfib i)
+  := pequiv_pfiber ((connect_fiberseq i f).2) pequiv_pmap_idmap
+       (pmap_postcompose_idmap _).
+
+(** Its defining square. *)
+Definition square_pfiber_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : (connect_fiberseq i f).2 o* pfib (connecting_map i f)
+    ==* pfib (pfib i) o* pequiv_pfiber_connecting_map i f
+  := square_pequiv_pfiber _ _ _.
+
+(** Through that identification, the fiber inclusion of the connecting map is [loops] of [f], twisted by loop inversion. *)
+Definition pfib_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : pfib (connecting_map i f)
+    ==* fmap loops f
+        o* (loops_inv X o* (pfiber2_loops i
+              o* pequiv_pfiber_connecting_map i f)).
+Proof.
+  refine ((pmap_postcompose_idmap _)^* @* _).
+  refine (pmap_prewhisker _
+    (peisretr ((pfiber2_loops f)
+               o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))^* @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  refine (pmap_postwhisker _ (square_pfiber_connecting_map i f) @* _).
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _ (pfiber2_loops_pfib2 i f) @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  napply pmap_postwhisker.
+  exact (pmap_compose_assoc _ _ _).
+Defined.
+
 (** ** Long exact sequences *)
 
 Record LongExactSequence (k : Modality) (N : SuccStr) : Type :=

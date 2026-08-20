@@ -40,15 +40,11 @@ Section EMFiberSequence.
       (grp_iso_inverse (equiv_g_pi_n_em B n))).
     - srapply phomotopy_homotopy_hset; intro x.
       refine (ap (grp_iso_inverse (equiv_g_pi_n_em E n))
-        (ap (fmap (Pi n.+1) (fmap (K' n.+1) (inclusion E)))
-           (eisretr (equiv_g_pi_n_em A n) x)^
-         @ pi_em_fmap (inclusion E) n _) @ _).
+                (pi_em_fmap' (inclusion E) n x) @ _).
       exact (eissect (equiv_g_pi_n_em E n) _).
     - srapply phomotopy_homotopy_hset; intro x.
       refine (ap (grp_iso_inverse (equiv_g_pi_n_em B n))
-        (ap (fmap (Pi n.+1) (fmap (K' n.+1) (projection E)))
-           (eisretr (equiv_g_pi_n_em E n) x)^
-         @ pi_em_fmap (projection E) n _) @ _).
+                (pi_em_fmap' (projection E) n x) @ _).
       exact (eissect (equiv_g_pi_n_em B n) _).
     - exact _.
   Defined.
@@ -78,10 +74,9 @@ Section EMFiberSequence.
       apply (equiv_inj (equiv_g_pi_n_em A n)^-1%equiv).
       rapply (isinj_embedding (inclusion E)).
       apply (equiv_inj (equiv_g_pi_n_em E n)).
-      lhs_V napply (pi_em_fmap (inclusion E) n _).
-      rhs_V napply (pi_em_fmap (inclusion E) n _).
-      exact (ap _ (eisretr (equiv_g_pi_n_em A n) x) @ q
-             @ ap _ (eisretr (equiv_g_pi_n_em A n) y)^).
+      lhs_V napply (pi_em_fmap' (inclusion E) n x).
+      rhs_V napply (pi_em_fmap' (inclusion E) n y).
+      exact q.
     - exact isembedding_pi_pfib_em.
     - exact isexact_pi_em_abses.
     - exact (cx_isexact (IsExact := isexact_pi_total _ _ n.+1)).
@@ -227,46 +222,15 @@ Section PfiberDeloop.
     - exact _.
   Defined.
 
-  (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group. *)
-  Local Definition pequiv_em_pfiber_psi
-    : K(abgroup_pi_pfiber 1 psi, 3) <~>* pfiber psi
-    := pequiv_em_connected_truncated (pfiber psi) 2.
-
-  (** The induced identification of third homotopy groups. *)
-  Local Definition eta_pfiber_psi
-    : GroupIsomorphism (abgroup_pi_pfiber 1 psi) (abgroup_pi_pfiber 1 psi)
-    := grp_iso_compose
-         (groupiso_pi_functor 2 pequiv_em_pfiber_psi)
-         (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2).
-
-  (** The bridge, twisted by [eta_pfiber_psi]. *)
+  (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group, identified so that the identification inverts [equiv_g_pi_n_em] on [Pi 3]. *)
   Local Definition pequiv_em_pfiber_psi'
-    : K(abgroup_pi_pfiber 1 psi, 3) <~>* pfiber psi.
-  Proof.
-    snapply Build_pEquiv.
-    1: exact (pequiv_em_pfiber_psi
-        o* emap (K' 3) (grp_iso_inverse eta_pfiber_psi)).
-    exact (isequiv_compose
-      (emap (K' 3) (grp_iso_inverse eta_pfiber_psi))
-      pequiv_em_pfiber_psi).
-  Defined.
+    : K(abgroup_pi_pfiber 1 psi, 3) <~>* pfiber psi
+    := pequiv_em_pi 1 (pfiber psi).
 
-  (** On [Pi 3], the bridge inverts [equiv_g_pi_n_em], by construction. *)
   Local Definition pi_bridge_psi (x : Pi 3 K(abgroup_pi_pfiber 1 psi, 3))
     : fmap (Pi 3) (pequiv_em_pfiber_psi') x
-      = grp_iso_inverse (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) x.
-  Proof.
-    refine (fmap_comp (Pi 3)
-      (fmap (K' 3) (grp_iso_inverse eta_pfiber_psi))
-      (pequiv_em_pfiber_psi) x @ _).
-    refine (ap (fmap (Pi 3) (pequiv_em_pfiber_psi))
-      (ap (fmap (Pi 3) (fmap (K' 3) (grp_iso_inverse eta_pfiber_psi)))
-        (eisretr
-          (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) x)^) @ _).
-    refine (ap (fmap (Pi 3) (pequiv_em_pfiber_psi))
-      (pi_em_fmap (grp_iso_inverse eta_pfiber_psi) 2 _) @ _).
-    exact (eisretr eta_pfiber_psi _).
-  Defined.
+      = grp_iso_inverse (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) x
+    := pi_pequiv_em_pi 1 (pfiber psi) x.
 
   (** Through the bridge, [fmap (K' 3)] of the projection is the fiber inclusion of [psi]. *)
   Local Definition path_em_proj_pfib_psi
@@ -278,10 +242,7 @@ Section PfiberDeloop.
     1: exact (isconnected_em (G:=B) 2).
     1: exact _.
     intro x.
-    refine (ap (fmap (Pi 3) (fmap (K' 3) (abses_pfiber_proj 1 psi)))
-      (eisretr (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) x)^
-      @ _).
-    refine (pi_em_fmap (abses_pfiber_proj 1 psi) 2 _ @ _).
+    refine (pi_em_fmap' (abses_pfiber_proj 1 psi) 2 x @ _).
     refine (eisretr (equiv_g_pi_n_em B 2) _ @ _).
     refine (_ @ (fmap_comp (Pi 3)
       (pequiv_em_pfiber_psi') (pfib psi) x)^).
@@ -302,10 +263,7 @@ Section PfiberDeloop.
       (fmap (K' 3) (abses_pfiber_incl 1 psi))
       (pequiv_em_pfiber_psi') x @ _).
     refine (ap (fmap (Pi 3) (pequiv_em_pfiber_psi'))
-      (ap (fmap (Pi 3) (fmap (K' 3) (abses_pfiber_incl 1 psi)))
-        (eisretr (equiv_g_pi_n_em A 2) x)^) @ _).
-    refine (ap (fmap (Pi 3) (pequiv_em_pfiber_psi'))
-      (pi_em_fmap (abses_pfiber_incl 1 psi) 2 _) @ _).
+      (pi_em_fmap' (abses_pfiber_incl 1 psi) 2 x) @ _).
     refine (pi_bridge_psi _ @ _).
     refine (eissect
       (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) _ @ _).
@@ -341,6 +299,23 @@ Section PfiberDeloop.
            (f := fmap (K' 3) (projection (abses_pfiber 1 psi)))
       = (connect_fiberseq (pfib psi) psi).2 o* pequiv_loops_em_em A 3.
   Proof.
+    (** The two sides have the same composite with [pfib (pfib psi)]: on the left the [pequiv_pfiber] square and [pfib_cxfib] turn it into [fmap (K' 3)] of the inclusion followed by the bridge, and on the right it is the connecting map by definition. *)
+    assert (sq : pfib (pfib psi)
+                 o* (pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
+                       square_em_proj_pfib_psi
+                     o* pequiv_cxfib
+                          (i := fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
+                          (f := fmap (K' 3) (projection (abses_pfiber 1 psi))))
+                 ==* pfib (pfib psi)
+                     o* ((connect_fiberseq (pfib psi) psi).2
+                         o* pequiv_loops_em_em A 3)).
+    { lhs_V' napply pmap_compose_assoc.
+      lhs_V' napply (pmap_prewhisker _
+        (square_pequiv_pfiber _ _ square_em_proj_pfib_psi)).
+      lhs' napply pmap_compose_assoc.
+      lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
+      rhs_V' napply pmap_compose_assoc.
+      exact (phomotopy_path path_em_incl_delta_psi). }
     snapply (path_pmap_pi_connected 1).
     1,2: exact _.
     1: exact (isconnected_equiv' 2 (loops K(A, 4))
@@ -349,43 +324,9 @@ Section PfiberDeloop.
     1: exact _.
     intro x.
     napply (isinj_embedding _ isembedding_pi_pfib_pfib_psi).
-    refine (ap (fmap (Pi 3) (pfib (pfib psi)))
-      (fmap_comp (Pi 3)
-        (pequiv_cxfib (i := fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
-           (f := fmap (K' 3) (projection (abses_pfiber 1 psi))))
-        (pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
-           square_em_proj_pfib_psi) x) @ _).
-    refine ((fmap_comp (Pi 3)
-      (pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
-         square_em_proj_pfib_psi)
-      (pfib (pfib psi)) _)^ @ _).
-    refine ((fmap2 (Pi 3)
-      (square_pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
-         square_em_proj_pfib_psi) _)^ @ _).
-    refine (fmap_comp (Pi 3)
-      (pfib (fmap (K' 3) (projection (abses_pfiber 1 psi))))
-      (pequiv_em_pfiber_psi') _ @ _).
-    refine (ap (fmap (Pi 3) (pequiv_em_pfiber_psi'))
-      ((fmap_comp (Pi 3)
-         (pequiv_cxfib (i := fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
-            (f := fmap (K' 3) (projection (abses_pfiber 1 psi))))
-         (pfib (fmap (K' 3) (projection (abses_pfiber 1 psi)))) x)^
-       @ fmap2 (Pi 3) (pfib_cxfib _) x) @ _).
-    refine ((fmap_comp (Pi 3)
-      (fmap (K' 3) (abses_pfiber_incl 1 psi))
-      (pequiv_em_pfiber_psi') x)^ @ _).
-    refine (ap (fun m => fmap (Pi 3) m x)
-      path_em_incl_delta_psi @ _).
-    refine (fmap_comp (Pi 3)
-      (pequiv_loops_em_em A 3)
-      (connecting_map (pfib psi) psi) x @ _).
-    refine (fmap_comp (Pi 3)
-      ((connect_fiberseq (pfib psi) psi).2)
-      (pfib (pfib psi)) _ @ _).
-    exact (ap (fmap (Pi 3) (pfib (pfib psi)))
-      (fmap_comp (Pi 3)
-        (pequiv_loops_em_em A 3)
-        ((connect_fiberseq (pfib psi) psi).2) x))^.
+    lhs_V refine (fmap_comp (Pi 3) _ (pfib (pfib psi)) x).
+    rhs_V refine (fmap_comp (Pi 3) _ (pfib (pfib psi)) x).
+    exact (fmap2 (Pi 3) sq x).
   Qed.
 
   (** The connecting identification of [psi] inverts [pfiber2_loops], since the underlying [pequiv_pfiber] square is tautological. *)
@@ -477,39 +418,12 @@ Section ClassifyingRoundTrip.
           o* pequiv_loops_em_em B 2
     := pmap_postcompose_idmap _.
 
-  (** The fiber of the connecting map's defining presentation. *)
-  Local Definition rt1_pfiber_delta
-    : pfiber (connecting_map (fmap (K' 3) (inclusion E))
-                (fmap (K' 3) (projection E)))
-      <~>* pfiber (pfib (fmap (K' 3) (inclusion E))).
-  Proof.
-    refine (pequiv_pfiber
-      ((connect_fiberseq (fmap (K' 3) (inclusion E))
-          (fmap (K' 3) (projection E))).2)
-      pequiv_pmap_idmap _).
-    exact (pmap_postcompose_idmap _).
-  Defined.
-
-  (** Its defining square. *)
-  Local Definition rt1_pfiber_delta_square
-    : (connect_fiberseq (fmap (K' 3) (inclusion E))
-         (fmap (K' 3) (projection E))).2
-      o* pfib (connecting_map (fmap (K' 3) (inclusion E))
-                 (fmap (K' 3) (projection E)))
-      ==* pfib (pfib (fmap (K' 3) (inclusion E))) o* rt1_pfiber_delta.
-  Proof.
-    refine (square_pequiv_pfiber
-      ((connect_fiberseq (fmap (K' 3) (inclusion E))
-          (fmap (K' 3) (projection E))).2)
-      pequiv_pmap_idmap _).
-  Qed.
-
   (** The fiber of the classifying map is [loops K(E,3)]. *)
   Local Definition pequiv_pfiber_classifying
     : pfiber (abses_classifying_map E) <~>* loops K(E, 3)
     := loops_inv _
        o*E (pfiber2_loops (fmap (K' 3) (inclusion E))
-       o*E (rt1_pfiber_delta
+       o*E (pequiv_pfiber_connecting_map _ _
            o*E pequiv_pfiber (pequiv_loops_em_em B 2) pequiv_pmap_idmap
                 rt1_square)).
 
@@ -519,28 +433,8 @@ Section ClassifyingRoundTrip.
       ==* fmap loops (fmap (K' 3) (projection E))
           o* pequiv_pfiber_classifying.
   Proof.
-    assert (X : pfib (connecting_map (fmap (K' 3) (inclusion E))
-                        (fmap (K' 3) (projection E)))
-                ==* fmap loops (fmap (K' 3) (projection E))
-                    o* (loops_inv _
-                        o* (pfiber2_loops (fmap (K' 3) (inclusion E))
-                            o* rt1_pfiber_delta))).
-    { refine ((pmap_postcompose_idmap _)^* @* _).
-      refine (pmap_prewhisker _
-        (peisretr ((pfiber2_loops (fmap (K' 3) (projection E)))
-                   o*E (pequiv_pfiber _ _
-                          (square_pfib_pequiv_cxfib
-                             (fmap (K' 3) (inclusion E))
-                             (fmap (K' 3) (projection E))))))^* @* _).
-      refine (pmap_compose_assoc _ _ _ @* _).
-      refine (pmap_postwhisker _ rt1_pfiber_delta_square @* _).
-      refine ((pmap_compose_assoc _ _ _)^* @* _).
-      refine (pmap_prewhisker _ (pfiber2_loops_pfib2 _ _) @* _).
-      refine (pmap_compose_assoc _ _ _ @* _).
-      napply pmap_postwhisker.
-      exact (pmap_compose_assoc _ _ _). }
     refine (square_pequiv_pfiber _ _ rt1_square @* _).
-    refine (pmap_prewhisker _ X @* _).
+    refine (pmap_prewhisker _ (pfib_connecting_map _ _) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
     napply pmap_postwhisker.
     refine (pmap_compose_assoc _ _ _ @* _).
@@ -779,37 +673,32 @@ Section Naturality.
     : functor_pfiber (em_proj_square^*) o* em_cxfib_E
       = em_cxfib_F o* fmap (K' 3) (component1 phi).
   Proof.
+    (** Both sides have the same composite with [pfib] of the projection of [F]: on the left the [functor_pfiber] square, [pfib_cxfib] and the inclusion square, on the right [pfib_cxfib] alone. *)
+    assert (l : pfib (fmap (K' 3) (projection F))
+                o* (functor_pfiber (em_proj_square^*) o* em_cxfib_E)
+                ==* fmap (K' 3) (inclusion F)
+                    o* fmap (K' 3) (component1 phi)).
+    { lhs_V' napply pmap_compose_assoc.
+      lhs_V' napply (pmap_prewhisker _
+        (square_functor_pfiber (em_proj_square^*))).
+      lhs' napply pmap_compose_assoc.
+      lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
+      napply em_incl_square. }
+    assert (r : pfib (fmap (K' 3) (projection F))
+                o* (em_cxfib_F o* fmap (K' 3) (component1 phi))
+                ==* fmap (K' 3) (inclusion F)
+                    o* fmap (K' 3) (component1 phi)).
+    { lhs_V' napply pmap_compose_assoc.
+      napply (pmap_prewhisker _ (pfib_cxfib _)). }
     snapply (path_pmap_pi_connected 1).
     1,2: exact _.
     1: exact (isconnected_equiv' 2 K(X, 3) em_cxfib_F (isconnected_em 2)).
     1: exact _.
     intro x.
     refine (isinj_embedding _ (isembedding_pi_pfib_em F 2) _ _ _).
-    refine (ap (fmap (Pi 3) (pfib (fmap (K' 3) (projection F))))
-      (fmap_comp (Pi 3) (em_cxfib_E)
-        (functor_pfiber (em_proj_square^*)) x) @ _).
-    refine ((fmap_comp (Pi 3)
-      (functor_pfiber (em_proj_square^*))
-      (pfib (fmap (K' 3) (projection F))) _)^ @ _).
-    refine ((fmap2 (Pi 3) (square_functor_pfiber (em_proj_square^*)) _)^ @ _).
-    refine (fmap_comp (Pi 3) (pfib (fmap (K' 3) (projection E)))
-      (fmap (K' 3) (component2 phi)) _ @ _).
-    refine (ap (fmap (Pi 3) (fmap (K' 3) (component2 phi)))
-      ((fmap_comp (Pi 3) (em_cxfib_E)
-         (pfib (fmap (K' 3) (projection E))) x)^
-       @ fmap2 (Pi 3) (pfib_cxfib _) x) @ _).
-    refine ((fmap_comp (Pi 3) (fmap (K' 3) (inclusion E))
-      (fmap (K' 3) (component2 phi)) x)^ @ _).
-    refine (fmap2 (Pi 3) em_incl_square x @ _).
-    refine (fmap_comp (Pi 3) (fmap (K' 3) (component1 phi))
-      (fmap (K' 3) (inclusion F)) x @ _).
-    refine ((fmap2 (Pi 3) (pfib_cxfib _)
-      (fmap (Pi 3) (fmap (K' 3) (component1 phi)) x))^ @ _).
-    refine (fmap_comp (Pi 3) (em_cxfib_F)
-      (pfib (fmap (K' 3) (projection F))) _ @ _).
-    exact (ap (fmap (Pi 3) (pfib (fmap (K' 3) (projection F))))
-      (fmap_comp (Pi 3) (fmap (K' 3) (component1 phi))
-        (em_cxfib_F) x))^.
+    lhs_V refine (fmap_comp (Pi 3) _ (pfib (fmap (K' 3) (projection F))) x).
+    rhs_V refine (fmap_comp (Pi 3) _ (pfib (fmap (K' 3) (projection F))) x).
+    exact (fmap2 (Pi 3) (l @* r^*) x).
   Qed.
 
   (** Hence the connecting maps of the two sequences are related by the morphism, through the loop identification of the bases. *)
