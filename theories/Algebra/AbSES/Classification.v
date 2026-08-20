@@ -129,135 +129,67 @@ Section AbSESPfiber.
   Definition abgroup_pi_pfiber : AbGroup
     := Build_AbGroup (Pi n.+2 (pfiber f)) _.
 
+  (** [A] is the [n.+2]-nd homotopy group of [loops K(A, n.+3)]. *)
+  Local Definition grp_iso_a_pi_loops
+    : GroupIsomorphism A (Pi n.+2 (loops K(A, n.+3)))
+    := grp_iso_compose (groupiso_pi_loops n.+1 K(A, n.+3))
+         (equiv_g_pi_n_em A n.+2).
+
   (** The inclusion, through the rotated fiber sequence [loops K(A,n+3) -> pfiber f -> K(B,n+2)]. *)
-  Definition abses_pfiber_incl : A $-> abgroup_pi_pfiber.
-  Proof.
-    nrefine (grp_homo_compose _
-      (grp_homo_compose (groupiso_pi_loops n.+1 K(A, n.+3))
-        (equiv_g_pi_n_em A n.+2))).
-    exact (fmap (Pi n.+2) (connecting_map (pfib f) f)).
-  Defined.
+  Definition abses_pfiber_incl : A $-> abgroup_pi_pfiber
+    := grp_homo_compose (fmap (Pi n.+2) (connecting_map (pfib f) f))
+         grp_iso_a_pi_loops.
 
   (** The projection, induced by the fiber inclusion of [f]. *)
-  Definition abses_pfiber_proj : abgroup_pi_pfiber $-> B.
-  Proof.
-    nrefine (grp_homo_compose
-      (grp_iso_inverse (equiv_g_pi_n_em B n.+1)) _).
-    exact (fmap (Pi n.+2) (pfib f)).
-  Defined.
+  Definition abses_pfiber_proj : abgroup_pi_pfiber $-> B
+    := grp_homo_compose (grp_iso_inverse (equiv_g_pi_n_em B n.+1))
+         (fmap (Pi n.+2) (pfib f)).
 
-  (** The fiber inclusion of [pfib f] is an embedding on [Pi n.+2], since the homotopy group mapping into it vanishes. *)
-  Local Definition isembedding_pi_pfib_pfib
-    : IsEmbedding (fmap (pPi n.+2) (pfib (pfib f))).
-  Proof.
-    napply (isembedding_isexact (A := pPi n.+3 K(B, n.+2))).
-    1: exact (contr_pi_succ_istrunc n.+2 K(B, n.+2)).
-    exact (isexact_pi_fiber _ _ n.+2).
-  Defined.
+  (** The two homotopy groups neighbouring the sequence vanish. *)
+  Local Instance contr_pi_em : Contr (Pi n.+2 K(A, n.+3))
+    := contr_pi_isconnected n.+2 K(A, n.+3).
 
-  (** The [n.+2]-nd homotopy group of [K(A,n+3)] vanishes. *)
-  Local Instance contr_pi_em : Contr (Pi n.+2 K(A, n.+3)).
-  Proof.
-    exact (contr_pi_isconnected n.+2 K(A, n.+3)).
-  Defined.
+  Local Instance contr_pi_em' : Contr (Pi n.+3 K(B, n.+2))
+    := contr_pi_succ_istrunc n.+2 K(B, n.+2).
 
-  Local Instance isembedding_abses_pfiber_incl
-    : IsEmbedding abses_pfiber_incl.
+  (** The three conditions defining a short exact sequence therefore come from the long exact sequences of the fiber sequence of [f] and of its rotation. *)
+
+  Local Instance isembedding_abses_pfiber_incl : IsEmbedding abses_pfiber_incl.
   Proof.
-    snapply isembedding_istrivial_kernel.
-    intros a w.
-    (* The image of [a] in [Pi n.+2 (loops K(A,n+3))]. *)
-    pose (z := groupiso_pi_loops n.+1 K(A, n.+3) (equiv_g_pi_n_em A n.+2 a)).
-    assert (wz : fmap (Pi n.+2) ((connect_fiberseq (pfib f) f).2) z
-                 = mon_unit).
-    { napply (isinj_embedding _ isembedding_pi_pfib_pfib).
-      refine ((fmap_comp (Pi n.+2)
-                ((connect_fiberseq (pfib f) f).2)
-                (pfib (pfib f)) z)^ @ _).
-      refine (w @ _).
-      exact (grp_homo_unit (fmap (Pi n.+2) (pfib (pfib f))))^. }
-    apply (equiv_inj (equiv_g_pi_n_em A n.+2)).
-    apply (equiv_inj (groupiso_pi_loops n.+1 K(A, n.+3))).
-    apply (equiv_inj (groupiso_pi_functor n.+1
-            ((connect_fiberseq (pfib f) f).2))).
-    refine (wz @ _).
-    symmetry.
-    refine (ap _ (ap _ (grp_homo_unit (equiv_g_pi_n_em A n.+2))) @ _).
-    refine (ap _ (grp_homo_unit (groupiso_pi_loops n.+1 K(A, n.+3))) @ _).
-    exact (grp_homo_unit (groupiso_pi_functor n.+1
-            ((connect_fiberseq (pfib f) f).2))).
+    assert (emb : IsEmbedding (fmap (pPi n.+2) (connecting_map (pfib f) f))).
+    { napply (isembedding_isexact (A := pPi n.+3 K(B, n.+2))).
+      1: exact _.
+      exact (isexact_pi_fiber (connecting_map (pfib f) f) (pfib f) n.+2). }
+    apply isembedding_isinj_hset.
+    intros x y q.
+    apply (equiv_inj grp_iso_a_pi_loops).
+    exact (isinj_embedding _ emb _ _ q).
   Defined.
 
   Local Definition issurjection_abses_pfiber_proj
     : IsSurjection abses_pfiber_proj.
   Proof.
-    intro b.
-    rapply contr_inhabited_hprop.
-    pose proof (c := @center _ (conn_map_isexact
-      (i := fmap (pTr 0) (fmap (iterated_loops n.+2) (pfib f)))
-      (f := fmap (pTr 0) (fmap (iterated_loops n.+2) f))
-      (equiv_g_pi_n_em B n.+1 b; path_contr _ _))).
-    strip_truncations.
-    destruct c as [u q].
-    apply tr.
-    exists u.
-    apply (equiv_inj (equiv_g_pi_n_em B n.+1)).
-    refine (eisretr (equiv_g_pi_n_em B n.+1) _ @ _).
-    exact (ap pr1 q).
+    pose proof (isexact_pi_total (pfib f) f n.+2) as ex.
+    assert (surj : IsConnMap (Tr (-1)) (fmap (pPi n.+2) (pfib f)))
+      by exact (@isconnmap_O_isexact_base_contr (Tr (-1)) _ _ _ _
+                  (fmap (pPi n.+2) (pfib f)) (fmap (pPi n.+2) f) ex).
+    exact (conn_map_compose _ (fmap (pPi n.+2) (pfib f))
+             (grp_iso_inverse (equiv_g_pi_n_em B n.+1))).
   Defined.
 
   Local Instance isexact_abses_pfiber
     : IsExact (Tr (-1)) abses_pfiber_incl abses_pfiber_proj.
   Proof.
-    snapply Build_IsExact.
-    - (* The composite is constant. *)
-      srapply phomotopy_homotopy_hset.
-      intro a.
-      refine (ap (grp_iso_inverse (equiv_g_pi_n_em B n.+1)) _
-              @ grp_homo_unit (grp_iso_inverse (equiv_g_pi_n_em B n.+1))).
-      refine (ap (fmap (Pi n.+2) (pfib f))
-        (fmap_comp (Pi n.+2) ((connect_fiberseq (pfib f) f).2)
-          (pfib (pfib f)) _) @ _).
-      exact (cx_isexact
-        (i := fmap (pTr 0) (fmap (iterated_loops n.+2) (pfib (pfib f))))
-        (f := fmap (pTr 0) (fmap (iterated_loops n.+2) (pfib f)))
-        (fmap (Pi n.+2) ((connect_fiberseq (pfib f) f).2)
-          (grp_homo_compose (groupiso_pi_loops n.+1 K(A, n.+3))
-            (equiv_g_pi_n_em A n.+2) a))).
-    - (* Every element of the kernel merely comes from [A]. *)
-      intros [x w].
-      rapply contr_inhabited_hprop.
-      assert (w' : fmap (Pi n.+2) (pfib f) x = mon_unit).
-      { refine ((eisretr (equiv_g_pi_n_em B n.+1) _)^ @ _
-                @ grp_homo_unit (equiv_g_pi_n_em B n.+1)).
-        exact (ap (equiv_g_pi_n_em B n.+1) w). }
-      pose proof (c := @center _ (conn_map_isexact
-        (i := fmap (pTr 0) (fmap (iterated_loops n.+2) (pfib (pfib f))))
-        (f := fmap (pTr 0) (fmap (iterated_loops n.+2) (pfib f)))
-        (x; w'))).
-      strip_truncations.
-      destruct c as [u q].
-      apply tr.
-      pose (v := fmap (Pi n.+2)
-        (pequiv_inverse (connect_fiberseq (pfib f) f).2) u
-        : Pi n.+2 (loops K(A, n.+3))).
-      exists ((equiv_g_pi_n_em A n.+2)^-1
-              ((groupiso_pi_loops n.+1 K(A, n.+3))^-1 v)).
-      apply path_sigma_hprop.
-      refine (ap (fmap (Pi n.+2) (connecting_map (pfib f) f))
-        (ap (groupiso_pi_loops n.+1 K(A, n.+3))
-          (eisretr (equiv_g_pi_n_em A n.+2) _)
-         @ eisretr (groupiso_pi_loops n.+1 K(A, n.+3)) _) @ _).
-      refine (fmap_comp (Pi n.+2)
-        ((connect_fiberseq (pfib f) f).2)
-        (pfib (pfib f)) _ @ _).
-      refine (ap (fmap (Pi n.+2) (pfib (pfib f))) _ @ ap pr1 q).
-      refine ((fmap_comp (Pi n.+2)
-        (pequiv_inverse (connect_fiberseq (pfib f) f).2)
-        ((connect_fiberseq (pfib f) f).2) u)^ @ _).
-      refine (fmap2 (Pi n.+2)
-        (peisretr ((connect_fiberseq (pfib f) f).2)) u @ _).
-      exact (fmap_id (Pi n.+2) _ u).
+    assert (ex : IsExact (Tr (-1))
+                   (fmap (Pi n.+2) (connecting_map (pfib f) f))
+                   (fmap (Pi n.+2) (pfib f)))
+      by exact (isexact_pi_total (connecting_map (pfib f) f) (pfib f) n.+2).
+    napply (isexact_square_if _
+      grp_iso_a_pi_loops pequiv_pmap_idmap (equiv_g_pi_n_em B n.+1)).
+    3: exact ex.
+    1: srapply phomotopy_homotopy_hset; intro x; reflexivity.
+    srapply phomotopy_homotopy_hset; intro x.
+    exact (eisretr (equiv_g_pi_n_em B n.+1) _).
   Defined.
 
   (** The short exact sequence associated to [f]. *)
