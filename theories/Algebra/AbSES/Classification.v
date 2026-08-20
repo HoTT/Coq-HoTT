@@ -120,10 +120,6 @@ Section AbSESPfiber.
   Context `{Univalence} {B A : AbGroup@{u}} (n : nat)
     (f : K(B, n.+2) ->* K(A, n.+3)).
 
-  (** The middle group: [Pi n.+2] of the fiber, abelian by Eckmann-Hilton. *)
-  Definition abgroup_pi_pfiber : AbGroup
-    := Build_AbGroup (Pi n.+2 (pfiber f)) _.
-
   (** [A] is the [n.+2]-nd homotopy group of [loops K(A, n.+3)]. *)
   Local Definition grp_iso_a_pi_loops
     : GroupIsomorphism A (Pi n.+2 (loops K(A, n.+3)))
@@ -131,12 +127,12 @@ Section AbSESPfiber.
          (equiv_g_pi_n_em A n.+2).
 
   (** The inclusion, through the rotated fiber sequence [loops K(A,n+3) -> pfiber f -> K(B,n+2)]. *)
-  Definition abses_pfiber_incl : A $-> abgroup_pi_pfiber
+  Definition abses_pfiber_incl : A $-> abgroup_pi n (pfiber f)
     := grp_homo_compose (fmap (Pi n.+2) (connecting_map (pfib f) f))
          grp_iso_a_pi_loops.
 
   (** The projection, induced by the fiber inclusion of [f]. *)
-  Definition abses_pfiber_proj : abgroup_pi_pfiber $-> B
+  Definition abses_pfiber_proj : abgroup_pi n (pfiber f) $-> B
     := grp_homo_compose (grp_iso_inverse (equiv_g_pi_n_em B n.+1))
          (fmap (Pi n.+2) (pfib f)).
 
@@ -189,7 +185,7 @@ Section AbSESPfiber.
 
   (** The short exact sequence associated to [f]. *)
   Definition abses_pfiber : AbSES B A
-    := Build_AbSES abgroup_pi_pfiber abses_pfiber_incl abses_pfiber_proj
+    := Build_AbSES (abgroup_pi n (pfiber f)) abses_pfiber_incl abses_pfiber_proj
          _ issurjection_abses_pfiber_proj _.
 
 End AbSESPfiber.
@@ -224,12 +220,12 @@ Section PfiberDeloop.
 
   (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group, identified so that the identification inverts [equiv_g_pi_n_em] on [Pi 3]. *)
   Local Definition pequiv_em_pfiber_psi'
-    : K(abgroup_pi_pfiber 1 psi, 3) <~>* pfiber psi
+    : K(abgroup_pi 1 (pfiber psi), 3) <~>* pfiber psi
     := pequiv_em_pi 1 (pfiber psi).
 
-  Local Definition pi_bridge_psi (x : Pi 3 K(abgroup_pi_pfiber 1 psi, 3))
+  Local Definition pi_bridge_psi (x : Pi 3 K(abgroup_pi 1 (pfiber psi), 3))
     : fmap (Pi 3) (pequiv_em_pfiber_psi') x
-      = grp_iso_inverse (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) x
+      = grp_iso_inverse (equiv_g_pi_n_em (abgroup_pi 1 (pfiber psi)) 2) x
     := pi_pequiv_em_pi 1 (pfiber psi) x.
 
   (** Through the bridge, [fmap (K' 3)] of the projection is the fiber inclusion of [psi]. *)
@@ -266,7 +262,7 @@ Section PfiberDeloop.
       (pi_em_fmap' (abses_pfiber_incl 1 psi) 2 x) @ _).
     refine (pi_bridge_psi _ @ _).
     refine (eissect
-      (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2) _ @ _).
+      (equiv_g_pi_n_em (abgroup_pi 1 (pfiber psi)) 2) _ @ _).
     refine (_ @ (fmap_comp (Pi 3)
       (pequiv_loops_em_em A 3)
       (connecting_map (pfib psi) psi) x)^).
@@ -494,7 +490,7 @@ Section ClassifyingRoundTrip.
 
   (** The middle isomorphism of the round trip. *)
   Local Definition rt1_middle
-    : GroupIsomorphism (abgroup_pi_pfiber 0 (abses_classifying_map E)) E.
+    : GroupIsomorphism (abgroup_pi 0 (pfiber (abses_classifying_map E))) E.
   Proof.
     nrefine (grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_em E 2)) _).
     nrefine (grp_iso_compose
