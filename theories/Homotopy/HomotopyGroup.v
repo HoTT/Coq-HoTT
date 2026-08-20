@@ -122,6 +122,10 @@ Proof.
   apply eckmann_hilton.
 Defined.
 
+(** In this range the homotopy groups are abelian, so they define abelian groups. *)
+Definition abgroup_pi (n : nat) (X : pType) : AbGroup
+  := Build_AbGroup (Pi n.+2 X) _.
+
 (** For the same reason as above, we make [Pi1] a functor before making [Pi] a functor. *)
 Instance is0functor_pi1 : Is0Functor Pi1.
 Proof.

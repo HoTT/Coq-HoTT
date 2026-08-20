@@ -363,10 +363,6 @@ Section EilenbergMacLane.
     exact (emap (K' n.+1) (groupiso_pi_loops _ _)).
   Defined.
 
-  (** In this range the homotopy groups are abelian. *)
-  Definition abgroup_pi (n : nat) (X : pType) : AbGroup
-    := Build_AbGroup (Pi n.+2 X) _.
-
   Section NormalizedEM.
     Context (n : nat) (X : pType)
       `{IsConnected (n.+1)%nat X} `{IsTrunc (n.+2)%nat X}.
