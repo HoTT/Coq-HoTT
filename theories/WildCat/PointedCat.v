@@ -13,16 +13,24 @@ Class IsPointedCat (A : Type) `{Is1Cat A} := {
 Definition zero_morphism {A : Type} `{IsPointedCat A} {a b : A} : a $-> b
   := (mor_initial _ b) $o (mor_terminal a _).
 
+(** The opposite category of a pointed category is also pointed. *)
+Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
+Proof.
+  snapply Build_IsPointedCat.
+  1: unfold op; exact zero_object.
+  1,2: exact _.
+Defined.
+
 Section ZeroLaws.
 
   Context {A : Type} `{IsPointedCat A} {a b c : A}
     (f : a $-> b) (g : b $-> c).
 
   Definition cat_zero_source (h : zero_object $-> a) : h $== zero_morphism
-    := (mor_initial_unique _ _ _)^$ $@ (mor_initial_unique _ _ _).
+    := mor_initial_unique' _ _ _ _.
 
   Definition cat_zero_target (h : a $-> zero_object) : h $== zero_morphism
-    := (mor_terminal_unique _ _ _)^$ $@ (mor_terminal_unique _ _ _).
+    := mor_terminal_unique' _ _ _ _.
 
   (** We show the last two arguments so that end points can easily be specified. *)
   Arguments zero_morphism {_ _ _ _ _ _} _ _.
@@ -39,17 +47,29 @@ Section ZeroLaws.
     apply mor_initial_unique.
   Defined.
 
-  (** Any morphism which factors through an object equivalent to the zero object is homotopic to the zero morphism. *)
-  Definition cat_zero_m `{!HasEquivs A} (be : b $<~> zero_object)
+  (** Any morphism which factors through an initial object is homotopic to the zero morphism. *)
+  Definition cat_zero_m_through_initial `{isinitial : !IsInitial b}
     : g $o f $== zero_morphism a c.
   Proof.
-    refine (_ $@L (compose_V_hh be f)^$ $@ _).
-    refine (cat_assoc_opp _ _ _ $@ _).
-    refine (_ $@L (mor_terminal_unique a _ _)^$ $@ _).
-    exact ((mor_initial_unique _ _ _)^$ $@R _).
+    unfold zero_morphism.
+    pose (h := mor_initial b zero_object).
+    rhs' rapply (_ $@L mor_terminal_unique _ _ (h $o f)).
+    rhs_V' rapply cat_assoc.
+    exact (mor_initial_unique' _ _ _ _ $@R f).
   Defined.
 
+  (** In particular, any morphism which factors through an object equivalent to the zero object is homotopic to the zero morphism. *)
+  Definition cat_zero_m_through_zero `{!HasEquivs A} (be : zero_object $<~> b)
+    : g $o f $== zero_morphism a c
+    := cat_zero_m_through_initial (isinitial:=isinitial_cate _ _ _ be _).
+
 End ZeroLaws.
+
+(** We state the dual result outside of the section, so that the variables have been generalized. *)
+Definition cat_zero_m_through_terminal {A : Type} `{IsPointedCat A}
+  {a b c : A} (f : a $-> b) (g : b $-> c) `{!IsTerminal b}
+  : g $o f $== zero_morphism
+  := cat_zero_m_through_initial (A:=A^op) (a:=c) g f.
 
 (** We make the last two arguments explicit so that end points can easily be specified. We had to do this again, since the section encapsulated the previous attempt. *)
 Local Arguments zero_morphism {_ _ _ _ _ _} _ _.
@@ -93,31 +113,20 @@ Defined.
 
 (** Pointed functors preserve the zero morphism up to homotopy *)
 Lemma fmap_zero_morphism {A B : Type} (F : A -> B)
-  `{IsPointedCat A, IsPointedCat B, !HasEquivs B,
+  `{IsPointedCat A, IsPointedCat B,
     !Is0Functor F, !Is1Functor F, !IsPointedFunctor F} {a b : A}
   : fmap F (zero_morphism a b) $== zero_morphism (F a) (F b).
 Proof.
-  refine (fmap_comp F _ _ $@ _).
-  refine (_ $@R _ $@ _).
-  1: napply fmap_initial; [exact _].
-  refine (_ $@L _ $@ _).
-  1: napply fmap_terminal; [exact _].
-  rapply cat_zero_m.
-  rapply pfunctor_zero.
+  lhs' rapply fmap_comp.
+  lhs' rapply (fmap_initial _ _ _ _ $@R _).
+  lhs' rapply (_ $@L fmap_terminal _ _ _ _).
+  rapply cat_zero_m_through_initial.
 Defined.
 
 (** A pointed functor takes complexes to complexes. *)
 Definition fmap_iscomplex {A B : Type} (F : A -> B)
-  `{IsPointedCat A, IsPointedCat B, !HasEquivs B,
+  `{IsPointedCat A, IsPointedCat B,
     !Is0Functor F, !Is1Functor F, !IsPointedFunctor F}
   {x y z : A} (i : x $-> y) (f : y $-> z) (cx : f $o i $== zero_morphism x z)
   : fmap F f $o fmap F i $== zero_morphism (F x) (F z)
   := (fmap_comp F i f)^$ $@ fmap2 F cx $@ fmap_zero_morphism F.
-
-(** Opposite category of a pointed category is also pointed. *)
-Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.
-Proof.
-  snapply Build_IsPointedCat.
-  1: unfold op; exact zero_object.
-  1,2: exact _.
-Defined.
