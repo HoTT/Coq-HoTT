@@ -211,12 +211,11 @@ Section PfiberDeloop.
   (** The fiber is 2-connected. *)
   Local Instance isconnected_pfiber_em : IsConnected 2 (pfiber psi).
   Proof.
-    napply (isconnected_succ_contr_pi 0).
-    - pose @O_lex_leq_Tr.
-      pose proof (@isconnected_pred 2 K(A, 4) (isconnected_em 3)).
-      pose proof (isconnected_em (G:=B) 2).
-      rapply OO_isconnected_hfiber.
-    - exact _.
+    napply (isconnected_succ_contr_pi 1); only 2: exact _.
+    napply (OO_isconnected_hfiber (Tr 2) (Tr 1)); only 1: exact _.
+    all: apply isconnected_pred.
+    - apply (isconnected_em 2).
+    - apply (isconnected_em 3).
   Defined.
 
   (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group, identified so that the identification inverts [equiv_g_pi_n_em] on [Pi 3]. *)

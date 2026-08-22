@@ -392,19 +392,16 @@ Proof.
   exact (contr_equiv' (Pi n.+1 X) (equiv_tr 0 _)^-1%equiv).
 Defined.
 
-(** An [n.+1]-connected type whose [n.+2]-nd homotopy group vanishes is [n.+2]-connected. *)
+(** An [n]-connected type whose [n.+1]-st homotopy group vanishes is [n.+1]-connected. *)
 Definition isconnected_succ_contr_pi `{Univalence} (n : nat) (X : pType)
-  `{IsConnected n.+1 X} (c : Contr (Pi n.+2 X))
-  : IsConnected n.+2 X.
+  `{IsConnected n X} (c : Contr (Pi n.+1 X))
+  : IsConnected n.+1 X.
 Proof.
-  (** The [n.+2]-truncation of [X] is [n.+1]-truncated by [istrunc_contr_pi], and it is [n.+1]-connected, hence contractible. *)
-  napply (contr_trunc_conn (Tr n.+1)).
-  2: exact _.
-  napply (istrunc_contr_pi n.+1 (pTr n.+2 X)).
-  1: pose proof (isconnected_trunc n.+1 n.+2 (X:=X));
-     rapply is0connected_isconnected.
-  1: exact _.
-  rapply (contr_equiv' _ (grp_iso_pi_Tr n.+1 X)).
+  (* The [n.+1]-truncation of [X] is [n]-truncated by [istrunc_contr_pi], and it is [n]-connected, hence contractible. *)
+  napply (contr_trunc_conn n); only 2: exact _.
+  napply (istrunc_contr_pi n (pTr n.+1 X)); only 2: exact _.
+  - rapply is0connected_isconnected.
+  - rapply (contr_equiv' _ (grp_iso_pi_Tr n X)).
 Defined.
 
 (** Pointed sections induce embeddings on homotopy groups. *)
