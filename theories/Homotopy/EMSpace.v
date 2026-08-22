@@ -337,8 +337,8 @@ Section EilenbergMacLane.
     apply h.
   Defined.
 
-  (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
-  (** The hypotheses are stated with [nat]-scoped indices, so that the instances [isconnected_em] and [istrunc_em] are found by typeclass search at applications. *)
+  (** Every pointed n-connected (n+1)-type is an Eilenberg-Mac Lane space. *)
+  (** Here and elsewhere in this file we put [n.+1] in [nat]-scope so that it parses as [nat_to_trunc_index (n.+1)] instead of as [trunc_S (nat_to_trunc_index n)].  These are definitionally equal, but the former allows typeclass search to match them with instances such as [isconnected_em] and [istrunc_em].  Similarly for [n.+2]. *)
   Definition pequiv_em_connected_truncated (X : pType)
     (n : nat) `{IsConnected n X} `{IsTrunc (n.+1)%nat X}
     : K(Pi n.+1 X, n.+1) <~>* X.
@@ -400,6 +400,7 @@ Section EilenbergMacLane.
   End NormalizedEM.
 
   (** Pointed maps between [n.+1]-connected [n.+2]-truncated types which agree on homotopy groups are equal. *)
+  (** TODO: Note that this result and many others in this file are also true with [n] reduced by one, but the current infrastructure doesn't allow us to uniformly prove these because of the transition between groups and abelian groups as [n] varies. We should consider extending [HomotopyGroup_type] to give abelian groups for [n >= 2], and using that in the hypotheses of various results. *)
   Definition path_pmap_pi_connected (n : nat) {X Y : pType}
     `{IsConnected (n.+1)%nat X} `{IsTrunc (n.+2)%nat X}
     `{IsConnected (n.+1)%nat Y} `{IsTrunc (n.+2)%nat Y}
