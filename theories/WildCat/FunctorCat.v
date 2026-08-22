@@ -213,3 +213,38 @@ Proof.
   napply Build_Fun11.
   exact (is1functor_compose G F).
 Defined.
+
+
+(** ** Functor categories of groupoids *)
+
+Instance is0gpd_fun01 (A B : Type) `{IsGraph A} `{Is1Gpd B}
+  : Is0Gpd (Fun01 A B).
+Proof.
+  snapply Build_Is0Gpd.
+  intros F G p.
+  snapply Build_NatTrans.
+  { intros a.
+    exact (p a)^$. }
+  snapply Build_Is1Natural.
+  intros x y f.
+  rapply Square.vinverse'.
+  rapply (isnat p).
+Defined.
+
+Instance is1gpd_fun01 (A B : Type) `{Is1Gpd A} `{Is1Gpd B}
+  : Is1Gpd (Fun01 A B).
+Proof.
+  snapply Build_Is1Gpd.
+  - intros F G p a.
+    apply gpd_issect.
+  - intros F G p a.
+    apply gpd_isretr.
+Defined.
+
+Instance is0gpd_fun11 (A B : Type) `{Is1Gpd A} `{Is1Gpd B}
+  : Is0Gpd (Fun11 A B)
+  := is0gpd_induced fun01_fun11.
+
+Instance is1gpd_fun11 (A B : Type) `{Is1Gpd A} `{Is1Gpd B}
+  : Is1Gpd (Fun11 A B)
+  := is1gpd_induced fun01_fun11.

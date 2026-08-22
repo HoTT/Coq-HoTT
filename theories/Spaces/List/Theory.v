@@ -72,6 +72,27 @@ Proof.
     napply (ap_compose (fun l => l ++ z)).
 Defined.
 
+(** The triangle condition for a monoidal category, complementing [list_pentagon]. *)
+Definition list_triangle {A: Type} (x y : list A)
+  : idpath (a :=  x ++ y) = app_assoc x nil y @ ap011 app (app_nil x) 1.
+Proof.
+  revert y.
+  induction x as [| x0 x IHx]. 
+  - reflexivity.
+  - intro y.
+    change (app_nil (x0 :: x)) with (ap (cons x0) (app_nil x)); simpl.
+    rewrite ap011_is_ap, concat_p1.
+    rewrite <- ap_compose.
+    change (fun x1 : list A => (x0 :: x1) ++ y) with
+      (fun x1 : list A => (cons x0 (x1 ++ y))).
+    rewrite (ap_compose (fun x1 => x1 ++ y)).
+    rewrite <- ap_pp.
+    rewrite <- IHx.
+    apply ap_1.
+Defined.
+  
+
+
 (** The length of a concatenated list is the sum of the lengths of the two lists. *)
 Definition length_app {A : Type} (l l' : list A)
   : length (l ++ l') = length l + length l'.
