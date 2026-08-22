@@ -3,7 +3,7 @@ Require Import Modalities.Modality Modalities.Identity.
 Require Import Truncations.Core Truncations.SeparatedTrunc
   Truncations.Connectedness.
 Require Import Algebra.AbGroups.AbelianGroup.
-Require Import Spaces.Finite.Tactics.
+Require Import Spaces.Finite.Tactics Spaces.Nat.Core.
 Require Import Homotopy.SuccessorStructure Homotopy.ExactSequence.
 From HoTT.WildCat Require Import Core Universe Equiv.
 
@@ -360,22 +360,25 @@ Proof.
   - exact (contr_equiv' _ (pi_loops n X)^-1%equiv).
 Defined.
 
-(** Homotopy groups below the connectivity vanish. *)
-Definition contr_pi_isconnected `{Univalence} (n : nat) (X : pType)
-  `{IsConnected n X}
-  : Contr (Pi n X).
+(** Homotopy groups at or below the connectivity vanish. *)
+Definition contr_pi_isconnected `{Univalence} (n : nat) {m : nat} {mlen : m <= n}
+  (X : pType) `{IsConnected n X}
+  : Contr (Pi m X).
 Proof.
-  rapply (contr_equiv' (Pi n (pTr n X))).
-  symmetry; rapply pequiv_pi_Tr.
+  induction mlen as [|n mlen IHn].
+  - exact (contr_equiv _ (pequiv_pi_Tr m X)^-1).
+  - rapply IHn.
 Defined.
 
-(** The [n.+1]-st homotopy group of an [n]-truncated type vanishes. *)
-Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
-  `{IsTrunc n X}
-  : Contr (Pi n.+1 X).
+(** Homotopy groups above the truncation level vanish. *)
+Definition contr_pi_istrunc `{Univalence} (n : nat) {m : nat} {nltm : n < m} (X : pType)
+  `{istr : IsTrunc n X}
+  : Contr (Pi m X).
 Proof.
-  rapply contr_O_contr.
-  rapply (equiv_istrunc_contr_iterated_loops n.+1).
+  induction nltm as [|m nltm IHm] in X, istr |- *.
+  - rapply contr_O_contr.
+    rapply (equiv_istrunc_contr_iterated_loops n.+1).
+  - exact (contr_equiv _ (pi_loops m X)^-1).
 Defined.
 
 (** An [n.+1]-truncated pointed [0]-connected type whose [n.+1]-st homotopy group vanishes is [n]-truncated. *)

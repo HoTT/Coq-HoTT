@@ -4,6 +4,7 @@ From HoTT.WildCat Require Import Core Equiv PointedCat.
 Require Import Pointed.
 Require Import AbelianGroup.
 Require Import Algebra.AbSES.Core Algebra.AbSES.Ext.
+Require Import Spaces.Nat.Core.
 Require Import Universes.Smallness.
 Require Import Homotopy.HomotopyGroup Homotopy.EMSpace Homotopy.ExactSequence.
 Require Import Homotopy.WhiteheadsPrinciple.
@@ -55,8 +56,8 @@ Section EMFiberSequence.
         (fmap (pPi n.+1) (pfib (fmap (K' n.+1) (projection E)))).
   Proof.
     napply (isembedding_isexact (A := pPi n.+2 K(B, n.+1))).
-    1: exact (contr_pi_succ_istrunc n.+1 K(B, n.+1)).
-    exact (isexact_pi_fiber _ _ n.+1).
+    1: rapply contr_pi_istrunc.
+    rapply isexact_pi_fiber.
   Defined.
 
   (** Both [Pi n.+1 K(A, n.+1)] and [Pi n.+1] of the fiber are the kernel of [Pi n.+1] of the projection, so the comparison map identifies them. *)
@@ -141,7 +142,7 @@ Section AbSESPfiber.
     := contr_pi_isconnected n.+2 K(A, n.+3).
 
   Local Instance contr_pi_em' : Contr (Pi n.+3 K(B, n.+2))
-    := contr_pi_succ_istrunc n.+2 K(B, n.+2).
+    := contr_pi_istrunc n.+2 K(B, n.+2).
 
   (** The three conditions defining a short exact sequence therefore come from the long exact sequences of the fiber sequence of [f] and of its rotation. *)
 
@@ -283,8 +284,8 @@ Section PfiberDeloop.
     : IsEmbedding (fmap (pPi 3) (pfib (pfib psi))).
   Proof.
     napply (isembedding_isexact (A := pPi 4 K(B, 3))).
-    1: exact (contr_pi_succ_istrunc 3 K(B, 3)).
-    exact (isexact_pi_fiber _ _ 3).
+    1: rapply contr_pi_istrunc.
+    rapply isexact_pi_fiber.
   Defined.
 
   (** Through the bridge, [cxfib] of the extracted sequence is the connecting identification of [psi], modulo the loop identification of [K(A,3)]. *)

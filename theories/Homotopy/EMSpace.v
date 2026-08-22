@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core Universe Equiv PointedCat.
 Require Import Pointed.
+Require Import Spaces.Nat.Core.
 Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
@@ -444,7 +445,7 @@ Section Deloop.
     napply (OO_isconnected_from_conn_map 0 (Tr (-1)) fu).
     1, 2: exact _.
     - napply isconnected_contr.
-      rapply contr_pi_succ_istrunc.
+      rapply contr_pi_istrunc.
     - apply (issurj_pi_connmap n.+2).
       napply (isconnmap_pred_add n.-2).
       rewrite 2 trunc_index_add_succ.
