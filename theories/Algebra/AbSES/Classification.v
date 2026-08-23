@@ -80,7 +80,7 @@ Section EMFiberSequence.
       exact q.
     - exact isembedding_pi_pfib_em.
     - exact isexact_pi_em_abses.
-    - exact (cx_isexact (IsExact := isexact_pi_total _ _ n.+1)).
+    - exact (isexact_pi_total _ _ n.+1).
   Defined.
 
   (** Both sides are [n]-connected and [n.+1]-truncated, so the comparison map is an equivalence by Whitehead's principle. *)
