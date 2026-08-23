@@ -1372,53 +1372,6 @@ Proof.
 Defined.
 Global Hint Immediate istrivial_kernel_isembedding : typeclass_instances.
 
-(** ** Two embeddings with the same image *)
-
-(** An embedding is determined by its image: if [i] and [j] are embeddings into [B] and everything in the image of [i] is in the image of [j], then [i] factors through [j].  The factorization is unique, since [j] is an embedding. *)
-Definition grp_homo_embedding_image {A C B : Group} (i : A $-> B) (j : C $-> B)
-  `{IsEmbedding j} (h : forall b, merely (hfiber i b) -> merely (hfiber j b))
-  : A $-> C.
-Proof.
-  (** Since [j] is an embedding, its fibers are propositions, so the mere factorization gives an actual one. *)
-  transparent assert (fib : (forall a : A, hfiber j (i a))).
-  { intro a; exact (Trunc_rec idmap (h (i a) (tr (a; idpath)))). }
-  snapply Build_GroupHomomorphism.
-  1: exact (fun a => (fib a).1).
-  intros a a'.
-  rapply (isinj_embedding j).
-  lhs napply (fib _).2.
-  lhs napply grp_homo_op.
-  rhs napply grp_homo_op.
-  symmetry.
-  napply (ap011 (.*.) (fib a).2 (fib a').2).
-Defined.
-
-Definition grp_homo_embedding_image_beta {A C B : Group} (i : A $-> B) (j : C $-> B)
-  `{IsEmbedding j} (h : forall b, merely (hfiber i b) -> merely (hfiber j b))
-  : j $o grp_homo_embedding_image i j h $== i
-  := fun a => (Trunc_rec idmap (h (i a) (tr (a; idpath)))).2.
-
-(** Two embeddings into [B] with the same image are isomorphic over [B].  In particular, any two kernels of the same homomorphism are isomorphic. *)
-Definition grp_iso_embedding_image {A C B : Group} (i : A $-> B) (j : C $-> B)
-  `{IsEmbedding i} `{IsEmbedding j}
-  (h : forall b, merely (hfiber i b) <-> merely (hfiber j b))
-  : GroupIsomorphism A C.
-Proof.
-  snapply Build_GroupIsomorphism.
-  1: exact (grp_homo_embedding_image i j (fun b => fst (h b))).
-  (** The argument is symmetric, so both composites are handled by the same computation: they agree with the identity after the relevant embedding. *)
-  snapply isequiv_adjointify.
-  1: exact (grp_homo_embedding_image j i (fun b => snd (h b))).
-  - intro c.
-    rapply (isinj_embedding j).
-    lhs napply grp_homo_embedding_image_beta.
-    napply grp_homo_embedding_image_beta.
-  - intro a.
-    rapply (isinj_embedding i).
-    lhs napply grp_homo_embedding_image_beta.
-    napply grp_homo_embedding_image_beta.
-Defined.
-
 (** Characterisation of group embeddings *)
 Proposition equiv_istrivial_kernel_isembedding `{F : Funext}
   {G H : Group} (f : G $-> H)

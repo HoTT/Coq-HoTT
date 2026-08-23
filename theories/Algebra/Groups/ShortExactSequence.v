@@ -67,25 +67,13 @@ Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
   := (equiv_istrivial_kernel_isembedding f)^-1%equiv
        oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).
 
-(** Anything in the image of a complex with [f] is in the image of anything exact with [f], since it is killed by [f]. *)
-Definition merely_hfiber_isexact {A B C D : Group}
-  (i : A $-> B) (j : C $-> B) (f : B $-> D)
-  (cx : IsComplex i f) (ex : IsExact (Tr (-1)) j f) (b : B)
-  : merely (hfiber i b) -> merely (hfiber j b).
-Proof.
-  apply Trunc_rec; intros [a q].
-  exact (isexact_preimage _ j f b ((ap f q)^ @ cx a)).
-Defined.
-
-(** Two maps which are exact at [B] with respect to the same [f] have the same image, so they are isomorphic: both are the kernel of [f]. *)
+(** Two maps which are exact at [B] with respect to the same [f] are both the kernel of [f], so they are isomorphic. *)
 Definition grp_iso_isexact_isexact {A B C D : Group}
   {i : A $-> B} {j : C $-> B} {f : B $-> D}
   `{IsEmbedding i} `{IsEmbedding j}
   (exi : IsExact (Tr (-1)) i f) (exj : IsExact (Tr (-1)) j f)
   : GroupIsomorphism A C
-  := grp_iso_embedding_image i j
-       (fun b => (merely_hfiber_isexact i j f (cx_isexact (IsExact:=exi)) exj b,
-                  merely_hfiber_isexact j i f (cx_isexact (IsExact:=exj)) exi b)).
+  := grp_iso_compose (grp_iso_inverse (grp_iso_cxfib exj)) (grp_iso_cxfib exi).
 
 (** Any factorization of [i] through [j] is therefore an equivalence, being homotopic to that isomorphism. *)
 Definition isequiv_isexact_factor {A B C D : Group}
@@ -97,7 +85,8 @@ Proof.
   rapply (isequiv_homotopic (grp_iso_isexact_isexact exi exj)).
   intro a.
   rapply (isinj_embedding j).
-  exact (grp_homo_embedding_image_beta i j _ a @ (p a)^).
+  lhs napply (grp_iso_cxfib_beta exj).
+  exact (p a)^.
 Defined.
 
 (** If [A -> B -> C -> D] is exact at [B] and [C], with [A] and [D] contractible, then the middle map is an isomorphism.  Only [B] and [C] need to be groups. *)

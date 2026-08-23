@@ -295,7 +295,7 @@ Section PfiberDeloop.
            (f := fmap (K' 3) (projection (abses_pfiber 1 psi)))
       = (connect_fiberseq (pfib psi) psi).2 o* pequiv_loops_em_em A 3.
   Proof.
-    (** The two sides have the same composite with [pfib (pfib psi)]: on the left the [pequiv_pfiber] square and [pfib_cxfib] turn it into [fmap (K' 3)] of the inclusion followed by the bridge, and on the right it is the connecting map by definition. *)
+    (* The two sides have the same composite with [pfib (pfib psi)]: on the left the [pequiv_pfiber] square and [pfib_cxfib] turn it into [fmap (K' 3)] of the inclusion followed by the bridge, and on the right it is the connecting map by definition. *)
     assert (sq : pfib (pfib psi)
                  o* (pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
                        square_em_proj_pfib_psi
@@ -669,7 +669,7 @@ Section Naturality.
     : functor_pfiber (em_proj_square^*) o* em_cxfib_E
       = em_cxfib_F o* fmap (K' 3) (component1 phi).
   Proof.
-    (** Both sides have the same composite with [pfib] of the projection of [F]: on the left the [functor_pfiber] square, [pfib_cxfib] and the inclusion square, on the right [pfib_cxfib] alone. *)
+    (* Both sides have the same composite with [pfib] of the projection of [F]: on the left the [functor_pfiber] square, [pfib_cxfib] and the inclusion square, on the right [pfib_cxfib] alone. *)
     assert (l : pfib (fmap (K' 3) (projection F))
                 o* (functor_pfiber (em_proj_square^*) o* em_cxfib_E)
                 ==* fmap (K' 3) (inclusion F)

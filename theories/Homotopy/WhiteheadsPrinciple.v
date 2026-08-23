@@ -125,13 +125,13 @@ Proof.
   induction n as [|n IHn]; intros X Y f cX tX cY tY e.
   - snapply (isequiv_is0connected_isequiv_loops (A:=X) (B:=Y) f).
     1,2: assumption.
-    (** The loop spaces are sets, so [Tr 0] reflects the equivalence. *)
+    (* The loop spaces are sets, so [Tr 0] reflects the equivalence. *)
     napply (@isequiv_O_inverts (Tr 0)).
     1,2: rapply istrunc_loops.
     exact e.
   - snapply (isequiv_is0connected_isequiv_loops (A:=X) (B:=Y) f).
     1,2: rapply is0connected_isconnected.
-    (** [fmap loops f] satisfies the hypotheses one level down, using that [Pi n.+1 o loops] is [Pi n.+2] up to the equivalences [pi_loops]. *)
+    (* [fmap loops f] satisfies the hypotheses one level down, using that [Pi n.+1 o loops] is [Pi n.+2] up to the equivalences [pi_loops]. *)
     assert (el : IsEquiv (fmap (pPi n.+1) (fmap loops f))).
     { napply (isequiv_commsq _ _ (pi_loops n.+1 X) (pi_loops n.+1 Y)).
       1: exact (fmap_pi_loops n.+1 f).
