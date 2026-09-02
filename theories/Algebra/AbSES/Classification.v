@@ -88,7 +88,7 @@ Section EMFiberSequence.
     : IsEquiv (cxfib (iscomplex_em_abses E n.+1)).
   Proof.
     pose proof (isconnmap_em_fmap (projection E) n (point _)).
-    napply (isequiv_pi_connected_truncated n).
+    napply (isequiv_isconnected_istrunc_isequiv_pi n.+1).
     1,2,3,4: exact _.
     exact isequiv_pi_cxfib.
   Defined.
