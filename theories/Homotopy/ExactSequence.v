@@ -637,17 +637,17 @@ Definition pfib_connecting_map {F X Y : pType}
         o* (loops_inv X o* (pfiber2_loops i
               o* pequiv_pfiber_connecting_map i f)).
 Proof.
-  refine ((pmap_postcompose_idmap _)^* @* _).
-  refine (pmap_prewhisker _
-    (peisretr ((pfiber2_loops f)
-               o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))^* @* _).
-  refine (pmap_compose_assoc _ _ _ @* _).
-  refine (pmap_postwhisker _ (square_pfiber_connecting_map i f) @* _).
-  refine ((pmap_compose_assoc _ _ _)^* @* _).
-  refine (pmap_prewhisker _ (pfiber2_loops_pfib2 i f) @* _).
-  refine (pmap_compose_assoc _ _ _ @* _).
+  lhs_V' napply pmap_postcompose_idmap.
+  lhs_V' rapply (pmap_prewhisker _
+                   (peisretr (pfiber2_loops f
+                                o*E pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ (square_pfiber_connecting_map i f)).
+  lhs_V' napply pmap_compose_assoc.
+  lhs' napply (pmap_prewhisker _ (pfiber2_loops_pfib2 i f)).
+  lhs' napply pmap_compose_assoc.
   napply pmap_postwhisker.
-  exact (pmap_compose_assoc _ _ _).
+  apply pmap_compose_assoc.
 Defined.
 
 (** ** Long exact sequences *)
