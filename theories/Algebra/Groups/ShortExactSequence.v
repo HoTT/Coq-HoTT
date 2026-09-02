@@ -70,6 +70,14 @@ Definition grp_iso_isexact_isexact {A B C D : Group}
   : GroupIsomorphism A C
   := grp_iso_compose (grp_iso_inverse (grp_iso_cxfib exj)) (grp_iso_cxfib exi).
 
+(** The isomorphism commutes with the embeddings. *)
+Definition grp_iso_isexact_isexact_beta {A B C D : Group}
+  {i : A $-> B} {j : C $-> B} {f : B $-> D}
+  `{IsEmbedding i} `{IsEmbedding j}
+  (exi : IsExact (Tr (-1)) i f) (exj : IsExact (Tr (-1)) j f)
+  : j $o grp_iso_isexact_isexact exi exj $== i
+  := fun a => grp_iso_cxfib_beta exj (grp_iso_cxfib exi a).
+
 (** Any factorization of [i] through [j] is therefore an equivalence, being homotopic to that isomorphism. *)
 Definition isequiv_isexact_factor {A B C D : Group}
   {i : A $-> B} {j : C $-> B} (k : A $-> C) {f : B $-> D}
@@ -80,7 +88,7 @@ Proof.
   rapply (isequiv_homotopic (grp_iso_isexact_isexact exi exj)).
   intro a.
   rapply (isinj_embedding j).
-  lhs napply (grp_iso_cxfib_beta exj).
+  lhs napply (grp_iso_isexact_isexact_beta exi exj).
   exact (p a)^.
 Defined.
 
