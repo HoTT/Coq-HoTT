@@ -1,7 +1,7 @@
 From HoTT Require Import Basics Types.
 Require Import SuccessorStructure.
 Require Import Spaces.Finite.Tactics.
-From HoTT.WildCat Require Import Core PointedCat Square Equiv.
+From HoTT.WildCat Require Import Core PointedCat Square Equiv Universe.
 From HoTT.Pointed Require Import Core pMap pEquiv pFiber pTrunc Loops.
 Require Import Modalities.Identity Modalities.Descent.
 Require Import Truncations.
@@ -296,14 +296,13 @@ Definition equiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y
   : F <~>* pfiber f
   := Build_pEquiv _ (isequiv_cxfib ex).
 
+(** [equiv_cxfib] definitionally satisfies the homotopy [pfib _ o equiv_cxfib ex == i].  Therefore, it also satisfies the following variant. *)
 Proposition equiv_cxfib_beta {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
-  : i o pequiv_inverse (equiv_cxfib ex) == pfib _.
+  : i o (equiv_cxfib ex)^-1 == pfib _.
 Proof.
-  rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
-  intro x.
-  exact (ap (fun g => i g) (eissect _ x)).
+  tapply (cate_moveR_eV (A:=Type) (equiv_cxfib ex)).
+  reflexivity.
 Defined.
 
 (** A purely exact sequence is [O]-exact for any modality [O]. *)
