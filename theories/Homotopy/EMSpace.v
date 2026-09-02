@@ -255,7 +255,6 @@ Section EilenbergMacLane.
     rapply isequiv_contr_contr.
   Defined.
 
-
   (** [fmap (K' n.+1) f] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
@@ -370,10 +369,9 @@ Section EilenbergMacLane.
 
     (** The automorphism of [Pi n.+2 X] by which [pequiv_em_connected_truncated] differs from [equiv_g_pi_n_em]. *)
     Local Definition eta_em_pi
-      : GroupIsomorphism (abgroup_pi n X) (abgroup_pi n X)
-      := grp_iso_compose
-           (groupiso_pi_functor n.+1 (pequiv_em_connected_truncated X n.+1))
-           (equiv_g_pi_n_em (abgroup_pi n X) n.+1).
+      : abgroup_pi n X $<~> abgroup_pi n X
+      := emap (Pi n.+2) (pequiv_em_connected_truncated X n.+1)
+             $oE equiv_g_pi_n_em (abgroup_pi n X) n.+1.
 
     (** The identification of [X] with an Eilenberg-Mac Lane space, normalized by that automorphism. *)
     Definition pequiv_em_pi : K(abgroup_pi n X, n.+2) <~>* X.
