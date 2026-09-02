@@ -16,16 +16,11 @@ Definition grp_iso_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C}
   : GroupIsomorphism A (grp_kernel f)
   := Build_GroupIsomorphism _ _ (grp_cxfib cx_isexact) (isequiv_cxfib ex).
 
-(** This is the same proof as for [equiv_cxfib_beta], but giving the proof is easier than specializing the general result. *)
-Proposition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}
+(** [grp_iso_cxfib] definitionally satisfies the homotopy [subgroup_incl (grp_kernel f) o grp_iso_cxfib ex == i].  Therefore, it also satisfies the following variant. *)
+Definition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}
             `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)
-  : i $o (grp_iso_inverse (grp_iso_cxfib ex)) $== subgroup_incl (grp_kernel f).
-Proof.
-  rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
-  intro x.
-  exact (ap (fun y => i y) (eissect _ x)).
-Defined.
+  : i $o grp_iso_inverse (grp_iso_cxfib ex) $== subgroup_incl (grp_kernel f)
+  := equiv_cxfib_beta ex.
 
 Definition grp_iscomplex_trivial {X Y : Group} (f : X $-> Y)
   : IsComplex (grp_trivial_rec X) f.
