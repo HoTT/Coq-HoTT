@@ -50,33 +50,38 @@ Proof.
   exact (@ap _ _ (cat_precomp c f)).
 Defined.
 
-(** Any type is a 1-category with n-morphisms given by paths. *)
-Instance is1cat_paths {A : Type} : Is1Cat A.
+(** Any type is a 1-bicategory with n-morphisms given by paths. *)
+Instance is1bicat_paths {A : Type} : Is1Bicat A.
 Proof.
-  snapply Build_Is1Cat.
-  - exact _.
+  snapply Build_Is1Bicat.
   - exact _.
   - exact _.
   - exact _.
   - exact (@concat_p_pp A).
   - exact (@concat_pp_p A).
   - exact (@concat_p1 A).
+  - intros a b f. exact ((@concat_p1 A _ _ f)^).
   - exact (@concat_1p A).
+  - intros a b f. exact ((@concat_1p A _ _ f)^).
 Defined.
+
+(** Any type is a 1-category with n-morphisms given by paths. *)
+Instance is1cat_paths {A : Type} : Is1Cat A
+  := is1cat_is1bicat A _.
 
 (** Any type is a 1-groupoid with morphisms given by paths. *)
 Instance is1gpd_paths {A : Type} : Is1Gpd A.
 Proof.
-  snapply Build_Is1Gpd.
-  - exact (@concat_pV A).
-  - exact (@concat_Vp A).
+  intros a b f; constructor.
+  - apply concat_pV.
+  - apply concat_Vp.
 Defined.
 
 (** Any type is a 2-category with higher morphisms given by paths. *)
-Instance is21cat_paths {A : Type} : Is21Cat A.
+
+Instance isbicat_paths {A : Type} : IsBicat A.
 Proof.
-  snapply Build_Is21Cat.
-  - exact _.
+  snapply Build_IsBicat.
   - exact _.
   - intros x y z p.
     snapply Build_Is1Functor.
@@ -94,33 +99,34 @@ Proof.
       exact (whiskerL_pp p).
   - intros a b c q r s t h g.
     exact (concat_whisker q r s t h g)^.
-  - intros a b c d q r.
+  - intros a b c d.
     snapply Build_Is1Natural.
-    intros s t h.
-    apply concat_p_pp_nat_r.
-  - intros a b c d q r.
-    snapply Build_Is1Natural.
-    intros s t h.
-    apply concat_p_pp_nat_m.
-  - intros a b c d q r.
-    snapply Build_Is1Natural.
-    intros s t h.
-    apply concat_p_pp_nat_l.
+    intros [[f g] h] [[f' g'] h'] [[p q] r]; simpl in *.
+    unfold Bifunctor.fmap11, Prod.fmap_pair; simpl.
+    unfold cat_precomp; simpl in p, q, r.
+    destruct r, q, p. simpl. exact (concat_1p_p1 _ ).
+  - intros a b c d f g h; constructor.
+    + apply concat_pV.
+    + apply concat_Vp.
+  - intros a b f; constructor.
+    + exact (concat_pV _).
+    + exact (concat_Vp _).
+  - intros a b f; constructor.
+    + exact (concat_pV _).
+    + exact (concat_Vp _).
   - intros a b.
     snapply Build_Is1Natural.
-    intros p q h; cbn.
-    apply moveL_Mp.
-    lhs napply concat_p_pp.
-    exact (whiskerR_p1 h).
+    apply concat_A1p.
   - intros a b.
     snapply Build_Is1Natural.
-    intros p q h.
-    apply moveL_Mp.
-    lhs rapply concat_p_pp.
-    exact (whiskerL_1p h).
+    apply concat_A1p.
   - intros a b c d e p q r s.
     lhs napply concat_p_pp.
     exact (pentagon p q r s).
   - intros a b c p q.
     exact (triangulator p q).
 Defined.
+
+Instance is21cat_paths {A : Type}
+  : Is21Cat A
+  := Build_Is21Cat _ _ _ _ _ _ _ _ _.
