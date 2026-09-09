@@ -375,7 +375,7 @@ Definition Book_3_1_9 := @HoTT.Types.Universe.not_hset_Type.
 (* ================================================== thm:not-dneg *)
 (** Theorem 3.2.2 *)
 
-
+Definition Book_3_2_2 := @HoTT.Types.Universe.not_forall_dneg.
 
 (* ================================================== thm:not-lem *)
 (** Corollary 3.2.7 *)

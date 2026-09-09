@@ -1,8 +1,7 @@
 (** * Theorems about the universe, including the Univalence Axiom. *)
 
-From HoTT Require Import Basics.
-From HoTT Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool Types.Prod.
-
+Require Import HoTT.Basics.
+Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool Types.Prod.
 
 Local Open Scope path_scope.
 
@@ -550,7 +549,6 @@ Proof.
 Defined.
 
 (** We can also say easily that the universe is not a set. *)
-
 Definition not_hset_Type : ~ (IsHSet Type).
 Proof.
   intro HT.
@@ -560,15 +558,14 @@ Proof.
   symmetry; apply transport_path_universe.
 Defined.
 
-
-
-Definition no_double_neg: ~(forall (A : Type), (~~A) -> A).
+(** And we can prove that it is not the case that for all types A, the double negation A implies A, which corresponds to theorem 3.2.2 in the book*)
+Definition not_forall_dneg: ~(forall (A : Type), (~~A) -> A).
 Proof.
   intro f.
   pose (u := fun (g : Bool -> Empty) => g false).
   refine (not_fixed_negb (f Bool u) _).
   pose (p := (path_universe equiv_negb)).
-  pose (f_eq_negf := (happly ((apD f p)^) u) @ transport_arrow p (f Bool) u @ (happly (transport_idmap_path_universe equiv_negb) (f Bool (transport (fun A => ~~A) p^ u)))).
+  pose (f_eq_negf := happly ((apD f p)^) u @ transport_arrow p (f Bool) u @ (happly (transport_idmap_path_universe equiv_negb) (f Bool (transport (fun A => ~~A) p^ u)))).
   refine ((f_eq_negf @ (ap (negb o (f Bool)) _ ))^).
   apply path_arrow.
   intro v.
