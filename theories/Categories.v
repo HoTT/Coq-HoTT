@@ -72,6 +72,10 @@ Require HoTT.Categories.Structure.
 Require HoTT.Categories.FundamentalPreGroupoidCategory.
 (** ** Homotopy precategory *)
 Require HoTT.Categories.HomotopyPreCategory.
+(** ** Monoidal categories *)
+Require HoTT.Categories.Monoidal.MonoidalCategory.
+(** ** Additive categories and related material *)
+Require HoTT.Categories.Additive.
 
 (* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)
 Local Set Warnings "-notation-overridden".
@@ -109,6 +113,8 @@ Include HoTT.Categories.Yoneda.
 Include HoTT.Categories.Structure.Core.
 Include HoTT.Categories.FundamentalPreGroupoidCategory.
 Include HoTT.Categories.HomotopyPreCategory.
+Include HoTT.Categories.Monoidal.MonoidalCategory.
+Include HoTT.Categories.Additive.
 
 Require Export HoTT.Categories.Notations.
 

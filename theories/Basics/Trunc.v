@@ -273,6 +273,10 @@ Proof.
   apply trunc_index_leq_add.
 Defined.
 
+Definition trunc_index_leq_add_nat@{} (n : trunc_index) (m : nat)
+  : n.+2 <= m +2+ n
+  := trunc_index_leq_add n m.-2.
+
 Fixpoint trunc_index_min@{} (n m : trunc_index)
   : trunc_index.
 Proof.

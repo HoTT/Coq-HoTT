@@ -215,7 +215,7 @@ Lemma transport_abgrouphomomorphism_from_const `{Univalence} {A B B' : AbGroup}
     = grp_homo_compose (equiv_path_abgroup^-1 p) f.
 Proof.
   induction p.
-  by apply equiv_path_grouphomomorphism.
+  by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 Lemma transport_iso_abgrouphomomorphism_from_const `{Univalence} {A B B' : AbGroup}
@@ -233,7 +233,7 @@ Lemma transport_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}
     = grp_homo_compose f (grp_iso_inverse (equiv_path_abgroup^-1 p)).
 Proof.
   induction p; cbn.
-  by apply equiv_path_grouphomomorphism.
+  by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 Lemma transport_iso_abgrouphomomorphism_to_const `{Univalence} {A A' B : AbGroup}

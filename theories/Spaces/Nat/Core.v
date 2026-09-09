@@ -243,7 +243,7 @@ Defined.
 (** ** Truncatedness of natural numbers *)
 
 (** [nat] has decidable paths. *)
-Instance decidable_paths_nat@{} : DecidablePaths nat.
+Instance decidablepaths_nat@{} : DecidablePaths nat.
 Proof.
   intros n m.
   induction n as [|n IHn] in m |- *; destruct m.

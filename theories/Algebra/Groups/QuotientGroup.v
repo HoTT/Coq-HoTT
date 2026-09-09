@@ -233,7 +233,8 @@ Corollary grp_quotient_rec_beta `{F : Funext} {G : Group}
           (h : forall n:G, N n -> f n = mon_unit)
   : (grp_quotient_rec G N f h) $o grp_quotient_map = f.
 Proof.
-  apply equiv_path_grouphomomorphism; reflexivity.
+  (* The underlying functions are definitionally equal. *)
+  apply equiv_path_map_grouphomomorphism; reflexivity.
 Defined.
 
 (** Computation rule for [grp_quotient_rec]. *)
@@ -283,7 +284,7 @@ Proof.
     by apply grp_quotient_map_trivial.
   - intros f.
     rapply equiv_path_grouphomomorphism.
-      by srapply Quotient_ind_hprop.
+    by srapply Quotient_ind_hprop.
   - intros [f p].
     srapply path_sigma_hprop; simpl.
     exact (grp_quotient_rec_beta N H f p).

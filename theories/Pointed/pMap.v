@@ -139,6 +139,18 @@ Proof.
   pointed_reduce. reflexivity.
 Defined.
 
+(** The functorial action of [pForall A B] in [A]. *)
+Definition functor_pforall_left {A A' : pType} {B : pFam A'}
+  (g : pForall A' B) (f : A ->* A')
+  : pForall A (pfam_precompose B f).
+Proof.
+  snapply Build_pForall.
+  - exact (g o f).
+  - cbn.
+    tapply (moveL_equiv_V (f:=transport _ _)).
+    exact (apD g (point_eq f) @ dpoint_eq g).
+Defined.
+
 (* functorial action of [pForall A (pointed_fam B)] in [B]. *)
 Definition pmap_compose_ppforall {A : pType} {B B' : A -> pType}
   (g : forall a, B a ->* B' a) (f : ppforall a, B a) : ppforall a, B' a.

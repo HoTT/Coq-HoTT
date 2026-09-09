@@ -59,7 +59,7 @@ Section BoolDecidable.
   Definition true_ne_false : ~ (true = false)
     := fun H => false_ne_true (symmetry _ _ H).
 
-  #[export] Instance decidable_paths_bool : DecidablePaths Bool
+  #[export] Instance decidablepaths_bool : DecidablePaths Bool
     := fun x y => match x as x, y as y return ((x = y) + ~(x = y)) with
                     | true, true => inl idpath
                     | false, false => inl idpath

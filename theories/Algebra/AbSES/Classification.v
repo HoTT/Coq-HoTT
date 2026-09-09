@@ -218,25 +218,23 @@ Section PfiberDeloop.
     - apply (isconnected_em 3).
   Defined.
 
-  (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group, identified so that the identification inverts [equiv_g_pi_n_em] on [Pi 3]. *)
+  (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group, and the identification inverts [equiv_g_pi_n_em] on [Pi 3]. *)
   Local Definition pequiv_em_pfiber_psi'
     : K(abgroup_pi 1 (pfiber psi), 3) <~>* pfiber psi
-    := pequiv_em_pi 1 (pfiber psi).
+    := pequiv_em_connected_truncated (pfiber psi) 2.
 
   Local Definition pi_bridge_psi (x : Pi 3 K(abgroup_pi 1 (pfiber psi), 3))
     : fmap (Pi 3) (pequiv_em_pfiber_psi') x
       = grp_iso_inverse (equiv_g_pi_n_em (abgroup_pi 1 (pfiber psi)) 2) x
-    := pi_pequiv_em_pi 1 (pfiber psi) x.
+    := fmap_pi_pequiv_em_connected_truncated (pfiber psi) 2 x.
 
   (** Through the bridge, [fmap (K' 3)] of the projection is the fiber inclusion of [psi]. *)
   Local Definition path_em_proj_pfib_psi
     : fmap (K' 3) (abses_pfiber_proj 1 psi)
       = pfib psi o* pequiv_em_pfiber_psi'.
   Proof.
-    snapply (path_pmap_pi_connected 1).
+    snapply (path_pmap_pi_connected 2).
     1,2: exact _.
-    1: exact (isconnected_em (G:=B) 2).
-    1: exact _.
     intro x.
     refine (pi_em_fmap' (abses_pfiber_proj 1 psi) 2 x @ _).
     refine (eisretr (equiv_g_pi_n_em B 2) _ @ _).
@@ -250,10 +248,8 @@ Section PfiberDeloop.
     : pequiv_em_pfiber_psi' o* fmap (K' 3) (abses_pfiber_incl 1 psi)
       = connecting_map (pfib psi) psi o* pequiv_loops_em_em A 3.
   Proof.
-    snapply (path_pmap_pi_connected 1).
+    snapply (path_pmap_pi_connected 2).
     1,2: exact _.
-    1: exact _.
-    1: exact _.
     intro x.
     refine (fmap_comp (Pi 3)
       (fmap (K' 3) (abses_pfiber_incl 1 psi))
@@ -312,12 +308,8 @@ Section PfiberDeloop.
       lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
       rhs_V' napply pmap_compose_assoc.
       exact (phomotopy_path path_em_incl_delta_psi). }
-    snapply (path_pmap_pi_connected 1).
+    snapply (path_pmap_pi_connected 2).
     1,2: exact _.
-    1: exact (isconnected_equiv' 2 (loops K(A, 4))
-         ((connect_fiberseq (pfib psi) psi).2)
-         (@isconnected_loops _ 2 K(A, 4) (isconnected_em 3))).
-    1: exact _.
     intro x.
     napply (isinj_embedding _ isembedding_pi_pfib_pfib_psi).
     lhs_V refine (fmap_comp (Pi 3) _ (pfib (pfib psi)) x).
@@ -686,10 +678,8 @@ Section Naturality.
                     o* fmap (K' 3) (component1 phi)).
     { lhs_V' napply pmap_compose_assoc.
       napply (pmap_prewhisker _ (pfib_cxfib _)). }
-    snapply (path_pmap_pi_connected 1).
+    snapply (path_pmap_pi_connected 2).
     1,2: exact _.
-    1: exact (isconnected_equiv' 2 K(X, 3) em_cxfib_F (isconnected_em 2)).
-    1: exact _.
     intro x.
     refine (isinj_embedding _ (isembedding_pi_pfib_em F 2) _ _ _).
     lhs_V refine (fmap_comp (Pi 3) _ (pfib (fmap (K' 3) (projection F))) x).

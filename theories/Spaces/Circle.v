@@ -132,18 +132,13 @@ Section EncodeDecode.
   Definition Circle_encode_loopexp (z : Int)
     : Circle_encode base (loopexp loop z) = z.
   Proof.
-    induction z as [|n | n].
-    - reflexivity.
-    - rewrite loopexp_succ_r.
-      unfold Circle_encode in IHz |- *.
-      rewrite transport_pp.
-      rewrite IHz.
-      apply transport_Circle_code_loop.
-    - rewrite loopexp_pred_r.
-      unfold Circle_encode in IHz |- *.
-      rewrite transport_pp.
-      rewrite IHz.
-      apply transport_Circle_code_loopV.
+    revert z.
+    rapply (int_homotopic int_succ); cbn beta.
+    1,3: reflexivity.
+    simpl; intro z.
+    unfold Circle_encode.
+    rewrite <- transport_Circle_code_loop.
+    by rewrite transport_pp.
   Defined.
 
   (** Now we put it together. *)

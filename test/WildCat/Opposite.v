@@ -1,6 +1,15 @@
 From HoTT Require Import Basics WildCat.Core WildCat.Opposite WildCat.Equiv
   WildCat.NatTrans WildCat.Bifunctor WildCat.Monoidal.
 
+(** [isgraph_op] is not an instance, since typeclass search could then loop on a goal [IsGraph ?A] with [?A] unknown.  It is an immediate hint and a [Hint Extern] instead, and between them they need to solve the goals below.  The immediate hint handles the ones whose premise is already in the context, even when the goal is a beta-redex, as it is in [trans_op]. *)
+Succeed Definition test A `{IsGraph A} : IsGraph A^op := _.
+Succeed Definition test A B `{IsGraph B}
+  : forall x : A^op, IsGraph ((fun _ : A^op => B^op) x) := _.
+
+(** The [Hint Extern] handles the ones whose premise itself needs a search. *)
+Succeed Definition test A `{Is1Cat A} (a b : A) : IsGraph ((a $-> b)^op) := _.
+Succeed Definition test A `{HasEquivs A} : IsGraph ((core A)^op) := _.
+
 (** Opposites are definitionally involutive. *)
 Succeed Definition test A : A = (A^op)^op :> Type := 1.
 Succeed Definition test A `{x : IsGraph A} : x = @isgraph_op A^op (@isgraph_op A x) := 1.

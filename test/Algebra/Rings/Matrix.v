@@ -65,8 +65,10 @@ Definition test3_AB := Build_Matrix' cring_Z 3 4
    ltac:(decide)
    ltac:(decide).
 
-(** The entries should be the same, although the well-formedness proofs may differ definitionally. *)
-Definition test3 : entries (matrix_mult test3_A test3_B) = entries test3_AB := idpath.
+(** The entries are propositionally equal, but with our use of HIT integers they are not definitionally equal, since the same integer has many representations.  Applying [int_reduce] to each entry puts it into normal form, after which the two sides agree definitionally. Using [ltac:(decide)] also works, but is slower. *)
+Definition test3
+  : entries (matrix_map int_reduce (matrix_mult test3_A test3_B)) = entries test3_AB
+  := idpath.
 
 (** Here we check the minors of a matrix are computed correctly. *)
 

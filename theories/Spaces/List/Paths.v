@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc Basics.Decidable.
 Require Import Basics.Equivalences Types.Empty Types.Unit Types.Prod.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
 Require Import Spaces.List.Core.
@@ -99,5 +99,16 @@ Section PathList.
   Definition equiv_path_list {l1 l2}
     : ListEq l1 l2 <~> l1 = l2
     := equiv_adjointify decode encode decode_encode encode_decode.
+
+  #[export] Instance decidablepaths_list `{DecidablePaths A}
+    : DecidablePaths (list A).
+  Proof.
+    intros l1 l2.
+    apply (decidable_equiv _ equiv_path_list).
+    revert l2; induction l1 as [|a1 l1];
+    intros [|a2 l2]; cbn.
+    1, 2, 3: exact _.
+    apply decidable_prod.
+  Defined.
 
 End PathList.

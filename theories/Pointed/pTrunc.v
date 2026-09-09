@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types Truncations
-  Pointed.Core Pointed.pEquiv Pointed.Loops Pointed.pModality.
+  Pointed.Core Pointed.pMap Pointed.pEquiv Pointed.Loops Pointed.pModality.
 From HoTT.WildCat Require Import Core Equiv.
 
 Local Open Scope pointed_scope.
@@ -39,11 +39,28 @@ Definition pTr_rec_beta n {X Y : pType} `{IsTrunc n Y} (f : X ->* Y)
   : pTr_rec n f o* ptr ==* f
   := phomotopy_path (pTr_rec_beta_path n f).
 
-(** A pointed version of the induction principle. *)
+(** A pointed version of the induction principle. We could also use [pO_ind] here, but this version has a slightly simpler [pFam] because [ptr] is definitionally pointed. *)
 Definition pTr_ind n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x)}
   (f : pForall X (Build_pFam (Y o tr) (dpoint Y)))
   : pForall (pTr n X) Y
   := Build_pForall (pTr n X) Y (Trunc_ind Y f) (dpoint_eq f).
+
+(** For the beta rule, we use [functor_pforall_left] to compose the dependent function with [ptr].  This is more complicated than necessary, again because [ptr] is definitionally pointed, but is more awkward to avoid here. *)
+Definition pTr_ind_beta n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x)}
+  (f : pForall X (Build_pFam (Y o tr) (dpoint Y)))
+  : functor_pforall_left (pTr_ind n f) ptr ==* f.
+Proof.
+  (* The proof of [pO_ind_beta] applies, except for the difference in the pointedness. *)
+  rhs_V' rapply pO_ind_beta.
+  apply phomotopy_path.
+  exact (ap (fun p => functor_pforall_left (Build_pForall _ Y (Trunc_ind Y f) p) ptr) (concat_1p _)^).
+Defined.
+
+(** To show two pointed maps out of a truncation into a truncated type are pointed homotopic, it is enough to compare their precomposites with [ptr]. Unlike passing through [pequiv_ptr_rec], this needs no [Funext]. *)
+Definition pTr_indpaths {n : trunc_index} {X Y : pType} `{IsTrunc n Y}
+  {f g : pTr n X ->* Y} (h : f o* ptr ==* g o* ptr)
+  : f ==* g
+  := pO_indpaths h.
 
 Definition pequiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
   : (pTr n X ->** Y) <~>* (X ->** Y)

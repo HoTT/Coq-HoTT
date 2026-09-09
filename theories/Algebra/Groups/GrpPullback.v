@@ -213,7 +213,8 @@ Section IsEquivGrpPullbackCorec.
         (p : f o b == g o c)
     : grp_pullback_pr1 f g $o grp_pullback_corec f g b c p = b.
   Proof.
-    apply equiv_path_grouphomomorphism; reflexivity.
+    (* Here and below, the underlying functions are definitionally equal. *)
+    apply equiv_path_map_grouphomomorphism; reflexivity.
   Defined.
 
   Lemma grp_pullback_corec_pr2 {X : Group}
@@ -221,7 +222,7 @@ Section IsEquivGrpPullbackCorec.
         (p : f o b == g o c)
     : grp_pullback_pr2 f g $o grp_pullback_corec f g b c p = c.
   Proof.
-    apply equiv_path_grouphomomorphism; reflexivity.
+    apply equiv_path_map_grouphomomorphism; reflexivity.
   Defined.
 
   Theorem isequiv_grp_pullback_corec (X : Group)
@@ -232,7 +233,7 @@ Section IsEquivGrpPullbackCorec.
       refine (grp_pullback_pr1 f g $o phi; grp_pullback_pr2 f g $o phi; _).
       intro x; exact (pullback_commsq f g (phi x)).
     - intro phi.
-      apply equiv_path_grouphomomorphism; reflexivity.
+      apply equiv_path_map_grouphomomorphism; reflexivity.
     - intro bcp; simpl.
       srapply path_sigma.
       + simpl. apply grp_pullback_corec_pr1.

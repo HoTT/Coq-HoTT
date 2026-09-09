@@ -91,6 +91,12 @@ Definition pmap_compose {A B C : pType} (g : B ->* C) (f : A ->* B)
 
 Infix "o*" := pmap_compose : pointed_scope.
 
+(** Precomposing a pointed type family with a pointed map. *)
+Definition pfam_precompose {A A' : pType} (B : pFam A')
+  (f : A ->* A')
+  : pFam A
+  := Build_pFam (B o f) ((point_eq f)^ # dpoint B).
+
 (** ** Pointed homotopies *)
 
 (** A pointed homotopy is a homotopy with a proof that the preservation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)

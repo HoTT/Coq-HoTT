@@ -58,7 +58,7 @@ Proof.
   snapply Build_GroupHomomorphism.
   1: exact (fun g => grp_homo_compose g f).
   intros phi psi.
-  by apply equiv_path_grouphomomorphism.
+  by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 Instance is1functor_ab_hom01 `{Funext} {A : Group^op}
@@ -69,9 +69,9 @@ Proof.
     apply equiv_path_grouphomomorphism; intro a; cbn.
     exact (p (phi a)).
   - intros B phi.
-    by apply equiv_path_grouphomomorphism.
+    by apply equiv_path_map_grouphomomorphism.
   - intros B C D f g phi.
-    by apply equiv_path_grouphomomorphism.
+    by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 Instance is1functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
@@ -82,9 +82,9 @@ Proof.
     apply equiv_path_grouphomomorphism; intro a; cbn.
     exact (ap phi (p a)).
   - intros A phi.
-    by apply equiv_path_grouphomomorphism.
+    by apply equiv_path_map_grouphomomorphism.
   - intros A C D f g phi.
-    by apply equiv_path_grouphomomorphism.
+    by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 Instance is0bifunctor_ab_hom `{Funext}
@@ -97,7 +97,7 @@ Proof.
   napply Build_Is1Bifunctor''.
   1,2: exact _.
   intros A A' f B B' g phi; cbn.
-  by apply equiv_path_grouphomomorphism.
+  by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 (** ** [AbGroup] has a wild enrichment in wild abelian groups *)

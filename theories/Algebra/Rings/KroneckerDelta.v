@@ -23,7 +23,7 @@ Section AssumeDecidable.
   Proof.
     unfold kronecker_delta.
     generalize (dec (i = i)).
-    by rapply decidable_paths_refl.
+    by rapply decidablepaths_refl.
   Defined.
 
   (** Kronecker delta with differing indices is 0. *)

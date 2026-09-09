@@ -206,13 +206,13 @@ Section MonoidEnriched.
   Context {A : Type} `{HasEquivs A} `{!HasBinaryProducts A}
     (I : A) `{!IsTerminal I} {x y : A}
     `{!HasMorExt A} `{forall x y : A, IsHSet (x $-> y)}.
-  
+
   Section Monoid.
 
     Context `{!IsMonoidObject cat_binprod I y}.
 
     Local Instance sgop_hom : SgOp (x $-> y)
-      := fun f g => mo_mult cat_binprod $o cat_binprod_corec f g.
+      := fun f g => mo_mult cat_binprod $o cat_binprod_corec _ f g.
 
     Local Instance monunit_hom : MonUnit (x $-> y) := mo_unit cat_binprod $o mor_terminal _ _.
 

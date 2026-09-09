@@ -204,7 +204,7 @@ Proof.
     exact (fun _ => idmap).
   - intros [phi [p q]].
     apply path_sigma_hprop.
-    by apply equiv_path_groupisomorphism.
+    by apply equiv_path_map_groupisomorphism.
   - reflexivity.
 Defined.
 
@@ -314,8 +314,7 @@ Proof.
   apply (equiv_ap_inv' equiv_path_abses_iso).
   refine (eissect _ _ @ _).
   srapply path_sigma_hprop; simpl.
-  srapply equiv_path_groupisomorphism.
-  reflexivity.
+  by srapply equiv_path_map_groupisomorphism.
 Defined.
 
 Definition equiv_path_absesV_1 `{Univalence} {B A : AbGroup@{u}} {E : AbSES B A}
@@ -348,7 +347,7 @@ Proof.
   refine (equiv_path_abses_1^ @ _).
   apply (ap equiv_path_abses_iso).
   apply path_sigma_hprop.
-  by apply equiv_path_groupisomorphism.
+  by apply equiv_path_map_groupisomorphism.
 Defined.
 
 (** A second beta-principle where you start with path data instead of actual paths. *)

@@ -254,7 +254,7 @@ Definition ab_diagonal {A : AbGroup} : A $-> ab_biprod A A
 Lemma ab_biprod_corec_diagonal `{Funext} {A B : AbGroup} (f g : B $-> A)
   : ab_biprod_corec f g = (functor_ab_biprod f g) $o ab_diagonal.
 Proof.
-  apply equiv_path_grouphomomorphism; reflexivity.
+  by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 (** Precomposing the codiagonal with the swap map has no effect. *)

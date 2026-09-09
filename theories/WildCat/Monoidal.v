@@ -219,7 +219,7 @@ Section Associator.
 End Associator.
 
 Definition associator_op' {A : Type} `{HasEquivs A} {F : A -> A -> A}
-  `{!Is0Bifunctor F, !Is1Bifunctor F, assoc : !Associator (A:=A^op) F}
+  `{bf0 : !Is0Bifunctor F, bf1 : !Is1Bifunctor F, assoc : !Associator (A:=A^op) F}
   : Associator F
   := associator_op (A:=A^op) (assoc := assoc).
 

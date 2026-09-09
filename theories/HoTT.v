@@ -1,7 +1,8 @@
 (** A convenience file that loads most of the HoTT library.
     You can use it with "Require Import HoTT" in your files.
     But please do not use it in the HoTT library itself, or
-    you are likely going to create a dependency loop. *)
+    you are likely going to create a dependency loop.
+    See the end of the file for things *not* exported here. *)
 
 Require Export HoTT.Basics.
 Require Export HoTT.Types.
@@ -30,6 +31,7 @@ Require Export HoTT.Functorish.
 Require Export HoTT.Factorization.
 
 Require Export HoTT.Universes.Smallness.
+Require Export HoTT.Universes.UniverseLevel.
 Require Export HoTT.Universes.TruncType.
 Require Export HoTT.Universes.ObjectClassifier.
 Require Export HoTT.Universes.DProp.
@@ -69,6 +71,7 @@ Require Export HoTT.Limits.Limit.
 
 Require Export HoTT.Colimits.GraphQuotient.
 Require Export HoTT.Colimits.Coeq.
+Require Export HoTT.Colimits.CoeqUnivProp.
 Require Export HoTT.Colimits.Pushout.
 Require Export HoTT.Colimits.SpanPushout.
 Require Export HoTT.Colimits.Quotient.
@@ -102,6 +105,7 @@ Require Export HoTT.Modalities.Meet.
 Require Export HoTT.Modalities.CoreflectiveSubuniverse.
 
 Require Export HoTT.Spaces.Nat.
+Require Export HoTT.Spaces.SInt.
 Require Export HoTT.Spaces.Int.
 Require Export HoTT.Spaces.FreeInt.
 Require Export HoTT.Spaces.Pos.
@@ -141,6 +145,8 @@ Require Export HoTT.Algebra.AbGroups.
 Require Export HoTT.Algebra.AbSES.
 Require Export HoTT.Algebra.Groups.
 Require Export HoTT.Algebra.Rings.
+Require Export HoTT.Algebra.Monoids.Monoid.
+Require Export HoTT.Algebra.Categorical.MonoidObject.
 Require Export HoTT.Algebra.Universal.Algebra.
 Require Export HoTT.Algebra.Universal.Congruence.
 Require Export HoTT.Algebra.Universal.Homomorphism.
@@ -160,6 +166,7 @@ Require Export HoTT.Homotopy.Join.
 Require Export HoTT.Homotopy.HSpace.
 Require Export HoTT.Homotopy.ClassifyingSpace.
 Require Export HoTT.Homotopy.CayleyDickson.
+Require Export HoTT.Homotopy.Cofiber.
 Require Export HoTT.Homotopy.EMSpace.
 Require Export HoTT.Homotopy.ExactSequence.
 Require Export HoTT.Homotopy.HSpaceS1.
@@ -170,6 +177,10 @@ Require Export HoTT.Homotopy.Syllepsis.
 Require Export HoTT.Homotopy.Hopf.
 Require Export HoTT.Homotopy.IdentitySystems.
 Require Export HoTT.Homotopy.NullHomotopy.
+
+Require Export HoTT.Homotopy.InjectiveTypes.InjectiveSigma.
+Require Export HoTT.Homotopy.InjectiveTypes.InjectiveTypes.
+Require Export HoTT.Homotopy.InjectiveTypes.TypeFamKanExt.
 
 Require Export HoTT.Spectra.Spectrum.
 
@@ -189,9 +200,16 @@ Require Export HoTT.Sets.Powers.
 
 Require Export HoTT.Misc.BoundedSearch.
 Require Export HoTT.Misc.UStructures.
+Require Export HoTT.Misc.BarInduction.
+Require Export HoTT.Misc.CompactTypes.
+Require Export HoTT.Misc.FanTheorem.
 
-(** We do _not_ export [UnivalenceAxiom], [FunextAxiom], or any of the files in [Metatheory] from this file.  Thus, importing this file does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
+(** We do _not_ export any of the files in the [Axioms] folder or the [Metatheory] folder.  Thus, importing this file does not prevent you from tracking usage of [Univalence] and [Funext] theorem-by-theorem in the same way that the library does.  If you want any of those files, you should import them separately. *)
 
 (** We check that [UnivalenceAxiom], [FunextAxiom] aren't being leaked. This is so that these can be imported separately. *)
 Fail Check HoTT.UnivalenceAxiom.univalence_axiom.
 Fail Check HoTT.FunextAxiom.funext_axiom.
+
+(** We also do not export files in the [Categories] tree or the [Classes] tree.  The [Categories] tree is not used by the rest of the library, but you can import [Categories] to get the entire categories library.  Some files in the [Classes] tree are used in the library, but no mechanism is provided for importing the entire tree. *)
+
+(** Finally, we do not export some Utf8 notation files. *)

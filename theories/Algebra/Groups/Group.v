@@ -55,6 +55,9 @@ Arguments group_assoc_opp {_}.
 (** We should never need to unfold the proof that something is a group. *)
 Global Opaque group_isgroup.
 
+(** While this can be found by typeclass search, it is sometimes slow, so we add it as an instance. *)
+Instance ishset_group (G : Group) : IsHSet G := _.
+
 Definition issig_group : _ <~> Group
   := ltac:(issig).
 
@@ -260,12 +263,18 @@ Coercion pmap_GroupHomomorphism : GroupHomomorphism >-> pForall.
 Definition issig_GroupHomomorphism (G H : Group) : _ <~> GroupHomomorphism G H
   := ltac:(issig).
 
+(** Equality of group homomorphisms is equivalent to equality of functions.  This uses [Funext] to know that [IsSemiGroupPreserving] is an hprop. *)
+Definition equiv_path_map_grouphomomorphism {F : Funext} {G H : Group}
+  {g h : GroupHomomorphism G H}
+  : (g = h :> (G -> H)) <~> g = h
+  := (equiv_ap (issig_GroupHomomorphism G H)^-1 _ _)^-1
+      oE equiv_path_sigma_hprop _ _.
+
 (** Function extensionality for group homomorphisms. *)
 Definition equiv_path_grouphomomorphism {F : Funext} {G H : Group}
   {g h : GroupHomomorphism G H} : g == h <~> g = h.
 Proof.
-  refine ((equiv_ap (issig_GroupHomomorphism G H)^-1 _ _)^-1 oE _).
-  refine (equiv_path_sigma_hprop _ _ oE _).
+  refine (equiv_path_map_grouphomomorphism oE _).
   apply equiv_path_forall.
 Defined.
 
@@ -274,7 +283,8 @@ Instance ishset_grouphomomorphism {F : Funext} {G H : Group}
   : IsHSet (GroupHomomorphism G H).
 Proof.
   apply istrunc_S.
-  intros f g; exact (istrunc_equiv_istrunc _ equiv_path_grouphomomorphism).
+  intros f g; exact (istrunc_equiv_istrunc _
+                       equiv_path_map_grouphomomorphism).
 Defined.
 
 (** Group homomorphisms preserve inverses. *)
@@ -339,22 +349,29 @@ Definition pequiv_groupisomorphism {A B : Group}
   := fun f => Build_pEquiv f _.
 Coercion pequiv_groupisomorphism : GroupIsomorphism >-> pEquiv.
 
-(** Funext for group isomorphisms. *)
-Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
+(** Equality of group isomorphisms is equivalent to equality of functions.  This uses [Funext] to know that [IsEquiv] and [IsSemiGroupPreserving] are hprops. *)
+Definition equiv_path_map_groupisomorphism {F : Funext} {G H : Group}
   (f g : GroupIsomorphism G H)
-  : f == g <~> f = g.
+  : (f = g :> (G -> H)) <~> f = g.
 Proof.
   refine ((equiv_ap (issig_GroupIsomorphism G H)^-1 _ _)^-1 oE _).
   refine (equiv_path_sigma_hprop _ _ oE _).
-  exact equiv_path_grouphomomorphism.
+  exact equiv_path_map_grouphomomorphism.
 Defined.
+
+(** Funext for group isomorphisms. *)
+Definition equiv_path_groupisomorphism `{F : Funext} {G H : Group}
+  (f g : GroupIsomorphism G H)
+  : f == g <~> f = g
+  := equiv_path_map_groupisomorphism f g oE equiv_path_forall _ _.
 
 (** Group isomorphisms form a set. *)
 Definition ishset_groupisomorphism `{F : Funext} {G H : Group}
   : IsHSet (GroupIsomorphism G H).
 Proof.
   apply istrunc_S.
-  intros f g; exact (istrunc_equiv_istrunc _ (equiv_path_groupisomorphism _ _)).
+  intros f g; exact (istrunc_equiv_istrunc _
+                       (equiv_path_map_groupisomorphism _ _)).
 Defined.
 
 (** The identity map is an equivalence and therefore a group isomorphism. *)
@@ -637,7 +654,7 @@ Defined.
 Definition grp_pow_unit {G : Group} (n : Int)
   : grp_pow (G:=G) mon_unit n = mon_unit.
 Proof.
-  snapply (int_iter_invariant n _ (fun g => g = mon_unit)); cbn.
+  snapply (int_iter_invariant _ (fun g => g = mon_unit)); cbn.
   1, 2: apply paths_ind_r.
   - apply grp_unit_r.
   - lhs napply grp_unit_r. exact grp_inv_unit.
@@ -649,28 +666,27 @@ Defined.
 (** The next two results tell us how [grp_pow] unfolds. *)
 Definition grp_pow_succ {G : Group} (n : Int) (g : G)
   : grp_pow g (n.+1)%int = g * grp_pow g n
-  := int_iter_succ_l _ _ _.
+  := idpath.
 
 Definition grp_pow_pred {G : Group} (n : Int) (g : G)
   : grp_pow g (n.-1)%int = g^ * grp_pow g n
-  := int_iter_pred_l _ _ _.
+  := idpath.
 
 (** [grp_pow] satisfies an additive law of exponents. *)
 Definition grp_pow_add {G : Group} (m n : Int) (g : G)
   : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
 Proof.
-  lhs napply int_iter_add.
-  induction n; cbn.
-  1: symmetry; exact (grp_unit_l _).
-  1: rewrite int_iter_succ_l, grp_pow_succ.
-  2: rewrite int_iter_pred_l, grp_pow_pred; cbn.
-  1,2 : rhs_V srapply associativity;
-        apply ap, IHn.
+  revert n.
+  rapply (int_homotopic (g *.)); cbn beta.
+  - symmetry; exact (grp_unit_l _).
+  - reflexivity.
+  - intro n; simpl.
+    symmetry; apply associativity.
 Defined.
 
 (** [grp_pow] commutes negative exponents to powers of the inverse *)
 Definition grp_pow_neg {G : Group} (n : Int) (g : G)
-  : grp_pow g (int_neg n) = grp_pow g^ n.
+  : grp_pow g (- n)%int = grp_pow g^ n.
 Proof.
   lhs napply int_iter_neg.
   cbn; unfold grp_pow.
@@ -699,18 +715,14 @@ Defined.
 Definition grp_pow_int_mul {G : Group} (m n : Int) (g : G)
   : grp_pow g (m * n)%int = grp_pow (grp_pow g m) n.
 Proof.
-  induction n.
+  revert n.
+  rapply (int_homotopic (grp_pow g m *.)); cbn beta.
   - simpl.
     by rewrite int_mul_0_r.
-  - rewrite int_mul_succ_r.
-    rewrite grp_pow_add.
-    rewrite grp_pow_succ.
-    apply grp_cancelL, IHn.
-  - rewrite int_mul_pred_r.
-    rewrite grp_pow_add.
-    rewrite grp_pow_neg_inv.
-    rewrite grp_pow_pred.
-    apply grp_cancelL, IHn.
+  - intro n.
+    rewrite int_mul_succ_r.
+    by rewrite grp_pow_add.
+  - reflexivity.
 Defined.
 
 (** If [h] commutes with [g], then [h] commutes with [grp_pow g n]. *)
@@ -718,14 +730,14 @@ Definition grp_pow_commutes {G : Group} (n : Int) (g h : G)
   (p : h * g = g * h)
   : h * (grp_pow g n) = (grp_pow g n) * h.
 Proof.
-  induction n.
+  revert n.
+  rapply (int_homotopic (g *.)); cbn beta.
   - by apply grp_g1_1g.
-  - rewrite grp_pow_succ.
-    napply grp_commutes_op; assumption.
-  - rewrite grp_pow_pred.
-    napply grp_commutes_op.
-    2: assumption.
-    apply grp_commutes_inv, p.
+  - intro n; simpl.
+    rewrite 2 simple_associativity.
+    by rewrite p.
+  - intro n; simpl.
+    by rewrite simple_associativity.
 Defined.
 
 (** [grp_pow g n] commutes with [g]. *)
@@ -740,28 +752,16 @@ Definition grp_pow_mul {G : Group} (n : Int) (g h : G)
   (c : g * h = h * g)
   : grp_pow (g * h) n = (grp_pow g n) * (grp_pow h n).
 Proof.
-  induction n.
+  revert n.
+  rapply (int_homotopic ((g * h) *.)); cbn beta.
   - simpl.
     symmetry; napply grp_unit_r.
-  - rewrite 3 grp_pow_succ.
-    rewrite IHn.
-    rewrite 2 grp_assoc.
-    apply grp_cancelR.
-    rewrite <- 2 grp_assoc.
-    apply grp_cancelL.
-    apply grp_pow_commutes.
-    exact c^%path.
-  - simpl.
-    rewrite 3 grp_pow_pred.
-    rewrite IHn.
-    rewrite 2 grp_assoc.
-    apply grp_cancelR.
-    rewrite c.
-    rewrite grp_inv_op.
-    rewrite <- 2 grp_assoc.
-    apply grp_cancelL.
-    apply grp_pow_commutes.
-    symmetry; apply grp_commutes_inv, c.
+  - reflexivity.
+  - intro n; simpl.
+    rewrite simple_associativity.
+    rewrite <- (simple_associativity g (grp_pow g n) h).
+    rewrite <- (grp_pow_commutes _ _ _ c^).
+    by rewrite 2 simple_associativity.
 Defined.
 
 (** ** The category of Groups *)
@@ -818,7 +818,7 @@ Defined.
 Instance hasmorext_group `{Funext} : HasMorExt Group.
 Proof.
   intros A B f g; cbn in *.
-  snapply @isequiv_homotopic.
+  snapply isequiv_homotopic.
   1: exact (equiv_path_grouphomomorphism^-1%equiv).
   1: exact _.
   intros []; reflexivity. 
@@ -845,7 +845,7 @@ Defined.
 Instance is1cat_strong `{Funext} : Is1Cat_Strong Group.
 Proof.
   rapply Build_Is1Cat_Strong.
-  all: intros; apply equiv_path_grouphomomorphism; intro; reflexivity.
+  all: intros; apply equiv_path_map_grouphomomorphism; reflexivity.
 Defined.
 
 (** The [group_type] map is a 1-functor. *)
@@ -1115,7 +1115,7 @@ Proof.
   rapply equiv_path_grouphomomorphism.
   intros [].
   symmetry.
-  rapply grp_homo_unit.
+  napply grp_homo_unit.
 Defined.
 
 Instance isterminal_grp_trivial : IsTerminal grp_trivial.
@@ -1131,10 +1131,8 @@ Instance contr_grp_homo_trivial_target `{Funext} G
 Proof.
   snapply Build_Contr.
   1: exact (pr1 (isterminal_grp_trivial _)).
-  intros g.
-  rapply equiv_path_grouphomomorphism.
-  intros x.
-  apply path_contr.
+  intros f.
+  apply equiv_path_map_grouphomomorphism, path_contr.
 Defined.
 
 Instance ishprop_grp_iso_trivial `{Funext} (G : Group)

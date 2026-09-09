@@ -38,14 +38,10 @@ Defined.
 Definition abgroup_Z_ab_mul (z z' : Int)
   : ab_mul (A:=abgroup_Z) z z' = z * z'.
 Proof.
-  induction z.
-  - reflexivity.
-  - cbn.
+  revert z.
+  rapply (int_homotopic (fun x => int_add x z')); cbn beta.
+  1,3: reflexivity.
+  - intro z.
     lhs napply (grp_pow_succ (G:=abgroup_Z)).
-    rhs napply int_mul_succ_l.
-    f_ap.
-  - cbn.
-    lhs napply (grp_pow_pred (G:=abgroup_Z)).
-    rhs napply int_mul_pred_l.
-    f_ap.
+    by rewrite int_add_comm.
 Defined.

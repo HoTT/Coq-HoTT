@@ -1,8 +1,7 @@
 From HoTT Require Import Basics Types.
-From HoTT.WildCat Require Import Core Universe Equiv PointedCat.
+From HoTT.WildCat Require Import Core Universe Equiv PointedCat Yoneda.
 Require Import Pointed.
 Require Import Spaces.Nat.Core.
-Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.Core.
@@ -18,6 +17,73 @@ Require Import Truncations.Core Truncations.Connectedness Truncations.SeparatedT
 Local Open Scope pointed_scope.
 Local Open Scope nat_scope.
 Local Open Scope mc_mult_scope.
+
+(** ** Maps from connected types to pointed types *)
+
+(** Before specializing to Eilenberg-Mac Lane spaces, we show that when [X] is [n]-connected and [Y] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence.  The case [n=1] is [isequiv_fmap_pi1_pmap], and the inductive step follows from [isequiv_fmap_loops_pmap]. *)
+
+(** Part of the inductive step is factored out here. *)
+Local Definition isequiv_fmap_pi_pmap_succ `{Univalence} (n : nat) {X Y : pType}
+  (el : IsEquiv (fmap loops (a:=X) (b:=Y)))
+  (e : IsEquiv (fmap (Pi n.+1) (a:=loops X) (b:=loops Y)))
+  : IsEquiv (fmap (Pi n.+2) (a:=X) (b:=Y)).
+Proof.
+  pose (a := groupiso_pi_loops n X).
+  pose (b := groupiso_pi_loops n Y).
+  pose (k := equiv_precompose_cat_equiv a
+              oE equiv_postcompose_cat_equiv (x:=Pi n.+1 (loops X)) b^-1$).
+  refine (isequiv_homotopic (k o fmap (Pi n.+1) o fmap loops (a:=X) (b:=Y)) _).
+  intro f.
+  rapply equiv_path_grouphomomorphism.
+  intro x.
+  exact (moveR_equiv_V (f:=b) _ _ (fmap_pi_loops n.+1 f x)^).
+Defined.
+
+(** For [X] [n]-connected and [Y] [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps [X ->* Y] to the group homomorphisms [Pi n.+1 X $-> Pi n.+1 Y].  Neither connectivity of [Y] nor truncatedness of [X] is needed.  The induction is on [n]: the successor step is [isequiv_fmap_loops_pmap], which applies since [n.+2 <= n +2+ n], and the base case is [isequiv_fmap_pi1_pmap]. *)
+Instance isequiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
+  `{cX : IsConnected n X} `{tY : IsTrunc n.+1 Y}
+  : IsEquiv (fmap (Pi n.+1) (a:=X) (b:=Y)).
+Proof.
+  induction n in X, Y, cX, tY |- *.
+  1: exact (isequiv_fmap_pi1_pmap X Y).
+  napply isequiv_fmap_pi_pmap_succ.
+  - napply (isequiv_fmap_loops_pmap (n:=n)).
+    + exact _.
+    + apply (istrunc_leq (trunc_index_leq_add_nat n n)).
+  - rapply IHn.
+Defined.
+
+Definition equiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
+  `{IsConnected n X} `{IsTrunc n.+1 Y}
+  : (X ->* Y) <~> (Pi n.+1 X $-> Pi n.+1 Y)
+  := Build_Equiv _ _ _ (isequiv_fmap_pi_pmap n X Y).
+
+(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are equal. *)
+Definition path_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
+  `{IsConnected n X} `{IsTrunc n.+1 Y}
+  (phi psi : X ->* Y)
+  (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
+  : phi = psi.
+Proof.
+  tapply (equiv_inj (fmap (Pi n.+1) (a:=X) (b:=Y))).
+  exact (equiv_path_grouphomomorphism h).
+Defined.
+
+(** Two [n]-connected [n.+1]-truncated pointed types with isomorphic [Pi n.+1] are pointed equivalent. *)
+Definition pequiv_pi_connected_truncated `{Univalence} (n : nat) {X Y : pType}
+  `{IsConnected n X} `{IsTrunc n.+1 X} `{IsConnected n Y} `{IsTrunc n.+1 Y}
+  (phi : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y))
+  : X <~>* Y
+  := cate_reflect_fmap (Pi n.+1) (x:=X) (y:=Y) phi.
+
+(** The equivalence induces the given isomorphism on [Pi n.+1]. *)
+Definition fmap_pi_pequiv_pi_connected_truncated `{Univalence} (n : nat) {X Y : pType}
+  `{IsConnected n X} `{IsTrunc n.+1 X} `{IsConnected n Y} `{IsTrunc n.+1 Y}
+  (phi : GroupIsomorphism (Pi n.+1 X) (Pi n.+1 Y))
+  : fmap (Pi n.+1) (pequiv_pi_connected_truncated n phi) == phi
+  := fmap_cate_reflect_fmap (Pi n.+1) (x:=X) (y:=Y) phi.
+
+(** ** Definition and properties of Eilenberg-Mac Lane spaces *)
 
 (** The definition of the Eilenberg-Mac Lane spaces.  Note that while we allow [G] to be non-abelian for [n > 1], later results will need to assume that [G] is abelian. *)
 Fixpoint EilenbergMacLane@{u v | u <= v} (G : Group@{u}) (n : nat) : pType@{v}
@@ -131,8 +197,8 @@ Section EilenbergMacLane.
   Proof.
     napply Build_Is1Functor.
     - intros G G' f g p.
-      exact (phomotopy_path (ap (fun h : G $-> G' => fmap (K' n) h)
-        (equiv_path_grouphomomorphism p))).
+      exact (phomotopy_path (ap (fmap (K' n))
+                               (equiv_path_grouphomomorphism p))).
     - intros G.
       induction n as [|[|m] IH].
       + rapply phomotopy_homotopy_hset.
@@ -225,15 +291,12 @@ Section EilenbergMacLane.
       exact (ap _ (IHn g)).
   Defined.
 
-  (** Equivalently, on [Pi n.+1] the functor [K(-, n.+1)] is conjugation by the identifications [equiv_g_pi_n_em]. *)
+  (** Equivalently, the composite is conjugation by the identifications [equiv_g_pi_n_em]. *)
   Definition pi_em_fmap' {G G' : AbGroup}
-    (f : GroupHomomorphism G G') (n : nat) (x : Pi n.+1 K(G, n.+1))
-    : fmap (Pi n.+1) (fmap (K' n.+1) f) x
-      = equiv_g_pi_n_em G' n (f ((equiv_g_pi_n_em G n)^-1 x)).
-  Proof.
-    lhs_V napply (ap _ (eisretr (equiv_g_pi_n_em G n) x)).
-    napply (pi_em_fmap f n).
-  Defined.
+    (f : GroupHomomorphism G G') (n : nat)
+    : fmap (Pi n.+1) (fmap (K' n.+1) f)
+      == equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1
+    := cate_moveL_eV (A:=Group) _ _ (equiv_g_pi_n_em G' n $o f) (pi_em_fmap f n).
 
   (** Eilenberg-Mac Lane spaces of a contractible group are contractible. *)
   #[export] Instance contr_em_contr {G : Group} `{Contr G} (n : nat)
@@ -280,39 +343,18 @@ Section EilenbergMacLane.
                  (c _)).
   Defined.
 
-  (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps, extending [isequiv_fmap_pclassifyingspace] to all levels.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
+  (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps.  Since [K(G, n.+1)] is [n]-connected and [K(G', n.+1)] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps to the group homomorphisms [Pi n.+1 K(G, n.+1) $-> Pi n.+1 K(G', n.+1)], and by [pi_em_fmap'] the composite with [fmap (K' n.+1)] is conjugation by the identifications [equiv_g_pi_n_em], which is also an equivalence.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
   #[export] Instance isequiv_em_fmap (G G' : AbGroup) (n : nat)
     : IsEquiv (fun f : GroupHomomorphism G G' => fmap (K' n.+1) f).
   Proof.
-    induction n as [|n IHn].
-    - exact (isequiv_fmap_pclassifyingspace G G').
-    - (* The ladder [pequiv_ptr_rec], [loop_susp_adjoint], postcomposition with [pequiv_loops_em_em], and the inductive hypothesis. *)
-      pose (L := ((Build_Equiv _ _ _ IHn)^-1%equiv)
-        oE (pequiv_pequiv_postcompose (pequiv_loops_em_em G' n.+1)^-1*
-            : (K(G, n.+1) ->** loops K(G', n.+2)) <~> _)
-        oE (loop_susp_adjoint K(G, n.+1) K(G', n.+2)
-            : (psusp K(G, n.+1) ->** _) <~> _)
-        oE (pequiv_ptr_rec
-            : (K(G, n.+2) ->** K(G', n.+2)) <~> _)).
-      napply (isequiv_homotopic' L^-1%equiv).
-      intro f.
-      apply moveR_equiv_V; symmetry.
-      unfold L; clear L.
-      apply moveR_equiv_V; unfold equiv_fun.
-      apply path_pforall.
-      lhs' refine (pmap_postwhisker _
-        (pmap_prewhisker _ (fmap2 loops (ptr_natural _ _)))).
-      lhs' refine (pmap_postwhisker _
-        (pmap_prewhisker _ (fmap_comp loops _ _))).
-      lhs' refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
-      lhs' refine (pmap_postwhisker _
-        (pmap_postwhisker _ (loop_susp_unit_natural _)^*)).
-      lhs' refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^*).
-      lhs' refine (pmap_postwhisker _
-        (pmap_prewhisker _ (loops_em_em_ptr_unit G' n)^*)).
-      lhs_V' refine (pmap_compose_assoc _ _ _).
-      lhs' refine (pmap_prewhisker _ (peissect _)).
-      apply pmap_postcompose_idmap.
+    refine (isequiv_commsq' _
+              (equiv_precompose_cat_equiv (A:=Group)
+                 (grp_iso_inverse (equiv_g_pi_n_em G n)))
+              (equiv_postcompose_cat_equiv (A:=Group) (equiv_g_pi_n_em G' n))
+              (fmap (Pi n.+1)) _).
+    intro f.
+    apply equiv_path_grouphomomorphism; symmetry.
+    apply pi_em_fmap'.
   Defined.
 
   (** The equivalence between group homomorphisms and pointed maps of Eilenberg-Mac Lane spaces. *)
@@ -320,110 +362,27 @@ Section EilenbergMacLane.
     : GroupHomomorphism G G' <~> (K(G, n.+1) ->* K(G', n.+1))
     := Build_Equiv _ _ _ (isequiv_em_fmap G G' n).
 
-  (** Pointed maps between Eilenberg-Mac Lane spaces of the same level which agree on homotopy groups are equal. *)
-  Definition path_em_pmap_pi {G G' : AbGroup} (n : nat)
-    (phi psi : K(G, n.+1) ->* K(G', n.+1))
-    (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
-    : phi = psi.
+  (** The canonical identification of [Pi n.+1 K(Pi n.+1 X, n.+1)] with [Pi n.+1 X].  For [n = 0] this is [grp_iso_g_pi1_bg], and for positive [n] it is [equiv_g_pi_n_em] applied to the abelian group [Pi n.+1 X]. *)
+  Definition grp_iso_pi_em_pi (X : pType) (n : nat)
+    : GroupIsomorphism (Pi n.+1 K(Pi n.+1 X, n.+1)) (Pi n.+1 X).
   Proof.
-    pose (e := equiv_em_fmap G G' n).
-    apply (equiv_inj e^-1).
-    apply equiv_path_grouphomomorphism; intro g.
-    apply (equiv_inj (equiv_g_pi_n_em G' n)).
-    refine ((pi_em_fmap _ n g)^ @ _ @ pi_em_fmap _ n g).
-    refine (ap (fun m => fmap (Pi n.+1) m _) (eisretr e phi) @ _).
-    refine (_ @ ap (fun m => fmap (Pi n.+1) m _) (eisretr e psi)^).
-    apply h.
+    symmetry.
+    destruct n as [|m].
+    - exact grp_iso_g_pi1_bg.
+    - exact (equiv_g_pi_n_em (Build_AbGroup (Pi m.+2 X) _) m.+1).
   Defined.
 
-  (** Every pointed n-connected (n+1)-type is an Eilenberg-Mac Lane space. *)
-  (** Here and elsewhere in this file we put [n.+1] in [nat]-scope so that it parses as [nat_to_trunc_index (n.+1)] instead of as [trunc_S (nat_to_trunc_index n)].  These are definitionally equal, but the former allows typeclass search to match them with instances such as [isconnected_em] and [istrunc_em].  Similarly for [n.+2]. *)
+  (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
   Definition pequiv_em_connected_truncated (X : pType)
-    (n : nat) `{IsConnected n X} `{IsTrunc (n.+1)%nat X}
-    : K(Pi n.+1 X, n.+1) <~>* X.
-  Proof.
-    generalize dependent X; induction n; intros X isC isT.
-    1: rapply pequiv_pclassifyingspace_pi1.
-    (* The equivalence will be the composite
-<<
-      K( (Pi n.+2 X) n.+2)
-   <~>* K( (Pi n.+1 (loops X)), n.+2)
-   = pTr n.+2 (psusp K( (Pi n.+1 (loops X)), n.+1))  [by definition]
-   <~>* pTr n.+2 (psusp (loops X))                   [by induction]
-   <~>* pTr n.+2 X
-   <~>* X
->>
-    and we'll work from right to left.
-*)
-    refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).
-    refine (pequiv_ptr_psusp_loops X n o*E _).
-    change (K(?G, n.+2)) with (pTr n.+2 (psusp K( G, n.+1 ))).
-    refine (emap (pTr n.+2 o psusp) _).
-    refine ((IHn (loops X) _ _) o*E _).
-    exact (emap (K' n.+1) (groupiso_pi_loops _ _)).
-  Defined.
+    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    : K(Pi n.+1 X, n.+1) <~>* X
+    := pequiv_pi_connected_truncated n (grp_iso_pi_em_pi X n).
 
-  Section NormalizedEM.
-    Context (n : nat) (X : pType)
-      `{IsConnected (n.+1)%nat X} `{IsTrunc (n.+2)%nat X}.
-
-    (** The automorphism of [Pi n.+2 X] by which [pequiv_em_connected_truncated] differs from [equiv_g_pi_n_em]. *)
-    Local Definition eta_em_pi
-      : abgroup_pi n X $<~> abgroup_pi n X
-      := emap (Pi n.+2) (pequiv_em_connected_truncated X n.+1)
-             $oE equiv_g_pi_n_em (abgroup_pi n X) n.+1.
-
-    (** The identification of [X] with an Eilenberg-Mac Lane space, normalized by that automorphism. *)
-    Definition pequiv_em_pi : K(abgroup_pi n X, n.+2) <~>* X.
-    Proof.
-      snapply Build_pEquiv.
-      1: exact (pequiv_em_connected_truncated X n.+1
-                o* emap (K' n.+2) (grp_iso_inverse eta_em_pi)).
-      exact (isequiv_compose (emap (K' n.+2) (grp_iso_inverse eta_em_pi))
-               (pequiv_em_connected_truncated X n.+1)).
-    Defined.
-
-    (** By construction it inverts [equiv_g_pi_n_em] on [Pi n.+2]. *)
-    Definition pi_pequiv_em_pi (x : Pi n.+2 K(abgroup_pi n X, n.+2))
-      : fmap (Pi n.+2) pequiv_em_pi x
-        = (equiv_g_pi_n_em (abgroup_pi n X) n.+1)^-1 x.
-    Proof.
-      refine (fmap_comp (Pi n.+2)
-        (fmap (K' n.+2) (grp_iso_inverse eta_em_pi))
-        (pequiv_em_connected_truncated X n.+1) x @ _).
-      refine (ap (fmap (Pi n.+2) (pequiv_em_connected_truncated X n.+1))
-        (pi_em_fmap' (grp_iso_inverse eta_em_pi) n.+1 x) @ _).
-      exact (eisretr eta_em_pi _).
-    Defined.
-  End NormalizedEM.
-
-  (** Pointed maps between [n.+1]-connected [n.+2]-truncated types which agree on homotopy groups are equal. *)
-  (** TODO: Note that this result and many others in this file are also true with [n] reduced by one, but the current infrastructure doesn't allow us to uniformly prove these because of the transition between groups and abelian groups as [n] varies. We should consider extending [HomotopyGroup_type] to give abelian groups for [n >= 2], and using that in the hypotheses of various results. *)
-  Definition path_pmap_pi_connected (n : nat) {X Y : pType}
-    `{IsConnected (n.+1)%nat X} `{IsTrunc (n.+2)%nat X}
-    `{IsConnected (n.+1)%nat Y} `{IsTrunc (n.+2)%nat Y}
-    (phi psi : X ->* Y)
-    (h : fmap (Pi n.+2) phi == fmap (Pi n.+2) psi)
-    : phi = psi.
-  Proof.
-    apply (equiv_inj (pequiv_pequiv_precompose
-      (pequiv_em_connected_truncated X n.+1))).
-    change (phi o* pequiv_em_connected_truncated X n.+1
-            = psi o* pequiv_em_connected_truncated X n.+1).
-    apply (equiv_inj (pequiv_pequiv_postcompose
-      (pequiv_em_connected_truncated Y n.+1)^-1* )).
-    change ((pequiv_em_connected_truncated Y n.+1)^-1*
-              o* (phi o* pequiv_em_connected_truncated X n.+1)
-            = (pequiv_em_connected_truncated Y n.+1)^-1*
-              o* (psi o* pequiv_em_connected_truncated X n.+1)).
-    rapply (path_em_pmap_pi (G := Build_AbGroup (Pi n.+2 X) _)
-                            (G' := Build_AbGroup (Pi n.+2 Y) _)).
-    intro x.
-    refine (fmap_comp (Pi n.+2) _ _ x @ _ @ (fmap_comp (Pi n.+2) _ _ x)^).
-    refine (ap _ (fmap_comp (Pi n.+2) _ phi x) @ _
-            @ (ap _ (fmap_comp (Pi n.+2) _ psi x))^).
-    exact (ap _ (h _)).
-  Defined.
+  (** It induces [grp_iso_pi_em_pi] on [Pi n.+1]. *)
+  Definition fmap_pi_pequiv_em_connected_truncated (X : pType)
+    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    : fmap (Pi n.+1) (pequiv_em_connected_truncated X n) == grp_iso_pi_em_pi X n
+    := fmap_pi_pequiv_pi_connected_truncated n (grp_iso_pi_em_pi X n).
 
 End EilenbergMacLane.
 

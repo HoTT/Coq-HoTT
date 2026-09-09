@@ -395,7 +395,7 @@ Definition cate_moveR_1V {A} `{HasEquivs A} {a b : A} {e : a $<~> b} (f : b $-> 
   : cate_fun e^-1$ $== f
   := cate_moveR_V1 (A:=A^op) (a:=b) (b:=a) f p.
 
-(** Lemmas about the underlying map of an equivalence. *)
+(** ** Lemmas about the underlying map of an equivalence *)
 
 Definition cate_inv2 {A} `{HasEquivs A} {a b : A} {e f : a $<~> b} (p : cate_fun e $== cate_fun f)
   : cate_fun e^-1$ $== cate_fun f^-1$.
@@ -424,6 +424,8 @@ Proof.
   apply cate_moveR_V1.
   symmetry; apply cate_issect.
 Defined.
+
+(** ** Behaviour of equivalences under functors *)
 
 (** Any sufficiently coherent functor preserves equivalences.  *)
 Instance iemap {A B : Type} `{HasEquivs A} `{HasEquivs B}
@@ -487,6 +489,33 @@ Definition emap_inv' {A B : Type} `{HasEquivs A} `{HasEquivs B}
   {a b : A} (e : a $<~> b)
   : cate_fun (emap F e)^-1$ $== fmap F e^-1$
   := emap_inv F e $@ cate_buildequiv_fun _.
+
+(** If [F] is fully faithful on the hom types among [x] and [y], in the sense that [fmap F] is an equivalence of types on each of them, then an equivalence [F x $<~> F y] lifts to an equivalence [x $<~> y].  We do not assume that [F] is globally fully faithful, since that is not always the case in applications.  Morphism extensionality in [B] is needed to convert [$==] into equality there, so that injectivity of [fmap F] on endomorphisms can be used. With a 0-groupoid version of being fully faithful, we wouldn't need this. *)
+Definition cate_reflect_fmap {A B : Type} `{HasEquivs A} `{HasEquivs B} `{!HasMorExt B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F} {x y : A}
+  `{!IsEquiv (fmap F (a:=x) (b:=y))} `{!IsEquiv (fmap F (a:=y) (b:=x))}
+  `{!IsEquiv (fmap F (a:=x) (b:=x))} `{!IsEquiv (fmap F (a:=y) (b:=y))}
+  (phi : F x $<~> F y)
+  : x $<~> y.
+Proof.
+  rapply (cate_adjointify ((fmap F)^-1 phi) ((fmap F)^-1 phi^-1$)).
+  all: apply GpdHom_path, (equiv_inj (fmap F)), path_hom.
+  all: refine (fmap_comp F _ _ $@ _ $@ (fmap_id F _)^$).
+  all: lhs' rapply (GpdHom_path (eisretr (fmap F) _) $@@ GpdHom_path (eisretr (fmap F) _)).
+  - apply cate_isretr.
+  - apply cate_issect.
+Defined.
+
+(** The lifted equivalence induces the original one under [F]. *)
+Definition fmap_cate_reflect_fmap {A B : Type} `{HasEquivs A} `{HasEquivs B} `{!HasMorExt B}
+  (F : A -> B) `{!Is0Functor F, !Is1Functor F} {x y : A}
+  `{!IsEquiv (fmap F (a:=x) (b:=y))} `{!IsEquiv (fmap F (a:=y) (b:=x))}
+  `{!IsEquiv (fmap F (a:=x) (b:=x))} `{!IsEquiv (fmap F (a:=y) (b:=y))}
+  (phi : F x $<~> F y)
+  : fmap F (cate_reflect_fmap F phi) $== phi
+  := fmap2 F (cate_buildequiv_fun _) $@ GpdHom_path (eisretr (fmap F) phi).
+
+(** ** Univalent wild 1-categories *)
 
 (** When we have equivalences, we can define what it means for a category to be univalent. *)
 Definition cat_equiv_path {A : Type} `{HasEquivs A} (a b : A)

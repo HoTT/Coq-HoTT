@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Tactics Basics.Decidable.
+Require Import Basics.Overture Basics.Equivalences Basics.Tactics Basics.Decidable.
 Require Import Types.Bool.
 Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
                WildCat.Opposite WildCat.Products WildCat.Universe
@@ -7,254 +7,323 @@ Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
 
 (** * Categories with coproducts *)
 
-Definition cat_coprod_rec_inv {I A : Type} `{Is1Cat A}
-  (coprod : A) (x : I -> A) (z : A) (inj : forall i, x i $-> coprod)
+(** ** Indexed coproducts *)
+
+(** For [A] a wild 1-category, [I] a type, and [x : I -> A] an [I]-indexed family of objects in [A], we study the categorical coproduct of this family of objects.  As much as possible, we use the results from Products.v in [A^op]. *)
+
+(** When [x] is an [I]-indexed family of objects in [A] and [coprod] is an object with an [I]-indexed family of inclusions, we get for each [z] an induced map from the 0-groupoid of morphisms [coprod $-> z] to the product of the 0-groupoids [x i $-> z] over [i : I]. *)
+Definition cat_coprod_rec_inv {A : Type} `{Is1Cat A}
+  {I : Type} (x : I -> A) (coprod : A) (inj : forall i, x i $-> coprod) (z : A)
   : yon_0gpd z coprod $-> prod_0gpd I (fun i => yon_0gpd z (x i))
-  := cat_prod_corec_inv (coprod : A^op) x z inj.
+  := cat_prod_corec_inv (A:=A^op) x coprod inj z.
 
-Class Coproduct (I : Type) {A : Type} `{Is1Cat A} (x : I -> A)
-  := prod_co_coprod :: Product (A:=A^op) I x.
+(** An object is a coproduct of an [I]-indexed family if there is an [I]-indexed family of inclusions such that the induced map defined above is an equivalence.  We record this as the object being a product in the opposite category and deduce the relevant structure.  *)
+Class IsCoproduct {A : Type} `{Is1Cat A} {I : Type} (x : I -> A) (cat_coprod : A)
+  := iscoproduct :: IsProduct (A:=A^op) x cat_coprod.
 
-Definition cat_coprod (I : Type) {A : Type} (x : I -> A) `{Coproduct I _ x} : A
-  := cat_prod (A:=A^op) I x.
+Definition cat_in {A : Type} `{Is1Cat A} {I : Type} {x : I -> A} {cat_coprod : A}
+  `{!IsCoproduct x cat_coprod} (i : I)
+  : x i $-> cat_coprod
+  := cat_pr (A:=A^op) (x:=x) (cat_prod:=cat_coprod) i.
 
-Definition cat_in {I : Type} {A : Type} {x : I -> A} `{Coproduct I _ x}
-  : forall (i : I), x i $-> cat_coprod I x
-  := cat_pr (A:=A^op) (x:=x).
+Arguments cat_in {A _ _ _ _ _ x cat_coprod iscoprod} : rename.
 
-Instance cat_isequiv_cat_coprod_rec_inv {I : Type} {A : Type}
-  {x : I -> A} `{Coproduct I _ x}
-  : forall (z : A), CatIsEquiv (cat_coprod_rec_inv (cat_coprod I x) x z cat_in)
-  := cat_isequiv_cat_prod_corec_inv (A:=A^op) (x:=x).
+Instance cat_isequiv_cat_coprod_rec_inv {A : Type} `{Is1Cat A}
+  {I : Type} (x : I -> A) (cat_coprod : A) `{!IsCoproduct x cat_coprod}
+  : forall (z : A), CatIsEquiv (cat_coprod_rec_inv x cat_coprod cat_in z)
+  := cat_isequiv_cat_prod_corec_inv (A:=A^op) x cat_coprod.
 
-(** A convenience wrapper for building coproducts *)
-Definition Build_Coproduct (I : Type) {A : Type} `{Is1Cat A} {x : I -> A}
-  (cat_coprod : A) (cat_in : forall i : I, x i $-> cat_coprod)
-  (cat_coprod_rec : forall z : A,
-    (forall i : I, x i $-> z) -> (cat_coprod $-> z))
-  (cat_coprod_beta_in : forall (z : A) (f : forall i, x i $-> z) (i : I),
-    cat_coprod_rec z f $o cat_in i $== f i)
-  (cat_prod_eta_in : forall (z : A) (f g : cat_coprod $-> z),
-    (forall i : I, f $o cat_in i $== g $o cat_in i) -> f $== g)
-  : Coproduct I x
-  := Build_Product I
-      (cat_coprod : A^op)
-      cat_in
-      cat_coprod_rec
-      cat_coprod_beta_in
-      cat_prod_eta_in.
+Arguments cat_isequiv_cat_coprod_rec_inv {A _ _ _ _ _} x cat_coprod {iscoprod} : rename.
+
+(** A coproduct in a category is a product in the opposite category. *)
+Class Coproduct {A : Type} `{Is1Cat A} {I : Type} (x : I -> A)
+  := coprod : Product (A:=A^op) x.
+
+Definition cat_coprod {A : Type} `{Is1Cat A} {I : Type} (x : I -> A) `{!Coproduct x} : A
+  := coprod.(cat_prod x).
+
+Arguments cat_coprod {A _ _ _ _ _} x {coproduct} : rename.
+
+(** We derive that a coproduct is also a coproduct in the sense above. *)
+Instance cat_iscoprod {A : Type} `{Is1Cat A} {I : Type} (x : I -> A) `{!Coproduct x}
+  : IsCoproduct x (cat_coprod x)
+  := coprod.(cat_isprod x).
+
+Arguments cat_iscoprod {A _ _ _ _ _} x {coproduct} : rename.
+
+(** A wrapper for building coproducts with less typechecking. *)
+Definition Build_Coproduct' {A : Type} `{Is1Cat A} {I : Type} (x : I -> A)
+  (cat_coprod : A) (cat_iscoprod : IsCoproduct x cat_coprod)
+  : Coproduct x
+  := Build_Product' (A:=A^op) x cat_coprod cat_iscoprod.
+
+Section CoproductConstructors.
+
+  Context {A : Type} `{Is1Cat A} {I : Type} (x : I -> A)
+    (cat_coprod : A) (cat_in : forall i : I, x i $-> cat_coprod)
+    (cat_coprod_rec : forall z : A,
+      (forall i : I, x i $-> z) -> (cat_coprod $-> z))
+    (cat_coprod_beta_in : forall (z : A) (f : forall i, x i $-> z) (i : I),
+      cat_coprod_rec z f $o cat_in i $== f i)
+    (cat_coprod_eta_in : forall (z : A) (f g : cat_coprod $-> z),
+      (forall i : I, f $o cat_in i $== g $o cat_in i) -> f $== g).
+
+  (** A convenience wrapper for building [IsCoproduct]. *)
+  Definition Build_IsCoproduct : IsCoproduct x cat_coprod
+    := Build_IsProduct (A:=A^op) x cat_coprod cat_in cat_coprod_rec
+        cat_coprod_beta_in cat_coprod_eta_in.
+
+  (** A convenience wrapper for building coproducts. *)
+  Definition Build_Coproduct : Coproduct x
+    := Build_Coproduct' x cat_coprod Build_IsCoproduct.
+
+End CoproductConstructors.
 
 Section Lemmata.
-  Context (I : Type) {A : Type} {x : I -> A} `{Coproduct I _ x}.
+  Context {A : Type} `{Is1Cat A} {I : Type} {x : I -> A} (cat_coprod : A)
+    `{!IsCoproduct x cat_coprod}.
 
   Definition cate_cat_coprod_rec_inv {z : A}
-    : yon_0gpd z (cat_coprod I x) $<~> prod_0gpd I (fun i => yon_0gpd z (x i))
-    := cate_cat_prod_corec_inv I (A:=A^op) (x:=x).
+    : yon_0gpd z cat_coprod $<~> prod_0gpd I (fun i => yon_0gpd z (x i))
+    := cate_cat_prod_corec_inv (A:=A^op) (x:=x) cat_coprod.
 
   Definition cate_cat_coprod_rec {z : A}
-    : prod_0gpd I (fun i => yon_0gpd z (x i)) $<~> yon_0gpd z (cat_coprod I x)
-    := cate_cat_prod_corec I (A:=A^op) (x:=x).
+    : prod_0gpd I (fun i => yon_0gpd z (x i)) $<~> yon_0gpd z cat_coprod
+    := cate_cat_prod_corec (A:=A^op) (x:=x) cat_coprod.
 
   Definition cat_coprod_rec {z : A}
-    : (forall i, x i $-> z) -> cat_coprod I x $-> z
-    := cat_prod_corec I (A:=A^op) (x:=x).
+    : (forall i, x i $-> z) -> cat_coprod $-> z
+    := cat_prod_corec (A:=A^op) (x:=x) cat_coprod.
 
   Definition cat_coprod_beta {z : A} (f : forall i, x i $-> z)
     : forall i, cat_coprod_rec f $o cat_in i $== f i
-    := cat_prod_beta I (A:=A^op) (x:=x) f.
+    := cat_prod_beta (A:=A^op) (x:=x) cat_coprod f.
 
-  Definition cat_coprod_eta {z : A} (f : cat_coprod I x $-> z)
+  Definition cat_coprod_eta {z : A} (f : cat_coprod $-> z)
     : cat_coprod_rec (fun i => f $o cat_in i) $== f
-    := cat_prod_eta I (A:=A^op) (x:=x) f.
+    := cat_prod_eta (A:=A^op) (x:=x) cat_coprod f.
 
   Definition natequiv_cat_coprod_rec_inv
-    : NatEquiv (fun z => yon_0gpd z (cat_coprod I x))
+    : NatEquiv (fun z => yon_0gpd z cat_coprod)
       (fun z : A => prod_0gpd I (fun i => yon_0gpd z (x i)))
-    := natequiv_cat_prod_corec_inv I (A:=A^op) (x:=x).
+    := natequiv_cat_prod_corec_inv (A:=A^op) (x:=x) cat_coprod.
 
   Definition cat_coprod_rec_eta {z : A} {f g : forall i, x i $-> z}
     : (forall i, f i $== g i) -> cat_coprod_rec f $== cat_coprod_rec g
-    := cat_prod_corec_eta I (A:=A^op) (x:=x).
+    := cat_prod_corec_eta (A:=A^op) (x:=x) cat_coprod.
 
-  Definition cat_coprod_in_eta {z : A} {f g : cat_coprod I x $-> z}
+  Definition cat_coprod_in_eta {z : A} {f g : cat_coprod $-> z}
     : (forall i, f $o cat_in i $== g $o cat_in i) -> f $== g
-    := cat_prod_pr_eta I (A:=A^op) (x:=x).
+    := cat_prod_pr_eta (A:=A^op) (x:=x) cat_coprod.
+
 End Lemmata.
 
-(** *** Codiagonal / fold map *)
+Section InducedFromEquiv.
 
-Definition cat_coprod_codiag {I : Type} {A : Type} (x : A) `{Coproduct I _ (fun _ => x)}
-  : cat_coprod I (fun _ => x) $-> x
-  := cat_prod_diag (A:=A^op) x.
+  Context {A : Type} `{HasEquivs A} {I : Type} {x : I -> A}
+    (cat_coprod : A) `{!IsCoproduct x cat_coprod}
+    (y : A) (f : cat_coprod $<~> y).
+
+  (** A categorical equivalence out of a coproduct induces a coproduct structure on the codomain. *)
+  Local Instance cat_coprod_coprod_equiv : IsCoproduct x y
+    := cat_prod_equiv_prod (A:=A^op) (x:=x) cat_coprod _ f.
+
+  (** The induced inclusion is given by the equivalence. *)
+  Definition cat_in_comp (i : I)
+    : cat_in i $== f $o cat_in i
+    := cat_pr_comp cat_coprod y _ i.
+
+  (** The induced recursion is given by the equivalence. *)
+  Definition cat_coprod_rec_comp {z : A} (D : forall i, x i $-> z)
+    : cat_coprod_rec y D $o f $== cat_coprod_rec cat_coprod D
+    := cat_prod_corec_comp (A:=A^op) (he:=hasequivs_op) cat_coprod y f D.
+
+End InducedFromEquiv.
+
+(** *** Codiagonal / fold map out of the coproduct of a constant family *)
+
+Definition cat_coprod_codiag {A : Type} {I : Type} (x : A) (cat_coprod : A)
+  `{IsCoproduct _ I (fun _ => x) cat_coprod}
+  : cat_coprod $-> x
+  := cat_prod_diag (A:=A^op) x cat_coprod.
 
 (** *** Uniqueness of coproducts *)
 
 (** [I]-indexed coproducts are unique no matter how they are constructed. *)
-Definition cate_cat_coprod {I J : Type} (ie : I <~> J) {A : Type} `{HasEquivs A}
-  (x : I -> A) `{!Coproduct I x} (y : J -> A) `{!Coproduct J y}
+Definition cate_cat_coprod {A : Type} `{HasEquivs A} {I J : Type} (ie : I <~> J)
+  (x : I -> A) (coprod_x : A) `{!IsCoproduct x coprod_x}
+  (y : J -> A) (coprod_y : A) `{!IsCoproduct y coprod_y}
   (e : forall (i : I), y (ie i) $<~> x i)
-  : cat_coprod J y $<~> cat_coprod I x
-  := cate_cat_prod (A:=A^op) ie x y e.
+  : coprod_y $<~> coprod_x
+  := cate_cat_prod (A:=A^op) ie x coprod_x y coprod_y e.
+
+(** [I]-indexed coproducts are unique. *)
+Definition cat_coprod_unique {A : Type} `{HasEquivs A} {I : Type}
+  (x : I -> A) (coprod_x : A) `{!IsCoproduct x coprod_x}
+  (y : I -> A) (coprod_y : A) `{!IsCoproduct y coprod_y}
+  (e : forall i : I, x i $<~> y i)
+  : coprod_x $<~> coprod_y
+  := cate_cat_coprod 1 y _ x _ e.
 
 (** *** Existence of coproducts *)
 
-Class HasCoproducts (I A : Type) `{Is1Cat A}
-  := has_coproducts :: forall x : I -> A, Coproduct I x.
+Class HasCoproducts (A : Type) `{Is1Cat A} (I : Type)
+  := has_coproducts :: forall x : I -> A, Coproduct x.
 
 Class HasAllCoproducts (A : Type) `{Is1Cat A}
-  := has_all_coproducts :: forall I : Type, HasCoproducts I A.
+  := has_all_coproducts :: forall I : Type, HasCoproducts A I.
 
 (** *** Coproduct functor *)
 
-Local Instance hasproductsop_hascoproducts {I A : Type} `{HasCoproducts I A}
-  : HasProducts I A^op
-  := fun x : I -> A^op => @has_coproducts I A _ _ _ _ _ x.
+Local Instance hasproductsop_hascoproducts {A I : Type} `{HasCoproducts A I}
+  : HasProducts A^op I
+  := fun x : I -> A^op => has_coproducts (A:=A) x.
 
-Instance is0functor_cat_coprod (I : Type) `{IsGraph I}
-  (A : Type) `{HasCoproducts I A}
+Instance is0functor_cat_coprod (A : Type) (I : Type) `{IsGraph I}
+  `{HasCoproducts A I}
   : @Is0Functor (I -> A) A (isgraph_forall I (fun _ => A)) _
-    (fun x : I -> A => cat_coprod I x).
+    (fun x : I -> A => cat_coprod x).
 Proof.
   apply is0functor_op'.
-  exact (is0functor_cat_prod I A^op).
+  exact (is0functor_cat_prod A^op I).
 Defined.
 
-Instance is1functor_cat_coprod (I : Type) `{IsGraph I}
-  (A : Type) `{HasCoproducts I A}
+Instance is1functor_cat_coprod (A : Type) (I : Type) `{IsGraph I}
+  `{HasCoproducts A I}
   : @Is1Functor (I -> A) A _ _ _ (is1cat_forall I (fun _ => A)) _ _ _ _
-    (fun x : I -> A => cat_coprod I x) _.
+    (fun x : I -> A => cat_coprod x) _.
 Proof.
   apply is1functor_op'.
-  exact (is1functor_cat_prod I A^op).
+  exact (is1functor_cat_prod A^op I).
 Defined.
 
 (** *** Categories with specific kinds of coproducts *)
 
-Definition isinitial_coprodempty {A : Type} {z : A}
-  `{Coproduct Empty A (fun _ => z)}
-  : IsInitial (cat_coprod Empty (fun _ => z)).
-Proof.
-  intros a.
-  snrefine (cat_coprod_rec _ _; fun f => cat_coprod_in_eta _ _); intros [].
-Defined.
+Definition isinitial_coprod_empty {A : Type} `{Is1Cat A} {x : Empty -> A}
+  {coprod_empty : A} {coprod : IsCoproduct x coprod_empty}
+  : IsInitial coprod_empty
+  := isterminal_prod_empty (A:=A^op) (isprod:=coprod).
 
-(** *** Binary coproducts *)
+(** ** Binary coproducts *)
+
+Class IsBinaryCoproduct {A : Type} `{Is1Cat A} (x y : A) (cat_bincoprod : A)
+  := is_binary_coproduct :: IsBinaryProduct (A:=A^op) x y cat_bincoprod.
+
+Instance isbincoprod_iscoprod {A : Type} `{Is1Cat A} (x y : A)
+  (cat_bincoprod : A) `{!IsBinaryCoproduct x y cat_bincoprod}
+  : IsCoproduct (Bool_rec _ x y) cat_bincoprod
+  := is_binary_product.
 
 Class BinaryCoproduct {A : Type} `{Is1Cat A} (x y : A)
-  := prod_co_bincoprod :: BinaryProduct (A:=A^op) x y.
+  := binary_coproduct :: BinaryProduct (A:=A^op) x y.
 
-Definition cat_bincoprod' {A : Type}  `{Is1Cat A} (x y : A) `{!BinaryCoproduct x y} : A
-  := cat_binprod' (x : A^op) y.
-
-Definition cat_inl {A : Type} `{Is1Cat A} {x y : A} `{!BinaryCoproduct x y}
-  : x $-> cat_bincoprod' x y
-  := cat_pr1 (A:=A^op) (x:=x) (y:=y).
-
-Definition cat_inr {A : Type} `{Is1Cat A} {x y : A} `{!BinaryCoproduct x y}
-  : y $-> cat_bincoprod' x y
-  := cat_pr2 (A:=A^op) (x:=x) (y:=y).
+Instance isbinarycoproduct_binarycoproduct {A : Type} `{Is1Cat A}
+  (x y : A) {coprod : BinaryCoproduct x y}
+  : IsBinaryCoproduct x y coprod.(cat_prod _)
+  := cat_isprod _.
 
 (** A category with binary coproducts is a category with a binary coproduct for each pair of objects. *)
 Class HasBinaryCoproducts (A : Type) `{Is1Cat A}
-  := binary_coproducts :: forall x y : A, BinaryCoproduct x y.
+  := has_binary_coproducts :: forall x y : A, BinaryCoproduct x y.
 
 Instance hasbinarycoproducts_hascoproductsbool {A : Type}
-  `{HasCoproducts Bool A}
+  `{HasCoproducts A Bool}
   : HasBinaryCoproducts A
-  := fun x y => has_coproducts (fun b : Bool => if b then x else y).
+  := fun x y => has_coproducts (Bool_rec _ x y).
 
-(** A convenience wrapper for building binary coproducts *)
-Definition Build_BinaryCoproduct {A : Type} `{Is1Cat A} {x y : A}
-  (cat_coprod : A) (cat_inl : x $-> cat_coprod) (cat_inr : y $-> cat_coprod)
-  (cat_coprod_rec : forall z : A, (x $-> z) -> (y $-> z) -> cat_coprod $-> z)
-  (cat_coprod_beta_inl : forall (z : A) (f : x $-> z) (g : y $-> z),
-    cat_coprod_rec z f g $o cat_inl $== f)
-  (cat_coprod_beta_inr : forall (z : A) (f : x $-> z) (g : y $-> z),
-    cat_coprod_rec z f g $o cat_inr $== g)
-  (cat_coprod_in_eta : forall (z : A) (f g : cat_coprod $-> z),
-    f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g)
-  : BinaryCoproduct x y
-  := Build_BinaryProduct
-      (cat_coprod : A^op)
-      cat_inl
-      cat_inr
-      cat_coprod_rec
-      cat_coprod_beta_inl
-      cat_coprod_beta_inr
-      cat_coprod_in_eta.
+Section BinaryCoproducts.
 
-Section Lemmata.
-  Context {A : Type} {x y z : A} `{BinaryCoproduct _ x y}.
+  Context {A : Type} `{Is1Cat A} {x y : A}
+    (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x y cat_bincoprod}.
 
-  Definition cat_bincoprod_rec (f : x $-> z) (g : y $-> z)
-    : cat_bincoprod' x y $-> z
-    := @cat_binprod_corec A^op _ _ _ _ x y _ _ f g.
+  Definition cat_inl : x $-> cat_bincoprod
+    := cat_pr1 cat_bincoprod (isbinprod:=isbincoprod).
 
-  Definition cat_bincoprod_beta_inl (f : x $-> z) (g : y $-> z)
+  Definition cat_inr : y $-> cat_bincoprod
+    := cat_pr2 cat_bincoprod (isbinprod:=isbincoprod).
+
+  Definition cat_bincoprod_rec {z : A} (f : x $-> z) (g : y $-> z)
+    : cat_bincoprod $-> z
+    := cat_binprod_corec (isbinprod:=isbincoprod) cat_bincoprod f g.
+
+  Definition cat_bincoprod_beta_inl {z : A} (f : x $-> z) (g : y $-> z)
     : cat_bincoprod_rec f g $o cat_inl $== f
-    := @cat_binprod_beta_pr1 A^op _ _ _ _ x y _ _ f g.
+    := cat_binprod_beta_pr1 (isbinprod:=isbincoprod) cat_bincoprod f g.
 
-  Definition cat_bincoprod_beta_inr (f : x $-> z) (g : y $-> z)
+  Definition cat_bincoprod_beta_inr {z : A} (f : x $-> z) (g : y $-> z)
     : cat_bincoprod_rec f g $o cat_inr $== g
-    := @cat_binprod_beta_pr2 A^op _ _ _ _ x y _ _ f g.
+    := cat_binprod_beta_pr2 (isbinprod:=isbincoprod) cat_bincoprod f g.
 
-  Definition cat_bincoprod_eta (f : cat_bincoprod' x y $-> z)
+  Definition cat_bincoprod_eta {z : A} (f : cat_bincoprod $-> z)
     : cat_bincoprod_rec (f $o cat_inl) (f $o cat_inr) $== f
-    := @cat_binprod_eta A^op _ _ _ _ x y _ _ f.
+    := cat_binprod_eta (isbinprod:=isbincoprod) cat_bincoprod f.
 
-  Definition cat_bincoprod_eta_in {f g : cat_bincoprod' x y $-> z}
-    : f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g
-    := @cat_binprod_eta_pr A^op _ _ _ _ x y _ _ f g.
+  Definition cat_bincoprod_eta_in {z : A} {f g : cat_bincoprod $-> z}
+    : f $o cat_inl $== g $o cat_inl
+      -> f $o cat_inr $== g $o cat_inr
+      -> f $== g
+    := cat_binprod_eta_pr (isbinprod:=isbincoprod) cat_bincoprod f g.
 
-  Definition cat_bincoprod_rec_eta {f f' : x $-> z} {g g' : y $-> z}
-    : f $== f' -> g $== g' -> cat_bincoprod_rec f g $== cat_bincoprod_rec f' g'
-    := @cat_binprod_corec_eta A^op _ _ _ _ x y _ _ f f' g g'.
-End Lemmata.
+  Definition cat_bincoprod_rec_eta {z : A} {f f' : x $-> z} {g g' : y $-> z}
+    : f $== f'
+      -> g $== g'
+      -> cat_bincoprod_rec f g $== cat_bincoprod_rec f' g'
+    := cat_binprod_corec_eta (isbinprod:=isbincoprod) cat_bincoprod f f' g g'.
 
-Definition cat_bincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A) := cat_bincoprod' x y.
+End BinaryCoproducts.
+
+Section BinaryCoproductConstructors.
+
+  Context {A : Type} `{Is1Cat A} {x y : A}
+    (cat_bincoprod : A) (cat_inl : x $-> cat_bincoprod) (cat_inr : y $-> cat_bincoprod)
+    (cat_bincoprod_rec : forall z : A, (x $-> z) -> (y $-> z) -> cat_bincoprod $-> z)
+    (cat_bincoprod_beta_inl : forall (z : A) (f : x $-> z) (g : y $-> z),
+      cat_bincoprod_rec z f g $o cat_inl $== f)
+    (cat_bincoprod_beta_inr : forall (z : A) (f : x $-> z) (g : y $-> z),
+      cat_bincoprod_rec z f g $o cat_inr $== g)
+    (cat_bincoprod_eta_in : forall (z : A) (f g : cat_bincoprod $-> z),
+      f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g).
+
+  (** A convenience wrapper for building [IsBinaryCoproduct]. *)
+  Definition Build_IsBinaryCoproduct : IsBinaryCoproduct x y cat_bincoprod
+    := Build_IsBinaryProduct
+        (cat_bincoprod : A^op)
+        cat_inl
+        cat_inr
+        cat_bincoprod_rec
+        cat_bincoprod_beta_inl
+        cat_bincoprod_beta_inr
+        cat_bincoprod_eta_in.
+
+  (** A convenience wrapper for building binary coproducts. *)
+  Definition Build_BinaryCoproduct : BinaryCoproduct x y
+    := Build_Coproduct' _ cat_bincoprod Build_IsBinaryCoproduct.
+
+End BinaryCoproductConstructors.
+
+Definition cat_bincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A) : A
+  := cat_coprod (Bool_rec _ x y) (coproduct:=has_binary_coproducts x y).
+
+Instance cat_isbincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A)
+  : IsBinaryCoproduct x y (cat_bincoprod x y)
+  := cat_iscoprod (Bool_rec _ x y) (coproduct:=has_binary_coproducts x y).
+
+(** From binary coproducts, all [Bool]-shaped coproducts can be constructed. This should not be an instance to avoid a cycle with [hasbinarycoproducts_hascoproductsbool]. *)
+Definition hascoproductsbool_hasbinarycoproducts {A : Type}
+  `{hbc : HasBinaryCoproducts A}
+  : HasCoproducts A Bool
+  := hasproductsbool_hasbinaryproducts (A:=A^op) (hbp:=hbc).
 
 (** *** Binary coproduct functor *)
 
 (** Hint: Use [Set Printing Implicit] to see the implicit arguments in the following proofs. *)
-
-Instance is0functor_cat_bincoprod_l {A : Type}
-  `{hbc : HasBinaryCoproducts A} y
-  : Is0Functor (A:=A) (fun x => cat_bincoprod x y).
-Proof.
-  rapply is0functor_op'.
-  exact (is0functor_cat_binprod_l (A:=A^op) (H0:=hbc) y).
-Defined.
-
-Instance is1functor_cat_bincoprod_l {A : Type}
-  `{hbc : HasBinaryCoproducts A} y
-  : Is1Functor (fun x => cat_bincoprod x y).
-Proof.
-  rapply is1functor_op'.
-  exact (is1functor_cat_binprod_l (A:=A^op) (H0:=hbc) y).
-Defined.
-
-Instance is0functor_cat_bincoprod_r {A : Type}
-  `{hbc : HasBinaryCoproducts A} x
-  : Is0Functor (cat_bincoprod x).
-Proof.
-  rapply is0functor_op'.
-  exact (is0functor_cat_binprod_r (A:=A^op) (H0:=hbc) x).
-Defined.
-
-Instance is1functor_cat_bincoprod_r {A : Type}
-  `{hbc : HasBinaryCoproducts A} x
-  : Is1Functor (cat_bincoprod x).
-Proof.
-  rapply is1functor_op'.
-  exact (is1functor_cat_binprod_r (A:=A^op) (H0:=hbc) x).
-Defined.
 
 Instance is0bifunctor_cat_bincoprod {A : Type}
   `{hbc : HasBinaryCoproducts A}
   : Is0Bifunctor cat_bincoprod.
 Proof.
   napply is0bifunctor_op'.
-  exact (is0bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
+  exact (is0bifunctor_cat_binprod (A:=A^op) (hbp:=hbc)).
 Defined.
 
 Instance is1bifunctor_cat_bincoprod {A : Type}
@@ -262,16 +331,27 @@ Instance is1bifunctor_cat_bincoprod {A : Type}
   : Is1Bifunctor cat_bincoprod.
 Proof.
   napply is1bifunctor_op'.
-  exact (is1bifunctor_cat_binprod (A:=A^op) (H0:=hbc)).
+  exact (is1bifunctor_cat_binprod (A:=A^op) (hbp:=hbc)).
 Defined.
+
+(** Products.v proves further results about the functoriality of binary products which have not been needed for coproducts so far:  that [cat_binprod_corec] is functorial in each of its two morphism arguments ([is0functor_cat_binprod_corec_l] and [is0functor_cat_binprod_corec_r]), and how each projection interacts with each of [fmap01], [fmap10] and [fmap11] ([cat_pr1_fmap01_binprod] and its five variants).  If needed, the duals can be obtained from those results in [A^op]. *)
 
 (** *** Products and coproducts in the opposite category *)
 
-Definition hasbinarycoproducts_op_hasbinaryproducts {A : Type}
-  `{hbp : HasBinaryProducts A}
+Instance iscoproduct_op {A I : Type} `{Is1Cat A} (x : I -> A)
+  (cat_prod : A) {isprod : IsProduct x cat_prod}
+  : IsCoproduct (A:=A^op) x cat_prod
+  := isprod.
+
+Instance coproduct_op {A I : Type} `{Is1Cat A} (x : I -> A)
+  {prod : Product x}
+  : Coproduct (A:=A^op) x
+  := prod.
+
+Instance hasbinarycoproducts_op_hasbinaryproducts {A : Type}
+  `{Is1Cat A, hbp : !HasBinaryProducts A}
   : HasBinaryCoproducts A^op
   := hbp.
-Hint Immediate hasbinarycoproducts_op_hasbinaryproducts : typeclass_instances.
 
 Definition hasbinarycoproducts_hasbinaryproducts_op {A : Type}
   `{Is1Cat A, hbp : !HasBinaryProducts A^op}
@@ -279,11 +359,10 @@ Definition hasbinarycoproducts_hasbinaryproducts_op {A : Type}
   := hbp.
 Hint Immediate hasbinarycoproducts_hasbinaryproducts_op : typeclass_instances.
 
-Definition hasbinaryproducts_op_hasbinarycoproducts {A : Type}
-  `{hbc : HasBinaryCoproducts A}
+Instance hasbinaryproducts_op_hasbinarycoproducts {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A}
   : HasBinaryProducts A^op
   := hbc.
-Hint Immediate hasbinarycoproducts_op_hasbinaryproducts : typeclass_instances.
 
 Definition hasbinaryproducts_hasbinarycoproducts_op {A : Type}
   `{Is1Cat A, hbc : !HasBinaryCoproducts A^op}
@@ -291,105 +370,100 @@ Definition hasbinaryproducts_hasbinarycoproducts_op {A : Type}
   := hbc.
 Hint Immediate hasbinaryproducts_hasbinarycoproducts_op : typeclass_instances.
 
+(** *** Lemmas about [cat_bincoprod_rec] *)
+
+Definition cat_bincoprod_fmap01_rec {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {w x y z : A}
+  (f : z $-> w) (g : y $-> x) (h : x $-> w)
+  : cat_bincoprod_rec _ f h
+      $o fmap01 cat_bincoprod z g
+    $== cat_bincoprod_rec _ f (h $o g)
+  := cat_binprod_fmap01_corec (hbp:=hbc) f g h.
+
+Definition cat_bincoprod_fmap10_rec {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {w x y z : A}
+  (f : y $-> x) (g : x $-> w) (h : z $-> w)
+  : cat_bincoprod_rec _ g h
+      $o fmap10 cat_bincoprod f z
+    $== cat_bincoprod_rec _ (g $o f) h
+  := cat_binprod_fmap10_corec (hbp:=hbc) f g h.
+
+Definition cat_bincoprod_fmap11_rec {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {v w x y z : A}
+  (f : y $-> w) (g : z $-> x) (h : w $-> v) (i : x $-> v)
+  : cat_bincoprod_rec _ h i
+      $o fmap11 cat_bincoprod f g
+    $== cat_bincoprod_rec _ (h $o f) (i $o g)
+  := cat_binprod_fmap11_corec (hbp:=hbc) f g h i.
+
+(** *** Codiagonal *)
+
+Definition cat_bincoprod_codiag {A : Type} `{Is1Cat A} (x : A)
+  (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x x cat_bincoprod}
+  : cat_bincoprod $-> x
+  := cat_binprod_diag (isbinprod:=isbincoprod) x cat_bincoprod.
+
+Definition cat_bincoprod_fmap11_codiag {A : Type}
+  `{HasBinaryCoproducts A} {x y : A} (f : x $-> y)
+  : f $o cat_bincoprod_codiag x _
+    $== cat_bincoprod_codiag y _ $o fmap11 cat_bincoprod f f
+  := cat_binprod_fmap11_diag (A:=A^op) _.
+
 (** *** Symmetry of coproducts *)
 
 Definition cat_bincoprod_swap {A : Type} `{Is1Cat A}
   {hbc : HasBinaryCoproducts A} (x y : A)
-  : cat_bincoprod x y $-> cat_bincoprod y x.
-Proof.
-  exact (@cat_binprod_swap A^op _ _ _ _ hbc _ _).
-Defined.
+  : cat_bincoprod x y $-> cat_bincoprod y x
+  := cat_binprod_swap (hbp:=hbc) _ _.
 
 Definition cate_bincoprod_swap {A : Type} `{HasEquivs A}
   {hbc : HasBinaryCoproducts A} (x y : A)
-  : cat_bincoprod x y $<~> cat_bincoprod y x.
+  : cat_bincoprod x y $<~> cat_bincoprod y x
+  := cate_binprod_swap (A:=A^op) (hbp:=hbc) _ _.
+
+Definition cat_bincoprod_swap_codiag {A : Type} `{Is1Cat A}
+  {hbc : HasBinaryCoproducts A} (x : A)
+  : cat_bincoprod_codiag x _ $o cat_bincoprod_swap x x
+    $== cat_bincoprod_codiag x _
+  := cat_binprod_swap_diag (A:=A^op) x.
+
+Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
+  `{hbc : !HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)
+  : cat_bincoprod_rec _ f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec _ g f
+  := cat_binprod_swap_corec (A:=A^op) _ _.
+
+(** The swap map is a symmetric braiding.  Its two fields give the naturality and the involutivity of the swap map, which Products.v also states separately as [cat_binprod_swap_nat] and [cat_binprod_swap_cat_binprod_swap]. *)
+Definition symmetricbraiding_bincoprod {A : Type} `{HasEquivs A}
+  `{!HasBinaryCoproducts A}
+  : SymmetricBraiding cat_bincoprod.
 Proof.
-  exact (@cate_binprod_swap A^op _ _ _ _ _ hbc _ _).
+  snapply symmetricbraiding_op'.
+  1: exact _.
+  exact symmetricbraiding_binprod.
 Defined.
 
 (** *** Associativity of coproducts *)
 
-Lemma cate_coprod_assoc {A : Type} `{HasEquivs A}
-  {hbc : HasBinaryCoproducts A} (x y z : A)
-  : cat_bincoprod x (cat_bincoprod y z)
-    $<~> cat_bincoprod (cat_bincoprod x y) z.
-Proof.
-  exact (@associator_cat_binprod A^op _ _ _ _ _ hbc x y z)^-1$.
-Defined.
-
-Definition associator_cat_bincoprod {A : Type} `{HasEquivs A}
-  `{!HasBinaryCoproducts A}
-  : Associator (fun x y => cat_bincoprod x y).
-Proof.
-  unfold Associator.
-  snapply associator_op'.
-  1: exact _.
-  exact associator_cat_binprod.
-Defined.
-
-(** *** Codiagonal *)
-
-Definition cat_bincoprod_codiag {A : Type}
-  `{Is1Cat A} (x : A) `{!BinaryCoproduct x x}
-  : cat_bincoprod' x x $-> x
-  := cat_binprod_diag (A:=A^op) x.
-
-(** *** Lemmas about [cat_bincoprod_rec] *)
-
-Definition cat_bincoprod_fmap01_rec {A : Type}
-  `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
-  (f : z $-> w) (g : y $-> x) (h : x $-> w)
-  : cat_bincoprod_rec f h $o fmap01 (fun x y => cat_bincoprod x y) z g
-    $== cat_bincoprod_rec f (h $o g)
-  := @cat_binprod_fmap01_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ f g h.
-
-Definition cat_bincoprod_fmap10_rec {A : Type}
-  `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
-  (f : y $-> x) (g : x $-> w) (h : z $-> w) 
-  : cat_bincoprod_rec g h $o fmap10 (fun x y => cat_bincoprod x y) f z
-    $== cat_bincoprod_rec (g $o f) h
-  := @cat_binprod_fmap10_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ f g h.
-
-Definition cat_bincoprod_fmap11_rec {A : Type}
-  `{Is1Cat A, !HasBinaryCoproducts A} {v w x y z : A}
-  (f : y $-> w) (g : z $-> x) (h : w $-> v) (i : x $-> v)
-  : cat_bincoprod_rec h i $o fmap11 cat_bincoprod f g
-    $== cat_bincoprod_rec (h $o f) (i $o g)
-  := @cat_binprod_fmap11_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _ f g h i.
+Instance associator_cat_bincoprod {A : Type} `{HasEquivs A}
+  `{hbc : !HasBinaryCoproducts A}
+  : Associator cat_bincoprod
+  := associator_op' (bf0:=is0bifunctor_cat_bincoprod (hbc:=hbc))
+      (assoc:=associator_cat_binprod (A:=A^op)).
 
 Definition cat_bincoprod_rec_associator {A : Type} `{HasEquivs A}
   {hbc : HasBinaryCoproducts A}
   {w x y z : A} (f : w $-> z) (g : x $-> z) (h : y $-> z)
-  : cat_bincoprod_rec (cat_bincoprod_rec f g) h $o associator_cat_bincoprod w x y
-    $== cat_bincoprod_rec f (cat_bincoprod_rec g h).
+  : cat_bincoprod_rec _ (cat_bincoprod_rec _ f g) h $o associator_cat_bincoprod w x y
+    $== cat_bincoprod_rec _ f (cat_bincoprod_rec _ g h).
 Proof.
   napply cate_moveR_eV.
   symmetry.
-  exact (cat_binprod_associator_corec
-           (HasBinaryProducts0:=hasbinaryproducts_op_hasbinarycoproducts (hbc:=hbc))
-           f g h).
+  exact (cat_binprod_associator_corec (A:=A^op) (hbp:=hbc) f g h).
 Defined.
-
-Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
-  `{!HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)
-  : cat_bincoprod_rec f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec g f
-  := @cat_binprod_swap_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _.
 
 (** *** Cocartesian Monoidal Structure *)
 
-Instance ismonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
-  `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
-  : IsMonoidal A cat_bincoprod zero | 10.
-Proof.
-  napply ismonoidal_op'.
-  napply (ismonoidal_cat_binprod (A:=A^op) zero).
-  by napply isterminal_op_isinitial.
-Defined.
-
+(** If [A] has binary coproducts and an initial object, then these form a symmetric monoidal structure.  Other things follow from this via typeclass search. *)
 Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
   `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
   : IsSymmetricMonoidal A cat_bincoprod zero | 10.
@@ -398,6 +472,8 @@ Proof.
   napply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).
   by napply isterminal_op_isinitial.
 Defined.
+
+(** ** Examples *)
 
 (** *** Coproducts in Type *)
 
@@ -421,34 +497,37 @@ Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
 
 (** ** Canonical coproduct-product map *)
 
-(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed. *)
-Definition cat_coprod_prod {I : Type} `{DecidablePaths I} {A : Type}
-  `{Is1Cat A, !IsPointedCat A}
-  (x : I -> A) `{!Coproduct I x, !Product I x}
-  : cat_coprod I x $-> cat_prod I x. 
+(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed.  We factor out the components of this map into a separate definition to make goals involving [cat_coprod_prod] easier to read. *)
+Definition cat_coprod_prod_component {A : Type} `{IsPointedCat A}
+  {I : Type} `{DecidablePaths I}
+  (x : I -> A) (i j : I)
+  : x i $-> x j.
 Proof.
-  apply cat_coprod_rec.
-  intros i.
-  apply cat_prod_corec.
-  intros a.
-  destruct (dec_paths i a) as [p|].
+  destruct (dec_paths i j) as [p|].
   - destruct p.
     exact (Id _).
   - exact zero_morphism.
 Defined.
 
-Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
-  (x y : A) `{!BinaryCoproduct x y, !BinaryProduct x y}
-  : cat_bincoprod' x y $-> cat_binprod' x y.
-Proof.
-  napply cat_coprod_prod; exact _.
+Definition cat_coprod_prod {A : Type} `{Is1Cat A, !IsPointedCat A}
+  {I : Type} `{DecidablePaths I}
+  (x : I -> A) (cat_coprod cat_prod : A)
+  `{!IsCoproduct x cat_coprod, !IsProduct x cat_prod}
+  : cat_coprod $-> cat_prod.
+  Proof.
+  rapply cat_coprod_rec.
+  intros i.
+  rapply cat_prod_corec.
+  intros j.
+  exact (cat_coprod_prod_component x i j).
 Defined.
 
-(** *** Coproducts in the opposite category *)
-
-Definition coproduct_op {I A : Type} (x : I -> A)
-  `{Is1Cat A} {H' : Product I x}
-  : Coproduct I (A:=A^op) x
-  := H'.
-  
-Hint Immediate coproduct_op : typeclass_instances.
+Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
+  (x y cat_bincoprod cat_binprod: A)
+  `{!IsBinaryCoproduct x y cat_bincoprod, !IsBinaryProduct x y cat_binprod}
+  : cat_bincoprod $-> cat_binprod.
+Proof.
+  napply cat_coprod_prod.
+  1,2,4: exact _.
+  rapply is_binary_coproduct.
+Defined.

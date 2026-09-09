@@ -896,14 +896,14 @@ have defined something with a given type, you can construct it with
 tactics and end the proof with `Qed.` The latter makes the term
 "opaque" so that it doesn't "compute".
 
-If something _can_ be made opaque, it is generally preferable to do
-so, for performance reasons. However, many things which a traditional
-type theorist would make opaque cannot be opaque in homotopy type
-theory. For instance, none of the higher-groupoid structure in
-PathGroupoids can be made opaque, not even the "coherence laws". If
-you doubt this, try making some of it opaque and you will find that
-the "higher coherences" such as `pentagon` and `eckmann_hilton` will
-fail to typecheck.
+In practice, we end most proofs with `Defined`, unless there is a
+specific performance reason to use `Qed.` Many things which a
+traditional type theorist would make opaque cannot be opaque in
+homotopy type theory. For instance, none of the higher-groupoid
+structure in PathGroupoids can be made opaque, not even the "coherence
+laws". If you doubt this, try making some of it opaque and you will
+find that the "higher coherences" such as `pentagon` and
+`eckmann_hilton` will fail to typecheck.
 
 In general, it is okay to construct something transparent using
 tactics; it's often a matter of aesthetics whether an explicit proof
@@ -1253,7 +1253,9 @@ reflexivity. Qed.`
 
 - `lhs`, `lhs_V`, `rhs`, `rhs_V`: Defined in `Basics/Tactics`.
   These are tacticals that apply a specified tactic to one side
-  of an equality. E.g. `lhs napply concat_1p.`
+  of an equality. E.g. `lhs napply concat_1p.` Primed variants
+  (`lhs'`, etc) exist which apply a specified tactic to one side of
+  any symmetric, transitive relation (such as `==*` or `<~>`).
 
 - `transparent assert`: Defined in `Basics/Overture`, this tactic is
   like `assert` but produces a transparent subterm rather than an

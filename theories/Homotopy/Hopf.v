@@ -196,3 +196,30 @@ Proof.
   rewrite 2 trunc_index_add_succ.
   exact (conn_map_loop_susp_counit X).
 Defined.
+
+(** ** Looping is an equivalence on pointed mapping spaces in the metastable range *)
+
+(** When [X] is [n.+1]-connected and [Y] is [n +2+ n]-truncated, the loops functor from [X ->* Y] to [loops X ->* loops Y] is an equivalence. *)
+Definition isequiv_fmap_loops_pmap `{Univalence} {n : trunc_index} (X Y : pType)
+  `{IsConnected n.+1 X} `{IsTrunc (n +2+ n) Y}
+  : IsEquiv (fmap loops (a:=X) (b:=Y)).
+Proof.
+  (* We will show that [fmap loops] is homotopic to precomposition with the counit followed by the loop-suspension adjunction, both of which are equivalences. *)
+  rapply (isequiv_homotopic
+            (loop_susp_adjoint (loops X) Y
+               o*E pequiv_o_conn_map (n +2+ n) (loop_susp_counit X) Y)).
+  intro f.
+  apply path_pforall.
+  (* The left-hand side is definitionally of this form; the [change] is only to make the goal readable. *)
+  change (fmap loops (f o* loop_susp_counit X) o* loop_susp_unit (loops X)
+    ==* fmap loops f).
+  lhs' tapply (pmap_prewhisker _ (fmap_comp loops _ _)).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ (loop_susp_triangle1 X)).
+  apply pmap_precompose_idmap.
+Defined.
+
+Definition pequiv_fmap_loops_pmap `{Univalence} {n : trunc_index} (X Y : pType)
+  `{IsConnected n.+1 X} `{IsTrunc (n +2+ n) Y}
+  : (X ->** Y) <~>* (loops X ->** loops Y)
+  := Build_pEquiv (pfmap loops) (isequiv_fmap_loops_pmap X Y).

@@ -50,7 +50,7 @@ Proof.
       change (ab_pushout_inl (b + - f (- a)) = bc').  (* Just to guide the reader. *)
       refine (_ @ q).
       symmetry.
-      apply path_ab_pushout; cbn.
+      napply path_ab_pushout; cbn.
       refine (tr (-a; _)).
       apply path_prod; cbn.
       * apply grp_moveL_Mg.
@@ -102,8 +102,8 @@ Proof.
   srapply path_sigma_hprop.
   1: apply path_prod.
   1: apply path_prod.
-  all: apply equiv_path_grouphomomorphism; intro x; simpl.
-  1,3: reflexivity.
+  1,3: by apply equiv_path_map_grouphomomorphism.
+  apply equiv_path_grouphomomorphism; intro x; simpl.
   rewrite grp_homo_unit.
   exact (left_identity _)^.
 Defined.

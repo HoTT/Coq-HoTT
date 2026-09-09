@@ -272,10 +272,11 @@ Proof.
     intros x.
     exact (g x).2.
   - intros g.
-    by snapply equiv_path_grouphomomorphism.
+    (* The underlying functions are definitionally equal. *)
+    by snapply equiv_path_map_grouphomomorphism.
   - intros [f p].
     rapply path_sigma_hprop.
-    by snapply equiv_path_grouphomomorphism.
+    by snapply equiv_path_map_grouphomomorphism.
 Defined.
 
 (** Functoriality on subgroups. *)

@@ -74,7 +74,7 @@ Proof.
   srapply path_sigma_hprop.
   apply path_prod.
   1: apply path_prod.
-  all: by apply equiv_path_grouphomomorphism.
+  all: by apply equiv_path_map_grouphomomorphism.
 Defined.
 
 Definition abses_pullback_component1_id'

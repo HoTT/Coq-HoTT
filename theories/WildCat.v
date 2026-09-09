@@ -15,6 +15,7 @@ Require Export WildCat.Monoidal.
 Require Export WildCat.MonoidalTwistConstruction.
 Require Export WildCat.Products.
 Require Export WildCat.Coproducts.
+Require Export WildCat.Biproducts.
 Require Export WildCat.Displayed.
 Require Export WildCat.DisplayedEquiv.
 Require Export WildCat.Pullbacks.
