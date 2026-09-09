@@ -558,8 +558,10 @@ Proof.
   symmetry; apply transport_path_universe.
 Defined.
 
-(** And we can prove that it is not the case that for all types A, the double negation A implies A, which corresponds to theorem 3.2.2 in the book*)
-Definition not_forall_dneg: ~(forall (A : Type), (~~A) -> A).
+(** ** Not all types are stable *)
+
+(** Similar methods let us prove that it is not the case that every type is stable.  That is, is it not the case that for every type [A], the double negation of [A] implies [A].  This is Theorem 3.2.2 in the book. *)
+Definition not_forall_stable : ~(forall (A : Type), (~~A) -> A).
 Proof.
   intro f.
   pose (u := fun (g : Bool -> Empty) => g false).
@@ -567,9 +569,9 @@ Proof.
   pose (p := (path_universe equiv_negb)).
   pose (f_eq_negf := happly ((apD f p)^) u @ transport_arrow p (f Bool) u @ (happly (transport_idmap_path_universe equiv_negb) (f Bool (transport (fun A => ~~A) p^ u)))).
   refine ((f_eq_negf @ (ap (negb o (f Bool)) _ ))^).
-  apply path_arrow.
-  intro v.
-  contradiction.
+  (* Our goal is to show that two functions to [Empty] are equal, which is trivial. *)
+  funext v.
+  contradiction (u v).
 Defined.
 
 
