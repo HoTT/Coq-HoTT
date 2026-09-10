@@ -570,7 +570,7 @@ Proof.
   rhs_V exact (ap10 (apD f p) u).
   rhs napply transport_arrow.
   rhs napply (ap10 (transport_idmap_path_universe equiv_negb)).
-  refine (ap (negb o f Bool) _)^.
+  napply (ap (negb o f Bool)).
   (* Our goal is to show that two functions to [Empty] are equal, which is trivial. *)
   funext v.
   contradiction (u v).
