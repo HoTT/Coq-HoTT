@@ -564,15 +564,16 @@ Defined.
 Definition not_forall_stable : ~(forall (A : Type), (~~A) -> A).
 Proof.
   intro f.
-  pose (u := fun (g : Bool -> Empty) => g false).
+  pose (u := fun g : Bool -> Empty => g false).
   refine (not_fixed_negb (f Bool u) _).
-  pose (p := (path_universe equiv_negb)).
-  pose (f_eq_negf := happly ((apD f p)^) u @ transport_arrow p (f Bool) u @ (happly (transport_idmap_path_universe equiv_negb) (f Bool (transport (fun A => ~~A) p^ u)))).
-  refine ((f_eq_negf @ (ap (negb o (f Bool)) _ ))^).
+  pose (p := path_universe equiv_negb).
+  rhs_V exact (ap10 (apD f p) u).
+  rhs napply transport_arrow.
+  rhs napply (ap10 (transport_idmap_path_universe equiv_negb)).
+  refine (ap (negb o f Bool) _)^.
   (* Our goal is to show that two functions to [Empty] are equal, which is trivial. *)
   funext v.
   contradiction (u v).
 Defined.
-
 
 End Univalence.
