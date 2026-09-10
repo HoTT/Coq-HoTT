@@ -1,0 +1,15 @@
+digraph HoTT_Classes_implementations_bool {
+  graph [ratio=0.5]
+  node [style=filled]
+bool_lattice_bool [label="lattice_bool", URL=<bool.html#lattice_bool>, peripheries=3, fillcolor="#F070D1"] ;
+bool_top_bool [label="top_bool", URL=<bool.html#top_bool>, fillcolor="#F070D1"] ;
+bool_bottom_bool [label="bottom_bool", URL=<bool.html#bottom_bool>, fillcolor="#F070D1"] ;
+bool_meet_bool [label="meet_bool", URL=<bool.html#meet_bool>, fillcolor="#F070D1"] ;
+bool_join_bool [label="join_bool", URL=<bool.html#join_bool>, fillcolor="#F070D1"] ;
+  bool_lattice_bool -> bool_top_bool [] ;
+  bool_lattice_bool -> bool_bottom_bool [] ;
+  bool_lattice_bool -> bool_meet_bool [] ;
+  bool_lattice_bool -> bool_join_bool [] ;
+subgraph cluster_bool { label="bool"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+bool_join_bool; bool_meet_bool; bool_bottom_bool; bool_top_bool; bool_lattice_bool; };
+} /* END */

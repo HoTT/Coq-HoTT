@@ -1,0 +1,5 @@
+N: 3 "Equalizer" [body=yes, kind=cnst, prop=no, path="Equalizer", ];
+N: 1 "equiv_functor_equalizer" [body=yes, kind=cnst, prop=no, path="Equalizer", ];
+N: 2 "functor_equalizer" [body=yes, kind=cnst, prop=no, path="Equalizer", ];
+E: 1 3 [weight=4, ];
+E: 2 3 [weight=3, ];

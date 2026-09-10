@@ -1,0 +1,2925 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core\n        Functor.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import ProductLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section MonoidalStructure.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"x --> y\" := (morphism _ x y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section MonoidalCategoryConcepts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable tensor : ((C * C) -> C)%category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable I : C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"A \u2297 B\" := (tensor (Basics.Overture.pair A B)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_assoc := (tensor \u2218 (Functor.Prod.pair 1 tensor) )%functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_assoc :=  tensor \u2218\n                                   (Functor.Prod.pair tensor 1) \u2218\n                                   (Associativity.functor _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition associator := NaturalIsomorphism right_assoc left_assoc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Orientation  (A \u2297 B) \u2297 C -> A \u2297 (B \u2297 C) *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pretensor (A : C) := Core.induced_snd tensor A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I_pretensor := pretensor I.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition posttensor (A : C) := Core.induced_fst tensor A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I_posttensor := posttensor I.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_unitor := NaturalIsomorphism I_pretensor 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_unitor := NaturalIsomorphism I_posttensor 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Close Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable alpha : associator.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable lambda : left_unitor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable rho : right_unitor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation alpha_nat_trans := ((@morphism_isomorphic\n                                  (C * (C * C) -> C)%category right_assoc left_assoc) alpha).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation lambda_nat_trans := ((@morphism_isomorphic _ _ _) lambda).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation rho_nat_trans := ((@morphism_isomorphic _ _ _) rho).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section coherence_laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable a b c d : C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition P1 : (a \u2297 (b \u2297 (c \u2297 d))) --> (a \u2297 ((b \u2297 c) \u2297 d)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (b, tensor \u2080 (c, d))))%object -->\n(tensor \u2080 (a, tensor \u2080 (tensor \u2080 (b, c), d)))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (b, tensor \u2080 (c, d))))%object -->\n(tensor \u2080 (a, tensor \u2080 (tensor \u2080 (b, c), d)))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (morphism_of tensor); split; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a --> a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (b, tensor \u2080 (c, d)))%object -->\n(tensor \u2080 (tensor \u2080 (b, c), d))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a --> a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Core.identity a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (b, tensor \u2080 (c, d)))%object -->\n(tensor \u2080 (tensor \u2080 (b, c), d))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (alpha_nat_trans (b, (c, d))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition P2 : a \u2297 ((b \u2297 c) \u2297 d) --> (a \u2297 (b \u2297 c)) \u2297 d\n    := alpha_nat_trans (a, (b \u2297 c, d)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition P3 : (a \u2297 (b \u2297 c)) \u2297 d --> ((a \u2297 b) \u2297 c ) \u2297 d.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (tensor \u2080 (a, tensor \u2080 (b, c)), d))%object -->\n(tensor \u2080 (tensor \u2080 (tensor \u2080 (a, b), c), d))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (tensor \u2080 (a, tensor \u2080 (b, c)), d))%object -->\n(tensor \u2080 (tensor \u2080 (tensor \u2080 (a, b), c), d))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (morphism_of tensor); split; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (b, c)))%object -->\n(tensor \u2080 (tensor \u2080 (a, b), c))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "d --> d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (b, c)))%object -->\n(tensor \u2080 (tensor \u2080 (a, b), c))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (alpha_nat_trans (a,_)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "d --> d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Core.identity d).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition P4 : a \u2297 (b \u2297 (c \u2297 d)) --> (a \u2297 b) \u2297 (c \u2297 d)\n    := alpha_nat_trans (a, (b, (c \u2297 d))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition P5 : (a \u2297 b) \u2297 (c \u2297 d) --> ((a \u2297 b) \u2297 c ) \u2297 d\n    := alpha_nat_trans (a \u2297 b,(c, d)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pentagon_eq := P3 o P2 o P1 = P5 o P4.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Close Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition Q1 : (a \u2297 (I \u2297 b)) --> a \u2297 b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (I, b)))%object --> (tensor \u2080 (a, b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (I, b)))%object --> (tensor \u2080 (a, b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (morphism_of tensor); split; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a --> a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (I, b))%object --> b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a --> a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Core.identity a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (I, b))%object --> b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (lambda_nat_trans _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition Q2 : (a \u2297 (I \u2297 b)) --> a \u2297 b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (I, b)))%object --> (tensor \u2080 (a, b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (I, b)))%object --> (tensor \u2080 (a, b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@Category.Core.compose _ _ ((a \u2297 I) \u2297 b) _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (tensor \u2080 (a, I), b))%object --> (tensor \u2080 (a, b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (I, b)))%object -->\n(tensor \u2080 (tensor \u2080 (a, I), b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (tensor \u2080 (a, I), b))%object --> (tensor \u2080 (a, b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (morphism_of tensor); split; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, I))%object --> a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b --> b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, I))%object --> a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (rho_nat_trans a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b --> b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Core.identity b).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(tensor \u2080 (a, tensor \u2080 (I, b)))%object -->\n(tensor \u2080 (tensor \u2080 (a, I), b))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tensor"
+              ],
+              "body": null,
+              "type": "(C * C -> C)%category"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "alpha"
+              ],
+              "body": null,
+              "type": "associator"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lambda"
+              ],
+              "body": null,
+              "type": "left_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "rho"
+              ],
+              "body": null,
+              "type": "right_unitor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (alpha_nat_trans (a,(I,b))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition triangle_eq := Q1 = Q2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End coherence_laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End MonoidalCategoryConcepts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class MonoidalStructure (C : PreCategory) :=\n  Build_MonoidalStructure {\n    tensor : (C * C -> C)%category;\n    I : C;\n    alpha : associator tensor;\n    lambda : left_unitor tensor I;\n    rho : right_unitor tensor I;\n    pentagon_eq_holds : forall a b c d : C, pentagon_eq alpha a b c d;\n    triangle_eq_holds : forall a b : C, triangle_eq alpha lambda rho a b;\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End MonoidalStructure.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

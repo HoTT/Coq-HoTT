@@ -1,0 +1,62 @@
+digraph HoTT_HFiber {
+  graph [ratio=0.5]
+  node [style=filled]
+HFiber_ap_isinj_embedding_beta [label="ap_isinj_embedding_beta", URL=<HFiber.html#ap_isinj_embedding_beta>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_isembedding_equiv_fun [label="isembedding_equiv_fun", URL=<HFiber.html#isembedding_equiv_fun>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_equiv_isequiv_ap_isembedding [label="equiv_isequiv_ap_isembedding", URL=<HFiber.html#equiv_isequiv_ap_isembedding>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_isembedding_isequiv_ap [label="isembedding_isequiv_ap", URL=<HFiber.html#isembedding_isequiv_ap>, fillcolor="#F070D1"] ;
+HFiber_equiv_ap_isembedding [label="equiv_ap_isembedding", URL=<HFiber.html#equiv_ap_isembedding>, fillcolor="#F070D1"] ;
+HFiber_isequiv_ap_isembedding [label="isequiv_ap_isembedding", URL=<HFiber.html#isequiv_ap_isembedding>, fillcolor="#F070D1"] ;
+HFiber_equiv_istruncmap_ap [label="equiv_istruncmap_ap", URL=<HFiber.html#equiv_istruncmap_ap>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_istruncmap_from_ap [label="istruncmap_from_ap", URL=<HFiber.html#istruncmap_from_ap>, fillcolor="#F070D1"] ;
+HFiber_istruncmap_ap [label="istruncmap_ap", URL=<HFiber.html#istruncmap_ap>, fillcolor="#F070D1"] ;
+HFiber_istruncmap_const [label="istruncmap_const", URL=<HFiber.html#istruncmap_const>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_const [label="hfiber_const", URL=<HFiber.html#hfiber_const>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_functor_forall_id [label="hfiber_functor_forall_id", URL=<HFiber.html#hfiber_functor_forall_id>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_istruncmap_compose [label="istruncmap_compose", URL=<HFiber.html#istruncmap_compose>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_compose [label="hfiber_compose", URL=<HFiber.html#hfiber_compose>, fillcolor="#F070D1"] ;
+HFiber_hfiber_hfiber_compose_map [label="hfiber_hfiber_compose_map", URL=<HFiber.html#hfiber_hfiber_compose_map>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_compose_map [label="hfiber_compose_map", URL=<HFiber.html#hfiber_compose_map>, fillcolor="#F070D1"] ;
+HFiber_hfiber_fibration [label="hfiber_fibration", URL=<HFiber.html#hfiber_fibration>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_equiv_double_fibration_replacement [label="equiv_double_fibration_replacement", URL=<HFiber.html#equiv_double_fibration_replacement>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_equiv_fibration_replacement [label="equiv_fibration_replacement", URL=<HFiber.html#equiv_fibration_replacement>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_functor_hfiber [label="hfiber_functor_hfiber", URL=<HFiber.html#hfiber_functor_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_functor_hfiber_subproof [label="hfiber_functor_hfiber_subproof", URL=<HFiber.html#hfiber_functor_hfiber_subproof>, fillcolor="#F070D1"] ;
+HFiber_functor_hfiber_compose [label="functor_hfiber_compose", URL=<HFiber.html#functor_hfiber_compose>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_equiv_functor_hfiber2 [label="equiv_functor_hfiber2", URL=<HFiber.html#equiv_functor_hfiber2>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_isequiv_functor_hfiber2 [label="isequiv_functor_hfiber2", URL=<HFiber.html#isequiv_functor_hfiber2>, fillcolor="#F070D1"] ;
+HFiber_functor_hfiber2 [label="functor_hfiber2", URL=<HFiber.html#functor_hfiber2>, fillcolor="#F070D1"] ;
+HFiber_equiv_functor_hfiber [label="equiv_functor_hfiber", URL=<HFiber.html#equiv_functor_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_isequiv_functor_hfiber [label="isequiv_functor_hfiber", URL=<HFiber.html#isequiv_functor_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_functor_hfiber [label="functor_hfiber", URL=<HFiber.html#functor_hfiber>, fillcolor="#F070D1"] ;
+HFiber_equiv_hfiber_homotopic [label="equiv_hfiber_homotopic", URL=<HFiber.html#equiv_hfiber_homotopic>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_hfiber_ap [label="hfiber_ap", URL=<HFiber.html#hfiber_ap>, fillcolor="#F070D1"] ;
+HFiber_path_hfiber [label="path_hfiber", URL=<HFiber.html#path_hfiber>, peripheries=3, fillcolor="#F070D1"] ;
+HFiber_path_hfiber_uncurried [label="path_hfiber_uncurried", URL=<HFiber.html#path_hfiber_uncurried>, fillcolor="#F070D1"] ;
+HFiber_equiv_path_hfiber [label="equiv_path_hfiber", URL=<HFiber.html#equiv_path_hfiber>, fillcolor="#F070D1"] ;
+  HFiber_ap_isinj_embedding_beta -> HFiber_equiv_ap_isembedding [] ;
+  HFiber_isembedding_equiv_fun -> HFiber_isembedding_isequiv_ap [] ;
+  HFiber_equiv_isequiv_ap_isembedding -> HFiber_isembedding_isequiv_ap [] ;
+  HFiber_equiv_isequiv_ap_isembedding -> HFiber_isequiv_ap_isembedding [] ;
+  HFiber_isembedding_isequiv_ap -> HFiber_istruncmap_from_ap [] ;
+  HFiber_equiv_ap_isembedding -> HFiber_isequiv_ap_isembedding [] ;
+  HFiber_isequiv_ap_isembedding -> HFiber_istruncmap_ap [] ;
+  HFiber_equiv_istruncmap_ap -> HFiber_istruncmap_from_ap [] ;
+  HFiber_equiv_istruncmap_ap -> HFiber_istruncmap_ap [] ;
+  HFiber_istruncmap_from_ap -> HFiber_hfiber_ap [] ;
+  HFiber_istruncmap_ap -> HFiber_hfiber_ap [] ;
+  HFiber_istruncmap_compose -> HFiber_hfiber_compose [] ;
+  HFiber_hfiber_hfiber_compose_map -> HFiber_hfiber_compose_map [] ;
+  HFiber_hfiber_functor_hfiber -> HFiber_hfiber_functor_hfiber_subproof [] ;
+  HFiber_hfiber_functor_hfiber -> HFiber_functor_hfiber [] ;
+  HFiber_functor_hfiber_compose -> HFiber_functor_hfiber [] ;
+  HFiber_equiv_functor_hfiber2 -> HFiber_isequiv_functor_hfiber2 [] ;
+  HFiber_isequiv_functor_hfiber2 -> HFiber_functor_hfiber2 [] ;
+  HFiber_equiv_functor_hfiber -> HFiber_functor_hfiber [] ;
+  HFiber_isequiv_functor_hfiber -> HFiber_functor_hfiber [] ;
+  HFiber_hfiber_ap -> HFiber_equiv_path_hfiber [] ;
+  HFiber_path_hfiber -> HFiber_path_hfiber_uncurried [] ;
+  HFiber_path_hfiber_uncurried -> HFiber_equiv_path_hfiber [] ;
+subgraph cluster_HFiber { label="HFiber"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+HFiber_equiv_path_hfiber; HFiber_path_hfiber_uncurried; HFiber_path_hfiber; HFiber_hfiber_ap; HFiber_equiv_hfiber_homotopic; HFiber_functor_hfiber; HFiber_isequiv_functor_hfiber; HFiber_equiv_functor_hfiber; HFiber_functor_hfiber2; HFiber_isequiv_functor_hfiber2; HFiber_equiv_functor_hfiber2; HFiber_functor_hfiber_compose; HFiber_hfiber_functor_hfiber_subproof; HFiber_hfiber_functor_hfiber; HFiber_equiv_fibration_replacement; HFiber_equiv_double_fibration_replacement; HFiber_hfiber_fibration; HFiber_hfiber_compose_map; HFiber_hfiber_hfiber_compose_map; HFiber_hfiber_compose; HFiber_istruncmap_compose; HFiber_hfiber_functor_forall_id; HFiber_hfiber_const; HFiber_istruncmap_const; HFiber_istruncmap_ap; HFiber_istruncmap_from_ap; HFiber_equiv_istruncmap_ap; HFiber_isequiv_ap_isembedding; HFiber_equiv_ap_isembedding; HFiber_isembedding_isequiv_ap; HFiber_equiv_isequiv_ap_isembedding; HFiber_isembedding_equiv_fun; HFiber_ap_isinj_embedding_beta; };
+} /* END */

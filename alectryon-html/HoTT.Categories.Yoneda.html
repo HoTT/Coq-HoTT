@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.Yoneda.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * The Yoneda Lemma *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual Functor.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms FunctorCategory.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> SetCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Attributes.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Functorial.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HomFunctor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Quoting Wikipedia on the Yoneda lemma (changing [A] to [a] and</span>
+<span class="sd">    [C] to [A] so that we can use unicode superscripts and</span>
+<span class="sd">    subscripts):</span>
+
+<span class="sd">    In mathematics, specifically in category theory, the Yoneda lemma</span>
+<span class="sd">    is an abstract result on functors of the type morphisms into a</span>
+<span class="sd">    fixed object. It is a vast generalisation of Cayley&#39;s theorem from</span>
+<span class="sd">    group theory (viewing a group as a particular kind of category</span>
+<span class="sd">    with just one object). It allows the embedding of any category</span>
+<span class="sd">    into a category of functors (contravariant set-valued functors)</span>
+<span class="sd">    defined on that category. It also clarifies how the embedded</span>
+<span class="sd">    category, of representable functors and their natural</span>
+<span class="sd">    transformations, relates to the other objects in the larger</span>
+<span class="sd">    functor category. It is an important tool that underlies several</span>
+<span class="sd">    modern developments in algebraic geometry and representation</span>
+<span class="sd">    theory. It is named after Nobuo Yoneda.</span>
+
+<span class="sd">    ** Generalities</span>
+
+<span class="sd">    The Yoneda lemma suggests that instead of studying the (locally</span>
+<span class="sd">    small) category [A], one should study the category of all functors</span>
+<span class="sd">    of [A] into [Set] (the category of sets with functions as</span>
+<span class="sd">    morphisms). [Set] is a category we understand well, and a functor</span>
+<span class="sd">    of [A] into [Set] can be seen as a &quot;representation&quot; of [A] in</span>
+<span class="sd">    terms of known structures. The original category [A] is contained</span>
+<span class="sd">    in this functor category, but new objects appear in the functor</span>
+<span class="sd">    category which were absent and &quot;hidden&quot; in [A]. Treating these new</span>
+<span class="sd">    objects just like the old ones often unifies and simplifies the</span>
+<span class="sd">    theory.  This approach is akin to (and in fact generalizes) the</span>
+<span class="sd">    common method of studying a ring by investigating the modules over</span>
+<span class="sd">    that ring. The ring takes the place of the category [A], and the</span>
+<span class="sd">    category of modules over the ring is a category of functors</span>
+<span class="sd">    defined on [A].</span>
+
+<span class="sd">    ** Formal statement</span>
+
+<span class="sd">    *** General version</span>
+
+<span class="sd">    Yoneda&#39;s lemma concerns functors from a fixed category [A] to the</span>
+<span class="sd">    category of sets, [Set]. If [A] is a locally small category</span>
+<span class="sd">    (i.e. the hom-sets are actual sets and not proper classes), then</span>
+<span class="sd">    each object [a] of [A] gives rise to a natural functor to [Set]</span>
+<span class="sd">    called a hom-functor. This functor is denoted:</span>
+
+<span class="sd">    [hᵃ = Hom(a, ─)].</span>
+
+<span class="sd">    The (covariant) hom-functor [hᵃ] sends [x] to the set of morphisms</span>
+<span class="sd">    [Hom(a, x)] and sends a morphism [f] from [x] to [y] to the</span>
+<span class="sd">    morphism [f ∘ ─] (composition with [f] on the left) that sends a</span>
+<span class="sd">    morphism [g] in [Hom(a, x)] to the morphism [f ∘ g] in [Hom(a,</span>
+<span class="sd">    y)]. That is,</span>
+
+<span class="sd">    [f ↦ Hom(a, f) = ⟦ Hom(a, x) ∋ g ↦ f ∘ g ∈ Hom(a,y) ⟧].</span>
+<span class="sd"> *)</span>
+
+<span class="sd">(** ** The (co-)Yoneda functors [A → (Aᵒᵖ → set)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">yoneda</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="c">(* TODO(JasonGross): Find a way to unify the [yoneda] and [coyoneda] lemmas into a single lemma which is more functorial. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coyoneda</span> <span class="nv">A</span> : Functor A^op (A -&gt; set_cat)
+    := ExponentialLaws.Law4.Functors.inverse _ _ _ (hom_functor A).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">yoneda</span> <span class="nv">A</span> : Functor A (A^op -&gt; set_cat)
+    := coyoneda A^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">yoneda</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** The (co-)Yoneda lemma *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">coyoneda_lemma</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">    <span class="sd">(** Let [F] be an arbitrary functor from [A] to [Set]. Then Yoneda&#39;s</span>
+<span class="sd">      lemma says that: *)</span>
+    <span class="c">(*Variable F : Functor A (@set_cat fs).*)</span>
+    <span class="sd">(** For each object [a] of [A], *)</span>
+    <span class="c">(*Variable a : A.*)</span>
+    <span class="sd">(** the natural transformations from [hᵃ] to [F] are in one-to-one</span>
+<span class="sd">      correspondence with the elements of [F(a)]. That is,</span>
+
+<span class="sd">      [Nat(hᵃ, F) ≅ F(a)].</span>
+
+<span class="sd">      Moreover this isomorphism is natural in [a] and [F] when both</span>
+<span class="sd">      sides are regarded as functors from [Setᴬ × A] to</span>
+<span class="sd">      [Set].</span>
+
+<span class="sd">      Given a natural transformation [Φ] from [hᵃ] to [F], the</span>
+<span class="sd">      corresponding element of [F(a)] is [u = Φₐ(idₐ)]. *)</span>
+
+    <span class="c">(*   Definition coyoneda_lemma_morphism (a : A)</span>
+<span class="c">  : morphism set_cat</span>
+<span class="c">             (BuildhSet</span>
+<span class="c">                (morphism (A -&gt; set_cat) (coyoneda A a) F)</span>
+<span class="c">                _)</span>
+<span class="c">             (F a)</span>
+<span class="c">    := fun phi =&gt; phi a 1%morphism. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coyoneda_functor</span>
+    : Functor (A -&gt; set_cat)
+              (A -&gt; set_cat)
+      := (compose_functor _ _ set_cat (coyoneda A)^op)
+           o (yoneda (A -&gt; set_cat)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">nt</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk0"><span class="kn">Definition</span> <span class="nf">coyoneda_natural_transformation_helper</span> <span class="nv">F</span>
+    : morphism (_ -&gt; _) (coyoneda_functor A F) F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (A -&gt; set_cat) ((coyoneda_functor A) _0 F)%object F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (A -&gt; set_cat) ((coyoneda_functor A) _0 F)%object F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2"><span class="nb">refine</span> (Build_NaturalTransformation
+                (coyoneda_functor A F) F
+                (<span class="k">fun</span> <span class="nv">a</span> <span class="nv">phi</span> =&gt; phi a <span class="mi">1</span>%morphism)
+                _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : A) (<span class="nv">m</span> : morphism A s d),
+((<span class="k">fun</span> <span class="nv">phi</span> : Trunc.trunctype_type (((coyoneda_functor A) _0 F) _0 d)%object =&gt;
+  phi d <span class="mi">1</span>)
+ o ((coyoneda_functor A) _0 F)%object _1 m)%morphism =
+(F _1 m
+ o (<span class="k">fun</span> <span class="nv">phi</span> : Trunc.trunctype_type (((coyoneda_functor A) _0 F) _0 s)%object =&gt;
+    phi s <span class="mi">1</span>))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk3"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : A) (<span class="nv">m</span> : morphism A s d),
+(<span class="k">fun</span>
+   <span class="nv">x</span> : NaturalTransformation
+         (Functors.inverse_object_of_object_of (hom_functor A) s) F =&gt;
+ x d (<span class="mi">1</span> o <span class="mi">1</span> o m)%morphism) =
+(<span class="k">fun</span>
+   <span class="nv">x</span> : NaturalTransformation
+         (Functors.inverse_object_of_object_of (hom_functor A) s) F =&gt;
+ (F _1 m) (x s <span class="mi">1</span>%morphism))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+          <span class="kp">repeat</span> (<span class="nb">intro</span> || <span class="nb">apply</span> path_forall);
+          <span class="nb">simpl</span> <span class="k">in</span> *;
+            <span class="k">match goal with</span>
+              | [ T : NaturalTransformation _ _ |- _ ]
+                =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> &lt;- (<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> =&gt; apD10 (commutes T s d m))
+            <span class="k">end</span>;
+          <span class="nb">rewrite</span> <span class="nl">?left_identity</span>, <span class="nl">?right_identity</span>;
+          <span class="bp">reflexivity</span>
+        ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk4"><span class="kn">Definition</span> <span class="nf">coyoneda_natural_transformation</span>
+    : morphism (_ -&gt; _)
+               (coyoneda_functor A)
+               <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism ((A -&gt; set_cat) -&gt; A -&gt; set_cat) (coyoneda_functor A) <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism ((A -&gt; set_cat) -&gt; A -&gt; set_cat) (coyoneda_functor A) <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk6"><span class="nb">hnf</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (coyoneda_functor A) <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk7"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (coyoneda_functor A) <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk8"><span class="k">let</span> <span class="nv">F</span> := <span class="k">match goal with</span> |- NaturalTransformation <span class="nl">?F</span> <span class="nl">?G</span> =&gt; <span class="kp">constr</span>:(F) <span class="k">end</span> <span class="k">in</span>
+      <span class="k">let</span> <span class="nv">G</span> := <span class="k">match goal with</span> |- NaturalTransformation <span class="nl">?F</span> <span class="nl">?G</span> =&gt; <span class="kp">constr</span>:(G) <span class="k">end</span> <span class="k">in</span>
+      <span class="nb">refine</span> (Build_NaturalTransformation
+                F G
+                coyoneda_natural_transformation_helper
+                _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : (A -&gt; set_cat)%category) (<span class="nv">m</span> : morphism (A -&gt; set_cat) s d),
+(coyoneda_natural_transformation_helper d o (coyoneda_functor A) _1 m)%morphism =
+(<span class="mi">1</span> _1 m o coyoneda_natural_transformation_helper s)%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk9"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : Functor A set_cat) (<span class="nv">m</span> : NaturalTransformation s d),
+Core.compose (coyoneda_natural_transformation_helper d)
+  (Core.whisker_r
+     (Functors.inverse_object_of_morphism_of (hom_functor (A -&gt; set_cat)^op)
+        s d m)
+     (coyoneda A)^op) =
+Core.compose m (coyoneda_natural_transformation_helper s)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (<span class="kp">repeat</span> <span class="kp">first</span> [ <span class="nb">intro</span>
+                             | <span class="kp">progress</span> path_natural_transformation
+                             | <span class="bp">reflexivity</span> ]).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">nt</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chka"><span class="kn">Definition</span> <span class="nf">coyoneda_lemma_morphism_inverse</span>
+             `{Funext}
+             A
+             (F : object (A -&gt; set_cat))
+             a
+  : morphism set_cat
+             (F a)
+             (coyoneda_functor A F a).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism set_cat (F _0 a)%object (((coyoneda_functor A) _0 F) _0 a)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chkb"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism set_cat (F _0 a)%object (((coyoneda_functor A) _0 F) _0 a)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chkc"><span class="nb">intro</span> Fa.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>Fa</var><span class="hyp-type"><b>: </b><span>Trunc.trunctype_type (F _0 a)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Trunc.trunctype_type (((coyoneda_functor A) _0 F) _0 a)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chkd"><span class="nb">hnf</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>(A -&gt; set_cat)%category</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>Fa</var><span class="hyp-type"><b>: </b><span>Trunc.trunctype_type (F _0 a)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (snd (F, ((coyoneda A)^op _0 a)%object))
+  (fst (F, ((coyoneda A)^op _0 a)%object))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chke"><span class="nb">simpl</span> <span class="k">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>Fa</var><span class="hyp-type"><b>: </b><span>Trunc.trunctype_type (F _0 a)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation
+  (Functors.inverse_object_of_object_of (hom_functor A) a) F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chkf"><span class="k">let</span> <span class="nv">F0</span> := <span class="k">match goal with</span> |- NaturalTransformation <span class="nl">?F</span> <span class="nl">?G</span> =&gt; <span class="kp">constr</span>:(F) <span class="k">end</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">G0</span> := <span class="k">match goal with</span> |- NaturalTransformation <span class="nl">?F</span> <span class="nl">?G</span> =&gt; <span class="kp">constr</span>:(G) <span class="k">end</span> <span class="k">in</span>
+    <span class="nb">refine</span> (Build_NaturalTransformation
+              F0 G0
+              (<span class="k">fun</span> <span class="nv">a&#39;</span> : A =&gt; (<span class="k">fun</span> <span class="nv">f</span> : morphism A a a&#39; =&gt; F _1 f Fa))
+              _
+           ).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>Fa</var><span class="hyp-type"><b>: </b><span>Trunc.trunctype_type (F _0 a)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : A) (<span class="nv">m</span> : morphism A s d),
+((<span class="k">fun</span> <span class="nv">f</span> : morphism A a d =&gt; (F _1 f) Fa)
+ o (Functors.inverse_object_of_object_of (hom_functor A) a) _1 m)%morphism =
+(F _1 m o (<span class="k">fun</span> <span class="nv">f</span> : morphism A a s =&gt; (F _1 f) Fa))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk10"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>Fa</var><span class="hyp-type"><b>: </b><span>Trunc.trunctype_type (F _0 a)%object</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : A) (<span class="nv">m</span> : morphism A s d),
+(<span class="k">fun</span> <span class="nv">x</span> : morphism A a s =&gt; (F _1 (m o x o <span class="mi">1</span>)) Fa) =
+(<span class="k">fun</span> <span class="nv">x</span> : morphism A a s =&gt; (F _1 m) ((F _1 x) Fa))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+        <span class="kp">repeat</span> <span class="kp">first</span> [ <span class="bp">reflexivity</span>
+                     | <span class="nb">intro</span>
+                     | <span class="nb">apply</span> path_forall
+                     | <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?composition_of</span>, <span class="nl">?identity_of</span> ]
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk11">#[export] <span class="kn">Instance</span> <span class="nf">coyoneda_lemma</span> `{Funext} A
+  : IsIsomorphism (coyoneda_natural_transformation A).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (coyoneda_natural_transformation A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk12"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (coyoneda_natural_transformation A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk13"><span class="nb">eapply</span> isisomorphism_natural_transformation.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> <span class="nv">x</span> : (A -&gt; set_cat)%category,
+IsIsomorphism (coyoneda_natural_transformation A x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk14"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> <span class="nv">x</span> : Functor A set_cat,
+IsIsomorphism (coyoneda_natural_transformation_helper x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk15"><span class="nb">intro</span> F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (coyoneda_natural_transformation_helper F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk16"><span class="nb">eapply</span> isisomorphism_natural_transformation.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> <span class="nv">x</span> : A, IsIsomorphism (coyoneda_natural_transformation_helper F x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk17"><span class="nb">intro</span> a.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (coyoneda_natural_transformation_helper F a)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk18"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A set_cat</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism
+  (<span class="k">fun</span>
+     <span class="nv">phi</span> : NaturalTransformation
+             (Functors.inverse_object_of_object_of (hom_functor A) a) F =&gt;
+   phi a <span class="mi">1</span>%morphism)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="k">exists</span> (<span class="nv">coyoneda_lemma_morphism_inverse</span> <span class="nv">F</span> <span class="nv">a</span>);
+      <span class="nb">simpl</span> <span class="k">in</span> *;
+    <span class="kp">abstract</span> (
+        <span class="kp">repeat</span> (<span class="nb">intro</span> || <span class="nb">apply</span> path_forall || path_natural_transformation);
+        <span class="nb">simpl</span> <span class="k">in</span> *;
+          <span class="kp">solve</span> [ <span class="nb">simpl</span> <span class="nb">rewrite</span> &lt;- (<span class="k">fun</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">m</span> =&gt; ap10 (commutes x c d m));
+                  <span class="nb">rewrite</span> <span class="nl">?right_identity</span>, <span class="nl">?left_identity</span>;
+                  <span class="bp">reflexivity</span>
+                | <span class="nb">rewrite</span> identity_of;
+                  <span class="bp">reflexivity</span> ]
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">coyoneda_lemma</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">yoneda_lemma</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">  <span class="sd">(** There is a contravariant version of Yoneda&#39;s lemma which</span>
+<span class="sd">      concerns contravariant functors from [A] to [Set]. This version</span>
+<span class="sd">      involves the contravariant hom-functor</span>
+
+<span class="sd">      [hₐ = Hom(─, A)],</span>
+
+<span class="sd">      which sends [x] to the hom-set [Hom(x, a)]. Given an arbitrary</span>
+<span class="sd">      contravariant functor [G] from [A] to [Set], Yoneda&#39;s lemma</span>
+<span class="sd">      asserts that</span>
+
+<span class="sd">      [Nat(hₐ, G) ≅ G(a)]. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">    <span class="sd">(** Let [F] be an arbitrary functor from [A] to [Set]. Then Yoneda&#39;s</span>
+<span class="sd">      lemma says that: *)</span>
+    <span class="c">(*Variable F : Functor A (@set_cat fs).*)</span>
+    <span class="sd">(** For each object [a] of [A], *)</span>
+    <span class="c">(*Variable a : A.*)</span>
+    <span class="sd">(** the natural transformations from [hᵃ] to [F] are in one-to-one</span>
+<span class="sd">      correspondence with the elements of [F(a)]. That is,</span>
+
+<span class="sd">      [Nat(hᵃ, F) ≅ F(a)].</span>
+
+<span class="sd">      Moreover this isomorphism is natural in [a] and [F] when both</span>
+<span class="sd">      sides are regarded as functors from [Setᴬ × A] to</span>
+<span class="sd">      [Set].</span>
+
+<span class="sd">      Given a natural transformation [Φ] from [hᵃ] to [F], the</span>
+<span class="sd">      corresponding element of [F(a)] is [u = Φₐ(idₐ)]. *)</span>
+
+    <span class="c">(* Definition yoneda_lemma_morphism A (G : object (A^op -&gt; set_cat)) (a : A)</span>
+<span class="c">  : morphism set_cat</span>
+<span class="c">             (BuildhSet</span>
+<span class="c">                (morphism (A^op -&gt; set_cat) (yoneda A a) G)</span>
+<span class="c">                _)</span>
+<span class="c">             (G a)</span>
+<span class="c">    := fun phi =&gt; phi a 1%morphism.*)</span>
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">yoneda_functor</span>
+    : Functor (A^op -&gt; set_cat)
+              (A^op -&gt; set_cat)
+      := coyoneda_functor A^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">yoneda_natural_transformation</span>
+  : morphism (_ -&gt; _)
+             <span class="mi">1</span>
+             (yoneda_functor A)
+    := @morphism_inverse _ _ _ _ (coyoneda_lemma A^op).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">yoneda_lemma</span>
+  : IsIsomorphism yoneda_natural_transformation
+    := @isisomorphism_inverse _ _ _ _ (coyoneda_lemma A^op).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">yoneda_lemma</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** The Yoneda embedding</span>
+
+<span class="sd">    An important special case of Yoneda&#39;s lemma is when the functor</span>
+<span class="sd">    [F] from [A] to [Set] is another hom-functor [hᵇ]. In this case,</span>
+<span class="sd">    the covariant version of Yoneda&#39;s lemma states that</span>
+
+<span class="sd">    [Nat(hᵃ, hᵇ) ≅ Hom(b, a)].</span>
+
+<span class="sd">    That is, natural transformations between hom-functors are in</span>
+<span class="sd">    one-to-one correspondence with morphisms (in the reverse</span>
+<span class="sd">    direction) between the associated objects. Given a morphism [f : b</span>
+<span class="sd">    → a] the associated natural transformation is denoted [Hom(f, ─)].</span>
+
+<span class="sd">    Mapping each object [a] in [A] to its associated hom-functor [hᵃ=</span>
+<span class="sd">    Hom(a, ─)] and each morphism [f : B → A] to the corresponding</span>
+<span class="sd">    natural transformation [Hom(f, ─)] determines a contravariant</span>
+<span class="sd">    functor [h⁻] from [A] to [Setᴬ], the functor category of all</span>
+<span class="sd">    (covariant) functors from [A] to [Set]. One can interpret [h⁻] as</span>
+<span class="sd">    a covariant functor:</span>
+
+<span class="sd">    [h⁻ : Aᵒᵖ → Setᴬ].</span>
+
+<span class="sd">    The meaning of Yoneda&#39;s lemma in this setting is that the functor</span>
+<span class="sd">    [h⁻] is fully faithful, and therefore gives an embedding of [Aᵒᵖ]</span>
+<span class="sd">    in the category of functors to [Set]. The collection of all</span>
+<span class="sd">    functors {[hᵃ], [a] in [A]} is a subcategory of [Set̂ᴬ]. Therefore,</span>
+<span class="sd">    Yoneda embedding implies that the category [Aᵒᵖ] is isomorphic to</span>
+<span class="sd">    the category {[hᵃ], [a] in [A]}.</span>
+
+<span class="sd">    The contravariant version of Yoneda&#39;s lemma states that</span>
+
+<span class="sd">    [Nat(hₐ, h_b) ≅ Hom(a, b)].</span>
+
+<span class="sd">    Therefore, [h₋] gives rise to a covariant functor from [A] to the</span>
+<span class="sd">    category of contravariant functors to [Set]:</span>
+
+<span class="sd">    [h₋ : A → Set⁽⁽ᴬ⁾ᵒᵖ⁾].</span>
+
+<span class="sd">    Yoneda&#39;s lemma then states that any locally small category [A] can</span>
+<span class="sd">    be embedded in the category of contravariant functors from [A] to</span>
+<span class="sd">    [Set] via [h₋]. This is called the Yoneda embedding. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">FullyFaithful</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk19"><span class="kn">Definition</span> <span class="nf">coyoneda_embedding</span> (<span class="nv">A</span> : PreCategory) : IsFullyFaithful (coyoneda A).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFullyFaithful (coyoneda A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFullyFaithful (coyoneda A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1b"><span class="nb">intros</span> a b.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A^op%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (induced_hom_natural_transformation (coyoneda A) (a, b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1c"><span class="nb">pose proof</span> (@isisomorphism_inverse
+                  _ _ _ _
+                  (@isisomorphism_components_of
+                     _ _ _ _ _ _
+                     (@isisomorphism_components_of
+                        _ _ _ _ _ _
+                        (@coyoneda_lemma _ A)
+                        (@coyoneda _ A b))
+                     a)) <span class="k">as</span> H&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A^op%category</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsIsomorphism
+  (coyoneda_natural_transformation A ((coyoneda A) _0 b)%object a)^-<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (induced_hom_natural_transformation (coyoneda A) (a, b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1d"><span class="nb">simpl</span> <span class="k">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsIsomorphism
+  (coyoneda_lemma_morphism_inverse
+     (Functors.inverse_object_of_object_of (hom_functor A) b) a)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism
+  (<span class="k">fun</span> <span class="nv">m</span> : morphism A b a =&gt;
+   Functors.inverse_object_of_morphism_of (hom_functor A) a b m)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1e"><span class="nb">unfold</span> coyoneda_lemma_morphism_inverse <span class="k">in</span> *; <span class="nb">simpl</span> <span class="k">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism
+  (<span class="k">fun</span> <span class="nv">m</span> : morphism A b a =&gt;
+   Functors.inverse_object_of_morphism_of (hom_functor A) a b m)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk1f"><span class="nb">unfold</span> Functors.inverse_object_of_morphism_of <span class="k">in</span> *; <span class="nb">simpl</span> <span class="k">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism
+  (<span class="k">fun</span> <span class="nv">m</span> : morphism A b a =&gt;
+   Build_NaturalTransformation
+     (Functors.inverse_object_of_object_of (hom_functor A) a)
+     (Functors.inverse_object_of_object_of (hom_functor A) b)
+     (<span class="k">fun</span> (<span class="nv">c</span> : A) (<span class="nv">g</span> : morphism A a c) =&gt; (<span class="mi">1</span> o g o m)%morphism)
+     (Functors.inverse_object_of_morphism_of_subproof (hom_functor A) a b m))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk20"><span class="k">let</span> <span class="nv">m</span> := <span class="k">match</span> <span class="kp">type of</span> H&#39; <span class="k">with</span> IsIsomorphism <span class="nl">?m</span> =&gt; <span class="kp">constr</span>:(m) <span class="k">end</span> <span class="k">in</span>
+    <span class="nb">apply</span> isisomorphism_set_cat_natural_transformation_paths <span class="k">with</span> (T1 := m).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span>
+(<span class="nv">x</span> : Trunc.trunctype_type
+       {|
+         Trunc.trunctype_type := morphism A b a;
+         Trunc.trunctype_istrunc := trunc_morphism A b a
+       |})
+(<span class="nv">y</span> : A),
+Build_NaturalTransformation
+  (Functors.inverse_object_of_object_of (hom_functor A) a)
+  (Functors.inverse_object_of_object_of (hom_functor A) b)
+  (<span class="k">fun</span> (<span class="nv">a&#39;</span> : A) (<span class="nv">f</span> : morphism A a a&#39;) =&gt; (f o x o <span class="mi">1</span>)%morphism)
+  (HoTT.Categories.Yoneda.coyoneda_lemma_morphism_inverse_subproof H A
+     (Functors.inverse_object_of_object_of (hom_functor A) b) a x)
+  y =
+Build_NaturalTransformation
+  (Functors.inverse_object_of_object_of (hom_functor A) a)
+  (Functors.inverse_object_of_object_of (hom_functor A) b)
+  (<span class="k">fun</span> (<span class="nv">c</span> : A) (<span class="nv">g</span> : morphism A a c) =&gt; (<span class="mi">1</span> o g o x)%morphism)
+  (Functors.inverse_object_of_morphism_of_subproof (hom_functor A) a b x) y</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk21" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><label class="goal-separator" for="HoTT-Categories-Yoneda-v-alectryon-json-chk21"><hr></label><div class="goal-conclusion">printer failed!</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk22">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span>
+(<span class="nv">x</span> : Trunc.trunctype_type
+       {|
+         Trunc.trunctype_type := morphism A b a;
+         Trunc.trunctype_istrunc := trunc_morphism A b a
+       |})
+(<span class="nv">y</span> : A),
+Build_NaturalTransformation
+  (Functors.inverse_object_of_object_of (hom_functor A) a)
+  (Functors.inverse_object_of_object_of (hom_functor A) b)
+  (<span class="k">fun</span> (<span class="nv">a&#39;</span> : A) (<span class="nv">f</span> : morphism A a a&#39;) =&gt; (f o x o <span class="mi">1</span>)%morphism)
+  (HoTT.Categories.Yoneda.coyoneda_lemma_morphism_inverse_subproof H A
+     (Functors.inverse_object_of_object_of (hom_functor A) b) a x)
+  y =
+Build_NaturalTransformation
+  (Functors.inverse_object_of_object_of (hom_functor A) a)
+  (Functors.inverse_object_of_object_of (hom_functor A) b)
+  (<span class="k">fun</span> (<span class="nv">c</span> : A) (<span class="nv">g</span> : morphism A a c) =&gt; (<span class="mi">1</span> o g o x)%morphism)
+  (Functors.inverse_object_of_morphism_of_subproof (hom_functor A) a b x) y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk23"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">x</span> : morphism A b a) (<span class="nv">y</span> : A),
+(<span class="k">fun</span> <span class="nv">f</span> : morphism A a y =&gt; (f o x o <span class="mi">1</span>)%morphism) =
+(<span class="k">fun</span> <span class="nv">g</span> : morphism A a y =&gt; (<span class="mi">1</span> o g o x)%morphism)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk24"><span class="nb">clear</span> H&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="k">forall</span> (<span class="nv">x</span> : morphism A b a) (<span class="nv">y</span> : A),
+(<span class="k">fun</span> <span class="nv">f</span> : morphism A a y =&gt; (f o x o <span class="mi">1</span>)%morphism) =
+(<span class="k">fun</span> <span class="nv">g</span> : morphism A a y =&gt; (<span class="mi">1</span> o g o x)%morphism)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span>; <span class="nb">apply</span> path_forall;
+      <span class="nb">intro</span>;
+      <span class="nb">rewrite</span> left_identity, right_identity;
+      <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk25">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">printer failed!</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk26"><span class="nb">destruct</span> H&#39; <span class="k">as</span> [m&#39; H0&#39; H1&#39;].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism set_cat
+  {|
+    Trunc.trunctype_type :=
+      NaturalTransformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b);
+    Trunc.trunctype_istrunc :=
+      trunc_natural_transformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b)
+  |}
+  {|
+    Trunc.trunctype_type := morphism A b a;
+    Trunc.trunctype_istrunc := trunc_morphism A b a
+  |}</span></span></span><br><span><var>H0', H1'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">printer failed!</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk27">(<span class="k">exists</span> <span class="nv">m&#39;</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism set_cat
+  {|
+    Trunc.trunctype_type :=
+      NaturalTransformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b);
+    Trunc.trunctype_istrunc :=
+      trunc_natural_transformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b)
+  |}
+  {|
+    Trunc.trunctype_type := morphism A b a;
+    Trunc.trunctype_istrunc := trunc_morphism A b a
+  |}</span></span></span><br><span><var>H0', H1'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">printer failed!</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk28" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism set_cat
+  {|
+    Trunc.trunctype_type :=
+      NaturalTransformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b);
+    Trunc.trunctype_istrunc :=
+      trunc_natural_transformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b)
+  |}
+  {|
+    Trunc.trunctype_type := morphism A b a;
+    Trunc.trunctype_istrunc := trunc_morphism A b a
+  |}</span></span></span><br><span><var>H0', H1'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><label class="goal-separator" for="HoTT-Categories-Yoneda-v-alectryon-json-chk28"><hr></label><div class="goal-conclusion">printer failed!</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk29">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism set_cat
+  {|
+    Trunc.trunctype_type :=
+      NaturalTransformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b);
+    Trunc.trunctype_istrunc :=
+      trunc_natural_transformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b)
+  |}
+  {|
+    Trunc.trunctype_type := morphism A b a;
+    Trunc.trunctype_istrunc := trunc_morphism A b a
+  |}</span></span></span><br><span><var>H0', H1'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">printer failed!</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> H0&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2a">+</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism set_cat
+  {|
+    Trunc.trunctype_type :=
+      NaturalTransformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b);
+    Trunc.trunctype_istrunc :=
+      trunc_natural_transformation
+        (Functors.inverse_object_of_object_of (hom_functor A) a)
+        (Functors.inverse_object_of_object_of (hom_functor A) b)
+  |}
+  {|
+    Trunc.trunctype_type := morphism A b a;
+    Trunc.trunctype_istrunc := trunc_morphism A b a
+  |}</span></span></span><br><span><var>H0', H1'</var><span class="hyp-type"><b>: </b><span>printer failed!</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">printer failed!</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> H1&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2b"><span class="kn">Definition</span> <span class="nf">yoneda_embedding</span> (<span class="nv">A</span> : PreCategory) : IsFullyFaithful (yoneda A).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFullyFaithful (yoneda A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFullyFaithful (yoneda A)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2d"><span class="nb">intros</span> a b.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (induced_hom_natural_transformation (yoneda A) (a, b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2e"><span class="nb">pose proof</span> (@coyoneda_embedding A^op a b) <span class="k">as</span> CYE.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>CYE</var><span class="hyp-type"><b>: </b><span>IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (induced_hom_natural_transformation (yoneda A) (a, b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk2f"><span class="nb">unfold</span> yoneda.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>CYE</var><span class="hyp-type"><b>: </b><span>IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Yoneda-v-alectryon-json-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Yoneda-v-alectryon-json-chk30"><span class="k">let</span> <span class="nv">T</span> := <span class="kp">type of</span> CYE <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">T&#39;</span> := (<span class="kp">eval</span> <span class="nb">simpl</span> <span class="k">in</span> T) <span class="k">in</span>
+    <span class="nb">pose proof</span> ((<span class="k">fun</span> <span class="nv">x</span> : T =&gt; (x : T&#39;)) CYE) <span class="k">as</span> CYE&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>CYE</var><span class="hyp-type"><b>: </b><span>IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))</span></span></span><br><span><var>CYE'</var><span class="hyp-type"><b>: </b><span>IsIsomorphism
+  (<span class="k">fun</span> <span class="nv">m</span> : morphism A a b =&gt;
+   Functors.inverse_object_of_morphism_of (hom_functor A^op) a b m)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (induced_hom_natural_transformation (coyoneda A^op) (a, b))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="k">let</span> <span class="nv">G</span> := <span class="k">match goal with</span> |- <span class="nl">?G</span> =&gt; <span class="kp">constr</span>:(G) <span class="k">end</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">G&#39;</span> := (<span class="kp">eval</span> <span class="nb">simpl</span> <span class="k">in</span> G) <span class="k">in</span>
+    <span class="bp">exact</span> ((<span class="k">fun</span> <span class="nv">x</span> : G&#39; =&gt; (x : G)) CYE&#39;).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">FullyFaithful</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

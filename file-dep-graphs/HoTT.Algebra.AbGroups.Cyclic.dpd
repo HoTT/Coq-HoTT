@@ -1,0 +1,6 @@
+N: 1 "ab_mul_cyclic_in" [body=yes, kind=cnst, prop=no, path="Cyclic", ];
+N: 3 "cyclic" [body=yes, kind=cnst, prop=no, path="Cyclic", ];
+N: 2 "cyclic_in" [body=yes, kind=cnst, prop=no, path="Cyclic", ];
+E: 1 2 [weight=9, ];
+E: 1 3 [weight=9, ];
+E: 2 3 [weight=1, ];

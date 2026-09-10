@@ -1,0 +1,124 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Unicode notations for comma categories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Comma.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Utf8.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Set some notations for printing *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"C \u2193 a\" := (@slice_category_over C a) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"a \u2193 C\" := (@coslice_category_over C a) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2193 F\" := (coslice_category x F) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"F \u2193 x\" := (slice_category x F) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"S \u2193 T\" := (comma_category S T) (only printing) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Set the notation for parsing; coercions will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"S \u2193 T\" := (comma_category (S : CC_Functor' _ _)\n                                    (T : CC_Functor' _ _)) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*Set Printing All.\nCheck (fun (C : PreCategory)(D : PreCategory)(E : PreCategory)(S : Functor C D) (T : Functor E D) => (S \u2193 T)%category).\nCheck (fun (D : PreCategory)(E : PreCategory)(S : Functor E D) (x : D) => (x \u2193 S)%category).\nCheck (fun (D : PreCategory)(E : PreCategory)(S : Functor E D) (x : D) => (S \u2193 x)%category).*)\n"
+    }
+  ]
+]

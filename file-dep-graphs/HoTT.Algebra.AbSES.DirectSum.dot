@@ -1,0 +1,19 @@
+digraph HoTT_Algebra_AbSES_DirectSum {
+  graph [ratio=0.5]
+  node [style=filled]
+DirectSum_abses_twist_directsum [label="abses_twist_directsum", URL=<DirectSum.html#abses_twist_directsum>, peripheries=3, fillcolor="#F070D1"] ;
+DirectSum_abses_swap_morphism [label="abses_swap_morphism", URL=<DirectSum.html#abses_swap_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+DirectSum_abses_codiagonal [label="abses_codiagonal", URL=<DirectSum.html#abses_codiagonal>, peripheries=3, fillcolor="#F070D1"] ;
+DirectSum_abses_diagonal [label="abses_diagonal", URL=<DirectSum.html#abses_diagonal>, peripheries=3, fillcolor="#F070D1"] ;
+DirectSum_functor_abses_directsum [label="functor_abses_directsum", URL=<DirectSum.html#functor_abses_directsum>, peripheries=3, fillcolor="#F070D1"] ;
+DirectSum_abses_direct_sum [label="abses_direct_sum", URL=<DirectSum.html#abses_direct_sum>, fillcolor="#F070D1"] ;
+DirectSum_ab_biprod_exact [label="ab_biprod_exact", URL=<DirectSum.html#ab_biprod_exact>, fillcolor="#F070D1"] ;
+  DirectSum_abses_twist_directsum -> DirectSum_abses_direct_sum [] ;
+  DirectSum_abses_swap_morphism -> DirectSum_abses_direct_sum [] ;
+  DirectSum_abses_codiagonal -> DirectSum_abses_direct_sum [] ;
+  DirectSum_abses_diagonal -> DirectSum_abses_direct_sum [] ;
+  DirectSum_functor_abses_directsum -> DirectSum_abses_direct_sum [] ;
+  DirectSum_abses_direct_sum -> DirectSum_ab_biprod_exact [] ;
+subgraph cluster_DirectSum { label="DirectSum"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+DirectSum_ab_biprod_exact; DirectSum_abses_direct_sum; DirectSum_functor_abses_directsum; DirectSum_abses_diagonal; DirectSum_abses_codiagonal; DirectSum_abses_swap_morphism; DirectSum_abses_twist_directsum; };
+} /* END */

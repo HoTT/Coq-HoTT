@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.HomFunctor.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Hom Functor *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core SetCategory.Core Category.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Functor.Prod.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Category.Prod.CategoryProdNotations Functor.Prod.Core.FunctorProdCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Trunc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** Definition of [hom : Cᵒᵖ × C → Set] as a functor *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">hom_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">obj_of</span> c&#39;c :=
+    (Build_HSet
+       (morphism
+          C
+          (fst (c&#39;c : object (C^op * C)))
+          (snd (c&#39;c : object (C^op * C))))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">hom_functor_morphism_of</span> <span class="nv">s&#39;s</span> <span class="nv">d&#39;d</span> (<span class="nv">hf</span> : morphism (C^op * C) s&#39;s d&#39;d)
+  : morphism set_cat (obj_of s&#39;s) (obj_of d&#39;d)
+    := <span class="k">fun</span> <span class="nv">g</span> =&gt; snd hf o g o fst hf.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-HomFunctor-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-HomFunctor-v-alectryon-json-chk0"><span class="kn">Definition</span> <span class="nf">hom_functor</span> : Functor (C^op * C) set_cat.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>hom_functor_morphism_of</var><span><span class="hyp-body"><b>:= </b><span><span class="k">fun</span> (<span class="nv">s&#39;s</span> <span class="nv">d&#39;d</span> : (C^op * C)%category) (<span class="nv">hf</span> : morphism (C^op * C) s&#39;s d&#39;d)
+  (<span class="nv">g</span> : obj_of s&#39;s) =&gt;
+snd hf o g o fst hf</span></span><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">s&#39;s</span> <span class="nv">d&#39;d</span> : (C^op * C)%category,
+morphism (C^op * C) s&#39;s d&#39;d -&gt; morphism set_cat (obj_of s&#39;s) (obj_of d&#39;d)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (C^op * C) set_cat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor (C^op * C) set_cat
+                          (<span class="k">fun</span> <span class="nv">c&#39;c</span> =&gt; obj_of c&#39;c)
+                          hom_functor_morphism_of
+                          _
+                          _);
+    <span class="nb">subst</span> hom_functor_morphism_of;
+    <span class="nb">simpl</span>;
+    <span class="kp">abstract</span> (
+        <span class="kp">repeat</span> (<span class="nb">apply</span> path_forall || <span class="nb">intros</span> [] || <span class="nb">intro</span>);
+        <span class="nb">simpl</span> <span class="k">in</span> *;
+        <span class="nb">rewrite</span> &lt;- <span class="nl">?associativity</span>, <span class="nl">?left_identity</span>, <span class="nl">?right_identity</span>;
+        <span class="bp">reflexivity</span>
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">hom_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">covariant_contravariant</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Arguments</span> Functor.Prod.Core.induced_snd / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Arguments</span> Functor.Prod.Core.induced_fst / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** ** Covariant hom functor [hom_C(A, ─) : C → set] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">covariant_hom_functor</span> (<span class="nv">A</span> : object C^op)
+    := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="k">in</span> Functor.Prod.Core.induced_snd (hom_functor C) A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">  <span class="sd">(** ** Contravariant hom functor [hom_C(─, A) : Cᵒᵖ → set] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">contravariant_hom_functor</span> (<span class="nv">A</span> : C)
+    := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="k">in</span> Functor.Prod.Core.induced_fst (hom_functor C) A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">covariant_contravariant</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

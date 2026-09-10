@@ -1,0 +1,4803 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Classification of path spaces of precategories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.Equivalences HoTT.Basics.PathGroupoids HoTT.Basics.Trunc HoTT.Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Types.Sigma HoTT.Types.Arrow HoTT.Types.Forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section path_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We add a prime ([']) as an arbitrary convention to denote that\n      we are talking about equality of functions (less convenient for\n      use) rather than pointwise equality of functions (more\n      convenient for use, but more annoying for proofs).  We add two\n      primes to denote the even less convenient version, which\n      requires an identity equality proof. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation path_precategory''_T C D\n    := { Hobj : object C = object D\n       | { Hmor : transport (fun obj => obj -> obj -> Type)\n                            Hobj\n                            (morphism C)\n                  = morphism D\n         | transport _\n                     Hmor\n                     (transportD (fun obj => obj -> obj -> Type)\n                                 (fun obj mor => forall s d d', mor d d' -> mor s d -> mor s d')\n                                 Hobj\n                                 (morphism C)\n                                 (@compose C))\n           = @compose D\n           /\\ transport _\n                        Hmor\n                        (transportD (fun obj => obj -> obj -> Type)\n                                    (fun obj mor => forall x, mor x x)\n                                    Hobj\n                                    (morphism C)\n                                    (@identity C))\n              = @identity D }}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation path_precategory'_T C D\n    := { Hobj : object C = object D\n       | { Hmor : transport (fun obj => obj -> obj -> Type)\n                            Hobj\n                            (morphism C)\n                  = morphism D\n         | transport _\n                     Hmor\n                     (transportD (fun obj => obj -> obj -> Type)\n                                 (fun obj mor => forall s d d', mor d d' -> mor s d -> mor s d')\n                                 Hobj\n                                 (morphism C)\n                                 (@compose C))\n           = @compose D }}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Classify sufficient conditions to prove precategories equal *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_precategory_uncurried__identity_helper `{Funext} (C D : PreCategory)\n        (Heq : path_precategory'_T C D)\n  : transport _\n              Heq.2.1\n              (transportD (fun obj => obj -> obj -> Type)\n                          (fun obj mor => forall x, mor x x)\n                          Heq.1\n                          (morphism C)\n                          (@identity C))\n    = @identity D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall x : D, mor x x)\n  (Heq.2).1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall x : obj, mor x x)\n     Heq.1 (morphism C) identity) =\nidentity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Heq"
+              ],
+              "body": null,
+              "type": "path_precategory'_T C D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall x : D, mor x x)\n  (Heq.2).1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall x : obj, mor x x)\n     Heq.1 (morphism C) identity) =\nidentity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Heq"
+              ],
+              "body": null,
+              "type": "path_precategory'_T C D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct Heq as [? [? ?]]; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun mor : D -> D -> Type => forall x : D, mor x x) proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     proj1 (morphism C) identity) =\nidentity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) proj1 (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     proj1 (morphism C) (@compose C)) =\n@compose D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat (intro || apply path_forall).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun mor : D -> D -> Type => forall x0 : D, mor x0 x0) proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall x0 : obj, mor x0 x0)\n     proj1 (morphism C) identity)\n  x =\n1%morphism",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) proj1 (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     proj1 (morphism C) (@compose C)) =\n@compose D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply identity_unique; cbn in *; auto with morphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : D) (m : morphism D s d),\nm\no transport (fun mor : D -> D -> Type => forall x0 : D, mor x0 x0) proj0\n    (transportD (fun obj : Type => obj -> obj -> Type)\n       (fun (obj : Type) (mor : obj -> obj -> Type) =>\n        forall x0 : obj, mor x0 x0)\n       proj1 (morphism C) identity)\n    s =\nm",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) proj1 (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     proj1 (morphism C) (@compose C)) =\n@compose D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct C, D; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (s d : object0) (m : morphism0 s d),\ncompose0 s s d m\n  (transport\n     (fun mor : object0 -> object0 -> Type => forall x0 : object0, mor x0 x0)\n     proj0\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x0 : obj, mor x0 x0)\n        proj1 morphism identity)\n     s) =\nm",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x0 : object, morphism x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x0 : object,\ncompose x0 x0 x0 (identity x0) (identity x0) = identity x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object0"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism0"
+              ],
+              "body": null,
+              "type": "object0 -> object0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x0 : object0, morphism0 x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose0"
+              ],
+              "body": null,
+              "type": "forall s d d' : object0, morphism0 d d' -> morphism0 s d -> morphism0 s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1 =\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1) =\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x0 : object0,\ncompose0 x0 x0 x0 (identity0 x0) (identity0 x0) = identity0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object0, IsHSet (morphism0 s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "object = object0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) proj1 morphism = morphism0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type =>\n   forall s d d' : object0, mor d d' -> mor s d -> mor s d')\n  proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     proj1 morphism compose) =\ncompose0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "object0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_induction; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose s s d m (identity s) = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x0 : object, morphism x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s0 d0 d' : object, morphism d0 d' -> morphism s0 d0 -> morphism s0 d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x0 : object,\ncompose x0 x0 x0 (identity x0) (identity x0) = identity x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s0 d0 : object, IsHSet (morphism s0 d0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x0 : object, morphism x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x0 : object,\ncompose x0 x0 x0 (identity0 x0) (identity0 x0) = identity0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s0 d0 : object, IsHSet (morphism s0 d0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "auto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_precategory''_T__of__path_precategory'_T `{Funext} C D\n  : path_precategory'_T C D -> path_precategory''_T C D\n    := fun H => (H.1; (H.2.1; (H.2.2, path_precategory_uncurried__identity_helper C D H))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma eta2_sigma_helper A B P Q `{forall a b, IsHProp (Q a b)}\n        (x : { a : A & { b : B a & P a b /\\ Q a b }})\n        q'\n  : (x.1; (x.2.1; (fst x.2.2, q'))) = x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x.1; (x.2).1; (fst (x.2).2, q')) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall x0 : A, B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall x0 : A, B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (a : A) (b : B a), IsHProp (Q a b)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "{a : A & {b : B a & P a b * Q a b}}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q'"
+              ],
+              "body": null,
+              "type": "Q x.1 (x.2).1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x.1; (x.2).1; (fst (x.2).2, q')) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall x0 : A, B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall x0 : A, B x0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (a : A) (b : B a), IsHProp (Q a b)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "{a : A & {b : B a & P a b * Q a b}}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q'"
+              ],
+              "body": null,
+              "type": "Q x.1 (x.2).1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x as [? [? [? ?]]]; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(proj1; proj0; (fst, q')) = (proj1; proj0; (fst, snd))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Q"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (a : A) (b : B a), IsHProp (Q a b)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "B proj1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fst"
+              ],
+              "body": null,
+              "type": "P proj1 proj0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "snd",
+                "q'"
+              ],
+              "body": null,
+              "type": "Q proj1 proj0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat f_ap; apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isequiv__path_precategory''_T__of__path_precategory'_T `{fs : Funext} C D\n  : IsEquiv (@path_precategory''_T__of__path_precategory'_T fs C D)\n    := isequiv_adjointify\n         (@path_precategory''_T__of__path_precategory'_T fs C D)\n         (fun H => (H.1; (H.2.1; fst H.2.2)))\n         (fun x => eta2_sigma_helper _ _ _ x _)\n         eta2_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_precategory_uncurried' `{fs : Funext} (C D : PreCategory)\n  : path_precategory''_T C D -> C = D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory''_T C D -> C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory''_T C D -> C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [? [? [? ?]]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) proj1 (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fst"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     proj1 (morphism C) (@compose C)) =\n@compose D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "snd"
+              ],
+              "body": null,
+              "type": "transport (fun mor : D -> D -> Type => forall x : D, mor x x) proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     proj1 (morphism C) identity) =\nidentity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct C, D; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  object := object;\n  morphism := morphism;\n  identity := identity;\n  compose := compose;\n  associativity := associativity;\n  associativity_sym := associativity_sym;\n  left_identity := left_identity;\n  right_identity := right_identity;\n  identity_identity := identity_identity;\n  trunc_morphism := trunc_morphism\n|} =\n{|\n  object := object0;\n  morphism := morphism0;\n  identity := identity0;\n  compose := compose0;\n  associativity := associativity0;\n  associativity_sym := associativity_sym0;\n  left_identity := left_identity0;\n  right_identity := right_identity0;\n  identity_identity := identity_identity0;\n  trunc_morphism := trunc_morphism0\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object0"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism0"
+              ],
+              "body": null,
+              "type": "object0 -> object0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, morphism0 x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose0"
+              ],
+              "body": null,
+              "type": "forall s d d' : object0, morphism0 d d' -> morphism0 s d -> morphism0 s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1 =\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1) =\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, compose0 x x x (identity0 x) (identity0 x) = identity0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object0, IsHSet (morphism0 s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "object = object0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) proj1 morphism = morphism0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fst"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type =>\n   forall s d d' : object0, mor d d' -> mor s d -> mor s d')\n  proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     proj1 morphism compose) =\ncompose0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "snd"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type => forall x : object0, mor x x) proj0\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     proj1 morphism identity) =\nidentity0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_induction; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  object := object;\n  morphism := morphism;\n  identity := identity;\n  compose := compose;\n  associativity := associativity;\n  associativity_sym := associativity_sym;\n  left_identity := left_identity;\n  right_identity := right_identity;\n  identity_identity := identity_identity;\n  trunc_morphism := trunc_morphism\n|} =\n{|\n  object := object;\n  morphism := morphism;\n  identity := identity;\n  compose := compose;\n  associativity := associativity0;\n  associativity_sym := associativity_sym0;\n  left_identity := left_identity0;\n  right_identity := right_identity0;\n  identity_identity := identity_identity0;\n  trunc_morphism := trunc_morphism0\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap;\n      eapply @center; abstract exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** Said proof respects [object] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_precategory_uncurried'_fst `{Funext} C D HO HM HC HI\n  : ap object (@path_precategory_uncurried' _ C D (HO; (HM; (HC, HI)))) = HO.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap object (path_precategory_uncurried' C D (HO; HM; (HC, HI))) = HO",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HO"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) HO (morphism C) = morphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HC"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  HM\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     HO (morphism C) (@compose C)) =\n@compose D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HI"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall x : D, mor x x)\n  HM\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall x : obj, mor x x)\n     HO (morphism C) identity) =\nidentity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap object (path_precategory_uncurried' C D (HO; HM; (HC, HI))) = HO",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HO"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) HO (morphism C) = morphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HC"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  HM\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     HO (morphism C) (@compose C)) =\n@compose D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HI"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall x : D, mor x x)\n  HM\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall x : obj, mor x x)\n     HO (morphism C) identity) =\nidentity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct C, D; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Core.object\n  (path_precategory_uncurried'\n     {|\n       object := object;\n       morphism := morphism;\n       identity := identity;\n       compose := compose;\n       associativity := associativity;\n       associativity_sym := associativity_sym;\n       left_identity := left_identity;\n       right_identity := right_identity;\n       identity_identity := identity_identity;\n       trunc_morphism := trunc_morphism\n     |}\n     {|\n       object := object0;\n       morphism := morphism0;\n       identity := identity0;\n       compose := compose0;\n       associativity := associativity0;\n       associativity_sym := associativity_sym0;\n       left_identity := left_identity0;\n       right_identity := right_identity0;\n       identity_identity := identity_identity0;\n       trunc_morphism := trunc_morphism0\n     |} (HO; HM; (HC, HI))) =\nHO",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object0"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism0"
+              ],
+              "body": null,
+              "type": "object0 -> object0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, morphism0 x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose0"
+              ],
+              "body": null,
+              "type": "forall s d d' : object0, morphism0 d d' -> morphism0 s d -> morphism0 s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1 =\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1) =\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, compose0 x x x (identity0 x) (identity0 x) = identity0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object0, IsHSet (morphism0 s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HO"
+              ],
+              "body": null,
+              "type": "object = object0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HM"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) HO morphism = morphism0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HC"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type =>\n   forall s d d' : object0, mor d d' -> mor s d -> mor s d')\n  HM\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     HO morphism compose) =\ncompose0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HI"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type => forall x : object0, mor x x) HM\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     HO morphism identity) =\nidentity0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_induction_hammer.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** Said proof respects [idpath] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_precategory_uncurried'_idpath `{Funext} C\n  : @path_precategory_uncurried' _ C C (idpath; (idpath; (idpath, idpath))) = idpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory_uncurried' C C (1; 1; (1, 1)) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory_uncurried' C C (1; 1; (1, 1)) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct C; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap11\n  (ap11\n     (ap11\n        (ap11\n           (ap11\n              match\n                center (associativity = associativity) in (_ = a)\n                return\n                  (Build_PreCategory' morphism identity compose associativity =\n                   Build_PreCategory' morphism identity compose a)\n              with\n              | 1 => 1\n              end (center (associativity_sym = associativity_sym)))\n           (center (left_identity = left_identity)))\n        (center (right_identity = right_identity)))\n     (center (identity_identity = identity_identity)))\n  (center (trunc_morphism = trunc_morphism)) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !(contr idpath).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap11 (ap11 (ap11 (ap11 (ap11 1 1) 1) 1) 1) 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Equality of precategories gives rise to an inhabitant of the path-classifying-type *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_precategory_uncurried'_inv (C D : PreCategory)\n  : C = D -> path_precategory''_T C D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "C = D -> path_precategory''_T C D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "C = D -> path_precategory''_T C D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory''_T C D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (ap object H').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{Hmor\n: transport (fun obj : Type => obj -> obj -> Type) \n    (ap object H') (morphism C) =\n  morphism D\n&\n(transport\n   (fun mor : D -> D -> Type =>\n    forall s d d' : D, mor d d' -> mor s d -> mor s d')\n   Hmor\n   (transportD (fun obj : Type => obj -> obj -> Type)\n      (fun (obj : Type) (mor : obj -> obj -> Type) =>\n       forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n      (ap object H') (morphism C) (@compose C)) =\n @compose D) *\n(transport (fun mor : D -> D -> Type => forall x : D, mor x x) Hmor\n   (transportD (fun obj : Type => obj -> obj -> Type)\n      (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n      (ap object H') (morphism C) identity) =\n identity)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists ((transport_compose _ object _ _) ^ @ apD (@morphism) H').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport\n   (fun mor : D -> D -> Type =>\n    forall s d d' : D, mor d d' -> mor s d -> mor s d')\n   ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n       (morphism C))^ @\n    apD morphism H')\n   (transportD (fun obj : Type => obj -> obj -> Type)\n      (fun (obj : Type) (mor : obj -> obj -> Type) =>\n       forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n      (ap object H') (morphism C) (@compose C)) =\n @compose D) *\n(transport (fun mor : D -> D -> Type => forall x : D, mor x x)\n   ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n       (morphism C))^ @\n    apD morphism H')\n   (transportD (fun obj : Type => obj -> obj -> Type)\n      (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n      (ap object H') (morphism C) identity) =\n identity)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n      (morphism C))^ @\n   apD morphism H')\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     (ap object H') (morphism C) (@compose C)) =\n@compose D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun mor : D -> D -> Type => forall x : D, mor x x)\n  ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n      (morphism C))^ @\n   apD morphism H')\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     (ap object H') (morphism C) identity) =\nidentity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n      (morphism C))^ @\n   apD morphism H')\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     (ap object H') (morphism C) (@compose C)) =\n@compose D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ apD (@compose) H'); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n      (morphism C))^ @\n   apD morphism H')\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     (ap object H') (morphism C) (@compose C)) =\ntransport\n  (fun C0 : PreCategory =>\n   forall s d d' : C0,\n   morphism C0 d d' -> morphism C0 s d -> morphism C0 s d')\n  H' (@compose C)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport_pp _ _ _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  (apD morphism H')\n  (transport\n     (fun mor : D -> D -> Type =>\n      forall s d d' : D, mor d d' -> mor s d -> mor s d')\n     (transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n        (morphism C))^\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        (ap object H') (morphism C) (@compose C))) =\ntransport\n  (fun C0 : PreCategory =>\n   forall s d d' : C0,\n   morphism C0 d d' -> morphism C0 s d -> morphism C0 s d')\n  H' (@compose C)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((ap _ (transportD_compose\n                       (fun obj => obj -> obj -> Type)\n                       (fun obj mor =>\n                          forall s d d' : obj, mor d d' -> mor s d -> mor s d') object H'\n                       (morphism C) (@compose C))^)\n                @ (transport_apD_transportD\n                     _\n                     morphism\n                     (fun x mor => forall s d d' : x, mor d d' -> mor s d -> mor s d') H'\n                     (@compose C))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun mor : D -> D -> Type => forall x : D, mor x x)\n  ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n      (morphism C))^ @\n   apD morphism H')\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     (ap object H') (morphism C) identity) =\nidentity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ apD (@identity) H'); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun mor : D -> D -> Type => forall x : D, mor x x)\n  ((transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n      (morphism C))^ @\n   apD morphism H')\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     (ap object H') (morphism C) identity) =\ntransport (fun C0 : PreCategory => forall x : C0, morphism C0 x x) H'\n  identity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport_pp _ _ _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun mor : D -> D -> Type => forall x : D, mor x x)\n  (apD morphism H')\n  (transport (fun mor : D -> D -> Type => forall x : D, mor x x)\n     (transport_compose (fun obj : Type => obj -> obj -> Type) object H'\n        (morphism C))^\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x : obj, mor x x)\n        (ap object H') (morphism C) identity)) =\ntransport (fun C0 : PreCategory => forall x : C0, morphism C0 x x) H'\n  identity",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "C = D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((ap _ (transportD_compose\n                       (fun obj => obj -> obj -> Type)\n                       (fun obj mor =>\n                          forall x : obj, mor x x) object H'\n                       (morphism C) (@identity C))^)\n                @ (transport_apD_transportD\n                     _\n                     morphism\n                     (fun x mor => forall s : x, mor s s) H'\n                     (@identity C))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Classify equality of precategories up to equivalence *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma equiv_path_precategory_uncurried'__eissect `{Funext} (C D : PreCategory)\n  : forall x : path_precategory''_T C D,\n      path_precategory_uncurried'_inv (path_precategory_uncurried' C D x) = x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : path_precategory''_T C D,\npath_precategory_uncurried'_inv (path_precategory_uncurried' C D x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : path_precategory''_T C D,\npath_precategory_uncurried'_inv (path_precategory_uncurried' C D x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct C, D; cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall\nx : {Hobj : object = object0 &\n    {Hmor\n    : transport (fun obj : Type => obj -> obj -> Type) Hobj morphism =\n      morphism0\n    &\n    (transport\n       (fun mor : object0 -> object0 -> Type =>\n        forall s d d' : object0, mor d d' -> mor s d -> mor s d')\n       Hmor\n       (transportD (fun obj : Type => obj -> obj -> Type)\n          (fun (obj : Type) (mor : obj -> obj -> Type) =>\n           forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n          Hobj morphism compose) =\n     compose0) *\n    (transport\n       (fun mor : object0 -> object0 -> Type => forall x : object0, mor x x)\n       Hmor\n       (transportD (fun obj : Type => obj -> obj -> Type)\n          (fun (obj : Type) (mor : obj -> obj -> Type) =>\n           forall x : obj, mor x x)\n          Hobj morphism identity) =\n     identity0)}},\npath_precategory_uncurried'_inv\n  (path_precategory_uncurried'\n     {|\n       object := object;\n       morphism := morphism;\n       identity := identity;\n       compose := compose;\n       associativity := associativity;\n       associativity_sym := associativity_sym;\n       left_identity := left_identity;\n       right_identity := right_identity;\n       identity_identity := identity_identity;\n       trunc_morphism := trunc_morphism\n     |}\n     {|\n       object := object0;\n       morphism := morphism0;\n       identity := identity0;\n       compose := compose0;\n       associativity := associativity0;\n       associativity_sym := associativity_sym0;\n       left_identity := left_identity0;\n       right_identity := right_identity0;\n       identity_identity := identity_identity0;\n       trunc_morphism := trunc_morphism0\n     |} x) =\nx",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object0"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism0"
+              ],
+              "body": null,
+              "type": "object0 -> object0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, morphism0 x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose0"
+              ],
+              "body": null,
+              "type": "forall s d d' : object0, morphism0 d d' -> morphism0 s d -> morphism0 s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1 =\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1) =\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, compose0 x x x (identity0 x) (identity0 x) = identity0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object0, IsHSet (morphism0 s d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [H0' [H1' [H2' H3']]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory_uncurried'_inv\n  (path_precategory_uncurried'\n     {|\n       object := object;\n       morphism := morphism;\n       identity := identity;\n       compose := compose;\n       associativity := associativity;\n       associativity_sym := associativity_sym;\n       left_identity := left_identity;\n       right_identity := right_identity;\n       identity_identity := identity_identity;\n       trunc_morphism := trunc_morphism\n     |}\n     {|\n       object := object0;\n       morphism := morphism0;\n       identity := identity0;\n       compose := compose0;\n       associativity := associativity0;\n       associativity_sym := associativity_sym0;\n       left_identity := left_identity0;\n       right_identity := right_identity0;\n       identity_identity := identity_identity0;\n       trunc_morphism := trunc_morphism0\n     |} (H0'; H1'; (H2', H3'))) =\n(H0'; H1'; (H2', H3'))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object0"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism0"
+              ],
+              "body": null,
+              "type": "object0 -> object0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, morphism0 x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose0"
+              ],
+              "body": null,
+              "type": "forall s d d' : object0, morphism0 d d' -> morphism0 s d -> morphism0 s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1 =\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1) =\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, compose0 x x x (identity0 x) (identity0 x) = identity0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object0, IsHSet (morphism0 s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "object = object0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) H0' morphism = morphism0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2'"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type =>\n   forall s d d' : object0, mor d d' -> mor s d -> mor s d')\n  H1'\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     H0' morphism compose) =\ncompose0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3'"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : object0 -> object0 -> Type => forall x : object0, mor x x) H1'\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) => forall x : obj, mor x x)\n     H0' morphism identity) =\nidentity0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_induction.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory_uncurried'_inv\n  (path_precategory_uncurried'\n     {|\n       object := object;\n       morphism := morphism;\n       identity := identity;\n       compose := compose;\n       associativity := associativity;\n       associativity_sym := associativity_sym;\n       left_identity := left_identity;\n       right_identity := right_identity;\n       identity_identity := identity_identity;\n       trunc_morphism := trunc_morphism\n     |}\n     {|\n       object := object;\n       morphism :=\n         transport (fun obj : Type => obj -> obj -> Type) 1 morphism;\n       identity :=\n         transport\n           (fun mor : object -> object -> Type => forall x : object, mor x x)\n           1\n           (transportD (fun obj : Type => obj -> obj -> Type)\n              (fun (obj : Type) (mor : obj -> obj -> Type) =>\n               forall x : obj, mor x x)\n              1 morphism identity);\n       compose :=\n         transport\n           (fun mor : object -> object -> Type =>\n            forall s d d' : object, mor d d' -> mor s d -> mor s d')\n           1\n           (transportD (fun obj : Type => obj -> obj -> Type)\n              (fun (obj : Type) (mor : obj -> obj -> Type) =>\n               forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n              1 morphism compose);\n       associativity := associativity0;\n       associativity_sym := associativity_sym0;\n       left_identity := left_identity0;\n       right_identity := right_identity0;\n       identity_identity := identity_identity0;\n       trunc_morphism := trunc_morphism0\n     |} (1; 1; (1, 1))) =\n(1; 1; (1, 1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object)\n(f : transport (fun obj : Type => obj -> obj -> Type) 1 morphism a b),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  a b b\n  (transport\n     (fun mor : object -> object -> Type => forall x : object, mor x x) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x : obj, mor x x)\n        1 morphism identity)\n     b)\n  f =\nf"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object)\n(f : transport (fun obj : Type => obj -> obj -> Type) 1 morphism a b),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  a a b f\n  (transport\n     (fun mor : object -> object -> Type => forall x : object, mor x x) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x : obj, mor x x)\n        1 morphism identity)\n     a) =\nf"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object,\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x x x\n  (transport\n     (fun mor : object -> object -> Type => forall x0 : object, mor x0 x0) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x0 : obj, mor x0 x0)\n        1 morphism identity)\n     x)\n  (transport\n     (fun mor : object -> object -> Type => forall x0 : object, mor x0 x0) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x0 : obj, mor x0 x0)\n        1 morphism identity)\n     x) =\ntransport\n  (fun mor : object -> object -> Type => forall x0 : object, mor x0 x0) 1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall x0 : obj, mor x0 x0)\n     1 morphism identity)\n  x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object)\n(m1 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x1 x2)\n(m2 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x2 x3)\n(m3 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x3 x4),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x2 x4\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x2 x3 x4 m3 m2)\n  m1 =\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x3 x4 m3\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object)\n(m1 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x1 x2)\n(m2 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x2 x3)\n(m3 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x3 x4),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x3 x4 m3\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x1 x2 x3 m2 m1) =\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x2 x4\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x2 x3 x4 m3 m2)\n  m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object,\nIsHSet (transport (fun obj : Type => obj -> obj -> Type) 1 morphism s d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory_uncurried'_inv\n  (ap11\n     (ap11\n        (ap11\n           (ap11\n              (ap11\n                 match\n                   center (associativity = associativity0) in (_ = a)\n                   return\n                     (Build_PreCategory' morphism identity compose\n                        associativity =\n                      Build_PreCategory' morphism identity compose a)\n                 with\n                 | 1 => 1\n                 end (center (associativity_sym = associativity_sym0)))\n              (center (left_identity = left_identity0)))\n           (center (right_identity = right_identity0)))\n        (center (identity_identity = identity_identity0)))\n     (center (trunc_morphism = trunc_morphism0))) =\n(1; 1; (1, 1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object)\n(f : transport (fun obj : Type => obj -> obj -> Type) 1 morphism a b),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  a b b\n  (transport\n     (fun mor : object -> object -> Type => forall x : object, mor x x) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x : obj, mor x x)\n        1 morphism identity)\n     b)\n  f =\nf"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object)\n(f : transport (fun obj : Type => obj -> obj -> Type) 1 morphism a b),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  a a b f\n  (transport\n     (fun mor : object -> object -> Type => forall x : object, mor x x) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x : obj, mor x x)\n        1 morphism identity)\n     a) =\nf"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object,\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x x x\n  (transport\n     (fun mor : object -> object -> Type => forall x0 : object, mor x0 x0) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x0 : obj, mor x0 x0)\n        1 morphism identity)\n     x)\n  (transport\n     (fun mor : object -> object -> Type => forall x0 : object, mor x0 x0) 1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall x0 : obj, mor x0 x0)\n        1 morphism identity)\n     x) =\ntransport\n  (fun mor : object -> object -> Type => forall x0 : object, mor x0 x0) 1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall x0 : obj, mor x0 x0)\n     1 morphism identity)\n  x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object)\n(m1 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x1 x2)\n(m2 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x2 x3)\n(m3 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x3 x4),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x2 x4\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x2 x3 x4 m3 m2)\n  m1 =\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x3 x4 m3\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object)\n(m1 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x1 x2)\n(m2 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x2 x3)\n(m3 : transport (fun obj : Type => obj -> obj -> Type) 1 morphism x3 x4),\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x3 x4 m3\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x1 x2 x3 m2 m1) =\ntransport\n  (fun mor : object -> object -> Type =>\n   forall s d d' : object, mor d d' -> mor s d -> mor s d')\n  1\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     1 morphism compose)\n  x1 x2 x4\n  (transport\n     (fun mor : object -> object -> Type =>\n      forall s d d' : object, mor d d' -> mor s d -> mor s d')\n     1\n     (transportD (fun obj : Type => obj -> obj -> Type)\n        (fun (obj : Type) (mor : obj -> obj -> Type) =>\n         forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n        1 morphism compose)\n     x2 x3 x4 m3 m2)\n  m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object,\nIsHSet (transport (fun obj : Type => obj -> obj -> Type) 1 morphism s d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat (edestruct (center (_ = _)); try reflexivity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma equiv_path_precategory_uncurried' `{Funext} (C D : PreCategory)\n  : path_precategory''_T C D <~> C = D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory''_T C D <~> C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory''_T C D <~> C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_adjointify (@path_precategory_uncurried' _ C D)\n                            (@path_precategory_uncurried'_inv C D)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : C = D =>\n path_precategory_uncurried' C D (path_precategory_uncurried'_inv x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : path_precategory''_T C D =>\n path_precategory_uncurried'_inv (path_precategory_uncurried' C D x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : C = D =>\n path_precategory_uncurried' C D (path_precategory_uncurried'_inv x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : C = D,\npath_precategory_uncurried' C D (path_precategory_uncurried'_inv x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory_uncurried' C C (path_precategory_uncurried'_inv 1) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_precategory_uncurried'_idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : path_precategory''_T C D =>\n path_precategory_uncurried'_inv (path_precategory_uncurried' C D x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : path_precategory''_T C D,\npath_precategory_uncurried'_inv (path_precategory_uncurried' C D x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_precategory_uncurried'__eissect.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_path_precategory_uncurried `{Funext} (C D : PreCategory)\n  : path_precategory'_T C D <~> C = D\n    := ((equiv_path_precategory_uncurried' C D)\n          oE (Build_Equiv\n                _ _ _\n                (isequiv__path_precategory''_T__of__path_precategory'_T C D))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_precategory_uncurried `{Funext} C D : _ -> _\n    := equiv_path_precategory_uncurried C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Curried version of path classifying lemma *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_precategory' `{fs : Funext} (C D : PreCategory)\n  : forall (Hobj : object C = object D)\n           (Hmor : transport (fun obj => obj -> obj -> Type)\n                             Hobj\n                             (morphism C)\n                   = morphism D),\n      transport _\n                Hmor\n                (transportD (fun obj => obj -> obj -> Type)\n                            (fun obj mor => forall s d d', mor d d' -> mor s d -> mor s d')\n                            Hobj\n                            (morphism C)\n                            (@compose C))\n      = @compose D\n      -> C = D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hobj : C = D)\n(Hmor : transport (fun obj : Type => obj -> obj -> Type) Hobj (morphism C) =\n        morphism D),\ntransport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C)) =\n@compose D -> C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hobj : C = D)\n(Hmor : transport (fun obj : Type => obj -> obj -> Type) Hobj (morphism C) =\n        morphism D),\ntransport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C)) =\n@compose D -> C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) Hobj (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C)) =\n@compose D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_precategory_uncurried.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_precategory'_T C D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "transport (fun obj : Type => obj -> obj -> Type) Hobj (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "transport\n  (fun mor : (fun obj : Type => obj -> obj -> Type) D =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : (fun obj0 : Type => obj0 -> obj0 -> Type) obj) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C)) =\n@compose D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat esplit; eassumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Curried version of path classifying lemma, using [forall] in place of equality of functions *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_precategory `{fs : Funext} (C D : PreCategory)\n  : forall (Hobj : object C = object D)\n           (Hmor : forall s d,\n                     morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d)\n                     = morphism D s d),\n      (forall s d d' m m',\n         transport idmap (Hmor _ _)\n                   (@compose C _ _ _\n                             (transport idmap (Hmor _ _)^ m)\n                             (transport idmap (Hmor _ _)^ m'))\n         = @compose D s d d' m m')\n      -> C = D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hobj : C = D)\n(Hmor : forall s d : D,\n        morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\n        morphism D s d),\n(forall (s d d' : D) (m : morphism D d d') (m' : morphism D s d),\n transport idmap (Hmor s d')\n   (transport idmap (Hmor d d')^ m o transport idmap (Hmor s d)^ m') =\n m o m') ->\nC = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hobj : C = D)\n(Hmor : forall s d : D,\n        morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\n        morphism D s d),\n(forall (s d d' : D) (m : morphism D d d') (m' : morphism D s d),\n transport idmap (Hmor s d')\n   (transport idmap (Hmor d d')^ m o transport idmap (Hmor s d)^ m') =\n m o m') ->\nC = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros Hobj Hmor Hcomp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hcomp"
+              ],
+              "body": null,
+              "type": "forall (s d d' : D) (m : morphism D d d') (m' : morphism D s d),\ntransport idmap (Hmor s d')\n  (transport idmap (Hmor d d')^ m o transport idmap (Hmor s d)^ m') =\nm o m'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (path_forall\n            _ _\n            (fun s =>\n               path_forall\n                 _ _\n                 (fun d =>\n                    (ap10 (@transport_arrow Type idmap (fun x => x -> Type) _ _ Hobj (@morphism C) _) _)\n                      @ (@transport_arrow Type idmap _ _ _ Hobj (@morphism C _) _)\n                      @ (transport_const _ _)\n                      @ Hmor s d)))\n      as Hmor'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "C = D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hcomp"
+              ],
+              "body": null,
+              "type": "forall (s d d' : D) (m : morphism D d d') (m' : morphism D s d),\ntransport idmap (Hmor s d')\n  (transport idmap (Hmor d d')^ m o transport idmap (Hmor s d)^ m') =\nm o m'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor'"
+              ],
+              "body": "path_forall\n  (transport (fun x : Type => idmap x -> (fun x0 : Type => x0 -> Type) x)\n     Hobj (morphism C))\n  (morphism D)\n  (fun s : D =>\n   path_forall\n     (transport (fun x : Type => idmap x -> (fun x0 : Type => x0 -> Type) x)\n        Hobj (morphism C) s)\n     (morphism D s)\n     (fun d : D =>\n      ((ap10 (transport_arrow Hobj (morphism C) s) d @\n        transport_arrow Hobj (morphism C (transport idmap Hobj^ s)) d) @\n       transport_const Hobj\n         (morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d))) @\n      Hmor s d))",
+              "type": "transport (fun x : Type => idmap x -> (fun x0 : Type => x0 -> Type) x) Hobj\n  (morphism C) =\nmorphism D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply (path_precategory' C D Hobj Hmor').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor'\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C)) =\n@compose D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hcomp"
+              ],
+              "body": null,
+              "type": "forall (s d d' : D) (m : morphism D d d') (m' : morphism D s d),\ntransport idmap (Hmor s d')\n  (transport idmap (Hmor d d')^ m o transport idmap (Hmor s d)^ m') =\nm o m'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor'"
+              ],
+              "body": "path_forall\n  (transport (fun x : Type => idmap x -> (fun x0 : Type => x0 -> Type) x)\n     Hobj (morphism C))\n  (morphism D)\n  (fun s : D =>\n   path_forall\n     (transport (fun x : Type => idmap x -> (fun x0 : Type => x0 -> Type) x)\n        Hobj (morphism C) s)\n     (morphism D s)\n     (fun d : D =>\n      ((ap10 (transport_arrow Hobj (morphism C) s) d @\n        transport_arrow Hobj (morphism C (transport idmap Hobj^ s)) d) @\n       transport_const Hobj\n         (morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d))) @\n      Hmor s d))",
+              "type": "transport (fun x : Type => idmap x -> (fun x0 : Type => x0 -> Type) x) Hobj\n  (morphism C) =\nmorphism D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat (apply path_forall; intro).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor'\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C))\n  x x0 x1 x2 x3 =\nx2 o x3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hcomp"
+              ],
+              "body": null,
+              "type": "forall (s d d' : D) (m : morphism D d d') (m' : morphism D s d),\ntransport idmap (Hmor s d')\n  (transport idmap (Hmor d d')^ m o transport idmap (Hmor s d)^ m') =\nm o m'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor'"
+              ],
+              "body": "path_forall\n  (transport (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4)\n     Hobj (morphism C))\n  (morphism D)\n  (fun s : D =>\n   path_forall\n     (transport\n        (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4) Hobj\n        (morphism C) s)\n     (morphism D s)\n     (fun d : D =>\n      ((ap10 (transport_arrow Hobj (morphism C) s) d @\n        transport_arrow Hobj (morphism C (transport idmap Hobj^ s)) d) @\n       transport_const Hobj\n         (morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d))) @\n      Hmor s d))",
+              "type": "transport (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4)\n  Hobj (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "morphism D x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "morphism D x x0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ Hcomp _ _ _ _ _); clear Hcomp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  Hmor'\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C))\n  x x0 x1 x2 x3 =\ntransport idmap (Hmor x x1)\n  (transport idmap (Hmor x0 x1)^ x2 o transport idmap (Hmor x x0)^ x3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor'"
+              ],
+              "body": "path_forall\n  (transport (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4)\n     Hobj (morphism C))\n  (morphism D)\n  (fun s : D =>\n   path_forall\n     (transport\n        (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4) Hobj\n        (morphism C) s)\n     (morphism D s)\n     (fun d : D =>\n      ((ap10 (transport_arrow Hobj (morphism C) s) d @\n        transport_arrow Hobj (morphism C (transport idmap Hobj^ s)) d) @\n       transport_const Hobj\n         (morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d))) @\n      Hmor s d))",
+              "type": "transport (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4)\n  Hobj (morphism C) =\nmorphism D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "morphism D x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "morphism D x x0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "subst Hmor'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  (path_forall\n     (transport\n        (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4) Hobj\n        (morphism C))\n     (morphism D)\n     (fun s : D =>\n      path_forall\n        (transport\n           (fun x4 : Type => idmap x4 -> (fun x5 : Type => x5 -> Type) x4)\n           Hobj (morphism C) s)\n        (morphism D s)\n        (fun d : D =>\n         ((ap10 (transport_arrow Hobj (morphism C) s) d @\n           transport_arrow Hobj (morphism C (transport idmap Hobj^ s)) d) @\n          transport_const Hobj\n            (morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d))) @\n         Hmor s d)))\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C))\n  x x0 x1 x2 x3 =\ntransport idmap (Hmor x x1)\n  (transport idmap (Hmor x0 x1)^ x2 o transport idmap (Hmor x x0)^ x3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "morphism D x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "morphism D x x0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mor : D -> D -> Type =>\n   forall s d d' : D, mor d d' -> mor s d -> mor s d')\n  (path_forall\n     (transport (fun x4 : Type => x4 -> x4 -> Type) Hobj (morphism C))\n     (morphism D)\n     (fun s : D =>\n      path_forall\n        (transport (fun x4 : Type => x4 -> x4 -> Type) Hobj (morphism C) s)\n        (morphism D s)\n        (fun d : D =>\n         ((ap10 (transport_arrow Hobj (morphism C) s) d @\n           transport_arrow Hobj (morphism C (transport idmap Hobj^ s)) d) @\n          transport_const Hobj\n            (morphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d))) @\n         Hmor s d)))\n  (transportD (fun obj : Type => obj -> obj -> Type)\n     (fun (obj : Type) (mor : obj -> obj -> Type) =>\n      forall s d d' : obj, mor d d' -> mor s d -> mor s d')\n     Hobj (morphism C) (@compose C))\n  x x0 x1 x2 x3 =\ntransport idmap (Hmor x x1)\n  (transport idmap (Hmor x0 x1)^ x2 o transport idmap (Hmor x x0)^ x3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C",
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hobj"
+              ],
+              "body": null,
+              "type": "C = D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hmor"
+              ],
+              "body": null,
+              "type": "forall s d : D,\nmorphism C (transport idmap Hobj^ s) (transport idmap Hobj^ d) =\nmorphism D s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "morphism D x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "morphism D x x0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (\n        destruct C, D;\n        cbn in *;\n          destruct Hobj;\n        cbn in *;\n          repeat match goal with\n                   | _ => reflexivity\n                   | _ => rewrite !concat_1p\n                   | _ => rewrite !transport_forall_constant, !transport_arrow\n                   | _ => progress transport_path_forall_hammer\n                   | [ |- transport ?P ?p^ ?u = ?v ]\n                     => (apply (@moveR_transport_V _ P _ _ p u v); progress transport_path_forall_hammer)\n                   | [ |- ?u = transport ?P ?p^ ?v ]\n                     => (apply (@moveL_transport_V _ P _ _ p u v); progress transport_path_forall_hammer)\n                   | [ |- context[?H ?x ?y] ]\n                     => (destruct (H x y); clear H)\n                   | _ => progress f_ap\n                 end\n      ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End path_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Tactic for proving equality of precategories *)\n(** We move the funext inference outside the loop. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac path_category :=\n  idtac;\n  let lem := constr:(@path_precategory _) in\n  repeat match goal with\n           | _ => intro\n           | _ => reflexivity\n           | _ => simple refine (lem _ _ _ _ _); cbn\n         end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

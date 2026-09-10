@@ -1,0 +1,50 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.interfaces.abstract_algebra\n  HoTT.Classes.interfaces.orders.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Universes:\n  - i universe of origin type\n  - j universe of target types\n  - k universe of applied apart of target types\n  - l universe of Field property of target types \n*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class RationalsToField@{i j k l} (A : Type@{i}) :=\n  rationals_to_field : forall (B : Type@{j}) `{IsField@{j l k} B}\n    `{!FieldCharacteristic B 0}, A -> B.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments rationals_to_field A {_} B {_ _ _ _ _ _ _ _ _} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(* The Rationals are the initial field of characteristic 0. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Rationals A {Aap : Apart A} {Aplus Amult Azero Aone Aneg Arecip Ale Alt}\n  `{U : !RationalsToField A} :=\n  { rationals_field :: @IsDecField A Aplus Amult Azero Aone Aneg Arecip\n  ; rationals_order :: FullPseudoSemiRingOrder Ale Alt\n  ; rationals_to_field_mor :: forall {B} `{IsField B} `{!FieldCharacteristic B 0},\n    IsSemiRingPreserving (rationals_to_field A B)\n  ; rationals_initial : forall {B} `{IsField B} `{!FieldCharacteristic B 0}\n    {h : A -> B} `{!IsSemiRingPreserving h} x,\n    rationals_to_field A B x = h x }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,1082 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Attributes of Functoriality of functor composition *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Functorial.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Isomorphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Attributes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Precomposition with an essentially surjective functor is faithful *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section faithfull_precomposition_essential_surjective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Quoting the HoTT Book:\n\n  Lemma. If [A], [B], [C] are precategories and [H : A \u2192 B] is an\n  essentially surjective functor, then [(\u2013 \u2218 H) : (B \u2192 C) \u2192 (A \u2192 C)]\n  is faithful. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{fs : Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A B C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable H : Functor A B.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{H_is_essentially_surjective : IsEssentiallySurjective A B H}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma isfaithful_precomposition_essentially_surjective_helper\n        (F G : Functor B C)\n        (T U : NaturalTransformation F G)\n        (a : A) (b : B)\n        (f : H a <~=~> b)\n        (H' : T oR H = U oR H)\n  : T b = U b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T b = U b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalTransformation F G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "H _0 a <~=~> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "T oR H = U oR H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T b = U b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalTransformation F G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "H _0 a <~=~> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "T oR H = U oR H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (ap components_of) in H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T b = U b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalTransformation F G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "H _0 a <~=~> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "T oR H = U oR H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply apD10 in H'; hnf in H'; simpl in H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T b = U b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalTransformation F G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "H _0 a <~=~> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x : A, T (H _0 x)%object = U (H _0 x)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- !(path_components_of_isomorphic' f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "G _1 f o T (H _0 a)%object o (F _1 f)^-1 =\nG _1 f o U (H _0 a)%object o (F _1 f)^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalTransformation F G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "H _0 a <~=~> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x : A, T (H _0 x)%object = U (H _0 x)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "G _1 f o U (H _0 a)%object o (F _1 f)^-1 =\nG _1 f o U (H _0 a)%object o (F _1 f)^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F",
+                "G"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T",
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalTransformation F G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "H _0 a <~=~> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x : A, T (H _0 x)%object = U (H _0 x)%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isfaithful_precomposition_essentially_surjective\n  : @IsFaithful _ (B -> C) (A -> C) (compose_functor _ _ _ H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsFaithful ((compose_functor A B C) _0 H)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsFaithful ((compose_functor A B C) _0 H)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fs"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Functor A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_is_essentially_surjective"
+              ],
+              "body": null,
+              "type": "IsEssentiallySurjective H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat match goal with\n             | _ => eapply isfaithful_precomposition_essentially_surjective_helper;\n                   eassumption\n             | _ => intro\n             | _ => progress hnf in *\n             | _ => progress simpl in *\n             | _ => apply path_forall\n             | _ => progress strip_truncations\n             | [ H : _ |- _ ] => apply ap10 in H\n             | _ => progress path_natural_transformation\n             | [ H : sig _ |- _ ] => destruct H\n             | [ H : _, t : _ |- _ ]\n               => generalize dependent (H t); clear H\n           end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End faithfull_precomposition_essential_surjective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

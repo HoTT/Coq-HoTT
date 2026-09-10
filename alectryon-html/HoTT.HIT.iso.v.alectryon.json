@@ -1,0 +1,1479 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Universe.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HIT.epi HIT.unique_choice.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We prove that [epi + mono <-> IsEquiv] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section iso.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables X Y : HSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable f : X -> Y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma atmost1P_isinj (injf : IsInjective f)\n  : forall y : Y, atmost1P (fun x => f x = y).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : Y, atmost1P (fun x : X => f x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : Y, atmost1P (fun x : X => f x = y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros y x x' p q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = x'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f x' = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (injective f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f x = f x'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f x' = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p @ q^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isequiv_isepi_ismono (epif : isepi f) (monof : ismono f)\n  : IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (@isepi_issurj _ _ _ f epif) as surjf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (isinj_ismono _ monof) as injf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (unique_choice\n                  (fun y x => f x = y)\n                  _\n                  (fun y => (@center _ (surjf y), atmost1P_isinj injf y)))\n      as H_unique_choice.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x : Y, (fun (y : Y) (x0 : X) => f x0 = y) x (f0 x)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (isequiv_adjointify _ H_unique_choice.1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Y => f (H_unique_choice.1 x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x : Y, (fun (y : Y) (x0 : X) => f x0 = y) x (f0 x)}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : X => H_unique_choice.1 (f x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x : Y, (fun (y : Y) (x0 : X) => f x0 = y) x (f0 x)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Y => f (H_unique_choice.1 x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x : Y, (fun (y : Y) (x0 : X) => f x0 = y) x (f0 x)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (H_unique_choice.1 x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x0 : Y, (fun (y : Y) (x1 : X) => f x1 = y) x0 (f0 x0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply H_unique_choice.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : X => H_unique_choice.1 (f x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x : Y, (fun (y : Y) (x0 : X) => f x0 = y) x (f0 x)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H_unique_choice.1 (f x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x0 : Y, (fun (y : Y) (x1 : X) => f x1 = y) x0 (f0 x0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply injf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (H_unique_choice.1 (f x)) = f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "HSet"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "epif"
+              ],
+              "body": null,
+              "type": "isepi f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "monof"
+              ],
+              "body": null,
+              "type": "ismono f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "surjf"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse.IsConnMap\n  (Modality.modality_to_reflective_subuniverse (Core.Tr (-1))) f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "injf"
+              ],
+              "body": null,
+              "type": "IsInjective f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H_unique_choice"
+              ],
+              "body": null,
+              "type": "{f0 : Y -> X & forall x0 : Y, (fun (y : Y) (x1 : X) => f x1 = y) x0 (f0 x0)}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply H_unique_choice.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End iso.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

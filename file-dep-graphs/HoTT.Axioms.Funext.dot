@@ -1,0 +1,7 @@
+digraph HoTT_Axioms_Funext {
+  graph [ratio=0.5]
+  node [style=filled]
+Funext_funext_axiom [label="funext_axiom", URL=<Funext.html#funext_axiom>, peripheries=3, fillcolor="#FACDEF"] ;
+subgraph cluster_Funext { label="Funext"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Funext_funext_axiom; };
+} /* END */

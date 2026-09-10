@@ -1,0 +1,17 @@
+digraph HoTT_Diagrams_ConstantDiagram {
+  graph [ratio=0.5]
+  node [style=filled]
+ConstantDiagram_equiv_diagram_const_cone [label="equiv_diagram_const_cone", URL=<ConstantDiagram.html#equiv_diagram_const_cone>, peripheries=3, fillcolor="#F070D1"] ;
+ConstantDiagram_equiv_diagram_const_cocone [label="equiv_diagram_const_cocone", URL=<ConstantDiagram.html#equiv_diagram_const_cocone>, peripheries=3, fillcolor="#F070D1"] ;
+ConstantDiagram_diagram_const_functor_idmap [label="diagram_const_functor_idmap", URL=<ConstantDiagram.html#diagram_const_functor_idmap>, peripheries=3, fillcolor="#F070D1"] ;
+ConstantDiagram_diagram_const_functor_comp [label="diagram_const_functor_comp", URL=<ConstantDiagram.html#diagram_const_functor_comp>, peripheries=3, fillcolor="#F070D1"] ;
+ConstantDiagram_diagram_const_functor [label="diagram_const_functor", URL=<ConstantDiagram.html#diagram_const_functor>, fillcolor="#F070D1"] ;
+ConstantDiagram_diagram_const [label="diagram_const", URL=<ConstantDiagram.html#diagram_const>, fillcolor="#F070D1"] ;
+  ConstantDiagram_equiv_diagram_const_cone -> ConstantDiagram_diagram_const [] ;
+  ConstantDiagram_equiv_diagram_const_cocone -> ConstantDiagram_diagram_const [] ;
+  ConstantDiagram_diagram_const_functor_idmap -> ConstantDiagram_diagram_const_functor [] ;
+  ConstantDiagram_diagram_const_functor_comp -> ConstantDiagram_diagram_const_functor [] ;
+  ConstantDiagram_diagram_const_functor -> ConstantDiagram_diagram_const [] ;
+subgraph cluster_ConstantDiagram { label="ConstantDiagram"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ConstantDiagram_diagram_const; ConstantDiagram_diagram_const_functor; ConstantDiagram_diagram_const_functor_comp; ConstantDiagram_diagram_const_functor_idmap; ConstantDiagram_equiv_diagram_const_cocone; ConstantDiagram_equiv_diagram_const_cone; };
+} /* END */

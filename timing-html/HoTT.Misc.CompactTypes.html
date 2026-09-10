@@ -1,0 +1,2376 @@
+<html>
+<head>
+<title>CompactTypes.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for CompactTypes.v</h1>
+
+<div class="code" title="File: CompactTypes.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Properties of compact and searchable types *)
+
+</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 2
+Time: 0.042s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 2
+Time: 0.029s">
+<div class="time" style="width: 69.047619047619%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Require Import Spaces.Nat.Core Finite.Fin.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Misc.UStructures.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Require Import Spaces.NatSeq.Core Spaces.NatSeq.UStructure.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 7
+Time: 0.01s">
+<div class="time" style="width: 23.809523809524%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Universes.TruncType Universes.HProp.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Basic definitions of compact types *)
+
+(** A type [A] is compact if for every decidable family over [A], the Σ-type is decidable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsSigmaCompact (A : Type)
+  := forall P : A -&gt; Type, (forall a : A, Decidable (P a)) -&gt; Decidable (sig P).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It is enough to consider [HProp]-valued families. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsSigmaCompactProps (A : Type)
+  := forall P : A -&gt; HProp,
+      (forall a : A, Decidable (P a)) -&gt; Decidable (sig P).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition issigmacompactprops_issigmacompact {A : Type}
+  (h : IsSigmaCompact A)
+  : IsSigmaCompactProps A
+  := h.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition issigmacompact_issigmacompactprops {A : Type}
+  (h : IsSigmaCompactProps A)
+  : IsSigmaCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P hP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  refine (decidable_iff _ (h (merely o P) _)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_functor_sigma; intro a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact merely_inhabited_iff_inhabited_stable.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A weaker definition: for any decidable family, the dependent function type is decidable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsPiCompact (A : Type)
+  := forall (P : A -&gt; Type) (dP : forall a : A, Decidable (P a)),
+      Decidable (forall a : A, P a).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ispicompact_issigmacompact {A : Type} (c : IsSigmaCompact A)
+  : IsPiCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 45
+Time: 0.003s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+  destruct (c (not o P) _) as [l|r].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; exact (fun f =&gt; l.2 (f l.1)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (stable_decidable (P a)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fun u =&gt; r (a; u)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Compact types are closed under retracts. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_retract {A R : Type} {f : A -&gt; R} {g : R -&gt; A}
+  (s : f o g == idmap) (c : IsSigmaCompact A)
+  : IsSigmaCompact R.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  intros P dP; destruct (c (P o f) _) as [u|v].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: left; exact (f u.1; u.2).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  right; intros [r pr].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply v.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (g r).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((s r)^ # pr).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+
+Definition issigmacompact_equiv {A B : Type} (f : A -&gt; B) `{!IsEquiv f}
+  (c : IsSigmaCompact B)
+  : IsSigmaCompact A
+  := issigmacompact_retract (eissect f) c.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any compact type is decidable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decidable_issigmacompact {A : Type} (c : IsSigmaCompact A)
+  : Decidable A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  destruct (c (fun (_ : A) =&gt; Unit) _) as [c1|c2].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl c1.1).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; intro a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (c2 (a; pt)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalent definitions *)
+
+(** A type [A] is compact if for every decidable predicate [P] on [A] we can either find an element of [A] making [P] false or we can show that [P a] always holds. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsCompact (A : Type)
+  := forall P : A -&gt; Type, (forall a : A, Decidable (P a)) -&gt;
+                              {a : A &amp; ~ P a} + (forall a : A, P a).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Compactness is equivalent to assuming the same for [HProp]-valued decidable predicates. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsCompactProps (A : Type)
+  := forall P : A -&gt; HProp, (forall a : A, Decidable (P a)) -&gt;
+                              {a : A &amp; ~ P a} + (forall a : A, P a).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iscompact_iscompactprops {A} (c : IsCompactProps A) : IsCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  destruct (c (merely o P) _) as [l|r].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl (l.1; fun p =&gt; l.2 (tr p))).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply merely_inhabited_iff_inhabited_stable, r.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since decidable types are stable, it's also equivalent to negate [P] in the definition. We use this as an intermediate notion to show that [IsCompact] and [IsSigmaCompact] are logically equivalent. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsCompact' (A : Type)
+  := forall P : A -&gt; Type, (forall a : A, Decidable (P a)) -&gt;
+                              {a : A &amp; P a} + (forall a : A, ~ P a).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_iscompact_iscompact' (A : Type)
+  : IsCompact A &lt;-&gt; IsCompact' A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 106
+Time: 0.009s">
+<div class="time" style="width: 21.428571428571%"></div>
+<pre>
+  split;
+    napply (functor_forall (fun P =&gt; not o P)); intro P;
+    rapply functor_forall; intro dP;
+    apply functor_sum.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2,3: exact idmap.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (functor_sigma idmap).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: apply (functor_forall idmap).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intro a; by apply stable_decidable.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_iscompact'_issigmacompact (A : Type)
+  : IsCompact' A &lt;-&gt; IsSigmaCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_functor_forall; intro P.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_functor_forall; intro dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_equiv.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_functor_sum' equiv_idmap).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply equiv_sig_ind.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_iscompact_issigmacompact (A : Type)
+  : IsCompact A &lt;-&gt; IsSigmaCompact A
+  := iff_compose (iff_iscompact_iscompact' A) (iff_iscompact'_issigmacompact A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Basic definitions of searchable types *)
+
+(** A type is searchable if for every decidable predicate we can find a "universal witness" for whether the predicate is always true or not. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition IsSearchable (A : Type)
+  := forall (P : A -&gt; Type) (dP : forall a : A, Decidable (P a)),
+      {x : A &amp; P x -&gt; forall a : A, P a}.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition IsSearchableProps (A : Type)
+  := forall (P : A -&gt; HProp) (dP : forall a : A, Decidable (P a)),
+      {x : A &amp; P x -&gt; forall a : A, P a}.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition issearchable_issearchableprops {A : Type} (s : IsSearchableProps A)
+  : IsSearchable A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  specialize (s (merely o P) _).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists s.1.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros h a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply merely_inhabited_iff_inhabited_stable, s.2, tr, h.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A type is searchable if and only if it is compact and inhabited. *)
+
+</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issearchable_issigmacompact_inhabited {A : Type}
+  (c : IsSigmaCompact A)
+  : A -&gt; IsSearchable A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 156
+Time: 0.003s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+  destruct (c (fun x =&gt; ~ (P x)) _) as [l|r].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists l.1.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h; contradiction (l.2 h).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a; intros _ x.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply stable_decidable.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fun u =&gt; r (x; u)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition issigmacompact_issearchable {A : Type} (s : IsSearchable A)
+  : IsSigmaCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 168
+Time: 0.003s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+  destruct (s (fun x =&gt; ~ (P x)) _) as [w hw].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dP w) as [x|y].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl (w; x)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (fun u =&gt; hw y u.1 u.2)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+
+Definition inhabited_issearchable {A : Type} (s : IsSearchable A) : A
+  := (s (fun a =&gt; Unit) _).1.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+
+Definition issearchable_iff (A : Type) : IsSearchable A &lt;-&gt; A * (IsSigmaCompact A)
+  := (fun s =&gt; (inhabited_issearchable s, issigmacompact_issearchable s),
+        fun c =&gt; issearchable_issigmacompact_inhabited (snd c) (fst c)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since compactness implies decidability, a type is compact if and only if it is either empty or searchable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_iff_not_or_issearchable (A : Type)
+  : IsSigmaCompact A &lt;-&gt; (~ A) + IsSearchable A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro c.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (decidable_issigmacompact c) as [l|r].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr (issearchable_issigmacompact_inhabited c l)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl r).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [l|r].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun P dP =&gt; inr (l o pr1)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (issigmacompact_issearchable r).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Examples of searchable and compact types, and closure properties *)
+
+(** Contractible types are compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_contr {A} (c : Contr A) : IsSigmaCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  rapply (decidable_equiv _ (equiv_contr_sigma _)^-1).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Contractible types are searchable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issearchable_contr {A} (c : Contr A) : IsSearchable A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (center A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by induction (contr a).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [Bool] is searchable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issearchable_Bool : IsSearchable Bool.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction (dP false) as [p | np]; [exists true | exists false].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: by intros p' [].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [Bool] is compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_bool : IsSigmaCompact Bool
+  := issigmacompact_issearchable issearchable_Bool.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The empty type is trivially compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_empty : IsSigmaCompact Empty
+  := fun P dP =&gt; inr pr1.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any decidable proposition is compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_decidable_hprop {A : HProp} (dA : Decidable A)
+  : IsSigmaCompact A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  destruct (equiv_decidable_hprop A) as [e1|e2].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (issigmacompact_equiv e1).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply issigmacompact_contr.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (issigmacompact_equiv e2).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issigmacompact_empty.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming univalence, the type of propositions is searchable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issearchable_hprop `{Univalence} : IsSearchable HProp.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply issearchable_issearchableprops.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dP Unit_hp) as [t|f].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists False_hp; intros p a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply stable_decidable.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply (not_not_constant_family_hprop P).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Unit_hp; fun h =&gt; Empty_rec (f h)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming the set truncation map has a section, a type is compact if and only if its set truncation is compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Definition issigmacompact_iff_issigmacompact_set_trunc `{Univalence} {A : Type}
+  (f : (Tr 0 A) -&gt; A) (s : tr o f == idmap)
+  : IsSigmaCompact A &lt;-&gt; IsSigmaCompact (Tr 0 A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (issigmacompact_retract s).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro cpt; rapply issigmacompact_issigmacompactprops.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (cpt (Trunc_rec P)) as [l|r].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 254
+Time: 0.023s">
+<div class="time" style="width: 54.761904761905%"></div>
+<pre> intro a; strip_truncations.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (dP a).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; exists (f l.1).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ap (Trunc_rec P) (s l.1))^ # l.2).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; refine (fun a =&gt; r (tr a.1; a.2)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 258
+Time: 0.002s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming univalence, if the domain of a surjective map is searchable, then so is its codomain. *)
+
+</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issearchableprops_image `{Univalence} (A B : Type)
+  (s : IsSearchableProps A)
+  (f : A -&gt; B) (surj : IsSurjection f)
+  : IsSearchableProps B.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (s (P o f) _).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 268
+Time: 0.008s">
+<div class="time" style="width: 19.047619047619%"></div>
+<pre>
+  exact (f s.1; fun t =&gt; conn_map_elim _ f _ (s.2 t)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 270
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+
+Definition issearchable_image `{Univalence} (A B : Type)
+  (s : IsSearchable A)
+  (f : A -&gt; B) (surj : IsSurjection f)
+  : IsSearchable B
+  := issearchable_issearchableprops (issearchableprops_image A B s f surj).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Consequently, the same is true for compact types.  *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_image `{Univalence} {A B : Type}
+  (c : IsSigmaCompact A)
+  (f : A -&gt; B) (surj : IsSurjection f)
+  : IsSigmaCompact B.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply issigmacompact_iff_not_or_issearchable.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (fst (issigmacompact_iff_not_or_issearchable A) c) as [n|s].</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 285
+Time: 0.004s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre> left; by rapply conn_map_elim.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre> right; by rapply issearchable_image.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming univalence, every pointed, connected type is searchable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 289
+Time: 0.017s">
+<div class="time" style="width: 40.47619047619%"></div>
+<pre>Definition issearchable_isconnected_ptype `{Univalence} (A : pType)
+  (c : IsConnected 0 A)
+  : IsSearchable A
+  := issearchable_image Unit A (issearchable_contr _) (fun _ =&gt; pt) _.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming univalence, the suspension of any type is searchable. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issearchable_suspension `{Univalence} (A : Type)
+  : IsSearchable (Susp A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (issearchable_image Bool (Susp A) issearchable_Bool _ _).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Bool_rec _ North South).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre> snapply Susp_ind; cbn.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+    1,2: rapply contr_inhabited_hprop; apply tr.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (true; idpath).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (false; idpath).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x; by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For any family of compact types over a compact type, the corresponding dependent sum type is compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_sigma {A : Type} {P : A -&gt; Type}
+  (cA : IsSigmaCompact A) (cP : forall (a : A), IsSigmaCompact (P a))
+  : IsSigmaCompact (sig P).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Q dQ.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (decidable_equiv _ (equiv_sigma_assoc P Q)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cA; intro a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply cP; intro p.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition issigmacompact_sum {A B : Type}
+  (cA : IsSigmaCompact A) (cB : IsSigmaCompact B)
+  : IsSigmaCompact (A + B).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (issigmacompact_equiv (sig_of_sum A B)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply issigmacompact_sigma.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact issigmacompact_bool.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by destruct a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inductively, any type of the form [Fin n] is compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_fin (n : nat)
+  : IsSigmaCompact (Fin n).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun P dP =&gt; inr proj1).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (issigmacompact_sum IHn).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply issigmacompact_contr.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A decidable subtype of a compact type is compact. *)</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issigmacompact_detachable_subtype {A : Type} {P : A -&gt; HProp}
+  (cA : IsSigmaCompact A) (dP : forall (a : A), Decidable (P a))
+  : IsSigmaCompact (sig P).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (issigmacompact_sigma cA); cbn beta.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply issigmacompact_decidable_hprop.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Uniform_Search.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Searchability of [nat -&gt; A] *)
+
+  (** Following https://www.cs.bham.ac.uk/~mhe/TypeTopology/TypeTopology.UniformSearch.html, we prove that if [A] is searchable then [nat -&gt; A] is uniformly searchable. *)
+
+  (** A type with a uniform structure is uniformly searchable if it is searchable over uniformly continuous predicates. Here the uniform structure on [Type] is the trivial one [trivial_us] involving the identity types at each level. *)
+ </pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uniformly_searchable (A : Type) {usA : UStructure A}
+    := forall (P : A -&gt; Type) (dP : forall a : A, Decidable (P a)),
+        uniformly_continuous P -&gt; exists w0 : A, (P w0 -&gt; forall u : A, P u).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} (issearchable_A : IsSearchable A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The witness function for uniformly continuous predicates on [nat -&gt; A]. The first argument [n : nat] will be the modulus of uniform continuity, but we do not use the property in this definition. *)
+ </pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uniformsearch_witness (n : nat) (P : (nat -&gt; A) -&gt; Type)
+    (dP : forall (f : nat -&gt; A), Decidable (P f))
+    : nat -&gt; A.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n in P, dP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun _ =&gt; inhabited_issearchable issearchable_A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pose (g Q dQ := Q (IHn Q dQ)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+      pose (wA := (issearchable_A (fun x =&gt; g (P o (seq_cons x)) _) _).1).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (seq_cons wA (IHn (P o (seq_cons wA)) _)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We often need to apply [P] to [uniformsearch_witness n P dP], and this saves repeating [P]. *)
+ </pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition pred_uniformsearch_witness (n : nat) (P : (nat -&gt; A) -&gt; Type)
+    (dP : forall (f : nat -&gt; A), Decidable (P f))
+    := P (uniformsearch_witness n P dP).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The desired property of the witness function. *)
+ </pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uniformsearch_witness_spec {n : nat} (P : (nat -&gt; A) -&gt; Type)
+    (dP : forall f : (nat -&gt; A), Decidable (P f))
+    (is_mod : is_modulus_of_uniform_continuity n P)
+    (h : pred_uniformsearch_witness n P dP)
+    : forall u : nat -&gt; A, P u.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n in P, dP, is_mod, h.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro u.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (transport idmap _ h).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* For [n = 0], [is_mod u1 u2] says that [P u1 = P u2]. *)
+     </pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply is_mod, sequence_type_us_zero.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro u.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (transport idmap _ _).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact (uniformly_continuous_extensionality P (m:=0)
+                  (uniformly_continuous_has_modulus is_mod)
+                  (seq_cons_head_tail u)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 390
+Time: 0.002s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+      rapply (IHn (P o (seq_cons (u 0)))).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply cons_decreases_modulus, is_mod.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* The universality of [uniformsearch_witness] says that it is enough to check this statement with [u 0] replaced with [wA] above, and that is exactly what [h] proves, by the inductive step. *)
+     </pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 394
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>exact ((issearchable_A
+                 (fun y =&gt; pred_uniformsearch_witness n (P o (seq_cons y)) _) _).2
+                h (u 0)).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 396
+Time: 0.001s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition has_uniformly_searchable_seq_issearchable
+    : uniformly_searchable (nat -&gt; A).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros P dP contP.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (uniformsearch_witness (contP 0).1 P dP).</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply uniformsearch_witness_spec; exact (contP 0).2.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Uniform_Search.</pre>
+</div>
+<div class="code" title="File: CompactTypes.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

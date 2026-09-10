@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.ExponentialLaws.Law2.Law.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Exponential laws about products and sums in exponents *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Sum Functor.Sum.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Prod ExponentialLaws.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> ExponentialLaws.Law2.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** [yⁿ⁺ᵐ ≅ yⁿ × yᵐ] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Law2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">D</span> <span class="nv">C1</span> <span class="nv">C2</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk0"><span class="kn">Lemma</span> <span class="nf">helper1</span> (<span class="nv">c</span> : Functor C1 D * Functor C2 D)
+  : ((<span class="mi">1</span> o (Basics.Overture.fst c + Basics.Overture.snd c) o inl C1 C2)%functor,
+     (<span class="mi">1</span> o (Basics.Overture.fst c + Basics.Overture.snd c) o inr C1 C2)%functor)%core = c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor C1 D * Functor C2 D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> o (fst c + snd c) o inl C1 C2, <span class="mi">1</span> o (fst c + snd c) o inr C1 C2) = c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor C1 D * Functor C2 D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> o (fst c + snd c) o inl C1 C2, <span class="mi">1</span> o (fst c + snd c) o inr C1 C2) = c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_prod; <span class="nb">simpl</span>;
+    path_functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk2"><span class="kn">Lemma</span> <span class="nf">helper2_helper</span> (<span class="nv">c</span> : Functor (C1 + C2) D) <span class="nv">x</span>
+  : (<span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2) x = c x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor (C1 + C2) D</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(C1 + C2)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((<span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2) _0 x)%object = (c _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk3"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor (C1 + C2) D</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>(C1 + C2)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((<span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2) _0 x)%object = (c _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">destruct</span> x; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk4"><span class="kn">Lemma</span> <span class="nf">helper2</span> (<span class="nv">c</span> : Functor (C1 + C2) D)
+  : <span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2 = c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor (C1 + C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2 = c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor (C1 + C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2 = c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk6">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor (C1 + C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{HO
+: (<span class="k">fun</span> <span class="nv">cc&#39;</span> : C1 + C2 =&gt;
+   <span class="k">match</span> cc&#39; <span class="k">with</span>
+   | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+   | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+   <span class="k">end</span>) =
+  c
+&amp;
+transport
+  (<span class="k">fun</span> <span class="nv">GO</span> : C1 + C2 -&gt; D =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C1 + C2,
+   <span class="k">match</span> s <span class="k">with</span>
+   | Overture.inl s0 =&gt;
+       <span class="k">match</span> d <span class="k">with</span>
+       | Overture.inl d0 =&gt; morphism C1 s0 d0
+       | Overture.inr _ =&gt; Empty
+       <span class="k">end</span>
+   | Overture.inr s0 =&gt;
+       <span class="k">match</span> d <span class="k">with</span>
+       | Overture.inl _ =&gt; Empty
+       | Overture.inr d0 =&gt; morphism C2 s0 d0
+       <span class="k">end</span>
+   <span class="k">end</span> -&gt; morphism D (GO s) (GO d))
+  HO
+  (<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> : C1 + C2 =&gt;
+   <span class="k">match</span>
+     s <span class="k">as</span> s0
+     <span class="k">return</span>
+       (<span class="k">match</span> s0 <span class="k">with</span>
+        | Overture.inl s1 =&gt;
+            <span class="k">match</span> d <span class="k">with</span>
+            | Overture.inl d0 =&gt; morphism C1 s1 d0
+            | Overture.inr _ =&gt; Empty
+            <span class="k">end</span>
+        | Overture.inr s1 =&gt;
+            <span class="k">match</span> d <span class="k">with</span>
+            | Overture.inl _ =&gt; Empty
+            | Overture.inr d0 =&gt; morphism C2 s1 d0
+            <span class="k">end</span>
+        <span class="k">end</span> -&gt;
+        morphism D
+          <span class="k">match</span> s0 <span class="k">with</span>
+          | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+          | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+          <span class="k">end</span>
+          <span class="k">match</span> d <span class="k">with</span>
+          | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+          | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+          <span class="k">end</span>)
+   <span class="k">with</span>
+   | Overture.inl cs =&gt;
+       <span class="k">match</span>
+         d <span class="k">as</span> d0
+         <span class="k">return</span>
+           (<span class="k">match</span> d0 <span class="k">with</span>
+            | Overture.inl d1 =&gt; morphism C1 cs d1
+            | Overture.inr _ =&gt; Empty
+            <span class="k">end</span> -&gt;
+            morphism D (c _0 (Overture.inl cs))%object
+              <span class="k">match</span> d0 <span class="k">with</span>
+              | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+              | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+              <span class="k">end</span>)
+       <span class="k">with</span>
+       | Overture.inl cd =&gt; <span class="k">fun</span> <span class="nv">m</span> : morphism C1 cs cd =&gt; (c _1 m)%morphism
+       | Overture.inr o =&gt;
+           <span class="k">fun</span> <span class="nv">m</span> : Empty =&gt;
+           <span class="k">match</span>
+             m
+             <span class="k">return</span>
+               (morphism D (c _0 (Overture.inl cs))%object
+                  (c _0 (Overture.inr o))%object)
+           <span class="k">with</span>
+           <span class="k">end</span>
+       <span class="k">end</span>
+   | Overture.inr c&#39;s =&gt;
+       <span class="k">match</span>
+         d <span class="k">as</span> d0
+         <span class="k">return</span>
+           (<span class="k">match</span> d0 <span class="k">with</span>
+            | Overture.inl _ =&gt; Empty
+            | Overture.inr d1 =&gt; morphism C2 c&#39;s d1
+            <span class="k">end</span> -&gt;
+            morphism D (c _0 (Overture.inr c&#39;s))%object
+              <span class="k">match</span> d0 <span class="k">with</span>
+              | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+              | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+              <span class="k">end</span>)
+       <span class="k">with</span>
+       | Overture.inl o =&gt;
+           <span class="k">fun</span> <span class="nv">m</span> : Empty =&gt;
+           <span class="k">match</span>
+             m
+             <span class="k">return</span>
+               (morphism D (c _0 (Overture.inr c&#39;s))%object
+                  (c _0 (Overture.inl o))%object)
+           <span class="k">with</span>
+           <span class="k">end</span>
+       | Overture.inr c&#39;d =&gt; <span class="k">fun</span> <span class="nv">m</span> : morphism C2 c&#39;s c&#39;d =&gt; (c _1 m)%morphism
+       <span class="k">end</span>
+   <span class="k">end</span>) =
+morphism_of c}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk7">(<span class="k">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> (@helper2_helper c))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Functor (C1 + C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">GO</span> : C1 + C2 -&gt; D =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C1 + C2,
+   <span class="k">match</span> s <span class="k">with</span>
+   | Overture.inl s0 =&gt;
+       <span class="k">match</span> d <span class="k">with</span>
+       | Overture.inl d0 =&gt; morphism C1 s0 d0
+       | Overture.inr _ =&gt; Empty
+       <span class="k">end</span>
+   | Overture.inr s0 =&gt;
+       <span class="k">match</span> d <span class="k">with</span>
+       | Overture.inl _ =&gt; Empty
+       | Overture.inr d0 =&gt; morphism C2 s0 d0
+       <span class="k">end</span>
+   <span class="k">end</span> -&gt; morphism D (GO s) (GO d))
+  (path_forall (<span class="mi">1</span> o c o inl C1 C2 + <span class="mi">1</span> o c o inr C1 C2) c (helper2_helper c))
+  (<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> : C1 + C2 =&gt;
+   <span class="k">match</span>
+     s <span class="k">as</span> s0
+     <span class="k">return</span>
+       (<span class="k">match</span> s0 <span class="k">with</span>
+        | Overture.inl s1 =&gt;
+            <span class="k">match</span> d <span class="k">with</span>
+            | Overture.inl d0 =&gt; morphism C1 s1 d0
+            | Overture.inr _ =&gt; Empty
+            <span class="k">end</span>
+        | Overture.inr s1 =&gt;
+            <span class="k">match</span> d <span class="k">with</span>
+            | Overture.inl _ =&gt; Empty
+            | Overture.inr d0 =&gt; morphism C2 s1 d0
+            <span class="k">end</span>
+        <span class="k">end</span> -&gt;
+        morphism D
+          <span class="k">match</span> s0 <span class="k">with</span>
+          | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+          | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+          <span class="k">end</span>
+          <span class="k">match</span> d <span class="k">with</span>
+          | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+          | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+          <span class="k">end</span>)
+   <span class="k">with</span>
+   | Overture.inl cs =&gt;
+       <span class="k">match</span>
+         d <span class="k">as</span> d0
+         <span class="k">return</span>
+           (<span class="k">match</span> d0 <span class="k">with</span>
+            | Overture.inl d1 =&gt; morphism C1 cs d1
+            | Overture.inr _ =&gt; Empty
+            <span class="k">end</span> -&gt;
+            morphism D (c _0 (Overture.inl cs))%object
+              <span class="k">match</span> d0 <span class="k">with</span>
+              | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+              | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+              <span class="k">end</span>)
+       <span class="k">with</span>
+       | Overture.inl cd =&gt; <span class="k">fun</span> <span class="nv">m</span> : morphism C1 cs cd =&gt; (c _1 m)%morphism
+       | Overture.inr o =&gt;
+           <span class="k">fun</span> <span class="nv">m</span> : Empty =&gt;
+           <span class="k">match</span>
+             m
+             <span class="k">return</span>
+               (morphism D (c _0 (Overture.inl cs))%object
+                  (c _0 (Overture.inr o))%object)
+           <span class="k">with</span>
+           <span class="k">end</span>
+       <span class="k">end</span>
+   | Overture.inr c&#39;s =&gt;
+       <span class="k">match</span>
+         d <span class="k">as</span> d0
+         <span class="k">return</span>
+           (<span class="k">match</span> d0 <span class="k">with</span>
+            | Overture.inl _ =&gt; Empty
+            | Overture.inr d1 =&gt; morphism C2 c&#39;s d1
+            <span class="k">end</span> -&gt;
+            morphism D (c _0 (Overture.inr c&#39;s))%object
+              <span class="k">match</span> d0 <span class="k">with</span>
+              | Overture.inl c0 =&gt; (c _0 (Overture.inl c0))%object
+              | Overture.inr c&#39; =&gt; (c _0 (Overture.inr c&#39;))%object
+              <span class="k">end</span>)
+       <span class="k">with</span>
+       | Overture.inl o =&gt;
+           <span class="k">fun</span> <span class="nv">m</span> : Empty =&gt;
+           <span class="k">match</span>
+             m
+             <span class="k">return</span>
+               (morphism D (c _0 (Overture.inr c&#39;s))%object
+                  (c _0 (Overture.inl o))%object)
+           <span class="k">with</span>
+           <span class="k">end</span>
+       | Overture.inr c&#39;d =&gt; <span class="k">fun</span> <span class="nv">m</span> : morphism C2 c&#39;s c&#39;d =&gt; (c _1 m)%morphism
+       <span class="k">end</span>
+   <span class="k">end</span>) =
+morphism_of c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> exp_laws_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk8"><span class="kn">Lemma</span> <span class="nf">law</span>
+  : functor D C1 C2 o inverse D C1 C2 = <span class="mi">1</span>
+    /\ inverse D C1 C2 o functor D C1 C2 = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(functor D C1 C2 o inverse D C1 C2 = <span class="mi">1</span>) *
+(inverse D C1 C2 o functor D C1 C2 = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-ExponentialLaws-Law2-Law-v-alectryon-json-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>D, C1, C2</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(functor D C1 C2 o inverse D C1 C2 = <span class="mi">1</span>) *
+(inverse D C1 C2 o functor D C1 C2 = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">split</span>;
+    path_functor;
+    [ (<span class="k">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">helper1</span>))
+    | (<span class="k">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">helper2</span>)) ];
+    exp_laws_t;
+    <span class="nb">unfold</span> helper1, helper2;
+    exp_laws_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Law2</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

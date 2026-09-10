@@ -1,0 +1,1433 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Grothendieck Construction of a pseudofunctor to Cat *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pseudofunctor.Core Pseudofunctor.RewriteLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms Cat.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Grothendieck.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Pseudofunctor C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record Pair :=\n    {\n      c : C;\n      x : object (F c)\n    }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation morphism s d :=\n    { f : morphism C s.(c) d.(c)\n    | morphism _ (p_morphism_of F f s.(x)) d.(x) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose s d d'\n             (m1 : morphism d d')\n             (m2 : morphism s d)\n  : morphism s d'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : Core.morphism C (c s) (c d') &\nCore.morphism (F (c d')) ((p_morphism_of F f) _0 (x s))%object (x d')}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "Pair"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c d) (c d') &\nCore.morphism (F (c d')) ((p_morphism_of F f) _0 (x d))%object (x d')}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c s) (c d) &\nCore.morphism (F (c d)) ((p_morphism_of F f) _0 (x s))%object (x d)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : Core.morphism C (c s) (c d') &\nCore.morphism (F (c d')) ((p_morphism_of F f) _0 (x s))%object (x d')}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "Pair"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c d) (c d') &\nCore.morphism (F (c d')) ((p_morphism_of F f) _0 (x d))%object (x d')}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c s) (c d) &\nCore.morphism (F (c d)) ((p_morphism_of F f) _0 (x s))%object (x d)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (m1.1 o m2.1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Core.morphism (F (c d')) ((p_morphism_of F (m1.1 o m2.1)) _0 (x s))%object\n  (x d')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "Pair"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c d) (c d') &\nCore.morphism (F (c d')) ((p_morphism_of F f) _0 (x d))%object (x d')}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c s) (c d) &\nCore.morphism (F (c d)) ((p_morphism_of F f) _0 (x s))%object (x d)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (m1.2 o ((p_morphism_of F m1.1) _1 m2.2 o _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Core.morphism (F (c d')) ((p_morphism_of F (m1.1 o m2.1)) _0 (x s))%object\n  ((p_morphism_of F m1.1) _0 ((p_morphism_of F m2.1) _0 (x s)))%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "Pair"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c d) (c d') &\nCore.morphism (F (c d')) ((p_morphism_of F f) _0 (x d))%object (x d')}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "{f : Core.morphism C (c s) (c d) &\nCore.morphism (F (c d)) ((p_morphism_of F f) _0 (x s))%object (x d)}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (p_composition_of F).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition identity s : morphism s s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : Core.morphism C (c s) (c s) &\nCore.morphism (F (c s)) ((p_morphism_of F f) _0 (x s))%object (x s)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Pair"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : Core.morphism C (c s) (c s) &\nCore.morphism (F (c s)) ((p_morphism_of F f) _0 (x s))%object (x s)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Pair"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Core.morphism (F (c s)) ((p_morphism_of F 1) _0 (x s))%object (x s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "Pair"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (p_identity_of F).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments identity _ / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments compose _ _ _ _ _ / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac try_associativity_f_ap :=\n    first [ f_ap; []\n          | repeat (etransitivity; [ apply Category.Core.associativity | ]);\n            repeat (etransitivity; [ | symmetry; apply Category.Core.associativity ]);\n            f_ap; []\n          | repeat (etransitivity; [ symmetry; apply Category.Core.associativity | ]);\n            repeat (etransitivity; [ | apply Category.Core.associativity ]);\n            f_ap; [] ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac assoc_before_commutes_tac :=\n    rewrite !composition_of;\n    rewrite <- !Category.Core.associativity;\n    etransitivity; [ | symmetry; apply compose4associativity_helper ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac assoc_fin_tac :=\n    repeat match goal with\n             | _ => reflexivity\n             | _ => progress rewrite ?Category.Core.left_identity, ?Category.Core.right_identity\n             | [ |- context[components_of ?T ?x o components_of ?T^-1 ?x] ]\n               => let k := constr:(@iso_compose_pV _ _ _ (T x) _) in\n                  simpl rewrite k (* https://coq.inria.fr/bugs/show_bug.cgi?id=3773 and https://coq.inria.fr/bugs/show_bug.cgi?id=3772 (probably) *)\n             | _ => try_associativity_quick\n                      first [ f_ap; []\n                            | apply concat_left_identity\n                            | apply concat_right_identity ]\n             | _ => rewrite <- ?identity_of, <- ?composition_of;\n                   progress repeat (f_ap; []);\n                   rewrite ?identity_of, ?composition_of\n             | _ => try_associativity_quick rewrite compose4associativity_helper\n           end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac helper_t before_commutes_tac :=\n    repeat intro;\n    symmetry;\n    apply path_sigma_uncurried;\n    simpl in *;\n    let ex_hyp := match goal with\n                    | [ H : ?A = ?B |- @sig (?B = ?A) _ ] => constr:(H)\n                  end in\n    (exists (inverse ex_hyp));\n      simpl;\n      rewrite ?transport_Fc_to_idtoiso, ?transport_cF_to_idtoiso;\n      rewrite ?idtoiso_inv, ?ap_V, ?inv_V;\n      simpl;\n      let rew_hyp := match goal with\n                       | [ H' : context[ex_hyp] |- _ ] => constr:(H')\n                     end in\n      rewrite rew_hyp;\n        clear rew_hyp ex_hyp;\n        before_commutes_tac;\n        repeat first [ reflexivity\n                     | progress rewrite ?Category.Core.left_identity, ?Category.Core.right_identity\n                     | try_associativity_quick (f_ap; []) ];\n        match goal with\n          | _ => reflexivity\n          | [ |- context[?F _1 ?m o components_of ?T ?x] ]\n            => simpl rewrite <- (commutes T _ _ m);\n              try reflexivity\n          | [ |- context[components_of ?T ?x o ?F _1 ?m] ]\n            => simpl rewrite (commutes T _ _ m);\n              try reflexivity\n        end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (* The goal for, e.g., the following associativity helper was made\n  with the following code:\n<<\nintros a b c d [f f'] [g g'] [h h']; simpl.\n    pose proof (apD10 (ap components_of (p_composition_ofCoherent_for_rewrite F _ _ _ _ f g h))) as rew_hyp.\n    revert rew_hyp.\n    generalize dependent (Category.Core.associativity C _ _ _ _ f g h). intros fst_hyp ?.\n\n    simpl in *.\n    hnf in rew_hyp.\n    simpl in *.\n\n    Local Ltac gen_x x :=\n      generalize dependent (X x);\n      generalize dependent (C x);\n      repeat (let x1 := fresh \"x\" in intro x1).\n    gen_x a.\n    gen_x b.\n    gen_x c.\n    gen_x d.\n    repeat match goal with\n             | [ |- context[p_identity_of ?F ?x] ]\n               => generalize dependent (p_identity_of F x)\n             | [ |- context[p_composition_of ?F ?x ?y ?z ?f ?g] ]\n               => generalize dependent (p_composition_of F x y z f g)\n             | [ |- context[p_morphism_of ?F ?m] ]\n               => generalize dependent (p_morphism_of F m)\n             | [ |- context[p_object_of ?F ?x] ]\n               => generalize dependent (p_object_of F x)\n             | [ H : context[p_morphism_of ?F ?m] |- _ ]\n               => generalize dependent (p_morphism_of F m)\n             | [ |- context[@p_morphism_of _ _ ?F ?x ?y] ]\n               => generalize dependent (@p_morphism_of _ _ F x y)\n           end.\n    simpl.\n\n    intros.\n\n    lazymatch goal with\n      | [ H : context[ap ?f ?H'] |- _ ]\n        => rename H' into fst_hyp;\n          rename H into rew_hyp;\n          move rew_hyp at top\n    end.\n\n    generalize dependent fst_hyp.\n    clear.\n    intros.\n    move rew_hyp at top.\n\n    move H at top.\n\n    repeat match goal with\n             | [ H : Isomorphic _ _ |- _ ]\n               => let x := fresh \"x\" in\n                  let H' := fresh \"H\" in\n                  destruct H as [x H'];\n                    simpl in *\n           end.\n    move rew_hyp at top.\n    repeat match goal with\n             | [ H : _ |- _ ] => revert H\n           end.\n\n    intro H.\n    intro C.\n>> *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pseudofunctor_to_cat_assoc_helper\n  : forall {x x0 : C} {x2 : Category.Core.morphism C x x0} {x1 : C}\n           {x5 : Category.Core.morphism C x0 x1} {x4 : C} {x7 : Category.Core.morphism C x1 x4}\n           {p p0 : PreCategory} {f : Category.Core.morphism C x x4 -> Functor p0 p}\n           {p1 p2 : PreCategory} {f0 : Functor p2 p} {f1 : Functor p1 p2}\n           {f2 : Functor p0 p2} {f3 : Functor p0 p1} {f4 : Functor p1 p}\n           {x16 : Category.Core.morphism (_ -> _) (f (x7 o x5 o x2)) (f4 o f3)%functor}\n           {x15 : Category.Core.morphism (_ -> _) f2 (f1 o f3)%functor} {H2 : IsIsomorphism x15}\n           {x11 : Category.Core.morphism (_ -> _) (f (x7 o (x5 o x2))) (f0 o f2)%functor}\n           {H1 : IsIsomorphism x11} {x9 : Category.Core.morphism (_ -> _) f4 (f0 o f1)%functor}\n           {fst_hyp : x7 o x5 o x2 = x7 o (x5 o x2)}\n           (rew_hyp : forall x3 : p0,\n                        (idtoiso (p0 -> p) (ap f fst_hyp) : Category.Core.morphism _ _ _) x3 =\n                        x11^-1 x3 o (f0 _1 (x15^-1 x3) o (1 o (x9 (f3 x3) o x16 x3))))\n           {H0' : IsIsomorphism x16}\n           {H1' : IsIsomorphism x9}\n           {x13 : p} {x3 : p0} {x6 : p1} {x10 : p2}\n           {x14 : Category.Core.morphism p (f0 x10) x13} {x12 : Category.Core.morphism p2 (f1 x6) x10}\n           {x8 : Category.Core.morphism p1 (f3 x3) x6},\n      exist (fun f5 : Category.Core.morphism C x x4 => Category.Core.morphism p ((f f5) x3) x13)\n             (x7 o x5 o x2)\n             (x14 o (f0 _1 x12 o x9 x6) o (f4 _1 x8 o x16 x3)) =\n      (x7 o (x5 o x2); x14 o (f0 _1 (x12 o (f1 _1 x8 o x15 x3)) o x11 x3)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x0 x1 : C) (x2 : Core.morphism C x0 x1) (x3 : C)\n(x5 : Core.morphism C x1 x3) (x4 : C) (x7 : Core.morphism C x3 x4)\n(p p0 : PreCategory) (f : Core.morphism C x0 x4 -> Functor p0 p)\n(p1 p2 : PreCategory) (f0 : Functor p2 p) (f1 : Functor p1 p2)\n(f2 : Functor p0 p2) (f3 : Functor p0 p1) (f4 : Functor p1 p)\n(x16 : Core.morphism (p0 -> p) (f (x7 o x5 o x2)) (f4 o f3)%functor)\n(x15 : Core.morphism (p0 -> p2) f2 (f1 o f3)%functor)\n(H2 : IsIsomorphism x15)\n(x11 : Core.morphism (p0 -> p) (f (x7 o (x5 o x2))) (f0 o f2)%functor)\n(H1 : IsIsomorphism x11) (x9 : Core.morphism (p1 -> p) f4 (f0 o f1)%functor)\n(fst_hyp : x7 o x5 o x2 = x7 o (x5 o x2)),\n(forall x6 : p0,\n (idtoiso (p0 -> p) (ap f fst_hyp)\n  :\n  Core.morphism (p0 -> p) (f (x7 o x5 o x2)) (f (x7 o (x5 o x2)))) x6 =\n x11^-1 x6 o (f0 _1 (x15^-1 x6) o (1 o (x9 (f3 _0 x6)%object o x16 x6)))) ->\nIsIsomorphism x16 ->\nIsIsomorphism x9 ->\nforall (x13 : p) (x6 : p0) (x8 : p1) (x10 : p2)\n(x14 : Core.morphism p (f0 _0 x10)%object x13)\n(x12 : Core.morphism p2 (f1 _0 x8)%object x10)\n(x17 : Core.morphism p1 (f3 _0 x6)%object x8),\n(x7 o x5 o x2; x14 o (f0 _1 x12 o x9 x8) o (f4 _1 x17 o x16 x6)) =\n(x7 o (x5 o x2); x14 o (f0 _1 (x12 o (f1 _1 x17 o x15 x6)) o x11 x6))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x0 x1 : C) (x2 : Core.morphism C x0 x1) (x3 : C)\n(x5 : Core.morphism C x1 x3) (x4 : C) (x7 : Core.morphism C x3 x4)\n(p p0 : PreCategory) (f : Core.morphism C x0 x4 -> Functor p0 p)\n(p1 p2 : PreCategory) (f0 : Functor p2 p) (f1 : Functor p1 p2)\n(f2 : Functor p0 p2) (f3 : Functor p0 p1) (f4 : Functor p1 p)\n(x16 : Core.morphism (p0 -> p) (f (x7 o x5 o x2)) (f4 o f3)%functor)\n(x15 : Core.morphism (p0 -> p2) f2 (f1 o f3)%functor)\n(H2 : IsIsomorphism x15)\n(x11 : Core.morphism (p0 -> p) (f (x7 o (x5 o x2))) (f0 o f2)%functor)\n(H1 : IsIsomorphism x11) (x9 : Core.morphism (p1 -> p) f4 (f0 o f1)%functor)\n(fst_hyp : x7 o x5 o x2 = x7 o (x5 o x2)),\n(forall x6 : p0,\n (idtoiso (p0 -> p) (ap f fst_hyp)\n  :\n  Core.morphism (p0 -> p) (f (x7 o x5 o x2)) (f (x7 o (x5 o x2)))) x6 =\n x11^-1 x6 o (f0 _1 (x15^-1 x6) o (1 o (x9 (f3 _0 x6)%object o x16 x6)))) ->\nIsIsomorphism x16 ->\nIsIsomorphism x9 ->\nforall (x13 : p) (x6 : p0) (x8 : p1) (x10 : p2)\n(x14 : Core.morphism p (f0 _0 x10)%object x13)\n(x12 : Core.morphism p2 (f1 _0 x8)%object x10)\n(x17 : Core.morphism p1 (f3 _0 x6)%object x8),\n(x7 o x5 o x2; x14 o (f0 _1 x12 o x9 x8) o (f4 _1 x17 o x16 x6)) =\n(x7 o (x5 o x2); x14 o (f0 _1 (x12 o (f1 _1 x17 o x15 x6)) o x11 x6))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "helper_t assoc_before_commutes_tac.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f0 _1 (f1 _1 x17)\no (f0 _1 (x15 x6)\n   o (x11 x6 o (x11^-1 x6 o (f0 _1 (x15^-1 x6) o x9 (f3 _0 x6)%object)))) =\nf0 _1 (f1 _1 x17) o x9 (f3 _0 x6)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "Core.morphism C x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "Core.morphism C x1 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Core.morphism C x3 x4"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Core.morphism C x0 x4 -> Functor p0 p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Functor p2 p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f1"
+              ],
+              "body": null,
+              "type": "Functor p1 p2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f2"
+              ],
+              "body": null,
+              "type": "Functor p0 p2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f3"
+              ],
+              "body": null,
+              "type": "Functor p0 p1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f4"
+              ],
+              "body": null,
+              "type": "Functor p1 p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (f (x7 o x5 o x2)) (f4 o f3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "NaturalTransformation f2 (f1 o f3)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsIsomorphism x15"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (f (x7 o (x5 o x2))) (f0 o f2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsIsomorphism x11"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "NaturalTransformation f4 (f0 o f1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0'"
+              ],
+              "body": null,
+              "type": "IsIsomorphism x16"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1'"
+              ],
+              "body": null,
+              "type": "IsIsomorphism x9"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "p"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "p0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "p1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "p2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "Core.morphism p (f0 _0 x10)%object x13"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "Core.morphism p2 (f1 _0 x8)%object x10"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "Core.morphism p1 (f3 _0 x6)%object x8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assoc_fin_tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pseudofunctor_to_cat_left_identity_helper\n  : forall {x1 x2 : C} {f : Category.Core.morphism C x2 x1} {p p0 : PreCategory}\n           {f0 : Category.Core.morphism C x2 x1 -> Functor p0 p} {f1 : Functor p p}\n           {x0 : Category.Core.morphism (_ -> _) (f0 (1 o f)) (f1 o f0 f)%functor}\n           {x : Category.Core.morphism (_ -> _) f1 1%functor}\n           {fst_hyp : 1 o f = f}\n           (rewrite_hyp : forall x3 : p0,\n                            (idtoiso (p0 -> p) (ap f0 fst_hyp) : Category.Core.morphism _ _ _) x3\n                            = 1 o (x ((f0 f) x3) o x0 x3))\n           {H0' : IsIsomorphism x0}\n           {H1' : IsIsomorphism x}\n           {x3 : p} {x4 : p0} {f' : Category.Core.morphism p ((f0 f) x4) x3},\n      exist (fun f2 : Category.Core.morphism C x2 x1 => Category.Core.morphism p ((f0 f2) x4) x3)\n             (1 o f)\n             (x x3 o (f1 _1 f' o x0 x4))\n      = (f; f').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x1 x2 : C) (f : Core.morphism C x2 x1) (p p0 : PreCategory)\n(f0 : Core.morphism C x2 x1 -> Functor p0 p) (f1 : Functor p p)\n(x0 : Core.morphism (p0 -> p) (f0 (1 o f)) (f1 o f0 f)%functor)\n(x3 : Core.morphism (p -> p) f1 1%functor) (fst_hyp : 1 o f = f),\n(forall x4 : p0,\n (idtoiso (p0 -> p) (ap f0 fst_hyp)\n  :\n  Core.morphism (p0 -> p) (f0 (1 o f)) (f0 f)) x4 =\n 1 o (x3 ((f0 f) _0 x4)%object o x0 x4)) ->\nIsIsomorphism x0 ->\nIsIsomorphism x3 ->\nforall (x4 : p) (x5 : p0) (f' : Core.morphism p ((f0 f) _0 x5)%object x4),\n(1 o f; x3 x4 o (f1 _1 f' o x0 x5)) = (f; f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x1 x2 : C) (f : Core.morphism C x2 x1) (p p0 : PreCategory)\n(f0 : Core.morphism C x2 x1 -> Functor p0 p) (f1 : Functor p p)\n(x0 : Core.morphism (p0 -> p) (f0 (1 o f)) (f1 o f0 f)%functor)\n(x3 : Core.morphism (p -> p) f1 1%functor) (fst_hyp : 1 o f = f),\n(forall x4 : p0,\n (idtoiso (p0 -> p) (ap f0 fst_hyp)\n  :\n  Core.morphism (p0 -> p) (f0 (1 o f)) (f0 f)) x4 =\n 1 o (x3 ((f0 f) _0 x4)%object o x0 x4)) ->\nIsIsomorphism x0 ->\nIsIsomorphism x3 ->\nforall (x4 : p) (x5 : p0) (f' : Core.morphism p ((f0 f) _0 x5)%object x4),\n(1 o f; x3 x4 o (f1 _1 f' o x0 x5)) = (f; f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "helper_t idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pseudofunctor_to_cat_right_identity_helper\n  : forall {x1 x2 : C} {f : Category.Core.morphism C x2 x1} {p p0 : PreCategory}\n           {f0 : Category.Core.morphism C x2 x1 -> Functor p0 p} {f1 : Functor p0 p0}\n           {x0 : Category.Core.morphism (_ -> _) (f0 (f o 1)) (f0 f o f1)%functor}\n           {H0' : IsIsomorphism x0}\n           {x : Category.Core.morphism (_ -> _) f1 1%functor}\n           {H1' : IsIsomorphism x}\n           {fst_hyp : f o 1 = f}\n           (rew_hyp : forall x3 : p0,\n                        (idtoiso (p0 -> p) (ap f0 fst_hyp) : Category.Core.morphism _ _ _) x3\n                        = 1 o ((f0 f) _1 (x x3) o x0 x3))\n           {x3 : p} {x4 : p0} {f' : Category.Core.morphism p ((f0 f) x4) x3},\n        exist (fun f2 : Category.Core.morphism C x2 x1 => Category.Core.morphism p ((f0 f2) x4) x3)\n               (f o 1)\n               (f' o ((f0 f) _1 (x x4) o x0 x4))\n        = (f; f').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x1 x2 : C) (f : Core.morphism C x2 x1) (p p0 : PreCategory)\n(f0 : Core.morphism C x2 x1 -> Functor p0 p) (f1 : Functor p0 p0)\n(x0 : Core.morphism (p0 -> p) (f0 (f o 1)) (f0 f o f1)%functor),\nIsIsomorphism x0 ->\nforall x3 : Core.morphism (p0 -> p0) f1 1%functor,\nIsIsomorphism x3 ->\nforall fst_hyp : f o 1 = f,\n(forall x4 : p0,\n (idtoiso (p0 -> p) (ap f0 fst_hyp)\n  :\n  Core.morphism (p0 -> p) (f0 (f o 1)) (f0 f)) x4 =\n 1 o ((f0 f) _1 (x3 x4) o x0 x4)) ->\nforall (x4 : p) (x5 : p0) (f' : Core.morphism p ((f0 f) _0 x5)%object x4),\n(f o 1; f' o ((f0 f) _1 (x3 x5) o x0 x5)) = (f; f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x1 x2 : C) (f : Core.morphism C x2 x1) (p p0 : PreCategory)\n(f0 : Core.morphism C x2 x1 -> Functor p0 p) (f1 : Functor p0 p0)\n(x0 : Core.morphism (p0 -> p) (f0 (f o 1)) (f0 f o f1)%functor),\nIsIsomorphism x0 ->\nforall x3 : Core.morphism (p0 -> p0) f1 1%functor,\nIsIsomorphism x3 ->\nforall fst_hyp : f o 1 = f,\n(forall x4 : p0,\n (idtoiso (p0 -> p) (ap f0 fst_hyp)\n  :\n  Core.morphism (p0 -> p) (f0 (f o 1)) (f0 f)) x4 =\n 1 o ((f0 f) _1 (x3 x4) o x0 x4)) ->\nforall (x4 : p) (x5 : p0) (f' : Core.morphism p ((f0 f) _0 x5)%object x4),\n(f o 1; f' o ((f0 f) _1 (x3 x5) o x0 x5)) = (f; f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "helper_t idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Category of elements *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition category : PreCategory.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Pseudofunctor C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@Build_PreCategory\n              Pair\n              (fun s d => morphism s d)\n              identity\n              compose\n              _\n              _\n              _\n              _);\n    [ abstract (\n          intros ? ? ? ? [f ?] [g ?] [h ?];\n          exact (pseudofunctor_to_cat_assoc_helper\n                   (apD10\n                      (ap components_of\n                          (p_composition_of_coherent_for_rewrite F _ _ _ _ f g h))))\n        )\n    | abstract (\n          intros ? ? [f ?];\n          exact (pseudofunctor_to_cat_left_identity_helper\n                   (apD10\n                      (ap components_of\n                          (p_left_identity_of_coherent_for_rewrite F _ _ f))))\n        )\n    | abstract (\n          intros ? ? [f ?];\n          exact (pseudofunctor_to_cat_right_identity_helper\n                   (apD10\n                      (ap components_of\n                          (p_right_identity_of_coherent_for_rewrite F _ _ f))))\n    ) ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** First projection functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pr1 : Functor category C\n    := Build_Functor category C\n                     c\n                     (fun s d => @pr1 _ _)\n                     (fun _ _ _ _ _ => idpath)\n                     (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Grothendieck.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

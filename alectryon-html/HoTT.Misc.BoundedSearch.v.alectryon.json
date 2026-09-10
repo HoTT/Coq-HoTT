@@ -1,0 +1,5109 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Bounded Search *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The main result of this file is [minimal_n], which say that if [P : nat -> Type] is a family such that each [P n] is decidable and [{n & P n}] is merely inhabited, then [{n & P n}] is inhabited.  Since [P n] is decidable, it is sufficient to prove [{n & merely (P n)}], and to do this, we prove the stronger claim that there is a *minimal* [n] satisfying [merely (P n)].  This stronger claim is a proposition, which is what makes the argument work.  Along the way, we also prove that [{ l : nat & (l <= n) * P l }] is decidable for each [n]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Decidable Basics.Trunc Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Sigma Types.Prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section bounded_search.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (P : nat -> Type) (P_dec : forall n, Decidable (P n)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  (** We open [type_scope] again after [nat_scope] in order to use the product type notation. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** If we assume [Funext], then [minimal n] is a proposition.  But to avoid needing [Funext], we propositionally truncate it. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition min_n_Type : Type := { n : nat & merely (P n) * merely (minimal n) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance ishpropmin_n : IsHProp min_n_Type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ishprop_sigma_disjoint.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : nat,\nmerely (P x) * merely (minimal x) ->\nmerely (P y) * merely (minimal y) -> x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros n n' [p m] [p' m'].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n = n'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "n'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "merely (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "merely (minimal n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "merely (P n')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "merely (minimal n')"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n = n'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "n'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "minimal n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "P n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply leq_antisym.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n <= n'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "n'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "minimal n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "P n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n' <= n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "n'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "minimal n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "P n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n <= n'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "n'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "minimal n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "P n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (m n' p').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n' <= n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "n'"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "minimal n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "P n'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (m' n p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition smaller (n : nat) := { l : nat & P l * minimal l * (l <= n) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition smaller_S (n : nat) (k : smaller n) : smaller (S n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "smaller n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "smaller n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct k as [l [[p m] z]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P l * minimal l * (l <= n.+1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "minimal l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "l <= n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: assumption.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "l <= n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition bounded_search (n : nat) : smaller n + forall l : nat, (l <= n) -> not (P l).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n + (forall l : nat, l <= n -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n + (forall l : nat, l <= n -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0 + (forall l : nat, l <= 0 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "smaller n + (forall l : nat, l <= n -> ~ P l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0 + (forall l : nat, l <= 0 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (P 0)) as [h|n].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0 + (forall l : nat, l <= 0 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0 + (forall l : nat, l <= 0 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "~ P 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0 + (forall l : nat, l <= 0 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "left.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (0; (h, fun _ _ => _, _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller 0 + (forall l : nat, l <= 0 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "~ P 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "right.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall l : nat, l <= 0 -> ~ P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "~ P 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros l lleq0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "~ P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "~ P 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "lleq0"
+              ],
+              "body": null,
+              "type": "l <= 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rewrite (leq_antisym lleq0 _ : l = 0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "smaller n + (forall l : nat, l <= n -> ~ P l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct IHn as [s|n0].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "smaller n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "smaller n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "left; by apply smaller_S.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec (P n.+1)) as [h|nP].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nP"
+              ],
+              "body": null,
+              "type": "~ P n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "left.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (n.+1; (h, _, _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "minimal n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros m pm.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "n.+1 <= m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pm"
+              ],
+              "body": null,
+              "type": "P m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply leq_iff_not_gt.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "~ (n.+1 > m)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pm"
+              ],
+              "body": null,
+              "type": "P m"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold gt, lt; intro leq_Sm_Sn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pm"
+              ],
+              "body": null,
+              "type": "P m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "leq_Sm_Sn"
+              ],
+              "body": null,
+              "type": "m.+1 <= n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply leq_pred' in leq_Sm_Sn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pm"
+              ],
+              "body": null,
+              "type": "P m"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "leq_Sm_Sn"
+              ],
+              "body": null,
+              "type": "m <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (n0 m leq_Sm_Sn pm).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "smaller n.+1 + (forall l : nat, l <= n.+1 -> ~ P l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nP"
+              ],
+              "body": null,
+              "type": "~ P n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "right.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall l : nat, l <= n.+1 -> ~ P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n1 : nat, Decidable (P n1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n0"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nP"
+              ],
+              "body": null,
+              "type": "~ P n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply leq_ind_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition n_to_min_n (n : nat) (Pn : P n) : min_n_Type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pn"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pn"
+              ],
+              "body": null,
+              "type": "P n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (bounded_search n) as [[l [[Pl ml] _]] | none].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pn"
+              ],
+              "body": null,
+              "type": "P n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pl"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ml"
+              ],
+              "body": null,
+              "type": "minimal l"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pn"
+              ],
+              "body": null,
+              "type": "P n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "none"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pn"
+              ],
+              "body": null,
+              "type": "P n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pl"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ml"
+              ],
+              "body": null,
+              "type": "minimal l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (l; (tr Pl, tr ml)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pn"
+              ],
+              "body": null,
+              "type": "P n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "none"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (none n (leq_refl n) Pn).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition prop_n_to_min_n (P_inhab : hexists P) : min_n_Type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "min_n_Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (n_to_min_n (P_inhab.1) (P_inhab.2)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition minimal_n (P_inhab : hexists P) : { n : nat & P n }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & P n}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n : nat & P n}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n : nat, Decidable (P n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (prop_n_to_min_n P_inhab) as [n [p _]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{n0 : nat & P n0}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "merely (P n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (n; fst merely_inhabited_iff_inhabited_stable p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** As a consequence of [bounded_search] we deduce that bounded existence is decidable.  See also [decidable_exists_bounded_nat] in Spaces/Lists/Theory.v for a similar result with different dependencies. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition decidable_search (n : nat) : Decidable { l : nat & (l <= n) * P l }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (bounded_search n) as [s | no_l].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "smaller n"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "no_l"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "smaller n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct s as [l [[Pl min] l_leq_n]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l0 : nat & (l0 <= n) * P l0}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pl"
+              ],
+              "body": null,
+              "type": "P l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "min"
+              ],
+              "body": null,
+              "type": "minimal l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l_leq_n"
+              ],
+              "body": null,
+              "type": "l <= n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inl (l; (l_leq_n, Pl))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Decidable {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "no_l"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "right.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "~ {l : nat & (l <= n) * P l}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "no_l"
+              ],
+              "body": null,
+              "type": "forall l : nat, l <= n -> ~ P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [l [l_leq_n Pl]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall n0 : nat, Decidable (P n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "no_l"
+              ],
+              "body": null,
+              "type": "forall l0 : nat, l0 <= n -> ~ P l0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l_leq_n"
+              ],
+              "body": null,
+              "type": "l <= n"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pl"
+              ],
+              "body": null,
+              "type": "P l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (no_l l l_leq_n Pl).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End bounded_search.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section bounded_search_alt_type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (X : Type)\n          (e : nat <~> X)\n          (P : X -> Type)\n          (P_dec : forall x, Decidable (P x))\n          (P_inhab : hexists P).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Bounded search works for types equivalent to the naturals even without full univalence. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition minimal_n_alt_type : {x : X & P x}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (P' n := P (e n)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (P'_dec n := P_dec (e n) : Decidable (P' n)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assert (P'_inhab : hexists P').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hexists P'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_inhab"
+              ],
+              "body": null,
+              "type": "hexists P'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hexists P'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hexists P'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : _ & P' x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct P_inhab as [x p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : _ & P' x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x0 : X, Decidable (P x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (e ^-1 x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P' (e^-1 x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x0 : X, Decidable (P x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold P'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (e (e^-1 x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x0 : X, Decidable (P x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (eisretr e).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x0 : X, Decidable (P x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "P x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n : nat => P (e n)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n : nat => P_dec (e n) : Decidable (P' n)",
+              "type": "forall n : nat, Decidable (P' n)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_inhab"
+              ],
+              "body": null,
+              "type": "hexists P'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (minimal_n P' P'_dec P'_inhab) as [n p'].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & P x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "nat <~> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_dec"
+              ],
+              "body": null,
+              "type": "forall x : X, Decidable (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inhab"
+              ],
+              "body": null,
+              "type": "hexists P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": "fun n0 : nat => P (e n0)",
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_dec"
+              ],
+              "body": "fun n0 : nat => P_dec (e n0) : Decidable (P' n0)",
+              "type": "forall n0 : nat, Decidable (P' n0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'_inhab"
+              ],
+              "body": null,
+              "type": "hexists P'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "P' n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((e n); p').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End bounded_search_alt_type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

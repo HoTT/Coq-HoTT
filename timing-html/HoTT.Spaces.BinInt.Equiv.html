@@ -1,0 +1,691 @@
+<html>
+<head>
+<title>Equiv.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Equiv.v</h1>
+
+<div class="code" title="File: Equiv.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 1
+Time: 0.007s">
+<div class="time" style="width: 24.137931034483%"></div>
+<pre>
+Require Import Spaces.Pos.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.BinInt.Core.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.BinInt.Spec.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Iteration of equivalences *)
+
+(** *** Iteration by arbitrary integers *)
+
+</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition binint_iter {A} (f : A -&gt; A) `{!IsEquiv f} (n : BinInt) : A -&gt; A
+  := match n with
+      | neg n =&gt; fun x =&gt; pos_iter f^-1 n x
+      | zero =&gt; idmap
+      | pos n =&gt; fun x =&gt; pos_iter f n x
+     end.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Iteration by arbitrary integers requires the endofunction to be an equivalence, so that we can define a negative iteration by using its inverse. *)
+
+
+</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_iter_succ_l {A} (f : A -&gt; A) `{IsEquiv _ _ f}
+  (n : BinInt) (a : A)
+  : binint_iter f (binint_succ n) a = f (binint_iter f n a).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n as [n| |n]; trivial.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert n f H a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f H a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply eisretr.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; intros n p f H a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap (fun x =&gt; _ x _) _ @ _).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: rewrite binint_neg_pos_succ.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (eisretr binint_succ (neg n)).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_equiv_M.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; symmetry.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply pos_iter_succ_l.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply pos_iter_succ_l.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition binint_iter_succ_r {A} (f : A -&gt; A) `{IsEquiv _ _ f}
+  (n : BinInt) (a : A) : binint_iter f (binint_succ n) a = binint_iter f n (f a).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   destruct n as [n| |n]; trivial.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
++</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert n f H a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f H a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eissect.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf; intros n p f H a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_neg_pos_succ.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap (fun x =&gt; _ x _) _ @ _).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (eisretr binint_succ (neg n)).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite pos_iter_succ_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite eissect.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
++</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply pos_iter_succ_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iter_binint_pred_l {A} (f : A -&gt; A) `{IsEquiv _ _ f}
+  (n : BinInt) (a : A)
+: binint_iter f (binint_pred n) a = f^-1 (binint_iter f n a).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n as [n| |n]; trivial.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite pos_iter_succ_l.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert n.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; symmetry; apply eissect.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf; intros p q.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (binint_pred (pos (p + 1)%pos))
+        with (binint_pred (binint_succ (pos p))).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binint_pred_succ.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (pos (p + 1)%pos)
+        with (binint_succ (pos p)).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binint_iter_succ_l.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply eissect.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iter_binint_pred_r {A} (f : A -&gt; A) `{IsEquiv _ _ f}
+  (n : BinInt) (a : A)
+: binint_iter f (binint_pred n) a = binint_iter f n (f^-1 a).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f H n a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  destruct n as [n| |n]; trivial;
+  induction n as [|n nH] using pos_peano_ind; trivial.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: hnf; intros; apply symmetry, eisretr.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: rewrite &lt;- pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intro a.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: change (neg (n + 1)%pos) with (binint_pred (neg n)).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: change (pos (n + 1)%pos) with (binint_succ (pos n)).</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rewrite &lt;- 2 binint_neg_pos_succ.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: cbn; apply pos_iter_succ_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pred_succ.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_iter_succ_r.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Equiv.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

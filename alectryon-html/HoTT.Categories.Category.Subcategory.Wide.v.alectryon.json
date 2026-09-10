@@ -1,0 +1,34 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Wide subcategories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We reuse \u2211-precategories; a wide subcategory has the same objects, and a \u2211 type as its morphisms.  We make use of the fact that the extra component should be an hProp to not require as many proofs. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Sigma.OnMorphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation wide := sig_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,1747 @@
+<html>
+<head>
+<title>Coproducts.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Coproducts.v</h1>
+
+<div class="code" title="File: Coproducts.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 90%"></div>
+<pre>Require Import Basics.Overture Basics.Equivalences Basics.Tactics Basics.Decidable.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 1
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+Require Import Types.Bool.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 2
+Time: 0.028s">
+<div class="time" style="width: 93.333333333333%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans
+               WildCat.Opposite WildCat.Products WildCat.Universe
+               WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat
+               WildCat.Monoidal WildCat.Bifunctor.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Categories with coproducts *)
+
+(** ** Indexed coproducts *)
+
+(** For [A] a wild 1-category, [I] a type, and [x : I -&gt; A] an [I]-indexed family of objects in [A], we study the categorical coproduct of this family of objects.  As much as possible, we use the results from Products.v in [A^op]. *)
+
+(** When [x] is an [I]-indexed family of objects in [A] and [coprod] is an object with an [I]-indexed family of inclusions, we get for each [z] an induced map from the 0-groupoid of morphisms [coprod $-&gt; z] to the product of the 0-groupoids [x i $-&gt; z] over [i : I]. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 14
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>Definition cat_coprod_rec_inv {A : Type} `{Is1Cat A}
+  {I : Type} (x : I -&gt; A) (coprod : A) (inj : forall i, x i $-&gt; coprod) (z : A)
+  : yon_0gpd z coprod $-&gt; prod_0gpd I (fun i =&gt; yon_0gpd z (x i))
+  := cat_prod_corec_inv (A:=A^op) x coprod inj z.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An object is a coproduct of an [I]-indexed family if there is an [I]-indexed family of inclusions such that the induced map defined above is an equivalence.  We record this as the object being a product in the opposite category and deduce the relevant structure.  *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 19
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Class IsCoproduct {A : Type} `{Is1Cat A} {I : Type} (x : I -&gt; A) (cat_coprod : A)
+  := iscoproduct :: IsProduct (A:=A^op) x cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 20
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+Definition cat_in {A : Type} `{Is1Cat A} {I : Type} {x : I -&gt; A} {cat_coprod : A}
+  `{!IsCoproduct x cat_coprod} (i : I)
+  : x i $-&gt; cat_coprod
+  := cat_pr (A:=A^op) (x:=x) (cat_prod:=cat_coprod) i.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cat_in {A _ _ _ _ _ x cat_coprod iscoprod} : rename.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 27
+Time: 0.005s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Instance cat_isequiv_cat_coprod_rec_inv {A : Type} `{Is1Cat A}
+  {I : Type} (x : I -&gt; A) (cat_coprod : A) `{!IsCoproduct x cat_coprod}
+  : forall (z : A), CatIsEquiv (cat_coprod_rec_inv x cat_coprod cat_in z)
+  := cat_isequiv_cat_prod_corec_inv (A:=A^op) x cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cat_isequiv_cat_coprod_rec_inv {A _ _ _ _ _} x cat_coprod {iscoprod} : rename.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A coproduct in a category is a product in the opposite category. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 36
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Class Coproduct {A : Type} `{Is1Cat A} {I : Type} (x : I -&gt; A)
+  := coprod : Product (A:=A^op) x.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition cat_coprod {A : Type} `{Is1Cat A} {I : Type} (x : I -&gt; A) `{!Coproduct x} : A
+  := coprod.(cat_prod x).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cat_coprod {A _ _ _ _ _} x {coproduct} : rename.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We derive that a coproduct is also a coproduct in the sense above. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 44
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Instance cat_iscoprod {A : Type} `{Is1Cat A} {I : Type} (x : I -&gt; A) `{!Coproduct x}
+  : IsCoproduct x (cat_coprod x)
+  := coprod.(cat_isprod x).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cat_iscoprod {A _ _ _ _ _} x {coproduct} : rename.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A wrapper for building coproducts with less typechecking. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition Build_Coproduct' {A : Type} `{Is1Cat A} {I : Type} (x : I -&gt; A)
+  (cat_coprod : A) (cat_iscoprod : IsCoproduct x cat_coprod)
+  : Coproduct x
+  := Build_Product' (A:=A^op) x cat_coprod cat_iscoprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section CoproductConstructors.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 55
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+
+  Context {A : Type} `{Is1Cat A} {I : Type} (x : I -&gt; A)
+    (cat_coprod : A) (cat_in : forall i : I, x i $-&gt; cat_coprod)
+    (cat_coprod_rec : forall z : A,
+      (forall i : I, x i $-&gt; z) -&gt; (cat_coprod $-&gt; z))
+    (cat_coprod_beta_in : forall (z : A) (f : forall i, x i $-&gt; z) (i : I),
+      cat_coprod_rec z f $o cat_in i $== f i)
+    (cat_coprod_eta_in : forall (z : A) (f g : cat_coprod $-&gt; z),
+      (forall i : I, f $o cat_in i $== g $o cat_in i) -&gt; f $== g).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A convenience wrapper for building [IsCoproduct]. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 67
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Definition Build_IsCoproduct : IsCoproduct x cat_coprod
+    := Build_IsProduct (A:=A^op) x cat_coprod cat_in cat_coprod_rec
+        cat_coprod_beta_in cat_coprod_eta_in.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A convenience wrapper for building coproducts. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_Coproduct : Coproduct x
+    := Build_Coproduct' x cat_coprod Build_IsCoproduct.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End CoproductConstructors.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Lemmata.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A : Type} `{Is1Cat A} {I : Type} {x : I -&gt; A} (cat_coprod : A)
+    `{!IsCoproduct x cat_coprod}.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 79
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+
+  Definition cate_cat_coprod_rec_inv {z : A}
+    : yon_0gpd z cat_coprod $&lt;~&gt; prod_0gpd I (fun i =&gt; yon_0gpd z (x i))
+    := cate_cat_prod_corec_inv (A:=A^op) (x:=x) cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 83
+Time: 0.005s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+  Definition cate_cat_coprod_rec {z : A}
+    : prod_0gpd I (fun i =&gt; yon_0gpd z (x i)) $&lt;~&gt; yon_0gpd z cat_coprod
+    := cate_cat_prod_corec (A:=A^op) (x:=x) cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 87
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+  Definition cat_coprod_rec {z : A}
+    : (forall i, x i $-&gt; z) -&gt; cat_coprod $-&gt; z
+    := cat_prod_corec (A:=A^op) (x:=x) cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 91
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+  Definition cat_coprod_beta {z : A} (f : forall i, x i $-&gt; z)
+    : forall i, cat_coprod_rec f $o cat_in i $== f i
+    := cat_prod_beta (A:=A^op) (x:=x) cat_coprod f.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 95
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+  Definition cat_coprod_eta {z : A} (f : cat_coprod $-&gt; z)
+    : cat_coprod_rec (fun i =&gt; f $o cat_in i) $== f
+    := cat_prod_eta (A:=A^op) (x:=x) cat_coprod f.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 99
+Time: 0.014s">
+<div class="time" style="width: 46.666666666667%"></div>
+<pre>
+
+  Definition natequiv_cat_coprod_rec_inv
+    : NatEquiv (fun z =&gt; yon_0gpd z cat_coprod)
+      (fun z : A =&gt; prod_0gpd I (fun i =&gt; yon_0gpd z (x i)))
+    := natequiv_cat_prod_corec_inv (A:=A^op) (x:=x) cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 104
+Time: 0.005s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+  Definition cat_coprod_rec_eta {z : A} {f g : forall i, x i $-&gt; z}
+    : (forall i, f i $== g i) -&gt; cat_coprod_rec f $== cat_coprod_rec g
+    := cat_prod_corec_eta (A:=A^op) (x:=x) cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 108
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+
+  Definition cat_coprod_in_eta {z : A} {f g : cat_coprod $-&gt; z}
+    : (forall i, f $o cat_in i $== g $o cat_in i) -&gt; f $== g
+    := cat_prod_pr_eta (A:=A^op) (x:=x) cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+End Lemmata.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section InducedFromEquiv.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+  Context {A : Type} `{HasEquivs A} {I : Type} {x : I -&gt; A}
+    (cat_coprod : A) `{!IsCoproduct x cat_coprod}
+    (y : A) (f : cat_coprod $&lt;~&gt; y).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A categorical equivalence out of a coproduct induces a coproduct structure on the codomain. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 123
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Local Instance cat_coprod_coprod_equiv : IsCoproduct x y
+    := cat_prod_equiv_prod (A:=A^op) (x:=x) cat_coprod _ f.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The induced inclusion is given by the equivalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 127
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>Definition cat_in_comp (i : I)
+    : cat_in i $== f $o cat_in i
+    := cat_pr_comp cat_coprod y _ i.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The induced recursion is given by the equivalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 132
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>Definition cat_coprod_rec_comp {z : A} (D : forall i, x i $-&gt; z)
+    : cat_coprod_rec y D $o f $== cat_coprod_rec cat_coprod D
+    := cat_prod_corec_comp (A:=A^op) (he:=hasequivs_op) cat_coprod y f D.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End InducedFromEquiv.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Codiagonal / fold map out of the coproduct of a constant family *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 139
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Definition cat_coprod_codiag {A : Type} {I : Type} (x : A) (cat_coprod : A)
+  `{IsCoproduct _ I (fun _ =&gt; x) cat_coprod}
+  : cat_coprod $-&gt; x
+  := cat_prod_diag (A:=A^op) x cat_coprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Uniqueness of coproducts *)
+
+(** [I]-indexed coproducts are unique no matter how they are constructed. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 146
+Time: 0.005s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Definition cate_cat_coprod {A : Type} `{HasEquivs A} {I J : Type} (ie : I &lt;~&gt; J)
+  (x : I -&gt; A) (coprod_x : A) `{!IsCoproduct x coprod_x}
+  (y : J -&gt; A) (coprod_y : A) `{!IsCoproduct y coprod_y}
+  (e : forall (i : I), y (ie i) $&lt;~&gt; x i)
+  : coprod_y $&lt;~&gt; coprod_x
+  := cate_cat_prod (A:=A^op) ie x coprod_x y coprod_y e.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [I]-indexed coproducts are unique. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 153
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>Definition cat_coprod_unique {A : Type} `{HasEquivs A} {I : Type}
+  (x : I -&gt; A) (coprod_x : A) `{!IsCoproduct x coprod_x}
+  (y : I -&gt; A) (coprod_y : A) `{!IsCoproduct y coprod_y}
+  (e : forall i : I, x i $&lt;~&gt; y i)
+  : coprod_x $&lt;~&gt; coprod_y
+  := cate_cat_coprod 1 y _ x _ e.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Existence of coproducts *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Class HasCoproducts (A : Type) `{Is1Cat A} (I : Type)
+  := has_coproducts :: forall x : I -&gt; A, Coproduct x.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Class HasAllCoproducts (A : Type) `{Is1Cat A}
+  := has_all_coproducts :: forall I : Type, HasCoproducts A I.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Coproduct functor *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 168
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Local Instance hasproductsop_hascoproducts {A I : Type} `{HasCoproducts A I}
+  : HasProducts A^op I
+  := fun x : I -&gt; A^op =&gt; has_coproducts (A:=A) x.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance is0functor_cat_coprod (A : Type) (I : Type) `{IsGraph I}
+  `{HasCoproducts A I}
+  : @Is0Functor (I -&gt; A) A (isgraph_forall I (fun _ =&gt; A)) _
+    (fun x : I -&gt; A =&gt; cat_coprod x).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply is0functor_op'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  exact (is0functor_cat_prod A^op I).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 179
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+Instance is1functor_cat_coprod (A : Type) (I : Type) `{IsGraph I}
+  `{HasCoproducts A I}
+  : @Is1Functor (I -&gt; A) A _ _ _ (is1cat_forall I (fun _ =&gt; A)) _ _ _ _
+    (fun x : I -&gt; A =&gt; cat_coprod x) _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply is1functor_op'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 186
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  exact (is1functor_cat_prod A^op I).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Categories with specific kinds of coproducts *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 191
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition isinitial_coprod_empty {A : Type} `{Is1Cat A} {x : Empty -&gt; A}
+  {coprod_empty : A} {coprod : IsCoproduct x coprod_empty}
+  : IsInitial coprod_empty
+  := isterminal_prod_empty (A:=A^op) (isprod:=coprod).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Binary coproducts *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 197
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Class IsBinaryCoproduct {A : Type} `{Is1Cat A} (x y : A) (cat_bincoprod : A)
+  := is_binary_coproduct :: IsBinaryProduct (A:=A^op) x y cat_bincoprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 198
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+Instance isbincoprod_iscoprod {A : Type} `{Is1Cat A} (x y : A)
+  (cat_bincoprod : A) `{!IsBinaryCoproduct x y cat_bincoprod}
+  : IsCoproduct (Bool_rec _ x y) cat_bincoprod
+  := is_binary_product.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Class BinaryCoproduct {A : Type} `{Is1Cat A} (x y : A)
+  := binary_coproduct :: BinaryProduct (A:=A^op) x y.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance isbinarycoproduct_binarycoproduct {A : Type} `{Is1Cat A}
+  (x y : A) {coprod : BinaryCoproduct x y}
+  : IsBinaryCoproduct x y coprod.(cat_prod _)
+  := cat_isprod _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A category with binary coproducts is a category with a binary coproduct for each pair of objects. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class HasBinaryCoproducts (A : Type) `{Is1Cat A}
+  := has_binary_coproducts :: forall x y : A, BinaryCoproduct x y.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance hasbinarycoproducts_hascoproductsbool {A : Type}
+  `{HasCoproducts A Bool}
+  : HasBinaryCoproducts A
+  := fun x y =&gt; has_coproducts (Bool_rec _ x y).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section BinaryCoproducts.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{Is1Cat A} {x y : A}
+    (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x y cat_bincoprod}.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_inl : x $-&gt; cat_bincoprod
+    := cat_pr1 cat_bincoprod (isbinprod:=isbincoprod).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_inr : y $-&gt; cat_bincoprod
+    := cat_pr2 cat_bincoprod (isbinprod:=isbincoprod).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cat_bincoprod_rec {z : A} (f : x $-&gt; z) (g : y $-&gt; z)
+    : cat_bincoprod $-&gt; z
+    := cat_binprod_corec (isbinprod:=isbincoprod) cat_bincoprod f g.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 234
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+  Definition cat_bincoprod_beta_inl {z : A} (f : x $-&gt; z) (g : y $-&gt; z)
+    : cat_bincoprod_rec f g $o cat_inl $== f
+    := cat_binprod_beta_pr1 (isbinprod:=isbincoprod) cat_bincoprod f g.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 238
+Time: 0.014s">
+<div class="time" style="width: 46.666666666667%"></div>
+<pre>
+
+  Definition cat_bincoprod_beta_inr {z : A} (f : x $-&gt; z) (g : y $-&gt; z)
+    : cat_bincoprod_rec f g $o cat_inr $== g
+    := cat_binprod_beta_pr2 (isbinprod:=isbincoprod) cat_bincoprod f g.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 242
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+  Definition cat_bincoprod_eta {z : A} (f : cat_bincoprod $-&gt; z)
+    : cat_bincoprod_rec (f $o cat_inl) (f $o cat_inr) $== f
+    := cat_binprod_eta (isbinprod:=isbincoprod) cat_bincoprod f.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 246
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+
+  Definition cat_bincoprod_eta_in {z : A} {f g : cat_bincoprod $-&gt; z}
+    : f $o cat_inl $== g $o cat_inl
+      -&gt; f $o cat_inr $== g $o cat_inr
+      -&gt; f $== g
+    := cat_binprod_eta_pr (isbinprod:=isbincoprod) cat_bincoprod f g.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 252
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+
+  Definition cat_bincoprod_rec_eta {z : A} {f f' : x $-&gt; z} {g g' : y $-&gt; z}
+    : f $== f'
+      -&gt; g $== g'
+      -&gt; cat_bincoprod_rec f g $== cat_bincoprod_rec f' g'
+    := cat_binprod_corec_eta (isbinprod:=isbincoprod) cat_bincoprod f f' g g'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End BinaryCoproducts.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section BinaryCoproductConstructors.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 262
+Time: 0.007s">
+<div class="time" style="width: 23.333333333333%"></div>
+<pre>
+
+  Context {A : Type} `{Is1Cat A} {x y : A}
+    (cat_bincoprod : A) (cat_inl : x $-&gt; cat_bincoprod) (cat_inr : y $-&gt; cat_bincoprod)
+    (cat_bincoprod_rec : forall z : A, (x $-&gt; z) -&gt; (y $-&gt; z) -&gt; cat_bincoprod $-&gt; z)
+    (cat_bincoprod_beta_inl : forall (z : A) (f : x $-&gt; z) (g : y $-&gt; z),
+      cat_bincoprod_rec z f g $o cat_inl $== f)
+    (cat_bincoprod_beta_inr : forall (z : A) (f : x $-&gt; z) (g : y $-&gt; z),
+      cat_bincoprod_rec z f g $o cat_inr $== g)
+    (cat_bincoprod_eta_in : forall (z : A) (f g : cat_bincoprod $-&gt; z),
+      f $o cat_inl $== g $o cat_inl -&gt; f $o cat_inr $== g $o cat_inr -&gt; f $== g).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A convenience wrapper for building [IsBinaryCoproduct]. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 275
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition Build_IsBinaryCoproduct : IsBinaryCoproduct x y cat_bincoprod
+    := Build_IsBinaryProduct
+        (cat_bincoprod : A^op)
+        cat_inl
+        cat_inr
+        cat_bincoprod_rec
+        cat_bincoprod_beta_inl
+        cat_bincoprod_beta_inr
+        cat_bincoprod_eta_in.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A convenience wrapper for building binary coproducts. *)
+ </pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_BinaryCoproduct : BinaryCoproduct x y
+    := Build_Coproduct' _ cat_bincoprod Build_IsBinaryCoproduct.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End BinaryCoproductConstructors.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 289
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition cat_bincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A) : A
+  := cat_coprod (Bool_rec _ x y) (coproduct:=has_binary_coproducts x y).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 292
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance cat_isbincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A)
+  : IsBinaryCoproduct x y (cat_bincoprod x y)
+  := cat_iscoprod (Bool_rec _ x y) (coproduct:=has_binary_coproducts x y).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From binary coproducts, all [Bool]-shaped coproducts can be constructed. This should not be an instance to avoid a cycle with [hasbinarycoproducts_hascoproductsbool]. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 298
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition hascoproductsbool_hasbinarycoproducts {A : Type}
+  `{hbc : HasBinaryCoproducts A}
+  : HasCoproducts A Bool
+  := hasproductsbool_hasbinaryproducts (A:=A^op) (hbp:=hbc).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Binary coproduct functor *)
+
+(** Hint: Use [Set Printing Implicit] to see the implicit arguments in the following proofs. *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0bifunctor_cat_bincoprod {A : Type}
+  `{hbc : HasBinaryCoproducts A}
+  : Is0Bifunctor cat_bincoprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  napply is0bifunctor_op'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (is0bifunctor_cat_binprod (A:=A^op) (hbp:=hbc)).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance is1bifunctor_cat_bincoprod {A : Type}
+  `{hbc : HasBinaryCoproducts A}
+  : Is1Bifunctor cat_bincoprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 317
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  napply is1bifunctor_op'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (is1bifunctor_cat_binprod (A:=A^op) (hbp:=hbc)).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products.v proves further results about the functoriality of binary products which have not been needed for coproducts so far:  that [cat_binprod_corec] is functorial in each of its two morphism arguments ([is0functor_cat_binprod_corec_l] and [is0functor_cat_binprod_corec_r]), and how each projection interacts with each of [fmap01], [fmap10] and [fmap11] ([cat_pr1_fmap01_binprod] and its five variants).  If needed, the duals can be obtained from those results in [A^op]. *)
+
+(** *** Products and coproducts in the opposite category *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 325
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Instance iscoproduct_op {A I : Type} `{Is1Cat A} (x : I -&gt; A)
+  (cat_prod : A) {isprod : IsProduct x cat_prod}
+  : IsCoproduct (A:=A^op) x cat_prod
+  := isprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance coproduct_op {A I : Type} `{Is1Cat A} (x : I -&gt; A)
+  {prod : Product x}
+  : Coproduct (A:=A^op) x
+  := prod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 333
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance hasbinarycoproducts_op_hasbinaryproducts {A : Type}
+  `{Is1Cat A, hbp : !HasBinaryProducts A}
+  : HasBinaryCoproducts A^op
+  := hbp.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition hasbinarycoproducts_hasbinaryproducts_op {A : Type}
+  `{Is1Cat A, hbp : !HasBinaryProducts A^op}
+  : HasBinaryCoproducts A
+  := hbp.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate hasbinarycoproducts_hasbinaryproducts_op : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 344
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Instance hasbinaryproducts_op_hasbinarycoproducts {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A}
+  : HasBinaryProducts A^op
+  := hbc.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition hasbinaryproducts_hasbinarycoproducts_op {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A^op}
+  : HasBinaryProducts A
+  := hbc.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate hasbinaryproducts_hasbinarycoproducts_op : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Lemmas about [cat_bincoprod_rec] *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 358
+Time: 0.009s">
+<div class="time" style="width: 30%"></div>
+<pre>Definition cat_bincoprod_fmap01_rec {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {w x y z : A}
+  (f : z $-&gt; w) (g : y $-&gt; x) (h : x $-&gt; w)
+  : cat_bincoprod_rec _ f h
+      $o fmap01 cat_bincoprod z g
+    $== cat_bincoprod_rec _ f (h $o g)
+  := cat_binprod_fmap01_corec (hbp:=hbc) f g h.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 364
+Time: 0.01s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+
+Definition cat_bincoprod_fmap10_rec {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {w x y z : A}
+  (f : y $-&gt; x) (g : x $-&gt; w) (h : z $-&gt; w)
+  : cat_bincoprod_rec _ g h
+      $o fmap10 cat_bincoprod f z
+    $== cat_bincoprod_rec _ (g $o f) h
+  := cat_binprod_fmap10_corec (hbp:=hbc) f g h.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 372
+Time: 0.009s">
+<div class="time" style="width: 30%"></div>
+<pre>
+
+Definition cat_bincoprod_fmap11_rec {A : Type}
+  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {v w x y z : A}
+  (f : y $-&gt; w) (g : z $-&gt; x) (h : w $-&gt; v) (i : x $-&gt; v)
+  : cat_bincoprod_rec _ h i
+      $o fmap11 cat_bincoprod f g
+    $== cat_bincoprod_rec _ (h $o f) (i $o g)
+  := cat_binprod_fmap11_corec (hbp:=hbc) f g h i.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Codiagonal *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition cat_bincoprod_codiag {A : Type} `{Is1Cat A} (x : A)
+  (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x x cat_bincoprod}
+  : cat_bincoprod $-&gt; x
+  := cat_binprod_diag (isbinprod:=isbincoprod) x cat_bincoprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 386
+Time: 0.01s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+
+Definition cat_bincoprod_fmap11_codiag {A : Type}
+  `{HasBinaryCoproducts A} {x y : A} (f : x $-&gt; y)
+  : f $o cat_bincoprod_codiag x _
+    $== cat_bincoprod_codiag y _ $o fmap11 cat_bincoprod f f
+  := cat_binprod_fmap11_diag (A:=A^op) _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Symmetry of coproducts *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 395
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition cat_bincoprod_swap {A : Type} `{Is1Cat A}
+  {hbc : HasBinaryCoproducts A} (x y : A)
+  : cat_bincoprod x y $-&gt; cat_bincoprod y x
+  := cat_binprod_swap (hbp:=hbc) _ _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 398
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+Definition cate_bincoprod_swap {A : Type} `{HasEquivs A}
+  {hbc : HasBinaryCoproducts A} (x y : A)
+  : cat_bincoprod x y $&lt;~&gt; cat_bincoprod y x
+  := cate_binprod_swap (A:=A^op) (hbp:=hbc) _ _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 403
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+
+Definition cat_bincoprod_swap_codiag {A : Type} `{Is1Cat A}
+  {hbc : HasBinaryCoproducts A} (x : A)
+  : cat_bincoprod_codiag x _ $o cat_bincoprod_swap x x
+    $== cat_bincoprod_codiag x _
+  := cat_binprod_swap_diag (A:=A^op) x.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 409
+Time: 0.007s">
+<div class="time" style="width: 23.333333333333%"></div>
+<pre>
+
+Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
+  `{hbc : !HasBinaryCoproducts A} {a b c : A} (f : a $-&gt; c) (g : b $-&gt; c)
+  : cat_bincoprod_rec _ f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec _ g f
+  := cat_binprod_swap_corec (A:=A^op) _ _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The swap map is a symmetric braiding.  Its two fields give the naturality and the involutivity of the swap map, which Products.v also states separately as [cat_binprod_swap_nat] and [cat_binprod_swap_cat_binprod_swap]. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 416
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition symmetricbraiding_bincoprod {A : Type} `{HasEquivs A}
+  `{!HasBinaryCoproducts A}
+  : SymmetricBraiding cat_bincoprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply symmetricbraiding_op'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 421
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  exact symmetricbraiding_binprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 422
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Associativity of coproducts *)
+
+</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 426
+Time: 0.009s">
+<div class="time" style="width: 30%"></div>
+<pre>Instance associator_cat_bincoprod {A : Type} `{HasEquivs A}
+  `{hbc : !HasBinaryCoproducts A}
+  : Associator cat_bincoprod
+  := associator_op' (bf0:=is0bifunctor_cat_bincoprod (hbc:=hbc))
+      (assoc:=associator_cat_binprod (A:=A^op)).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 430
+Time: 0.008s">
+<div class="time" style="width: 26.666666666667%"></div>
+<pre>
+
+Definition cat_bincoprod_rec_associator {A : Type} `{HasEquivs A}
+  {hbc : HasBinaryCoproducts A}
+  {w x y z : A} (f : w $-&gt; z) (g : x $-&gt; z) (h : y $-&gt; z)
+  : cat_bincoprod_rec _ (cat_bincoprod_rec _ f g) h $o associator_cat_bincoprod w x y
+    $== cat_bincoprod_rec _ f (cat_bincoprod_rec _ g h).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 437
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  napply cate_moveR_eV.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 439
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+  exact (cat_binprod_associator_corec (A:=A^op) (hbp:=hbc) f g h).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 440
+Time: 0.004s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Cocartesian Monoidal Structure *)
+
+(** If [A] has binary coproducts and an initial object, then these form a symmetric monoidal structure.  Other things follow from this via typeclass search. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 445
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}
+  `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}
+  : IsSymmetricMonoidal A cat_bincoprod zero | 10.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 448
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  napply issymmetricmonoidal_op'.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by napply isterminal_op_isinitial.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Examples *)
+
+(** *** Coproducts in Type *)
+
+(** [Type] has all coproducts. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hasallcoproducts_type : HasAllCoproducts Type.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros I x.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 460
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  snapply Build_Coproduct.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sig (fun i : I =&gt; x i)).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (exist x).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f [i xi].</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f i xi).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f i xi; reflexivity.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f g p [i xi].</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p i xi).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 468
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In particular, [Type] has all binary coproducts. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 471
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
+  := {}.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Canonical coproduct-product map *)
+
+(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed.  We factor out the components of this map into a separate definition to make goals involving [cat_coprod_prod] easier to read. *)</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cat_coprod_prod_component {A : Type} `{IsPointedCat A}
+  {I : Type} `{DecidablePaths I}
+  (x : I -&gt; A) (i j : I)
+  : x i $-&gt; x j.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dec_paths i j) as [p|].</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Id _).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact zero_morphism.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 485
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition cat_coprod_prod {A : Type} `{Is1Cat A, !IsPointedCat A}
+  {I : Type} `{DecidablePaths I}
+  (x : I -&gt; A) (cat_coprod cat_prod : A)
+  `{!IsCoproduct x cat_coprod, !IsProduct x cat_prod}
+  : cat_coprod $-&gt; cat_prod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 492
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  rapply cat_coprod_rec.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply cat_prod_corec.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros j.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (cat_coprod_prod_component x i j).</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 498
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
+  (x y cat_bincoprod cat_binprod: A)
+  `{!IsBinaryCoproduct x y cat_bincoprod, !IsBinaryProduct x y cat_binprod}
+  : cat_bincoprod $-&gt; cat_binprod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply cat_coprod_prod.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2,4: exact _.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply is_binary_coproduct.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coproducts.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

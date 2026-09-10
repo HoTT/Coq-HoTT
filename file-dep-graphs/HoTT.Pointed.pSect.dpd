@@ -1,0 +1,7 @@
+N: 2 "equiv_pequiv_pslice_psect" [body=yes, kind=cnst, prop=no, path="pSect", ];
+N: 1 "equiv_psect_psnd" [body=yes, kind=cnst, prop=no, path="pSect", ];
+N: 3 "issig_psect" [body=yes, kind=cnst, prop=no, path="pSect", ];
+N: 4 "pSect" [body=yes, kind=cnst, prop=no, path="pSect", ];
+E: 1 4 [weight=2, ];
+E: 2 4 [weight=2, ];
+E: 3 4 [weight=20, ];

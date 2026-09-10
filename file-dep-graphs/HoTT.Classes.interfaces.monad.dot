@@ -1,0 +1,25 @@
+digraph HoTT_Classes_interfaces_monad {
+  graph [ratio=0.5]
+  node [style=filled]
+monad_monad_bind_assoc [label="monad_bind_assoc", URL=<monad.html#monad_bind_assoc>, peripheries=3, fillcolor="#F070D1"] ;
+monad_monad_bind_ret [label="monad_bind_ret", URL=<monad.html#monad_bind_ret>, peripheries=3, fillcolor="#F070D1"] ;
+monad_monad_ret_bind [label="monad_ret_bind", URL=<monad.html#monad_ret_bind>, peripheries=3, fillcolor="#F070D1"] ;
+monad_Monad_sind [label="Monad_sind", URL=<monad.html#Monad_sind>, peripheries=3, fillcolor="#F070D1"] ;
+monad_Monad_rec [label="Monad_rec", URL=<monad.html#Monad_rec>, peripheries=3, fillcolor="#F070D1"] ;
+monad_Monad_ind [label="Monad_ind", URL=<monad.html#Monad_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+monad_Monad_rect [label="Monad_rect", URL=<monad.html#Monad_rect>, fillcolor="#F070D1"] ;
+monad_Build_Monad [label="Build_Monad", URL=<monad.html#Build_Monad>, fillcolor="#7FAAFF"] ;
+monad_Monad [label="Monad", URL=<monad.html#Monad>, fillcolor="#E2CDFA"] ;
+  monad_monad_bind_assoc -> monad_Monad [] ;
+  monad_monad_bind_ret -> monad_Monad [] ;
+  monad_monad_ret_bind -> monad_Monad [] ;
+  monad_Monad_sind -> monad_Build_Monad [] ;
+  monad_Monad_sind -> monad_Monad [] ;
+  monad_Monad_rec -> monad_Monad_rect [] ;
+  monad_Monad_ind -> monad_Build_Monad [] ;
+  monad_Monad_ind -> monad_Monad [] ;
+  monad_Monad_rect -> monad_Build_Monad [] ;
+  monad_Monad_rect -> monad_Monad [] ;
+subgraph cluster_monad { label="monad"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+monad_Monad; monad_Build_Monad; monad_Monad_rect; monad_Monad_ind; monad_Monad_rec; monad_Monad_sind; monad_monad_ret_bind; monad_monad_bind_ret; monad_monad_bind_assoc; };
+} /* END */

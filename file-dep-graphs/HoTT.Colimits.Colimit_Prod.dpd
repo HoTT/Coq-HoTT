@@ -1,0 +1,6 @@
+N: 2 "diagram_equiv_prod_sigma" [body=yes, kind=cnst, prop=no, path="Colimit_Prod", ];
+N: 1 "iscolimit_prod" [body=yes, kind=cnst, prop=no, path="Colimit_Prod", ];
+N: 3 "prod_diagram" [body=yes, kind=cnst, prop=no, path="Colimit_Prod", ];
+E: 1 2 [weight=1, ];
+E: 1 3 [weight=4, ];
+E: 2 3 [weight=15, ];

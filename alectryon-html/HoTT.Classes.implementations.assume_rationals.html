@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Classes.implementations.assume_rationals.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT.Classes <span class="kn">Require Import</span></span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT.Classes <span class="kn">Require Import</span>
+     interfaces.canonical_names
+     interfaces.orders
+     interfaces.rationals
+     theory.rationals.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Universe</span> <span class="nf">UQ</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Parameters</span> (<span class="nv">Q</span> : <span class="kt">Type</span>@{UQ}) (<span class="nv">Qap</span> : Apart@{UQ UQ} Q)
+  (<span class="nv">Qplus</span> : Plus Q) (<span class="nv">Qmult</span> : Mult Q)
+  (<span class="nv">Qzero</span> : Zero Q) (<span class="nv">Qone</span> : One Q) (<span class="nv">Qneg</span> : Negate Q) (<span class="nv">Qrecip</span> : DecRecip Q)
+  (<span class="nv">Qle</span> : Le@{UQ UQ} Q) (<span class="nv">Qlt</span> : Lt@{UQ UQ} Q)
+  (<span class="nv">QtoField</span> : RationalsToField@{UQ UQ UQ UQ} Q)
+  (<span class="nv">Qrats</span> : Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q)
+  (<span class="nv">Qtrivialapart</span> : TrivialApart Q) (<span class="nv">Qdec</span> : DecidablePaths Q)
+  (<span class="nv">Qmeet</span> : Meet Q) (<span class="nv">Qjoin</span> : Join Q) (<span class="nv">Qlattice</span> : LatticeOrder Qle)
+  (<span class="nv">Qle_total</span> : TotalRelation (@le Q _))
+  (<span class="nv">Qabs</span> : Abs Q).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="c">(* I don&#39;t even want to know why this is necessary. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Parameter</span> <span class="nv">Qenum</span> : Enumerable Q.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;Q+&quot;</span> := (Qpos Q).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input">Existing Instances Qap Qplus Qmult Qzero Qone Qneg Qrecip
+         Qle Qlt QtoField Qrats Qtrivialapart Qdec
+         Qmeet Qjoin Qlattice Qle_total Qabs Qenum.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

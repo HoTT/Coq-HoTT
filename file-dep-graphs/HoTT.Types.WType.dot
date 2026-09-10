@@ -1,0 +1,34 @@
+digraph HoTT_Types_WType {
+  graph [ratio=0.5]
+  node [style=filled]
+WType_istrunc_wtype [label="istrunc_wtype", URL=<WType.html#istrunc_wtype>, peripheries=3, fillcolor="#F070D1"] ;
+WType_equiv_path_wtype_ [label="equiv_path_wtype'", URL=<WType.html#equiv_path_wtype'>, fillcolor="#F070D1"] ;
+WType_equiv_path_wtype [label="equiv_path_wtype", URL=<WType.html#equiv_path_wtype>, fillcolor="#F070D1"] ;
+WType_issig_W [label="issig_W", URL=<WType.html#issig_W>, fillcolor="#F070D1"] ;
+WType_w_arg [label="w_arg", URL=<WType.html#w_arg>, fillcolor="#F070D1"] ;
+WType_w_label [label="w_label", URL=<WType.html#w_label>, fillcolor="#F070D1"] ;
+WType_W_sind [label="W_sind", URL=<WType.html#W_sind>, peripheries=3, fillcolor="#F070D1"] ;
+WType_W_rec [label="W_rec", URL=<WType.html#W_rec>, peripheries=3, fillcolor="#F070D1"] ;
+WType_W_ind [label="W_ind", URL=<WType.html#W_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+WType_W_rect [label="W_rect", URL=<WType.html#W_rect>, fillcolor="#F070D1"] ;
+WType_w_sup [label="w_sup", URL=<WType.html#w_sup>, fillcolor="#7FAAFF"] ;
+WType_W [label="W", URL=<WType.html#W>, fillcolor="#E2CDFA"] ;
+  WType_istrunc_wtype -> WType_equiv_path_wtype_ [] ;
+  WType_istrunc_wtype -> WType_W_rect [] ;
+  WType_equiv_path_wtype_ -> WType_equiv_path_wtype [] ;
+  WType_equiv_path_wtype -> WType_issig_W [] ;
+  WType_equiv_path_wtype -> WType_w_arg [] ;
+  WType_issig_W -> WType_w_sup [] ;
+  WType_issig_W -> WType_W [] ;
+  WType_w_arg -> WType_w_label [] ;
+  WType_w_label -> WType_W [] ;
+  WType_W_sind -> WType_w_sup [] ;
+  WType_W_sind -> WType_W [] ;
+  WType_W_rec -> WType_W_rect [] ;
+  WType_W_ind -> WType_w_sup [] ;
+  WType_W_ind -> WType_W [] ;
+  WType_W_rect -> WType_w_sup [] ;
+  WType_W_rect -> WType_W [] ;
+subgraph cluster_WType { label="WType"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+WType_W; WType_w_sup; WType_W_rect; WType_W_ind; WType_W_rec; WType_W_sind; WType_w_label; WType_w_arg; WType_issig_W; WType_equiv_path_wtype; WType_equiv_path_wtype_; WType_istrunc_wtype; };
+} /* END */

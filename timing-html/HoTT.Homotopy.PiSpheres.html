@@ -1,0 +1,801 @@
+<html>
+<head>
+<title>PiSpheres.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for PiSpheres.v</h1>
+
+<div class="code" title="File: PiSpheres.v
+Line: 1
+Time: 0.043s">
+<div class="time" style="width: 22.395833333333%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 1
+Time: 0.022s">
+<div class="time" style="width: 11.458333333333%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Equiv NatTrans Yoneda.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 2
+Time: 0.031s">
+<div class="time" style="width: 16.145833333333%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import HFiber.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+Require Import Spaces.Int Spaces.Circle Spaces.Spheres.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 6
+Time: 0.02s">
+<div class="time" style="width: 10.416666666667%"></div>
+<pre>
+From HoTT.Algebra.AbGroups Require Import AbelianGroup Z.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 7
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+Require Import Algebra.Groups.ShortExactSequence.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.ExactSequence.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpace.Core.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpaceS1.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 12
+Time: 0.004s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Require Import Homotopy.Hopf.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Join.JoinSusp.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * We show that the nth homotopy group of the n-sphere is the integers, for n &gt;= 1, and that the third homotopy group of the 2-sphere is also the integers. *)
+
+</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The fundamental group of the 1-sphere / circle. *)
+
+</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Pi1S1.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>
+
+  Theorem pi1_circle : Pi 1 [Circle, base] ≅ abgroup_Z.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)
+   </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>symmetry.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 27
+Time: 0.009s">
+<div class="time" style="width: 4.6875%"></div>
+<pre>
+    srapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_via (base = base).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 29
+Time: 0.006s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+      2: exact (equiv_tr 0 (loops [Circle, base])).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact equiv_loopCircle_int.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 33
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+    cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply loopexp_add.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Theorem pi1_s1 : Pi 1 (psphere 1) ≅ abgroup_Z.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: exact pi1_circle.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply groupiso_pi_functor.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pequiv_S1_Circle.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Pi1S1.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The second homotopy group of the 2-sphere is the integers. *)
+
+</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Pi2S2.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 49
+Time: 0.006s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Definition ptr_loops_s2_s1 `{Univalence}
+    : pTr 1 (loops (psphere 2)) &lt;~&gt;* psphere 1
+    := (licata_finster (psphere 1))^-1*.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>
+
+  Definition pi2_s2 `{Univalence}
+    : Pi 2 (psphere 2) $&lt;~&gt; abgroup_Z.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (pi1_s1 $oE _).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 58
+Time: 0.192s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    change (Pi 2 ?X) with (Pi 1 (loops X)).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 59
+Time: 0.003s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    symmetry; exact (grp_iso_Pi_connected_hspace (psphere 1)).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The last line can also be replaced with
+         exact (compose_cate (A:=Group) (emap (Pi 1) ptr_loops_s2_s1)
+                                        (grp_iso_pi_Tr _ _)). *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 64
+Time: 0.106s">
+<div class="time" style="width: 55.208333333333%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Pi2S2.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** For n &gt;= 1, the nth homotopy group of the n-sphere is the integers. *)
+
+</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PinSn.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition pin_sn `{Univalence} (n : nat)
+    : Pi n.+1 (psphere n.+1) $&lt;~&gt; abgroup_Z.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact pi1_s1.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact pi2_s2.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $oE groupiso_pi_loops n.+1 (psphere n.+3)).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (IHn $oE _).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>
+    snapply (grp_iso_pi_connmap _ (loop_susp_unit (psphere n.+2))).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The (n+2)-sphere is (n+1)-connected, so [loop_susp_unit] is [n +2+ n]-connected.  Since [n.+2 &lt;= n +2+ n], we're done, after some [trunc_index] juggling. *)
+   </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (isconnmap_pred_add n.-2).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 trunc_index_add_succ.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (IsConnMap (Tr (n +2+ n)) (loop_susp_unit (psphere n.+2))).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 84
+Time: 0.015s">
+<div class="time" style="width: 7.8125%"></div>
+<pre>
+    rapply conn_map_loop_susp_unit.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 85
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End PinSn.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The third homotopy group of the 2-sphere *)
+
+(** We use the Hopf fibration [S1 -&gt; S3 -&gt; S2] to prove that the homotopy groups of [psphere 2] agree with those of [psphere 3] starting in degree 3.  In particular, [Pi 3 (psphere 2)] is isomorphic to the integers. *)
+
+</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Pi3S2.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The 1-sphere is 1-truncated by [istrunc_s1], hence [n.+1]-truncated for any [n]. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>Local Instance istrunc_psphere_1 (n : nat) : IsTrunc n.+1 (psphere 1)
+    := @istrunc_leq 1 n.+1 tt _ _.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Therefore its homotopy groups vanish in degrees 2 and above. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>Local Instance contr_pi_succ_succ_psphere_1 (n : nat)
+    : Contr (Pi n.+2 (psphere 1))
+    := contr_pi_succ_istrunc n (psphere 1).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The Hopf construction on the circle gives a pointed family over [psusp (psphere 1)], which is definitionally [psphere 2].  The projection of its total space is the Hopf fibration. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 105
+Time: 0.014s">
+<div class="time" style="width: 7.2916666666667%"></div>
+<pre>Definition hopf_pr1
+    : psigma (hopf_construction (psphere 1)) -&gt;* psphere 2
+    := Build_pMap pr1 1.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The circle, included as the fiber over the basepoint, gives a fiber sequence. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 110
+Time: 0.012s">
+<div class="time" style="width: 6.25%"></div>
+<pre>Definition fiberseq_hopf
+    : FiberSeq (psphere 1) (psigma (hopf_construction (psphere 1))) (psphere 2).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists hopf_pr1.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 115
+Time: 0.004s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> exact (hfiber_fibration (point (psphere 2)) _).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The total space of the Hopf fibration is the 3-sphere. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 120
+Time: 0.026s">
+<div class="time" style="width: 13.541666666667%"></div>
+<pre>Definition pequiv_hopf_total_s3
+    : psigma (hopf_construction (psphere 1)) &lt;~&gt;* psphere 3
+    := pequiv_pjoin_sphere 1 1 o*E pequiv_hopf_total_join (psphere 1).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Since the homotopy groups of the fiber [psphere 1] vanish in degrees 2 and above, the homotopy groups of [psphere 2] and [psphere 3] agree in degrees 3 and above.  The two groups flanking the relevant map in the long exact sequence are homotopy groups of [psphere 1], so [grp_iso_isexact] applies. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 0.52083333333333%"></div>
+<pre>Definition grp_iso_pi_s2_s3 (n : nat)
+    : Pi n.+3 (psphere 2) $&lt;~&gt; Pi n.+3 (psphere 3).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (groupiso_pi_functor n.+2 pequiv_hopf_total_s3 $oE _^-1$).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 128
+Time: 0.003s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    exact (grp_iso_isexact
+             (isexact_pi_total (i_fiberseq fiberseq_hopf) hopf_pr1 n.+3)
+             (isexact_pi_base (i_fiberseq fiberseq_hopf) hopf_pr1 n.+2)).</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 131
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The third homotopy group of the 2-sphere is the integers. *)
+ </pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 135
+Time: 0.003s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Definition pi3_s2 : Pi 3 (psphere 2) $&lt;~&gt; abgroup_Z
+    := pin_sn 2 $oE grp_iso_pi_s2_s3 0.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 136
+Time: 0.002s">
+<div class="time" style="width: 1.0416666666667%"></div>
+<pre>
+
+End Pi3S2.</pre>
+</div>
+<div class="code" title="File: PiSpheres.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

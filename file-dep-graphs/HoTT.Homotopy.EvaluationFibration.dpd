@@ -1,0 +1,7 @@
+N: 4 "ev" [body=yes, kind=cnst, prop=no, path="EvaluationFibration", ];
+N: 1 "ev1" [body=yes, kind=cnst, prop=no, path="EvaluationFibration", ];
+N: 3 "evfib" [body=yes, kind=cnst, prop=no, path="EvaluationFibration", ];
+N: 2 "pevfib" [body=yes, kind=cnst, prop=no, path="EvaluationFibration", ];
+N: 5 "selfmaps" [body=yes, kind=cnst, prop=no, path="EvaluationFibration", ];
+E: 1 2 [weight=1, ];
+E: 4 5 [weight=6, ];

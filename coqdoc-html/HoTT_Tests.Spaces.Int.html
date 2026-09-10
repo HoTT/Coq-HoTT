@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.Spaces.Int</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.Spaces.Int</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Spaces.Int.html#"><span class="id" title="library">Spaces.Int</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#"><span class="id" title="library">Spaces.SInt</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test the conversion functions between <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int.Int"><span class="id" title="inductive">Int</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test2" class="idref" href="#test2"><span class="id" title="definition">test2</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred2"><span class="id" title="constructor">int_pred2</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> 0 := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test2'" class="idref" href="#test2'"><span class="id" title="definition">test2'</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred"><span class="id" title="constructor">int_pred</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> 0 := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test3" class="idref" href="#test3"><span class="id" title="definition">test3</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred2"><span class="id" title="constructor">int_pred2</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>)) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4" class="idref" href="#test4"><span class="id" title="definition">test4</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#int_neg"><span class="id" title="definition">int_neg</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>))) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> 1 := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test5" class="idref" href="#test5"><span class="id" title="definition">test5</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> (-4)%<span class="id" title="var">int</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> 3 := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test6" class="idref" href="#test6"><span class="id" title="definition">test6</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> ((0<a class="idref" href="HoTT.Spaces.Int.html#2775fbf917a0f7e38e437cba6fd439e6"><span class="id" title="notation">.+1</span></a>)%<span class="id" title="var">int</span>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> 0 := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test7" class="idref" href="#test7"><span class="id" title="definition">test7</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_to_sint"><span class="id" title="definition">int_to_sint</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#::int_scope:x_'-'_x"><span class="id" title="notation">(</span></a>0<a class="idref" href="HoTT.Spaces.Int.html#2775fbf917a0f7e38e437cba6fd439e6"><span class="id" title="notation">.+1</span></a><a class="idref" href="HoTT.Spaces.Int.html#::int_scope:x_'-'_x"><span class="id" title="notation">)-</span></a>1)%<span class="id" title="var">int</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test8" class="idref" href="#test8"><span class="id" title="definition">test8</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#sint_to_int"><span class="id" title="definition">sint_to_int</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test9" class="idref" href="#test9"><span class="id" title="definition">test9</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#sint_to_int"><span class="id" title="definition">sint_to_int</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> 0) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test10" class="idref" href="#test10"><span class="id" title="definition">test10</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#sint_to_int"><span class="id" title="definition">sint_to_int</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> 0) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred"><span class="id" title="constructor">int_pred</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test the reduction function for <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int.Int"><span class="id" title="inductive">Int</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test11" class="idref" href="#test11"><span class="id" title="definition">test11</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred"><span class="id" title="constructor">int_pred</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>))) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test12" class="idref" href="#test12"><span class="id" title="definition">test12</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred2"><span class="id" title="constructor">int_pred2</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred"><span class="id" title="constructor">int_pred</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test13" class="idref" href="#test13"><span class="id" title="definition">test13</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred"><span class="id" title="constructor">int_pred</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_succ"><span class="id" title="constructor">int_succ</span></a> (<a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred2"><span class="id" title="constructor">int_pred2</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a>))) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.int_pred"><span class="id" title="constructor">int_pred</span></a> <a class="idref" href="HoTT.Spaces.Int.html#Int.zero"><span class="id" title="constructor">zero</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Arithmetic does not generally produce a term in normal form, so <span class="inlinecode">3</span> <span class="inlinecode">-</span> <span class="inlinecode">2</span> is not definitionally <span class="inlinecode">1</span>.  Reducing first makes the two sides agree. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test14" class="idref" href="#test14"><span class="id" title="definition">test14</span></a> : <a class="idref" href="HoTT.Spaces.Int.html#int_reduce"><span class="id" title="definition">int_reduce</span></a> (3 <a class="idref" href="HoTT.Spaces.Int.html#::int_scope:x_'-'_x"><span class="id" title="notation">-</span></a> 2)%<span class="id" title="var">int</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1%<span class="id" title="var">int</span> := <a class="idref" href="HoTT.Basics.Overture.html#idpath"><span class="id" title="constructor">idpath</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Since <span class="inlinecode"><a class="idref" href="HoTT.Spaces.Int.html#Int.Int"><span class="id" title="inductive">Int</span></a></span> has decidable equality, such facts can also be proved automatically. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test15" class="idref" href="#test15"><span class="id" title="definition">test15</span></a> : (3 <a class="idref" href="HoTT.Spaces.Int.html#::int_scope:x_'-'_x"><span class="id" title="notation">-</span></a> 2)%<span class="id" title="var">int</span> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1%<span class="id" title="var">int</span> := <span class="id" title="keyword">ltac</span>:(<span class="id" title="var">decide</span>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

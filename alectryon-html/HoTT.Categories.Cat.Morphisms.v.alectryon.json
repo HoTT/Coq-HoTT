@@ -1,0 +1,636 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Morphisms in cat *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core FunctorCategory.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Lemmas relationship between transporting the action of functors on objects, and [idtoiso] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section iso_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables s d : C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables m1 m2 : morphism C s d.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable p : m1 = m2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables Fs Fd : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Fm : morphism C s d -> Functor Fs Fd.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma transport_Fc_to_idtoiso\n        s' d' u\n  : @transport _ (fun m => morphism _ (Fm m s') d') _ _ p u\n    = u o components_of (Category.Morphisms.idtoiso (_ -> _) (ap Fm p) : morphism _ _ _)^-1 s'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun m : morphism C s d => morphism Fd ((Fm m) _0 s')%object d') p\n  u =\nu o (idtoiso (Fs -> Fd) (ap Fm p))^-1 s'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1",
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism C s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "m1 = m2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fs"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fd"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fm"
+              ],
+              "body": null,
+              "type": "morphism C s d -> Functor Fs Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "Fs"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d'"
+              ],
+              "body": null,
+              "type": "Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "morphism Fd ((Fm m1) _0 s')%object d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun m : morphism C s d => morphism Fd ((Fm m) _0 s')%object d') p\n  u =\nu o (idtoiso (Fs -> Fd) (ap Fm p))^-1 s'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1",
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism C s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "m1 = m2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fs"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fd"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fm"
+              ],
+              "body": null,
+              "type": "morphism C s d -> Functor Fs Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "Fs"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d'"
+              ],
+              "body": null,
+              "type": "Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "morphism Fd ((Fm m1) _0 s')%object d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "case p; clear p; simpl; autorewrite with morphism; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma transport_cF_to_idtoiso\n        s' d' u\n  : @transport _ (fun m => morphism _ s' (Fm m d')) _ _ p u\n    = components_of (Category.Morphisms.idtoiso (_ -> _) (ap Fm p) : morphism _ _ _) d' o u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun m : morphism C s d => morphism Fd s' ((Fm m) _0 d')%object) p\n  u =\n(idtoiso (Fs -> Fd) (ap Fm p) : morphism (Fs -> Fd) (Fm m1) (Fm m2)) d' o u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1",
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism C s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "m1 = m2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fs"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fd"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fm"
+              ],
+              "body": null,
+              "type": "morphism C s d -> Functor Fs Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d'"
+              ],
+              "body": null,
+              "type": "Fs"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "morphism Fd s' ((Fm m1) _0 d')%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun m : morphism C s d => morphism Fd s' ((Fm m) _0 d')%object) p\n  u =\n(idtoiso (Fs -> Fd) (ap Fm p) : morphism (Fs -> Fd) (Fm m1) (Fm m2)) d' o u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1",
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism C s d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "m1 = m2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fs"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fd"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Fm"
+              ],
+              "body": null,
+              "type": "morphism C s d -> Functor Fs Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "Fd"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d'"
+              ],
+              "body": null,
+              "type": "Fs"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "morphism Fd s' ((Fm m1) _0 d')%object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "case p; clear p; simpl; autorewrite with morphism; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End iso_lemmas.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

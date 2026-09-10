@@ -1,0 +1,70 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n HoTT.Classes.interfaces.abstract_algebra\n HoTT.Classes.interfaces.orders.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class NaturalsToSemiRing@{i j} (A : Type@{i}) :=\n  naturals_to_semiring: forall (B : Type@{j}) `{IsSemiCRing B}, A -> B.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments naturals_to_semiring A {_} B {_ _ _ _ _} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Naturals A {Aap:Apart A} {Aplus Amult Azero Aone Ale Alt}\n  `{U: NaturalsToSemiRing A} :=\n  { naturals_ring :: @IsSemiCRing A Aplus Amult Azero Aone\n  ; naturals_order :: FullPseudoSemiRingOrder Ale Alt\n  ; naturals_to_semiring_mor :: forall {B} `{IsSemiCRing B},\n    IsSemiRingPreserving (naturals_to_semiring A B)\n  ; naturals_initial: forall {B} `{IsSemiCRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,\n    naturals_to_semiring A B x = h x }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Specializable operations: *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class NatDistance N `{Plus N}\n  := nat_distance_sig : forall x y : N, { z : N | x + z = y } |_|\n                                   { z : N | y + z = x }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nat_distance {N} `{nd : NatDistance N} (x y : N) :=\n  match nat_distance_sig x y with\n  | inl (n;_) => n\n  | inr (n;_) => n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,90 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types Truncations.Core Pointed.Core Homotopy.Cover.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types Truncations.Core Pointed.Core Homotopy.Cover.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Evaluation fibrations and self-maps *)\n\n(** The type of unpointed self maps of A, pointed at the identity map. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition selfmaps (A : Type) : pType := [A -> A, idmap].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The unrestricted evaluation map. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ev (A : pType) : selfmaps A ->* A\n  := Build_pMap (fun f : selfmaps A => f pt) idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The evaluation fibration of an unpointed map [X -> A]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition evfib {X : pType} {A : Type} (f : X -> A) : comp (X -> A) (tr f) -> A\n  := fun g => g.1 pt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [f] is pointed, then the evaluation fibration of [f] is too. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pevfib {A X : pType} (f : X ->* A) : pcomp (X -> A) f ->* A\n  := Build_pMap (fun g : pcomp (X -> A) f => g.1 pt) (point_eq f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The evaluation map of the identity. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ev1 (A : pType) := pevfib (A:=A) pmap_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

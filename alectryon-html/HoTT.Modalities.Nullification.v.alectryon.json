@@ -1,0 +1,1989 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Nullification *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Extensions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modality Accessible.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Modalities.Localization.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "    (** Nullification is a special case of localization *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Nullification is the special case of localization where the codomains of the generating maps are all [Unit].  In this case, we get a modality and not just a reflective subuniverse. *)\n\n(** The hypotheses of this lemma may look slightly odd (why are we bothering to talk about type families dependent over [Unit]?), but they seem to be the most convenient to make the induction go through.  *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition extendable_over_unit (n : nat)\n  (A : Type@{a}) (C : Unit -> Type@{i}) (D : forall u, C u -> Type@{j})\n  (ext : ExtendableAlong@{a a i k} n (const_tt A) C)\n  (ext' : forall (c : forall u, C u),\n            ExtendableAlong@{a a j k} n (const_tt A) (fun u => (D u (c u))))\n  : ExtendableAlong_Over@{a a i j k} n (const_tt A) C D ext.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ExtendableAlong_Over n (const_tt A) C D ext",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n (const_tt A) (fun u : Unit => D u (c u))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ExtendableAlong_Over n (const_tt A) C D ext",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n (const_tt A) (fun u : Unit => D u (c u))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize dependent C; simple_induction n n IH;\n    intros C D ext ext'; [exact tt | split].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (g : forall a : A, C (const_tt A a))\n(g' : forall a : A, D (const_tt A a) (g a)),\n{rec : forall b : Unit, D b ((fst ext g).1 b) &\nforall a : A,\ntransport (D (const_tt A a)) ((fst ext g).2 a) (rec (const_tt A a)) = g' a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (h k : forall b : Unit, C b) (h' : forall b : Unit, D b (h b))\n(k' : forall b : Unit, D b (k b)),\nExtendableAlong_Over n (const_tt A) (fun b : Unit => h b = k b)\n  (fun (b : Unit) (c : h b = k b) => transport (D b) c (h' b) = k' b)\n  (snd ext h k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (g : forall a : A, C (const_tt A a))\n(g' : forall a : A, D (const_tt A a) (g a)),\n{rec : forall b : Unit, D b ((fst ext g).1 b) &\nforall a : A,\ntransport (D (const_tt A a)) ((fst ext g).2 a) (rec (const_tt A a)) = g' a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g g'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{rec : forall b : Unit, D b ((fst ext g).1 b) &\nforall a : A,\ntransport (D (const_tt A a)) ((fst ext g).2 a) (rec (const_tt A a)) = g' a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, C (const_tt A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "forall a : A, D (const_tt A a) (g a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists ((fst (ext' (fst ext g).1)\n                 (fun a => ((fst ext g).2 a)^ # (g' a))).1);\n      intros a; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (D (const_tt A a)) ((fst ext g).2 a)\n  ((fst (ext' (fst ext g).1)\n      (fun a0 : A =>\n       transport (D (const_tt A a0)) ((fst ext g).2 a0)^ (g' a0))).1\n     (const_tt A a)) =\ng' a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : A, C (const_tt A a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "forall a0 : A, D (const_tt A a0) (g a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_transport_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fst (ext' (fst ext g).1)\n   (fun a0 : A => transport (D (const_tt A a0)) ((fst ext g).2 a0)^ (g' a0))).1\n  (const_tt A a) =\ntransport (D (const_tt A a)) ((fst ext g).2 a)^ (g' a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : A, C (const_tt A a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "forall a0 : A, D (const_tt A a0) (g a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((fst (ext' (fst ext g).1)\n                (fun a => ((fst ext g).2 a)^ # (g' a))).2 a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (h k : forall b : Unit, C b) (h' : forall b : Unit, D b (h b))\n(k' : forall b : Unit, D b (k b)),\nExtendableAlong_Over n (const_tt A) (fun b : Unit => h b = k b)\n  (fun (b : Unit) (c : h b = k b) => transport (D b) c (h' b) = k' b)\n  (snd ext h k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h k h' k'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ExtendableAlong_Over n (const_tt A) (fun b : Unit => h b = k b)\n  (fun (b : Unit) (c : h b = k b) => transport (D b) c (h' b) = k' b)\n  (snd ext h k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "forall b : Unit, C b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall b : Unit, D b (h b)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k'"
+              ],
+              "body": null,
+              "type": "forall b : Unit, D b (k b)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IH; intros g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ExtendableAlong n (const_tt A)\n  (fun u : Unit => transport (D u) (g u) (h' u) = k' u)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IH"
+              ],
+              "body": null,
+              "type": "forall (C0 : Unit -> Type) (D0 : forall u : Unit, C0 u -> Type)\n(ext0 : ExtendableAlong n (const_tt A) C0),\n(forall c : forall u : Unit, C0 u,\n ExtendableAlong n (const_tt A) (fun u : Unit => D0 u (c u))) ->\nExtendableAlong_Over n (const_tt A) C0 D0 ext0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Unit -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "forall u : Unit, C u -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext"
+              ],
+              "body": null,
+              "type": "ExtendableAlong n.+1 (const_tt A) C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext'"
+              ],
+              "body": null,
+              "type": "forall c : forall u : Unit, C u,\nExtendableAlong n.+1 (const_tt A) (fun u : Unit => D u (c u))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "forall b : Unit, C b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "forall b : Unit, D b (h b)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k'"
+              ],
+              "body": null,
+              "type": "forall b : Unit, D b (k b)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall u : Unit, h u = k u"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (snd (ext' k) (fun u => g u # h' u) k').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ooextendable_over_unit@{i j k l m}\n  (A : Type@{i}) (C : Unit -> Type@{j}) (D : forall u, C u -> Type@{k})\n  (ext : ooExtendableAlong@{l l j m} (const_tt A) C)\n  (ext' : forall (c : forall u, C u),\n            ooExtendableAlong (const_tt A) (fun u => (D u (c u))))\n  : ooExtendableAlong_Over (const_tt A) C D ext\n  := fun n => extendable_over_unit n A C D (ext n) (fun c => ext' c n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Nul@{a i} (S : NullGenerators@{a}) : Modality@{i}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Modality",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Modality",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We use the localization reflective subuniverses for most of the necessary data. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Build_Modality' (Loc (null_to_local_generators S)) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type, PreReflects (Loc (null_to_local_generators S)) T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type,\nReflectsD (Loc (null_to_local_generators S))\n  (Loc (null_to_local_generators S)) T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type, PreReflects (Loc (null_to_local_generators S)) T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall T : Type,\nReflectsD (Loc (null_to_local_generators S))\n  (Loc (null_to_local_generators S)) T",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectsD (Loc (null_to_local_generators S))\n  (Loc (null_to_local_generators S)) A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** We take care with universes. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snrefine (reflectsD_from_OO_ind@{i} _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall B : O_reflector (Loc (null_to_local_generators S)) A -> Type,\n(forall oa : O_reflector (Loc (null_to_local_generators S)) A,\n In (Loc (null_to_local_generators S)) (B oa)) ->\n(forall a : A, B (to (Loc (null_to_local_generators S)) A a)) ->\nforall oa : O_reflector (Loc (null_to_local_generators S)) A, B oa",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (B : O_reflector (Loc (null_to_local_generators S)) A -> Type)\n(B_inO : forall oa : O_reflector (Loc (null_to_local_generators S)) A,\n         In (Loc (null_to_local_generators S)) (B oa))\n(f : forall a : A, B (to (Loc (null_to_local_generators S)) A a)) \n(a : A), ?OO_ind' B B_inO f (to (Loc (null_to_local_generators S)) A a) = f a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall B : Type,\nIn (Loc (null_to_local_generators S)) B ->\nforall z z' : B, In (Loc (null_to_local_generators S)) (z = z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall B : O_reflector (Loc (null_to_local_generators S)) A -> Type,\n(forall oa : O_reflector (Loc (null_to_local_generators S)) A,\n In (Loc (null_to_local_generators S)) (B oa)) ->\n(forall a : A, B (to (Loc (null_to_local_generators S)) A a)) ->\nforall oa : O_reflector (Loc (null_to_local_generators S)) A, B oa",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros B B_inO g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall oa : O_reflector (Loc (null_to_local_generators S)) A, B oa",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "O_reflector (Loc (null_to_local_generators S)) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : O_reflector (Loc (null_to_local_generators S)) A,\nIn (Loc (null_to_local_generators S)) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B (to (Loc (null_to_local_generators S)) A a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Localize_ind@{a i i i} (null_to_local_generators S) A B g _); intros i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong_Over (null_to_local_generators S i)\n  (fun _ : lgen_codomain (null_to_local_generators S) i =>\n   Localize (null_to_local_generators S) A)\n  (fun _ : lgen_codomain (null_to_local_generators S) i => B)\n  (islocal_localize (null_to_local_generators S) A i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "O_reflector (Loc (null_to_local_generators S)) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : O_reflector (Loc (null_to_local_generators S)) A,\nIn (Loc (null_to_local_generators S)) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B (to (Loc (null_to_local_generators S)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators S)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_over_unit; intros c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (const_tt (lgen_domain (null_to_local_generators S) i))\n  (fun u : Unit => B (c u))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "O_reflector (Loc (null_to_local_generators S)) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : O_reflector (Loc (null_to_local_generators S)) A,\nIn (Loc (null_to_local_generators S)) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B (to (Loc (null_to_local_generators S)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Unit -> Localize (null_to_local_generators S) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ooextendable_postcompose@{a a i i i i i i i i}\n                (fun (_:Unit) => B (c tt)) _ _\n                (fun u => transport B (ap@{Set _} c (path_unit tt u))) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (const_tt (lgen_domain (null_to_local_generators S) i))\n  (unit_name (B (c tt)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "O_reflector (Loc (null_to_local_generators S)) A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B_inO"
+              ],
+              "body": null,
+              "type": "forall oa : O_reflector (Loc (null_to_local_generators S)) A,\nIn (Loc (null_to_local_generators S)) (B oa)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, B (to (Loc (null_to_local_generators S)) A a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Unit -> Localize (null_to_local_generators S) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ooextendable_islocal _ i).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (B : O_reflector (Loc (null_to_local_generators S)) A -> Type)\n(B_inO : forall oa : O_reflector (Loc (null_to_local_generators S)) A,\n         In (Loc (null_to_local_generators S)) (B oa))\n(f : forall a : A, B (to (Loc (null_to_local_generators S)) A a)) \n(a : A),\n(fun (B0 : O_reflector (Loc (null_to_local_generators S)) A -> Type)\n   (B_inO0 : forall oa : O_reflector (Loc (null_to_local_generators S)) A,\n             In (Loc (null_to_local_generators S)) (B0 oa))\n   (g : forall a0 : A, B0 (to (Loc (null_to_local_generators S)) A a0)) =>\n Localize_ind (null_to_local_generators S) A B0 g\n   (fun i : lgen_indices (null_to_local_generators S) =>\n    ooextendable_over_unit (lgen_domain (null_to_local_generators S) i)\n      (fun _ : lgen_codomain (null_to_local_generators S) i =>\n       Localize (null_to_local_generators S) A)\n      (fun _ : lgen_codomain (null_to_local_generators S) i => B0)\n      (islocal_localize (null_to_local_generators S) A i)\n      (fun c : Unit -> Localize (null_to_local_generators S) A =>\n       ooextendable_postcompose (unit_name (B0 (c tt)))\n         (fun u : Unit => B0 (c u))\n         (const_tt (lgen_domain (null_to_local_generators S) i))\n         (fun u : Unit => transport B0 (ap c (path_unit tt u)))\n         (ooextendable_islocal (null_to_local_generators S) i))))\n  B B_inO f (to (Loc (null_to_local_generators S)) A a) =\nf a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall B : Type,\nIn (Loc (null_to_local_generators S)) B ->\nforall z z' : B, In (Loc (null_to_local_generators S)) (z = z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inO_paths@{i i}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** And here is the \"real\" definition of the notation [IsNull]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation IsNull f := (In (Nul f)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Nullification and Accessibility *)\n\n(** Nullification modalities are accessible, essentially by definition. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance accmodality_nul (S : NullGenerators) : IsAccModality (Nul S).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAccModality (Nul S)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAccModality (Nul S)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unshelve econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullGenerators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, In (Nul S) X <-> IsNull_Internal.IsNull ?acc_ngen X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullGenerators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact S.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, In (Nul S) X <-> IsNull_Internal.IsNull S X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "NullGenerators"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** And accessible modalities can be lifted to other universes. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition lift_accmodality@{a i j} (O : Subuniverse@{i}) `{IsAccModality@{a i} O}\n  : Modality@{j}\n  := Nul@{a j} (acc_ngen O).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance O_eq_lift_accmodality (O : Subuniverse@{i}) `{IsAccModality@{a i} O}\n  : O <=> lift_accmodality O.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O <=> lift_accmodality O",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O <=> lift_accmodality O",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; intros A; apply inO_iff_isnull.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

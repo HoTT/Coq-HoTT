@@ -1,0 +1,514 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Composition of natural transformations *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core Functor.Composition.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Vertical composition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (**\n     We have the diagram\n<<\n          F\n     C -------> D\n          |\n          |\n          | T\n          |\n          V\n     C -------> D\n          F'\n          |\n          | T'\n          |\n          V\n     C ------> D\n          F''\n>>\n\n     And we want the commutative diagram\n<<\n           F m\n     F A -------> F B\n      |            |\n      |            |\n      | T A        | T B\n      |            |\n      V    F' m    V\n     F' A -------> F' B\n      |            |\n      |            |\n      | T' A       | T' B\n      |            |\n      V    F'' m   V\n     F'' A ------> F'' B\n>>\n  *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables F F' F'' : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : NaturalTransformation F' F''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation F F'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation CO c := (T' c o T c).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose_commutes s d (m : morphism C s d)\n    : CO d o F _1 m = F'' _1 m o CO s\n      := (associativity _ _ _ _ _ _ _ _)\n           @ ap (fun x => _ o x) (commutes T _ _ m)\n           @ (associativity_sym _ _ _ _ _ _ _ _)\n           @ ap (fun x => x o _) (commutes T' _ _ m)\n           @ (associativity _ _ _ _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** We define the symmetrized version separately so that we can get more unification in the functor [(C \u2192 D)\u1d52\u1d56 \u2192 (C\u1d52\u1d56 \u2192 D\u1d52\u1d56)] *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose_commutes_sym s d (m : morphism C s d)\n    : F'' _1 m o CO s = CO d o F _1 m\n      := (associativity_sym _ _ _ _ _ _ _ _)\n           @ ap (fun x => x o _) (commutes_sym T' _ _ m)\n           @ (associativity _ _ _ _ _ _ _ _)\n           @ ap (fun x => _ o x) (commutes_sym T _ _ m)\n           @ (associativity_sym _ _ _ _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments compose_commutes : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments compose_commutes_sym : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose\n    : NaturalTransformation F F''\n      := Build_NaturalTransformation' F F''\n                                      (fun c => CO c)\n                                      compose_commutes\n                                      compose_commutes_sym.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Whiskering *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section whisker.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D E : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section L.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor D E.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables G G' : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation G G'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation CO c := (F _1 (T c)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whisker_l_commutes s d (m : morphism C s d)\n      : F _1 (T d) o (F o G) _1 m = (F o G') _1 m o F _1 (T s)\n        := ((composition_of F _ _ _ _ _)^)\n             @ (ap (fun m => F _1 m) (commutes T _ _ _))\n             @ (composition_of F _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whisker_l_commutes_sym s d (m : morphism C s d)\n      : (F o G') _1 m o F _1 (T s) = F _1 (T d) o (F o G) _1 m\n        := ((composition_of F _ _ _ _ _)^)\n             @ (ap (fun m => F _1 m) (commutes_sym T _ _ _))\n             @ (composition_of F _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments whisker_l_commutes : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments whisker_l_commutes_sym : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whisker_l\n        := Build_NaturalTransformation'\n             (F o G) (F o G')\n             (fun c => CO c)\n             whisker_l_commutes\n             whisker_l_commutes_sym.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End L.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section R.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables F F' : Functor D E.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : NaturalTransformation F F'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation CO c := (T (G c)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whisker_r_commutes s d (m : morphism C s d)\n      : T (G d) o (F o G) _1 m = (F' o G) _1 m o T (G s)\n        := commutes T _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whisker_r_commutes_sym s d (m : morphism C s d)\n      : (F' o G) _1 m o T (G s) = T (G d) o (F o G) _1 m\n        := commutes_sym T _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments whisker_r_commutes : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments whisker_r_commutes_sym : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whisker_r\n        := Build_NaturalTransformation'\n             (F o G) (F' o G)\n             (fun c => CO c)\n             whisker_r_commutes\n             whisker_r_commutes_sym.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End R.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End whisker.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export NaturalTransformationCompositionCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"o\" := compose : natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"oL\" := whisker_l : natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"oR\" := whisker_r : natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End NaturalTransformationCompositionCoreNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

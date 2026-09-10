@@ -1,0 +1,9 @@
+N: 3 "bottom_bool" [body=yes, kind=cnst, prop=no, path="bool", ];
+N: 5 "join_bool" [body=yes, kind=cnst, prop=no, path="bool", ];
+N: 1 "lattice_bool" [body=yes, kind=cnst, prop=no, path="bool", ];
+N: 4 "meet_bool" [body=yes, kind=cnst, prop=no, path="bool", ];
+N: 2 "top_bool" [body=yes, kind=cnst, prop=no, path="bool", ];
+E: 1 2 [weight=9, ];
+E: 1 3 [weight=9, ];
+E: 1 4 [weight=106, ];
+E: 1 5 [weight=106, ];

@@ -1,0 +1,6930 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cubical.DPath Cubical.PathSquare.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.Core Pointed.pSusp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.HSpace.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.Suspension.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.Join.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The Cayley-Dickson Construction *)\n\n(** The Cayley-Dickson construction in homotopy type theory due to Buchholtz and Rijke https://arxiv.org/abs/1610.01134 is a method to construct an H-space structure on the join of two suspensions of a type [A]. As a special case, this gives a way to construct an H-space structure on [S^3] leading to the quaternionic Hopf fibration.\n\nThe construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can produce the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore the construction here attempts to axiomatize the properties of the units of those algebras instead.\n\nThis is done by postulating a structure called a \"Cayley-Dickson imaginaroid\" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. An open problem is to show that this space itself is also an imaginaroid given further, yet unspecified, coherences on [A]. *)\n\n(** ** Cayley-Dickson spheroids *)\n\n(** A Cayley-Dickson Spheroid is a pointed type X which is an H-space, with two operations called negation and conjugation, satisfying the following seven laws:\n  1. [--x = x]\n  2. [x** = x]\n  3. [1* = 1]\n  4. [(-x)* = -x*]\n  5. [x(-y) = -(xy)]\n  6. [(xy)* = y* x*]\n  7. [x* x = 1]\nNote that the above laws are written in pseudocode since we cannot define multiplication by juxtaposition in Coq, and * is used to denote conjugation. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class CayleyDicksonSpheroid (X : pType) := {\n  cds_hspace :: IsHSpace X;\n  cds_negate :: Negate X;\n  cds_conjug :: Conjugate X;\n  cds_negate_inv :: Involutive cds_negate;\n  cds_conjug_inv :: Involutive cds_conjug;\n  cds_conjug_unit_pres :: IsUnitPreserving cds_conjug;\n  cds_conjug_left_inv :: LeftInverse (.*.) cds_conjug mon_unit;\n  cds_conjug_distr :: DistrOpp (.*.) cds_conjug;\n  cds_swapop :: SwapOp (-) cds_conjug;\n  cds_factorneg_r :: FactorNegRight (-) (.*.)\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section CayleyDicksonSpheroid_Properties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {X : pType} `(CayleyDicksonSpheroid X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance isequiv_cds_conjug : IsEquiv cds_conjug\n    := isequiv_adjointify cds_conjug cds_conjug cds_conjug_inv cds_conjug_inv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance cds_factorneg_l : FactorNegLeft (-) (.*.).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FactorNegLeft negate sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FactorNegLeft negate sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- x * y = - (x * y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (equiv_inj conj).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj (- x * y) = conj (- (x * y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs rapply distropp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj y * conj (- x) = conj (- (x * y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs rapply swapop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj y * conj (- x) = - conj (x * y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs rapply (ap _ (distropp _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj y * conj (- x) = - (conj y * conj x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V rapply factorneg_r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj y * conj (- x) = conj y * - conj x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj (- x) = - conj x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply swapop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance cds_conjug_right_inv : RightInverse (.*.) cds_conjug mon_unit.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightInverse sg_op cds_conjug 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightInverse sg_op cds_conjug 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x * cds_conjug x = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V exact (ap (.* conj x) (involutive x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cds_conjug (cds_conjug x) * conj x = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonSpheroid X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply left_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End CayleyDicksonSpheroid_Properties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Negation and conjugation on suspensions *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance conjugate_susp (A : Type) `(Negate A) : Conjugate (Susp A)\n  := functor_susp (-).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance negate_susp (A : Type) `(Negate A) : Negate (Susp A)\n  := susp_neg _ o conjugate_susp A (-).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [conjugate_susp A] and [negate_susp A] commute. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance swapop_conjugate_susp {A} `(Negate A)\n  : SwapOp (negate_susp A (-)) (conjugate_susp A (-)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SwapOp (negate_susp A negate) (conjugate_susp A negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SwapOp (negate_susp A negate) (conjugate_susp A negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conj (- x) = - conj x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- conj x = conj (- x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply susp_neg_natural.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [conjugate_susp A] is involutive, since any functor applied to an involution gives an involution. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance involutive_conjugate_susp {A} `(Negate A, !Involutive (-))\n  : Involutive (conjugate_susp A (-)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Involutive (conjugate_susp A negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Involutive (conjugate_susp A negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conjugate_susp A negate (conjugate_susp A negate x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V napply functor_susp_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_susp (fun x0 : A => - - x0) x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V napply functor_susp_idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functor_susp (fun x0 : A => - - x0) x = functor_susp idmap x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply functor2_susp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x0 : A => - - x0) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact involutive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [conjugate_susp A] is involutive as any composite of commuting involutions is an involution. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance involutive_negate_susp {A} `(Negate A, !Involutive (-))\n  : Involutive (negate_susp A (-)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Involutive (negate_susp A negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Involutive (negate_susp A negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate_susp A negate (negate_susp A negate x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold negate_susp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "susp_neg A (conjugate_susp A negate (susp_neg A (conjugate_susp A negate x))) =\nx",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conjugate_susp A negate (susp_neg A (conjugate_susp A negate x)) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "susp_neg A ?Goal = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: napply swapop_conjugate_susp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "susp_neg A (- conj x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs rapply susp_neg_inv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "conjugate_susp A negate (conj x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Involutive0"
+              ],
+              "body": null,
+              "type": "Involutive negate"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply involutive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Cayley-Dickson imaginaroids *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class CayleyDicksonImaginaroid (A : Type) := {\n  cdi_negate :: Negate A;\n  cdi_negate_involutive :: Involutive cdi_negate;\n  cdi_susp_hspace :: IsHSpace (psusp A);\n  cdi_susp_factorneg_r :: FactorNegRight (negate_susp A cdi_negate) hspace_op;\n  cdi_susp_conjug_left_inv :: LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit;\n  cdi_susp_conjug_distr :: DistrOpp hspace_op (conjugate_susp A cdi_negate);\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isunitpreserving_conjugate_susp {A} `(CayleyDicksonImaginaroid A)\n  : @IsUnitPreserving _ _ pt pt (conjugate_susp A cdi_negate)\n  := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Every suspension of a Cayley-Dickson imaginaroid gives a Cayley-Dickson spheroid. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cds_susp_cdi {A} `(CayleyDicksonImaginaroid A)\n  : CayleyDicksonSpheroid (psusp A) := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cdi_conjugate_susp_left_inverse {A} `(CayleyDicksonImaginaroid A)\n  : LeftInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftInverse hspace_op (conjugate_susp A cdi_negate) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftInverse hspace_op (conjugate_susp A cdi_negate) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact cds_conjug_left_inv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cdi_conjugate_susp_right_inverse {A} `(CayleyDicksonImaginaroid A)\n  : RightInverse hspace_op (conjugate_susp A cdi_negate) mon_unit.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightInverse hspace_op (conjugate_susp A cdi_negate) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightInverse hspace_op (conjugate_susp A cdi_negate) 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "stapply cds_conjug_right_inv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cdi_susp_left_identity {A} `(CayleyDicksonImaginaroid A)\n  : LeftIdentity hspace_op mon_unit\n  := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cdi_susp_right_identity {A} `(CayleyDicksonImaginaroid A)\n  : RightIdentity hspace_op mon_unit\n  := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cdi_negate_susp_factornegleft {A} `(CayleyDicksonImaginaroid A)\n  : FactorNegLeft (negate_susp A cdi_negate) hspace_op.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FactorNegLeft (negate_susp A cdi_negate) hspace_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FactorNegLeft (negate_susp A cdi_negate) hspace_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "stapply cds_factorneg_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A Cayley-Dickson imaginaroid [A] whose multiplication on the suspension is associative gives rise to an H-space structure on the join of the suspension of [A] with itself. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ImaginaroidHSpace.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Let [A] be a Cayley-Dickson imaginaroid with associative H-space multiplication on [Susp A]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A} `(CayleyDicksonImaginaroid A) `(!Associative hspace_op).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Declaring these as local instances so that they can be found *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance hspace_op' : SgOp (Susp A) := hspace_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance hspace_unit' : MonUnit (Susp A) := hspace_mon_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** First we make some observations with the context we have. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Lemmata.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (a b c d : Susp A).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition f := (fun x => a * (c * -x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition g := (fun y => c * (y * b)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma lemma1 : f (- mon_unit) = a * c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (- (1)) = a * c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (- (1)) = a * c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold f; apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * - - (1) = c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (hspace_right_identity c).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (conj c * conj a * d * conj b) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (conj c * conj a * d * conj b) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a * (c * - (conj c * conj a * d * conj b)) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite 2 factorneg_r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- (a * (c * (conj c * conj a * d * conj b))) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite 3 simple_associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- (a * c * (conj c * conj a) * d * conj b) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- distropp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- (a * c * conj (a * c) * d * conj b) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (right_inverse (a * c)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- (1 * d * conj b) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (left_identity d).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- (d * conj b) = - d * conj b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- d * conj b = - (d * conj b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply factorneg_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma lemma3 : g mon_unit = c * b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g 1 = c * b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g 1 = c * b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold g; apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 * b = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (conj c * conj a * d * conj b) = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (conj c * conj a * d * conj b) = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * (conj c * conj a * d * conj b * b) = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite 2 simple_associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * (conj c * conj a * d) * conj b * b = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- simple_associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * (conj c * conj a * d) * (conj b * b) = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite left_inverse.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * (conj c * conj a * d) * 1 = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite right_identity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * (conj c * conj a * d) = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite 2 simple_associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * conj c * conj a * d = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite right_inverse.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 * conj a * d = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- simple_associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 * (conj a * d) = conj a * d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "Susp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Lemmata.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments f {_ _}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments g {_ _}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (pjoin (psusp A) (psusp A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (pjoin (psusp A) (psusp A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Join_rec2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a c d : psusp A, ?P_AC a c = ?P_AD a d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b c d : psusp A, ?P_BC b c = ?P_BD b d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall c a b : psusp A, ?P_AC a c = ?P_BC b c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall d a b : psusp A, ?P_AD a d = ?P_BD b d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b c d : psusp A,\n?P_gAx a c d @ ?P_gxD d a b = ?P_gxC c a b @ ?P_gBx b c d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun a b => joinl (a * b)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun a b => joinr (conj a * b)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun a b => joinr (b * a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psusp A -> psusp A -> pjoin (psusp A) (psusp A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun a b => joinl ((- b) * conj a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a c d : psusp A,\n(fun a0 b : psusp A => joinl (a0 * b)) a c =\n(fun a0 b : psusp A => joinr (conj a0 * b)) a d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; apply jglue.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b c d : psusp A,\n(fun a b0 : psusp A => joinr (b0 * a)) b c =\n(fun a b0 : psusp A => joinl (- b0 * conj a)) b d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; symmetry; apply jglue.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall c a b : psusp A,\n(fun a0 b0 : psusp A => joinl (a0 * b0)) a c =\n(fun a0 b0 : psusp A => joinr (b0 * a0)) b c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; apply jglue.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall d a b : psusp A,\n(fun a0 b0 : psusp A => joinr (conj a0 * b0)) a d =\n(fun a0 b0 : psusp A => joinl (- b0 * conj a0)) b d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; symmetry; apply jglue.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b c d : psusp A,\n(fun a0 c0 d0 : psusp A => jglue (a0 * c0) (conj a0 * d0)) a c d @\n(fun d0 a0 b0 : psusp A => (jglue (- d0 * conj b0) (conj a0 * d0))^) d a b =\n(fun c0 a0 b0 : psusp A => jglue (a0 * c0) (c0 * b0)) c a b @\n(fun b0 c0 d0 : psusp A => (jglue (- d0 * conj b0) (c0 * b0))^) b c d",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b c d; cbn beta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "jglue (a * c) (conj a * d) @ (jglue (- d * conj b) (conj a * d))^ =\njglue (a * c) (c * b) @ (jglue (- d * conj b) (c * b))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "jglue (a * c) (c * b) @ (jglue (- d * conj b) (c * b))^ =\njglue (a * c) (conj a * d) @ (jglue (- d * conj b) (conj a * d))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply sq_path.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (a * c) (c * b)) (jglue (- d * conj b) (conj a * d))^\n  (jglue (a * c) (conj a * d)) (jglue (- d * conj b) (c * b))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (lemma1 a c).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (f (- (1))) (c * b)) (jglue (- d * conj b) (conj a * d))^\n  (jglue (f (- (1))) (conj a * d)) (jglue (- d * conj b) (c * b))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (lemma2 a b c d).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (f (- (1))) (c * b))\n  (jglue (f (conj c * conj a * d * conj b)) (conj a * d))^\n  (jglue (f (- (1))) (conj a * d))\n  (jglue (f (conj c * conj a * d * conj b)) (c * b))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (lemma3 b c).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (f (- (1))) (g 1))\n  (jglue (f (conj c * conj a * d * conj b)) (conj a * d))^\n  (jglue (f (- (1))) (conj a * d))\n  (jglue (f (conj c * conj a * d * conj b)) (g mon_unit))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (lemma4 a b c d).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (f (- (1))) (g 1))\n  (jglue (f (conj c * conj a * d * conj b))\n     (g (conj c * conj a * d * conj b)))^\n  (jglue (f (- (1))) (g (conj c * conj a * d * conj b)))\n  (jglue (f (conj c * conj a * d * conj b)) (g mon_unit))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (sq_GGGG _ _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal = jglue (f (- (1))) (g 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal0 =\n(jglue (f (conj c * conj a * d * conj b)) (g (conj c * conj a * d * conj b)))^%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal1 = jglue (f (- (1))) (g (conj c * conj a * d * conj b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal2 = (jglue (f (conj c * conj a * d * conj b)) (g mon_unit))^%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare ?Goal ?Goal0 ?Goal1 ?Goal2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2,4: apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal = jglue (f (- (1))) (g 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?x =\njglue (f (conj c * conj a * d * conj b)) (g (conj c * conj a * d * conj b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?x0 = jglue (f (conj c * conj a * d * conj b)) (g 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal0 = jglue (f (- (1))) (g (conj c * conj a * d * conj b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare ?Goal ?x^ ?Goal0 ?x0^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (- (1)) 1))\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b)))^\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (- (1)) (conj c * conj a * d * conj b)))\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (conj c * conj a * d * conj b) mon_unit))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (sq_cGcG _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal =\n(ap\n   (Join_rec (fun a0 : Susp A => joinl (f a0))\n      (fun b0 : Susp A => joinr (g b0))\n      (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n   (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b)))^%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal0 =\n(ap\n   (Join_rec (fun a0 : Susp A => joinl (f a0))\n      (fun b0 : Susp A => joinr (g b0))\n      (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n   (jglue (conj c * conj a * d * conj b) mon_unit))^%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (- (1)) 1))\n  ?Goal\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (- (1)) (conj c * conj a * d * conj b)))\n  ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact (ap_V _ (jglue _ _ )).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (- (1)) 1))\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^)\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (- (1)) (conj c * conj a * d * conj b)))\n  (ap\n     (Join_rec (fun a0 : Susp A => joinl (f a0))\n        (fun b0 : Susp A => joinr (g b0))\n        (fun a0 b0 : Susp A => jglue (f a0) (g b0)))\n     (jglue (conj c * conj a * d * conj b) mon_unit)^)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^\n        (jglue _ _) (jglue _ _)^ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (- (1)) 1)\n  (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^\n  (jglue (- (1)) (conj c * conj a * d * conj b))\n  (jglue (conj c * conj a * d * conj b) mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (PathSquare\n        (jglue (- mon_unit) mon_unit)\n        (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^\n        (jglue (- mon_unit) (conj c * conj a * d * conj b))\n        (jglue (conj c * conj a * d * conj b) mon_unit)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (- (1)) 1)\n  (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^\n  (jglue (- (1)) (conj c * conj a * d * conj b))\n  (jglue (conj c * conj a * d * conj b) mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize (conj c * conj a * d * conj b).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : psusp A,\nPathSquare (jglue (- (1)) 1) (jglue p p)^ (jglue (- (1)) p)\n  (jglue p mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c",
+                "d"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear a b c d.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : psusp A,\nPathSquare (jglue (- (1)) 1) (jglue p p)^ (jglue (- (1)) p)\n  (jglue p mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (forall s : Susp A,\n        Diamond (-mon_unit) s (mon_unit) s).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall s : Susp A, Diamond (- (1)) s 1 s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Susp_ind; hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (- (1)) 1) (jglue North North)^ \n  (jglue (- (1)) North) (jglue North mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (- (1)) 1) (jglue South South)^ \n  (jglue (- (1)) South) (jglue South mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\ntransport (fun y : Susp A => Diamond (- (1)) y 1 y) (merid x) ?Goal = ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: by apply diamond_v_sq.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (jglue (- (1)) 1) (jglue South South)^ \n  (jglue (- (1)) South) (jglue South mon_unit)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\ntransport (fun y : Susp A => Diamond (- (1)) y 1 y) \n  (merid x) (diamond_v_sq (- (1)) North 1) =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: by apply diamond_h_sq.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\ntransport (fun y : Susp A => Diamond (- (1)) y 1 y) \n  (merid x) (diamond_v_sq (- (1)) North 1) =\ndiamond_h_sq 1 South 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : Susp A => Diamond (- (1)) y 1 y) \n  (merid a) (diamond_v_sq (- (1)) North 1) =\ndiamond_h_sq 1 South 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply diamond_twist.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance cd_op_left_identity\n    : LeftIdentity cd_op pt.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity cd_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity cd_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Join_ind_Flr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : psusp A, cd_op pt (joinl a) = joinl a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : psusp A, cd_op pt (joinr b) = joinr b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : psusp A, ap (cd_op pt) (jglue a b) @ ?Hr b = ?Hl a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact (fun _ => ap _ (hspace_left_identity _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : psusp A,\nap (cd_op pt) (jglue a b) @\n(fun b0 : psusp A => ap joinr (hspace_left_identity b0)) b =\n(fun a0 : psusp A => ap joinl (hspace_left_identity a0)) a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (cd_op pt) (jglue a b) @\n(fun b0 : psusp A => ap joinr (hspace_left_identity b0)) b =\n(fun a0 : psusp A => ap joinl (hspace_left_identity a0)) a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (cd_op pt) (jglue a b) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal @ ap joinr (hspace_left_identity b) =\nap joinl (hspace_left_identity a) @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (Join_rec_beta_jglue _ _ _ a b).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "jglue (pt * a) (conj pt * b) @ ap joinr (hspace_left_identity b) =\nap joinl (hspace_left_identity a) @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap joinl (hspace_left_identity a) @ jglue a b =\njglue (pt * a) (conj pt * b) @ ap joinr (hspace_left_identity b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply join_natsq.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance cd_op_right_identity\n    : RightIdentity cd_op pt.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightIdentity cd_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightIdentity cd_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Join_ind_Flr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : psusp A,\n(fun x : Join (psusp A) (psusp A) => cd_op x pt) (joinl a) = joinl a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : psusp A,\n(fun x : Join (psusp A) (psusp A) => cd_op x pt) (joinr b) = joinr b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : psusp A,\nap (fun x : Join (psusp A) (psusp A) => cd_op x pt) (jglue a b) @ ?Hr b =\n?Hl a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (fun _ => ap joinl (hspace_right_identity _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall b : psusp A,\n(fun x : Join (psusp A) (psusp A) => cd_op x pt) (joinr b) = joinr b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : psusp A,\nap (fun x : Join (psusp A) (psusp A) => cd_op x pt) (jglue a b) @ ?Hr b =\n(fun a0 : psusp A => ap joinl (hspace_right_identity a0)) a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (fun _ => ap joinr (hspace_left_identity _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : psusp A,\nap (fun x : Join (psusp A) (psusp A) => cd_op x pt) (jglue a b) @\n(fun b0 : psusp A => ap joinr (hspace_left_identity b0)) b =\n(fun a0 : psusp A => ap joinl (hspace_right_identity a0)) a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : Join (psusp A) (psusp A) => cd_op x pt) (jglue a b) @\n(fun b0 : psusp A => ap joinr (hspace_left_identity b0)) b =\n(fun a0 : psusp A => ap joinl (hspace_right_identity a0)) a @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : Join (psusp A) (psusp A) => cd_op x pt) (jglue a b) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal @ ap joinr (hspace_left_identity b) =\nap joinl (hspace_right_identity a) @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (Join_rec_beta_jglue _ _ _ a b).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Join_ind_FlFr\n  (fun x : Join (psusp A) (psusp A) =>\n   (fun a0 : psusp A =>\n    Join_rec ((fun a1 b0 : psusp A => joinl (a1 * b0)) a0)\n      ((fun a1 b0 : psusp A => joinr (conj a1 * b0)) a0)\n      ((fun a1 c d : psusp A => jglue (a1 * c) (conj a1 * d)) a0) x)\n     a)\n  (fun x : Join (psusp A) (psusp A) =>\n   (fun b0 : psusp A =>\n    Join_rec ((fun a0 b1 : psusp A => joinr (b1 * a0)) b0)\n      ((fun a0 b1 : psusp A => joinl (- b1 * conj a0)) b0)\n      ((fun b1 c d : psusp A => (jglue (- d * conj b1) (c * b1))^) b0) x)\n     b)\n  (fun c : psusp A =>\n   (fun c0 a0 b0 : psusp A => jglue (a0 * c0) (c0 * b0)) c a b)\n  (fun d : psusp A =>\n   (fun d0 a0 b0 : psusp A => (jglue (- d0 * conj b0) (conj a0 * d0))^) d a b)\n  (fun c d : psusp A =>\n   whiskerR\n     (Join_rec_beta_jglue ((fun a0 b0 : psusp A => joinl (a0 * b0)) a)\n        ((fun a0 b0 : psusp A => joinr (conj a0 * b0)) a)\n        ((fun a0 c0 d0 : psusp A => jglue (a0 * c0) (conj a0 * d0)) a) c d)\n     ((fun d0 a0 b0 : psusp A => (jglue (- d0 * conj b0) (conj a0 * d0))^) d\n        a b) @\n   ((fun a0 b0 c0 d0 : psusp A =>\n     (let X := equiv_isequiv sq_path in\n      let X0 := sq_path^-1 in\n      X0\n        (internal_paths_rew\n           (fun s : Susp A =>\n            PathSquare (jglue s (c0 * b0))\n              (jglue (- d0 * conj b0) (conj a0 * d0))^\n              (jglue s (conj a0 * d0)) (jglue (- d0 * conj b0) (c0 * b0))^)\n           (internal_paths_rew\n              (fun s : Susp A =>\n               PathSquare (jglue (f (- mon_unit)) (c0 * b0))\n                 (jglue s (conj a0 * d0))^\n                 (jglue (f (- mon_unit)) (conj a0 * d0)) \n                 (jglue s (c0 * b0))^)\n              (internal_paths_rew\n                 (fun s : Susp A =>\n                  PathSquare (jglue (f (- mon_unit)) s)\n                    (jglue (f (conj c0 * conj a0 * d0 * conj b0))\n                       (conj a0 * d0))^\n                    (jglue (f (- mon_unit)) (conj a0 * d0))\n                    (jglue (f (conj c0 * conj a0 * d0 * conj b0)) s)^)\n                 (internal_paths_rew\n                    (fun s : Susp A =>\n                     PathSquare (jglue (f (- mon_unit)) (g mon_unit))\n                       (jglue (f (conj c0 * conj a0 * d0 * conj b0)) s)^\n                       (jglue (f (- mon_unit)) s)\n                       (jglue (f (conj c0 * conj a0 * d0 * conj b0))\n                          (g mon_unit))^)\n                    (sq_GGGG\n                       (Join_rec_beta_jglue (fun a1 : Susp A => joinl (f a1))\n                          (fun b1 : Susp A => joinr (g b1))\n                          (fun a1 b1 : Susp A => jglue (f a1) (g b1))\n                          (- mon_unit) mon_unit)\n                       (ap inverse\n                          (Join_rec_beta_jglue\n                             (fun a1 : Susp A => joinl (f a1))\n                             (fun b1 : Susp A => joinr (g b1))\n                             (fun a1 b1 : Susp A => jglue (f a1) (g b1))\n                             (conj c0 * conj a0 * d0 * conj b0)\n                             (conj c0 * conj a0 * d0 * conj b0)))\n                       (Join_rec_beta_jglue (fun a1 : Susp A => joinl (f a1))\n                          (fun b1 : Susp A => joinr (g b1))\n                          (fun a1 b1 : Susp A => jglue (f a1) (g b1))\n                          (- mon_unit) (conj c0 * conj a0 * d0 * conj b0))\n                       (ap inverse\n                          (Join_rec_beta_jglue\n                             (fun a1 : Susp A => joinl (f a1))\n                             (fun b1 : Susp A => joinr (g b1))\n                             (fun a1 b1 : Susp A => jglue (f a1) (g b1))\n                             (conj c0 * conj a0 * d0 * conj b0) mon_unit))\n                       (sq_cGcG\n                          (ap_V\n                             (Join_rec (fun a1 : Susp A => joinl (f a1))\n                                (fun b1 : Susp A => joinr (g b1))\n                                (fun a1 b1 : Susp A => jglue (f a1) (g b1)))\n                             (jglue (conj c0 * conj a0 * d0 * conj b0)\n                                (conj c0 * conj a0 * d0 * conj b0)))\n                          (ap_V\n                             (Join_rec (fun a1 : Susp A => joinl (f a1))\n                                (fun b1 : Susp A => joinr (g b1))\n                                (fun a1 b1 : Susp A => jglue (f a1) (g b1)))\n                             (jglue (conj c0 * conj a0 * d0 * conj b0)\n                                mon_unit))\n                          (sq_ap\n                             (Join_rec (fun a1 : Susp A => joinl (f a1))\n                                (fun b1 : Susp A => joinr (g b1))\n                                (fun a1 b1 : Susp A => jglue (f a1) (g b1)))\n                             (Susp_ind\n                                (fun y : Susp A =>\n                                 Diamond (- mon_unit) y mon_unit y)\n                                (diamond_v_sq (- mon_unit) North 1\n                                 :\n                                 (fun y : Susp A =>\n                                  Diamond (- mon_unit) y mon_unit y) North)\n                                (diamond_h_sq mon_unit South 1\n                                 :\n                                 (fun y : Susp A =>\n                                  Diamond (- mon_unit) y mon_unit y) South)\n                                ((fun a1 : A => diamond_twist (merid a1))\n                                 :\n                                 forall x : A,\n                                 transport\n                                   (fun y : Susp A =>\n                                    Diamond (- mon_unit) y mon_unit y)\n                                   (merid x)\n                                   (diamond_v_sq (- mon_unit) North 1\n                                    :\n                                    (fun y : Susp A =>\n                                     Diamond (- mon_unit) y mon_unit y) North) =\n                                 (diamond_h_sq mon_unit South 1\n                                  :\n                                  (fun y : Susp A =>\n                                   Diamond (- mon_unit) y mon_unit y) South))\n                                (conj c0 * conj a0 * d0 * conj b0)))))\n                    (lemma4 a0 b0 c0 d0))\n                 (lemma3 b0 c0))\n              (lemma2 a0 b0 c0 d0))\n           (lemma1 a0 c0)))^\n     :\n     (fun a1 c1 d1 : psusp A => jglue (a1 * c1) (conj a1 * d1)) a0 c0 d0 @\n     (fun d1 a1 b1 : psusp A => (jglue (- d1 * conj b1) (conj a1 * d1))^) d0\n       a0 b0 =\n     (fun c1 a1 b1 : psusp A => jglue (a1 * c1) (c1 * b1)) c0 a0 b0 @\n     (fun b1 c1 d1 : psusp A => (jglue (- d1 * conj b1) (c1 * b1))^) b0 c0 d0)\n      a b c d @\n    (whiskerL ((fun c0 a0 b0 : psusp A => jglue (a0 * c0) (c0 * b0)) c a b)\n       (Join_rec_beta_jglue ((fun a0 b0 : psusp A => joinr (b0 * a0)) b)\n          ((fun a0 b0 : psusp A => joinl (- b0 * conj a0)) b)\n          ((fun b0 c0 d0 : psusp A => (jglue (- d0 * conj b0) (c0 * b0))^) b)\n          c d))^)\n   :\n   ap\n     (fun x : Join (psusp A) (psusp A) =>\n      (fun a0 : psusp A =>\n       Join_rec ((fun a1 b0 : psusp A => joinl (a1 * b0)) a0)\n         ((fun a1 b0 : psusp A => joinr (conj a1 * b0)) a0)\n         ((fun a1 c0 d0 : psusp A => jglue (a1 * c0) (conj a1 * d0)) a0) x)\n        a)\n     (jglue c d) @\n   (fun d0 : psusp A =>\n    (fun d1 a0 b0 : psusp A => (jglue (- d1 * conj b0) (conj a0 * d1))^) d0 a\n      b)\n     d =\n   (fun c0 : psusp A =>\n    (fun c1 a0 b0 : psusp A => jglue (a0 * c1) (c1 * b0)) c0 a b) c @\n   ap\n     (fun x : Join (psusp A) (psusp A) =>\n      (fun b0 : psusp A =>\n       Join_rec ((fun a0 b1 : psusp A => joinr (b1 * a0)) b0)\n         ((fun a0 b1 : psusp A => joinl (- b1 * conj a0)) b0)\n         ((fun b1 c0 d0 : psusp A => (jglue (- d0 * conj b1) (c0 * b1))^) b0)\n         x)\n        b)\n     (jglue c d))\n  pt @\nap joinr (hspace_left_identity b) =\nap joinl (hspace_right_identity a) @ jglue a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap joinl (hspace_right_identity a) @ jglue a b =\njglue (a * pt) (pt * b) @ ap joinr (hspace_left_identity b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "CayleyDicksonImaginaroid A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Associative0"
+              ],
+              "body": null,
+              "type": "Associative hspace_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "psusp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply join_natsq.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance hspace_cdi_susp_assoc\n    : IsHSpace (pjoin (psusp A) (psusp A))\n    := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ImaginaroidHSpace.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,9 @@
+digraph HoTT_Classes_interfaces_round {
+  graph [ratio=0.5]
+  node [style=filled]
+round_round_up_strict [label="round_up_strict", URL=<round.html#round_up_strict>, peripheries=3, fillcolor="#F070D1"] ;
+round_RoundUpStrict [label="RoundUpStrict", URL=<round.html#RoundUpStrict>, fillcolor="#F070D1"] ;
+  round_round_up_strict -> round_RoundUpStrict [] ;
+subgraph cluster_round { label="round"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+round_RoundUpStrict; round_round_up_strict; };
+} /* END */

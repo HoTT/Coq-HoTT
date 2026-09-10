@@ -1,0 +1,28 @@
+digraph HoTT_Diagrams_DDiagram {
+  graph [ratio=0.5]
+  node [style=filled]
+DDiagram_isequifibered [label="isequifibered", URL=<DDiagram.html#isequifibered>, peripheries=3, fillcolor="#F070D1"] ;
+DDiagram_Equifibered_sind [label="Equifibered_sind", URL=<DDiagram.html#Equifibered_sind>, peripheries=3, fillcolor="#F070D1"] ;
+DDiagram_Equifibered_rec [label="Equifibered_rec", URL=<DDiagram.html#Equifibered_rec>, peripheries=3, fillcolor="#F070D1"] ;
+DDiagram_Equifibered_ind [label="Equifibered_ind", URL=<DDiagram.html#Equifibered_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+DDiagram_Equifibered_rect [label="Equifibered_rect", URL=<DDiagram.html#Equifibered_rect>, fillcolor="#F070D1"] ;
+DDiagram_Build_Equifibered [label="Build_Equifibered", URL=<DDiagram.html#Build_Equifibered>, fillcolor="#7FAAFF"] ;
+DDiagram_Equifibered [label="Equifibered", URL=<DDiagram.html#Equifibered>, fillcolor="#E2CDFA"] ;
+DDiagram_diagram_sigma [label="diagram_sigma", URL=<DDiagram.html#diagram_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+DDiagram_DDiagram [label="DDiagram", URL=<DDiagram.html#DDiagram>, fillcolor="#F070D1"] ;
+DDiagram_integral [label="integral", URL=<DDiagram.html#integral>, fillcolor="#F070D1"] ;
+  DDiagram_isequifibered -> DDiagram_Equifibered [] ;
+  DDiagram_Equifibered_sind -> DDiagram_Build_Equifibered [] ;
+  DDiagram_Equifibered_sind -> DDiagram_Equifibered [] ;
+  DDiagram_Equifibered_rec -> DDiagram_Equifibered_rect [] ;
+  DDiagram_Equifibered_ind -> DDiagram_Build_Equifibered [] ;
+  DDiagram_Equifibered_ind -> DDiagram_Equifibered [] ;
+  DDiagram_Equifibered_rect -> DDiagram_Build_Equifibered [] ;
+  DDiagram_Equifibered_rect -> DDiagram_Equifibered [] ;
+  DDiagram_Build_Equifibered -> DDiagram_DDiagram [] ;
+  DDiagram_Equifibered -> DDiagram_DDiagram [] ;
+  DDiagram_diagram_sigma -> DDiagram_DDiagram [] ;
+  DDiagram_DDiagram -> DDiagram_integral [] ;
+subgraph cluster_DDiagram { label="DDiagram"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+DDiagram_integral; DDiagram_DDiagram; DDiagram_diagram_sigma; DDiagram_Equifibered; DDiagram_Build_Equifibered; DDiagram_Equifibered_rect; DDiagram_Equifibered_ind; DDiagram_Equifibered_rec; DDiagram_Equifibered_sind; DDiagram_isequifibered; };
+} /* END */

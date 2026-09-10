@@ -1,0 +1,6290 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core WildCat.Opposite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A wild category is pointed if the initial and terminal object are the same. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsPointedCat (A : Type) `{Is1Cat A} := {\n  zero_object : A;\n  isinitial_zero_object :: IsInitial zero_object;\n  isterminal_zero_object :: IsTerminal zero_object;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The zero morphism between objects [a] and [b] of a pointed category [A] is the unique morphism that factors through the zero object. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition zero_morphism {A : Type} `{IsPointedCat A} {a b : A} : a $-> b\n  := (mor_initial _ b) $o (mor_terminal a _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ZeroLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{IsPointedCat A} {a b c : A}\n    (f : a $-> b) (g : b $-> c).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_zero_source (h : zero_object $-> a) : h $== zero_morphism\n    := (mor_initial_unique _ _ _)^$ $@ (mor_initial_unique _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_zero_target (h : a $-> zero_object) : h $== zero_morphism\n    := (mor_terminal_unique _ _ _)^$ $@ (mor_terminal_unique _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We show the last two arguments so that end points can easily be specified. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments zero_morphism {_ _ _ _ _ _} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_zero_l : zero_morphism b c $o f $== zero_morphism a c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "zero_morphism b c $o f $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "zero_morphism b c $o f $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cat_assoc _ _ _ $@ (_ $@L _^$)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mor_terminal a zero_object $-> mor_terminal b zero_object $o f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply mor_terminal_unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_zero_r : g $o zero_morphism a b $== zero_morphism a c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o zero_morphism a b $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o zero_morphism a b $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((_ $@R _) $@ cat_assoc _ _ _)^$.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mor_initial zero_object c $== g $o mor_initial zero_object b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply mor_initial_unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Any morphism which factors through an object equivalent to the zero object is homotopic to the zero morphism. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_zero_m `{!HasEquivs A} (be : b $<~> zero_object)\n    : g $o f $== zero_morphism a c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o f $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "be"
+              ],
+              "body": null,
+              "type": "b $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o f $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "be"
+              ],
+              "body": null,
+              "type": "b $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $@L (compose_V_hh be f)^$ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o (be^-1$ $o (be $o f)) $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "be"
+              ],
+              "body": null,
+              "type": "b $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cat_assoc_opp _ _ _ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o be^-1$ $o (be $o f) $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "be"
+              ],
+              "body": null,
+              "type": "b $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $@L (mor_terminal_unique a _ _)^$ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g $o be^-1$ $o mor_terminal a zero_object $== zero_morphism a c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "be"
+              ],
+              "body": null,
+              "type": "b $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((mor_initial_unique _ _ _)^$ $@R _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ZeroLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We make the last two arguments explicit so that end points can easily be specified. We had to do this again, since the section encapsulated the previous attempt. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Arguments zero_morphism {_ _ _ _ _ _} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A functor is pointed if it preserves the zero object. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsPointedFunctor {A B : Type} (F : A -> B) `{Is1Functor A B F} :=\n{\n  preservesinitial_pfunctor :: PreservesInitial F ;\n  preservesterminal_pfunctor :: PreservesTerminal F ;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here is an alternative constructor using preservation of the zero object. This requires more structure on the categories however. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsPointedFunctor' {A B : Type} (F : A -> B)\n  `{Is1Cat A, Is1Cat B, !Is0Functor F, !Is1Functor F}\n  `{!IsPointedCat A, !IsPointedCat B, !HasEquivs A, !HasEquivs B}\n  (p : F zero_object $<~> zero_object)\n  : IsPointedFunctor F.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPointedFunctor F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPointedFunctor F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Build_IsPointedFunctor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreservesInitial F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreservesTerminal F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreservesInitial F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x inx.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitial (F x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inx"
+              ],
+              "body": null,
+              "type": "IsInitial x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply isinitial_cate.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "zero_object $<~> F x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inx"
+              ],
+              "body": null,
+              "type": "IsInitial x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F x $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inx"
+              ],
+              "body": null,
+              "type": "IsInitial x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (p $oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F x $<~> F zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inx"
+              ],
+              "body": null,
+              "type": "IsInitial x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (emap F _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inx"
+              ],
+              "body": null,
+              "type": "IsInitial x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply cate_isinitial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreservesTerminal F",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x tex.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTerminal (F x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tex"
+              ],
+              "body": null,
+              "type": "IsTerminal x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply isterminal_cate.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F x $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tex"
+              ],
+              "body": null,
+              "type": "IsTerminal x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (p $oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F x $<~> F zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tex"
+              ],
+              "body": null,
+              "type": "IsTerminal x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (emap F _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat1"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs1"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "F zero_object $<~> zero_object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "tex"
+              ],
+              "body": null,
+              "type": "IsTerminal x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply cate_isterminal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Pointed functors preserve the zero object up to isomorphism. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma pfunctor_zero {A B : Type} (F : A -> B)\n  `{IsPointedCat A, IsPointedCat B, !HasEquivs B,\n    !Is0Functor F, !Is1Functor F, !IsPointedFunctor F}\n  : F zero_object $<~> zero_object.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F zero_object $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F zero_object $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply cate_isinitial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Pointed functors preserve the zero morphism up to homotopy *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma fmap_zero_morphism {A B : Type} (F : A -> B)\n  `{IsPointedCat A, IsPointedCat B, !HasEquivs B,\n    !Is0Functor F, !Is1Functor F, !IsPointedFunctor F} {a b : A}\n  : fmap F (zero_morphism a b) $== zero_morphism (F a) (F b).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap F (zero_morphism a b) $== zero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap F (zero_morphism a b) $== zero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (fmap_comp F _ _ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap F (mor_initial zero_object b) $o fmap F (mor_terminal a zero_object) $==\nzero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $@R _ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap F (mor_initial zero_object b) $== ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal $o fmap F (mor_terminal a zero_object) $== zero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: napply fmap_initial; [exact _].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mor_initial (F zero_object) (F b) $o fmap F (mor_terminal a zero_object) $==\nzero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $@L _ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap F (mor_terminal a zero_object) $== ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mor_initial (F zero_object) (F b) $o ?Goal $== zero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: napply fmap_terminal; [exact _].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mor_initial (F zero_object) (F b) $o mor_terminal (F a) (F zero_object) $==\nzero_morphism (F a) (F b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply cat_zero_m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "F zero_object $<~> zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph1"
+              ],
+              "body": null,
+              "type": "IsGraph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph1"
+              ],
+              "body": null,
+              "type": "Is2Graph B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat1"
+              ],
+              "body": null,
+              "type": "Is01Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Is1Cat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "IsPointedCat B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasEquivs0"
+              ],
+              "body": null,
+              "type": "HasEquivs B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is0Functor0"
+              ],
+              "body": null,
+              "type": "Is0Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is1Functor0"
+              ],
+              "body": null,
+              "type": "Is1Functor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedFunctor0"
+              ],
+              "body": null,
+              "type": "IsPointedFunctor F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply pfunctor_zero.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Opposite category of a pointed category is also pointed. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ispointedcat_op {A : Type} `{IsPointedCat A} : IsPointedCat A^op.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPointedCat A^op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPointedCat A^op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_IsPointedCat.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A^op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitial ?zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTerminal ?zero_object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: unfold op; exact zero_object.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInitial (zero_object : A^op)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTerminal (zero_object : A^op)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

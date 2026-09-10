@@ -1,0 +1,3051 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Utf8Minimal\n  HoTT.Spaces.List.Core\n  HoTT.Basics.Overture Basics.Tactics\n  HoTT.Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope ne_list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope ne_list_scope with ne_list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Open Scope ne_list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Nonempty list implementation [ne_list.ne_list]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module ne_list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section with_type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {T: Type}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A nonempty list. Below there is an implicit coercion\n    [ne_list >-> list]. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive ne_list : Type\n    := one: T \u2192 ne_list | cons: T \u2192 ne_list \u2192 ne_list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint app (a b: ne_list): ne_list :=\n    match a with\n    | one x => cons x b\n    | cons x y => cons x (app y b)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint foldr {R} (u: T \u2192 R) (f: T \u2192 R \u2192 R) (a: ne_list): R :=\n    match a with\n    | one x => u x\n    | cons x y => f x (foldr u f y)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint foldr1 (f: T \u2192 T \u2192 T) (a: ne_list): T :=\n    match a with\n    | one x => x\n    | cons x y => f x (foldr1 f y)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition head (l: ne_list): T\n    := match l with one x => x | cons x _ => x end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint to_list (l: ne_list): list T :=\n    match l with\n    | one x => x :: nil\n    | cons x xs => x :: to_list xs\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint from_list (x: T) (xs: list T): ne_list :=\n    match xs with\n    | nil => one x\n    | List.Core.cons h t => cons x (from_list h t)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition tail (l: ne_list): list T\n    := match l with one _ => nil | cons _ x => to_list x end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma decomp_eq (l: ne_list): l = from_list (head l) (tail l).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "l = from_list (head l) (tail l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof with auto.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "l = from_list (head l) (tail l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction l...",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons t l = from_list (head (cons t l)) (tail (cons t l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "l = from_list (head l) (tail l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct l...",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons t (cons t0 l) =\nfrom_list (head (cons t (cons t0 l))) (tail (cons t (cons t0 l)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t",
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "cons t0 l = from_list (head (cons t0 l)) (tail (cons t0 l))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cons t (cons t0 l) = cons t (from_list t0 (to_list l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t",
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "cons t0 l = from_list t0 (to_list l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite IHl...",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " \n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition last: ne_list \u2192 T := foldr1 (fun x y => y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint replicate_Sn (x: T) (n: nat): ne_list :=\n    match n with\n    | 0 => one x\n    | S n' => cons x (replicate_Sn x n')\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint take (n: nat) (l: ne_list): ne_list :=\n    match l, n with\n    | cons x xs, S n' => take n' xs\n    | _, _ => one (head l)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint front (l: ne_list) : list T :=\n    match l with\n    | one _ => nil\n    | cons x xs => x :: front xs\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma two_level_rect (P: ne_list \u2192 Type)\n    (Pone: \u2200 x, P (one x))\n    (Ptwo: \u2200 x y, P (cons x (one y)))\n    (Pmore: \u2200 x y z, P z \u2192 (\u2200 y', P (cons y' z)) \u2192 P (cons x (cons y z)))\n    : \u2200 l, P l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall l : ne_list, P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof with auto.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall l : ne_list, P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n   "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cut (\u2200 l, P l * \u2200 x, P (cons x l)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall l : ne_list, P l * (forall x : T, P (cons x l))) ->\nforall l : ne_list, P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall l : ne_list, P l * (forall x : T, P (cons x l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n   "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall l : ne_list, P l * (forall x : T, P (cons x l))) ->\nforall l : ne_list, P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "forall l0 : ne_list, P l0 * (forall x : T, P (cons x l0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n   "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall l : ne_list, P l * (forall x : T, P (cons x l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct l...",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (cons t l) * (forall x : T, P (cons x (cons t l)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n     "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert t.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall t : T, P (cons t l) * (forall x : T, P (cons x (cons t l)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n     "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction l...",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall t0 : T,\nP (cons t0 (cons t l)) * (forall x : T, P (cons x (cons t0 (cons t l))))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t0 : T, P (cons t0 l) * (forall x : T, P (cons x (cons t0 l)))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n     "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (cons t0 (cons t l)) * (forall x : T, P (cons x (cons t0 (cons t l))))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t1 : T, P (cons t1 l) * (forall x : T, P (cons x (cons t1 l)))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n     "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (cons t0 (cons t l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t1 : T, P (cons t1 l) * (forall x : T, P (cons x (cons t1 l)))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : T, P (cons x (cons t0 (cons t l)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t1 : T, P (cons t1 l) * (forall x : T, P (cons x (cons t1 l)))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n     "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (cons t0 (cons t l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t1 : T, P (cons t1 l) * (forall x : T, P (cons x (cons t1 l)))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n     "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : T, P (cons x (cons t0 (cons t l)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x : T, P (one x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x y : T, P (cons x (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t1 : T, P (cons t1 l) * (forall x : T, P (cons x (cons t1 l)))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t0"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P (cons x (cons t0 (cons t l)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "ne_list -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pone"
+              ],
+              "body": null,
+              "type": "forall x0 : T, P (one x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ptwo"
+              ],
+              "body": null,
+              "type": "forall x0 y : T, P (cons x0 (one y))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmore"
+              ],
+              "body": null,
+              "type": "forall (x0 y : T) (z : ne_list),\nP z -> (forall y' : T, P (cons y' z)) -> P (cons x0 (cons y z))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "forall t1 : T, P (cons t1 l) * (forall x0 : T, P (cons x0 (cons t1 l)))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t0",
+                "x"
+              ],
+              "body": null,
+              "type": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Pmore; intros; apply IHl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma tail_length (l: ne_list)\n    : S (length (List.Core.tail (to_list l))) = length (to_list l).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(length (Core.tail (to_list l))).+1 = length (to_list l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(length (Core.tail (to_list l))).+1 = length (to_list l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct l; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End with_type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments ne_list : clear implicits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint tails {T} (l: ne_list T): ne_list (ne_list T) :=\n  match l with\n  | one x => one (one x)\n  | cons x y => cons l (tails y)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma tails_are_shorter {T} (y x: ne_list T):\n  InList x (to_list (tails y)) \u2192\n  leq (length (to_list x)) (length (to_list y)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction y; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(one t = x) + Empty -> length (to_list x) <= 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(cons t y = x) + InList x (to_list (tails y)) ->\nlength (to_list x) <= (length (to_list y)).+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHy"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(one t = x) + Empty -> length (to_list x) <= 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[] | C].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list (one t)) <= 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list x) <= 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list (one t)) <= 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "constructor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list x) <= 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(cons t y = x) + InList x (to_list (tails y)) ->\nlength (to_list x) <= (length (to_list y)).+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHy"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[] | C].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list (cons t y)) <= (length (to_list y)).+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHy"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list x) <= (length (to_list y)).+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHy"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list (cons t y)) <= (length (to_list y)).+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHy"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "length (to_list x) <= (length (to_list y)).+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y",
+                "x"
+              ],
+              "body": null,
+              "type": "ne_list T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHy"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y)) -> length (to_list x) <= length (to_list y)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "InList x (to_list (tails y))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply leq_succ_r, IHy.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint map {A B} (f: A \u2192 B) (l: ne_list A): ne_list B :=\n  match l with\n  | one x => one (f x)\n  | cons h t => cons (f h) (map f t)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma list_map {A B} (f: A \u2192 B) (l: ne_list A)\n  : to_list (map f l) = List.Core.list_map f (to_list l).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "to_list (map f l) = list_map f (to_list l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "to_list (map f l) = list_map f (to_list l)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "to_list (map f (one t)) = list_map f (to_list (one t))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "to_list (map f (cons t l)) = list_map f (to_list (cons t l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "to_list (map f l) = list_map f (to_list l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "to_list (map f (one t)) = list_map f (to_list (one t))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "to_list (map f (cons t l)) = list_map f (to_list (cons t l))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "to_list (map f l) = list_map f (to_list l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f t :: to_list (map f l))%list = (f t :: list_map f (to_list l))%list",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "to_list (map f l) = list_map f (to_list l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- IHl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f t :: to_list (map f l))%list = (f t :: to_list (map f l))%list",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "t"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "ne_list A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHl"
+              ],
+              "body": null,
+              "type": "to_list (map f l) = list_map f (to_list l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint inits {A} (l: ne_list A): ne_list (ne_list A) :=\n  match l with\n  | one x => one (one x)\n  | cons h t => cons (one h) (map (cons h) (inits t))\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint zip {A B: Type} (l: ne_list A) (m: ne_list B)\n  : ne_list (A * B) :=\n  match l with\n  | one a => one (a, head m)\n  | cons a l =>\n      match m with\n      | one b => one (a, b)\n      | cons b m => cons (a, b) (zip l m)\n      end\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Notation ne_list := ne_list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Notation \"[: x :]\" := (one x) : ne_list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Notation \"[: x ; .. ; y ; z :]\"\n        := (cons x .. (cons y (one z)) ..) : ne_list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Infix \":::\" := cons : ne_list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ne_list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Coercion ne_list.to_list : ne_list.ne_list >-> list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

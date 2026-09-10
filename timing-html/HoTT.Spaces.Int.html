@@ -1,0 +1,4040 @@
+<html>
+<head>
+<title>Int.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Int.v</h1>
+
+<div class="code" title="File: Int.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT.Basics Require Import Overture Numeral Tactics Decidable.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+From HoTT.Basics Require Import Equivalences PathGroupoids Trunc Iff.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 2
+Time: 0.006s">
+<div class="time" style="width: 20.689655172414%"></div>
+<pre>
+Require Import Types.Paths Types.Universe.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 3
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+Require Import Spaces.Nat.Core Spaces.SInt.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** Users of this file likely want the instances in Equiv.BiInv, such as [isequiv_isbiinv], so we export this file. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Require Export Equiv.BiInv.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The integers, defined as a HIT *)
+
+(** Following "The integers as a higher inductive type" by Altenkirch and Scoccola, we define the integers as a higher inductive type.  Morally it is the free pointed type with a biinvertible self-map.  This representation leads to more convenient induction and recursion principles that avoid needing to split into many cases as happens with the signed integers [SInt].  Moreover, many results hold definitionally instead of requiring lengthy proofs.  Examples include results about addition, multiplication, iteration of equivalences and exponentiation of loops such as [int_add_succ_l], [int_mul_pred_l], [int_iter_succ_l], and [loopexp_pred_r] to name just a few.  We also have a convenient lemma [int_homotopic] for proving that two functions [Int -&gt; P] are homotopic.  Part of what makes it easy to use is that the functions being compared often compute definitionally on [zero] and [int_succ].
+
+One difference compared to the Altenkirch-Scoccola paper is that we prove additional induction principles, [int_ind_biinv] and [int_ind_equiv].  The key to these is a carefully chosen proof of [int_succ_pred] that satisfies the half-adjoint law.  Then, using [int_ind_equiv], we are able to trivially prove [int_homotopic] (their Theorem 2.4) without using univalence or needing to introduce "prBiInv" (squares preserving bi-invertible maps).  As a result, we don't need univalence for any fundamental results about the integers.
+
+One thing to be aware of is that the representation of integers is no longer definitionally unique. For example, [2 - 3] is not definitionally equal to [-1].  [int_reduce] or [ltac:(decide)] can be used to show that these are equal, with [int_reduce] being faster, as illustrated in test/Spaces/Int.v. *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope int_scope with int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The definition of [Int] *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Export Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Section Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** Here we are modeling the HIT which has a point [zero] and a successor map [int_succ] which is a biinvertible equivalence.  [int_pred] and [int_pred2] are its left and right inverses. *)
+
+   </pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Private Inductive Int : Type0 :=
+    | zero : Int
+    | int_succ : Int -&gt; Int
+    | int_pred : Int -&gt; Int
+    | int_pred2 : Int -&gt; Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Axiom int_pred_succ : int_pred o int_succ == idmap.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Axiom int_succ_pred2 : int_succ o int_pred2 == idmap.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+    Context {P : Int -&gt; Type} (t0 : P zero) (e : forall z : Int, P z -&gt; P (int_succ z))
+      (r : forall z : Int, P z -&gt; P (int_pred z)) (s : forall z : Int, P z -&gt; P (int_pred2 z))
+      (re : forall (z : Int) (t : P z), int_pred_succ z # (r (int_succ z) (e z t)) = t)
+      (es : forall (z : Int) (t : P z), int_succ_pred2 z # (e (int_pred2 z) (s z t)) = t).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+    Fixpoint int_ind (z : Int) : P z
+      := match z with
+      | zero =&gt; fun _ _ =&gt; t0
+      | int_succ z =&gt; fun _ _ =&gt; e z (int_ind z)
+      | int_pred z =&gt; fun _ _ =&gt; r z (int_ind z)
+      | int_pred2 z =&gt; fun _ _ =&gt; s z (int_ind z)
+      end re es.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** We make sure that this depends on [re] and [es] as well. *)
+
+    (** The beta principles for [int_ind] on [int_pred_succ] and [int_succ_pred2]. *)
+   </pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Axiom int_ind_beta_int_pred_succ
+      : forall (z : Int), apD int_ind (int_pred_succ z) = re z (int_ind z).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Axiom int_ind_beta_int_succ_pred2
+      : forall (z : Int), apD int_ind (int_succ_pred2 z) = es z (int_ind z).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We sometimes want to treat the integers as a pointed type with basepoint given by 0. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointed_int : IsPointed Int := zero.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Successor is biinvertible.  It follows from typeclass inference that it is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isbiinv_int_succ : IsBiInv int_succ
+  := Build_IsBiInv _ _ _ int_pred2 int_pred int_succ_pred2 int_pred_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition biinv_int_succ : BiInv Int Int
+  := Build_BiInv _ _ int_succ _.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The predecessor is an equivalence on [Int]. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_int_pred : IsEquiv int_pred
+  := isequiv_retr_biinv int_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "z .+1" := (int_succ z) : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "z .-1" := (int_pred z) : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_pred] is a section of [int_succ]. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_succ_pred : int_succ o int_pred == idmap
+  := retr_is_sect_isbiinv int_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_pred2] is a retraction of [int_succ]. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_pred2_succ : int_pred2 o int_succ == idmap
+  := sect_is_retr_isbiinv int_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Our proof of [retr_is_sect_isbiinv] was carefully chosen so that the data showing that [int_succ] and [int_pred] form an equivalence satisfies the adjoint law. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_succ_isadj (z : Int)
+  : int_succ_pred (int_succ z) = ap int_succ (int_pred_succ z)
+  := eisadj int_succ z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Induction and recursion principles for Int *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_ind_biinv {P : Int -&gt; Type} (t0 : P zero)
+  (e : forall z : Int, P z -&gt; P z.+1) {iseq : forall z, IsBiInv (e z)}
+  : forall z, P z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  snapply (int_ind t0 e).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((retr_biinv (e z.-1)) o transport P (int_succ_pred z)^).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((e (int_pred2 z))^-1 o transport P (int_succ_pred2 z)^).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z p; cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    lhs_V napply (ap_transport _ (fun z =&gt; retr_biinv (e z))).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply (ap (retr_biinv (e z))).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre> lhs napply transport_compose.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+      lhs_V napply transport_pp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply transport2.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply (ap inverse (int_succ_isadj z) @@ 1).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eissect_biinv.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z p; cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply transport_pV.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 105
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition int_ind_equiv {P : Int -&gt; Type} (t0 : P zero)
+  (e : forall z : Int, P z -&gt; P z.+1) {iseq : forall z, IsEquiv (e z)}
+  : forall z, P z
+  := @int_ind_biinv P t0 e (fun z =&gt; isbiinv_isequiv _ (iseq z)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section RecursionPrinciple.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {P : Type} (t0 : P) (f : P -&gt; P) (g1 g2 : P -&gt; P)
+    (s : g1 o f == idmap) (r : f o g2 == idmap).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The recursion principle. *)
+ </pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_rec : Int -&gt; P.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (int_ind t0 (fun _ =&gt; f) (fun _ =&gt; g1) (fun _ =&gt; g2)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: intros z t; cbn.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    all: lhs napply transport_const.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply s.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition int_rec_beta_int_pred_succ
+    : forall z, ap int_rec (int_pred_succ z) = s (int_rec z).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    napply (cancelL (transport_const (int_pred_succ z) _)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    lhs_V napply apD_const.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    napply int_ind_beta_int_pred_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition int_rec_beta_int_succ_pred2
+    : forall z, ap int_rec (int_succ_pred2 z) = r (int_rec z).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    napply (cancelL (transport_const (int_succ_pred2 z) _)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    lhs_V napply apD_const.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    napply int_ind_beta_int_succ_pred2.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+End RecursionPrinciple.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The recursion principle phrased using a biinvertible map. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_rec_biinv {P : Type} (t0 : P) (f : P -&gt; P) `{IsBiInv P P f}
+  : Int -&gt; P
+  := int_rec t0 f (retr_biinv f) (sect_biinv f) (eissect_biinv f) (eisretr_biinv f).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The recursion principle phrased using a half-adjoint equivalence. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_rec_equiv {P : Type} (t0 : P) (f : P -&gt; P) `{IsEquiv P P f}
+  : Int -&gt; P
+  := @int_rec_biinv P t0 f (isbiinv_isequiv _ _).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Equivalence iteration.  The properties of this are proved later in the file. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_iter {A} (f : A -&gt; A) `{!IsEquiv f} (z : Int) (a0 : A) : A
+  := int_rec_equiv a0 f z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Uniqueness.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {P : Type} (e : BiInv P P).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The following uniqueness principle states that if two maps out of [Int] agree on 0 and commute with the successor, then they are homotopic. *)
+ </pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_homotopic_biinv (k1 : Int -&gt; P) (k2 : Int -&gt; P)
+    (p0 : k1 zero = k2 zero) (pf1 : k1 o int_succ == e o k1) (pf2 : k2 o int_succ == e o k2)
+    : k1 == k2.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply int_ind_equiv; cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p0.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+      exact (equiv_concat_l (pf1 z) _ oE equiv_concat_r (pf2 z)^ _ oE equiv_ap e _ _).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 172
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** As a special case, we can characterize the recursor. *)
+ </pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_homotopic_rec (t0 : P) (k : Int -&gt; P)
+    (p0 : k zero = t0) (pf : k o int_succ == e o k)
+    (rec := int_rec_biinv t0 e)
+    : k == rec
+    := int_homotopic_biinv k rec p0 pf (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Uniqueness.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The same uniqueness principle but for half-adjoint equivalences. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 184
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>Definition int_homotopic {P : Type} (f : P -&gt; P)
+  {e' : IsEquiv f} (k1 : Int -&gt; P) (k2 : Int -&gt; P)
+  (p0 : k1 zero = k2 zero) (pf1 : k1 o int_succ == f o k1)
+  (pf2 : k2 o int_succ == f o k2)
+  : forall (z : Int), k1 z = k2 z
+  := int_homotopic_biinv (Build_BiInv P P _ (isbiinv_isequiv f e')) k1 k2 p0 pf1 pf2.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [Int] is equivalent to [SInt] *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_to_sint : Int -&gt; SInt
+  := int_rec sint_zero sint_succ sint_pred sint_pred sint_pred_succ sint_succ_pred.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sint_to_int : SInt -&gt; Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s; induction s as [|n IHz|n IHz].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact zero.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (int_succ IHz).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (int_pred IHz).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sint_to_int_issect : int_to_sint o sint_to_int == idmap.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s; induction s as [|[|n] IHz|[|n] IHz].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2, 4: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap sint_succ IHz).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap sint_pred IHz).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sint_to_int_succ : sint_to_int o sint_succ == int_succ o sint_to_int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s; induction s as [|[|n] IHz|[|n] IHz].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1-3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: symmetry; exact (int_succ_pred _).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sint_to_int_isretr : sint_to_int o int_to_sint == idmap.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  napply (int_homotopic_biinv biinv_int_succ).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro z; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sint_to_int_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [sint_to_int] is biinvertible.  It follows from typeclass inference that it is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isbiinv_sint_to_int : IsBiInv sint_to_int
+  := Build_IsBiInv _ _ _ _ _ sint_to_int_isretr sint_to_int_issect.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since [SInt] has decidable equality, so does [Int]. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidablepaths_int@{} : DecidablePaths Int
+  := decidablepaths_equiv SInt _ _.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since [SInt] is a set, therefore also [Int] is a set. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishset_int : IsHSet Int
+  := istrunc_isequiv_istrunc SInt _.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following function reduces an integer expression by cancelling successive successor and predecessor terms. It is homotopic to the identity by [sint_to_int_isretr]. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_reduce : Int -&gt; Int := sint_to_int o int_to_sint.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From the equivalence to [SInt] we can deduce another induction principle for [Int].  This one has weak hypotheses, but since [HN 1 (HP 0 t)] doesn't necessarily transport to [t] along [int_pred_succ 0], it is impossible for it to compute well on general [int_pred] and [int_succ] operations.  Passing through [SInt] normalizes terms giving us a canonical choice. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_ind_sint (P : Int -&gt; Type)
+  (H0 : P zero)
+  (HP : forall z, P z -&gt; P z.+1)
+  (HN : forall z, P z -&gt; P z.-1)
+  : forall z, P z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  equiv_intro sint_to_int s.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction s as [|n IHz|n IHz].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H0.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n as [|n].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: apply HP, IHz.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n as [|n].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: apply HN, IHz.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition int_ind_iff (P : Int -&gt; Type)
+  (t0 : P zero) (f : forall z : Int, P z &lt;-&gt; P z.+1)
+  : forall z, P z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_ind_sint P t0).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  exact (fst (f z)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro int_succ z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ o snd (f z)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (transport P (int_pred_succ z)^).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Printing and parsing *)
+
+(** We pass through [SInt] for printing and parsing. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_to_number_int : Int -&gt; Numeral.int := sint_to_number_int o int_to_sint.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition int_of_number_int : Numeral.int -&gt; Int := sint_to_int o sint_of_number_int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Number Notation Int int_of_number_int int_to_number_int : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Integer arithmetic *)
+
+(** *** Negation *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_neg (z : Int) : Int
+  := int_rec_equiv zero int_pred z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "- z" := (int_neg z) : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation is involutive. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_neg_neg (z : Int) : --z = z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 281
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  by srapply (int_homotopic int_succ).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_int_neg : IsEquiv int_neg.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (isequiv_adjointify int_neg int_neg).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: napply int_neg_neg.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation is injective. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isinj_int_neg (x y : Int) : -x = -y -&gt; x = y
+  := equiv_inj int_neg.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of a successor is the predecessor of the negation. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_neg_succ (z : Int) : -(z.+1) = (-z).-1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of a predecessor is the successor of the negation. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_neg_pred (z : Int) : -(z.-1) = (-z).+1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Addition *)
+
+(** We define addition by recursion on the first argument. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add (x y : Int) : Int
+  := int_iter int_succ x y.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "+" := int_add : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "-" := (fun x y =&gt; x + -y) : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer addition with zero on the left is the identity by definition. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_0_l (z : Int) : 0 + z = z
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Adding a successor on the left is the successor of the sum. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_succ_l (x y : Int) : x.+1 + y = (x + y).+1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Adding a predecessor on the left is the predecessor of the sum. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_pred_l (x y : Int) : x.-1 + y = (x + y).-1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer addition with 1 on the left is the successor. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_1_l (z : Int) : 1 + z = z.+1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer addition with zero on the right is the identity. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_0_r (z : Int) : z + 0 = z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 322
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  by srapply (int_homotopic int_succ).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Adding a successor on the right is the successor of the sum. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_succ_r (x y : Int) : x + y.+1 = (x + y).+1.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 328
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  by srapply (int_homotopic int_succ).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer addition is commutative. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_comm (x y : Int) : x + y = y + x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 334
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  srapply (int_homotopic int_succ); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite int_add_0_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite int_add_succ_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Adding a predecessor on the right is the predecessor of the sum. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_add_pred_r (x y : Int) : x + y.-1 = (x + y).-1
+  := int_add_comm x y.-1 @ ap int_pred (int_add_comm y x).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer addition with 1 on the right is the successor. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_1_r (z : Int) : z + 1 = z.+1.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 347
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+  by srapply (int_homotopic int_succ).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer addition is associative. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_assoc (x y z : Int) : x + (y + z) = x + y + z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 353
+Time: 0.004s">
+<div class="time" style="width: 13.793103448276%"></div>
+<pre>
+  by srapply (int_homotopic int_succ).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation is a left inverse with respect to integer addition. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_neg_l (z : Int) : -z + z = 0.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_homotopic idmap); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 361
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  simpl; intro s.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite int_add_succ_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply int_pred_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation is a right inverse with respect to integer addition. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_add_neg_r (z : Int) : z - z = 0
+  := int_add_comm _ _ @ int_add_neg_l _.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation distributes over addition. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_neg_add (x y : Int) : -(x + y) = -x - y.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 372
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+  by srapply (int_homotopic int_pred).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 373
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition is an equivalence with first argument fixed. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_int_add_l (x : Int) : IsEquiv (int_add x).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (isequiv_adjointify _ (int_add (-x))).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: simpl; intro y.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 379
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  all: lhs napply int_add_assoc.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite int_add_neg_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite int_add_neg_l.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition is an equivalence with second argument fixed.  This also follows from the previous result and [int_add_comm], but this proof computes better. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_int_add_r (y : Int) : IsEquiv (fun x =&gt; x + y).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (isequiv_adjointify _ (fun x =&gt; x - y)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  all: simpl; intro x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 388
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  all: lhs_V napply int_add_assoc.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite int_add_neg_l.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply int_add_0_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite int_add_neg_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply int_add_0_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Multiplication *)
+
+(** We define multiplication by recursion on the first argument.  This depends on the proof that addition is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul (x y : Int) : Int
+  := int_iter (fun z =&gt; z + y) x 0.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "*" := int_mul : int_scope.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer multiplication with zero on the left is zero by definition. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_0_l (z : Int) : 0 * z = 0
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication with a successor on the left adds the other argument. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_succ_l (x y : Int) : x.+1 * y = x * y + y
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication with a predecessor on the left subtracts the other argument. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 409
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_mul_pred_l (x y : Int) : x.-1 * y = x * y - y
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer multiplication with one on the left is the identity. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_1_l (z : Int) : 1 * z = z
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer multiplication with [-1] on the left is negation. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_neg1_l (z : Int) : -1 * z = -z
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplying with a negation on the left is the same as negating the product. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_neg_l (x y : Int) : -x * y = -(x * y).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  rapply (int_homotopic (fun x =&gt; x - y)); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 421
+Time: 0.025s">
+<div class="time" style="width: 86.206896551724%"></div>
+<pre>
+  1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 422
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+  simpl; intro x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply int_neg_add.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 424
+Time: 0.004s">
+<div class="time" style="width: 13.793103448276%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication distributes over addition on the left. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_dist_l (x y z : Int) : x * (y + z) = x * y + x * z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_homotopic (fun x =&gt; x + (y + z))); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 431
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+  simpl; intro x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply int_add_assoc.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (int_add_comm y (x * z + z)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (int_add_comm y z).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite &lt;- 2 int_add_assoc.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 436
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer multiplication with zero on the right is zero. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_0_r (z : Int) : z * 0 = 0.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 441
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  rapply (int_homotopic idmap); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply int_add_0_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplying with a successor on the right adds the other argument. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_succ_r (x y : Int) : x * y.+1 = x + x * y.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 450
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  rapply (int_homotopic (fun x =&gt; x + y.+1)); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 452
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  simpl; intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite int_add_succ_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite int_add_assoc.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication is commutative. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_comm (x y : Int) : x * y = y * x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_homotopic (fun x =&gt; x + y)); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply int_mul_0_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite int_add_comm.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply int_mul_succ_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplying with a predecessor on the right subtracts the other argument. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 469
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_mul_pred_r (x y : Int) : x * y.-1 = x * y - x
+  := int_mul_comm x y.-1 @ ap _ (int_mul_comm y x).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Integer multiplication with one on the right is the identity. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_1_r (z : Int) : z * 1 = z
+  := int_mul_comm _ _.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplying with a negation on the right is the same as negating the product. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_neg_r (x y : Int) : x * -y = -(x * y)
+  := int_mul_comm _ _ @ int_mul_neg_l _ _ @ ap _ (int_mul_comm _ _).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication distributes over addition on the right. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_dist_r (x y z : Int) : (x + y) * z = x * z + y * z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 479
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  by rewrite int_mul_comm, int_dist_l, !(int_mul_comm z).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Multiplication is associative. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_mul_assoc (x y z : Int) : x * (y * z) = x * y * z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_homotopic (fun x =&gt; x + (y * z))); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 487
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  simpl; intro x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite int_dist_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Results about iteration of equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_iter_neg {A} (f : A -&gt; A) `{IsEquiv _ _ f} (z : Int) (a : A)
+  : int_iter f (int_neg z) a = int_iter f^-1 z a.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 496
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  by srapply (int_homotopic f^-1).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 498
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Definition int_iter_succ_l {A} (f : A -&gt; A) `{IsEquiv _ _ f} (z : Int) (a : A)
+  : int_iter f z.+1 a = f (int_iter f z a)
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition int_iter_succ_r {A} (f : A -&gt; A) `{IsEquiv _ _ f} (z : Int) (a : A)
+  : int_iter f z.+1 a = int_iter f z (f a).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 507
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  by srapply (int_homotopic f).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 509
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Definition int_iter_pred_l {A} (f : A -&gt; A) `{IsEquiv _ _ f} (z : Int) (a : A)
+  : int_iter f z.-1 a = f^-1 (int_iter f z a)
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition int_iter_pred_r {A} (f : A -&gt; A) `{IsEquiv _ _ f} (z : Int) (a : A)
+  : int_iter f z.-1 a = int_iter f z (f^-1 a).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_homotopic f); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro z; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (eissect f (int_iter f z a) @ (eisretr f (int_iter f z a))^).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 522
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition int_iter_add {A} (f : A -&gt; A) `{IsEquiv _ _ f} (x y : Int)
+  : int_iter f (x + y) == int_iter f x o int_iter f y.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a; revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 528
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  by srapply (int_homotopic f).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 529
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [g : A -&gt; A'] commutes with automorphisms of [A] and [A'], then it commutes with iteration. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 532
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_iter_commute_map {A A'} (f : A -&gt; A) `{!IsEquiv f}
+  (f' : A' -&gt; A') `{!IsEquiv f'}
+  (g : A -&gt; A') (p : g o f == f' o g) (z : Int) (a : A)
+  : g (int_iter f z a) = int_iter f' z (g a).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (int_homotopic f'); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; apply p.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In particular, homotopic maps have homotopic iterations. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 543
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition int_iter_homotopic (z : Int) {A} (f f' : A -&gt; A) `{!IsEquiv f} `{!IsEquiv f'}
+  (h : f == f')
+  : int_iter f z == int_iter f' z
+  := int_iter_commute_map f f' idmap h z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_iter f n x] doesn't depend on the proof that [f] is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_iter_agree (z : Int) {A} (f : A -&gt; A) {ief ief' : IsEquiv f}
+  : forall x, @int_iter A f ief z x = @int_iter A f ief' z x
+  := int_iter_homotopic z f f (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An important invariance property of iteration.  The most obvious proof attempts fail, for the reasons described in the comment for [int_ind_sint]. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_iter_invariant {A} (f : A -&gt; A) `{!IsEquiv f}
+  (P : A -&gt; Type)
+  (Psucc : forall a, P a -&gt; P (f a))
+  (Ppred : forall a, P a -&gt; P (f^-1 a))
+  (a0 : A) (Pa0 : P a0)
+  : forall z, P (int_iter f z a0).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 558
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  snapply int_ind_sint; cbn.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Pa0.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z IH.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Psucc, IH.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z IH.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Ppred, IH.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Exponentiation of loops *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 566
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition loopexp {A : Type} {a : A} (p : a = a) (z : Int) : (a = a)
+  := int_iter (equiv_concat_r p a) z idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 567
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Definition loopexp_succ_r {A : Type} {a : A} (p : a = a) (z : Int)
+  : loopexp p z.+1 = loopexp p z @ p
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 571
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Definition loopexp_pred_r {A : Type} {a : A} (p : a = a) (z : Int)
+  : loopexp p z.-1 = loopexp p z @ p^
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition loopexp_succ_l {A : Type} {a : A} (p : a = a) (z : Int)
+  : loopexp p z.+1 = p @ loopexp p z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 580
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  rapply (int_homotopic (equiv_concat_r p a)); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply concat_1p_p1.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 585
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition loopexp_pred_l {A : Type} {a : A} (p : a = a) (z : Int)
+  : loopexp p z.-1 = p^ @ loopexp p z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; revert z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 591
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  rapply (int_homotopic (equiv_concat_r p a)); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply concat_1p_p1.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 594
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre> intro z; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_pp_V _ _ @ (concat_pV_p _ _)^).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 597
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ap_loopexp {A B} (f : A -&gt; B) {a : A} (p : a = a) (z : Int)
+  : ap f (loopexp p z) = loopexp (ap f p) z.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 602
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  napply int_iter_commute_map.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro q; apply ap_pp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition loopexp_add {A : Type} {a : A} (p : a = a) x y
+  : loopexp p (x + y) = loopexp p x @ loopexp p y.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 610
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  rapply (int_homotopic (equiv_concat_r p a)); cbn beta.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 614
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre> intro z; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite &lt;- loopexp_succ_l.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 616
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under univalence, exponentiation of loops corresponds to iteration of auto-equivalences. *)
+
+</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_loopexp {A : Type} (p : A = A) (z : Int) (a : A)
+  : equiv_path A A (loopexp p z) a = int_iter (equiv_path A A p) z a.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply int_iter_commute_map with (g:=fun p =&gt; equiv_path A A p a).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro q; cbn.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply transport_pp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 626
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Definition loopexp_path_universe `{Univalence} {A : Type} (f : A &lt;~&gt; A)
+  (z : Int) (a : A)
+  : transport idmap (loopexp (path_universe f) z) a = int_iter f z a.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f; equiv_intro (equiv_path A A) p.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V napply equiv_path_loopexp.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (ap (fun q =&gt; equiv_path A A (loopexp q z) a) _).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply eissect.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Converting between integers and naturals *)
+
+(** We can convert a [nat] to an [Int] by mapping [0] to [zero] and [S n] to [int_succ n].  Various operations on [nat] are preserved by this function.  We will make this into a coercion later; we delay doing so to ensure that the lemmas about [int_of_nat] are interpreted as we want them to be. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat (n : nat) : Int
+  := nat_iter n int_succ zero.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_of_nat] preserves zero. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat_zero : int_of_nat 0 = 0
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_of_nat] preserves successors. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat_succ (n : nat)
+  : int_of_nat (n.+1) = (int_of_nat n).+1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_of_nat] preserves predecessors of positive naturals. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat_pred (n : nat) (npos : (0 &lt; n)%nat)
+  : int_of_nat (nat_pred n) = (int_of_nat n).-1.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V napply (ap (fun _ =&gt; _.-1) (nat_succ_pred n npos)).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; symmetry.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply int_pred_succ.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_of_nat] preserves addition. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat_add (n m : nat)
+  : int_of_nat (n + m) = int_of_nat n + int_of_nat m.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap _ IHn).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_of_nat] preserves subtraction when not truncated. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat_sub (n m : nat) (ngeq : (m &lt;= n)%nat)
+  : int_of_nat (n - m) = int_of_nat n - int_of_nat m.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction ngeq as [|n H IHn].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rhs napply int_add_neg_r.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite nat_sub_cancel.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite nat_sub_succ_l; only 2: exact _; simpl.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap _ IHn).</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [int_of_nat] preserves multiplication. This makes [int_of_nat] a semiring homomorphism. *)</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition int_of_nat_mul (n m : nat)
+  : int_of_nat (n * m) = int_of_nat n * int_of_nat m.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; rewrite &lt;- IHn.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply int_of_nat_add.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion int_of_nat : nat &gt;-&gt; Int.</pre>
+</div>
+<div class="code" title="File: Int.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,3 @@
+N: 2 "atmost1P_isinj" [body=yes, kind=cnst, prop=no, path="iso", ];
+N: 1 "isequiv_isepi_ismono" [body=yes, kind=cnst, prop=no, path="iso", ];
+E: 1 2 [weight=1, ];

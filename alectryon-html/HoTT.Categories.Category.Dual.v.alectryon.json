@@ -1,0 +1,174 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Opposite Category *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Category.Objects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition of [C\u1d52\u1d56] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition opposite (C : PreCategory) : PreCategory\n  := @Build_PreCategory'\n       C\n       (fun s d => morphism C d s)\n       (identity (C := C))\n       (fun _ _ _ m1 m2 => m2 o m1)\n       (fun _ _ _ _ _ _ _ => @associativity_sym _ _ _ _ _ _ _ _)\n       (fun _ _ _ _ _ _ _ => @associativity _ _ _ _ _ _ _ _)\n       (fun _ _ => @right_identity _ _ _)\n       (fun _ _ => @left_identity _ _ _)\n       (@identity_identity C)\n       _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation \"C ^op\" := (opposite C) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [\u1d52\u1d56] is judgmentally involutive *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition opposite_involutive C : (C^op)^op = C := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Initial objects are opposite terminal objects, and vice versa *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section DualObjects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition terminal_opposite_initial (x : C)\n             `(H : IsTerminalObject C x)\n  : IsInitialObject (C^op) x\n    := fun x' => H x'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition initial_opposite_terminal (x : C)\n             `(H : IsInitialObject C x)\n  : IsTerminalObject (C^op) x\n    := fun x' => H x'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End DualObjects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export CategoryDualNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"C ^op\" := (opposite C) : category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End CategoryDualNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

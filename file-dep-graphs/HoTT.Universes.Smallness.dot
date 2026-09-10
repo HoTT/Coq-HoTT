@@ -1,0 +1,42 @@
+digraph HoTT_Universes_Smallness {
+  graph [ratio=0.5]
+  node [style=filled]
+Smallness_islocallysmall_trunc [label="islocallysmall_trunc", URL=<Smallness.html#islocallysmall_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_islocallysmall_islocallysmall_codomain_fibers [label="islocallysmall_islocallysmall_codomain_fibers", URL=<Smallness.html#islocallysmall_islocallysmall_codomain_fibers>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_sigma_closed_islocallysmall [label="sigma_closed_islocallysmall", URL=<Smallness.html#sigma_closed_islocallysmall>, fillcolor="#F070D1"] ;
+Smallness_islocallysmall_succ [label="islocallysmall_succ", URL=<Smallness.html#islocallysmall_succ>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_islocallysmall_issmall [label="islocallysmall_issmall", URL=<Smallness.html#islocallysmall_issmall>, fillcolor="#F070D1"] ;
+Smallness_islocallysmall_equiv_islocallysmall [label="islocallysmall_equiv_islocallysmall", URL=<Smallness.html#islocallysmall_equiv_islocallysmall>, fillcolor="#F070D1"] ;
+Smallness_islocallysmall_in [label="islocallysmall_in", URL=<Smallness.html#islocallysmall_in>, fillcolor="#F070D1"] ;
+Smallness_ishprop_islocallysmall [label="ishprop_islocallysmall", URL=<Smallness.html#ishprop_islocallysmall>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_IsLocallySmall [label="IsLocallySmall", URL=<Smallness.html#IsLocallySmall>, fillcolor="#F070D1"] ;
+Smallness_istrunc_smalltype [label="istrunc_smalltype", URL=<Smallness.html#istrunc_smalltype>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_issmall_inhabited_issmall [label="issmall_inhabited_issmall", URL=<Smallness.html#issmall_inhabited_issmall>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_issmall_contr [label="issmall_contr", URL=<Smallness.html#issmall_contr>, peripheries=3, fillcolor="#F070D1"] ;
+Smallness_issmall_issmall_codomain_fibers [label="issmall_issmall_codomain_fibers", URL=<Smallness.html#issmall_issmall_codomain_fibers>, fillcolor="#F070D1"] ;
+Smallness_sigma_closed_issmall [label="sigma_closed_issmall", URL=<Smallness.html#sigma_closed_issmall>, fillcolor="#F070D1"] ;
+Smallness_issmall_equiv_issmall [label="issmall_equiv_issmall", URL=<Smallness.html#issmall_equiv_issmall>, fillcolor="#F070D1"] ;
+Smallness_issmall_in [label="issmall_in", URL=<Smallness.html#issmall_in>, fillcolor="#F070D1"] ;
+Smallness_ishprop_issmall [label="ishprop_issmall", URL=<Smallness.html#ishprop_issmall>, fillcolor="#F070D1"] ;
+  Smallness_islocallysmall_trunc -> Smallness_IsLocallySmall [] ;
+  Smallness_islocallysmall_islocallysmall_codomain_fibers -> Smallness_sigma_closed_islocallysmall [] ;
+  Smallness_sigma_closed_islocallysmall -> Smallness_islocallysmall_equiv_islocallysmall [] ;
+  Smallness_sigma_closed_islocallysmall -> Smallness_sigma_closed_issmall [] ;
+  Smallness_islocallysmall_succ -> Smallness_islocallysmall_issmall [] ;
+  Smallness_islocallysmall_issmall -> Smallness_islocallysmall_equiv_islocallysmall [] ;
+  Smallness_islocallysmall_issmall -> Smallness_islocallysmall_in [] ;
+  Smallness_islocallysmall_equiv_islocallysmall -> Smallness_IsLocallySmall [] ;
+  Smallness_islocallysmall_equiv_islocallysmall -> Smallness_issmall_equiv_issmall [] ;
+  Smallness_islocallysmall_in -> Smallness_IsLocallySmall [] ;
+  Smallness_islocallysmall_in -> Smallness_issmall_in [] ;
+  Smallness_ishprop_islocallysmall -> Smallness_IsLocallySmall [] ;
+  Smallness_ishprop_islocallysmall -> Smallness_ishprop_issmall [] ;
+  Smallness_issmall_inhabited_issmall -> Smallness_issmall_issmall_codomain_fibers [] ;
+  Smallness_issmall_inhabited_issmall -> Smallness_ishprop_issmall [] ;
+  Smallness_issmall_contr -> Smallness_issmall_equiv_issmall [] ;
+  Smallness_issmall_contr -> Smallness_issmall_in [] ;
+  Smallness_issmall_issmall_codomain_fibers -> Smallness_sigma_closed_issmall [] ;
+  Smallness_issmall_issmall_codomain_fibers -> Smallness_issmall_equiv_issmall [] ;
+subgraph cluster_Smallness { label="Smallness"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Smallness_ishprop_issmall; Smallness_issmall_in; Smallness_issmall_equiv_issmall; Smallness_sigma_closed_issmall; Smallness_issmall_issmall_codomain_fibers; Smallness_issmall_contr; Smallness_issmall_inhabited_issmall; Smallness_istrunc_smalltype; Smallness_IsLocallySmall; Smallness_ishprop_islocallysmall; Smallness_islocallysmall_in; Smallness_islocallysmall_equiv_islocallysmall; Smallness_islocallysmall_issmall; Smallness_islocallysmall_succ; Smallness_sigma_closed_islocallysmall; Smallness_islocallysmall_islocallysmall_codomain_fibers; Smallness_islocallysmall_trunc; };
+} /* END */

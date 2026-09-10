@@ -1,0 +1,16 @@
+digraph HoTT_Spaces_Nat_Paths {
+  graph [ratio=0.5]
+  node [style=filled]
+Paths_equiv_path_nat [label="equiv_path_nat", URL=<Paths.html#equiv_path_nat>, peripheries=3, fillcolor="#F070D1"] ;
+Paths_isequiv_path_nat [label="isequiv_path_nat", URL=<Paths.html#isequiv_path_nat>, fillcolor="#F070D1"] ;
+Paths_path_nat [label="path_nat", URL=<Paths.html#path_nat>, fillcolor="#F070D1"] ;
+Paths_idcode_nat [label="idcode_nat", URL=<Paths.html#idcode_nat>, fillcolor="#F070D1"] ;
+Paths_code_nat [label="code_nat", URL=<Paths.html#code_nat>, fillcolor="#F070D1"] ;
+  Paths_equiv_path_nat -> Paths_isequiv_path_nat [] ;
+  Paths_isequiv_path_nat -> Paths_path_nat [] ;
+  Paths_isequiv_path_nat -> Paths_idcode_nat [] ;
+  Paths_path_nat -> Paths_code_nat [] ;
+  Paths_idcode_nat -> Paths_code_nat [] ;
+subgraph cluster_Paths { label="Paths"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Paths_code_nat; Paths_idcode_nat; Paths_path_nat; Paths_isequiv_path_nat; Paths_equiv_path_nat; };
+} /* END */

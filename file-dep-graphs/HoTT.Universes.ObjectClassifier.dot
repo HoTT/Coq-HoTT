@@ -1,0 +1,45 @@
+digraph HoTT_Universes_ObjectClassifier {
+  graph [ratio=0.5]
+  node [style=filled]
+ObjectClassifier_equiv_pmap_typeO_type_connected [label="equiv_pmap_typeO_type_connected", URL=<ObjectClassifier.html#equiv_pmap_typeO_type_connected>, peripheries=3, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_pfibration_O_connected [label="equiv_sigma_pfibration_O_connected", URL=<ObjectClassifier.html#equiv_sigma_pfibration_O_connected>, peripheries=3, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_pfibration_O [label="equiv_sigma_pfibration_O", URL=<ObjectClassifier.html#equiv_sigma_pfibration_O>, peripheries=3, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_fibration_Op_connected [label="equiv_sigma_fibration_Op_connected", URL=<ObjectClassifier.html#equiv_sigma_fibration_Op_connected>, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_fibration_Op [label="equiv_sigma_fibration_Op", URL=<ObjectClassifier.html#equiv_sigma_fibration_Op>, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_fibration_O [label="equiv_sigma_fibration_O", URL=<ObjectClassifier.html#equiv_sigma_fibration_O>, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_pfibration [label="equiv_sigma_pfibration", URL=<ObjectClassifier.html#equiv_sigma_pfibration>, peripheries=3, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_pfiber_fibration_pfibration [label="equiv_pfiber_fibration_pfibration", URL=<ObjectClassifier.html#equiv_pfiber_fibration_pfibration>, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_fibration_p [label="equiv_sigma_fibration_p", URL=<ObjectClassifier.html#equiv_sigma_fibration_p>, fillcolor="#F070D1"] ;
+ObjectClassifier_ispullback_objectclassifier_square [label="ispullback_objectclassifier_square", URL=<ObjectClassifier.html#ispullback_objectclassifier_square>, peripheries=3, fillcolor="#F070D1"] ;
+ObjectClassifier_objectclassifier_square [label="objectclassifier_square", URL=<ObjectClassifier.html#objectclassifier_square>, fillcolor="#F070D1"] ;
+ObjectClassifier_topmap [label="topmap", URL=<ObjectClassifier.html#topmap>, fillcolor="#F070D1"] ;
+ObjectClassifier_equiv_sigma_fibration [label="equiv_sigma_fibration", URL=<ObjectClassifier.html#equiv_sigma_fibration>, fillcolor="#F070D1"] ;
+ObjectClassifier_isequiv_sigma_fibration [label="isequiv_sigma_fibration", URL=<ObjectClassifier.html#isequiv_sigma_fibration>, fillcolor="#F070D1"] ;
+ObjectClassifier_sigma_fibration_inverse [label="sigma_fibration_inverse", URL=<ObjectClassifier.html#sigma_fibration_inverse>, fillcolor="#F070D1"] ;
+ObjectClassifier_sigma_fibration [label="sigma_fibration", URL=<ObjectClassifier.html#sigma_fibration>, fillcolor="#F070D1"] ;
+ObjectClassifier_pSlice [label="pSlice", URL=<ObjectClassifier.html#pSlice>, fillcolor="#F070D1"] ;
+ObjectClassifier_Slice [label="Slice", URL=<ObjectClassifier.html#Slice>, fillcolor="#F070D1"] ;
+  ObjectClassifier_equiv_pmap_typeO_type_connected -> ObjectClassifier_equiv_sigma_fibration_Op_connected [] ;
+  ObjectClassifier_equiv_pmap_typeO_type_connected -> ObjectClassifier_equiv_sigma_fibration_p [] ;
+  ObjectClassifier_equiv_sigma_pfibration_O_connected -> ObjectClassifier_equiv_sigma_fibration_Op_connected [] ;
+  ObjectClassifier_equiv_sigma_pfibration_O_connected -> ObjectClassifier_equiv_pfiber_fibration_pfibration [] ;
+  ObjectClassifier_equiv_sigma_pfibration_O -> ObjectClassifier_equiv_sigma_fibration_Op [] ;
+  ObjectClassifier_equiv_sigma_pfibration_O -> ObjectClassifier_equiv_pfiber_fibration_pfibration [] ;
+  ObjectClassifier_equiv_sigma_fibration_Op_connected -> ObjectClassifier_equiv_sigma_fibration_Op [] ;
+  ObjectClassifier_equiv_sigma_fibration_Op -> ObjectClassifier_equiv_sigma_fibration_O [] ;
+  ObjectClassifier_equiv_sigma_fibration_O -> ObjectClassifier_equiv_sigma_fibration [] ;
+  ObjectClassifier_equiv_sigma_pfibration -> ObjectClassifier_equiv_pfiber_fibration_pfibration [] ;
+  ObjectClassifier_equiv_sigma_pfibration -> ObjectClassifier_equiv_sigma_fibration_p [] ;
+  ObjectClassifier_equiv_pfiber_fibration_pfibration -> ObjectClassifier_pSlice [] ;
+  ObjectClassifier_equiv_pfiber_fibration_pfibration -> ObjectClassifier_Slice [] ;
+  ObjectClassifier_equiv_sigma_fibration_p -> ObjectClassifier_equiv_sigma_fibration [] ;
+  ObjectClassifier_ispullback_objectclassifier_square -> ObjectClassifier_objectclassifier_square [] ;
+  ObjectClassifier_objectclassifier_square -> ObjectClassifier_topmap [] ;
+  ObjectClassifier_equiv_sigma_fibration -> ObjectClassifier_isequiv_sigma_fibration [] ;
+  ObjectClassifier_isequiv_sigma_fibration -> ObjectClassifier_sigma_fibration_inverse [] ;
+  ObjectClassifier_isequiv_sigma_fibration -> ObjectClassifier_sigma_fibration [] ;
+  ObjectClassifier_sigma_fibration_inverse -> ObjectClassifier_Slice [] ;
+  ObjectClassifier_sigma_fibration -> ObjectClassifier_Slice [] ;
+subgraph cluster_ObjectClassifier { label="ObjectClassifier"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ObjectClassifier_Slice; ObjectClassifier_pSlice; ObjectClassifier_sigma_fibration; ObjectClassifier_sigma_fibration_inverse; ObjectClassifier_isequiv_sigma_fibration; ObjectClassifier_equiv_sigma_fibration; ObjectClassifier_topmap; ObjectClassifier_objectclassifier_square; ObjectClassifier_ispullback_objectclassifier_square; ObjectClassifier_equiv_sigma_fibration_p; ObjectClassifier_equiv_pfiber_fibration_pfibration; ObjectClassifier_equiv_sigma_pfibration; ObjectClassifier_equiv_sigma_fibration_O; ObjectClassifier_equiv_sigma_fibration_Op; ObjectClassifier_equiv_sigma_fibration_Op_connected; ObjectClassifier_equiv_sigma_pfibration_O; ObjectClassifier_equiv_sigma_pfibration_O_connected; ObjectClassifier_equiv_pmap_typeO_type_connected; };
+} /* END */

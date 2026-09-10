@@ -1,0 +1,13 @@
+N: 7 "ab_biprod_exact" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+N: 3 "abses_codiagonal" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+N: 4 "abses_diagonal" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+N: 6 "abses_direct_sum" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+N: 2 "abses_swap_morphism" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+N: 1 "abses_twist_directsum" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+N: 5 "functor_abses_directsum" [body=yes, kind=cnst, prop=no, path="DirectSum", ];
+E: 1 6 [weight=18, ];
+E: 2 6 [weight=9, ];
+E: 3 6 [weight=15, ];
+E: 4 6 [weight=3, ];
+E: 5 6 [weight=28, ];
+E: 6 7 [weight=1, ];

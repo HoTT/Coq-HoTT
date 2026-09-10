@@ -1,0 +1,65 @@
+digraph HoTT_Classes_theory_naturals {
+  graph [ratio=0.5]
+  node [style=filled]
+naturals_negate_to_ring [label="negate_to_ring", URL=<naturals.html#negate_to_ring>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_to_ring_zero_sum [label="to_ring_zero_sum", URL=<naturals.html#to_ring_zero_sum>, fillcolor="#F070D1"] ;
+naturals_slow_naturals_dec [label="slow_naturals_dec", URL=<naturals.html#slow_naturals_dec>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_1_plus_ne_0 [label="nat_1_plus_ne_0", URL=<naturals.html#nat_1_plus_ne_0>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_zeroproduct_nat [label="zeroproduct_nat", URL=<naturals.html#zeroproduct_nat>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_one_sum [label="one_sum", URL=<naturals.html#one_sum>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_zero_sum [label="zero_sum", URL=<naturals.html#zero_sum>, fillcolor="#F070D1"] ;
+naturals_nat_nontrivial_apart [label="nat_nontrivial_apart", URL=<naturals.html#nat_nontrivial_apart>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_nontrivial [label="nat_nontrivial", URL=<naturals.html#nat_nontrivial>, fillcolor="#F070D1"] ;
+naturals_rightcancellation_mult_nat [label="rightcancellation_mult_nat", URL=<naturals.html#rightcancellation_mult_nat>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_leftcancellation_plus_nat [label="leftcancellation_plus_nat", URL=<naturals.html#leftcancellation_plus_nat>, fillcolor="#F070D1"] ;
+naturals_rightcancellation_plus_nat [label="rightcancellation_plus_nat", URL=<naturals.html#rightcancellation_plus_nat>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_plus_cancel_l [label="nat_plus_cancel_l", URL=<naturals.html#nat_plus_cancel_l>, fillcolor="#F070D1"] ;
+naturals_biinduction_nat [label="biinduction_nat", URL=<naturals.html#biinduction_nat>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_case [label="case", URL=<naturals.html#case>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_induction [label="induction", URL=<naturals.html#induction>, fillcolor="#F070D1"] ;
+naturals_from_nat_stmt [label="from_nat_stmt", URL=<naturals.html#from_nat_stmt>, fillcolor="#F070D1"] ;
+naturals_nat_to_nat_equiv [label="nat_to_nat_equiv", URL=<naturals.html#nat_to_nat_equiv>, fillcolor="#F070D1"] ;
+naturals_retract_is_nat [label="retract_is_nat", URL=<naturals.html#retract_is_nat>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_same_morphism [label="same_morphism", URL=<naturals.html#same_morphism>, fillcolor="#F070D1"] ;
+naturals_issemiringpreserving_naturals_to_semiring [label="issemiringpreserving_naturals_to_semiring", URL=<naturals.html#issemiringpreserving_naturals_to_semiring>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_retract_is_nat_to_sr [label="retract_is_nat_to_sr", URL=<naturals.html#retract_is_nat_to_sr>, fillcolor="#F070D1"] ;
+naturals_naturals_to_naturals_injective [label="naturals_to_naturals_injective", URL=<naturals.html#naturals_to_naturals_injective>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_to_semiring_injective [label="to_semiring_injective", URL=<naturals.html#to_semiring_injective>, fillcolor="#F070D1"] ;
+naturals_to_semiring_self [label="to_semiring_self", URL=<naturals.html#to_semiring_self>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_to_semiring_twice [label="to_semiring_twice", URL=<naturals.html#to_semiring_twice>, fillcolor="#F070D1"] ;
+naturals_morphisms_involutive [label="morphisms_involutive", URL=<naturals.html#morphisms_involutive>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_to_semiring_involutive [label="to_semiring_involutive", URL=<naturals.html#to_semiring_involutive>, fillcolor="#F070D1"] ;
+naturals_to_semiring_unique_alt [label="to_semiring_unique_alt", URL=<naturals.html#to_semiring_unique_alt>, fillcolor="#F070D1"] ;
+naturals_to_semiring_unique [label="to_semiring_unique", URL=<naturals.html#to_semiring_unique>, fillcolor="#F070D1"] ;
+  naturals_negate_to_ring -> naturals_to_ring_zero_sum [] ;
+  naturals_to_ring_zero_sum -> naturals_zero_sum [] ;
+  naturals_slow_naturals_dec -> naturals_nat_to_nat_equiv [] ;
+  naturals_nat_1_plus_ne_0 -> naturals_zero_sum [] ;
+  naturals_nat_1_plus_ne_0 -> naturals_nat_nontrivial [] ;
+  naturals_zeroproduct_nat -> naturals_from_nat_stmt [] ;
+  naturals_one_sum -> naturals_from_nat_stmt [] ;
+  naturals_zero_sum -> naturals_from_nat_stmt [] ;
+  naturals_nat_nontrivial_apart -> naturals_nat_nontrivial [] ;
+  naturals_nat_nontrivial -> naturals_from_nat_stmt [] ;
+  naturals_rightcancellation_mult_nat -> naturals_leftcancellation_plus_nat [] ;
+  naturals_leftcancellation_plus_nat -> naturals_from_nat_stmt [] ;
+  naturals_rightcancellation_plus_nat -> naturals_nat_plus_cancel_l [] ;
+  naturals_nat_plus_cancel_l -> naturals_from_nat_stmt [] ;
+  naturals_biinduction_nat -> naturals_induction [] ;
+  naturals_case -> naturals_from_nat_stmt [] ;
+  naturals_induction -> naturals_from_nat_stmt [] ;
+  naturals_from_nat_stmt -> naturals_nat_to_nat_equiv [] ;
+  naturals_nat_to_nat_equiv -> naturals_to_semiring_involutive [] ;
+  naturals_retract_is_nat -> naturals_same_morphism [] ;
+  naturals_retract_is_nat -> naturals_retract_is_nat_to_sr [] ;
+  naturals_same_morphism -> naturals_to_semiring_unique [] ;
+  naturals_naturals_to_naturals_injective -> naturals_to_semiring_injective [] ;
+  naturals_to_semiring_injective -> naturals_to_semiring_twice [] ;
+  naturals_to_semiring_self -> naturals_to_semiring_unique_alt [] ;
+  naturals_to_semiring_twice -> naturals_to_semiring_unique_alt [] ;
+  naturals_morphisms_involutive -> naturals_to_semiring_unique_alt [] ;
+  naturals_to_semiring_involutive -> naturals_to_semiring_unique_alt [] ;
+  naturals_to_semiring_unique_alt -> naturals_to_semiring_unique [] ;
+subgraph cluster_naturals { label="naturals"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+naturals_to_semiring_unique; naturals_to_semiring_unique_alt; naturals_to_semiring_involutive; naturals_morphisms_involutive; naturals_to_semiring_twice; naturals_to_semiring_self; naturals_to_semiring_injective; naturals_naturals_to_naturals_injective; naturals_retract_is_nat_to_sr; naturals_issemiringpreserving_naturals_to_semiring; naturals_same_morphism; naturals_retract_is_nat; naturals_nat_to_nat_equiv; naturals_from_nat_stmt; naturals_induction; naturals_case; naturals_biinduction_nat; naturals_nat_plus_cancel_l; naturals_rightcancellation_plus_nat; naturals_leftcancellation_plus_nat; naturals_rightcancellation_mult_nat; naturals_nat_nontrivial; naturals_nat_nontrivial_apart; naturals_zero_sum; naturals_one_sum; naturals_zeroproduct_nat; naturals_nat_1_plus_ne_0; naturals_slow_naturals_dec; naturals_to_ring_zero_sum; naturals_negate_to_ring; };
+} /* END */

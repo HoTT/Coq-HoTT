@@ -1,0 +1,84 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Tactic for proving laws about adjoint composition *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.UnitCounit Adjoint.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import PathGroupoids HoTT.Tactics Types.Prod Types.Forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac law_t :=\n  rewrite !transport_path_prod'; simpl;\n  path_adjunction; simpl;\n  repeat match goal with\n           | [ |- context[unit (transport ?P ?p ?z)] ]\n             => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @unit _ _ _ _) z)\n           | [ |- context[counit (transport ?P ?p ?z)] ]\n             => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @counit _ _ _ _) z)\n           | [ |- context[components_of (transport ?P ?p ?z)] ]\n             => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @components_of _ _ _ _) z)\n         end;\n  rewrite !transport_forall_constant;\n  repeat\n    match goal with\n      | [ |- context[transport (fun y : Functor ?C ?D => ?f (y _0 ?x)%object)] ]\n        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x)) (@object_of C D))\n      | [ |- context[transport (fun y : Functor ?C ?D => ?f (?g (y _0 ?x)%object))] ]\n        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x))) (@object_of C D))\n      | [ |- context[transport (fun y : Functor ?C ?D => ?f (?g (?h (?i (y _0 ?x)%object))))] ]\n        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (h (i (y' x))))) (@object_of C D))\n      | [ |- context[transport (fun y : Functor ?C ?D => ?f (y _0 ?x)%object ?z)] ]\n        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (y' x) z) (@object_of C D))\n      | [ |- context[transport (fun y : Functor ?C ?D => ?f (?g (y _0 ?x)%object) ?z)] ]\n        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (y' x)) z) (@object_of C D))\n      | [ |- context[transport (fun y : Functor ?C ?D => ?f (?g (?h (?i (y _0 ?x)%object))) ?z)] ]\n        => rewrite (fun a b => @transport_compose _ _ a b (fun y' => f (g (h (i (y' x)))) z) (@object_of C D))\n    end;\n  unfold symmetry, symmetric_paths;\n  rewrite ?ap_V;\n  rewrite ?left_identity_fst, ?right_identity_fst, ?associativity_fst;\n  simpl;\n  repeat (\n      rewrite\n        ?identity_of,\n      ?composition_of,\n      ?Category.Core.left_identity,\n      ?Category.Core.right_identity,\n      ?Category.Core.associativity\n    );\n  try reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

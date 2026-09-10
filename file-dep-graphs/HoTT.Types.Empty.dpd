@@ -1,0 +1,12 @@
+N: 6 "Empty_rec" [body=yes, kind=cnst, prop=no, path="Empty", ];
+N: 7 "contr_from_Empty" [body=yes, kind=cnst, prop=no, path="Empty", ];
+N: 4 "equiv_empty_rec" [body=yes, kind=cnst, prop=no, path="Empty", ];
+N: 1 "equiv_to_empty" [body=yes, kind=cnst, prop=no, path="Empty", ];
+N: 2 "isequiv_all_to_empty" [body=yes, kind=cnst, prop=no, path="Empty", ];
+N: 5 "isequiv_empty_rec" [body=yes, kind=cnst, prop=no, path="Empty", ];
+N: 3 "istrunc_Empty" [body=yes, kind=cnst, prop=no, path="Empty", ];
+E: 1 2 [weight=1, ];
+E: 2 6 [weight=1, ];
+E: 4 5 [weight=1, ];
+E: 4 6 [weight=1, ];
+E: 5 6 [weight=5, ];
