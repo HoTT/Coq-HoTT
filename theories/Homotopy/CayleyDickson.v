@@ -1,7 +1,6 @@
 From HoTT Require Import Basics.
 Require Import Types.Paths.
 Require Import Classes.interfaces.abstract_algebra.
-Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
@@ -9,6 +8,7 @@ Require Import Homotopy.Join.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** The Cayley-Dickson Construction *)
 
@@ -72,9 +72,10 @@ End CayleyDicksonSpheroid_Properties.
 
 (** ** Chosen diamonds *)
 
-(** The geometric input to doubling a spheroid is a chosen filler, not merely the assertion that a filler exists. No multiplication or associativity is needed to state this data. Additional laws for the doubled multiplication can then be formulated as coherences of this choice. *)
+(** The geometric input to doubling a spheroid is a chosen filler, not merely the assertion that a filler exists. We express it as an equality of zigzags, so the construction only needs path algebra. No multiplication or associativity is needed to state this data. Additional laws for the doubled multiplication can then be formulated as coherences of this choice. *)
 Class CayleyDicksonDiamond (X : pType) (neg : X -> X)
-  := cd_diamond : forall t : X, Diamond (neg pt) t pt t.
+  := cd_diamond : forall t : X,
+    zigzag (neg pt) t pt = zigzag (neg pt) t t.
 
 (** ** Negation and conjugation on suspensions *)
 
@@ -119,8 +120,8 @@ Defined.
 (** Every suspension supplies a canonical diamond. Only the value of suspension negation at the north pole is used; no laws of the negation on [A], or multiplication on [Susp A], are needed. *)
 Instance cd_diamond_susp {A : Type} `{Negate A}
   : CayleyDicksonDiamond (psusp A) (-)
-  := Susp_ind (fun t => Diamond South t North t)
-       (diamond_v_sq South North 1) (diamond_h_sq North South 1)
+  := Susp_ind (fun t => zigzag South t North = zigzag South t t)
+       (diamond_v South North 1) (diamond_h North South 1)
        (fun a => diamond_twist (merid a)).
 
 (** ** Cayley-Dickson imaginaroids *)
@@ -288,18 +289,20 @@ Section SpheroidHSpace.
     - intros; apply jglue.
     - intros; symmetry; apply jglue.
     - intros a b c d; cbn beta.
-      symmetry.
-      apply sq_path.
-      rewrite <- (lemma1 a c).
-      rewrite <- (lemma2 a b c d).
-      rewrite <- (lemma3 b c).
-      rewrite <- (lemma4 a b c d).
-      refine (sq_GGGG _ _ _ _ _).
-      2,4: apply ap.
-      1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
-      refine (sq_cGcG _ _ _).
-      1,2: exact (ap_V _ (jglue _ _ )).
-      exact (sq_ap _ (cd_diamond (conj c * conj a * d * conj b))).
+      (** Identify the scalar vertices using naturality of zigzags. *)
+      napply (cancelL (ap joinl (lemma1 a c))).
+      refine (zigzag_natsq (lemma1 a c) (lemma2 a b c d)
+        (lemma4 a b c d) @ _
+        @ (zigzag_natsq (lemma1 a c) (lemma2 a b c d)
+          (lemma3 b c))^).
+      (** The remaining comparison is the image of the chosen diamond. *)
+      napply whiskerR.
+      lhs_V napply (Join_rec_beta_zigzag _ _
+        (fun x y => jglue (f x) (g y))).
+      rhs_V napply (Join_rec_beta_zigzag _ _
+        (fun x y => jglue (f x) (g y))).
+      napply ap.
+      exact (cd_diamond (conj c * conj a * d * conj b))^.
   Defined.
 
   #[export] Instance cd_op_left_identity

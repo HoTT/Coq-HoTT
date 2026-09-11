@@ -116,9 +116,13 @@ Section Spheroid.
   (** A different explicitly supplied diamond is also supported; the laws must not silently select the ambient choice. *)
   Context (D : CayleyDicksonDiamond X (-)).
 
+  Example chosen_diamond_path (t : X)
+    : zigzag (-pt) t pt = zigzag (-pt) t t
+    := @cd_diamond X (-) D t.
+
   Example chosen_diamond_hspace
-    : @hspace_op (pjoin X X) (@hspace_cd X _ _ D)
-      = @cd_op X _ _ D := idpath.
+    : @hspace_op (pjoin X X) (@hspace_cd@{u} X _ _ D)
+      = @cd_op@{u} X _ _ D := idpath.
 
   Example chosen_diamond_left_inverse
     : LeftInverse (@cd_op X _ _ D) cd_conjugate pt
@@ -136,11 +140,11 @@ Section SuspensionDiamond.
   Example suspension_diamond : CayleyDicksonDiamond (psusp A) (-) := _.
 
   Example suspension_diamond_north
-    : cd_diamond (X := psusp A) North = diamond_v_sq South North 1
+    : cd_diamond (X := psusp A) North = diamond_v South North 1
     := idpath.
 
   Example suspension_diamond_south
-    : cd_diamond (X := psusp A) South = diamond_h_sq North South 1
+    : cd_diamond (X := psusp A) South = diamond_h North South 1
     := idpath.
 
   Example suspension_diamond_merid (a : A)

@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types.
-Require Import Cubical.DPath Cubical.PathSquare.
+Require Import Cubical.PathSquare.
 Require Import Homotopy.NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
@@ -460,6 +460,17 @@ Section JoinNatSq.
     apply concat_1p_p1.
   Defined.
 
+  (** Naturality of a zigzag under paths in its endpoints and its intermediate vertex. *)
+  Definition zigzag_natsq {A B : Type}
+    {a a' c c' : A} {b b' : B}
+    (p : a = a') (q : c = c') (r : b = b')
+    : ap joinl p @ zigzag a' c' b'
+      = zigzag a c b @ ap joinl q.
+  Proof.
+    destruct p, q, r.
+    apply concat_1p_p1.
+  Defined.
+
   Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
     (p : a = a') (q : b = b')
     : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
@@ -554,17 +565,16 @@ Section Diamond.
   Defined.
 
   Lemma diamond_symm (a : A) (b : B)
-    : diamond_v_sq a a 1 = diamond_h_sq b b 1.
+    : diamond_v a a 1 = diamond_h b b 1.
   Proof.
-    unfold diamond_v_sq, diamond_h_sq, diamond_v, diamond_h.
-    symmetry; apply ap, concat_pV.
+    exact (concat_pV (concat_pV (jglue a b)))^.
   Defined.
 
 End Diamond.
 
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
-  : DPath (fun x => Diamond a' x a x) p
-    (diamond_v_sq a' a 1) (diamond_h_sq a a' 1).
+  : transport (fun x => zigzag a' x a = zigzag a' x x) p
+      (diamond_v a' a 1) = diamond_h a a' 1.
 Proof.
   destruct p.
   apply diamond_symm.
