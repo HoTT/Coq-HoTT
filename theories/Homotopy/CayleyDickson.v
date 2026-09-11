@@ -1,5 +1,5 @@
 From HoTT Require Import Basics.
-Require Import Types.Paths Types.Arrow.
+Require Import Types.Paths.
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Pointed.Core Pointed.pSusp.
@@ -118,15 +118,10 @@ Defined.
 
 (** Every suspension supplies a canonical diamond. Only the value of suspension negation at the north pole is used; no laws of the negation on [A], or multiplication on [Susp A], are needed. *)
 Instance cd_diamond_susp {A : Type} `{Negate A}
-  : CayleyDicksonDiamond (psusp A) (-).
-Proof.
-  change (forall t : Susp A, Diamond South t North t).
-  srapply Susp_ind; hnf.
-  1: by apply diamond_v_sq.
-  1: by apply diamond_h_sq.
-  intro a.
-  apply diamond_twist.
-Defined.
+  : CayleyDicksonDiamond (psusp A) (-)
+  := Susp_ind (fun t => Diamond South t North t)
+       (diamond_v_sq South North 1) (diamond_h_sq North South 1)
+       (fun a => diamond_twist (merid a)).
 
 (** ** Cayley-Dickson imaginaroids *)
 
@@ -300,14 +295,7 @@ Section SpheroidHSpace.
       1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
       refine (sq_cGcG _ _ _).
       1,2: exact (ap_V _ (jglue _ _ )).
-      refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
-        (jglue _ _) (jglue _ _)^ _).
-      change (PathSquare
-        (jglue (- mon_unit) mon_unit)
-        (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^
-        (jglue (- mon_unit) (conj c * conj a * d * conj b))
-        (jglue (conj c * conj a * d * conj b) mon_unit)^).
-      apply cd_diamond.
+      exact (sq_ap _ (cd_diamond (conj c * conj a * d * conj b))).
   Defined.
 
   #[export] Instance cd_op_left_identity
@@ -318,8 +306,7 @@ Section SpheroidHSpace.
     1: exact (fun b => ap joinr
       (ap (.* b) cds_conjug_unit_pres @ hspace_left_identity b)).
     intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
+    lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
     symmetry.
     apply join_natsq.
   Defined.
@@ -331,8 +318,7 @@ Section SpheroidHSpace.
     1: exact (fun _ => ap joinl (hspace_right_identity _)).
     1: exact (fun _ => ap joinr (hspace_left_identity _)).
     intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
+    lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
     simpl; symmetry.
     apply join_natsq.
   Defined.
@@ -345,32 +331,22 @@ Section SpheroidHSpace.
     - intro a; exact (ap joinl (left_inverse a)).
     - intro b; exact (ap joinl (right_inverse (-b))).
     - intros a b.
-      assert (beta : ap (fun z => cd_op (cd_conjugate z) z)
-        (jglue a b) = zigzag (conj a * a) ((-b) * conj (-b))
-          (conj (conj a) * b)).
-      { lhs exact (ap_apply_FlFr (jglue a b)
-          (fun z => cd_op (cd_conjugate z)) idmap).
-        lhs napply ap11_is_ap01_ap10.
-        napply concat2.
-        - lhs exact (ap (ap (cd_op (joinl (conj a))))
-            (ap_idmap (jglue a b))).
-          exact (Join_rec_beta_jglue _ _ _ a b).
-        - lhs_V exact (ap_apply_Fl (jglue a b)
-            (fun z => cd_op (cd_conjugate z)) (joinr b)).
-          lhs napply (ap_compose cd_conjugate
-            (fun z => cd_op z (joinr b))).
-          lhs exact (ap (ap (fun z => cd_op z (joinr b)))
-            (functor_join_beta_jglue conj (-) a b)).
-          exact (Join_rec_beta_jglue _ _ _ (conj a) (-b)). }
-      lhs napply (beta @@ 1).
       rhs napply (1 @@ ap_const _ _).
       rhs napply concat_p1.
       apply moveR_pM.
-      lhs napply (triangle_h' _ (left_inverse a
-        @ (right_inverse (-b))^)).
-      lhs napply ap_pp.
-      napply whiskerL.
-      napply ap_V.
+      rhs_V napply (ap_pV joinl).
+      rhs_V napply (triangle_h' (B:=X) (conj (conj a) * b)).
+      (** Compute the diagonal path by changing the second argument first. *)
+      lhs_V napply (ap011_diag
+        (fun x y => cd_op (cd_conjugate y) x) (jglue a b)).
+      lhs napply (ap011_is_ap
+        (fun x y => cd_op (cd_conjugate y) x)).
+      napply concat2.
+      + exact (Join_rec_beta_jglue _ _ _ a b).
+      + lhs napply (ap_compose cd_conjugate
+          (fun z => cd_op z (joinr b))).
+        lhs napply (ap _ (functor_join_beta_jglue conj (-) a b)).
+        exact (Join_rec_beta_jglue _ _ _ (conj a) (-b)).
   Defined.
 
   #[export] Instance cd_op_conjugate_right_inverse
