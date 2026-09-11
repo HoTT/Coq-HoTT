@@ -221,62 +221,69 @@ Section SpheroidHSpace.
   Context {X : pType} `{CayleyDicksonSpheroid X}
     `{!Associative hspace_op} `{!CayleyDicksonDiamond X (-)}.
 
-  (** These are the four scalar boundary identifications for the image of the chosen diamond under the join map induced by [f] and [g]. *)
-  Section Lemmata.
+  (** These maps send the chosen diamond to the multiplication's mixed coherence. The suffixes [l] and [r] refer to the two join factors, not to left and right multiplication. *)
+  Definition cd_diamond_map_l (a c : X) := fun x => a * (c * -x).
+  Definition cd_diamond_map_r (b c : X) := fun y => c * (y * b).
 
-    Context (a b c d : X).
+  (** This is [functor_join (cd_diamond_map_l a c) (cd_diamond_map_r b c)], expressed via [Join_rec] to avoid an unused universe parameter. *)
+  Definition cd_diamond_map (a b c : X) : Join X X -> Join X X
+    := Join_rec (joinl o cd_diamond_map_l a c)
+         (joinr o cd_diamond_map_r b c)
+         (fun x y => jglue (cd_diamond_map_l a c x)
+           (cd_diamond_map_r b c y)).
 
-    Local Definition f := (fun x => a * (c * -x)).
-    Local Definition g := (fun y => c * (y * b)).
-    Local Notation assoc := (simple_associativity (f:=hspace_op)).
+  Definition cd_diamond_parameter (a b c d : X)
+    := conj c * conj a * d * conj b.
 
-    Lemma lemma1 : f (- mon_unit) = a * c.
-    Proof.
-      exact (ap (fun x => a * (c * x)) (cds_negate_inv mon_unit)
-        @ ap (a *.) (hspace_right_identity c)).
-    Defined.
+  Local Notation assoc := (simple_associativity (f:=hspace_op)).
 
-    Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.
-    Proof.
-      (** Move the sign out, then cancel [a * c] against its conjugate. *)
-      refine (_ @ (factorneg_l d (conj b))^).
-      refine (ap (a *.) (factorneg_r c _) @ factorneg_r a _ @ _).
-      napply (ap (-)).
-      refine (assoc a c _ @ assoc (a * c) _ (conj b) @ _).
-      napply (ap (.* conj b)).
-      refine (assoc (a * c) _ d @ _ @ left_identity d).
-      napply (ap (.* d)).
-      exact (ap ((a * c) *.) (distropp a c)^
-        @ right_inverse (a * c)).
-    Defined.
+  (** The four scalar boundary identifications for [cd_diamond_map]. *)
+  Lemma cd_diamond_map_l_neg_unit (a c : X)
+    : cd_diamond_map_l a c (- mon_unit) = a * c.
+  Proof.
+    exact (ap (fun x => a * (c * x)) (cds_negate_inv mon_unit)
+      @ ap (a *.) (hspace_right_identity c)).
+  Defined.
 
-    Lemma lemma3 : g mon_unit = c * b.
-    Proof.
-      exact (ap (c *.) (left_identity b)).
-    Defined.
+  Lemma cd_diamond_map_l_parameter (a b c d : X)
+    : cd_diamond_map_l a c (cd_diamond_parameter a b c d) = (-d) * conj b.
+  Proof.
+    (** Move the sign out, then cancel [a * c] against its conjugate. *)
+    refine (_ @ (factorneg_l d (conj b))^).
+    refine (ap (a *.) (factorneg_r c _) @ factorneg_r a _ @ _).
+    napply (ap (-)).
+    refine (assoc a c _ @ assoc (a * c) _ (conj b) @ _).
+    napply (ap (.* conj b)).
+    refine (assoc (a * c) _ d @ _ @ left_identity d).
+    napply (ap (.* d)).
+    exact (ap ((a * c) *.) (distropp a c)^
+      @ right_inverse (a * c)).
+  Defined.
 
-    Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.
-    Proof.
-      pose (t := conj c * conj a * d).
-      nrefine (concat (y:=c * t) _ _).
-      - (** First cancel [conj b * b] on the right. *)
-        refine (_ @ ap ((c * t) *.) (left_inverse b)
-          @ right_identity (c * t)).
-        refine (_ @ (assoc (c * t) (conj b) b)^).
-        exact (assoc c (t * conj b) b
-          @ ap (.* b) (assoc c t (conj b))).
-      - (** Then cancel [c * conj c] on the left. *)
-        refine (_ @ (assoc mon_unit (conj a) d)^
-          @ left_identity (conj a * d)).
-        refine (assoc c _ d @ ap (.* d) _).
-        exact (assoc c (conj c) (conj a)
-          @ ap (.* conj a) (right_inverse c)).
-    Defined.
+  Lemma cd_diamond_map_r_unit (b c : X)
+    : cd_diamond_map_r b c mon_unit = c * b.
+  Proof.
+    exact (ap (c *.) (left_identity b)).
+  Defined.
 
-  End Lemmata.
-
-  Arguments f {_ _}.
-  Arguments g {_ _}.
+  Lemma cd_diamond_map_r_parameter (a b c d : X)
+    : cd_diamond_map_r b c (cd_diamond_parameter a b c d) = conj a * d.
+  Proof.
+    pose (u := conj c * conj a * d).
+    nrefine (concat (y:=c * u) _ _).
+    - (** First cancel [conj b * b] on the right. *)
+      refine (_ @ ap ((c * u) *.) (left_inverse b)
+        @ right_identity (c * u)).
+      refine (_ @ (assoc (c * u) (conj b) b)^).
+      exact (assoc c (u * conj b) b
+        @ ap (.* b) (assoc c u (conj b))).
+    - (** Then cancel [c * conj c] on the left. *)
+      refine (_ @ (assoc mon_unit (conj a) d)^
+        @ left_identity (conj a * d)).
+      refine (assoc c _ d @ ap (.* d) _).
+      exact (assoc c (conj c) (conj a)
+        @ ap (.* conj a) (right_inverse c)).
+  Defined.
 
   (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
   #[export] Instance cd_op : SgOp (pjoin X X).
@@ -292,19 +299,25 @@ Section SpheroidHSpace.
     - intros; symmetry; apply jglue.
     - intros a b c d; cbn beta.
       (** Identify the scalar vertices using naturality of zigzags. *)
-      napply (cancelL (ap joinl (lemma1 a c))).
-      refine (zigzag_natsq (lemma1 a c) (lemma2 a b c d)
-        (lemma4 a b c d) @ _
-        @ (zigzag_natsq (lemma1 a c) (lemma2 a b c d)
-          (lemma3 b c))^).
+      napply (cancelL (ap joinl (cd_diamond_map_l_neg_unit a c))).
+      refine (zigzag_natsq
+        (cd_diamond_map_l_neg_unit a c)
+        (cd_diamond_map_l_parameter a b c d)
+        (cd_diamond_map_r_parameter a b c d) @ _
+        @ (zigzag_natsq
+          (cd_diamond_map_l_neg_unit a c)
+          (cd_diamond_map_l_parameter a b c d)
+          (cd_diamond_map_r_unit b c))^).
       (** The remaining comparison is the image of the chosen diamond. *)
       napply whiskerR.
       lhs_V napply (Join_rec_beta_zigzag _ _
-        (fun x y => jglue (f x) (g y))).
+        (fun x y => jglue (cd_diamond_map_l a c x)
+          (cd_diamond_map_r b c y))).
       rhs_V napply (Join_rec_beta_zigzag _ _
-        (fun x y => jglue (f x) (g y))).
-      napply ap.
-      exact (cd_diamond (conj c * conj a * d * conj b))^.
+        (fun x y => jglue (cd_diamond_map_l a c x)
+          (cd_diamond_map_r b c y))).
+      exact (ap (ap (cd_diamond_map a b c))
+        (cd_diamond (cd_diamond_parameter a b c d))^).
   Defined.
 
   #[export] Instance cd_op_left_identity

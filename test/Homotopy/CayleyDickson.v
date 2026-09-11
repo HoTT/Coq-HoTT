@@ -15,18 +15,19 @@ Section ScalarBoundaryPaths.
     `{!Associative hspace_op}.
 
   Example boundary_neg_unit (a c : X)
-    : a * (c * -(- mon_unit)) = a * c := lemma1 a c.
+    : a * (c * -(- mon_unit)) = a * c
+    := cd_diamond_map_l_neg_unit a c.
 
   Example boundary_neg_product (a b c d : X)
     : a * (c * -(conj c * conj a * d * conj b)) = (-d) * conj b
-    := lemma2 a b c d.
+    := cd_diamond_map_l_parameter a b c d.
 
   Example boundary_unit (b c : X)
-    : c * (mon_unit * b) = c * b := lemma3 b c.
+    : c * (mon_unit * b) = c * b := cd_diamond_map_r_unit b c.
 
   Example boundary_product (a b c d : X)
     : c * ((conj c * conj a * d * conj b) * b) = conj a * d
-    := lemma4 a b c d.
+    := cd_diamond_map_r_parameter a b c d.
 End ScalarBoundaryPaths.
 
 (** The construction works for an arbitrary spheroid and an arbitrary chosen diamond, without commutativity or any further coherence hypotheses. *)
@@ -168,9 +169,10 @@ Section Imaginaroid.
 
   (** The formerly judgmental double negation at the unit still reduces in the suspension instance. *)
   Example suspension_unit_normalization (a c : Susp A)
-    : lemma1 a c = ap (a *.) (hspace_right_identity c).
+    : cd_diamond_map_l_neg_unit a c
+      = ap (a *.) (hspace_right_identity c).
   Proof.
-    unfold lemma1.
+    unfold cd_diamond_map_l_neg_unit.
     apply concat_1p.
   Defined.
 
