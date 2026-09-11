@@ -16,7 +16,7 @@ Local Open Scope path_scope.
 
 The construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can produce the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore the construction here attempts to axiomatize the properties of the units of those algebras instead.
 
-This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. Here we separate the algebra from the geometry: an associative spheroid [X] with a chosen diamond gives an H-space on [Join X X], and suspensions supply the canonical diamond. We also prove the doubled involution and inverse laws, without additional coherences of the diamond. Anti-multiplicativity of doubled conjugation and associativity of the doubled multiplication are not established here. Recovering an imaginaroid on [Join A (Susp A)] remains an open problem requiring further coherences. *)
+This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. Here we separate the algebra from the geometry: an associative spheroid [X] with a chosen diamond gives an H-space on [Join X X], and suspensions supply the canonical diamond. We also prove the doubled involution, inverse, and sign laws, without additional coherences of the diamond. In fact, doubled negation is homotopic to the identity. Anti-multiplicativity of doubled conjugation and associativity of the doubled multiplication are not established here. Recovering an imaginaroid on [Join A (Susp A)] remains an open problem requiring further coherences. *)
 
 (** ** Cayley-Dickson spheroids *)
 
@@ -343,6 +343,50 @@ Section SpheroidHSpace.
     lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
     simpl; symmetry.
     apply join_natsq.
+  Defined.
+
+  (** Negation is left translation by the image of [-1]. The glue case uses only naturality of [jglue], not a comparison of diamond fillers. *)
+  Definition cd_negate_translation
+    : cd_op (joinl (-mon_unit)) == cd_negate.
+  Proof.
+    snapply Join_ind_FlFr.
+    - intro a.
+      exact (ap joinl (factorneg_l mon_unit a
+        @ ap (-) (hspace_left_identity a))).
+    - intro b.
+      napply (ap joinr).
+      refine (ap (.* b) _ @ _).
+      1: exact (swapop mon_unit @ ap (-) cds_conjug_unit_pres).
+      exact (factorneg_l mon_unit b
+        @ ap (-) (hspace_left_identity b)).
+    - intros a b.
+      lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
+      symmetry.
+      lhs napply (1 @@ functor_join_beta_jglue (-) (-) a b).
+      apply join_natsq.
+  Defined.
+
+  (** The points [joinl (-pt)] and [joinl pt] are connected through [joinr pt], even when [-pt] and [pt] are in different components of [X]. *)
+  Definition cd_negate_homotopic_id (z : pjoin X X) : cd_negate z = z.
+  Proof.
+    exact ((cd_negate_translation z)^
+      @ ap (fun w => cd_op w z) (zigzag (-pt) pt pt)
+      @ cd_op_left_identity z).
+  Defined.
+
+  (** These are the sign laws as unstructured paths; no prescribed higher coherence of these witnesses is asserted. *)
+  #[export] Instance cd_op_factorneg_r : FactorNegRight cd_negate cd_op.
+  Proof.
+    intros x y.
+    exact (ap (cd_op x) (cd_negate_homotopic_id y)
+      @ (cd_negate_homotopic_id (cd_op x y))^).
+  Defined.
+
+  #[export] Instance cd_op_factorneg_l : FactorNegLeft cd_negate cd_op.
+  Proof.
+    intros x y.
+    exact (ap (fun z => cd_op z y) (cd_negate_homotopic_id x)
+      @ (cd_negate_homotopic_id (cd_op x y))^).
   Defined.
 
   (** The diagonal inverse law only uses the one-glue computation rules. Its image is a zigzag with a common right vertex, so no symmetry of the chosen diamond is needed. *)

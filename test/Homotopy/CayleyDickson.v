@@ -83,6 +83,8 @@ Section Spheroid.
   Example doubled_right_identity : RightIdentity cd_op pt := _.
   Example doubled_left_inverse : LeftInverse cd_op cd_conjugate pt := _.
   Example doubled_right_inverse : RightInverse cd_op cd_conjugate pt := _.
+  Example doubled_factorneg_l : FactorNegLeft cd_negate cd_op := _.
+  Example doubled_factorneg_r : FactorNegRight cd_negate cd_op := _.
 
   (** Simplifying the glue proof preserves the chosen inverse witnesses on points. *)
   Example doubled_left_inverse_joinl (a : X)
