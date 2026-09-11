@@ -239,14 +239,15 @@ Section SpheroidHSpace.
     Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.
     Proof.
       (** Move the sign out, then cancel [a * c] against its conjugate. *)
-      refine (ap (a *.) (factorneg_r c _) @ factorneg_r a _
-        @ ap (-) _ @ (factorneg_l d (conj b))^).
-      refine (assoc a c _ @ assoc (a * c) _ (conj b)
-        @ ap (.* conj b) _).
-      exact (assoc (a * c) _ d
-        @ ap (.* d) (ap ((a * c) *.) (distropp a c)^
-          @ right_inverse (a * c))
-        @ left_identity d).
+      refine (_ @ (factorneg_l d (conj b))^).
+      refine (ap (a *.) (factorneg_r c _) @ factorneg_r a _ @ _).
+      napply (ap (-)).
+      refine (assoc a c _ @ assoc (a * c) _ (conj b) @ _).
+      napply (ap (.* conj b)).
+      refine (assoc (a * c) _ d @ _ @ left_identity d).
+      napply (ap (.* d)).
+      exact (ap ((a * c) *.) (distropp a c)^
+        @ right_inverse (a * c)).
     Defined.
 
     Lemma lemma3 : g mon_unit = c * b.
@@ -257,18 +258,19 @@ Section SpheroidHSpace.
     Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.
     Proof.
       pose (t := conj c * conj a * d).
-      (** First cancel [conj b * b] on the right. *)
-      refine (assoc c (t * conj b) b
-        @ ap (.* b) (assoc c t (conj b))
-        @ (assoc (c * t) (conj b) b)^
-        @ ap ((c * t) *.) (left_inverse b)
-        @ right_identity (c * t) @ _).
-      (** Then cancel [c * conj c] on the left. *)
-      exact (assoc c _ d
-        @ ap (.* d) (assoc c (conj c) (conj a)
-          @ ap (.* conj a) (right_inverse c))
-        @ (assoc mon_unit (conj a) d)^
-        @ left_identity (conj a * d)).
+      nrefine (concat (y:=c * t) _ _).
+      - (** First cancel [conj b * b] on the right. *)
+        refine (_ @ ap ((c * t) *.) (left_inverse b)
+          @ right_identity (c * t)).
+        refine (_ @ (assoc (c * t) (conj b) b)^).
+        exact (assoc c (t * conj b) b
+          @ ap (.* b) (assoc c t (conj b))).
+      - (** Then cancel [c * conj c] on the left. *)
+        refine (_ @ (assoc mon_unit (conj a) d)^
+          @ left_identity (conj a * d)).
+        refine (assoc c _ d @ ap (.* d) _).
+        exact (assoc c (conj c) (conj a)
+          @ ap (.* conj a) (right_inverse c)).
     Defined.
 
   End Lemmata.
