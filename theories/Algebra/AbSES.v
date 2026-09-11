@@ -6,3 +6,4 @@ Require Export AbSES.Pushout.
 Require Export AbSES.BaerSum.
 Require Export AbSES.DirectSum.
 Require Export AbSES.SixTerm.
+Require Export AbSES.Classification.

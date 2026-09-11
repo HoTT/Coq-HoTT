@@ -202,6 +202,15 @@ Proof.
   apply isequiv_path_inverse.
 Defined.
 
+(** Loop inversion is an involution. *)
+Definition loops_inv_inv (A : pType)
+  : loops_inv A o* loops_inv A ==* pmap_idmap.
+Proof.
+  snapply Build_pHomotopy.
+  - exact inv_V.
+  - reflexivity.
+Defined.
+
 (** Loops functor preserves equivalences *)
 Definition pequiv_fmap_loops {A B : pType}
   : A $<~> B -> loops A $<~> loops B

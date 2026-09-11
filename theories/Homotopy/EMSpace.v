@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core Universe Equiv PointedCat Yoneda.
 Require Import Pointed.
+Require Import Spaces.Nat.Core.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.Core.
@@ -317,7 +318,6 @@ Section EilenbergMacLane.
     rapply isequiv_contr_contr.
   Defined.
 
-
   (** [fmap (K' n.+1) f] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
@@ -403,7 +403,7 @@ Section Deloop.
     napply (OO_isconnected_from_conn_map 0 (Tr (-1)) fu).
     1, 2: exact _.
     - napply isconnected_contr.
-      rapply contr_pi_succ_istrunc.
+      rapply contr_pi_istrunc.
     - apply (issurj_pi_connmap n.+2).
       napply (isconnmap_pred_add n.-2).
       rewrite 2 trunc_index_add_succ.
