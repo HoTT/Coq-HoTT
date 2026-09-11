@@ -220,50 +220,54 @@ Section SpheroidHSpace.
   Context {X : pType} `{CayleyDicksonSpheroid X}
     `{!Associative hspace_op} `{!CayleyDicksonDiamond X (-)}.
 
-  (** First we make some observations with the context we have. *)
+  (** These are the four scalar boundary identifications for the image of the chosen diamond under the join map induced by [f] and [g]. *)
   Section Lemmata.
 
     Context (a b c d : X).
 
     Local Definition f := (fun x => a * (c * -x)).
     Local Definition g := (fun y => c * (y * b)).
+    Local Notation assoc := (simple_associativity (f:=hspace_op)).
 
     Lemma lemma1 : f (- mon_unit) = a * c.
     Proof.
-      unfold f.
-      lhs exact (ap (fun x => a * (c * x)) (cds_negate_inv mon_unit)).
-      exact (ap (a *.) (hspace_right_identity c)).
+      exact (ap (fun x => a * (c * x)) (cds_negate_inv mon_unit)
+        @ ap (a *.) (hspace_right_identity c)).
     Defined.
 
     Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.
     Proof.
-      unfold f.
-      rewrite 2 factorneg_r.
-      rewrite 3 simple_associativity.
-      rewrite <- distropp.
-      rewrite (right_inverse (a * c)).
-      rewrite (left_identity d).
-      symmetry.
-      apply factorneg_l.
+      (** Move the sign out, then cancel [a * c] against its conjugate. *)
+      refine (ap (a *.) (factorneg_r c _) @ factorneg_r a _
+        @ ap (-) _ @ (factorneg_l d (conj b))^).
+      refine (assoc a c _ @ assoc (a * c) _ (conj b)
+        @ ap (.* conj b) _).
+      exact (assoc (a * c) _ d
+        @ ap (.* d) (ap ((a * c) *.) (distropp a c)^
+          @ right_inverse (a * c))
+        @ left_identity d).
     Defined.
 
     Lemma lemma3 : g mon_unit = c * b.
     Proof.
-      unfold g; apply ap.
-      apply left_identity.
+      exact (ap (c *.) (left_identity b)).
     Defined.
 
     Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.
     Proof.
-      unfold g.
-      rewrite 2 simple_associativity.
-      rewrite <- simple_associativity.
-      rewrite left_inverse.
-      rewrite right_identity.
-      rewrite 2 simple_associativity.
-      rewrite right_inverse.
-      rewrite <- simple_associativity.
-      apply left_identity.
+      pose (t := conj c * conj a * d).
+      (** First cancel [conj b * b] on the right. *)
+      refine (assoc c (t * conj b) b
+        @ ap (.* b) (assoc c t (conj b))
+        @ (assoc (c * t) (conj b) b)^
+        @ ap ((c * t) *.) (left_inverse b)
+        @ right_identity (c * t) @ _).
+      (** Then cancel [c * conj c] on the left. *)
+      exact (assoc c _ d
+        @ ap (.* d) (assoc c (conj c) (conj a)
+          @ ap (.* conj a) (right_inverse c))
+        @ (assoc mon_unit (conj a) d)^
+        @ left_identity (conj a * d)).
     Defined.
 
   End Lemmata.

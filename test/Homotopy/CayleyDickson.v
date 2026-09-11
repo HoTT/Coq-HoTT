@@ -8,6 +8,27 @@ Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
 Local Open Scope path_scope.
 
+(** The scalar boundary paths need neither a chosen diamond nor commutativity. *)
+Section ScalarBoundaryPaths.
+  Universe u.
+  Context {X : pType@{u}} `{CayleyDicksonSpheroid X}
+    `{!Associative hspace_op}.
+
+  Example boundary_neg_unit (a c : X)
+    : a * (c * -(- mon_unit)) = a * c := lemma1 a c.
+
+  Example boundary_neg_product (a b c d : X)
+    : a * (c * -(conj c * conj a * d * conj b)) = (-d) * conj b
+    := lemma2 a b c d.
+
+  Example boundary_unit (b c : X)
+    : c * (mon_unit * b) = c * b := lemma3 b c.
+
+  Example boundary_product (a b c d : X)
+    : c * ((conj c * conj a * d * conj b) * b) = conj a * d
+    := lemma4 a b c d.
+End ScalarBoundaryPaths.
+
 (** The construction works for an arbitrary spheroid and an arbitrary chosen diamond, without commutativity or any further coherence hypotheses. *)
 Section Spheroid.
   Universe u.
