@@ -73,10 +73,10 @@ Proof.
     - cbn; symmetry; apply eissect.
     - hnf; intros p q.
       rewrite <- pos_add_1_r.
-      change (binint_pred (pos (p + 1)%pos))
+      change (binint_pred (pos (p + 1)))
         with (binint_pred (binint_succ (pos p))).
       rewrite binint_pred_succ.
-      change (pos (p + 1)%pos)
+      change (pos (p + 1))
         with (binint_succ (pos p)).
       rewrite binint_iter_succ_l.
       symmetry.
@@ -93,8 +93,8 @@ Proof.
   2: hnf; intros; apply symmetry, eisretr.
   all: rewrite <- pos_add_1_r.
   all: intro a.
-  1: change (neg (n + 1)%pos) with (binint_pred (neg n)).
-  2: change (pos (n + 1)%pos) with (binint_succ (pos n)).
+  1: change (neg (n + 1)) with (binint_pred (neg n)).
+  2: change (pos (n + 1)) with (binint_succ (pos n)).
   1: rewrite <- 2 binint_neg_pos_succ.
   1: cbn; apply pos_iter_succ_r.
   rewrite binint_pred_succ.
