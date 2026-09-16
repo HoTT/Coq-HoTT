@@ -601,8 +601,6 @@ Definition trunc_index_rect := trunc_index_ind.
 
 (** We will use [Notation] for [trunc_index]es, so define a scope for them here. Numeral notation for [trunc_index]es is set up in Basics/Trunc.v. *)
 Bind Scope trunc_scope with trunc_index.
-Arguments trunc_S _%_trunc_scope.
-
 Notation "n .+1" := (trunc_S n) : trunc_scope.
 Notation "n .+2" := (n.+1.+1)%trunc : trunc_scope.
 Notation "n .+3" := (n.+1.+2)%trunc : trunc_scope.

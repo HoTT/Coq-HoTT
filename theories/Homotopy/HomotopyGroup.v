@@ -362,7 +362,7 @@ Definition istrunc_contr_pi `{Univalence} (n : nat) (X : pType)
   : IsTrunc n X.
 Proof.
   apply (equiv_istrunc_contr_iterated_loops n.+1 X)^-1.
-  rapply (conn_point_elim (-1)%trunc).
+  rapply (conn_point_elim (-1)).
   pose proof (istrunc_iterated_loops n.+1 X).
   exact (contr_equiv' (Pi n.+1 X) (equiv_tr 0 _)^-1%equiv).
 Defined.
