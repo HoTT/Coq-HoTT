@@ -665,16 +665,16 @@ Defined.
 
 (** The next two results tell us how [grp_pow] unfolds. *)
 Definition grp_pow_succ {G : Group} (n : Int) (g : G)
-  : grp_pow g (n.+1)%int = g * grp_pow g n
+  : grp_pow g (n.+1) = g * grp_pow g n
   := idpath.
 
 Definition grp_pow_pred {G : Group} (n : Int) (g : G)
-  : grp_pow g (n.-1)%int = g^ * grp_pow g n
+  : grp_pow g (n.-1) = g^ * grp_pow g n
   := idpath.
 
 (** [grp_pow] satisfies an additive law of exponents. *)
 Definition grp_pow_add {G : Group} (m n : Int) (g : G)
-  : grp_pow g (n + m)%int = grp_pow g n * grp_pow g m.
+  : grp_pow g (n + m) = grp_pow g n * grp_pow g m.
 Proof.
   revert n.
   rapply (int_homotopic (g *.)); cbn beta.
@@ -686,7 +686,7 @@ Defined.
 
 (** [grp_pow] commutes negative exponents to powers of the inverse *)
 Definition grp_pow_neg {G : Group} (n : Int) (g : G)
-  : grp_pow g (- n)%int = grp_pow g^ n.
+  : grp_pow g (- n) = grp_pow g^ n.
 Proof.
   lhs napply int_iter_neg.
   cbn; unfold grp_pow.
@@ -696,7 +696,7 @@ Defined.
 
 (** Using a negative power in [grp_pow] is the same as first using a positive power and then inverting the result. *)
 Definition grp_pow_neg_inv {G: Group} (m : Int) (g : G)
-  : grp_pow g (- m)%int = (grp_pow g m)^.
+  : grp_pow g (- m) = (grp_pow g m)^.
 Proof.
   apply grp_moveL_1V.
   lhs_V napply grp_pow_add.
@@ -713,7 +713,7 @@ Defined.
 
 (** [grp_pow] satisfies a multiplicative law of exponents. *)
 Definition grp_pow_int_mul {G : Group} (m n : Int) (g : G)
-  : grp_pow g (m * n)%int = grp_pow (grp_pow g m) n.
+  : grp_pow g (m * n) = grp_pow (grp_pow g m) n.
 Proof.
   revert n.
   rapply (int_homotopic (grp_pow g m *.)); cbn beta.

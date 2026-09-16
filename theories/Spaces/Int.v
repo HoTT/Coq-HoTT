@@ -60,6 +60,8 @@ Module Export Int.
   End Int.
 End Int.
 
+Bind Scope int_scope with Int.
+
 (** We sometimes want to treat the integers as a pointed type with basepoint given by 0. *)
 Instance ispointed_int : IsPointed Int := zero.
 
