@@ -5,8 +5,6 @@ Require Import Spaces.BinInt.Core.
 Require Import Spaces.BinInt.Spec.
 Require Import Spaces.BinInt.Equiv.
 
-Local Open Scope binint_scope.
-
 (** ** Exponentiation of loops *)
 
 Definition loopexp_pos {A : Type} {x : A} (p : x = x) (n : Pos) : (x = x).
