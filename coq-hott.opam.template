@@ -1,4 +1,4 @@
 depends: [
-  "dune" {>= "3.13"}
-  ("rocq-core" {>= "9.1"} & "coq-core" {>= "9.1"})
+  "dune" {>= "3.21"}
+  "rocq-core" {>= "9.1"}
 ]
