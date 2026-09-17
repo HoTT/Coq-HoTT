@@ -21,6 +21,7 @@ Inductive BinInt : Type0 :=
 Declare Scope binint_scope.
 Local Open Scope binint_scope.
 Delimit Scope binint_scope with binint.
+Bind Scope binint_scope with BinInt.
 
 (** The integers are a pointed type *)
 Instance ispointed_BinInt : IsPointed BinInt := zero.
