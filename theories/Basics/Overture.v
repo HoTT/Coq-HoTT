@@ -703,8 +703,6 @@ Scheme nat_rec := Induction for nat Sort Type.
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
 Bind Scope nat_scope with nat.
-Arguments S _%_nat.
-
 (** ** Misc *)
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)

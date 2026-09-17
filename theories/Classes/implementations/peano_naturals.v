@@ -15,7 +15,6 @@ Universe N.
 (* It's important that the universe [N] be free.  Occasionally, Coq will choose universe variables in proofs that force [N] to be [Set].  To pinpoint where this happens, you can add the line [Constraint Set < N.] here, and see what fails below. *)
 
 Let natpaths := @paths@{N} nat.
-Arguments natpaths (_ _)%_nat_scope.
 Infix "=N=" := natpaths.
 
 Definition natpaths_symm : Symmetric@{N N} natpaths.

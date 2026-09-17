@@ -165,7 +165,7 @@ Arguments join_assoc : simpl never.
 
 (** As a consequence, we get associativity of powers. *)
 Corollary join_join_power A n m
-  : Join (join_power A n) (join_power A m) <~> join_power A (n + m)%nat.
+  : Join (join_power A n) (join_power A m) <~> join_power A (n + m).
 Proof.
   induction n as [|n IHn].
   1: exact (equiv_join_empty_left _).

@@ -127,7 +127,7 @@ Definition succ_seq (A : Sequence) : Sequence
 
 (** The shifted sequence from Lemma 3.7. *)
 Definition shift_seq (A : Sequence) n : Sequence
-  := Build_Sequence (fun k => A (k+n)%nat) (fun k a => a^+).
+  := Build_Sequence (fun k => A (k+n)) (fun k a => a^+).
 
 (** The canonical equivalence between the colimit of the successor sequence and the colimit of the original sequence; Lemma 3.6. *)
 Definition colim_succ_seq_to_colim_seq A : Colimit (succ_seq A) -> Colimit A.
@@ -173,18 +173,18 @@ Definition equiv_colim_succ_seq_to_colim_seq A : Colimit (succ_seq A) <~> Colimi
 Definition colim_shift_seq_to_colim_seq A n : Colimit (shift_seq A n) -> Colimit A.
 Proof.
   srapply Colimit_rec; srapply Build_Cocone.
-  + exact (fun k a => inj A (k+n)%nat a).
-  + intros k l p; destruct p; exact (glue A (k+n)%nat).
+  + exact (fun k a => inj A (k+n) a).
+  + intros k l p; destruct p; exact (glue A (k+n)).
 Defined.
 
 Definition colim_shift_seq_to_colim_seq_beta_glue A n k a
-  : ap (colim_shift_seq_to_colim_seq A n) (glue (shift_seq A n) k a) = glue A (k+n)%nat a.
+  : ap (colim_shift_seq_to_colim_seq A n) (glue (shift_seq A n) k a) = glue A (k+n) a.
 Proof.
   srapply Colimit_rec_beta_colimp.
 Defined.
 
 Definition colim_shift_seq_to_colim_seq_ap_inj A n k (a1 a2 : shift_seq A n k) (p : a1 = a2)
-  : ap (colim_shift_seq_to_colim_seq A n) (ap (inj _ k) p) = ap (inj _ (k+n)%nat) p.
+  : ap (colim_shift_seq_to_colim_seq A n) (ap (inj _ k) p) = ap (inj _ (k+n)) p.
 Proof.
   destruct p; reflexivity.
 Defined.
