@@ -1,0 +1,2098 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.Iff.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.Iff.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Universe.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Groups.Group AbGroups.Abelianization AbGroups.AbelianGroup\n  Groups.Commutator Groups.QuotientGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core WildCat.Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope group_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Perfect Groups *)\n\n(** ** Definition *)\n\n(** A group is perfect if its abelianization is trivial. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsPerfect (G : Group) := contr_abel_isperfect :: IsTrivialGroup (abel G).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A group is perfect if its commutator subgroup is the maximal subgroup. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isperfect_maximal_commutator (G : Group)\n  : IsMaximalSubgroup [G, G] -> IsPerfect G.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G] -> IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G] -> IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros max.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "max"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply istrivial_iff_grp_iso_trivial.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "maximal_subgroup (abel G) $<~> grp_trivial",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "max"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (_ $oE grp_iso_subgroup_group_maximal _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abel G $<~> grp_trivial",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "max"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $oE emap abgroup_group (@groupiso_isabelianization G _ _ _ _ _\n    (isabelianization_derived_quotient _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abgroup_derived_quotient G $<~> grp_trivial",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "max"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fst (istrivial_iff_grp_iso_trivial (abgroup_derived_quotient G)) _\n    $oE (grp_iso_subgroup_group_maximal _)^-1$).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Conversely, the commutator subgroup of any perfect group is the maximal subgroup. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ismaximalsubgroup_commutator_isperfect `{Univalence} (G : Group)\n  : IsPerfect G -> IsMaximalSubgroup [G, G].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G -> IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G -> IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (ismaximalsubgroup_istrivial_grp_quotient _ (normalsubgroup_derived _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrivialGroup (maximal_subgroup (G / normalsubgroup_derived G))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (istrivial_grp_iso (abel G)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "maximal_subgroup (abel G) $<~>\nmaximal_subgroup (G / normalsubgroup_derived G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (_^-1$ $oE _ $oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "maximal_subgroup (G / normalsubgroup_derived G) $<~> ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal $<~> ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "maximal_subgroup (abel G) $<~> ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,3: apply grp_iso_subgroup_group_maximal.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "abel G $<~> G / normalsubgroup_derived G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (emap abgroup_group (@groupiso_isabelianization G _ _ _ _ _\n    (isabelianization_derived_quotient _))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Basic properties *)\n  \n(** All simple non-abelian groups are perfect. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isperfect_simple_nonabelian `{Univalence}\n  (G : Group) {s : IsSimpleGroup G}\n  (na : ~ Commutative (A:=G) (.*.))\n  : IsPerfect G.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Since [G] is simple, we can assume the commutator [ [G, G] ] is either trivial or maximal. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (s [G, G] _) as [triv | max].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "max"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: by apply isperfect_maximal_commutator.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "contradiction na.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Commutative sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x * y = y * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply grp_commutator_swap_op.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_commutator x y * y * x = y * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V napply grp_assoc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_commutator x y * (y * x) = y * x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V napply grp_unit_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_commutator x y * (y * x) = 1 * (y * x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (ap (.* _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grp_commutator x y = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply triv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[maximal_subgroup G, maximal_subgroup G] (grp_commutator x y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "IsSimpleGroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "na"
+              ],
+              "body": null,
+              "type": "~ Commutative sg_op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "triv"
+              ],
+              "body": null,
+              "type": "IsTrivialGroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply subgroup_commutator_in.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A quotient of a perfect group is perfect. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isperfect_grp_quotient `{Univalence}\n  (G : Group) (N : NormalSubgroup G)\n  : IsPerfect G -> IsPerfect (G / N).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G -> IsPerfect (G / N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect G -> IsPerfect (G / N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros perf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPerfect (G / N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isperfect_maximal_commutator.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMaximalSubgroup [maximal_subgroup (G / N), maximal_subgroup (G / N)]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply grp_quotient_ind_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : G,\n[maximal_subgroup (G / N), maximal_subgroup (G / N)] (grp_quotient_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[maximal_subgroup (G / N), maximal_subgroup (G / N)] (grp_quotient_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsPerfect G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ismaximalsubgroup_commutator_isperfect in perf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[maximal_subgroup (G / N), maximal_subgroup (G / N)] (grp_quotient_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize (perf x); revert x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : G,\n[maximal_subgroup G, maximal_subgroup G] x ->\n[maximal_subgroup (G / N), maximal_subgroup (G / N)] (grp_quotient_map x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change ([G / N, G / N] (grp_quotient_map ?x))\n    with (subgroup_preimage grp_quotient_map [G / N, G / N] x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : G,\n[maximal_subgroup G, maximal_subgroup G] x ->\nsubgroup_preimage grp_quotient_map\n  [maximal_subgroup (G / N), maximal_subgroup (G / N)] x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply subgroup_commutator_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : G,\nmaximal_subgroup G x ->\nmaximal_subgroup G y ->\nsubgroup_preimage grp_quotient_map\n  [maximal_subgroup (G / N), maximal_subgroup (G / N)] \n  (grp_commutator x y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y _ _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subgroup_preimage grp_quotient_map\n  [maximal_subgroup (G / N), maximal_subgroup (G / N)] \n  (grp_commutator x y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change ([G / N, G / N] (grp_quotient_map (grp_commutator x y))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[maximal_subgroup (G / N), maximal_subgroup (G / N)]\n  (grp_quotient_map (grp_commutator x y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite grp_homo_commutator.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[maximal_subgroup (G / N), maximal_subgroup (G / N)]\n  (grp_commutator (grp_quotient_map x) (grp_quotient_map y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "perf"
+              ],
+              "body": null,
+              "type": "IsMaximalSubgroup [maximal_subgroup G, maximal_subgroup G]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply subgroup_commutator_in.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

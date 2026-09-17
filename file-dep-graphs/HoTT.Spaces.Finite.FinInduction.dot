@@ -1,0 +1,19 @@
+digraph HoTT_Spaces_Finite_FinInduction {
+  graph [ratio=0.5]
+  node [style=filled]
+FinInduction_fin_rec_beta_fsucc [label="fin_rec_beta_fsucc", URL=<FinInduction.html#fin_rec_beta_fsucc>, peripheries=3, fillcolor="#F070D1"] ;
+FinInduction_fin_rec_beta_zero [label="fin_rec_beta_zero", URL=<FinInduction.html#fin_rec_beta_zero>, peripheries=3, fillcolor="#F070D1"] ;
+FinInduction_fin_rec [label="fin_rec", URL=<FinInduction.html#fin_rec>, fillcolor="#F070D1"] ;
+FinInduction_fin_ind_beta_fsucc [label="fin_ind_beta_fsucc", URL=<FinInduction.html#fin_ind_beta_fsucc>, fillcolor="#F070D1"] ;
+FinInduction_fin_ind_beta_zero [label="fin_ind_beta_zero", URL=<FinInduction.html#fin_ind_beta_zero>, fillcolor="#F070D1"] ;
+FinInduction_fin_ind [label="fin_ind", URL=<FinInduction.html#fin_ind>, fillcolor="#F070D1"] ;
+  FinInduction_fin_rec_beta_fsucc -> FinInduction_fin_rec [] ;
+  FinInduction_fin_rec_beta_fsucc -> FinInduction_fin_ind_beta_fsucc [] ;
+  FinInduction_fin_rec_beta_zero -> FinInduction_fin_rec [] ;
+  FinInduction_fin_rec_beta_zero -> FinInduction_fin_ind_beta_zero [] ;
+  FinInduction_fin_rec -> FinInduction_fin_ind [] ;
+  FinInduction_fin_ind_beta_fsucc -> FinInduction_fin_ind [] ;
+  FinInduction_fin_ind_beta_zero -> FinInduction_fin_ind [] ;
+subgraph cluster_FinInduction { label="FinInduction"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FinInduction_fin_ind; FinInduction_fin_ind_beta_zero; FinInduction_fin_ind_beta_fsucc; FinInduction_fin_rec; FinInduction_fin_rec_beta_zero; FinInduction_fin_rec_beta_fsucc; };
+} /* END */

@@ -1,0 +1,1029 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import TruncType.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core Modalities.Modality Modalities.Descent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Separatedness and path-spaces of truncations *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section SeparatedTrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope subuniverse_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The [n.+1]-truncation modality consists of the separated types for the [n]-truncation modality. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance O_eq_Tr (n : trunc_index)\n  : Tr n.+1 <=> Sep (Tr n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n.+1 <=> Sep (Tr n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n.+1 <=> Sep (Tr n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; intros A A_inO.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In (Sep (Tr n)) A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A_inO"
+              ],
+              "body": null,
+              "type": "In (Tr n.+1) A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In (Tr n.+1) A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A_inO"
+              ],
+              "body": null,
+              "type": "In (Sep (Tr n)) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In (Sep (Tr n)) A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A_inO"
+              ],
+              "body": null,
+              "type": "In (Tr n.+1) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In (Tr n.+1) A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A_inO"
+              ],
+              "body": null,
+              "type": "In (Sep (Tr n)) A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply istrunc_S.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** It follows that [Tr n <<< Tr n.+1].  However, it is easier to prove this directly than to go through separatedness. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance O_leq_Tr (n : trunc_index)\n  : Tr n <= Tr n.+1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n <= Tr n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n <= Tr n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A ?; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance O_strong_leq_Tr (n : trunc_index)\n  : Tr n << Tr n.+1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n << Tr n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n << Tr n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply O_strong_leq_trans_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance O_lex_leq_Tr `{Univalence} (n : trunc_index)\n  : Tr n <<< Tr n.+1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n <<< Tr n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n <<< Tr n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A; unshelve econstructor; intros P' P_inO;\n    pose (P := fun x => Build_TruncType n (P' x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_reflector (Tr n.+1) A -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x : A, In (Tr n) (P' x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x : A =>\n{| trunctype_type := P' x; trunctype_istrunc := istrunc_inO_tr (P' x) |}",
+              "type": "A -> n -Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : O_reflector (Tr n.+1) A,\nIn (Tr n)\n  ((fun (P'0 : A -> Type) (P_inO0 : forall x0 : A, In (Tr n) (P'0 x0)) =>\n    let P0 :=\n      fun x0 : A =>\n      {|\n        trunctype_type := P'0 x0;\n        trunctype_istrunc := istrunc_inO_tr (P'0 x0)\n      |} in\n    ?Goal@{P':=P'0; P_inO:=P_inO0}) P' P_inO x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x : A, In (Tr n) (P' x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x : A =>\n{| trunctype_type := P' x; trunctype_istrunc := istrunc_inO_tr (P' x) |}",
+              "type": "A -> n -Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\n(fun (P'0 : A -> Type) (P_inO0 : forall x0 : A, In (Tr n) (P'0 x0)) =>\n let P0 :=\n   fun x0 : A =>\n   {|\n     trunctype_type := P'0 x0; trunctype_istrunc := istrunc_inO_tr (P'0 x0)\n   |} in\n ?Goal@{P':=P'0; P_inO:=P_inO0}) P' P_inO (to (Tr n.+1) A x) <~>\nP' x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x : A, In (Tr n) (P' x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x : A =>\n{| trunctype_type := P' x; trunctype_istrunc := istrunc_inO_tr (P' x) |}",
+              "type": "A -> n -Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_reflector (Tr n.+1) A -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x : A, In (Tr n) (P' x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x : A =>\n{| trunctype_type := P' x; trunctype_istrunc := istrunc_inO_tr (P' x) |}",
+              "type": "A -> n -Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Trunc_rec P).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : O_reflector (Tr n.+1) A,\nIn (Tr n)\n  ((fun (P'0 : A -> Type) (P_inO0 : forall x0 : A, In (Tr n) (P'0 x0)) =>\n    let P0 :=\n      fun x0 : A =>\n      {|\n        trunctype_type := P'0 x0;\n        trunctype_istrunc := istrunc_inO_tr (P'0 x0)\n      |} in\n    fun x0 : O_reflector (Tr n.+1) A => trunctype_type (Trunc_rec P0 x0)) P'\n     P_inO x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x : A, In (Tr n) (P' x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x : A =>\n{| trunctype_type := P' x; trunctype_istrunc := istrunc_inO_tr (P' x) |}",
+              "type": "A -> n -Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; simpl; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\n(fun (P'0 : A -> Type) (P_inO0 : forall x0 : A, In (Tr n) (P'0 x0)) =>\n let P0 :=\n   fun x0 : A =>\n   {|\n     trunctype_type := P'0 x0; trunctype_istrunc := istrunc_inO_tr (P'0 x0)\n   |} in\n fun x0 : O_reflector (Tr n.+1) A => trunctype_type (Trunc_rec P0 x0)) P'\n  P_inO (to (Tr n.+1) A x) <~>\nP' x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x : A, In (Tr n) (P' x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x : A =>\n{| trunctype_type := P' x; trunctype_istrunc := istrunc_inO_tr (P' x) |}",
+              "type": "A -> n -Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P' x <~> P' x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P'"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_inO"
+              ],
+              "body": null,
+              "type": "forall x0 : A, In (Tr n) (P' x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": "fun x0 : A =>\n{| trunctype_type := P' x0; trunctype_istrunc := istrunc_inO_tr (P' x0) |}",
+              "type": "A -> n -Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_Tr {n A} {x y : A}\n  : Tr n (x = y) -> (tr x = tr y :> Tr n.+1 A)\n  := path_OO (Tr n.+1) (Tr n) x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_path_Tr `{Univalence} {n} {A : Type} (x y : A)\n  : Tr n (x = y) <~> (tr x = tr y :> Tr n.+1 A)\n  := equiv_path_OO (Tr n.+1) (Tr n) x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End SeparatedTrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

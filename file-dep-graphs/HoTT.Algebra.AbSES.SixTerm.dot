@@ -1,0 +1,24 @@
+digraph HoTT_Algebra_AbSES_SixTerm {
+  graph [ratio=0.5]
+  node [style=filled]
+SixTerm_ext_cyclic_ab [label="ext_cyclic_ab", URL=<SixTerm.html#ext_cyclic_ab>, peripheries=3, fillcolor="#F070D1"] ;
+SixTerm_ext_cyclic_exact [label="ext_cyclic_exact", URL=<SixTerm.html#ext_cyclic_exact>, fillcolor="#F070D1"] ;
+SixTerm_isexact_ext_cyclic_ab_iii [label="isexact_ext_cyclic_ab_iii", URL=<SixTerm.html#isexact_ext_cyclic_ab_iii>, fillcolor="#F070D1"] ;
+SixTerm_cyclic_ [label="cyclic'", URL=<SixTerm.html#cyclic'>, fillcolor="#F070D1"] ;
+SixTerm_isexact_ext_contra_sixterm_v [label="isexact_ext_contra_sixterm_v", URL=<SixTerm.html#isexact_ext_contra_sixterm_v>, peripheries=3, fillcolor="#F070D1"] ;
+SixTerm_isexact_ext_contra_sixterm_iv [label="isexact_ext_contra_sixterm_iv", URL=<SixTerm.html#isexact_ext_contra_sixterm_iv>, fillcolor="#F070D1"] ;
+SixTerm_isexact_ext_contra_sixterm_iv_mor [label="isexact_ext_contra_sixterm_iv_mor", URL=<SixTerm.html#isexact_ext_contra_sixterm_iv_mor>, fillcolor="#F070D1"] ;
+SixTerm_isexact_ext_contra_sixterm_iii [label="isexact_ext_contra_sixterm_iii", URL=<SixTerm.html#isexact_ext_contra_sixterm_iii>, fillcolor="#F070D1"] ;
+SixTerm_abses_pushout_trivial_factors_inclusion [label="abses_pushout_trivial_factors_inclusion", URL=<SixTerm.html#abses_pushout_trivial_factors_inclusion>, fillcolor="#F070D1"] ;
+SixTerm_isexact_ext_contra_sixterm_ii [label="isexact_ext_contra_sixterm_ii", URL=<SixTerm.html#isexact_ext_contra_sixterm_ii>, peripheries=3, fillcolor="#F070D1"] ;
+SixTerm_isexact_abses_sixterm_i [label="isexact_abses_sixterm_i", URL=<SixTerm.html#isexact_abses_sixterm_i>, peripheries=3, fillcolor="#F070D1"] ;
+  SixTerm_ext_cyclic_ab -> SixTerm_ext_cyclic_exact [] ;
+  SixTerm_ext_cyclic_ab -> SixTerm_cyclic_ [] ;
+  SixTerm_ext_cyclic_ab -> SixTerm_isexact_ext_contra_sixterm_iv [] ;
+  SixTerm_ext_cyclic_exact -> SixTerm_isexact_ext_cyclic_ab_iii [] ;
+  SixTerm_isexact_ext_cyclic_ab_iii -> SixTerm_isexact_ext_contra_sixterm_iii [] ;
+  SixTerm_isexact_ext_contra_sixterm_iv -> SixTerm_isexact_ext_contra_sixterm_iv_mor [] ;
+  SixTerm_isexact_ext_contra_sixterm_iii -> SixTerm_abses_pushout_trivial_factors_inclusion [] ;
+subgraph cluster_SixTerm { label="SixTerm"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+SixTerm_isexact_abses_sixterm_i; SixTerm_isexact_ext_contra_sixterm_ii; SixTerm_abses_pushout_trivial_factors_inclusion; SixTerm_isexact_ext_contra_sixterm_iii; SixTerm_isexact_ext_contra_sixterm_iv_mor; SixTerm_isexact_ext_contra_sixterm_iv; SixTerm_isexact_ext_contra_sixterm_v; SixTerm_cyclic_; SixTerm_isexact_ext_cyclic_ab_iii; SixTerm_ext_cyclic_exact; SixTerm_ext_cyclic_ab; };
+} /* END */

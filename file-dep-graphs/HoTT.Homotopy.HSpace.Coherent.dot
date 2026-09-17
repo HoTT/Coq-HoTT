@@ -1,0 +1,38 @@
+digraph HoTT_Homotopy_HSpace_Coherent {
+  graph [ratio=0.5]
+  node [style=filled]
+Coherent_iscohhspace_loops [label="iscohhspace_loops", URL=<Coherent.html#iscohhspace_loops>, peripheries=3, fillcolor="#F070D1"] ;
+Coherent_iscohhspace_equiv_cohhspace [label="iscohhspace_equiv_cohhspace", URL=<Coherent.html#iscohhspace_equiv_cohhspace>, peripheries=3, fillcolor="#F070D1"] ;
+Coherent_issig_iscohhspace [label="issig_iscohhspace", URL=<Coherent.html#issig_iscohhspace>, peripheries=3, fillcolor="#F070D1"] ;
+Coherent_iscoherent_cohhspace [label="iscoherent_cohhspace", URL=<Coherent.html#iscoherent_cohhspace>, peripheries=3, fillcolor="#F070D1"] ;
+Coherent_ishspace_cohhspace [label="ishspace_cohhspace", URL=<Coherent.html#ishspace_cohhspace>, fillcolor="#F070D1"] ;
+Coherent_IsCohHSpace_sind [label="IsCohHSpace_sind", URL=<Coherent.html#IsCohHSpace_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Coherent_IsCohHSpace_rec [label="IsCohHSpace_rec", URL=<Coherent.html#IsCohHSpace_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Coherent_IsCohHSpace_ind [label="IsCohHSpace_ind", URL=<Coherent.html#IsCohHSpace_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Coherent_IsCohHSpace_rect [label="IsCohHSpace_rect", URL=<Coherent.html#IsCohHSpace_rect>, fillcolor="#F070D1"] ;
+Coherent_Build_IsCohHSpace [label="Build_IsCohHSpace", URL=<Coherent.html#Build_IsCohHSpace>, fillcolor="#7FAAFF"] ;
+Coherent_IsCohHSpace [label="IsCohHSpace", URL=<Coherent.html#IsCohHSpace>, fillcolor="#E2CDFA"] ;
+Coherent_iscoherent [label="iscoherent", URL=<Coherent.html#iscoherent>, fillcolor="#F070D1"] ;
+Coherent_IsCoherent [label="IsCoherent", URL=<Coherent.html#IsCoherent>, fillcolor="#F070D1"] ;
+  Coherent_iscohhspace_loops -> Coherent_Build_IsCohHSpace [] ;
+  Coherent_iscohhspace_loops -> Coherent_IsCohHSpace [] ;
+  Coherent_iscohhspace_equiv_cohhspace -> Coherent_ishspace_cohhspace [] ;
+  Coherent_iscohhspace_equiv_cohhspace -> Coherent_Build_IsCohHSpace [] ;
+  Coherent_iscohhspace_equiv_cohhspace -> Coherent_iscoherent [] ;
+  Coherent_issig_iscohhspace -> Coherent_Build_IsCohHSpace [] ;
+  Coherent_issig_iscohhspace -> Coherent_IsCohHSpace [] ;
+  Coherent_iscoherent_cohhspace -> Coherent_IsCohHSpace [] ;
+  Coherent_ishspace_cohhspace -> Coherent_IsCohHSpace [] ;
+  Coherent_IsCohHSpace_sind -> Coherent_Build_IsCohHSpace [] ;
+  Coherent_IsCohHSpace_sind -> Coherent_IsCohHSpace [] ;
+  Coherent_IsCohHSpace_rec -> Coherent_IsCohHSpace_rect [] ;
+  Coherent_IsCohHSpace_ind -> Coherent_Build_IsCohHSpace [] ;
+  Coherent_IsCohHSpace_ind -> Coherent_IsCohHSpace [] ;
+  Coherent_IsCohHSpace_rect -> Coherent_Build_IsCohHSpace [] ;
+  Coherent_IsCohHSpace_rect -> Coherent_IsCohHSpace [] ;
+  Coherent_Build_IsCohHSpace -> Coherent_IsCoherent [] ;
+  Coherent_IsCohHSpace -> Coherent_IsCoherent [] ;
+  Coherent_iscoherent -> Coherent_IsCoherent [] ;
+subgraph cluster_Coherent { label="Coherent"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Coherent_IsCoherent; Coherent_iscoherent; Coherent_IsCohHSpace; Coherent_Build_IsCohHSpace; Coherent_IsCohHSpace_rect; Coherent_IsCohHSpace_ind; Coherent_IsCohHSpace_rec; Coherent_IsCohHSpace_sind; Coherent_ishspace_cohhspace; Coherent_iscoherent_cohhspace; Coherent_issig_iscohhspace; Coherent_iscohhspace_equiv_cohhspace; Coherent_iscohhspace_loops; };
+} /* END */

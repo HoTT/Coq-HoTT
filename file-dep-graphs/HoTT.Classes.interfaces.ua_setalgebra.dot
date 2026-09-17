@@ -1,0 +1,37 @@
+digraph HoTT_Classes_interfaces_ua_setalgebra {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_setalgebra_isequiv_path_setalgebra [label="isequiv_path_setalgebra", URL=<ua_setalgebra.html#isequiv_path_setalgebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_setalgebra_isequiv_path_setalgebra_subproof0 [label="isequiv_path_setalgebra_subproof0", URL=<ua_setalgebra.html#isequiv_path_setalgebra_subproof0>, fillcolor="#F070D1"] ;
+ua_setalgebra_isequiv_path_setalgebra_subproof [label="isequiv_path_setalgebra_subproof", URL=<ua_setalgebra.html#isequiv_path_setalgebra_subproof>, fillcolor="#F070D1"] ;
+ua_setalgebra_path_setalgebra_1 [label="path_setalgebra_1", URL=<ua_setalgebra.html#path_setalgebra_1>, fillcolor="#F070D1"] ;
+ua_setalgebra_path_setalgebra [label="path_setalgebra", URL=<ua_setalgebra.html#path_setalgebra>, fillcolor="#F070D1"] ;
+ua_setalgebra_is_hset_algebra_setalgebra [label="is_hset_algebra_setalgebra", URL=<ua_setalgebra.html#is_hset_algebra_setalgebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_setalgebra_algebra_setalgebra [label="algebra_setalgebra", URL=<ua_setalgebra.html#algebra_setalgebra>, fillcolor="#F070D1"] ;
+ua_setalgebra_SetAlgebra_sind [label="SetAlgebra_sind", URL=<ua_setalgebra.html#SetAlgebra_sind>, peripheries=3, fillcolor="#F070D1"] ;
+ua_setalgebra_SetAlgebra_rec [label="SetAlgebra_rec", URL=<ua_setalgebra.html#SetAlgebra_rec>, peripheries=3, fillcolor="#F070D1"] ;
+ua_setalgebra_SetAlgebra_ind [label="SetAlgebra_ind", URL=<ua_setalgebra.html#SetAlgebra_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+ua_setalgebra_SetAlgebra_rect [label="SetAlgebra_rect", URL=<ua_setalgebra.html#SetAlgebra_rect>, fillcolor="#F070D1"] ;
+ua_setalgebra_BuildSetAlgebra [label="BuildSetAlgebra", URL=<ua_setalgebra.html#BuildSetAlgebra>, fillcolor="#7FAAFF"] ;
+ua_setalgebra_SetAlgebra [label="SetAlgebra", URL=<ua_setalgebra.html#SetAlgebra>, fillcolor="#E2CDFA"] ;
+  ua_setalgebra_isequiv_path_setalgebra -> ua_setalgebra_isequiv_path_setalgebra_subproof0 [] ;
+  ua_setalgebra_isequiv_path_setalgebra -> ua_setalgebra_isequiv_path_setalgebra_subproof [] ;
+  ua_setalgebra_isequiv_path_setalgebra_subproof0 -> ua_setalgebra_path_setalgebra [] ;
+  ua_setalgebra_isequiv_path_setalgebra_subproof0 -> ua_setalgebra_algebra_setalgebra [] ;
+  ua_setalgebra_isequiv_path_setalgebra_subproof -> ua_setalgebra_path_setalgebra_1 [] ;
+  ua_setalgebra_isequiv_path_setalgebra_subproof -> ua_setalgebra_algebra_setalgebra [] ;
+  ua_setalgebra_path_setalgebra_1 -> ua_setalgebra_path_setalgebra [] ;
+  ua_setalgebra_path_setalgebra -> ua_setalgebra_BuildSetAlgebra [] ;
+  ua_setalgebra_path_setalgebra -> ua_setalgebra_SetAlgebra [] ;
+  ua_setalgebra_is_hset_algebra_setalgebra -> ua_setalgebra_SetAlgebra [] ;
+  ua_setalgebra_algebra_setalgebra -> ua_setalgebra_SetAlgebra [] ;
+  ua_setalgebra_SetAlgebra_sind -> ua_setalgebra_BuildSetAlgebra [] ;
+  ua_setalgebra_SetAlgebra_sind -> ua_setalgebra_SetAlgebra [] ;
+  ua_setalgebra_SetAlgebra_rec -> ua_setalgebra_SetAlgebra_rect [] ;
+  ua_setalgebra_SetAlgebra_ind -> ua_setalgebra_BuildSetAlgebra [] ;
+  ua_setalgebra_SetAlgebra_ind -> ua_setalgebra_SetAlgebra [] ;
+  ua_setalgebra_SetAlgebra_rect -> ua_setalgebra_BuildSetAlgebra [] ;
+  ua_setalgebra_SetAlgebra_rect -> ua_setalgebra_SetAlgebra [] ;
+subgraph cluster_ua_setalgebra { label="ua_setalgebra"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_setalgebra_SetAlgebra; ua_setalgebra_BuildSetAlgebra; ua_setalgebra_SetAlgebra_rect; ua_setalgebra_SetAlgebra_ind; ua_setalgebra_SetAlgebra_rec; ua_setalgebra_SetAlgebra_sind; ua_setalgebra_algebra_setalgebra; ua_setalgebra_is_hset_algebra_setalgebra; ua_setalgebra_path_setalgebra; ua_setalgebra_path_setalgebra_1; ua_setalgebra_isequiv_path_setalgebra_subproof; ua_setalgebra_isequiv_path_setalgebra_subproof0; ua_setalgebra_isequiv_path_setalgebra; };
+} /* END */

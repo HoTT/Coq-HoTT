@@ -1,0 +1,1070 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** This file defines [SetAlgebra], a specialized [Algebra] where",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    the carriers are always sets. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Classes.interfaces.ua_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record SetAlgebra {\u03c3 : Signature} : Type := BuildSetAlgebra\n  { algebra_setalgebra : Algebra \u03c3\n  ; is_hset_algebra_setalgebra :: IsHSetAlgebra algebra_setalgebra }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments SetAlgebra : clear implicits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Coercion algebra_setalgebra : SetAlgebra >-> Algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** To find a path [A = B] between set algebras [A B : SetAlgebra \u03c3],\n    it is enough to find a path between the defining algebras,\n    [algebra_setalgebra A = algebra_setalgebra B]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_setalgebra `{Funext} {\u03c3} (A B : SetAlgebra \u03c3)\n  (p : algebra_setalgebra A = algebra_setalgebra B)\n  : A = B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct A as [A AH], B as [B BH].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| algebra_setalgebra := A; is_hset_algebra_setalgebra := AH |} =\n{| algebra_setalgebra := B; is_hset_algebra_setalgebra := BH |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AH"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BH"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{| algebra_setalgebra := A; is_hset_algebra_setalgebra := AH |} =\n{| algebra_setalgebra := B; is_hset_algebra_setalgebra := BH |}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| algebra_setalgebra := A; is_hset_algebra_setalgebra := AH |} =\n{| algebra_setalgebra := B; is_hset_algebra_setalgebra := BH |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AH"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BH"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transparent assert (a : (p#AH = BH)) by apply path_ishprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| algebra_setalgebra := A; is_hset_algebra_setalgebra := AH |} =\n{| algebra_setalgebra := B; is_hset_algebra_setalgebra := BH |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AH"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Algebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BH"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": "path_ishprop (transport IsHSetAlgebra p AH) BH",
+              "type": "transport IsHSetAlgebra p AH = BH"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by path_induction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The id path is mapped to the id path by [path_setalgebra]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_setalgebra_1 `{Funext} {\u03c3} (A : SetAlgebra \u03c3)\n  : path_setalgebra A A idpath = idpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_setalgebra A A 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_setalgebra A A 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transparent assert (p :\n      (\u2200 I : IsHSetAlgebra A, path_ishprop I I = idpath)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall I : IsHSetAlgebra A, path_ishprop I I = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_setalgebra A A 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "?Goal",
+              "type": "forall I : IsHSetAlgebra A, path_ishprop I I = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall I : IsHSetAlgebra A, path_ishprop I I = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_ishprop I I = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "IsHSetAlgebra A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_setalgebra A A 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "\u03bb I : IsHSetAlgebra A, path_ishprop (path_ishprop I I) 1",
+              "type": "forall I : IsHSetAlgebra A, path_ishprop I I = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold path_setalgebra.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "paths_rect (IsHSetAlgebra A)\n  (transport IsHSetAlgebra 1 (is_hset_algebra_setalgebra A))\n  (\u03bb (BH : IsHSetAlgebra A)\n   (_ : transport IsHSetAlgebra 1 (is_hset_algebra_setalgebra A) = BH),\n   {|\n     algebra_setalgebra := A;\n     is_hset_algebra_setalgebra := is_hset_algebra_setalgebra A\n   |} = {| algebra_setalgebra := A; is_hset_algebra_setalgebra := BH |})\n  (paths_rect (Algebra \u03c3) A\n     (\u03bb (B : Algebra \u03c3) (p0 : A = B),\n      {|\n        algebra_setalgebra := A;\n        is_hset_algebra_setalgebra := is_hset_algebra_setalgebra A\n      |} =\n      {|\n        algebra_setalgebra := B;\n        is_hset_algebra_setalgebra :=\n          transport IsHSetAlgebra p0 (is_hset_algebra_setalgebra A)\n      |})\n     1 A 1)\n  (is_hset_algebra_setalgebra A)\n  (path_ishprop (transport IsHSetAlgebra 1 (is_hset_algebra_setalgebra A))\n     (is_hset_algebra_setalgebra A)) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "\u03bb I : IsHSetAlgebra A, path_ishprop (path_ishprop I I) 1",
+              "type": "forall I : IsHSetAlgebra A, path_ishprop I I = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rewrite p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The function [path_setalgebra A B] is an equivalence with inverse\n    [ap algebra_setalgebra]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_path_setalgebra `{Funext} {\u03c3 : Signature}\n  (A B : SetAlgebra \u03c3)\n  : IsEquiv (path_setalgebra A B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (path_setalgebra A B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (path_setalgebra A B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify\n            (path_setalgebra A B) (ap algebra_setalgebra) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : A = B, path_setalgebra A B (ap algebra_setalgebra x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : A = B, ap algebra_setalgebra (path_setalgebra A B x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : A = B, path_setalgebra A B (ap algebra_setalgebra x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (intro p; induction p; by rewrite path_setalgebra_1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(\u03bb x : A = B, ap algebra_setalgebra (path_setalgebra A B x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "\u03c3"
+              ],
+              "body": null,
+              "type": "Signature"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "SetAlgebra \u03c3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (\n      intro e; destruct A as [A AH], B as [B BH];\n      cbn in e; destruct e;\n      unfold path_setalgebra; by destruct path_ishprop).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

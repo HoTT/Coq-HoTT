@@ -1,0 +1,104 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Precategories [set_cat] and [prop_cat] *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Strict.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types TruncType.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation cat_of obj :=\n  (@Build_PreCategory obj\n                      (fun x y => x -> y)\n                      (fun _ x => x)\n                      (fun _ _ _ f g => f o g)%core\n                      (fun _ _ _ _ _ _ _ => idpath)\n                      (fun _ _ _ => idpath)\n                      (fun _ _ _ => idpath)\n                      _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** There is a category [Set], where the objects are sets and the\n    morphisms are set morphisms *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition prop_cat `{Funext} : PreCategory := cat_of HProp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition set_cat `{Funext} : PreCategory := cat_of HSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** [Prop] is a strict category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isstrict_prop_cat `{Univalence}\n: IsStrictCategory prop_cat\n  := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Because, e.g., [@identity set_cat x \u2261 x], and we want [rewrite] to\n    notice this, we must inform it that it can try treating [identity]\n    as [idmap]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Equivalent Keys identity idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

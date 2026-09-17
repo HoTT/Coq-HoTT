@@ -1,0 +1,1085 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables A B.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance Empty_lt : Lt@{Set Set} Empty.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Lt Empty",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Lt Empty",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance Unit_lt : Lt@{Set Set} Unit := fun _ _ => Empty.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance empty_tricho : Trichotomy@{Set Set Set} (_:Lt Empty).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trichotomy (Empty_lt : Lt Empty)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trichotomy (Empty_lt : Lt Empty)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance unit_tricho : Trichotomy@{Set Set Set} (_:Lt Unit).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trichotomy (Unit_lt : Lt Unit)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trichotomy (Unit_lt : Lt Unit)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [] [];auto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Alt : Lt@{Set Set} A} `{Blt : Lt@{Set Set} B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance sum_lt : Lt@{Set Set} (A |_| B) | 2\n  := fun s1 s2 =>\n  match s1, s2 with\n  | inl a1, inl a2 => a1 < a2\n  | inr b1, inr b2 => b1 < b2\n  | inl _, inr _ => Unit\n  | inr _, inl _ => Empty\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance sum_tricho `{!Trichotomy@{Set Set Set} Alt} `{!Trichotomy@{Set Set Set} Blt}\n  : Trichotomy@{Set Set Set} sum_lt.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trichotomy sum_lt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trichotomy sum_lt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : A + B, sum_lt x y + ((x = y) + sum_lt y x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [a1|b1] [a2|b2];simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a1 < a2) + ((inl a1 = inl a2) + (a2 < a1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Unit + ((inl a1 = inr b2) + Empty)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b2"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty + ((inr b1 = inl a2) + Unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(b1 < b2) + ((inr b1 = inr b2) + (b2 < b1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a1 < a2) + ((inl a1 = inl a2) + (a2 < a1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1",
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (trichotomy _ a1 a2) as [?|[?|?]];auto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Unit + ((inl a1 = inr b2) + Empty)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b2"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "auto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty + ((inr b1 = inl a2) + Unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a2"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "auto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(b1 < b2) + ((inr b1 = inr b2) + (b2 < b1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Blt"
+              ],
+              "body": null,
+              "type": "Lt B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy0"
+              ],
+              "body": null,
+              "type": "Trichotomy Alt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trichotomy1"
+              ],
+              "body": null,
+              "type": "Trichotomy Blt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1",
+                "b2"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (trichotomy _ b1 b2) as [?|[?|?]];auto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

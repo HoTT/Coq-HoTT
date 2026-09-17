@@ -1,0 +1,35 @@
+digraph HoTT_Tactics {
+  graph [ratio=0.5]
+  node [style=filled]
+Tactics_internal_paths_rew_r_to_transport [label="internal_paths_rew_r_to_transport", URL=<Tactics.html#internal_paths_rew_r_to_transport>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_match_eta2 [label="match_eta2", URL=<Tactics.html#match_eta2>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_match_eta1 [label="match_eta1", URL=<Tactics.html#match_eta1>, fillcolor="#F070D1"] ;
+Tactics_match_eta [label="match_eta", URL=<Tactics.html#match_eta>, fillcolor="#F070D1"] ;
+Tactics_path_forall_2_beta [label="path_forall_2_beta", URL=<Tactics.html#path_forall_2_beta>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_path_forall_2_beta_ [label="path_forall_2_beta'", URL=<Tactics.html#path_forall_2_beta'>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_path_forall_recr_beta [label="path_forall_recr_beta", URL=<Tactics.html#path_forall_recr_beta>, fillcolor="#F070D1"] ;
+Tactics_path_forall_recr_beta_ [label="path_forall_recr_beta'", URL=<Tactics.html#path_forall_recr_beta'>, fillcolor="#F070D1"] ;
+Tactics_path_forall_1_beta [label="path_forall_1_beta", URL=<Tactics.html#path_forall_1_beta>, peripheries=3, fillcolor="#F070D1"] ;
+EvalIn_dummy_sind [label="dummy_sind", URL=<EvalIn.html#dummy_sind>, peripheries=3, fillcolor="#F070D1"] ;
+EvalIn_dummy_rec [label="dummy_rec", URL=<EvalIn.html#dummy_rec>, peripheries=3, fillcolor="#F070D1"] ;
+EvalIn_dummy_ind [label="dummy_ind", URL=<EvalIn.html#dummy_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+EvalIn_dummy_rect [label="dummy_rect", URL=<EvalIn.html#dummy_rect>, fillcolor="#F070D1"] ;
+EvalIn_adummy [label="adummy", URL=<EvalIn.html#adummy>, fillcolor="#7FAAFF"] ;
+EvalIn_dummy [label="dummy", URL=<EvalIn.html#dummy>, fillcolor="#E2CDFA"] ;
+  Tactics_match_eta2 -> Tactics_match_eta1 [] ;
+  Tactics_match_eta1 -> Tactics_match_eta [] ;
+  Tactics_path_forall_2_beta -> Tactics_path_forall_recr_beta [] ;
+  Tactics_path_forall_2_beta_ -> Tactics_path_forall_recr_beta [] ;
+  Tactics_path_forall_recr_beta -> Tactics_path_forall_recr_beta_ [] ;
+  EvalIn_dummy_sind -> EvalIn_adummy [] ;
+  EvalIn_dummy_sind -> EvalIn_dummy [] ;
+  EvalIn_dummy_rec -> EvalIn_dummy_rect [] ;
+  EvalIn_dummy_ind -> EvalIn_adummy [] ;
+  EvalIn_dummy_ind -> EvalIn_dummy [] ;
+  EvalIn_dummy_rect -> EvalIn_adummy [] ;
+  EvalIn_dummy_rect -> EvalIn_dummy [] ;
+subgraph cluster_EvalIn { label="EvalIn"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EvalIn_dummy; EvalIn_adummy; EvalIn_dummy_rect; EvalIn_dummy_ind; EvalIn_dummy_rec; EvalIn_dummy_sind; };
+subgraph cluster_Tactics { label="Tactics"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Tactics_path_forall_1_beta; Tactics_path_forall_recr_beta_; Tactics_path_forall_recr_beta; Tactics_path_forall_2_beta_; Tactics_path_forall_2_beta; Tactics_match_eta; Tactics_match_eta1; Tactics_match_eta2; Tactics_internal_paths_rew_r_to_transport; };
+} /* END */

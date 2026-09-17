@@ -1,0 +1,1240 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * \u2211-categories - exploded Grothendieck constructions, or generalizations of subcategories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Trunc Types.Sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation sig_type := sig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We can generalize the notion of [sig] to categories.  This is, essentially, a type-theoretic perspective on the Grothendieck construction. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sig_obj_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pobj : A -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation obj := (sig Pobj).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation mor s d := (sig (Pmor s d)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(HPmor : forall s d, IsHSet (mor s d)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pidentity : forall x, @Pmor x x (@identity A _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pcompose : forall s d d' m1 m2,\n                        @Pmor d d' m1\n                        -> @Pmor s d m2\n                        -> @Pmor s d' (m1 o m2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation identity x := (@identity A x.1; @Pidentity x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P_associativity\n  : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),\n      compose (compose m3 m2) m1 = compose m3 (compose m2 m1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P_left_identity\n  : forall a b (f : mor a b),\n      compose (identity b) f = f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis P_right_identity\n  : forall a b (f : mor a b),\n      compose f (identity a) = f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Definition of a [sig]-precategory *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig' : PreCategory.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, IsHSet (mor s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : obj) (f : mor a b), compose (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : obj) (f : mor a b), compose f (identity a) = f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, IsHSet (mor s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : obj) (f : mor a b), compose (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : obj) (f : mor a b), compose f (identity a) = f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@Build_PreCategory\n              obj\n              (fun s d => mor s d)\n              (fun x => identity x)\n              (fun s d d' m1 m2 => compose m1 m2)\n              _\n              _\n              _\n              _);\n    assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** First projection functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pr1' : Functor sig' A\n    := Build_Functor\n         sig' A\n         (@pr1 _ _)\n         (fun _ _ => @pr1 _ _)\n         (fun _ _ _ _ _ => idpath)\n         (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sig_obj_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments pr1' {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Variant of [sig']-precategory when we are taking a subset of morphisms *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sig_obj_mor_hProp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable A : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pobj : A -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation obj := (sig_type Pobj).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pmor : forall s d : obj, morphism A s.1 d.1 -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation mor s d := (sig_type (Pmor s d)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(HPmor : forall s d m, IsHProp (Pmor s d m)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pidentity : forall x, @Pmor x x (@identity A _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable Pcompose : forall s d d' m1 m2,\n                        @Pmor d d' m1\n                        -> @Pmor s d m2\n                        -> @Pmor s d' (m1 o m2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation identity x := (@identity A x.1; @Pidentity x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation compose m1 m2 := (m1.1 o m2.1; @Pcompose _ _ _ m1.1 m2.1 m1.2 m2.2)%morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac t ex_tac :=\n    intros;\n    simpl;\n    apply path_sigma_uncurried;\n    simpl;\n    ex_tac;\n    apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let P_associativity\n  : forall x1 x2 x3 x4 (m1 : mor x1 x2) (m2 : mor x2 x3) (m3 : mor x3 x4),\n      compose (compose m3 m2) m1 = compose m3 (compose m2 m1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract t ltac:(exists (associativity _ _ _ _ _ _ _ _))\n      using P_associativity_core_subproof.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let P_left_identity\n  : forall a b (f : mor a b),\n      compose (identity b) f = f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : obj) (f : mor a b), compose (identity b) f = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_associativity"
+              ],
+              "body": "let P_associativity_core_subproof0 := P_associativity_core_subproof in\nP_associativity_core_subproof",
+              "type": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : obj) (f : mor a b), compose (identity b) f = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_associativity"
+              ],
+              "body": "let P_associativity_core_subproof0 := P_associativity_core_subproof in\nP_associativity_core_subproof",
+              "type": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear P_associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : obj) (f : mor a b), compose (identity b) f = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract t ltac:(exists (left_identity _ _ _ _))\n      using P_left_identity_core_subproof.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let P_right_identity\n  : forall a b (f : mor a b),\n      compose f (identity a) = f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : obj) (f : mor a b), compose f (identity a) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_associativity"
+              ],
+              "body": "let P_associativity_core_subproof0 := P_associativity_core_subproof in\nP_associativity_core_subproof",
+              "type": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_left_identity"
+              ],
+              "body": "let P_left_identity_core_subproof0 := P_left_identity_core_subproof in\nP_left_identity_core_subproof",
+              "type": "forall (a b : obj) (f : mor a b), compose (identity b) f = f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : obj) (f : mor a b), compose f (identity a) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_associativity"
+              ],
+              "body": "let P_associativity_core_subproof0 := P_associativity_core_subproof in\nP_associativity_core_subproof",
+              "type": "forall (x1 x2 x3 x4 : obj) (m1 : mor x1 x2) (m2 : mor x2 x3)\n(m3 : mor x3 x4), compose (compose m3 m2) m1 = compose m3 (compose m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P_left_identity"
+              ],
+              "body": "let P_left_identity_core_subproof0 := P_left_identity_core_subproof in\nP_left_identity_core_subproof",
+              "type": "forall (a b : obj) (f : mor a b), compose (identity b) f = f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear P_associativity P_left_identity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : obj) (f : mor a b), compose f (identity a) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pobj"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pmor"
+              ],
+              "body": null,
+              "type": "forall s d : obj, morphism A s.1 d.1 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HPmor"
+              ],
+              "body": null,
+              "type": "forall (s d : obj) (m : morphism A s.1 d.1), IsHProp (Pmor s d m)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pidentity"
+              ],
+              "body": null,
+              "type": "forall x : obj, Pmor x x 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pcompose"
+              ],
+              "body": null,
+              "type": "forall (s d d' : obj) (m1 : morphism A d.1 d'.1) (m2 : morphism A s.1 d.1),\nPmor d d' m1 -> Pmor s d m2 -> Pmor s d' (m1 o m2)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract t ltac:(exists (right_identity _ _ _ _))\n      using P_right_identity_core_subproof.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** Definition of [sig]-precategory *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sig : PreCategory\n    := Eval cbv delta [P_associativity P_left_identity P_right_identity]\n      in @sig' A Pobj Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** *** First projection functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition proj1_sig : Functor sig A\n    := pr1'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sig_obj_mor_hProp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments proj1_sig {A Pobj Pmor HPmor Pidentity Pcompose}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation subcategory := sig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

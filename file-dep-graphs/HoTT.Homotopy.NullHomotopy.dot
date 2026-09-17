@@ -1,0 +1,21 @@
+digraph HoTT_Homotopy_NullHomotopy {
+  graph [ratio=0.5]
+  node [style=filled]
+NullHomotopy_nullhomotopy_ap [label="nullhomotopy_ap", URL=<NullHomotopy.html#nullhomotopy_ap>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_cancelR_nullhomotopy_equiv [label="cancelR_nullhomotopy_equiv", URL=<NullHomotopy.html#cancelR_nullhomotopy_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_cancelL_nullhomotopy_equiv [label="cancelL_nullhomotopy_equiv", URL=<NullHomotopy.html#cancelL_nullhomotopy_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_nullhomotopy_composeL [label="nullhomotopy_composeL", URL=<NullHomotopy.html#nullhomotopy_composeL>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_nullhomotopy_composeR [label="nullhomotopy_composeR", URL=<NullHomotopy.html#nullhomotopy_composeR>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_nullhomotopy_homotopic [label="nullhomotopy_homotopic", URL=<NullHomotopy.html#nullhomotopy_homotopic>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_istrunc_nullhomotopy [label="istrunc_nullhomotopy", URL=<NullHomotopy.html#istrunc_nullhomotopy>, peripheries=3, fillcolor="#F070D1"] ;
+NullHomotopy_NullHomotopy [label="NullHomotopy", URL=<NullHomotopy.html#NullHomotopy>, fillcolor="#F070D1"] ;
+  NullHomotopy_nullhomotopy_ap -> NullHomotopy_NullHomotopy [] ;
+  NullHomotopy_cancelR_nullhomotopy_equiv -> NullHomotopy_NullHomotopy [] ;
+  NullHomotopy_cancelL_nullhomotopy_equiv -> NullHomotopy_NullHomotopy [] ;
+  NullHomotopy_nullhomotopy_composeL -> NullHomotopy_NullHomotopy [] ;
+  NullHomotopy_nullhomotopy_composeR -> NullHomotopy_NullHomotopy [] ;
+  NullHomotopy_nullhomotopy_homotopic -> NullHomotopy_NullHomotopy [] ;
+  NullHomotopy_istrunc_nullhomotopy -> NullHomotopy_NullHomotopy [] ;
+subgraph cluster_NullHomotopy { label="NullHomotopy"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+NullHomotopy_NullHomotopy; NullHomotopy_istrunc_nullhomotopy; NullHomotopy_nullhomotopy_homotopic; NullHomotopy_nullhomotopy_composeR; NullHomotopy_nullhomotopy_composeL; NullHomotopy_cancelL_nullhomotopy_equiv; NullHomotopy_cancelR_nullhomotopy_equiv; NullHomotopy_nullhomotopy_ap; };
+} /* END */

@@ -1,0 +1,60 @@
+digraph HoTT_Spaces_Finite_FinNat {
+  graph [ratio=0.5]
+  node [style=filled]
+FinNat_equiv_fin_finnat [label="equiv_fin_finnat", URL=<FinNat.html#equiv_fin_finnat>, peripheries=3, fillcolor="#F070D1"] ;
+FinNat_path_fin_to_finnat_to_fin [label="path_fin_to_finnat_to_fin", URL=<FinNat.html#path_fin_to_finnat_to_fin>, fillcolor="#F070D1"] ;
+FinNat_path_finnat_to_fin_to_finnat [label="path_finnat_to_fin_to_finnat", URL=<FinNat.html#path_finnat_to_fin_to_finnat>, fillcolor="#F070D1"] ;
+FinNat_path_finnat_to_fin_last [label="path_finnat_to_fin_last", URL=<FinNat.html#path_finnat_to_fin_last>, fillcolor="#F070D1"] ;
+FinNat_path_finnat_to_fin_incl [label="path_finnat_to_fin_incl", URL=<FinNat.html#path_finnat_to_fin_incl>, fillcolor="#F070D1"] ;
+FinNat_path_finnat_to_fin_succ [label="path_finnat_to_fin_succ", URL=<FinNat.html#path_finnat_to_fin_succ>, fillcolor="#F070D1"] ;
+FinNat_path_fin_to_finnat_fin_zero [label="path_fin_to_finnat_fin_zero", URL=<FinNat.html#path_fin_to_finnat_fin_zero>, fillcolor="#F070D1"] ;
+FinNat_path_fin_to_finnat_fsucc [label="path_fin_to_finnat_fsucc", URL=<FinNat.html#path_fin_to_finnat_fsucc>, fillcolor="#F070D1"] ;
+FinNat_finnat_to_fin [label="finnat_to_fin", URL=<FinNat.html#finnat_to_fin>, fillcolor="#F070D1"] ;
+FinNat_path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat [label="path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat", URL=<FinNat.html#path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat>, peripheries=3, fillcolor="#F070D1"] ;
+FinNat_fin_to_finnat [label="fin_to_finnat", URL=<FinNat.html#fin_to_finnat>, fillcolor="#F070D1"] ;
+FinNat_is_bounded_fin_to_nat [label="is_bounded_fin_to_nat", URL=<FinNat.html#is_bounded_fin_to_nat>, fillcolor="#F070D1"] ;
+FinNat_finnat_ind_beta_succ [label="finnat_ind_beta_succ", URL=<FinNat.html#finnat_ind_beta_succ>, peripheries=3, fillcolor="#F070D1"] ;
+FinNat_finnat_ind_beta_zero [label="finnat_ind_beta_zero", URL=<FinNat.html#finnat_ind_beta_zero>, peripheries=3, fillcolor="#F070D1"] ;
+FinNat_finnat_ind [label="finnat_ind", URL=<FinNat.html#finnat_ind>, fillcolor="#F070D1"] ;
+FinNat_incl_finnat [label="incl_finnat", URL=<FinNat.html#incl_finnat>, fillcolor="#F070D1"] ;
+FinNat_last_finnat [label="last_finnat", URL=<FinNat.html#last_finnat>, fillcolor="#F070D1"] ;
+FinNat_path_succ_finnat [label="path_succ_finnat", URL=<FinNat.html#path_succ_finnat>, fillcolor="#F070D1"] ;
+FinNat_succ_finnat [label="succ_finnat", URL=<FinNat.html#succ_finnat>, fillcolor="#F070D1"] ;
+FinNat_zero_finnat [label="zero_finnat", URL=<FinNat.html#zero_finnat>, fillcolor="#F070D1"] ;
+FinNat_FinNat [label="FinNat", URL=<FinNat.html#FinNat>, fillcolor="#F070D1"] ;
+  FinNat_equiv_fin_finnat -> FinNat_path_fin_to_finnat_to_fin [] ;
+  FinNat_equiv_fin_finnat -> FinNat_path_finnat_to_fin_to_finnat [] ;
+  FinNat_path_fin_to_finnat_to_fin -> FinNat_path_finnat_to_fin_last [] ;
+  FinNat_path_fin_to_finnat_to_fin -> FinNat_path_finnat_to_fin_incl [] ;
+  FinNat_path_fin_to_finnat_to_fin -> FinNat_fin_to_finnat [] ;
+  FinNat_path_finnat_to_fin_to_finnat -> FinNat_path_fin_to_finnat_fin_zero [] ;
+  FinNat_path_finnat_to_fin_to_finnat -> FinNat_path_fin_to_finnat_fsucc [] ;
+  FinNat_path_finnat_to_fin_to_finnat -> FinNat_finnat_to_fin [] ;
+  FinNat_path_finnat_to_fin_last -> FinNat_finnat_to_fin [] ;
+  FinNat_path_finnat_to_fin_last -> FinNat_last_finnat [] ;
+  FinNat_path_finnat_to_fin_incl -> FinNat_path_finnat_to_fin_succ [] ;
+  FinNat_path_finnat_to_fin_incl -> FinNat_finnat_ind [] ;
+  FinNat_path_finnat_to_fin_incl -> FinNat_incl_finnat [] ;
+  FinNat_path_finnat_to_fin_succ -> FinNat_finnat_to_fin [] ;
+  FinNat_path_finnat_to_fin_succ -> FinNat_succ_finnat [] ;
+  FinNat_path_fin_to_finnat_fin_zero -> FinNat_fin_to_finnat [] ;
+  FinNat_path_fin_to_finnat_fin_zero -> FinNat_zero_finnat [] ;
+  FinNat_path_fin_to_finnat_fsucc -> FinNat_fin_to_finnat [] ;
+  FinNat_path_fin_to_finnat_fsucc -> FinNat_succ_finnat [] ;
+  FinNat_finnat_to_fin -> FinNat_FinNat [] ;
+  FinNat_path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat -> FinNat_fin_to_finnat [] ;
+  FinNat_path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat -> FinNat_incl_finnat [] ;
+  FinNat_fin_to_finnat -> FinNat_is_bounded_fin_to_nat [] ;
+  FinNat_fin_to_finnat -> FinNat_FinNat [] ;
+  FinNat_finnat_ind_beta_succ -> FinNat_finnat_ind [] ;
+  FinNat_finnat_ind_beta_zero -> FinNat_finnat_ind [] ;
+  FinNat_finnat_ind -> FinNat_path_succ_finnat [] ;
+  FinNat_finnat_ind -> FinNat_zero_finnat [] ;
+  FinNat_incl_finnat -> FinNat_FinNat [] ;
+  FinNat_last_finnat -> FinNat_FinNat [] ;
+  FinNat_path_succ_finnat -> FinNat_succ_finnat [] ;
+  FinNat_succ_finnat -> FinNat_FinNat [] ;
+  FinNat_zero_finnat -> FinNat_FinNat [] ;
+subgraph cluster_FinNat { label="FinNat"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FinNat_FinNat; FinNat_zero_finnat; FinNat_succ_finnat; FinNat_path_succ_finnat; FinNat_last_finnat; FinNat_incl_finnat; FinNat_finnat_ind; FinNat_finnat_ind_beta_zero; FinNat_finnat_ind_beta_succ; FinNat_is_bounded_fin_to_nat; FinNat_fin_to_finnat; FinNat_path_fin_to_finnat_fin_incl_incl_finnat_fin_to_finnat; FinNat_finnat_to_fin; FinNat_path_fin_to_finnat_fsucc; FinNat_path_fin_to_finnat_fin_zero; FinNat_path_finnat_to_fin_succ; FinNat_path_finnat_to_fin_incl; FinNat_path_finnat_to_fin_last; FinNat_path_finnat_to_fin_to_finnat; FinNat_path_fin_to_finnat_to_fin; FinNat_equiv_fin_finnat; };
+} /* END */

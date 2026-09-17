@@ -1,0 +1,7559 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Commutative squares *)\n\n(** Commutative squares compose vertically.\n\n      A --f--> B\n      |    //  |\n      h  comm  g\n      |  //    |\n      V //     V\n      C --f'-> D\n      |    //  |\n      h' comm' g'\n      |  //    |\n      V //     V\n      E --f''> F\n*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comm_square_comp {A B C D E F}\n  {f : A -> B} {f': C -> D} {h : A -> C} {g : B -> D} (comm : f' o h == g o f)\n  {f'': E -> F} {h' : C -> E} {g' : D -> F} (comm' : f'' o h' == g' o f')\n  : f'' o (h' o h) == (g' o g) o f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f'' o (h' o h) == g' o g o f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm"
+              ],
+              "body": null,
+              "type": "f' o h == g o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f''"
+              ],
+              "body": null,
+              "type": "E -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "C -> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "D -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm'"
+              ],
+              "body": null,
+              "type": "f'' o h' == g' o f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f'' o (h' o h) == g' o g o f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm"
+              ],
+              "body": null,
+              "type": "f' o h == g o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f''"
+              ],
+              "body": null,
+              "type": "E -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "C -> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "D -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm'"
+              ],
+              "body": null,
+              "type": "f'' o h' == g' o f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f'' (h' (h x)) = g' (g (f x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm"
+              ],
+              "body": null,
+              "type": "f' o h == g o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f''"
+              ],
+              "body": null,
+              "type": "E -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "C -> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "D -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm'"
+              ],
+              "body": null,
+              "type": "f'' o h' == g' o f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (g' (f' (h x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g' (f' (h x)) = g' (g (f x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm"
+              ],
+              "body": null,
+              "type": "f' o h == g o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f''"
+              ],
+              "body": null,
+              "type": "E -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h'"
+              ],
+              "body": null,
+              "type": "C -> E"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'"
+              ],
+              "body": null,
+              "type": "D -> F"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "comm'"
+              ],
+              "body": null,
+              "type": "f'' o h' == g' o f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, comm.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Commutative squares compose horizontally.\n\n      A --k--> B --l--> C\n      |    //  |    //  |\n      f  comm  g  comm  h\n      |  //    |  //    |\n      V //     V //     V\n      X --i--> Y --j--> Z\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comm_square_comp' {A B C X Y Z : Type}\n    {k : A -> B} {l : B -> C}\n    {f : A -> X} {g : B -> Y} {h : C -> Z}\n    {i : X -> Y} {j : Y -> Z}\n    (H : i o f == g o k) (K : j o g == h o l)\n  : (j o i) o f == h o (l o k).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j o i o f == h o (l o k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "C -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "i o f == g o k"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "j o g == h o l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j o i o f == h o (l o k)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "C -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "i o f == g o k"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "j o g == h o l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j (i (f x)) = h (l (k x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "C -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "i o f == g o k"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "j o g == h o l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (j (g (k x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "j (i (f x)) = j (g (k x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "C -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "X -> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "j"
+              ],
+              "body": null,
+              "type": "Y -> Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "i o f == g o k"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "j o g == h o l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Given any commutative square from [f] to [f'] whose verticals\n[wA, wB] are equivalences, the [equiv_inv] square from [f'] to [f] with verticals [wA ^-1, wB ^-1] also commutes. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comm_square_inverse\n  {A B : Type} {f : A -> B}\n  {A' B' : Type} {f' : A' -> B'}\n  {wA : A <~> A'} {wB : B <~> B'}\n  (wf : f' o wA == wB o f)\n: f o (wA ^-1) == (wB ^-1) o f'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o wA^-1 == wB^-1 o f'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o wA^-1 == wB^-1 o f'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (wA^-1 a') = wB^-1 (f' a')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (wB ^-1 (wB (f (wA ^-1 a')))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (wA^-1 a') = wB^-1 (wB (f (wA^-1 a')))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wB^-1 (wB (f (wA^-1 a'))) = wB^-1 (f' a')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (wA^-1 a') = wB^-1 (wB (f (wA^-1 a')))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inverse, eissect.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wB^-1 (wB (f (wA^-1 a'))) = wB^-1 (f' a')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, (concat (wf _)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f' (wA (wA^-1 a')) = f' a'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a'"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Up to naturality, the result of [comm_square_inverse] really is a\nretraction (aka left inverse); *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comm_square_inverse_is_sect\n  {A B : Type} {f : A -> B}\n  {A' B' : Type} {f' : A' -> B'}\n  (wA : A <~> A') (wB : B <~> B')\n  (wf : f' o wA == wB o f) (a : A)\n  : comm_square_comp wf (comm_square_inverse wf) a @ eissect wB (f a)\n   = ap f (eissect wA a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comm_square_comp wf (comm_square_inverse wf) a @ eissect wB (f a) =\nap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comm_square_comp wf (comm_square_inverse wf) a @ eissect wB (f a) =\nap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold comm_square_inverse, comm_square_comp; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(((eissect wB (f (wA^-1 (wA a))))^ @\n  ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a)))) @\n ap wB^-1 (wf a)) @\neissect wB (f a) = ap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat lhs napply concat_pp_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(eissect wB (f (wA^-1 (wA a))))^ @\n(ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @\n (ap wB^-1 (wf a) @ eissect wB (f a))) =\nap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_Vp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @\n(ap wB^-1 (wf a) @ eissect wB (f a)) =\neissect wB (f (wA^-1 (wA a))) @ ap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity (ap (wB ^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @\n(ap wB^-1 (wf a) @ eissect wB (f a)) =\nap (wB^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (wB^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a) =\neissect wB (f (wA^-1 (wA a))) @ ap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: {",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (wB^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a) =\neissect wB (f (wA^-1 (wA a))) @ ap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply (concat_Ap (eissect wB)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eissect wB (f (wA^-1 (wA a))) @ ap idmap (ap f (eissect wA a)) =\neissect wB (f (wA^-1 (wA a))) @ ap f (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n       "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, ap_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @\n(ap wB^-1 (wf a) @ eissect wB (f a)) =\nap (wB^-1 o wB) (ap f (eissect wA a)) @ eissect wB (f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply concat_p_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @\n ap wB^-1 (wf a)) @\neissect wB (f a) =\nap (fun x : B => wB^-1 (wB x)) (ap f (eissect wA a)) @ eissect wB (f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB^-1 ((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @ ap wB^-1 (wf a) =\nap (fun x : B => wB^-1 (wB x)) (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V napply ap_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB^-1 (((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @ wf a) =\nap (fun x : B => wB^-1 (wB x)) (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs napply ap_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB^-1 (((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @ wf a) =\nap wB^-1 (ap wB (ap f (eissect wA a)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((wf (wA^-1 (wA a)))^ @ ap f' (eisretr wA (wA a))) @ wf a =\nap wB (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply concat_pp_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(wf (wA^-1 (wA a)))^ @ (ap f' (eisretr wA (wA a)) @ wf a) =\nap wB (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_Vp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f' (eisretr wA (wA a)) @ wf a =\nwf (wA^-1 (wA a)) @ ap wB (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (ap (f' o wA) (eissect wA a) @ wf a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f' (eisretr wA (wA a)) @ wf a =\nap (fun x : A => f' (wA x)) (eissect wA a) @ wf a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : A => f' (wA x)) (eissect wA a) @ wf a =\nwf (wA^-1 (wA a)) @ ap wB (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f' (eisretr wA (wA a)) @ wf a =\nap (fun x : A => f' (wA x)) (eissect wA a) @ wf a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f' (eisretr wA (wA a)) = ap (fun x : A => f' (wA x)) (eissect wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs napply ap_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f' (eisretr wA (wA a)) = ap f' (ap wA (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, eisadj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : A => f' (wA x)) (eissect wA a) @ wf a =\nwf (wA^-1 (wA a)) @ ap wB (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply (concat_Ap wf).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 (wA a)) @ ap (fun x : A => wB (f x)) (eissect wA a) =\nwf (wA^-1 (wA a)) @ ap wB (ap f (eissect wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply whiskerL, (ap_compose f wB).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** and similarly, [comm_square_inverse] is a section (aka right [equiv_inv]). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma comm_square_inverse_is_retr\n  {A B : Type} {f : A -> B}\n  {A' B' : Type} {f' : A' -> B'}\n  (wA : A <~> A') (wB : B <~> B')\n  (wf : f' o wA == wB o f) (a : A')\n  : comm_square_comp (comm_square_inverse wf) wf a @ eisretr wB (f' a)\n  = ap f' (eisretr wA a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comm_square_comp (comm_square_inverse wf) wf a @ eisretr wB (f' a) =\nap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "comm_square_comp (comm_square_inverse wf) wf a @ eisretr wB (f' a) =\nap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold comm_square_inverse, comm_square_comp; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(wf (wA^-1 a) @\n ap wB\n   ((eissect wB (f (wA^-1 a)))^ @\n    ap wB^-1 ((wf (wA^-1 a))^ @ ap f' (eisretr wA a)))) @\neisretr wB (f' a) = ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !ap_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(wf (wA^-1 a) @\n (ap wB (eissect wB (f (wA^-1 a)))^ @\n  (ap wB (ap wB^-1 (wf (wA^-1 a))^) @ ap wB (ap wB^-1 (ap f' (eisretr wA a)))))) @\neisretr wB (f' a) = ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- !concat_pp_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(((wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^) @\n  ap wB (ap wB^-1 (wf (wA^-1 a))^)) @\n ap wB (ap wB^-1 (ap f' (eisretr wA a)))) @\neisretr wB (f' a) = ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite concat_pp_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^) @\n ap wB (ap wB^-1 (wf (wA^-1 a))^)) @\n(ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)) =\nap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (p := (ap wB (ap (wB ^-1) (ap f' (eisretr wA a)))\n            @ eisretr wB (f' a))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^) @\n ap wB (ap wB^-1 (wf (wA^-1 a))^)) @\np = ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via ((eisretr wB _)^ @ p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^) @\n ap wB (ap wB^-1 (wf (wA^-1 a))^)) @\np = (eisretr wB (f' (wA (wA^-1 a))))^ @ p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(eisretr wB (f' (wA (wA^-1 a))))^ @ p = ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^) @\n ap wB (ap wB^-1 (wf (wA^-1 a))^)) @\np = (eisretr wB (f' (wA (wA^-1 a))))^ @ p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^) @\nap wB (ap wB^-1 (wf (wA^-1 a))^) = (eisretr wB (f' (wA (wA^-1 a))))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_pM.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^ =\n(eisretr wB (f' (wA (wA^-1 a))))^ @ (ap wB (ap wB^-1 (wf (wA^-1 a))^))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via ((eisretr wB (f' (wA (wA ^-1 a))))^ @\n      ap (wB o wB ^-1) (wf ((wA ^-1) a))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^ =\n(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a)) =\n(eisretr wB (f' (wA (wA^-1 a))))^ @ (ap wB (ap wB^-1 (wf (wA^-1 a))^))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 a) @ ap wB (eissect wB (f (wA^-1 a)))^ =\n(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ap_V, <- eisadj.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 a) @ (eisretr wB (wB (f (wA^-1 a))))^ =\n(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity (ap idmap (wf ((wA ^-1) a))\n                       @ (eisretr wB (wB (f ((wA ^-1) a))))^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 a) @ (eisretr wB (wB (f (wA^-1 a))))^ =\nap idmap (wf (wA^-1 a)) @ (eisretr wB (wB (f (wA^-1 a))))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap idmap (wf (wA^-1 a)) @ (eisretr wB (wB (f (wA^-1 a))))^ =\n(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "wf (wA^-1 a) @ (eisretr wB (wB (f (wA^-1 a))))^ =\nap idmap (wf (wA^-1 a)) @ (eisretr wB (wB (f (wA^-1 a))))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply whiskerR, inverse, ap_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap idmap (wf (wA^-1 a)) @ (eisretr wB (wB (f (wA^-1 a))))^ =\n(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (concat_Ap (fun b' => (eisretr wB b')^) _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(eisretr wB (f' (wA (wA^-1 a))))^ @\nap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a)) =\n(eisretr wB (f' (wA (wA^-1 a))))^ @ (ap wB (ap wB^-1 (wf (wA^-1 a))^))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : B' => wB (wB^-1 x)) (wf (wA^-1 a)) =\n(ap wB (ap wB^-1 (wf (wA^-1 a))^))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ap_compose, !ap_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB (ap wB^-1 (wf (wA^-1 a))) = ((ap wB (ap wB^-1 (wf (wA^-1 a))))^)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inverse, inv_V.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(eisretr wB (f' (wA (wA^-1 a))))^ @ p = ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_Vp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = eisretr wB (f' (wA (wA^-1 a))) @ ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a)",
+              "type": "wB (wB^-1 (f' (wA (wA^-1 a)))) = f' a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "subst p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap wB (ap wB^-1 (ap f' (eisretr wA a))) @ eisretr wB (f' a) =\neisretr wB (f' (wA (wA^-1 a))) @ ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- ap_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : B' => wB (wB^-1 x)) (ap f' (eisretr wA a)) @ eisretr wB (f' a) =\neisretr wB (f' (wA (wA^-1 a))) @ ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (eisretr wB _ @ ap idmap (ap f' (eisretr wA a))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : B' => wB (wB^-1 x)) (ap f' (eisretr wA a)) @ eisretr wB (f' a) =\neisretr wB (f' (wA (wA^-1 a))) @ ap idmap (ap f' (eisretr wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr wB (f' (wA (wA^-1 a))) @ ap idmap (ap f' (eisretr wA a)) =\neisretr wB (f' (wA (wA^-1 a))) @ ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : B' => wB (wB^-1 x)) (ap f' (eisretr wA a)) @ eisretr wB (f' a) =\neisretr wB (f' (wA (wA^-1 a))) @ ap idmap (ap f' (eisretr wA a))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (concat_Ap (eisretr wB) _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr wB (f' (wA (wA^-1 a))) @ ap idmap (ap f' (eisretr wA a)) =\neisretr wB (f' (wA (wA^-1 a))) @ ap f' (eisretr wA a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f'"
+              ],
+              "body": null,
+              "type": "A' -> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wA"
+              ],
+              "body": null,
+              "type": "A <~> A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wB"
+              ],
+              "body": null,
+              "type": "B <~> B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "f' o wA == wB o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, ap_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

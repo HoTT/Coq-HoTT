@@ -1,0 +1,390 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Unset Elimination Schemes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Polymorphic Inductive Cumulativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Lists *)\n\n(** ** Definition *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A list is a sequence of elements from a type [A]. This is a very useful datatype and has many applications ranging from programming to algebra. It can be thought of a free monoid. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive list@{i|} (A : Type@{i}) : Type@{i} :=\n| nil : list A\n| cons : A -> list A -> list A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments nil {A}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments cons {A} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope list_scope with list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope list_scope with list.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This messes with Coq's parsing of [] in Ltac. Therefore we keep it commented out. It's not difficult to write [nil] instead. *)\n(* Notation \"[]\" := nil : list_scope. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"::\" := cons : list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Scheme list_rect := Induction for list Sort Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Scheme list_ind := Induction for list Sort Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Scheme list_rec := Minimality for list Sort Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A tactic for doing induction over a list that avoids spurious universes. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac simple_list_induction l h t IH :=\n  try generalize dependent l;\n  fix IH 1;\n  intros [| h t];\n  [ clear IH | specialize (IH t) ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Syntactic sugar for creating lists. [ [a1, b2, ..., an] = a1 :: b2 :: ... :: an :: nil ]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"[ x ]\" := (x :: nil) : list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"[ x , y , .. , z ]\" := (x :: (y :: .. (z :: nil) ..)) : list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Length *)\n\n(** Notice that the definition of a list looks very similar to the definition of [nat]. It is as if each [S] constructor from [nat] has an element of [A] attached to it. We can discard this extra element and get a list invariant that we call [length]. *)\n\n(** The length (number of elements) of a list. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint length {A : Type} (l : list A) :=\n  match l with\n  | nil => O\n  | _ :: l => S (length l)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Concatenation *)\n\n(** Given two lists [ [a1; a2; ...; an] ] and [ [b1; b2; ...; bm] ], we can concatenate them to get [ [a1; a2; ...; an; b1; b2; ...; bm] ]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition app {A : Type} : list A -> list A -> list A :=\n  fix app l m :=\n  match l with\n   | nil => m\n   | a :: l1 => a :: app l1 m\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Infix \"++\" := app : list_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Folding *)\n\n(** Folding is a very important operation on lists. It is a way to reduce a list to a single value. The [fold_left] function starts from the left and the [fold_right] function starts from the right. *)\n\n(** [fold_left f l a0] computes [f (... (f (f a0 x1) x2) ...) xn] where [l = [x1; x2; ...; xn]]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint fold_left {A B} (f : A -> B -> A) (l : list B) (default : A) : A :=\n  match l with\n    | nil => default\n    | cons b l => fold_left f l (f default b)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [fold_right f a0 l] computes [f x1 (f x2 ... (f xn a0) ...)] where [l = [x1; x2; ...; xn]]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint fold_right {A B} (f : B -> A -> A) (default : A) (l : list B) : A :=\n  match l with\n    | nil => default\n    | cons b l => f b (fold_right f default l)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Maps - Functoriality of Lists *)\n\n(** The [list_map] function applies a function to each element of a list. In other words [ list_map f [a1; a2; ...; an] = [f a1; f a2; ...; f an] ]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint list_map {A B : Type} (f : A -> B) (l : list A) :=\n  match l with\n  | nil => nil\n  | x :: l => (f x) :: (list_map f l)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The [list_map2] function applies a binary function to corresponding elements of two lists. When one of the lists run out, it uses one of the default functions to fill in the rest. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint list_map2 {A B C : Type} (f : A -> B -> C)\n  (def_l : list A -> list C) (def_r : list B -> list C) l1 l2 :=\n  match l1, l2 with\n  | nil, nil => nil\n  | nil, _ => def_r l2\n  | _, nil => def_l l1\n  | x :: l1, y :: l2 => (f x y) :: (list_map2 f def_l def_r l1 l2)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Reversal *)\n\n(** Tail-recursive list reversal. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint reverse_acc {A : Type} (acc : list A) (l : list A) : list A :=\n  match l with\n  | nil => acc\n  | x :: l => reverse_acc (x :: acc) l\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Reversing the order of a list. The list [ [a1; a2; ...; an] ] becomes [ [an; ...; a2; a1] ]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition reverse {A : Type} (l : list A) : list A := reverse_acc nil l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Getting Elements *)\n\n(** The head of a list is its first element. Returns [None] If the list is empty. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition head {A : Type} (l : list A) : option A :=\n  match l with\n  | nil => None\n  | a :: _ => Some a\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The tail of a list is the list without its first element. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition tail {A : Type} (l : list A) : list A :=\n  match l with\n    | nil => nil\n    | a :: m => m\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The last element of a list. If the list is empty, it returns [None]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint last {A : Type} (l : list A) : option A :=\n  match l with\n  | nil => None\n  | a :: nil => Some a\n  | _ :: l => last l\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The [n]-th element of a list. If the list is too short, it returns [None]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint nth {A : Type} (l : list A) (n : nat) : option A :=\n  match n, l with\n  | O, x :: _ => Some x\n  | S n, _ :: l => nth l n\n  | _, _ => None\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Removing Elements *)\n\n(** Remove the last element of a list and do nothing if it is empty. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint remove_last {A : Type} (l : list A) : list A :=\n  match l with\n  | nil => nil\n  | _ :: nil => nil\n  | x :: l => x :: remove_last l\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Sequences *)\n\n(** Descending sequence of natural numbers starting from [n.-1] to [0]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint seq_rev (n : nat) : list nat :=\n    match n with\n    | O => nil\n    | S n => n :: seq_rev n\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Ascending sequence of natural numbers [< n]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition seq (n : nat) : list nat := reverse (seq_rev n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Repeat *)\n\n(** Repeat an element [n] times. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint repeat {A : Type} (x : A) (n : nat) : list A :=\n  match n with\n  | O => nil\n  | S n => x :: repeat x n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Membership Predicate *)\n\n(** The \"In list\" predicate *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint InList@{i|} {A : Type@{i}} (a : A) (l : list A) : Type@{i} :=\n  match l with\n    | nil => Empty\n    | b :: m => (b = a) + InList a m\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Forall *)\n\n(** Apply a predicate to all elements of a list and take their conjunction. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint for_all@{i j|} {A : Type@{i}} (P : A -> Type@{j}) l : Type@{j} :=\n  match l with\n  | nil => Unit\n  | x :: l => P x /\\ for_all P l\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Exists *)\n\n(** Apply a predicate to all elements of a list and take their disjunction. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint list_exists@{i j|} {A : Type@{i}} (P : A -> Type@{j}) l : Type@{j} :=\n  match l with\n  | nil => Empty\n  | x :: l => P x + list_exists P l\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,378 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Universal objects *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Contractible.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Category.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition of \"unique up to unique isomorphism\" *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition unique_up_to_unique_isomorphism (C : PreCategory) (P : C -> Type) :=\n  forall x (_ : P x) x' (_ : P x'),\n    { c : Contr (morphism C x x')\n    | IsIsomorphism (center (morphism C x x')) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Terminal objects *)\n(** A terminal object is an object with a unique morphism from every\n    other object. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation IsTerminalObject C x :=\n  (forall x' : object C, Contr (morphism C x' x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class TerminalObject (C : PreCategory) :=\n  {\n    object_terminal : C;\n    isterminal_object_terminal :: IsTerminalObject C object_terminal\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion object_terminal : TerminalObject >-> object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Initial objects *)\n(** An initial object is an object with a unique morphism from every\n    other object. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation IsInitialObject C x :=\n  (forall x' : object C, Contr (morphism C x x')).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class InitialObject (C : PreCategory) :=\n  {\n    object_initial : C;\n    isinitial_object_initial :: IsInitialObject C object_initial\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion object_initial : InitialObject >-> object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments unique_up_to_unique_isomorphism [C] P.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Canonical morphisms *)\n  \n(** The unique morphism from an initial object. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition morphism_from_initial {C : PreCategory} {I : InitialObject C}\n  (Y : object C)\n  : morphism C I Y\n  := center (morphism C I Y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The unique morphism to a terminal object. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition morphism_to_terminal {C : PreCategory} {T : TerminalObject C}\n  (X : object C)\n  : morphism C X T\n  := center (morphism C X T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Initial and terminal objects are unique up to unique isomorphism *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section CategoryObjectsTheorems.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac unique :=\n    repeat first [ intro\n                 | exists _\n                 | exists (center (morphism C _ _))\n                 | apply path_contr ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The terminal object is unique up to unique isomorphism. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem terminal_object_unique\n    : unique_up_to_unique_isomorphism (fun x => IsTerminalObject C x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unique_up_to_unique_isomorphism (fun x : C => IsTerminalObject C x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unique_up_to_unique_isomorphism (fun x : C => IsTerminalObject C x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The initial object is unique up to unique isomorphism. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem initial_object_unique\n    : unique_up_to_unique_isomorphism (fun x => IsInitialObject C x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unique_up_to_unique_isomorphism (fun x : C => IsInitialObject C x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "unique_up_to_unique_isomorphism (fun x : C => IsInitialObject C x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Any two morphisms from an initial object are equal. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition initial_morphism_unique {I X : object C}\n    `{IsInitialObject C I} (f g : morphism C I X)\n    : f = g\n    := path_contr f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    \n  (** Any two morphisms to a terminal object are equal. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition terminal_morphism_unique {T X : object C}\n    `{IsTerminalObject C T} (f g : morphism C X T)\n    : f = g\n    := path_contr f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End CategoryObjectsTheorems.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

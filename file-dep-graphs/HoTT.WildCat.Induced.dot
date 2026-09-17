@@ -1,0 +1,25 @@
+digraph HoTT_WildCat_Induced {
+  graph [ratio=0.5]
+  node [style=filled]
+Induced_hasequivs_induced [label="hasequivs_induced", URL=<Induced.html#hasequivs_induced>, peripheries=3, fillcolor="#F070D1"] ;
+Induced_hasmorext_induced [label="hasmorext_induced", URL=<Induced.html#hasmorext_induced>, peripheries=3, fillcolor="#F070D1"] ;
+Induced_is1functor_induced [label="is1functor_induced", URL=<Induced.html#is1functor_induced>, peripheries=3, fillcolor="#F070D1"] ;
+Induced_is1cat_induced [label="is1cat_induced", URL=<Induced.html#is1cat_induced>, fillcolor="#F070D1"] ;
+Induced_is2graph_induced [label="is2graph_induced", URL=<Induced.html#is2graph_induced>, fillcolor="#F070D1"] ;
+Induced_is0functor_induced [label="is0functor_induced", URL=<Induced.html#is0functor_induced>, fillcolor="#F070D1"] ;
+Induced_is0gpd_induced [label="is0gpd_induced", URL=<Induced.html#is0gpd_induced>, peripheries=3, fillcolor="#F070D1"] ;
+Induced_is01cat_induced [label="is01cat_induced", URL=<Induced.html#is01cat_induced>, fillcolor="#F070D1"] ;
+Induced_isgraph_induced [label="isgraph_induced", URL=<Induced.html#isgraph_induced>, fillcolor="#F070D1"] ;
+  Induced_hasequivs_induced -> Induced_is1cat_induced [] ;
+  Induced_hasmorext_induced -> Induced_is1cat_induced [] ;
+  Induced_is1functor_induced -> Induced_is1cat_induced [] ;
+  Induced_is1functor_induced -> Induced_is0functor_induced [] ;
+  Induced_is1cat_induced -> Induced_is2graph_induced [] ;
+  Induced_is1cat_induced -> Induced_is01cat_induced [] ;
+  Induced_is2graph_induced -> Induced_isgraph_induced [] ;
+  Induced_is0functor_induced -> Induced_isgraph_induced [] ;
+  Induced_is0gpd_induced -> Induced_is01cat_induced [] ;
+  Induced_is01cat_induced -> Induced_isgraph_induced [] ;
+subgraph cluster_Induced { label="Induced"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Induced_isgraph_induced; Induced_is01cat_induced; Induced_is0gpd_induced; Induced_is0functor_induced; Induced_is2graph_induced; Induced_is1cat_induced; Induced_is1functor_induced; Induced_hasmorext_induced; Induced_hasequivs_induced; };
+} /* END */

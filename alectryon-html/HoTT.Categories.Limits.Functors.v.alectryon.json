@@ -1,0 +1,244 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * (co)limits assemble into functors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import KanExtensions.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Limits.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NatCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** (co)limits assemble into functors *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** Colimit functor, which is left adjoint to \u0394 *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section colimit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(has_colimits\n              : forall F : Functor D C,\n                  @IsColimit _ C D F (colimits F)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** TODO(jgross): We'll probably want to compose this with the\n        functor from [1 \u2192 C] to [C], and then compose the adjunctions\n        similarly.  This will require turning the equality in the\n        exponential laws into an adjunction. Probably not very\n        hard. *)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition colimit_functor : Functor (D -> C) (1 -> C)\n      := left_kan_extension_functor has_colimits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition colimit_adjunction\n    : colimit_functor -| diagonal_functor _ _\n      := left_kan_extension_adjunction has_colimits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End colimit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section limit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `(has_limits\n              : forall F : Functor D C,\n                  @IsLimit _ C D F (limits F)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** TODO(jgross): We'll probably want to compose this with the\n        functor from [1 -> C] to [C], and then compose the adjunctions\n        similarly.  This will require turning the equality in the\n        exponential laws into an adjunction. Probably not very\n        hard. *)\n\n    (** ** Limit functor, which is right adjoint to \u0394 *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition limit_functor : Functor (D -> C) (1 -> C)\n      := right_kan_extension_functor has_limits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition limit_adjunction\n    : diagonal_functor _ _ -| limit_functor\n      := right_kan_extension_adjunction has_limits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End limit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

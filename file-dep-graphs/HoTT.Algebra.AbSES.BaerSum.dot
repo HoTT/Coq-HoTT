@@ -1,0 +1,68 @@
+digraph HoTT_Algebra_AbSES_BaerSum {
+  graph [ratio=0.5]
+  node [style=filled]
+BaerSum_baer_sum_pullback [label="baer_sum_pullback", URL=<BaerSum.html#baer_sum_pullback>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_pushout [label="baer_sum_pushout", URL=<BaerSum.html#baer_sum_pushout>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_is1bifunctor_abses [label="is1bifunctor_abses", URL=<BaerSum.html#is1bifunctor_abses>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_is0bifunctor_abses [label="is0bifunctor_abses", URL=<BaerSum.html#is0bifunctor_abses>, fillcolor="#F070D1"] ;
+BaerSum_ishspace_abses [label="ishspace_abses", URL=<BaerSum.html#ishspace_abses>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_associative [label="baer_sum_associative", URL=<BaerSum.html#baer_sum_associative>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_twist [label="baer_sum_twist", URL=<BaerSum.html#baer_sum_twist>, fillcolor="#F070D1"] ;
+BaerSum_twist_trinary_baer_sum [label="twist_trinary_baer_sum", URL=<BaerSum.html#twist_trinary_baer_sum>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_is_trinary [label="baer_sum_is_trinary", URL=<BaerSum.html#baer_sum_is_trinary>, fillcolor="#F070D1"] ;
+BaerSum_abses_trinary_baer_sum [label="abses_trinary_baer_sum", URL=<BaerSum.html#abses_trinary_baer_sum>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_distributive_pushouts [label="baer_sum_distributive_pushouts", URL=<BaerSum.html#baer_sum_distributive_pushouts>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_inverse_r [label="baer_sum_inverse_r", URL=<BaerSum.html#baer_sum_inverse_r>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_inverse_l [label="baer_sum_inverse_l", URL=<BaerSum.html#baer_sum_inverse_l>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_unit_l [label="baer_sum_unit_l", URL=<BaerSum.html#baer_sum_unit_l>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_unit_r [label="baer_sum_unit_r", URL=<BaerSum.html#baer_sum_unit_r>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_commutative [label="baer_sum_commutative", URL=<BaerSum.html#baer_sum_commutative>, fillcolor="#F070D1"] ;
+BaerSum_baer_sum_distributive_pullbacks [label="baer_sum_distributive_pullbacks", URL=<BaerSum.html#baer_sum_distributive_pullbacks>, fillcolor="#F070D1"] ;
+BaerSum_abses_reorder_pullback_pushout [label="abses_reorder_pullback_pushout", URL=<BaerSum.html#abses_reorder_pullback_pushout>, fillcolor="#F070D1"] ;
+BaerSum_is1bifunctor_abses_ [label="is1bifunctor_abses'", URL=<BaerSum.html#is1bifunctor_abses'>, peripheries=3, fillcolor="#F070D1"] ;
+BaerSum_is0bifunctor_abses_ [label="is0bifunctor_abses'", URL=<BaerSum.html#is0bifunctor_abses'>, fillcolor="#F070D1"] ;
+BaerSum_abses_pushout_pullback_reorder [label="abses_pushout_pullback_reorder", URL=<BaerSum.html#abses_pushout_pullback_reorder>, fillcolor="#F070D1"] ;
+BaerSum_abses_pushout_pullback_reorder_ [label="abses_pushout_pullback_reorder'", URL=<BaerSum.html#abses_pushout_pullback_reorder'>, fillcolor="#F070D1"] ;
+BaerSum_abses_pushout_is_pullback [label="abses_pushout_is_pullback", URL=<BaerSum.html#abses_pushout_is_pullback>, fillcolor="#F070D1"] ;
+BaerSum_abses_pushout_is_pullback_ [label="abses_pushout_is_pullback'", URL=<BaerSum.html#abses_pushout_is_pullback'>, fillcolor="#F070D1"] ;
+BaerSum_abses_baer_sum [label="abses_baer_sum", URL=<BaerSum.html#abses_baer_sum>, fillcolor="#F070D1"] ;
+  BaerSum_baer_sum_pullback -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_baer_sum_pullback -> BaerSum_abses_baer_sum [] ;
+  BaerSum_baer_sum_pushout -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_baer_sum_pushout -> BaerSum_abses_baer_sum [] ;
+  BaerSum_is1bifunctor_abses -> BaerSum_is0bifunctor_abses [] ;
+  BaerSum_is1bifunctor_abses -> BaerSum_ishspace_abses [] ;
+  BaerSum_ishspace_abses -> BaerSum_baer_sum_unit_l [] ;
+  BaerSum_baer_sum_associative -> BaerSum_baer_sum_twist [] ;
+  BaerSum_baer_sum_associative -> BaerSum_baer_sum_commutative [] ;
+  BaerSum_baer_sum_twist -> BaerSum_twist_trinary_baer_sum [] ;
+  BaerSum_baer_sum_twist -> BaerSum_baer_sum_is_trinary [] ;
+  BaerSum_twist_trinary_baer_sum -> BaerSum_abses_trinary_baer_sum [] ;
+  BaerSum_twist_trinary_baer_sum -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_twist_trinary_baer_sum -> BaerSum_abses_pushout_is_pullback [] ;
+  BaerSum_baer_sum_is_trinary -> BaerSum_abses_trinary_baer_sum [] ;
+  BaerSum_baer_sum_is_trinary -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_baer_sum_is_trinary -> BaerSum_abses_baer_sum [] ;
+  BaerSum_baer_sum_distributive_pushouts -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_baer_sum_distributive_pushouts -> BaerSum_abses_pushout_is_pullback [] ;
+  BaerSum_baer_sum_distributive_pushouts -> BaerSum_abses_baer_sum [] ;
+  BaerSum_baer_sum_inverse_r -> BaerSum_baer_sum_inverse_l [] ;
+  BaerSum_baer_sum_inverse_r -> BaerSum_baer_sum_commutative [] ;
+  BaerSum_baer_sum_inverse_l -> BaerSum_baer_sum_distributive_pullbacks [] ;
+  BaerSum_baer_sum_unit_l -> BaerSum_baer_sum_unit_r [] ;
+  BaerSum_baer_sum_unit_l -> BaerSum_baer_sum_commutative [] ;
+  BaerSum_baer_sum_unit_r -> BaerSum_baer_sum_distributive_pullbacks [] ;
+  BaerSum_baer_sum_commutative -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_baer_sum_commutative -> BaerSum_abses_pushout_is_pullback [] ;
+  BaerSum_baer_sum_commutative -> BaerSum_abses_baer_sum [] ;
+  BaerSum_baer_sum_distributive_pullbacks -> BaerSum_abses_reorder_pullback_pushout [] ;
+  BaerSum_baer_sum_distributive_pullbacks -> BaerSum_abses_baer_sum [] ;
+  BaerSum_abses_reorder_pullback_pushout -> BaerSum_abses_pushout_is_pullback [] ;
+  BaerSum_is1bifunctor_abses_ -> BaerSum_is0bifunctor_abses_ [] ;
+  BaerSum_is1bifunctor_abses_ -> BaerSum_abses_pushout_pullback_reorder [] ;
+  BaerSum_abses_pushout_pullback_reorder -> BaerSum_abses_pushout_pullback_reorder_ [] ;
+  BaerSum_abses_pushout_pullback_reorder_ -> BaerSum_abses_pushout_is_pullback_ [] ;
+  BaerSum_abses_pushout_is_pullback -> BaerSum_abses_pushout_is_pullback_ [] ;
+subgraph cluster_BaerSum { label="BaerSum"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+BaerSum_abses_baer_sum; BaerSum_abses_pushout_is_pullback_; BaerSum_abses_pushout_is_pullback; BaerSum_abses_pushout_pullback_reorder_; BaerSum_abses_pushout_pullback_reorder; BaerSum_is0bifunctor_abses_; BaerSum_is1bifunctor_abses_; BaerSum_abses_reorder_pullback_pushout; BaerSum_baer_sum_distributive_pullbacks; BaerSum_baer_sum_commutative; BaerSum_baer_sum_unit_r; BaerSum_baer_sum_unit_l; BaerSum_baer_sum_inverse_l; BaerSum_baer_sum_inverse_r; BaerSum_baer_sum_distributive_pushouts; BaerSum_abses_trinary_baer_sum; BaerSum_baer_sum_is_trinary; BaerSum_twist_trinary_baer_sum; BaerSum_baer_sum_twist; BaerSum_baer_sum_associative; BaerSum_ishspace_abses; BaerSum_is0bifunctor_abses; BaerSum_is1bifunctor_abses; BaerSum_baer_sum_pushout; BaerSum_baer_sum_pullback; };
+} /* END */

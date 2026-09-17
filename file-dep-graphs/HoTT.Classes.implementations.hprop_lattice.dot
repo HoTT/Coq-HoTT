@@ -1,0 +1,48 @@
+digraph HoTT_Classes_implementations_hprop_lattice {
+  graph [ratio=0.5]
+  node [style=filled]
+hprop_lattice_boundedlattice_hprop [label="boundedlattice_hprop", URL=<hprop_lattice.html#boundedlattice_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+hprop_lattice_absorption_hand_hor [label="absorption_hand_hor", URL=<hprop_lattice.html#absorption_hand_hor>, fillcolor="#F070D1"] ;
+hprop_lattice_absorption_hor_hand [label="absorption_hor_hand", URL=<hprop_lattice.html#absorption_hor_hand>, fillcolor="#F070D1"] ;
+hprop_lattice_rightidentity_hand [label="rightidentity_hand", URL=<hprop_lattice.html#rightidentity_hand>, fillcolor="#F070D1"] ;
+hprop_lattice_leftidentity_hand [label="leftidentity_hand", URL=<hprop_lattice.html#leftidentity_hand>, fillcolor="#F070D1"] ;
+hprop_lattice_rightidentity_hor [label="rightidentity_hor", URL=<hprop_lattice.html#rightidentity_hor>, fillcolor="#F070D1"] ;
+hprop_lattice_leftidentity_hor [label="leftidentity_hor", URL=<hprop_lattice.html#leftidentity_hor>, fillcolor="#F070D1"] ;
+hprop_lattice_idempotent_hand [label="idempotent_hand", URL=<hprop_lattice.html#idempotent_hand>, fillcolor="#F070D1"] ;
+hprop_lattice_idempotent_hor [label="idempotent_hor", URL=<hprop_lattice.html#idempotent_hor>, fillcolor="#F070D1"] ;
+hprop_lattice_associative_hand [label="associative_hand", URL=<hprop_lattice.html#associative_hand>, fillcolor="#F070D1"] ;
+hprop_lattice_associative_hor [label="associative_hor", URL=<hprop_lattice.html#associative_hor>, fillcolor="#F070D1"] ;
+hprop_lattice_commutative_hand [label="commutative_hand", URL=<hprop_lattice.html#commutative_hand>, fillcolor="#F070D1"] ;
+hprop_lattice_commutative_hor [label="commutative_hor", URL=<hprop_lattice.html#commutative_hor>, fillcolor="#F070D1"] ;
+hprop_lattice_top_hprop [label="top_hprop", URL=<hprop_lattice.html#top_hprop>, fillcolor="#F070D1"] ;
+hprop_lattice_bottom_hprop [label="bottom_hprop", URL=<hprop_lattice.html#bottom_hprop>, fillcolor="#F070D1"] ;
+hprop_lattice_meet_hprop [label="meet_hprop", URL=<hprop_lattice.html#meet_hprop>, fillcolor="#F070D1"] ;
+hprop_lattice_hand [label="hand", URL=<hprop_lattice.html#hand>, fillcolor="#F070D1"] ;
+hprop_lattice_join_hor [label="join_hor", URL=<hprop_lattice.html#join_hor>, fillcolor="#F070D1"] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_absorption_hand_hor [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_absorption_hor_hand [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_rightidentity_hand [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_leftidentity_hand [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_rightidentity_hor [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_leftidentity_hor [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_idempotent_hand [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_idempotent_hor [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_associative_hand [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_associative_hor [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_commutative_hand [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_commutative_hor [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_top_hprop [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_bottom_hprop [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_meet_hprop [] ;
+  hprop_lattice_boundedlattice_hprop -> hprop_lattice_join_hor [] ;
+  hprop_lattice_absorption_hand_hor -> hprop_lattice_hand [] ;
+  hprop_lattice_absorption_hor_hand -> hprop_lattice_hand [] ;
+  hprop_lattice_rightidentity_hand -> hprop_lattice_hand [] ;
+  hprop_lattice_leftidentity_hand -> hprop_lattice_hand [] ;
+  hprop_lattice_idempotent_hand -> hprop_lattice_hand [] ;
+  hprop_lattice_associative_hand -> hprop_lattice_hand [] ;
+  hprop_lattice_commutative_hand -> hprop_lattice_hand [] ;
+  hprop_lattice_meet_hprop -> hprop_lattice_hand [] ;
+subgraph cluster_hprop_lattice { label="hprop_lattice"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+hprop_lattice_join_hor; hprop_lattice_hand; hprop_lattice_meet_hprop; hprop_lattice_bottom_hprop; hprop_lattice_top_hprop; hprop_lattice_commutative_hor; hprop_lattice_commutative_hand; hprop_lattice_associative_hor; hprop_lattice_associative_hand; hprop_lattice_idempotent_hor; hprop_lattice_idempotent_hand; hprop_lattice_leftidentity_hor; hprop_lattice_rightidentity_hor; hprop_lattice_leftidentity_hand; hprop_lattice_rightidentity_hand; hprop_lattice_absorption_hor_hand; hprop_lattice_absorption_hand_hor; hprop_lattice_boundedlattice_hprop; };
+} /* END */

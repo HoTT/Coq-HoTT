@@ -1,0 +1,32 @@
+digraph HoTT_Classes_theory_groups {
+  graph [ratio=0.5]
+  node [style=filled]
+groups_projected_ab_group [label="projected_ab_group", URL=<groups.html#projected_ab_group>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_group [label="projected_group", URL=<groups.html#projected_group>, fillcolor="#F070D1"] ;
+groups_projected_com_monoid [label="projected_com_monoid", URL=<groups.html#projected_com_monoid>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_monoid [label="projected_monoid", URL=<groups.html#projected_monoid>, fillcolor="#F070D1"] ;
+groups_projected_com_sg [label="projected_com_sg", URL=<groups.html#projected_com_sg>, peripheries=3, fillcolor="#F070D1"] ;
+groups_projected_comm [label="projected_comm", URL=<groups.html#projected_comm>, fillcolor="#F070D1"] ;
+groups_projected_sg [label="projected_sg", URL=<groups.html#projected_sg>, fillcolor="#F070D1"] ;
+groups_preserves_inverse [label="preserves_inverse", URL=<groups.html#preserves_inverse>, peripheries=3, fillcolor="#F070D1"] ;
+groups_negate_sg_op_distr [label="negate_sg_op_distr", URL=<groups.html#negate_sg_op_distr>, peripheries=3, fillcolor="#F070D1"] ;
+groups_inverse_sg_op [label="inverse_sg_op", URL=<groups.html#inverse_sg_op>, fillcolor="#F070D1"] ;
+groups_group_cancelR [label="group_cancelR", URL=<groups.html#group_cancelR>, peripheries=3, fillcolor="#F070D1"] ;
+groups_group_cancelL [label="group_cancelL", URL=<groups.html#group_cancelL>, fillcolor="#F070D1"] ;
+groups_inverse_mon_unit [label="inverse_mon_unit", URL=<groups.html#inverse_mon_unit>, peripheries=3, fillcolor="#F070D1"] ;
+groups_isinj_group_inverse [label="isinj_group_inverse", URL=<groups.html#isinj_group_inverse>, peripheries=3, fillcolor="#F070D1"] ;
+groups_inverse_involutive [label="inverse_involutive", URL=<groups.html#inverse_involutive>, fillcolor="#F070D1"] ;
+  groups_projected_ab_group -> groups_projected_group [] ;
+  groups_projected_ab_group -> groups_projected_comm [] ;
+  groups_projected_group -> groups_projected_monoid [] ;
+  groups_projected_com_monoid -> groups_projected_monoid [] ;
+  groups_projected_com_monoid -> groups_projected_comm [] ;
+  groups_projected_monoid -> groups_projected_sg [] ;
+  groups_projected_com_sg -> groups_projected_comm [] ;
+  groups_projected_com_sg -> groups_projected_sg [] ;
+  groups_preserves_inverse -> groups_group_cancelL [] ;
+  groups_negate_sg_op_distr -> groups_inverse_sg_op [] ;
+  groups_isinj_group_inverse -> groups_inverse_involutive [] ;
+subgraph cluster_groups { label="groups"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+groups_inverse_involutive; groups_isinj_group_inverse; groups_inverse_mon_unit; groups_group_cancelL; groups_group_cancelR; groups_inverse_sg_op; groups_negate_sg_op_distr; groups_preserves_inverse; groups_projected_sg; groups_projected_comm; groups_projected_com_sg; groups_projected_monoid; groups_projected_com_monoid; groups_projected_group; groups_projected_ab_group; };
+} /* END */

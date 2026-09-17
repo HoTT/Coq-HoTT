@@ -1,0 +1,60 @@
+digraph HoTT_Classes_theory_fields {
+  graph [ratio=0.5]
+  node [style=filled]
+fields_preserves_recip [label="preserves_recip", URL=<fields.html#preserves_recip>, peripheries=3, fillcolor="#F070D1"] ;
+fields_isstronginjective_field_homomorphism [label="isstronginjective_field_homomorphism", URL=<fields.html#isstronginjective_field_homomorphism>, peripheries=3, fillcolor="#F070D1"] ;
+fields_strong_injective_preserves_0 [label="strong_injective_preserves_0", URL=<fields.html#strong_injective_preserves_0>, fillcolor="#F070D1"] ;
+fields_recip_involutive [label="recip_involutive", URL=<fields.html#recip_involutive>, peripheries=3, fillcolor="#F070D1"] ;
+fields_recip_on_apart [label="recip_on_apart", URL=<fields.html#recip_on_apart>, fillcolor="#F070D1"] ;
+fields_recip_apart [label="recip_apart", URL=<fields.html#recip_apart>, fillcolor="#F070D1"] ;
+fields_recip_negate [label="recip_negate", URL=<fields.html#recip_negate>, peripheries=3, fillcolor="#F070D1"] ;
+fields_negate_apart [label="negate_apart", URL=<fields.html#negate_apart>, fillcolor="#F070D1"] ;
+fields_apart_negate [label="apart_negate", URL=<fields.html#apart_negate>, fillcolor="#F070D1"] ;
+fields_recip_distr_alt [label="recip_distr_alt", URL=<fields.html#recip_distr_alt>, peripheries=3, fillcolor="#F070D1"] ;
+fields_equal_quotients [label="equal_quotients", URL=<fields.html#equal_quotients>, peripheries=3, fillcolor="#F070D1"] ;
+fields_field_div_diag [label="field_div_diag", URL=<fields.html#field_div_diag>, peripheries=3, fillcolor="#F070D1"] ;
+fields_field_div_0_l [label="field_div_0_l", URL=<fields.html#field_div_0_l>, peripheries=3, fillcolor="#F070D1"] ;
+fields_recip_apart_zero [label="recip_apart_zero", URL=<fields.html#recip_apart_zero>, fillcolor="#F070D1"] ;
+fields_apart_0_sig_apart_0 [label="apart_0_sig_apart_0", URL=<fields.html#apart_0_sig_apart_0>, peripheries=3, fillcolor="#F070D1"] ;
+fields_isintegraldomain_field [label="isintegraldomain_field", URL=<fields.html#isintegraldomain_field>, fillcolor="#F070D1"] ;
+fields_nozerodivisors_field [label="nozerodivisors_field", URL=<fields.html#nozerodivisors_field>, fillcolor="#F070D1"] ;
+fields_mult_apart_zero [label="mult_apart_zero", URL=<fields.html#mult_apart_zero>, peripheries=3, fillcolor="#F070D1"] ;
+fields_mult_apart_zero_r [label="mult_apart_zero_r", URL=<fields.html#mult_apart_zero_r>, fillcolor="#F070D1"] ;
+fields_mult_apart_zero_l [label="mult_apart_zero_l", URL=<fields.html#mult_apart_zero_l>, fillcolor="#F070D1"] ;
+fields_strongrightcancellation_mult_field [label="strongrightcancellation_mult_field", URL=<fields.html#strongrightcancellation_mult_field>, peripheries=3, fillcolor="#F070D1"] ;
+fields_strongleftcancellation_mult_field [label="strongleftcancellation_mult_field", URL=<fields.html#strongleftcancellation_mult_field>, fillcolor="#F070D1"] ;
+fields_strongrightcancellation_plus_field [label="strongrightcancellation_plus_field", URL=<fields.html#strongrightcancellation_plus_field>, peripheries=3, fillcolor="#F070D1"] ;
+fields_strongleftcancellation_plus_field [label="strongleftcancellation_plus_field", URL=<fields.html#strongleftcancellation_plus_field>, fillcolor="#F070D1"] ;
+fields_isstronginjective_recip_field [label="isstronginjective_recip_field", URL=<fields.html#isstronginjective_recip_field>, peripheries=3, fillcolor="#F070D1"] ;
+fields_isstronginjective_negation_field [label="isstronginjective_negation_field", URL=<fields.html#isstronginjective_negation_field>, peripheries=3, fillcolor="#F070D1"] ;
+fields_apart_0_proper [label="apart_0_proper", URL=<fields.html#apart_0_proper>, peripheries=3, fillcolor="#F070D1"] ;
+fields_recip_irrelevant [label="recip_irrelevant", URL=<fields.html#recip_irrelevant>, peripheries=3, fillcolor="#F070D1"] ;
+fields_recip_proper [label="recip_proper", URL=<fields.html#recip_proper>, peripheries=3, fillcolor="#F070D1"] ;
+fields_recip_proper_alt [label="recip_proper_alt", URL=<fields.html#recip_proper_alt>, fillcolor="#F070D1"] ;
+fields_reciperse_alt [label="reciperse_alt", URL=<fields.html#reciperse_alt>, fillcolor="#F070D1"] ;
+fields_recip_inverse_ [label="recip_inverse'", URL=<fields.html#recip_inverse'>, fillcolor="#F070D1"] ;
+fields_recip_ [label="recip'", URL=<fields.html#recip'>, peripheries=3, fillcolor="#F070D1"] ;
+  fields_preserves_recip -> fields_isintegraldomain_field [] ;
+  fields_isstronginjective_field_homomorphism -> fields_strong_injective_preserves_0 [] ;
+  fields_isstronginjective_field_homomorphism -> fields_mult_apart_zero_l [] ;
+  fields_isstronginjective_field_homomorphism -> fields_reciperse_alt [] ;
+  fields_recip_involutive -> fields_recip_on_apart [] ;
+  fields_recip_involutive -> fields_recip_apart_zero [] ;
+  fields_recip_involutive -> fields_nozerodivisors_field [] ;
+  fields_recip_involutive -> fields_recip_inverse_ [] ;
+  fields_recip_on_apart -> fields_recip_apart [] ;
+  fields_recip_negate -> fields_negate_apart [] ;
+  fields_recip_negate -> fields_nozerodivisors_field [] ;
+  fields_negate_apart -> fields_apart_negate [] ;
+  fields_recip_distr_alt -> fields_nozerodivisors_field [] ;
+  fields_recip_apart_zero -> fields_mult_apart_zero_r [] ;
+  fields_isintegraldomain_field -> fields_nozerodivisors_field [] ;
+  fields_nozerodivisors_field -> fields_reciperse_alt [] ;
+  fields_mult_apart_zero -> fields_reciperse_alt [] ;
+  fields_strongrightcancellation_mult_field -> fields_strongleftcancellation_mult_field [] ;
+  fields_strongleftcancellation_mult_field -> fields_reciperse_alt [] ;
+  fields_strongrightcancellation_plus_field -> fields_strongleftcancellation_plus_field [] ;
+  fields_recip_irrelevant -> fields_recip_proper_alt [] ;
+subgraph cluster_fields { label="fields"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+fields_recip_; fields_recip_inverse_; fields_reciperse_alt; fields_recip_proper_alt; fields_recip_proper; fields_recip_irrelevant; fields_apart_0_proper; fields_isstronginjective_negation_field; fields_isstronginjective_recip_field; fields_strongleftcancellation_plus_field; fields_strongrightcancellation_plus_field; fields_strongleftcancellation_mult_field; fields_strongrightcancellation_mult_field; fields_mult_apart_zero_l; fields_mult_apart_zero_r; fields_mult_apart_zero; fields_nozerodivisors_field; fields_isintegraldomain_field; fields_apart_0_sig_apart_0; fields_recip_apart_zero; fields_field_div_0_l; fields_field_div_diag; fields_equal_quotients; fields_recip_distr_alt; fields_apart_negate; fields_negate_apart; fields_recip_negate; fields_recip_apart; fields_recip_on_apart; fields_recip_involutive; fields_strong_injective_preserves_0; fields_isstronginjective_field_homomorphism; fields_preserves_recip; };
+} /* END */

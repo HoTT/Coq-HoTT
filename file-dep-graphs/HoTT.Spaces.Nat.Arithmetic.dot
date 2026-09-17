@@ -1,0 +1,58 @@
+digraph HoTT_Spaces_Nat_Arithmetic {
+  graph [ratio=0.5]
+  node [style=filled]
+Arithmetic_symmetric_rel_total_order [label="symmetric_rel_total_order", URL=<Arithmetic.html#symmetric_rel_total_order>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_leq_wrapper [label="leq_wrapper", URL=<Arithmetic.html#leq_wrapper>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_leq_equivalent [label="leq_equivalent", URL=<Arithmetic.html#leq_equivalent>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_ineq_sub [label="ineq_sub", URL=<Arithmetic.html#ineq_sub>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_ineq_sub_ [label="ineq_sub'", URL=<Arithmetic.html#ineq_sub'>, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_minus [label="increasing_geq_minus", URL=<Arithmetic.html#increasing_geq_minus>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_n_0 [label="increasing_geq_n_0", URL=<Arithmetic.html#increasing_geq_n_0>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_S_n [label="increasing_geq_S_n", URL=<Arithmetic.html#increasing_geq_S_n>, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_rect [label="increasing_geq_rect", URL=<Arithmetic.html#increasing_geq_rect>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_rec [label="increasing_geq_rec", URL=<Arithmetic.html#increasing_geq_rec>, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_ind [label="increasing_geq_ind", URL=<Arithmetic.html#increasing_geq_ind>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_increasing_geq_S [label="increasing_geq_S", URL=<Arithmetic.html#increasing_geq_S>, fillcolor="#7FAAFF"] ;
+Arithmetic_increasing_geq_n [label="increasing_geq_n", URL=<Arithmetic.html#increasing_geq_n>, fillcolor="#7FAAFF"] ;
+Arithmetic_increasing_geq [label="increasing_geq", URL=<Arithmetic.html#increasing_geq>, fillcolor="#E2CDFA"] ;
+Arithmetic_n_leq_m_n_leq_plus_m_k [label="n_leq_m_n_leq_plus_m_k", URL=<Arithmetic.html#n_leq_m_n_leq_plus_m_k>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_sub_less_strict [label="sub_less_strict", URL=<Arithmetic.html#sub_less_strict>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_sub_less [label="sub_less", URL=<Arithmetic.html#sub_less>, fillcolor="#F070D1"] ;
+Arithmetic_pred_preserves_lt [label="pred_preserves_lt", URL=<Arithmetic.html#pred_preserves_lt>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_pred_gt_implies_lt [label="pred_gt_implies_lt", URL=<Arithmetic.html#pred_gt_implies_lt>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_j_geq_0_lt_implies_pred_geq [label="j_geq_0_lt_implies_pred_geq", URL=<Arithmetic.html#j_geq_0_lt_implies_pred_geq>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_lt_implies_pred_geq [label="lt_implies_pred_geq", URL=<Arithmetic.html#lt_implies_pred_geq>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_pred_lt_implies_leq [label="pred_lt_implies_leq", URL=<Arithmetic.html#pred_lt_implies_leq>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_leq_implies_pred_lt [label="leq_implies_pred_lt", URL=<Arithmetic.html#leq_implies_pred_lt>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_n_leq_pred_Sn [label="n_leq_pred_Sn", URL=<Arithmetic.html#n_leq_pred_Sn>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_pred_equiv [label="pred_equiv", URL=<Arithmetic.html#pred_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_predn_leq_n [label="predn_leq_n", URL=<Arithmetic.html#predn_leq_n>, fillcolor="#F070D1"] ;
+Arithmetic_predeqminus1 [label="predeqminus1", URL=<Arithmetic.html#predeqminus1>, fillcolor="#F070D1"] ;
+Arithmetic_i_lt_n_sum_m [label="i_lt_n_sum_m", URL=<Arithmetic.html#i_lt_n_sum_m>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_nat_sub_add_ineq [label="nat_sub_add_ineq", URL=<Arithmetic.html#nat_sub_add_ineq>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_nataddsub_comm_ineq [label="nataddsub_comm_ineq", URL=<Arithmetic.html#nataddsub_comm_ineq>, peripheries=3, fillcolor="#F070D1"] ;
+Arithmetic_nataddsub_comm_ineq_lemma [label="nataddsub_comm_ineq_lemma", URL=<Arithmetic.html#nataddsub_comm_ineq_lemma>, fillcolor="#F070D1"] ;
+  Arithmetic_leq_equivalent -> Arithmetic_increasing_geq_S_n [] ;
+  Arithmetic_ineq_sub -> Arithmetic_ineq_sub_ [] ;
+  Arithmetic_ineq_sub -> Arithmetic_sub_less [] ;
+  Arithmetic_increasing_geq_minus -> Arithmetic_increasing_geq_S [] ;
+  Arithmetic_increasing_geq_minus -> Arithmetic_increasing_geq_n [] ;
+  Arithmetic_increasing_geq_minus -> Arithmetic_increasing_geq [] ;
+  Arithmetic_increasing_geq_minus -> Arithmetic_predeqminus1 [] ;
+  Arithmetic_increasing_geq_n_0 -> Arithmetic_increasing_geq_rec [] ;
+  Arithmetic_increasing_geq_n_0 -> Arithmetic_increasing_geq_S [] ;
+  Arithmetic_increasing_geq_n_0 -> Arithmetic_increasing_geq_n [] ;
+  Arithmetic_increasing_geq_S_n -> Arithmetic_increasing_geq_rec [] ;
+  Arithmetic_increasing_geq_S_n -> Arithmetic_increasing_geq_S [] ;
+  Arithmetic_increasing_geq_S_n -> Arithmetic_increasing_geq_n [] ;
+  Arithmetic_increasing_geq_rect -> Arithmetic_increasing_geq_rec [] ;
+  Arithmetic_increasing_geq_rec -> Arithmetic_increasing_geq [] ;
+  Arithmetic_increasing_geq_ind -> Arithmetic_increasing_geq_S [] ;
+  Arithmetic_increasing_geq_ind -> Arithmetic_increasing_geq_n [] ;
+  Arithmetic_increasing_geq_ind -> Arithmetic_increasing_geq [] ;
+  Arithmetic_sub_less_strict -> Arithmetic_sub_less [] ;
+  Arithmetic_pred_gt_implies_lt -> Arithmetic_predn_leq_n [] ;
+  Arithmetic_nataddsub_comm_ineq -> Arithmetic_nataddsub_comm_ineq_lemma [] ;
+subgraph cluster_Arithmetic { label="Arithmetic"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Arithmetic_nataddsub_comm_ineq_lemma; Arithmetic_nataddsub_comm_ineq; Arithmetic_nat_sub_add_ineq; Arithmetic_i_lt_n_sum_m; Arithmetic_predeqminus1; Arithmetic_predn_leq_n; Arithmetic_pred_equiv; Arithmetic_n_leq_pred_Sn; Arithmetic_leq_implies_pred_lt; Arithmetic_pred_lt_implies_leq; Arithmetic_lt_implies_pred_geq; Arithmetic_j_geq_0_lt_implies_pred_geq; Arithmetic_pred_gt_implies_lt; Arithmetic_pred_preserves_lt; Arithmetic_sub_less; Arithmetic_sub_less_strict; Arithmetic_n_leq_m_n_leq_plus_m_k; Arithmetic_increasing_geq; Arithmetic_increasing_geq_n; Arithmetic_increasing_geq_S; Arithmetic_increasing_geq_ind; Arithmetic_increasing_geq_rec; Arithmetic_increasing_geq_rect; Arithmetic_increasing_geq_S_n; Arithmetic_increasing_geq_n_0; Arithmetic_increasing_geq_minus; Arithmetic_ineq_sub_; Arithmetic_ineq_sub; Arithmetic_leq_equivalent; Arithmetic_leq_wrapper; Arithmetic_symmetric_rel_total_order; };
+} /* END */

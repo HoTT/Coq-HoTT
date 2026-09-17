@@ -1,0 +1,13 @@
+digraph HoTT_Pointed_pSect {
+  graph [ratio=0.5]
+  node [style=filled]
+pSect_equiv_psect_psnd [label="equiv_psect_psnd", URL=<pSect.html#equiv_psect_psnd>, peripheries=3, fillcolor="#F070D1"] ;
+pSect_equiv_pequiv_pslice_psect [label="equiv_pequiv_pslice_psect", URL=<pSect.html#equiv_pequiv_pslice_psect>, peripheries=3, fillcolor="#F070D1"] ;
+pSect_issig_psect [label="issig_psect", URL=<pSect.html#issig_psect>, peripheries=3, fillcolor="#F070D1"] ;
+pSect_pSect [label="pSect", URL=<pSect.html#pSect>, fillcolor="#F070D1"] ;
+  pSect_equiv_psect_psnd -> pSect_pSect [] ;
+  pSect_equiv_pequiv_pslice_psect -> pSect_pSect [] ;
+  pSect_issig_psect -> pSect_pSect [] ;
+subgraph cluster_pSect { label="pSect"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+pSect_pSect; pSect_issig_psect; pSect_equiv_pequiv_pslice_psect; pSect_equiv_psect_psnd; };
+} /* END */

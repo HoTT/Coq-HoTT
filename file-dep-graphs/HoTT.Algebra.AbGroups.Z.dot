@@ -1,0 +1,11 @@
+digraph HoTT_Algebra_AbGroups_Z {
+  graph [ratio=0.5]
+  node [style=filled]
+Z_abgroup_Z_ab_mul [label="abgroup_Z_ab_mul", URL=<Z.html#abgroup_Z_ab_mul>, peripheries=3, fillcolor="#F070D1"] ;
+Z_grp_pow_homo [label="grp_pow_homo", URL=<Z.html#grp_pow_homo>, peripheries=3, fillcolor="#F070D1"] ;
+Z_abgroup_Z [label="abgroup_Z", URL=<Z.html#abgroup_Z>, fillcolor="#F070D1"] ;
+  Z_abgroup_Z_ab_mul -> Z_abgroup_Z [] ;
+  Z_grp_pow_homo -> Z_abgroup_Z [] ;
+subgraph cluster_Z { label="Z"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Z_abgroup_Z; Z_grp_pow_homo; Z_abgroup_Z_ab_mul; };
+} /* END */

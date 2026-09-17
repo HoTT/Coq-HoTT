@@ -1,0 +1,2986 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Pointed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Pointed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Encode-decode method of characterizing identity types *)\n\n(** See Homotopy/IdentitySystems.v for a related characterization of identity types. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition encode_decode\n  (A : Type) (a0 : A) (code : A -> Type)\n  (c0 : code a0) (decode : forall x, code x -> a0 = x)\n  (s : forall (c : code a0), decode _ c # c0 = c)\n  (r : decode _ c0 = idpath) (a1 : A)\n  : a0 = a1 <~> code a1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a0 = a1 <~> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a0 = a1 <~> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a0 = a1 -> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "code a1 -> a0 = a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o ?f == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a0 = a1 -> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun p => p # c0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "code a1 -> a0 = a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply decode.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun p : a0 = a1 => transport code p c0) o decode a1 == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport code (decode a1 p) c0 = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (decode _ p) in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport code (decode a0 p) c0 = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "decode a1 o (fun p : a0 = a1 => transport code p c0) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "decode a0 (transport code 1 c0) = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> a0 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0, transport code (decode a0 c) c0 = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Encode-decode for truncated identity-types *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition encode_decode_trunc n\n  (A : Type) (a0 : A) (code : A -> Type) `{forall a, IsTrunc n (code a)}\n  (c0 : code a0) (decode : forall x, code x -> Tr n (a0 = x))\n  (s : forall (c : code a0), Trunc_rec (fun p => p # c0) (decode _ c) = c)\n  (r : decode _ c0 = tr idpath) (a1 : A)\n  : Tr n (a0 = a1) <~> code a1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n (a0 = a1) <~> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n (a0 = a1) <~> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n (a0 = a1) -> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "code a1 -> Tr n (a0 = a1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o ?f == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr n (a0 = a1) -> code a1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Trunc_rec (fun p => p # c0)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "code a1 -> Tr n (a0 = a1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply decode.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_rec (fun p : a0 = a1 => transport code p c0) o decode a1 == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_rec (fun p0 : a0 = a1 => transport code p0 c0) (decode a1 p) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (decode _ p) as p'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_rec (fun p0 : a0 = a1 => transport code p0 c0) (decode a1 p) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": "decode a1 p",
+              "type": "Tr n (a0 = a1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clearbody p'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_rec (fun p0 : a0 = a1 => transport code p0 c0) (decode a1 p) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "Tr n (a0 = a1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_rec (fun p0 : a0 = a1 => transport code p0 c0) (decode a1 p) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p'"
+              ],
+              "body": null,
+              "type": "a0 = a1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p' in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 p) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "code a0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "decode a1 o Trunc_rec (fun p : a0 = a1 => transport code p c0) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "decode a1 (Trunc_rec (fun p0 : a0 = a1 => transport code p0 c0) p) = p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Tr n (a0 = a1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "decode a1 (Trunc_rec (fun p0 : a0 = a1 => transport code p0 c0) (tr p)) =\ntr p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p0 : a0 = a0 => transport code p0 c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a0 = a1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "decode a0 (Trunc_rec (fun p : a0 = a0 => transport code p c0) (tr 1)) = tr 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "code"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsTrunc n (code a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c0"
+              ],
+              "body": null,
+              "type": "code a0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "decode"
+              ],
+              "body": null,
+              "type": "forall x : A, code x -> Tr n (a0 = x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall c : code a0,\nTrunc_rec (fun p : a0 = a0 => transport code p c0) (decode a0 c) = c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "decode a0 c0 = tr 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Encode-decode for loop spaces *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition encode_decode_loops\n  (A : pType) (code : pFam A)\n  (decode : forall x, code x -> point A = x)\n  (s : forall (c : code (point A)), decode _ c # (dpoint code) = c)\n  (r : decode _ (dpoint code) = idpath)\n  : loops A <~> code (point A)\n  := encode_decode _ _ code (dpoint code) decode s r _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Encode-decode for truncated loop spaces *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition encode_decode_trunc_loops n\n  (A : pType) (code : pFam A) `{forall a, IsTrunc n (code a)}\n  (decode : forall x, code x -> Tr n (point A = x))\n  (s : forall (c : code (point A)),\n    Trunc_rec (fun (p : loops A) => p # (dpoint code)) (decode _ c) = c)\n  (r : decode _ (dpoint code) = tr idpath)\n  : pTr n (loops A) <~> code (point A)\n  := encode_decode_trunc _ _ _ code (dpoint code) decode s r _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    }
+  ]
+]

@@ -1,0 +1,6248 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Export Basics.Classes Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Basics.Classes Basics.Overture.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Classes.interfaces.canonical_names.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modalities.ReflectiveSubuniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Polymorphic Inductive Cumulativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables A B C f g x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*\nFor various structures we omit declaration of substructures. For example, if we\nsay:\n\nClass Setoid_Morphism :=\n  { setoidmor_a : Setoid A\n  ; setoidmor_b : Setoid B\n  ; sm_proper : Proper ((=) ==> (=)) f }.\n#[export] Existing Instances setoidmor_a setoidmor_b sm_proper.\n\nthen each time a Setoid instance is required, Coq will try to prove that a\nSetoid_Morphism exists. This obviously results in an enormous blow-up of the\nsearch space. Moreover, one should be careful to declare a Setoid_Morphisms\nas a substructure. Consider [f t1 t2], now if we want to perform setoid rewriting\nin [t2] Coq will first attempt to prove that [f t1] is Proper, for which it will\nattempt to prove [Setoid_Morphism (f t1)]. If many structures declare\nSetoid_Morphism as a substructure, setoid rewriting will become horribly slow.\n*)\n\n(* An unbundled variant of the former CoRN CSetoid. We do not\n  include a proof that A is a Setoid because it can be derived. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsApart A {Aap : Apart A} : Type :=\n  { apart_set :: IsHSet A\n  ; apart_mere :: is_mere_relation _ apart\n  ; apart_symmetric :: Symmetric (\u2276)\n  ; apart_cotrans :: CoTransitive (\u2276)\n  ; tight_apart : forall x y, ~(x \u2276 y) <-> x = y }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance apart_irrefl `{IsApart A} : Irreflexive (\u2276).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Irreflexive apart",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Irreflexive apart",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ap"
+              ],
+              "body": null,
+              "type": "x \u2276 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (tight_apart x x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ap"
+              ],
+              "body": null,
+              "type": "x \u2276 x"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x \u2276 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ap"
+              ],
+              "body": null,
+              "type": "x \u2276 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ap"
+              ],
+              "body": null,
+              "type": "x \u2276 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x \u2276 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsApart A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ap"
+              ],
+              "body": null,
+              "type": "x \u2276 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments tight_apart {A Aap IsApart} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section setoid_morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrongExtensionality := strong_extensionality : forall x y, f x \u2276 f y -> x \u2276 y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End setoid_morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* HOTT TODO check if this is ok/useful *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (?f _ = ?f _) => eapply (ap f) : core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section setoid_binary_morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B C} {Aap: Apart A}\n    {Bap : Apart B} {Cap : Apart C} (f : A -> B -> C).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrongBinaryExtensionality := strong_binary_extensionality\n    : forall x\u2081 y\u2081 x\u2082 y\u2082, f x\u2081 y\u2081 \u2276 f x\u2082 y\u2082 -> hor (x\u2081 \u2276 x\u2082) (y\u2081 \u2276 y\u2082).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End setoid_binary_morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*\nSince apartness usually only becomes relevant when considering fields (e.g. the\nreal numbers), we do not include it in the lower part of the algebraic hierarchy\n(as opposed to CoRN).\n*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section upper_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universe i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (A : Type@{i}).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSemiGroup {Aop: SgOp A} :=\n    { sg_set :: IsHSet A\n    ; sg_ass :: Associative (.*.) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsCommutativeSemiGroup {Aop : SgOp A} :=\n    { comsg_sg :: @IsSemiGroup (.*.)\n    ; comsg_comm :: Commutative (.*.) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSemiLattice {Aop : SgOp A} :=\n    { semilattice_sg :: @IsCommutativeSemiGroup (.*.)\n    ; semilattice_idempotent :: BinaryIdempotent (.*.)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=\n    { monoid_semigroup :: IsSemiGroup\n    ; monoid_left_id :: LeftIdentity (.*.) mon_unit\n    ; monoid_right_id :: RightIdentity (.*.) mon_unit }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsCommutativeMonoid {Aop : SgOp A} {Aunit : MonUnit A} :=\n    { commonoid_mon :: @IsMonoid (.*.) Aunit\n    ; commonoid_commutative :: Commutative (.*.) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsGroup {Aop : SgOp A} {Aunit : MonUnit A} {Ainv : Inverse A} :=\n    { group_monoid :: @IsMonoid (.*.) mon_unit\n    ; inverse_l :: LeftInverse (.*.) (^) mon_unit\n    ; inverse_r :: RightInverse (.*.) (^) mon_unit\n    }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBoundedSemiLattice {Aop : SgOp A} {Aunit : MonUnit A} :=\n    { bounded_semilattice_mon :: @IsCommutativeMonoid (.*.) Aunit\n    ; bounded_semilattice_idempotent :: BinaryIdempotent (.*.)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Close Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsAbGroup {Aop : SgOp A} {Aunit : MonUnit A} {Ainv : Inverse A} :=\n    { abgroup_group :: @IsGroup Aop Aunit Ainv\n    ; abgroup_commutative :: Commutative Aop }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {Aplus : Plus A} {Amult : Mult A} {Azero : Zero A} {Aone : One A}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSemiCRing :=\n    { semiplus_monoid :: @IsCommutativeMonoid (+) 0\n    ; semimult_monoid :: @IsCommutativeMonoid (.*.) 1\n    ; semiring_distr :: LeftDistribute (.*.) (+)\n    ; semiring_left_absorb :: LeftAbsorb (.*.) 0 }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {Anegate : Negate A}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsRing :=\n    { ring_abgroup :: @IsAbGroup (+) 0 (-)\n    ; ring_monoid :: @IsMonoid (.*.) 1\n    ; ring_dist_left :: LeftDistribute (.*.) (+)\n    ; ring_dist_right :: RightDistribute (.*.) (+)\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsCRing :=\n    { cring_group :: @IsAbGroup (+) 0 (-)\n    ; cring_monoid :: @IsCommutativeMonoid (.*.) 1\n    ; cring_dist :: LeftDistribute (.*.) (+) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isring_iscring : IsCRing -> IsRing.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCRing -> IsRing",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCRing -> IsRing",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsRing",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "econstructor; try exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightDistribute mult plus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(a + b) * c = a * c + b * c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs rapply commutativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op c (a + b) = a * c + b * c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs rapply distribute_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c * a + c * b = a * c + b * c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Anegate"
+              ],
+              "body": null,
+              "type": "Negate A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsCRing"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap; apply commutativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsIntegralDomain :=\n    { intdom_ring : IsCRing\n    ; intdom_nontrivial : PropHolds (not (1 = 0))\n    ; intdom_nozeroes :: NoZeroDivisors A }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (* We do not include strong extensionality for (-) and (/)\n    because it can be derived *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsField {Aap: Apart A} {Arecip: Recip A} :=\n    { field_ring :: IsCRing\n    ; field_apart :: IsApart A\n    ; field_plus_ext :: StrongBinaryExtensionality (+)\n    ; field_mult_ext :: StrongBinaryExtensionality (.*.)\n    ; field_nontrivial : PropHolds (1 \u2276 0)\n    ; recip_inverse : forall x, x.1 // x = 1 }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (* We let /0 = 0 so properties as Injective (/),\n    f (/x) = / (f x), / /x = x, /x * /y = /(x * y)\n    hold without any additional assumptions *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsDecField {Adec_recip : DecRecip A} :=\n    { decfield_ring :: IsCRing\n    ; decfield_nontrivial : PropHolds (1 <> 0)\n    ; dec_recip_0 : /0 = 0\n    ; dec_recip_inverse : forall x, x <> 0 -> x / x = 1 }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FieldCharacteristic@{j} {Aap : Apart@{i j} A} (k : nat) : Type@{j}\n    := field_characteristic : forall n : nat,\n        Nat.Core.lt 0 n ->\n        iff@{j j j} (forall m : nat, not@{j} (paths@{Set} n\n                                                  (nat_mul k m)))\n        (@apart A Aap (nat_iter n (1 +) 0) 0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End upper_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Due to bug #2528 *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (PropHolds (1 <> 0)) =>\n  eapply @intdom_nontrivial : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 5 (PropHolds (1 \u2276 0)) =>\n  eapply @field_nontrivial : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 5 (PropHolds (1 <> 0)) =>\n  eapply @decfield_nontrivial : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*\nFor a strange reason IsCRing instances of Integers are sometimes obtained by\nIntegers -> IntegralDomain -> Ring and sometimes directly. Making this an\ninstance with a low priority instead of using intdom_ring:> IsCRing forces Coq to\ntake the right way\n*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 10 (IsCRing _) => apply @intdom_ring : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments recip_inverse {A Aplus Amult Azero Aone Anegate Aap Arecip IsField} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments dec_recip_inverse\n  {A Aplus Amult Azero Aone Anegate Adec_recip IsDecField} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments dec_recip_0 {A Aplus Amult Azero Aone Anegate Adec_recip IsDecField}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section lattice.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context A {Ajoin: Join A} {Ameet: Meet A} {Abottom : Bottom A} {Atop : Top A}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsJoinSemiLattice :=\n    join_semilattice :: @IsSemiLattice A join_is_sg_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBoundedJoinSemiLattice :=\n    bounded_join_semilattice :: @IsBoundedSemiLattice A\n      join_is_sg_op bottom_is_mon_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsMeetSemiLattice :=\n    meet_semilattice :: @IsSemiLattice A meet_is_sg_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBoundedMeetSemiLattice :=\n    bounded_meet_semilattice :: @IsBoundedSemiLattice A\n      meet_is_sg_op top_is_mon_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsLattice :=\n    { lattice_join :: IsJoinSemiLattice\n    ; lattice_meet :: IsMeetSemiLattice\n    ; join_meet_absorption :: Absorption (\u2294) (\u2293)\n    ; meet_join_absorption :: Absorption (\u2293) (\u2294) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBoundedLattice :=\n    { boundedlattice_join :: IsBoundedJoinSemiLattice\n    ; boundedlattice_meet :: IsBoundedMeetSemiLattice\n    ; boundedjoin_meet_absorption :: Absorption (\u2294) (\u2293)\n    ; boundedmeet_join_absorption :: Absorption (\u2293) (\u2294)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsDistributiveLattice :=\n    { distr_lattice_lattice :: IsLattice\n    ; join_meet_distr_l :: LeftDistribute (\u2294) (\u2293) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End lattice.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section morphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sgmorphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B : Type} {Aop : SgOp A} {Bop : SgOp B}\n    {Aunit : MonUnit A} {Bunit : MonUnit B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSemiGroupPreserving (f : A -> B) :=\n    preserves_sg_op : forall x y, f (x * y) = f x * f y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsUnitPreserving (f : A -> B) :=\n    preserves_mon_unit : f mon_unit = mon_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsMonoidPreserving (f : A -> B) :=\n    { monmor_sgmor :: IsSemiGroupPreserving f\n    ; monmor_unitmor :: IsUnitPreserving f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sgmorphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ringmorphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B : Type} {Aplus : Plus A} {Bplus : Plus B}\n    {Amult : Mult A} {Bmult : Mult B} {Azero : Zero A} {Bzero : Zero B}\n    {Aone : One A} {Bone : One B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSemiRingPreserving (f : A -> B) :=\n    { semiringmor_plus_mor :: @IsMonoidPreserving A B\n        (+) (+) 0 0 f\n    ; semiringmor_mult_mor :: @IsMonoidPreserving A B\n        (.*.) (.*.) 1 1 f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {Aap : Apart A} {Bap : Apart B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsSemiRingStrongPreserving (f : A -> B) :=\n    { strong_semiringmor_sr_mor :: IsSemiRingPreserving f\n    ; strong_semiringmor_strong_mor :: StrongExtensionality f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ringmorphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section latticemorphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B : Type} {Ajoin : Join A} {Bjoin : Join B}\n    {Ameet : Meet A} {Bmeet : Meet B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsJoinPreserving (f : A -> B) :=\n    join_slmor_sgmor :: @IsSemiGroupPreserving A B join_is_sg_op join_is_sg_op f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsMeetPreserving (f : A -> B) :=\n    meet_slmor_sgmor :: @IsSemiGroupPreserving A B meet_is_sg_op meet_is_sg_op f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {Abottom : Bottom A} {Bbottom : Bottom B}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBoundedJoinPreserving (f : A -> B) := bounded_join_slmor_monmor\n      :: @IsMonoidPreserving A B join_is_sg_op join_is_sg_op\n         bottom_is_mon_unit bottom_is_mon_unit f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsLatticePreserving (f : A -> B) :=\n    { latticemor_join_mor :: IsJoinPreserving f\n    ; latticemor_meet_mor :: IsMeetPreserving f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End latticemorphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End morphism_classes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section id_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{SgOp A} `{MonUnit A}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance id_sg_morphism : IsSemiGroupPreserving (@id A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving id",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving id",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance id_monoid_morphism : IsMonoidPreserving (@id A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving id",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving id",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; split.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End id_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section compose_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context\n    `{SgOp A} `{MonUnit A}\n    `{SgOp B} `{MonUnit B}\n    `{SgOp C} `{MonUnit C}\n    (f : A -> B) (g : B -> C).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Making these global instances causes typeclass loops.  Instead they are declared below as [Hint Extern]s that apply only when the goal has the specified form. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance compose_sg_morphism : IsSemiGroupPreserving f -> IsSemiGroupPreserving g ->\n    IsSemiGroupPreserving (g \u2218 f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving f ->\nIsSemiGroupPreserving g -> IsSemiGroupPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving f ->\nIsSemiGroupPreserving g -> IsSemiGroupPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "red; intros fp gp x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(g \u2218 f) (sg_op x y) = sg_op ((g \u2218 f) x) ((g \u2218 f) y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f (sg_op x y)) = sg_op (g (f x)) (g (f y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap g _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (sg_op x y) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g ?Goal = sg_op (g (f x)) (g (f y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (sg_op x y) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply fp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (sg_op (f x) (f y)) = sg_op (g (f x)) (g (f y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply gp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance compose_monoid_morphism : IsMonoidPreserving f -> IsMonoidPreserving g ->\n    IsMonoidPreserving (g \u2218 f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving f -> IsMonoidPreserving g -> IsMonoidPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving f -> IsMonoidPreserving g -> IsMonoidPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros;split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving g"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsUnitPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsUnitPreserving (g \u2218 f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "red;unfold Compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f mon_unit) = mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity;[|exact (preserves_mon_unit (f:=g))].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g (f mon_unit) = g mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H3"
+              ],
+              "body": null,
+              "type": "SgOp C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H4"
+              ],
+              "body": null,
+              "type": "MonUnit C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap,preserves_mon_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End compose_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section invert_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context\n    `{SgOp A} `{MonUnit A}\n    `{SgOp B} `{MonUnit B}\n    (f : A -> B).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance invert_sg_morphism\n    : forall `{!IsEquiv f}, IsSemiGroupPreserving f ->\n      IsSemiGroupPreserving (f^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall IsEquiv0 : IsEquiv f,\nIsSemiGroupPreserving f -> IsSemiGroupPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall IsEquiv0 : IsEquiv f,\nIsSemiGroupPreserving f -> IsSemiGroupPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "red; intros E fp x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f^-1 (sg_op x y) = sg_op (f^-1 x) (f^-1 y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 (sg_op x y)) = f (sg_op (f^-1 x) (f^-1 y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply eisretr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op x y = f (sg_op (f^-1 x) (f^-1 y))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (sg_op (f^-1 x) (f^-1 y)) = sg_op x y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply fp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sg_op (f (f^-1 x)) (f (f^-1 y)) = sg_op x y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fp"
+              ],
+              "body": null,
+              "type": "IsSemiGroupPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap; apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance invert_monoid_morphism :\n    forall `{!IsEquiv f}, IsMonoidPreserving f -> IsMonoidPreserving (f^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall IsEquiv0 : IsEquiv f, IsMonoidPreserving f -> IsMonoidPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall IsEquiv0 : IsEquiv f, IsMonoidPreserving f -> IsMonoidPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros;split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsUnitPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsUnitPreserving f^-1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 mon_unit) = f mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 mon_unit) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal = f mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 mon_unit) = ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mon_unit = f mon_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; exact preserves_mon_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End invert_mor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (IsSemiGroupPreserving (_ \u2218 _)) =>\n  class_apply @compose_sg_morphism : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (IsMonoidPreserving (_ \u2218 _)) =>\n  class_apply @compose_monoid_morphism : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (IsSemiGroupPreserving (_ o _)) =>\n  class_apply @compose_sg_morphism : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (IsMonoidPreserving (_ o _)) =>\n  class_apply @compose_monoid_morphism : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (IsSemiGroupPreserving (_^-1)) =>\n  class_apply @invert_sg_morphism : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (IsMonoidPreserving (_^-1)) =>\n  class_apply @invert_monoid_morphism : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nInstance isinjective_mapinO_tr {A B : Type} (f : A -> B)\n  {p : MapIn (Tr (-1)) f} : IsInjective f\n  := fun x y pfeq => ap pr1 (@center _ (p (f y) (x; pfeq) (y; idpath))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section strong_injective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B} {Aap : Apart A} {Bap : Apart B} (f : A -> B) .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsStrongInjective :=\n    { strong_injective : forall x y, x \u2276 y -> f x \u2276 f y\n    ; strong_injective_mor : StrongExtensionality f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End strong_injective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section extras.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class CutMinusSpec A (cm : CutMinus A) `{Zero A} `{Plus A} `{Le A} := {\n  cut_minus_le : forall x y, y \u2264 x -> x \u2238 y + y = x ;\n  cut_minus_0 : forall x y, x \u2264 y -> x \u2238 y = 0\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance istrunc_isunitpreserving `{Funext} {n A B} unitA unitB f\n  : IsTrunc n.+1 B -> IsTrunc n (@IsUnitPreserving A B unitA unitB f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 B -> IsTrunc n (IsUnitPreserving f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unitA"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unitB"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 B -> IsTrunc n (IsUnitPreserving f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unitA"
+              ],
+              "body": null,
+              "type": "MonUnit A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "unitB"
+              ],
+              "body": null,
+              "type": "MonUnit B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold IsUnitPreserving; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance istrunc_issemigrouppreserving `{Funext} {n A B} opA opB f\n  : IsTrunc n.+1 B -> IsTrunc n (@IsSemiGroupPreserving A B opA opB f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 B -> IsTrunc n (IsSemiGroupPreserving f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opA"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opB"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 B -> IsTrunc n (IsSemiGroupPreserving f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opA"
+              ],
+              "body": null,
+              "type": "SgOp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opB"
+              ],
+              "body": null,
+              "type": "SgOp B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold IsSemiGroupPreserving; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_IsSemiRingPreserving {A B : Type}\n  `{Plus A, Plus B, Mult A, Mult B, Zero A, Zero B, One A, One B} {f : A -> B}\n  : _ <~> IsSemiRingPreserving f := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_IsMonoidPreserving {A B : Type} `{SgOp A} `{SgOp B}\n  `{MonUnit A} `{MonUnit B} {f : A -> B} : _ <~> IsMonoidPreserving f\n  := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_ismonoidpreserving `{Funext} {A B : Type} `{SgOp A}\n  `{SgOp B} `{IsHSet B} `{MonUnit A} `{MonUnit B} (f : A -> B)\n  : IsHProp (IsMonoidPreserving f)\n  := istrunc_equiv_istrunc _ issig_IsMonoidPreserving.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_issemiringpreserving `{Funext} {A B : Type} `{IsHSet B}\n  `{Plus A, Plus B, Mult A, Mult B, Zero A, Zero B, One A, One B}\n  (f : A -> B)\n  : IsHProp (IsSemiRingPreserving f)\n  := istrunc_equiv_istrunc _ issig_IsSemiRingPreserving.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_issemigroup x y : _ <~> @IsSemiGroup x y := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_issemigroup `{Funext} x y\n  : IsHProp (@IsSemiGroup x y)\n  := istrunc_equiv_istrunc _ (issig_issemigroup _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_ismonoid x y z : _ <~> @IsMonoid x y z := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_ismonoid `{Funext} x y z : IsHProp (@IsMonoid x y z)\n  := istrunc_equiv_istrunc _ (issig_ismonoid _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_isgroup w x y z : _ <~> @IsGroup w x y z := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_isgroup `{Funext} w x y z : IsHProp (@IsGroup w x y z)\n  := istrunc_equiv_istrunc _ (issig_isgroup _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End extras.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

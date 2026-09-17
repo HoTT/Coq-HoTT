@@ -1,0 +1,40 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Metatheory *)\n\n(** This directory contains files that prove important metatheoretic results about HoTT, but that are not important for internal development of mathematics in HoTT.  Thus, no files in this directory should ever need to be imported by files outside of this directory. *)\n\n(** Many of these results are about ways to prove univalence and function extensionality (which in the main library we simply assert as axioms, though we track their usage with dummy typeclasses).  For convenience, here we define the types of these two statements. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Funext_type@{i j max} :=\n  forall (A : Type@{i}) (P : A -> Type@{j}) f g,\n    IsEquiv (@apD10@{i j max} A P f g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Univalence is a property of a single universe; its statement lives in a higher universe *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Univalence_type@{i iplusone} : Type@{iplusone} :=\n  forall (A B : Type@{i}), IsEquiv (equiv_path@{i iplusone} A B).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

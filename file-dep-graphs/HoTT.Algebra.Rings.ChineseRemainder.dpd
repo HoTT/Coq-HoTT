@@ -1,0 +1,17 @@
+N: 2 "chinese_remainder" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+N: 1 "chinese_remainder_prod" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+N: 3 "issurjection_rng_homo_crt" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+N: 6 "issurjection_rng_homo_crt'" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+N: 7 "rng_homo_crt" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+N: 5 "rng_homo_crt_beta_left" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+N: 4 "rng_homo_crt_beta_right" [body=yes, kind=cnst, prop=no, path="ChineseRemainder", ];
+E: 1 2 [weight=1, ];
+E: 2 3 [weight=1, ];
+E: 2 7 [weight=11, ];
+E: 3 4 [weight=1, ];
+E: 3 5 [weight=1, ];
+E: 3 6 [weight=1, ];
+E: 3 7 [weight=3, ];
+E: 4 7 [weight=2, ];
+E: 5 7 [weight=2, ];
+E: 6 7 [weight=126, ];

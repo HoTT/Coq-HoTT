@@ -1,0 +1,7095 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Universes.HSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core Connectedness SeparatedTrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.Group Subgroup Algebra.AbGroups.Centralizer.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed WildCat WildCat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.ClassifyingSpace.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Colimits.Quotient GraphQuotient.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cubical.PathSquare.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.HomotopyGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Export Homotopy.ClassifyingSpace.Core.ClassifyingSpaceNotation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Mapping spaces between classifying spaces *)\n\n(** The type of pointed maps [B G ->* B H] is known to be equivalent to the set [G $-> H]. In this file, we compute [Pi 0] and [Pi 1] of the general function type [B G -> B H]. *)\n\n(** ** Connected components of [B G -> B H] *)\n\n(** The set of representations is the set of conjugacy classes of group homomorphisms. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition groupreps (G H : Group) : Type\n  := @Quotient (G $-> H) (conj_grp_homo).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We show that the set of connected components of [B G -> B H] is in bijection with [groupreps G H]. *)\n\n(** [fmap B] sends conjugation to the identity map. Therefore, it induces a map [groupreps G H -> Trunc 0 (B G -> B H)]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition idmap_fmap_grp_conj {G : Group} (g : G)\n  : fmap B (grp_conj g) == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap B (grp_conj g) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap B (grp_conj g) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply ClassifyingSpace_ind_hset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b) bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : G,\nDPath.DPath (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b)\n  (bloop x) ?bbase' ?bbase'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b) bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bbase = bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (bloop g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : G,\nDPath.DPath (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b)\n  (bloop x)\n  (bloop g\n   :\n   (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b) bbase)\n  (bloop g\n   :\n   (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b) bbase)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DPath.DPath (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b)\n  (bloop x)\n  (bloop g\n   :\n   (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b) bbase)\n  (bloop g\n   :\n   (fun b : ClassifyingSpace G => fmap B (grp_conj g) b = idmap b) bbase)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply equiv_sq_dp^-1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (bloop g) (bloop g) (ap (fmap B (grp_conj g)) (bloop x))\n  (ap idmap (bloop x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply equiv_sq_path.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop g @ ap idmap (bloop x) = ap (fmap B (grp_conj g)) (bloop x) @ bloop g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ClassifyingSpace_rec_beta_bloop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop g @ ap idmap (bloop x) = bloop (grp_conj g x) @ bloop g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V rapply bloop_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop g @ ap idmap (bloop x) = bloop (grp_conj g x * g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ap_idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop g @ bloop x = bloop (grp_conj g x * g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V rapply bloop_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop (g * x) = bloop (grp_conj g x * g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; exact (ap bloop (grp_inv_gV_g _ g)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition groupreps_to_pi0_map_bg `{ua : Univalence} (G H : Group)\n  : groupreps G H -> Trunc 0 (B G -> B H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupreps G H -> Trunc 0 (B G -> B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupreps G H -> Trunc 0 (B G -> B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (Quotient_rec _ _ _ _); cbn beta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(G $-> H) -> Trunc 0 (B G -> B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : G $-> H, conj_grp_homo a b -> ?Goal a = ?Goal b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(G $-> H) -> Trunc 0 (B G -> B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc 0 (B G -> B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "B G -> B H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fmap B f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : G $-> H,\nconj_grp_homo a b ->\n(fun f : G $-> H => tr (fmap B f)) a = (fun f : G $-> H => tr (fmap B f)) b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a b hr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun f : G $-> H => tr (fmap B f)) a = (fun f : G $-> H => tr (fmap B f)) b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hr"
+              ],
+              "body": null,
+              "type": "conj_grp_homo a b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; destruct hr as [h r].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "tr (fmap B a) = tr (fmap B b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "forall g : G, a g = grp_conj h (b g)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap B a = fmap B b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "forall g : G, a g = grp_conj h (b g)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap B a == fmap B b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "forall g : G, a g = grp_conj h (b g)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' exact (fmap2 (g:=grp_conj h $o b) B r).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap B (grp_conj h $o b) == fmap B b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "forall g : G, a g = grp_conj h (b g)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs' exact (fmap_comp B b (grp_conj h)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap B (grp_conj h) $o fmap B b == fmap B b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "forall g : G, a g = grp_conj h (b g)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap B (grp_conj h) $o fmap B b) x = fmap B b x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "forall g : G, a g = grp_conj h (b g)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "B G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (idmap_fmap_grp_conj h _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We first show that [groupreps_to_pi0_map_bg] is an embedding. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isemb_groupreps_to_pi0_map_bg `{ua : Univalence} {G H : Group}\n  : IsEmbedding (groupreps_to_pi0_map_bg G H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isembedding_isinj_hset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsInjective (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply Quotient_ind2_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : G $-> H,\ngroupreps_to_pi0_map_bg G H\n  (class_of (fun u v : G $-> H => conj_grp_homo u v) a) =\ngroupreps_to_pi0_map_bg G H\n  (class_of (fun u v : G $-> H => conj_grp_homo u v) b) ->\nclass_of (fun u v : G $-> H => conj_grp_homo u v) a =\nclass_of (fun u v : G $-> H => conj_grp_homo u v) b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros u v p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "class_of (fun u0 v0 : G $-> H => conj_grp_homo u0 v0) u =\nclass_of (fun u0 v0 : G $-> H => conj_grp_homo u0 v0) v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "groupreps_to_pi0_map_bg G H\n  (class_of (fun u0 v0 : G $-> H => conj_grp_homo u0 v0) u) =\ngroupreps_to_pi0_map_bg G H\n  (class_of (fun u0 v0 : G $-> H => conj_grp_homo u0 v0) v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply path_quotient.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun u0 v0 : G $-> H => trunctype_type (conj_grp_homo u0 v0)) u v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "groupreps_to_pi0_map_bg G H\n  (class_of (fun u0 v0 : G $-> H => conj_grp_homo u0 v0) u) =\ngroupreps_to_pi0_map_bg G H\n  (class_of (fun u0 v0 : G $-> H => conj_grp_homo u0 v0) v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_path_Tr _ _)^-1 in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun u0 v0 : G $-> H => trunctype_type (conj_grp_homo u0 v0)) u v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Tr (-1) (fmap B u = fmap B v)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : H & forall g : G, u g = grp_conj h (v g)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (h := equiv_g_loops_bg^-1 (ap10 p bbase)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h0 : H & forall g : G, u g = grp_conj h0 (v g)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall g : G, u g = grp_conj h (v g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "u x = grp_conj h (v x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "u x = h * v x * inv h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj equiv_g_loops_bg).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_g_loops_bg (u x) = equiv_g_loops_bg (h * v x * inv h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop (u x) = bloop (h * v x * inv h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite 2 bloop_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop (u x) = (bloop h @ bloop (v x)) @ bloop h^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite bloop_inv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop (u x) = (bloop h @ bloop (v x)) @ (bloop h)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* [h] is defined by applying [equiv_g_loops_bg^-1] and [bloop] is the inverse of that function. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite eisretr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop (u x) = (ap10 p bbase @ bloop (v x)) @ (ap10 p bbase)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- 2 ap_fmap_b_beta_bloop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fmap B u) (bloop x) =\n(ap10 p bbase @ ap (fmap B v) (bloop x)) @ (ap10 p bbase)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u",
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B u = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": "equiv_g_loops_bg^-1 (ap10 p bbase)",
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap_homotopic (ap10 p) (bloop x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** When [Y] is connected, every function [X -> Y] is merely pointed, so [pointed_fun] is a surjection. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance issurj_pointed_fun_conn `{Univalence} {X Y : pType} `{IsConnected 0 Y}\n  : IsSurjection (pointed_fun : (X ->* Y) -> (X -> Y)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (pointed_fun : (X ->* Y) -> X -> Y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (pointed_fun : (X ->* Y) -> X -> Y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancelR_issurjection (issig_pmap X Y)); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (fun x : {f : X -> Y & f pt = pt} => x.1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply conn_map_pr1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** It follows that [groupreps_to_pi0_map_bg] is surjective.  By definition, we have a commutative diagram\n<<\n               fmap B             pointed_fun\n        G $-> H   <~>   (BG ->* BH)  ---------->  (BG -> BH)\n           |                                      |\n  class_of |                                      | tr\n           v                                      v\n        groupreps G H ------------------> Tr 0 (BG -> BH)\n                     groupreps_to_pi0_map_bg\n>>\n    To show that [groupreps_to_pi0_map_bg] is surjective, it suffices to show that this is true after precomposition with [class_of] and so we just need to show that the other three maps are surjective.  Rocq can prove these by typeclass search, with one hint for [tr]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issurj_groupreps_to_pi0_map_bg `{ua : Univalence} {G H : Group}\n  : IsSurjection (groupreps_to_pi0_map_bg G H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancelR_issurjection (class_of _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1))\n  (fun x : G $-> H =>\n   groupreps_to_pi0_map_bg G H\n     (class_of (fun u v : G $-> H => conj_grp_homo u v) x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (IsConnMap (Tr (-1)) (tr (n:=0) o pointed_fun o fmap (a:=G) (b:=H) B)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (tr o pointed_fun o fmap B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (@isconnmap_pred' 0).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (tr o pointed_fun o fmap B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": "@isconnmap_pred' 0",
+              "type": "forall (A B0 : Type) (f : A -> B0),\nIsConnMap (Tr 0) f -> IsConnMap (Tr 0.-1) f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* [tr] is in fact 0-connected, so we give this hint. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_groupreps_to_pi0_map_bg `{ua : Univalence} (G H : Group)\n  : IsEquiv (groupreps_to_pi0_map_bg G H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_surj_emb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact issurj_groupreps_to_pi0_map_bg.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding (groupreps_to_pi0_map_bg G H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact isemb_groupreps_to_pi0_map_bg.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_groupreps_to_pi0_map_bg `{ua : Univalence} (G H : Group)\n  : (groupreps G H) <~> Pi 0 [B G -> B H, fun x => bbase]\n  := Build_Equiv _ _ _ (isequiv_groupreps_to_pi0_map_bg G H).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The fundamental group of [B G -> B H] *)\n\n(** We show that [Pi 1 [B G -> B H, fmap B v]] is equivalent to the centralizer of the image of [v]. *)\n\n(** The map in one direction is induced by [fmap11_B] applied to the subgroup inclusion and [v]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition b_centralizer_grp_image_to_map_bg {G H : Group} (v : G $-> H)\n  : B (subtype_centralizer_subgroup (grp_image v)) -> (B G -> B H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "B (subtype_centralizer_subgroup (grp_image v)) -> B G -> B H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "B (subtype_centralizer_subgroup (grp_image v)) -> B G -> B H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (fmap11_B (subgroup_incl _) v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (g : subtype_centralizer_subgroup (grp_image v)) \n(h : G),\nsubgroup_incl (subtype_centralizer_subgroup (grp_image v)) g * v h =\nv h * subgroup_incl (subtype_centralizer_subgroup (grp_image v)) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [h ch] g; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h * v g = v g * h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ch"
+              ],
+              "body": null,
+              "type": "subtype_centralizer_subgroup (grp_image v) h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "v g * h = h * v g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ch"
+              ],
+              "body": null,
+              "type": "subtype_centralizer_subgroup (grp_image v) h"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "v g * h = h * v g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ch"
+              ],
+              "body": null,
+              "type": "forall h0 : H, grp_image v h0 -> centralizer h0 h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ch (v g) (tr (g; idpath))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition centralizer_grp_image_to_loops_map_bg {G H : Group} (v : G $-> H)\n  : subtype_centralizer_subgroup (grp_image v)\n      -> loops [B G -> B H, fmap B v]\n  := fun x => ap (b_centralizer_grp_image_to_map_bg v) (bloop x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition centralizer_grp_image_to_pi1_map_bg {G H : Group} (v : G $-> H)\n  : subtype_centralizer_subgroup (grp_image v)\n      -> Pi 1 [B G -> B H, fmap B v]\n  := tr o (centralizer_grp_image_to_loops_map_bg v).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We now define the inverse. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pi1_map_bg_to_centralizer_group_image `{ua : Univalence}\n  {G H : Group} (v : G $-> H)\n  : Pi 1 [B G -> B H, fmap B v]\n    $-> subtype_centralizer_subgroup (grp_image v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] $-> subtype_centralizer_subgroup (grp_image v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] $-> subtype_centralizer_subgroup (grp_image v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* It's enough to define a group homomorphism to [H] whose image is in the centralizer. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply subgroup_corec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] $-> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Pi 1 [B G -> B H, fmap B v],\nsubtype_centralizer_subgroup (grp_image v) (?f x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] $-> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_^-1$ $o _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H $<~> ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] $-> ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* For the homomorphism to [H], it's enough to define a homomorphism to [LoopGroup (B H)]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact grp_iso_g_loopgroup_bg.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] $-> LoopGroup (B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* And for that, [ap10] does the trick. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_GroupHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] -> LoopGroup (B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving ?grp_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Pi 1 [B G -> B H, fmap B v] -> LoopGroup (B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LoopGroup (B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pi 1 [B G -> B H, fmap B v]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; change (pointed_fun (fmap B v) = (fmap B v)) in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LoopGroup (B H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap10 p bbase).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving\n  (fun p : Pi 1 [B G -> B H, fmap B v] =>\n   Trunc_ind\n     (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n      LoopGroup (B H))\n     (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n      ap10 p0 bbase)\n     p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros p q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_ind\n  (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n   LoopGroup (B H))\n  (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) => ap10 p0 bbase)\n  (p * q) =\nTrunc_ind\n  (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n   LoopGroup (B H))\n  (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) => ap10 p0 bbase)\n  p *\nTrunc_ind\n  (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n   LoopGroup (B H))\n  (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) => ap10 p0 bbase)\n  q",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p",
+                "q"
+              ],
+              "body": null,
+              "type": "Pi 1 [B G -> B H, fmap B v]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; change (pointed_fun (fmap B v) = fmap B v) in p, q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc_ind\n  (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n   LoopGroup (B H))\n  (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) => ap10 p0 bbase)\n  (tr p * tr q) =\nTrunc_ind\n  (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n   LoopGroup (B H))\n  (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) => ap10 p0 bbase)\n  (tr p) *\nTrunc_ind\n  (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n   LoopGroup (B H))\n  (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) => ap10 p0 bbase)\n  (tr q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap10 (p @ q) bbase = ap10 p bbase @ ap10 q bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap10_pp p q bbase).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Now we need to show that the image of our homomorphism is in the centralizer. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Pi 1 [B G -> B H, fmap B v],\nsubtype_centralizer_subgroup (grp_image v)\n  ((grp_iso_g_loopgroup_bg^-1$ $o\n    {|\n      grp_homo_map :=\n        fun p : Pi 1 [B G -> B H, fmap B v] =>\n        Trunc_ind\n          (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n           LoopGroup (B H))\n          (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n           ap10 p0 bbase)\n          p;\n      issemigrouppreserving_grp_homo :=\n        (fun p q : Pi 1 [B G -> B H, fmap B v] =>\n         Trunc_ind\n           (fun\n              aa : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n            Trunc_ind\n              (fun\n                 _ : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               LoopGroup (B H))\n              (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10 p0 bbase)\n              (p * aa) =\n            Trunc_ind\n              (fun\n                 _ : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               LoopGroup (B H))\n              (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10 p0 bbase)\n              p *\n            Trunc_ind\n              (fun\n                 _ : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               LoopGroup (B H))\n              (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10 p0 bbase)\n              aa)\n           (fun q0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n            Trunc_ind\n              (fun\n                 aa : Trunc 0\n                        (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p0 bbase)\n                 (aa * tr q0) =\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p0 bbase)\n                 aa *\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p0 bbase)\n                 (tr q0))\n              (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10_pp p0 q0 bbase\n               :\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p1 bbase)\n                 (tr p0 * tr q0) =\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p1 bbase)\n                 (tr p0) *\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p1 bbase)\n                 (tr q0))\n              p)\n           q)\n        :\n        IsSemiGroupPreserving\n          (fun p : Pi 1 [B G -> B H, fmap B v] =>\n           Trunc_ind\n             (fun\n                _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n              LoopGroup (B H))\n             (fun p0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n              ap10 p0 bbase)\n             p)\n    |}) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subtype_centralizer_subgroup (grp_image v)\n  ((grp_iso_g_loopgroup_bg^-1$ $o\n    {|\n      grp_homo_map :=\n        fun p0 : Pi 1 [B G -> B H, fmap B v] =>\n        Trunc_ind\n          (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n           LoopGroup (B H))\n          (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n           ap10 p1 bbase)\n          p0;\n      issemigrouppreserving_grp_homo :=\n        (fun p0 q : Pi 1 [B G -> B H, fmap B v] =>\n         Trunc_ind\n           (fun\n              aa : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n            Trunc_ind\n              (fun\n                 _ : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               LoopGroup (B H))\n              (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10 p1 bbase)\n              (p0 * aa) =\n            Trunc_ind\n              (fun\n                 _ : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               LoopGroup (B H))\n              (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10 p1 bbase)\n              p0 *\n            Trunc_ind\n              (fun\n                 _ : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               LoopGroup (B H))\n              (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10 p1 bbase)\n              aa)\n           (fun q0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n            Trunc_ind\n              (fun\n                 aa : Trunc 0\n                        (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p1 bbase)\n                 (aa * tr q0) =\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p1 bbase)\n                 aa *\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p1 bbase)\n                 (tr q0))\n              (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n               ap10_pp p1 q0 bbase\n               :\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p2 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p2 bbase)\n                 (tr p1 * tr q0) =\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p2 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p2 bbase)\n                 (tr p1) *\n               Trunc_ind\n                 (fun\n                    _ : Trunc 0\n                          (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                  LoopGroup (B H))\n                 (fun p2 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                  ap10 p2 bbase)\n                 (tr q0))\n              p0)\n           q)\n        :\n        IsSemiGroupPreserving\n          (fun p0 : Pi 1 [B G -> B H, fmap B v] =>\n           Trunc_ind\n             (fun\n                _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n              LoopGroup (B H))\n             (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n              ap10 p1 bbase)\n             p0)\n    |}) p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Pi 1 [B G -> B H, fmap B v]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; change (pointed_fun (fmap B v) = (fmap B v)) in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subtype_centralizer_subgroup (grp_image v)\n  ((grp_iso_g_loopgroup_bg^-1$ $o\n    {|\n      grp_homo_map :=\n        fun p0 : Pi 1 [B G -> B H, fmap B v] =>\n        Trunc_ind\n          (fun _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n           LoopGroup (B H))\n          (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n           ap10 p1 bbase)\n          p0;\n      issemigrouppreserving_grp_homo :=\n        fun p0 q : Pi 1 [B G -> B H, fmap B v] =>\n        Trunc_ind\n          (fun aa : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n           Trunc_ind\n             (fun\n                _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n              LoopGroup (B H))\n             (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n              ap10 p1 bbase)\n             (p0 * aa) =\n           Trunc_ind\n             (fun\n                _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n              LoopGroup (B H))\n             (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n              ap10 p1 bbase)\n             p0 *\n           Trunc_ind\n             (fun\n                _ : Trunc 0 (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n              LoopGroup (B H))\n             (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n              ap10 p1 bbase)\n             aa)\n          (fun q0 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n           Trunc_ind\n             (fun\n                aa : Trunc 0\n                       (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n              Trunc_ind\n                (fun\n                   _ : Trunc 0\n                         (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                 LoopGroup (B H))\n                (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                 ap10 p1 bbase)\n                (aa * tr q0) =\n              Trunc_ind\n                (fun\n                   _ : Trunc 0\n                         (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                 LoopGroup (B H))\n                (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                 ap10 p1 bbase)\n                aa *\n              Trunc_ind\n                (fun\n                   _ : Trunc 0\n                         (loops (iterated_loops 0 [B G -> B H, fmap B v])) =>\n                 LoopGroup (B H))\n                (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n                 ap10 p1 bbase)\n                (tr q0))\n             (fun p1 : loops (iterated_loops 0 [B G -> B H, fmap B v]) =>\n              ap10_pp p1 q0 bbase)\n             p0)\n          q\n    |}) (tr p))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc (-1)\n  (forall h : H,\n   Trunc (-1) {x : G & v x = h} -> centralizer h (bloop^-1 (ap10 p bbase)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall h : H,\nTrunc (-1) {x : G & v x = h} -> centralizer h (bloop^-1 (ap10 p bbase))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h sh.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer h (bloop^-1 (ap10 p bbase))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sh"
+              ],
+              "body": null,
+              "type": "Trunc (-1) {x : G & v x = h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (centralizer_iso grp_iso_g_loopgroup_bg); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer (bloop h) (bloop (bloop^-1 (ap10 p bbase)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sh"
+              ],
+              "body": null,
+              "type": "Trunc (-1) {x : G & v x = h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (eisretr bloop).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer (bloop h) (ap10 p bbase)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sh"
+              ],
+              "body": null,
+              "type": "Trunc (-1) {x : G & v x = h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer (bloop h) (ap10 p bbase)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "sh"
+              ],
+              "body": null,
+              "type": "{x : G & v x = h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct sh as [g []]; clear h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer (bloop (v g)) (ap10 p bbase)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- ap_fmap_b_beta_bloop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer (ap (fmap B v) (bloop g)) (ap10 p bbase)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold centralizer.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fmap B v) (bloop g) * ap10 p bbase =\nap10 p bbase * ap (fmap B v) (bloop g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; napply concat_Ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_pi1_map_bg_to_centralizer_group_image `{ua : Univalence}\n  {G H : Group} (v : G $-> H)\n  : IsEquiv (pi1_map_bg_to_centralizer_group_image v).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (pi1_map_bg_to_centralizer_group_image v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (pi1_map_bg_to_centralizer_group_image v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply isequiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subtype_centralizer_subgroup (grp_image v) -> Pi 1 [B G -> B H, fmap B v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pi1_map_bg_to_centralizer_group_image v o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o pi1_map_bg_to_centralizer_group_image v == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subtype_centralizer_subgroup (grp_image v) -> Pi 1 [B G -> B H, fmap B v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (centralizer_grp_image_to_pi1_map_bg v).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pi1_map_bg_to_centralizer_group_image v\no centralizer_grp_image_to_pi1_map_bg v == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [h ch]; strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pi1_map_bg_to_centralizer_group_image v\n  (centralizer_grp_image_to_pi1_map_bg v (h; tr ch)) =\n(h; tr ch)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ch"
+              ],
+              "body": null,
+              "type": "forall h0 : H, grp_image v h0 -> centralizer h0 h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop^-1 (ap10 (centralizer_grp_image_to_loops_map_bg v (h; tr ch)) bbase) =\nh",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ch"
+              ],
+              "body": null,
+              "type": "forall h0 : H, grp_image v h0 -> centralizer h0 h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_equiv_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap10 (centralizer_grp_image_to_loops_map_bg v (h; tr ch)) bbase = bloop h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ch"
+              ],
+              "body": null,
+              "type": "forall h0 : H, grp_image v h0 -> centralizer h0 h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply ClassifyingSpace_rec2_beta_bloop1_bbase.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer_grp_image_to_pi1_map_bg v\no pi1_map_bg_to_centralizer_group_image v == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer_grp_image_to_pi1_map_bg v\n  (pi1_map_bg_to_centralizer_group_image v u) =\nu",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "Pi 1 [B G -> B H, fmap B v]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer_grp_image_to_pi1_map_bg v\n  (pi1_map_bg_to_centralizer_group_image v (tr u)) =\ntr u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "loops (iterated_loops 0 [B G -> B H, fmap B v])"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (pointed_fun (fmap B v) = (fmap B v)) in u.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer_grp_image_to_pi1_map_bg v\n  (pi1_map_bg_to_centralizer_group_image v (tr u)) =\ntr u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold centralizer_grp_image_to_pi1_map_bg.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "tr\n  (centralizer_grp_image_to_loops_map_bg v\n     (pi1_map_bg_to_centralizer_group_image v (tr u))) =\ntr u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "centralizer_grp_image_to_loops_map_bg v\n  (pi1_map_bg_to_centralizer_group_image v (tr u)) =\nu",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold centralizer_grp_image_to_loops_map_bg.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (b_centralizer_grp_image_to_map_bg v)\n  (bloop (pi1_map_bg_to_centralizer_group_image v (tr u))) =\nu",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj ap10).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap10\n  (ap (b_centralizer_grp_image_to_map_bg v)\n     (bloop (pi1_map_bg_to_centralizer_group_image v (tr u)))) =\nap10 u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap10\n  (ap (b_centralizer_grp_image_to_map_bg v)\n     (bloop (pi1_map_bg_to_centralizer_group_image v (tr u)))) ==\nap10 u",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply ClassifyingSpace_ind_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap10\n  (ap (b_centralizer_grp_image_to_map_bg v)\n     (bloop (pi1_map_bg_to_centralizer_group_image v (tr u))))\n  bbase =\nap10 u bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply ClassifyingSpace_rec2_beta_bloop1_bbase.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop\n  (subgroup_incl (subtype_centralizer_subgroup (grp_image v))\n     (pi1_map_bg_to_centralizer_group_image v (tr u))) =\nap10 u bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "bloop (bloop^-1 (ap10 u bbase)) = ap10 u bbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "fmap B v = fmap B v"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_pi1_map_bg_to_centralizer_group_image `{ua : Univalence}\n  {G H : Group} (v : G $-> H)\n  : GroupIsomorphism\n    (Pi 1 [B G -> B H, fmap B v])\n    (subtype_centralizer_subgroup (grp_image v))\n  := Build_GroupIsomorphism _ _ _ (isequiv_pi1_map_bg_to_centralizer_group_image v).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** As a corollary, we can compute the homotopy groups of any function type of the form [X -> B G], where [X] is a pointed connected type. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pi0_map_bg_groupreps_pi1 `{Univalence}\n  (X : pType) (G : Group) `{IsConnected 0 X}\n  : groupreps (Pi 1 X) G <~> Tr 0 (X -> B G).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupreps (Pi 1 X) G <~> Tr 0 (X -> B G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupreps (Pi 1 X) G <~> Tr 0 (X -> B G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Trunc_functor_equiv 0 (equiv_map_bg X G) oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "groupreps (Pi 1 X) G <~> Tr 0 (B (Pi 1 X) -> B G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_groupreps_to_pi0_map_bg.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pi1_map_bg_groupreps_pi1 `{Univalence}\n  (X : pType) (G : Group) `{IsConnected 0 X} (v : Pi 1 X $-> G)\n  : GroupIsomorphism\n      (Pi 1 [X -> B G, equiv_bg_pi1_adjoint X G v])\n      (subtype_centralizer_subgroup (grp_image v)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupIsomorphism (Pi 1 [X -> B G, equiv_bg_pi1_adjoint X G v])\n  (subtype_centralizer_subgroup (grp_image v))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupIsomorphism (Pi 1 [X -> B G, equiv_bg_pi1_adjoint X G v])\n  (subtype_centralizer_subgroup (grp_image v))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (grp_iso_compose (equiv_pi1_map_bg_to_centralizer_group_image v) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupIsomorphism (Pi 1 [X -> B G, equiv_bg_pi1_adjoint X G v])\n  (Pi 1 [B (Pi 1 X) -> B G, fmap B v])",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply groupiso_pi_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[X -> B G, equiv_bg_pi1_adjoint X G v] <~>* [B (Pi 1 X) -> B G, fmap B v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[B (Pi 1 X) -> B G, fmap B v] <~>* [X -> B G, equiv_bg_pi1_adjoint X G v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pEquiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[B (Pi 1 X) -> B G, fmap B v] <~> [X -> B G, equiv_bg_pi1_adjoint X G v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[B (Pi 1 X) -> B G, fmap B v] <~> [X -> B G, equiv_bg_pi1_adjoint X G v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_map_bg X G).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_map_bg X G pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold \"pt\".",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_map_bg X G (ispointed_type [B (Pi 1 X) -> B G, fmap B v]) =\nispointed_type [X -> B G, equiv_bg_pi1_adjoint X G v]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold ispointed_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_map_bg X G (fmap B v) = equiv_bg_pi1_adjoint X G v",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "Pi 1 X $-> G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

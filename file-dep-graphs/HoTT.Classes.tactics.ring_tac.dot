@@ -1,0 +1,22 @@
+digraph HoTT_Classes_tactics_ring_tac {
+  graph [ratio=0.5]
+  node [style=filled]
+ring_tac_ring_mor_almostring_mor [label="ring_mor_almostring_mor", URL=<ring_tac.html#ring_mor_almostring_mor>, peripheries=3, fillcolor="#F070D1"] ;
+ring_tac_sr_mor_almostring_mor [label="sr_mor_almostring_mor", URL=<ring_tac.html#sr_mor_almostring_mor>, peripheries=3, fillcolor="#F070D1"] ;
+ring_tac_ring_almostring [label="ring_almostring", URL=<ring_tac.html#ring_almostring>, peripheries=3, fillcolor="#F070D1"] ;
+ring_tac_semiring_almostring [label="semiring_almostring", URL=<ring_tac.html#semiring_almostring>, peripheries=3, fillcolor="#F070D1"] ;
+ring_tac_negate_almostneg [label="negate_almostneg", URL=<ring_tac.html#negate_almostneg>, fillcolor="#F070D1"] ;
+ring_tac_default_almostneg [label="default_almostneg", URL=<ring_tac.html#default_almostneg>, fillcolor="#F070D1"] ;
+ring_tac_prove_prequoted [label="prove_prequoted", URL=<ring_tac.html#prove_prequoted>, peripheries=3, fillcolor="#F070D1"] ;
+ring_tac_normalize_prequoted [label="normalize_prequoted", URL=<ring_tac.html#normalize_prequoted>, fillcolor="#F070D1"] ;
+ring_tac_by_quoting [label="by_quoting", URL=<ring_tac.html#by_quoting>, peripheries=3, fillcolor="#F070D1"] ;
+ring_tac_normalize_eq [label="normalize_eq", URL=<ring_tac.html#normalize_eq>, fillcolor="#F070D1"] ;
+  ring_tac_ring_mor_almostring_mor -> ring_tac_negate_almostneg [] ;
+  ring_tac_sr_mor_almostring_mor -> ring_tac_default_almostneg [] ;
+  ring_tac_ring_almostring -> ring_tac_negate_almostneg [] ;
+  ring_tac_semiring_almostring -> ring_tac_default_almostneg [] ;
+  ring_tac_prove_prequoted -> ring_tac_normalize_prequoted [] ;
+  ring_tac_by_quoting -> ring_tac_normalize_eq [] ;
+subgraph cluster_ring_tac { label="ring_tac"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ring_tac_normalize_eq; ring_tac_by_quoting; ring_tac_normalize_prequoted; ring_tac_prove_prequoted; ring_tac_default_almostneg; ring_tac_negate_almostneg; ring_tac_semiring_almostring; ring_tac_ring_almostring; ring_tac_sr_mor_almostring_mor; ring_tac_ring_mor_almostring_mor; };
+} /* END */

@@ -1,0 +1,18 @@
+digraph HoTT_Algebra_Groups_Perfect {
+  graph [ratio=0.5]
+  node [style=filled]
+Perfect_isperfect_grp_quotient [label="isperfect_grp_quotient", URL=<Perfect.html#isperfect_grp_quotient>, peripheries=3, fillcolor="#F070D1"] ;
+Perfect_isperfect_simple_nonabelian [label="isperfect_simple_nonabelian", URL=<Perfect.html#isperfect_simple_nonabelian>, peripheries=3, fillcolor="#F070D1"] ;
+Perfect_ismaximalsubgroup_commutator_isperfect [label="ismaximalsubgroup_commutator_isperfect", URL=<Perfect.html#ismaximalsubgroup_commutator_isperfect>, fillcolor="#F070D1"] ;
+Perfect_isperfect_maximal_commutator [label="isperfect_maximal_commutator", URL=<Perfect.html#isperfect_maximal_commutator>, fillcolor="#F070D1"] ;
+Perfect_contr_abel_isperfect [label="contr_abel_isperfect", URL=<Perfect.html#contr_abel_isperfect>, fillcolor="#F070D1"] ;
+Perfect_IsPerfect [label="IsPerfect", URL=<Perfect.html#IsPerfect>, fillcolor="#F070D1"] ;
+  Perfect_isperfect_grp_quotient -> Perfect_ismaximalsubgroup_commutator_isperfect [] ;
+  Perfect_isperfect_grp_quotient -> Perfect_isperfect_maximal_commutator [] ;
+  Perfect_isperfect_simple_nonabelian -> Perfect_isperfect_maximal_commutator [] ;
+  Perfect_ismaximalsubgroup_commutator_isperfect -> Perfect_contr_abel_isperfect [] ;
+  Perfect_isperfect_maximal_commutator -> Perfect_IsPerfect [] ;
+  Perfect_contr_abel_isperfect -> Perfect_IsPerfect [] ;
+subgraph cluster_Perfect { label="Perfect"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Perfect_IsPerfect; Perfect_contr_abel_isperfect; Perfect_isperfect_maximal_commutator; Perfect_ismaximalsubgroup_commutator_isperfect; Perfect_isperfect_simple_nonabelian; Perfect_isperfect_grp_quotient; };
+} /* END */

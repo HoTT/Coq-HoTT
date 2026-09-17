@@ -1,0 +1,204 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Initial and terminal category definitions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NatCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Unset Primitive Projections.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* suppress a warning about [IsTerminalCategory] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation initial_category := (nat_category 0) (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation terminal_category := (nat_category 1) (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Terminal categories *)\n(** A precategory is terminal if its objects and morphisms are contractible types. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsTerminalCategory (C : PreCategory)\n      `{Contr (object C)}\n      `{forall s d, Contr (morphism C s d)}\n  : Type0 := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Initial categories *)\n(** An initial precategory is one whose objects have the recursion principle of the empty type *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsInitialCategory (C : PreCategory)\n  := initial_category_ind : forall P : Type, C -> P.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance trunc_initial_category `{IsInitialCategory C}\n: IsHProp C\n  := istrunc_S _ (fun x y => initial_category_ind _ x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance trunc_initial_category_mor `{IsInitialCategory C} x y\n: Contr (morphism C x y)\n  := initial_category_ind _ x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Default initial ([0]) and terminal ([1]) precategories. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is_initial_category_0 : IsInitialCategory 0 := (fun T => @Empty_ind (fun _ => T)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance: IsTerminalCategory 1 | 0 := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance: Contr (object 1) | 0 := _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance : `{Contr (morphism 1 x y)} | 0 := fun x y => _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance default_terminal C {H H1} : @IsTerminalCategory C H H1 | 10 := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments initial_category_ind / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments is_initial_category_0 / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

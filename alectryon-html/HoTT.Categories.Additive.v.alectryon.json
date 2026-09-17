@@ -1,0 +1,94 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Additive categories and needed material *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Zero objects in a category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Additive.ZeroObjects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Biproducts in a category *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Additive.Biproducts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Semi-additive categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Additive.SemiAdditive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Additive categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Additive.Additive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Additive.ZeroObjects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Additive.Biproducts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Additive.SemiAdditive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Additive.Additive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

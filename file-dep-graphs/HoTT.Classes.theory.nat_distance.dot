@@ -1,0 +1,10 @@
+digraph HoTT_Classes_theory_nat_distance {
+  graph [ratio=0.5]
+  node [style=filled]
+nat_distance_natdistance_default [label="natdistance_default", URL=<nat_distance.html#natdistance_default>, peripheries=3, fillcolor="#F070D1"] ;
+nat_distance_natdistance_cut_minus [label="natdistance_cut_minus", URL=<nat_distance.html#natdistance_cut_minus>, fillcolor="#F070D1"] ;
+nat_distance_nat_distance_unique [label="nat_distance_unique", URL=<nat_distance.html#nat_distance_unique>, peripheries=3, fillcolor="#F070D1"] ;
+  nat_distance_natdistance_default -> nat_distance_natdistance_cut_minus [] ;
+subgraph cluster_nat_distance { label="nat_distance"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+nat_distance_nat_distance_unique; nat_distance_natdistance_cut_minus; nat_distance_natdistance_default; };
+} /* END */

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.IndiscreteCategory.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Indiscrete category *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Core Category.Strict Category.Univalent Category.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Unit Trunc HoTT.Tactics Equivalences.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** Definition of an indiscrete category *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">indiscrete_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">    <span class="sd">(** The indiscrete category has exactly one morphism between any two</span>
+<span class="sd">      objects. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">X</span> : <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+    <span class="sd">(** We define the symmetrized version of associativity differently</span>
+<span class="sd">      so that the dual of an indiscrete category is convertible with</span>
+<span class="sd">      the indiscrete category. *)</span>
+
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">indiscrete_category</span> : PreCategory
+      := @Build_PreCategory&#39; X
+                             (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; Unit)
+                             (<span class="k">fun</span> <span class="nv">_</span> =&gt; tt)
+                             (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; tt)
+                             (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                             (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                             (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">f</span> =&gt; <span class="k">match</span> f <span class="k">with</span> tt =&gt; idpath <span class="k">end</span>)
+                             (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">f</span> =&gt; <span class="k">match</span> f <span class="k">with</span> tt =&gt; idpath <span class="k">end</span>)
+                             (<span class="k">fun</span> <span class="nv">_</span> =&gt; idpath)
+                             _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">indiscrete_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** *** Indiscrete categories are strict categories *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">isstrict_indiscrete_category</span> `{H : IsHSet X}
+  : IsStrictCategory (indiscrete_category X)
+    := H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** *** Indiscrete categories are (saturated/univalent) categories *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-IndiscreteCategory-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-IndiscreteCategory-v-alectryon-json-chk0">#[export] <span class="kn">Instance</span> <span class="nf">iscategory_indiscrete_category</span> `{H : IsHProp X}
+  : IsCategory (indiscrete_category X).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsHProp X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory (indiscrete_category X)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-IndiscreteCategory-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-IndiscreteCategory-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsHProp X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory (indiscrete_category X)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-IndiscreteCategory-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-IndiscreteCategory-v-alectryon-json-chk2"><span class="nb">intros</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>IsHProp X</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>indiscrete_category X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (idtoiso (indiscrete_category X) (y:=d))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">eapply</span> (isequiv_adjointify
+              (idtoiso (indiscrete_category X) (x := s) (y := d))
+              (<span class="k">fun</span> <span class="nv">_</span> =&gt; center _));
+      <span class="kp">abstract</span> (
+          <span class="kp">repeat</span> <span class="nb">intro</span>;
+          destruct_head_hnf @Isomorphic;
+          destruct_head_hnf @IsIsomorphism;
+          destruct_head_hnf @Unit;
+          path_induction_hammer
+        ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Core</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** Functors to an indiscrete category are given by their action on objects *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Functors</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">to</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">X</span> : <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">objOf</span> : C -&gt; X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">to</span> : Functor C (indiscrete_category X)
+      := Build_Functor C (indiscrete_category X)
+                       objOf
+                       (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; tt)
+                       (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                       (<span class="k">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">to</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Functors</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

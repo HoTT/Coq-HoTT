@@ -1,0 +1,28 @@
+digraph HoTT_Homotopy_PiSpheres {
+  graph [ratio=0.5]
+  node [style=filled]
+PiSpheres_pi3_s2 [label="pi3_s2", URL=<PiSpheres.html#pi3_s2>, peripheries=3, fillcolor="#F070D1"] ;
+PiSpheres_grp_iso_pi_s2_s3 [label="grp_iso_pi_s2_s3", URL=<PiSpheres.html#grp_iso_pi_s2_s3>, fillcolor="#F070D1"] ;
+PiSpheres_pequiv_hopf_total_s3 [label="pequiv_hopf_total_s3", URL=<PiSpheres.html#pequiv_hopf_total_s3>, fillcolor="#F070D1"] ;
+PiSpheres_fiberseq_hopf [label="fiberseq_hopf", URL=<PiSpheres.html#fiberseq_hopf>, fillcolor="#F070D1"] ;
+PiSpheres_hopf_pr1 [label="hopf_pr1", URL=<PiSpheres.html#hopf_pr1>, fillcolor="#F070D1"] ;
+PiSpheres_contr_pi_succ_succ_psphere_1 [label="contr_pi_succ_succ_psphere_1", URL=<PiSpheres.html#contr_pi_succ_succ_psphere_1>, fillcolor="#F070D1"] ;
+PiSpheres_istrunc_psphere_1 [label="istrunc_psphere_1", URL=<PiSpheres.html#istrunc_psphere_1>, fillcolor="#F070D1"] ;
+PiSpheres_pin_sn [label="pin_sn", URL=<PiSpheres.html#pin_sn>, fillcolor="#F070D1"] ;
+PiSpheres_pi2_s2 [label="pi2_s2", URL=<PiSpheres.html#pi2_s2>, fillcolor="#F070D1"] ;
+PiSpheres_ptr_loops_s2_s1 [label="ptr_loops_s2_s1", URL=<PiSpheres.html#ptr_loops_s2_s1>, peripheries=3, fillcolor="#F070D1"] ;
+PiSpheres_pi1_s1 [label="pi1_s1", URL=<PiSpheres.html#pi1_s1>, fillcolor="#F070D1"] ;
+PiSpheres_pi1_circle [label="pi1_circle", URL=<PiSpheres.html#pi1_circle>, fillcolor="#F070D1"] ;
+  PiSpheres_pi3_s2 -> PiSpheres_grp_iso_pi_s2_s3 [] ;
+  PiSpheres_pi3_s2 -> PiSpheres_pin_sn [] ;
+  PiSpheres_grp_iso_pi_s2_s3 -> PiSpheres_pequiv_hopf_total_s3 [] ;
+  PiSpheres_grp_iso_pi_s2_s3 -> PiSpheres_fiberseq_hopf [] ;
+  PiSpheres_grp_iso_pi_s2_s3 -> PiSpheres_contr_pi_succ_succ_psphere_1 [] ;
+  PiSpheres_fiberseq_hopf -> PiSpheres_hopf_pr1 [] ;
+  PiSpheres_contr_pi_succ_succ_psphere_1 -> PiSpheres_istrunc_psphere_1 [] ;
+  PiSpheres_pin_sn -> PiSpheres_pi2_s2 [] ;
+  PiSpheres_pi2_s2 -> PiSpheres_pi1_s1 [] ;
+  PiSpheres_pi1_s1 -> PiSpheres_pi1_circle [] ;
+subgraph cluster_PiSpheres { label="PiSpheres"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PiSpheres_pi1_circle; PiSpheres_pi1_s1; PiSpheres_ptr_loops_s2_s1; PiSpheres_pi2_s2; PiSpheres_pin_sn; PiSpheres_istrunc_psphere_1; PiSpheres_contr_pi_succ_succ_psphere_1; PiSpheres_hopf_pr1; PiSpheres_fiberseq_hopf; PiSpheres_pequiv_hopf_total_s3; PiSpheres_grp_iso_pi_s2_s3; PiSpheres_pi3_s2; };
+} /* END */

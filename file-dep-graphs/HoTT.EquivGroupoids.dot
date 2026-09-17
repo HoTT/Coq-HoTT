@@ -1,0 +1,61 @@
+digraph HoTT_EquivGroupoids {
+  graph [ratio=0.5]
+  node [style=filled]
+EquivGroupoids_emoveR_V1 [label="emoveR_V1", URL=<EquivGroupoids.html#emoveR_V1>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_1V [label="emoveR_1V", URL=<EquivGroupoids.html#emoveR_1V>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_1M [label="emoveR_1M", URL=<EquivGroupoids.html#emoveR_1M>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_M1 [label="emoveR_M1", URL=<EquivGroupoids.html#emoveR_M1>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_V1 [label="emoveL_V1", URL=<EquivGroupoids.html#emoveL_V1>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_1V [label="emoveL_1V", URL=<EquivGroupoids.html#emoveL_1V>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_M1 [label="emoveL_M1", URL=<EquivGroupoids.html#emoveL_M1>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_1M [label="emoveL_1M", URL=<EquivGroupoids.html#emoveL_1M>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_eV [label="emoveL_eV", URL=<EquivGroupoids.html#emoveL_eV>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_Ve [label="emoveL_Ve", URL=<EquivGroupoids.html#emoveL_Ve>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_eM [label="emoveL_eM", URL=<EquivGroupoids.html#emoveL_eM>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveL_Me [label="emoveL_Me", URL=<EquivGroupoids.html#emoveL_Me>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_eV [label="emoveR_eV", URL=<EquivGroupoids.html#emoveR_eV>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_Ve [label="emoveR_Ve", URL=<EquivGroupoids.html#emoveR_Ve>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_eM [label="emoveR_eM", URL=<EquivGroupoids.html#emoveR_eM>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_emoveR_Me [label="emoveR_Me", URL=<EquivGroupoids.html#emoveR_Me>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_einv_V [label="einv_V", URL=<EquivGroupoids.html#einv_V>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_einv_VV [label="einv_VV", URL=<EquivGroupoids.html#einv_VV>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_einv_eV [label="einv_eV", URL=<EquivGroupoids.html#einv_eV>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_einv_Ve [label="einv_Ve", URL=<EquivGroupoids.html#einv_Ve>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_einv_ee [label="einv_ee", URL=<EquivGroupoids.html#einv_ee>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_eV_e [label="ecompose_eV_e", URL=<EquivGroupoids.html#ecompose_eV_e>, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_ee_V [label="ecompose_ee_V", URL=<EquivGroupoids.html#ecompose_ee_V>, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_e_Ve [label="ecompose_e_Ve", URL=<EquivGroupoids.html#ecompose_e_Ve>, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_V_ee [label="ecompose_V_ee", URL=<EquivGroupoids.html#ecompose_V_ee>, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_Ve [label="ecompose_Ve", URL=<EquivGroupoids.html#ecompose_Ve>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_eV [label="ecompose_eV", URL=<EquivGroupoids.html#ecompose_eV>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_ee_e [label="ecompose_ee_e", URL=<EquivGroupoids.html#ecompose_ee_e>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_e_ee [label="ecompose_e_ee", URL=<EquivGroupoids.html#ecompose_e_ee>, peripheries=3, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_1e [label="ecompose_1e", URL=<EquivGroupoids.html#ecompose_1e>, fillcolor="#F070D1"] ;
+EquivGroupoids_ecompose_e1 [label="ecompose_e1", URL=<EquivGroupoids.html#ecompose_e1>, fillcolor="#F070D1"] ;
+  EquivGroupoids_emoveR_V1 -> EquivGroupoids_ecompose_V_ee [] ;
+  EquivGroupoids_emoveR_V1 -> EquivGroupoids_ecompose_e1 [] ;
+  EquivGroupoids_emoveR_1V -> EquivGroupoids_ecompose_ee_V [] ;
+  EquivGroupoids_emoveR_1V -> EquivGroupoids_ecompose_1e [] ;
+  EquivGroupoids_emoveR_1M -> EquivGroupoids_ecompose_eV_e [] ;
+  EquivGroupoids_emoveR_1M -> EquivGroupoids_ecompose_1e [] ;
+  EquivGroupoids_emoveR_M1 -> EquivGroupoids_ecompose_e_Ve [] ;
+  EquivGroupoids_emoveR_M1 -> EquivGroupoids_ecompose_e1 [] ;
+  EquivGroupoids_emoveL_V1 -> EquivGroupoids_ecompose_V_ee [] ;
+  EquivGroupoids_emoveL_V1 -> EquivGroupoids_ecompose_e1 [] ;
+  EquivGroupoids_emoveL_1V -> EquivGroupoids_ecompose_ee_V [] ;
+  EquivGroupoids_emoveL_1V -> EquivGroupoids_ecompose_1e [] ;
+  EquivGroupoids_emoveL_M1 -> EquivGroupoids_ecompose_e_Ve [] ;
+  EquivGroupoids_emoveL_M1 -> EquivGroupoids_ecompose_e1 [] ;
+  EquivGroupoids_emoveL_1M -> EquivGroupoids_ecompose_eV_e [] ;
+  EquivGroupoids_emoveL_1M -> EquivGroupoids_ecompose_1e [] ;
+  EquivGroupoids_emoveL_eV -> EquivGroupoids_ecompose_ee_V [] ;
+  EquivGroupoids_emoveL_Ve -> EquivGroupoids_ecompose_V_ee [] ;
+  EquivGroupoids_emoveL_eM -> EquivGroupoids_ecompose_eV_e [] ;
+  EquivGroupoids_emoveL_Me -> EquivGroupoids_ecompose_e_Ve [] ;
+  EquivGroupoids_emoveR_eV -> EquivGroupoids_ecompose_ee_V [] ;
+  EquivGroupoids_emoveR_Ve -> EquivGroupoids_ecompose_V_ee [] ;
+  EquivGroupoids_emoveR_eM -> EquivGroupoids_ecompose_eV_e [] ;
+  EquivGroupoids_emoveR_Me -> EquivGroupoids_ecompose_e_Ve [] ;
+subgraph cluster_EquivGroupoids { label="EquivGroupoids"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EquivGroupoids_ecompose_e1; EquivGroupoids_ecompose_1e; EquivGroupoids_ecompose_e_ee; EquivGroupoids_ecompose_ee_e; EquivGroupoids_ecompose_eV; EquivGroupoids_ecompose_Ve; EquivGroupoids_ecompose_V_ee; EquivGroupoids_ecompose_e_Ve; EquivGroupoids_ecompose_ee_V; EquivGroupoids_ecompose_eV_e; EquivGroupoids_einv_ee; EquivGroupoids_einv_Ve; EquivGroupoids_einv_eV; EquivGroupoids_einv_VV; EquivGroupoids_einv_V; EquivGroupoids_emoveR_Me; EquivGroupoids_emoveR_eM; EquivGroupoids_emoveR_Ve; EquivGroupoids_emoveR_eV; EquivGroupoids_emoveL_Me; EquivGroupoids_emoveL_eM; EquivGroupoids_emoveL_Ve; EquivGroupoids_emoveL_eV; EquivGroupoids_emoveL_1M; EquivGroupoids_emoveL_M1; EquivGroupoids_emoveL_1V; EquivGroupoids_emoveL_V1; EquivGroupoids_emoveR_M1; EquivGroupoids_emoveR_1M; EquivGroupoids_emoveR_1V; EquivGroupoids_emoveR_V1; };
+} /* END */

@@ -1,0 +1,1820 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Tactics for rewriting modulo associativity *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Overture PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Tactics.BinderApply.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Throughout this file, we prefix with [idtac; ] all imperative tactics (those not returning constrs) which would otherwise start with [let] or [match].  This prevents them from being evaluated at the call site.  See https://coq.inria.fr/bugs/show_bug.cgi?id=3498 for more details on this difference between tactics and tactic expressions. *)\n\n(** rewrite [lem] modulo associativity using:\n\n    - [assoc_tac : unit] to associate the goal (in place)\n    - [assoc_in_tac : hyp -> unit] to associate the hypothesis (in place)\n    - [prepostcompose_any_tac : constr -> constr] to pre/post compose an arbitrary morphism onto the lemma\n    - [rew_tac : hyp -> unit] to do the actual rewriting (in place).  This tactic is called first with the non-associated version of  the lemma, then with the associated version.\n *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac rewriteA_using_helper rew_tac lem prepostcompose_any_tac assoc_tac assoc_in_tac :=\n  idtac;\n  let lem' := prepostcompose_any_tac lem in\n  let H := fresh in\n  pose proof lem' as H;\n    assoc_tac;\n    match goal with\n      | _ => rew_tac H\n      | _ => assoc_in_tac H;\n            rew_tac H\n    end;\n    clear H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This tactic is similar to the above, except that it passes both the unassociated lemma and the associated lemma to [repeat_rew_tac], which may then contain optimizations over a manual [repeat] such as being [rewrite ?lem, ?lem']. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac repeat_rewriteA_using_helper repeat_rew_tac lem prepostcompose_any_tac assoc_tac assoc_in_tac :=\n  idtac;\n  let lem' := prepostcompose_any_tac lem in\n  let H := fresh in\n  pose proof lem' as H;\n    assoc_in_tac H;\n    assoc_tac;\n    repeat_rew_tac lem' H;\n    clear H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export Compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Rewriting modulo associativity of composition ([o]) *)\n  (** Since [f o g] is just a notation, we need to define a constant\n      that isn't reduced by [cbv beta]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition compose {A B C} (g : B -> C) (f : A -> B) (x : A) : C := g (f x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac to_compose T :=\n    match T with\n      | context G[?g o ?f] => let T' := context G[compose g f] in\n                              to_compose T'\n      | ?T' => constr:(T')\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Turns a lemma of type [f = g] into [forall h, h o f = h o g] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac precompose_any H :=\n    let ret := make_tac_under_binders_using_in ltac:(fun H => (let H' := fresh in\n                                                               rename H into H';\n                                                               let T := type of H' in\n                                                               let T' := to_compose T in\n                                                               pose proof (fun src (g : _ -> src) => @ap _ _ (fun f => compose g f) _ _ (H' : T')) as H))\n                                                      ltac:(idtac) H in\n    let T := type of ret in\n    let T' := (eval cbv beta in T) in\n    constr:(ret : T').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Associates a type fully to the left *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_compose_type T :=\n    let rec_tac := left_associate_compose_type in\n    match to_compose T with\n      | forall a : ?A, @?P a => let ret := constr:(forall a : A, let T' := P a in\n                                                                 ltac:(\n                                                                   let T'' := (eval unfold T' in T') in\n                                                                   let ret := rec_tac T'' in\n                                                                   exact ret)) in\n                                eval cbv beta zeta in ret\n      | context T'[compose ?a (compose ?b ?c)]\n        => let T'' := context T'[compose (compose a b) c] in\n           rec_tac T''\n      | ?T' => constr:(T')\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_compose_in_type_of H :=\n    let T := type of H in\n    let T' := left_associate_compose_type T in\n    constr:(H : T').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_compose :=\n    idtac;\n    (lazymatch goal with\n    | [ |- ?G ] => let G' := left_associate_compose_type G in change G'\n     end).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_compose_in H :=\n    idtac;\n    (lazymatch type of H with\n    | ?T => let T' := left_associate_compose_type T in change T' in H\n     end).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac after_rewrite :=\n    repeat match goal with\n             | [ |- context G[compose ?g ?f] ] => let G' := context G[g o f] in change G'\n             | _ =>\n               match goal with\n                 | [ |- context G[@compose ?A ?B ?C ?g] ] => let G' := context G[fun f : A -> B => g o f] in change G'\n                 | [ |- context G[@compose ?A ?B ?C] ] => let G' := context G[fun (g : B -> C) (f : A -> B) => g o f] in change G'\n                 | _ => progress cbv delta [compose]\n               end;\n                 idtac \"Warning: could not fully restore pre-rewrite state.\"\n                       \"Try introducing more things or removing binders.\"\n           end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => rewrite lem') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"->\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => rewrite -> lem') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"<-\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => rewrite <- lem') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite ?lem', ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite ?lem', ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"->\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite -> ?lem', -> ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"<-\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite <- ?lem', <- ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"->\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite -> ?lem', -> ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewriteoA\" \"<-\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite <- ?lem', <- ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => erewrite lem') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"->\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => erewrite -> lem') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"<-\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => erewrite <- lem') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite ?lem', ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite ?lem', ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"->\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite -> ?lem', -> ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"<-\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite <- ?lem', <- ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"->\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite -> ?lem', -> ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewriteoA\" \"<-\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite <- ?lem', <- ?lem'') lem ltac:(precompose_any) ltac:(left_associate_compose) ltac:(left_associate_compose_in); after_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" constr(lem) := rewriteoA lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"->\" constr(lem) := rewriteoA -> lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"<-\" constr(lem) := rewriteoA <- lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"!\" constr(lem) := rewriteoA !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"?\" constr(lem) := rewriteoA ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"->\" \"!\" constr(lem) := rewriteoA -> !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"<-\" \"!\" constr(lem) := rewriteoA <- !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"->\" \"?\" constr(lem) := rewriteoA -> ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2218A\" \"<-\" \"?\" constr(lem) := rewriteoA <- ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" open_constr(lem) := erewriteoA lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"->\" open_constr(lem) := erewriteoA -> lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"<-\" open_constr(lem) := erewriteoA <- lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"!\" open_constr(lem) := erewriteoA !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"?\" open_constr(lem) := erewriteoA ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"->\" \"!\" open_constr(lem) := erewriteoA -> !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"<-\" \"!\" open_constr(lem) := erewriteoA <- !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"->\" \"?\" open_constr(lem) := erewriteoA -> ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2218A\" \"<-\" \"?\" open_constr(lem) := erewriteoA <- ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export Concat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Rewriting modulo associativity of concatenation ([@]) *)\n  (** Turns a lemma of type [f = g] into [forall h, h @ f = h @ g] *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac preconcat_any H :=\n    let ret := make_tac_under_binders_using_in ltac:(fun H => (let H' := fresh in\n                                                               rename H into H';\n                                                               pose proof (fun dst (g : dst = _) => @ap _ _ (fun f => g @ f) _ _ H') as H))\n                                                      ltac:(idtac) H in\n    let T := type of ret in\n    let T' := (eval cbv beta in T) in\n    constr:(ret : T').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Associates a path fully to the left *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_concat_in H :=\n    let rec_tac := left_associate_concat_in in\n    let T := type of H in\n    let T' := (eval cbv beta in T) in\n    match T' with\n      | forall a : ?A, @?P a => let ret := constr:(fun a : A => let H' := H a in\n                                                                ltac:(\n                                                                  let H'' := (eval unfold H' in H') in\n                                                                  let ret := rec_tac H'' in\n                                                                  exact ret)) in\n                                let T := type of ret in\n                                let T' := (eval cbv beta zeta in T) in\n                                let ret' := (eval cbv beta zeta in ret) in\n                                constr:(ret' : T')\n      | context[@concat ?A1 ?x1 ?y1 ?z1 ?a (@concat ?A2 ?x2 ?y2 ?z2 ?b ?c)] =>\n        (lazymatch eval pattern (@concat A1 x1 y1 z1 a (@concat A2 x2 y2 z2 b c)) in T' with\n        | ?P _ => let H' := constr:(transport P (concat_p_pp a b c) H) in\n                  rec_tac H'\n         end)\n      | ?T' => constr:(H : T')\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We really should just use [setoid_rewrite -> !concat_p_pp] here, to take care of binders, but we threw away Setoids. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_concat :=\n    repeat match goal with\n             | _ => rewrite -> !concat_p_pp\n             | [ |- forall a : ?A, _ ] => let H := fresh in\n                                          intro H;\n                                            left_associate_concat;\n                                            revert H\n           end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac left_associate_concat_in_hyp H :=\n    let H' := fresh in\n    rename H into H';\n      let H_rep := left_associate_concat_in H' in\n      pose proof H_rep as H;\n        clear H'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => rewrite lem') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"->\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => rewrite -> lem') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"<-\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => rewrite <- lem') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite ?lem', ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite ?lem', ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"->\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite -> ?lem', -> ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"<-\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress rewrite <- ?lem', <- ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"->\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite -> ?lem', -> ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite@A\" \"<-\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => rewrite <- ?lem', <- ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => erewrite lem') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"->\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => erewrite -> lem') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"<-\" constr(lem) :=\n    rewriteA_using_helper ltac:(fun lem' => erewrite <- lem') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite ?lem', ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite ?lem', ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"->\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite -> ?lem', -> ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"<-\" \"!\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => progress erewrite <- ?lem', <- ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"->\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite -> ?lem', -> ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite@A\" \"<-\" \"?\" constr(lem) :=\n    repeat_rewriteA_using_helper ltac:(fun lem' lem'' => erewrite <- ?lem', <- ?lem'') lem ltac:(preconcat_any) ltac:(left_associate_concat) ltac:(left_associate_concat_in_hyp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" constr(lem) := rewrite@A lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"->\" constr(lem) := rewrite@A -> lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"<-\" constr(lem) := rewrite@A <- lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"!\" constr(lem) := rewrite@A !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"?\" constr(lem) := rewrite@A ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"->\" \"!\" constr(lem) := rewrite@A -> !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"<-\" \"!\" constr(lem) := rewrite@A <- !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"->\" \"?\" constr(lem) := rewrite@A -> ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"rewrite\u2022A\" \"<-\" \"?\" constr(lem) := rewrite@A <- ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" open_constr(lem) := erewrite@A lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"->\" open_constr(lem) := erewrite@A -> lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"<-\" open_constr(lem) := erewrite@A <- lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"!\" open_constr(lem) := erewrite@A !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"?\" open_constr(lem) := erewrite@A ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"->\" \"!\" open_constr(lem) := erewrite@A -> !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"<-\" \"!\" open_constr(lem) := erewrite@A <- !lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"->\" \"?\" open_constr(lem) := erewrite@A -> ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"erewrite\u2022A\" \"<-\" \"?\" open_constr(lem) := erewrite@A <- ? lem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Concat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section examples.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example simple_01 {A} (f g h i j : A -> A) : f o g = h -> (i o f) o (g o j) = i o h o j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o g = h -> i o f o (g o j) = i o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o g = h -> i o f o (g o j) = i o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i o f o (g o j) = i o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f o g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite\u2218A H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i o h o j = i o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f o g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example simple_02 {A} (f g h i j : A -> A) : f o g = h -> (i o f) o (g o f o g o j) = i o h o h o j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o g = h -> i o f o (g o f o g o j) = i o h o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o g = h -> i o f o (g o f o g o j) = i o h o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i o f o (g o f o g o j) = i o h o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f o g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite\u2218A !H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i o h o h o j = i o h o h o j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f o g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section concat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example simple_01 {A} {a : A} (f g h i j : a = a) : f @ g = h -> (i @ f) @ (g @ j) = i @ h @ j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f @ g = h -> (i @ f) @ (g @ j) = (i @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "a = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f @ g = h -> (i @ f) @ (g @ j) = (i @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "a = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i @ f) @ (g @ j) = (i @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "a = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f @ g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite@A H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i @ h) @ j = (i @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "a = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f @ g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example simple_02 {A} {a : A} (f g h i j : A = A) : f @ g = h -> (i @ f) @ (g @ f @ g @ j) = i @ h @ h @ j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f @ g = h -> (i @ f) @ (((g @ f) @ g) @ j) = ((i @ h) @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A = A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f @ g = h -> (i @ f) @ (((g @ f) @ g) @ j) = ((i @ h) @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A = A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i @ f) @ (((g @ f) @ g) @ j) = ((i @ h) @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A = A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f @ g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite@A !H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((i @ h) @ h) @ j = ((i @ h) @ h) @ j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g",
+                "h",
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "A = A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "f @ g = h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End concat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End examples.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

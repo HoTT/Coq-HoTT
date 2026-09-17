@@ -1,0 +1,4822 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functoriality of the comma category construction *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core NaturalTransformation.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Strict.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Tactics PathGroupoids Types.Forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The comma category construction is functorial in its category\n    arguments.  We really should be using \u220f (dependent product) here,\n    but I'm lazy, and will instead expand it out. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac helper_t fwd_tac bak_tac fin :=\n  repeat\n    first [ fin\n          | rewrite <- ?Category.Core.associativity;\n            progress repeat first [ bak_tac\n                                  | apply ap10; apply ap ]\n          | rewrite -> ?Category.Core.associativity;\n            progress repeat first [ fwd_tac\n                                  | apply ap ]\n          | rewrite <- !composition_of ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Tactic Notation \"helper\" tactic(fin) constr(hyp_fwd) constr(hyp_bak) :=\n  let H := fresh in\n  let H' := fresh in\n  pose proof hyp_fwd as H;\n    pose proof hyp_bak as H';\n    simpl in *;\n    helper_t ltac:(rewrite -> H) ltac:(rewrite <- H') fin.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac functorial_helper_t unfold_lem :=\n  repeat (apply path_forall || intro); simpl;\n  rewrite !transport_forall_constant; simpl;\n  transport_path_forall_hammer; simpl;\n  apply CommaCategory.path_morphism; simpl;\n  unfold unfold_lem; simpl;\n  repeat match goal with\n           | _ => exact idpath\n           | [ |- context[CommaCategory.g (transport ?P ?p ?z)] ]\n             => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @CommaCategory.g _ _ _ _ _ _ _) z)\n           | [ |- context[CommaCategory.h (transport ?P ?p ?z)] ]\n             => simpl rewrite (@ap_transport _ P _ _ _ p (fun _ => @CommaCategory.h _ _ _ _ _ _ _) z)\n           | [ |- context[transport (fun y => ?f (?g y) ?z)] ]\n             => simpl rewrite (fun a b => @transport_compose _ _ a b (fun y => f y z) g)\n           | [ |- context[transport (fun y => ?f (?g y))] ]\n             => simpl rewrite (fun a b => @transport_compose _ _ a b (fun y => f y) g)\n           | _ => rewrite !CommaCategory.ap_a_path_object'; simpl\n           | _ => rewrite !CommaCategory.ap_b_path_object'; simpl\n         end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section single_source.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A B C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S : Functor A C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : Functor B C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section morphism_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A' B' C' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S' : Functor A' C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : Functor B' C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable AF : Functor A A'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable BF : Functor B B'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF : Functor C C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable TA : NaturalTransformation (S' o AF) (CF o S).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable TB : NaturalTransformation (CF o T) (T' o BF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_morphism_of_object_of : (S / T) -> (S' / T')\n        := fun x => CommaCategory.Build_object\n                      S' T'\n                      (AF (CommaCategory.a x))\n                      (BF (CommaCategory.b x))\n                      (TB (CommaCategory.b x) o CF _1 (CommaCategory.f x) o TA (CommaCategory.a x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_morphism_of_morphism_of\n                 s d (m : morphism (S / T) s d)\n      : morphism (S' / T') (functorial_morphism_of_object_of s) (functorial_morphism_of_object_of d).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism (S' / T') (functorial_morphism_of_object_of s)\n  (functorial_morphism_of_object_of d)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "S / T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism (S / T) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism (S' / T') (functorial_morphism_of_object_of s)\n  (functorial_morphism_of_object_of d)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "S / T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism (S / T) s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "CommaCategory.morphism (functorial_morphism_of_object_of s)\n  (functorial_morphism_of_object_of d)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "CommaCategory.object S T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "CommaCategory.morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (CommaCategory.Build_morphism\n                  (functorial_morphism_of_object_of s)\n                  (functorial_morphism_of_object_of d)\n                  (AF _1 (CommaCategory.g m))\n                  (BF _1 (CommaCategory.h m))\n                  _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T' _1 (BF _1 (CommaCategory.h m))\no CommaCategory.f (functorial_morphism_of_object_of s) =\nCommaCategory.f (functorial_morphism_of_object_of d)\no S' _1 (AF _1 (CommaCategory.g m))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "CommaCategory.object S T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "CommaCategory.morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold functorial_morphism_of_object_of; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T' _1 (BF _1 (CommaCategory.h m))\no (TB (CommaCategory.b s) o CF _1 (CommaCategory.f s)\n   o TA (CommaCategory.a s)) =\nTB (CommaCategory.b d) o CF _1 (CommaCategory.f d) o TA (CommaCategory.a d)\no S' _1 (AF _1 (CommaCategory.g m))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "CommaCategory.object S T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "CommaCategory.morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "clear.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "T' _1 (BF _1 (CommaCategory.h m))\no (TB (CommaCategory.b s) o CF _1 (CommaCategory.f s)\n   o TA (CommaCategory.a s)) =\nTB (CommaCategory.b d) o CF _1 (CommaCategory.f d) o TA (CommaCategory.a d)\no S' _1 (AF _1 (CommaCategory.g m))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "CommaCategory.object S T"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "CommaCategory.morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract helper (exact (CommaCategory.p m)) (commutes TA) (commutes TB).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_morphism_of : Functor (S / T) (S' / T').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (S / T) (S' / T')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (S / T) (S' / T')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Build_Functor\n                  (S / T) (S' / T')\n                  functorial_morphism_of_object_of\n                  functorial_morphism_of_morphism_of\n                  _\n                  _);\n        abstract (\n            intros;\n            apply CommaCategory.path_morphism; simpl;\n            auto with functor\n          ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End morphism_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_identity_of_helper x\n      : @functorial_morphism_of_object_of _ _ _ S T 1 1 1 1 1 x = x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functorial_morphism_of_object_of 1 1 x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functorial_morphism_of_object_of 1 1 x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let A := match goal with |- ?A = ?B => constr:(A) end in\n        let B := match goal with |- ?A = ?B => constr:(B) end in\n        refine (@CommaCategory.path_object' _ _ _ _ _ A B 1%path 1%path _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun X : A => morphism C (S _0 X)%object (T _0 (CommaCategory.b x))%object)\n  1\n  (transport\n     (fun Y : B =>\n      morphism C\n        (S _0 (CommaCategory.a (functorial_morphism_of_object_of 1 1 x)))%object\n        (T _0 Y)%object)\n     1 (CommaCategory.f (functorial_morphism_of_object_of 1 1 x))) =\nCommaCategory.f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Category.Core.right_identity _ _ _ _ @ Category.Core.left_identity _ _ _ _)%path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_identity_of `{Funext}\n      : @functorial_morphism_of\n          _ _ _ S T\n          1 1 1 1 1\n        = 1%functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functorial_morphism_of 1 1 = 1%functor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "functorial_morphism_of 1 1 = 1%functor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO : functorial_morphism_of_object_of 1 1 = idmap &\ntransport\n  (fun GO : CommaCategory.object S T -> CommaCategory.object S T =>\n   forall s d : CommaCategory.object S T,\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  HO (functorial_morphism_of_morphism_of 1 1) =\n(fun s d : CommaCategory.object S T => idmap)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_forall _ _ functorial_identity_of_helper).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : CommaCategory.object S T -> CommaCategory.object S T =>\n   forall s d : CommaCategory.object S T,\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  (path_forall (functorial_morphism_of_object_of 1 1) idmap\n     functorial_identity_of_helper)\n  (functorial_morphism_of_morphism_of 1 1) =\n(fun s d : CommaCategory.object S T => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : CommaCategory.object S T -> CommaCategory.object S T =>\n   forall s d : CommaCategory.object S T,\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  (path_forall (functorial_morphism_of_object_of 1 1) idmap\n     functorial_identity_of_helper)\n  (functorial_morphism_of_morphism_of 1 1) =\n(fun s d : CommaCategory.object S T => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "functorial_helper_t functorial_identity_of_helper.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End identity_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End single_source.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A B C : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S : Functor A C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : Functor B C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A' B' C' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S' : Functor A' C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T' : Functor B' C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A'' B'' C'' : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S'' : Functor A'' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T'' : Functor B'' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable AF : Functor A A'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable BF : Functor B B'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF : Functor C C'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable TA : NaturalTransformation (S' o AF) (CF o S).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable TB : NaturalTransformation (CF o T) (T' o BF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable AF' : Functor A' A''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable BF' : Functor B' B''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable CF' : Functor C' C''.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable TA' : NaturalTransformation (S'' o AF') (CF' o S').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable TB' : NaturalTransformation (CF' o T') (T'' o BF').",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let AF'' := (AF' o AF)%functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let BF'' := (BF' o BF)%functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let CF'' := (CF' o CF)%functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let TA'' : NaturalTransformation (S'' o AF'') (CF'' o S)\n      := ((associator_2 _ _ _)\n            o (CF' oL TA)\n            o (associator_1 _ _ _)\n            o (TA' oR AF)\n            o associator_2 _ _ _)%natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let TB'' : NaturalTransformation (CF'' o T) (T'' o BF'')\n      := ((associator_1 _ _ _)\n            o (TB' oR BF)\n            o (associator_2 _ _ _)\n            o (CF' oL TB)\n            o associator_1 _ _ _)%natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_composition_of_helper x\n    : (functorial_morphism_of TA' TB' o functorial_morphism_of TA TB)%functor x\n      = functorial_morphism_of TA'' TB'' x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((functorial_morphism_of TA' TB' o functorial_morphism_of TA TB) _0 x)%object =\n((functorial_morphism_of TA'' TB'') _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((functorial_morphism_of TA' TB' o functorial_morphism_of TA TB) _0 x)%object =\n((functorial_morphism_of TA'' TB'') _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "let A := match goal with |- ?A = ?B => constr:(A) end in\n      let B := match goal with |- ?A = ?B => constr:(B) end in\n      refine (@CommaCategory.path_object' _ _ _ _ _ A B 1%path 1%path _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun X : A'' =>\n   morphism C'' (S'' _0 X)%object\n     (T'' _0 (CommaCategory.b ((functorial_morphism_of TA'' TB'') _0 x)))%object)\n  1\n  (transport\n     (fun Y : B'' =>\n      morphism C''\n        (S''\n         _0 (CommaCategory.a\n               ((functorial_morphism_of TA' TB'\n                 o functorial_morphism_of TA TB)\n                _0 x)))%object\n        (T'' _0 Y)%object)\n     1\n     (CommaCategory.f\n        ((functorial_morphism_of TA' TB' o functorial_morphism_of TA TB) _0 x)%object)) =\nCommaCategory.f ((functorial_morphism_of TA'' TB'') _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "subst AF'' BF'' CF'' TA'' TB''.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun X : A'' =>\n   morphism C'' (S'' _0 X)%object\n     (T''\n      _0 (CommaCategory.b\n            ((functorial_morphism_of\n                (associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF\n                 o (TA' oR AF) o associator_2 S'' AF' AF)\n                (associator_1 T'' BF' BF o (TB' oR BF)\n                 o associator_2 CF' T' BF o (CF' oL TB)\n                 o associator_1 CF' CF T))\n             _0 x)))%object)\n  1\n  (transport\n     (fun Y : B'' =>\n      morphism C''\n        (S''\n         _0 (CommaCategory.a\n               ((functorial_morphism_of TA' TB'\n                 o functorial_morphism_of TA TB)\n                _0 x)))%object\n        (T'' _0 Y)%object)\n     1\n     (CommaCategory.f\n        ((functorial_morphism_of TA' TB' o functorial_morphism_of TA TB) _0 x)%object)) =\nCommaCategory.f\n  ((functorial_morphism_of\n      (associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF\n       o (TA' oR AF) o associator_2 S'' AF' AF)\n      (associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF\n       o (CF' oL TB) o associator_1 CF' CF T))\n   _0 x)%object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S / T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "TB' (BF _0 (CommaCategory.b x))%object\no CF'\n  _1 (TB (CommaCategory.b x) o CF _1 (CommaCategory.f x)\n      o TA (CommaCategory.a x))\no TA' (AF _0 (CommaCategory.a x))%object =\n1 o TB' (BF _0 (CommaCategory.b x))%object o 1\no CF' _1 (TB (CommaCategory.b x)) o 1 o CF' _1 (CF _1 (CommaCategory.f x))\no (1 o CF' _1 (TA (CommaCategory.a x)) o 1\n   o TA' (AF _0 (CommaCategory.a x))%object o 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "CommaCategory.object S T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (\n          autorewrite with morphism; simpl;\n          helper (exact idpath) (commutes TA') (commutes TB')\n        ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functorial_composition_of `{Funext}\n    : (functorial_morphism_of TA' TB' o functorial_morphism_of TA TB)%functor\n      = functorial_morphism_of TA'' TB''.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functorial_morphism_of TA' TB' o functorial_morphism_of TA TB)%functor =\nfunctorial_morphism_of TA'' TB''",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functorial_morphism_of TA' TB' o functorial_morphism_of TA TB)%functor =\nfunctorial_morphism_of TA'' TB''",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: (fun c : CommaCategory.object S T =>\n   functorial_morphism_of_object_of TA' TB'\n     (functorial_morphism_of_object_of TA TB c)) =\n  functorial_morphism_of_object_of TA'' TB''\n&\ntransport\n  (fun GO : CommaCategory.object S T -> CommaCategory.object S'' T'' =>\n   forall s d : CommaCategory.object S T,\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  HO\n  (fun (s d : CommaCategory.object S T) (m : CommaCategory.morphism s d) =>\n   functorial_morphism_of_morphism_of TA' TB'\n     (functorial_morphism_of_morphism_of TA TB m)) =\nfunctorial_morphism_of_morphism_of TA'' TB''}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_forall _ _ functorial_composition_of_helper).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : CommaCategory.object S T -> CommaCategory.object S'' T'' =>\n   forall s d : CommaCategory.object S T,\n   CommaCategory.morphism s d -> CommaCategory.morphism (GO s) (GO d))\n  (path_forall\n     (functorial_morphism_of TA' TB' o functorial_morphism_of TA TB)%functor\n     (functorial_morphism_of TA'' TB'') functorial_composition_of_helper)\n  (fun (s d : CommaCategory.object S T) (m : CommaCategory.morphism s d) =>\n   functorial_morphism_of_morphism_of TA' TB'\n     (functorial_morphism_of_morphism_of TA TB m)) =\nfunctorial_morphism_of_morphism_of TA'' TB''",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Functor A C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Functor B C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S'"
+              ],
+              "body": null,
+              "type": "Functor A' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T'"
+              ],
+              "body": null,
+              "type": "Functor B' C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C''"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S''"
+              ],
+              "body": null,
+              "type": "Functor A'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T''"
+              ],
+              "body": null,
+              "type": "Functor B'' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF"
+              ],
+              "body": null,
+              "type": "Functor A A'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF"
+              ],
+              "body": null,
+              "type": "Functor B B'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF"
+              ],
+              "body": null,
+              "type": "Functor C C'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S' o AF) (CF o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF o T) (T' o BF)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF'"
+              ],
+              "body": null,
+              "type": "Functor A' A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF'"
+              ],
+              "body": null,
+              "type": "Functor B' B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF'"
+              ],
+              "body": null,
+              "type": "Functor C' C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (S'' o AF') (CF' o S')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB'"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (CF' o T') (T'' o BF')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "AF''"
+              ],
+              "body": "(AF' o AF)%functor",
+              "type": "Functor A A''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BF''"
+              ],
+              "body": "(BF' o BF)%functor",
+              "type": "Functor B B''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CF''"
+              ],
+              "body": "(CF' o CF)%functor",
+              "type": "Functor C C''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA''"
+              ],
+              "body": "(associator_2 CF' CF S o (CF' oL TA) o associator_1 CF' S' AF o (TA' oR AF)\n o associator_2 S'' AF' AF)%natural_transformation",
+              "type": "NaturalTransformation (S'' o AF'') (CF'' o S)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB''"
+              ],
+              "body": "(associator_1 T'' BF' BF o (TB' oR BF) o associator_2 CF' T' BF o (CF' oL TB)\n o associator_1 CF' CF T)%natural_transformation",
+              "type": "NaturalTransformation (CF'' o T) (T'' o BF'')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "functorial_helper_t functorial_composition_of_helper.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End functorial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

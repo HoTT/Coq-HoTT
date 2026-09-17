@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Homotopy.EvaluationFibration.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require Import</span> Basics Types Truncations.Core Pointed.Core Homotopy.Cover.</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT <span class="kn">Require Import</span> Basics Types Truncations.Core Pointed.Core Homotopy.Cover.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> pointed_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> trunc_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** * Evaluation fibrations and self-maps *)</span>
+
+<span class="sd">(** The type of unpointed self maps of A, pointed at the identity map. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">selfmaps</span> (<span class="nv">A</span> : <span class="kt">Type</span>) : pType := [A -&gt; A, idmap].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** The unrestricted evaluation map. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ev</span> (<span class="nv">A</span> : pType) : selfmaps A -&gt;* A
+  := Build_pMap (<span class="k">fun</span> <span class="nv">f</span> : selfmaps A =&gt; f pt) idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** The evaluation fibration of an unpointed map [X -&gt; A]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">evfib</span> {<span class="nv">X</span> : pType} {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">f</span> : X -&gt; A) : comp (X -&gt; A) (tr f) -&gt; A
+  := <span class="k">fun</span> <span class="nv">g</span> =&gt; g.<span class="mi">1</span> pt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** If [f] is pointed, then the evaluation fibration of [f] is too. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pevfib</span> {<span class="nv">A</span> <span class="nv">X</span> : pType} (<span class="nv">f</span> : X -&gt;* A) : pcomp (X -&gt; A) f -&gt;* A
+  := Build_pMap (<span class="k">fun</span> <span class="nv">g</span> : pcomp (X -&gt; A) f =&gt; g.<span class="mi">1</span> pt) (point_eq f).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** The evaluation map of the identity. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">ev1</span> (<span class="nv">A</span> : pType) := pevfib (A:=A) pmap_idmap.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

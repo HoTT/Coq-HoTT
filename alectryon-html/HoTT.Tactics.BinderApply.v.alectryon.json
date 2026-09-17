@@ -1,0 +1,1055 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Apply a lemma under binders *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Tactics.EvalIn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** There are some cases where [apply lem] will fail, but [intros; apply lem] will succeed.  The tactic [binder apply] is like [intros; apply lem], but it cleans up after itself by [revert]ing the things it introduced.  The tactic [binder apply lem in H] is to [binder apply lem], as [apply lem in H] is to [apply lem].  Note, however, that the implementation of [binder apply lem in H] is completely different and significantly more complicated. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac can_binder_apply apply_tac fail1_tac :=\n  first [ assert_succeeds apply_tac\n        | assert_succeeds (intro; can_binder_apply apply_tac fail1_tac)\n        | fail1_tac ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac binder_apply apply_tac fail1_tac :=\n  can_binder_apply apply_tac fail1_tac;\n  first [ apply_tac\n        | let H := fresh in\n          intro H;\n            binder_apply apply_tac fail1_tac;\n            revert H\n        | fail 1 \"Cannot re-revert some introduced hypothesis\" ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The tactic [eval_under_binders tac H] is equivalent to [tac H] if [H] is not a product (lambda-abstraction), and roughly equivalent to the constr [fun x => eval_under_binders tac (H x)] if [H] is a product. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac eval_under_binders tac H :=\n  (** Bind a convenient name for the recursive call *)\n  let rec_tac := eval_under_binders tac in\n  (** If the hypothesis is a product ([forall]), we want to recurse under binders; if not, we're in the base case, and we simply compute the new term.  We use [match] rather than [lazymatch] so that if the tactic fails to apply under all of the binders, we try again under fewer binders.  We want to try first under as many binders as possible, in case the tactic, e.g., instantiates extra binders with evars. *)\n  match type of H with\n      (** Standard pattern for recursing under binders.  We zeta-expand to work around https://coq.inria.fr/bugs/show_bug.cgi?id=3248 and https://coq.inria.fr/bugs/show_bug.cgi?id=3458; we'd otherwise need globally unique name for [x].  We zeta-reduce afterwards so the user doesn't see our zeta-expansion.  We use [x] in both the pattern and the returned constructor so that we preserve the given name for the binder.  *)\n    | forall x : ?T, @?P x\n      => let ret := constr:(fun x : T =>\n                              let Hx := H x in\n                              ltac:(\n                                let ret' := rec_tac Hx in\n                                exact ret')) in\n         let ret' := (eval cbv zeta in ret) in\n         constr:(ret')\n    (** Base case - simply return [tac H]  *)\n    | _ => tac H\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The tactic [make_tac_under_binders_using_in tac using_tac H] uses [tac] to transform a term [H], solving side-conditions (e.g., if [tac] uses [apply]) with [using_tac].  It returns the updated version of [H] as a constr; if [H] is a hypothesis in the context, it does not modify it.  Conceptually, [make_tac_under_binders_using_in tac idtac H] is the composition of two tactics: a [transform_under_binders : (constr -> constr) -> (constr -> constr)] that runs a tactic under the binders of the constr it's given, and what would be an [eval tac in H], except for the fact that, e.g., [eval rewrite in H] doesn't actually work because it predates tactics in terms (we use [eval_in_using tac using_tac H] instead).\n\n    The arguments are:\n\n    - [tac] - should take the name of a hypothesis, and modify that hypothesis in place.  It could, for example, be [fun H => rewrite lem in H] to do the [rewrite H] under binders.\n\n    - [using_tac] - used to solve any side-conditions that [tac] generates.  Not strictly necessary, since [tac] can always solve its own side-conditions, but it's sometimes convenient to instantiate [tac] with [fun H => eapply lem in H] or something, and solve the side-conditions with [eassumption].\n\n    - [H] - the name of the hypothesis to start from.\n\n    N.B. We do not require [Funext] to use this tactic; [Funext] would only required to relate the term returned by this tactic and the original term.  Note also that we only rewrite under top-level binders (e.g., under the [x] in a hypothesis of type [forall x, P x], but not under the [x] in a hypothesis of type [(fun x y => x + y) = (fun x y => y + x)]). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac make_tac_under_binders_using_in tac using_tac H :=\n  eval_under_binders ltac:(fun H' => eval_in_using tac using_tac H') H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac do_tac_under_binders_using_in tac using_tac H :=\n  let H' := make_tac_under_binders_using_in tac using_tac H in\n  let H'' := fresh in\n  pose proof H' as H'';\n    clear H;\n    rename H'' into H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"constrbinder\" \"apply\" constr(lem) \"in\" constr(H) \"using\" tactic3(tac)\n  := make_tac_under_binders_using_in ltac:(fun H' => apply lem in H') tac H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"constrbinder\" \"eapply\" open_constr(lem) \"in\" constr(H) \"using\" tactic3(tac)\n  := constrbinder apply lem in H using tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"binder\" \"apply\" constr(lem) \"in\" constr(H) \"using\" tactic3(tac)\n  := do_tac_under_binders_using_in ltac:(fun H' => apply lem in H') tac H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"binder\" \"eapply\" open_constr(lem) \"in\" constr(H) \"using\" tactic3(tac)\n  := binder apply lem in H using tac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"constrbinder\" \"apply\" constr(lem) \"in\" constr(H) := constrbinder apply lem in H using idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"constrbinder\" \"eapply\" open_constr(lem) \"in\" constr(H) := constrbinder eapply lem in H using idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"binder\" \"apply\" constr(lem) := binder_apply ltac:(apply lem) ltac:(fail 1 \"Cannot apply\" lem).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"binder\" \"eapply\" open_constr(lem) := binder_apply ltac:(eapply lem) ltac:(fail 1 \"Cannot eapply\" lem).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"binder\" \"apply\" constr(lem) \"in\" constr(H) := binder apply lem in H using idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Tactic Notation \"binder\" \"eapply\" open_constr(lem) \"in\" constr(H) := binder eapply lem in H using idtac.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example basic_goal {A B C} (HA : forall x : A, B x) (HB : forall x : A, B x -> C x) : forall x : A, C x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** If we try to [apply HB], wanting to replace [C] with [B], we get an error about being unable to unify [B ?] with [A]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fail apply HB.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** The tactic [binder apply] fixes this shortcoming. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "binder apply HB.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall H : A, B H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact HA.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We [Abort], so that we don't get an extra constant floating around. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example basic {A B C} (HA : forall x : A, B x) (HB : forall x : A, B x -> C x) : forall x : A, C x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** If we try to [apply HB in HA], wanting to replace [B] with [C], we get an error about being unable to instantiate the argument of type [A]: \"Error: Unable to find an instance for the variable x.\" *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fail apply HB in HA.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** The tactic [binder apply] fixes this shortcoming. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "binder apply HB in HA.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, C x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HB"
+              ],
+              "body": null,
+              "type": "forall x : A, B x -> C x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HA"
+              ],
+              "body": null,
+              "type": "forall x : A, C x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact HA.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We [Abort], so that we don't get an extra constant floating around. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Example ex_funext `{Funext} {A} f g\n        (H' : forall x y z w : A, f x y z w = g x y z w :> A)\n: f = g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x y z w : A, f x y z w = g x y z w"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x y z w : A, f x y z w = g x y z w"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We need to apply [path_forall] under binders five times in [H'].  We use a different variant each time to demonstrate the various ways of using this tactic.  In a normal proof, you'd probably just do [do 4 binder apply (@path_forall _) in H'] or just [repeat binder apply (@path_forall _) in H']. *)\n  (** If we do [binder apply path_forall in H'], we are told that Coq can't infer the argument [A] to [path_forall].  Instead, we can [binder eapply] it, to tell Coq to defer inference and use an evar for now. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fail binder apply path_forall in H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x y z w : A, f x y z w = g x y z w"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "binder eapply path_forall in H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x y z : A, f x y z = g x y z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Alternatively, we can make [A] explicit.  But then we get an error about not being able to resolve the instance of [Funext].  We can either tell Coq to solve the side condition using the [assumption] tactic (or [typeclasses eauto], for that matter), or we can have typeclass inference run when we construct the lemma to apply. *)\n  (** Some versions of Proof General are bad about noticing [Fail] within a tactic; see http://proofgeneral.inf.ed.ac.uk/trac/ticket/494.  So we comment this one out. *)\n  (**\n<<\n  Fail binder apply @path_forall in H'.\n>>\n  Error: Tactic failure: Cannot use <tactic> to solve side-condition goal\nFunext . Extended goal with context:\n(Funext ->\n forall (A : Type) (f g : A -> A -> A -> A -> A)\n   (H' : forall x' x'0 x'1 : A, f x' x'0 x'1 = g x' x'0 x'1),\n let H0 := H' in Funext). *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "binder apply @path_forall in H' using assumption.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x y : A, f x y = g x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "binder apply @path_forall in H' using typeclasses eauto.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "binder apply (@path_forall _) in H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> A -> A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "f = g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Now we have removed all arguments to [f] and [g] in [H']. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact H'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We [Abort], so that we don't get an extra constant floating around. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** N.B. [constrbinder apply] is like [binder apply], except that it constructs a new term and returns it, rather than applying a lemma in-place to a hypothesis.  It's primarily useful as plumbing for higher-level tactics. *)\n"
+    }
+  ]
+]

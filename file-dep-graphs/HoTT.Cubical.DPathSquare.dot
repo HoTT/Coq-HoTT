@@ -1,0 +1,46 @@
+digraph HoTT_Cubical_DPathSquare {
+  graph [ratio=0.5]
+  node [style=filled]
+DPathSquare_equiv_ds_transport_dpath [label="equiv_ds_transport_dpath", URL=<DPathSquare.html#equiv_ds_transport_dpath>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_fill_b [label="ds_fill_b", URL=<DPathSquare.html#ds_fill_b>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_fill_t [label="ds_fill_t", URL=<DPathSquare.html#ds_fill_t>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_equiv_ds_fill_lr [label="equiv_ds_fill_lr", URL=<DPathSquare.html#equiv_ds_fill_lr>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_fill_r_uniq [label="ds_fill_r_uniq", URL=<DPathSquare.html#ds_fill_r_uniq>, fillcolor="#F070D1"] ;
+DPathSquare_ds_fill_r [label="ds_fill_r", URL=<DPathSquare.html#ds_fill_r>, fillcolor="#F070D1"] ;
+DPathSquare_ds_fill_l_uniq [label="ds_fill_l_uniq", URL=<DPathSquare.html#ds_fill_l_uniq>, fillcolor="#F070D1"] ;
+DPathSquare_ds_fill_l [label="ds_fill_l", URL=<DPathSquare.html#ds_fill_l>, fillcolor="#F070D1"] ;
+DPathSquare_equiv_ds_dp [label="equiv_ds_dp", URL=<DPathSquare.html#equiv_ds_dp>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_equiv_ds_G1 [label="equiv_ds_G1", URL=<DPathSquare.html#equiv_ds_G1>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_dp_apD_nat [label="dp_apD_nat", URL=<DPathSquare.html#dp_apD_nat>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_equiv_ds_const_ [label="equiv_ds_const'", URL=<DPathSquare.html#equiv_ds_const'>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_const [label="ds_const", URL=<DPathSquare.html#ds_const>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_apD [label="ds_apD", URL=<DPathSquare.html#ds_apD>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_equiv_ds_dpath [label="equiv_ds_dpath", URL=<DPathSquare.html#equiv_ds_dpath>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_refl_v [label="ds_refl_v", URL=<DPathSquare.html#ds_refl_v>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_refl_h [label="ds_refl_h", URL=<DPathSquare.html#ds_refl_h>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_ds_id [label="ds_id", URL=<DPathSquare.html#ds_id>, peripheries=3, fillcolor="#F070D1"] ;
+DPathSquare_DPathSquare [label="DPathSquare", URL=<DPathSquare.html#DPathSquare>, fillcolor="#F070D1"] ;
+  DPathSquare_equiv_ds_transport_dpath -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_fill_b -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_fill_t -> DPathSquare_DPathSquare [] ;
+  DPathSquare_equiv_ds_fill_lr -> DPathSquare_ds_fill_r_uniq [] ;
+  DPathSquare_equiv_ds_fill_lr -> DPathSquare_ds_fill_r [] ;
+  DPathSquare_equiv_ds_fill_lr -> DPathSquare_ds_fill_l_uniq [] ;
+  DPathSquare_equiv_ds_fill_lr -> DPathSquare_ds_fill_l [] ;
+  DPathSquare_ds_fill_r_uniq -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_fill_r -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_fill_l_uniq -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_fill_l -> DPathSquare_DPathSquare [] ;
+  DPathSquare_equiv_ds_dp -> DPathSquare_DPathSquare [] ;
+  DPathSquare_equiv_ds_G1 -> DPathSquare_DPathSquare [] ;
+  DPathSquare_dp_apD_nat -> DPathSquare_DPathSquare [] ;
+  DPathSquare_equiv_ds_const_ -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_const -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_apD -> DPathSquare_DPathSquare [] ;
+  DPathSquare_equiv_ds_dpath -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_refl_v -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_refl_h -> DPathSquare_DPathSquare [] ;
+  DPathSquare_ds_id -> DPathSquare_DPathSquare [] ;
+subgraph cluster_DPathSquare { label="DPathSquare"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+DPathSquare_DPathSquare; DPathSquare_ds_id; DPathSquare_ds_refl_h; DPathSquare_ds_refl_v; DPathSquare_equiv_ds_dpath; DPathSquare_ds_apD; DPathSquare_ds_const; DPathSquare_equiv_ds_const_; DPathSquare_dp_apD_nat; DPathSquare_equiv_ds_G1; DPathSquare_equiv_ds_dp; DPathSquare_ds_fill_l; DPathSquare_ds_fill_l_uniq; DPathSquare_ds_fill_r; DPathSquare_ds_fill_r_uniq; DPathSquare_equiv_ds_fill_lr; DPathSquare_ds_fill_t; DPathSquare_ds_fill_b; DPathSquare_equiv_ds_transport_dpath; };
+} /* END */

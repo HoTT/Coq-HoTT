@@ -1,0 +1,13 @@
+digraph HoTT_Homotopy_WhiteheadsPrinciple {
+  graph [ratio=0.5]
+  node [style=filled]
+WhiteheadsPrinciple_whiteheads_principle [label="whiteheads_principle", URL=<WhiteheadsPrinciple.html#whiteheads_principle>, peripheries=3, fillcolor="#F070D1"] ;
+WhiteheadsPrinciple_isequiv_is0connected_isequiv_loops [label="isequiv_is0connected_isequiv_loops", URL=<WhiteheadsPrinciple.html#isequiv_is0connected_isequiv_loops>, peripheries=3, fillcolor="#F070D1"] ;
+WhiteheadsPrinciple_isequiv_isbij_tr0_isequiv_loops [label="isequiv_isbij_tr0_isequiv_loops", URL=<WhiteheadsPrinciple.html#isequiv_isbij_tr0_isequiv_loops>, fillcolor="#F070D1"] ;
+WhiteheadsPrinciple_isequiv_issurj_tr0_isequiv_ap [label="isequiv_issurj_tr0_isequiv_ap", URL=<WhiteheadsPrinciple.html#isequiv_issurj_tr0_isequiv_ap>, fillcolor="#F070D1"] ;
+  WhiteheadsPrinciple_whiteheads_principle -> WhiteheadsPrinciple_isequiv_isbij_tr0_isequiv_loops [] ;
+  WhiteheadsPrinciple_isequiv_is0connected_isequiv_loops -> WhiteheadsPrinciple_isequiv_isbij_tr0_isequiv_loops [] ;
+  WhiteheadsPrinciple_isequiv_isbij_tr0_isequiv_loops -> WhiteheadsPrinciple_isequiv_issurj_tr0_isequiv_ap [] ;
+subgraph cluster_WhiteheadsPrinciple { label="WhiteheadsPrinciple"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+WhiteheadsPrinciple_isequiv_issurj_tr0_isequiv_ap; WhiteheadsPrinciple_isequiv_isbij_tr0_isequiv_loops; WhiteheadsPrinciple_isequiv_is0connected_isequiv_loops; WhiteheadsPrinciple_whiteheads_principle; };
+} /* END */

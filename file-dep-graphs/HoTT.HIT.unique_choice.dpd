@@ -1,0 +1,14 @@
+N: 3 "atmost" [body=yes, kind=cnst, prop=no, path="unique_choice", ];
+N: 6 "atmost1" [body=yes, kind=cnst, prop=no, path="unique_choice", ];
+N: 5 "atmost1P" [body=yes, kind=cnst, prop=no, path="unique_choice", ];
+N: 4 "hunique" [body=yes, kind=cnst, prop=no, path="unique_choice", ];
+N: 2 "iota" [body=yes, kind=cnst, prop=no, path="unique_choice", ];
+N: 1 "unique_choice" [body=yes, kind=cnst, prop=no, path="unique_choice", ];
+E: 1 2 [weight=2, ];
+E: 1 4 [weight=2, ];
+E: 2 3 [weight=1, ];
+E: 2 4 [weight=2, ];
+E: 2 5 [weight=1, ];
+E: 3 5 [weight=2, ];
+E: 3 6 [weight=2, ];
+E: 4 5 [weight=1, ];

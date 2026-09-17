@@ -1,0 +1,214 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Since there are only notations in [Functor.Notations], we can just export those. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Functor.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Composition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Duals *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Identity *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Classification of path space *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Product functors *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Prod.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Coproduct functors *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Sum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Full, Faithful, Fully Faithful *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Attributes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Pointwise functors (functoriality of functor category construction) *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Pointwise.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Prod.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Sum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Attributes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Functor.Pointwise.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Functor.Pointwise.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We don't want to make UTF-8 notations the default, so we don't export them. *)\n"
+    }
+  ]
+]

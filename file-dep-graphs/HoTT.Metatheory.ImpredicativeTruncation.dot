@@ -1,0 +1,44 @@
+digraph HoTT_Metatheory_ImpredicativeTruncation {
+  graph [ratio=0.5]
+  node [style=filled]
+ImpredicativeTruncation_resized_Trm_rec_beta [label="resized_Trm_rec_beta", URL=<ImpredicativeTruncation.html#resized_Trm_rec_beta>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_resized_Trm_rec [label="resized_Trm_rec", URL=<ImpredicativeTruncation.html#resized_Trm_rec>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_resized_trm [label="resized_trm", URL=<ImpredicativeTruncation.html#resized_trm>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_resized_Trm [label="resized_Trm", URL=<ImpredicativeTruncation.html#resized_Trm>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_imp_Trm_rec_beta [label="imp_Trm_rec_beta", URL=<ImpredicativeTruncation.html#imp_Trm_rec_beta>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_imp_Trm [label="functor_imp_Trm", URL=<ImpredicativeTruncation.html#functor_imp_Trm>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_imp_Trm_rec [label="imp_Trm_rec", URL=<ImpredicativeTruncation.html#imp_Trm_rec>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_imp_Trm [label="imp_Trm", URL=<ImpredicativeTruncation.html#imp_Trm>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_Trm_ind [label="Trm_ind", URL=<ImpredicativeTruncation.html#Trm_ind>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_functor_Trm [label="functor_Trm", URL=<ImpredicativeTruncation.html#functor_Trm>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_Trm_rec_beta [label="Trm_rec_beta", URL=<ImpredicativeTruncation.html#Trm_rec_beta>, peripheries=3, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_Trm_rec [label="Trm_rec", URL=<ImpredicativeTruncation.html#Trm_rec>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_ishprop_Trm [label="ishprop_Trm", URL=<ImpredicativeTruncation.html#ishprop_Trm>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_trm [label="trm", URL=<ImpredicativeTruncation.html#trm>, fillcolor="#F070D1"] ;
+ImpredicativeTruncation_Trm [label="Trm", URL=<ImpredicativeTruncation.html#Trm>, fillcolor="#F070D1"] ;
+  ImpredicativeTruncation_resized_Trm_rec_beta -> ImpredicativeTruncation_resized_Trm_rec [] ;
+  ImpredicativeTruncation_resized_Trm_rec_beta -> ImpredicativeTruncation_resized_trm [] ;
+  ImpredicativeTruncation_resized_Trm_rec -> ImpredicativeTruncation_resized_Trm [] ;
+  ImpredicativeTruncation_resized_trm -> ImpredicativeTruncation_resized_Trm [] ;
+  ImpredicativeTruncation_resized_trm -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_resized_Trm -> ImpredicativeTruncation_ishprop_Trm [] ;
+  ImpredicativeTruncation_imp_Trm_rec_beta -> ImpredicativeTruncation_imp_Trm_rec [] ;
+  ImpredicativeTruncation_imp_Trm_rec_beta -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_functor_imp_Trm -> ImpredicativeTruncation_imp_Trm_rec [] ;
+  ImpredicativeTruncation_functor_imp_Trm -> ImpredicativeTruncation_ishprop_Trm [] ;
+  ImpredicativeTruncation_functor_imp_Trm -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_imp_Trm_rec -> ImpredicativeTruncation_imp_Trm [] ;
+  ImpredicativeTruncation_imp_Trm -> ImpredicativeTruncation_Trm [] ;
+  ImpredicativeTruncation_Trm_ind -> ImpredicativeTruncation_ishprop_Trm [] ;
+  ImpredicativeTruncation_Trm_ind -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_functor_Trm -> ImpredicativeTruncation_Trm_rec [] ;
+  ImpredicativeTruncation_functor_Trm -> ImpredicativeTruncation_ishprop_Trm [] ;
+  ImpredicativeTruncation_functor_Trm -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_Trm_rec_beta -> ImpredicativeTruncation_Trm_rec [] ;
+  ImpredicativeTruncation_Trm_rec_beta -> ImpredicativeTruncation_trm [] ;
+  ImpredicativeTruncation_Trm_rec -> ImpredicativeTruncation_Trm [] ;
+  ImpredicativeTruncation_ishprop_Trm -> ImpredicativeTruncation_Trm [] ;
+  ImpredicativeTruncation_trm -> ImpredicativeTruncation_Trm [] ;
+subgraph cluster_ImpredicativeTruncation { label="ImpredicativeTruncation"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ImpredicativeTruncation_Trm; ImpredicativeTruncation_trm; ImpredicativeTruncation_ishprop_Trm; ImpredicativeTruncation_Trm_rec; ImpredicativeTruncation_Trm_rec_beta; ImpredicativeTruncation_functor_Trm; ImpredicativeTruncation_Trm_ind; ImpredicativeTruncation_imp_Trm; ImpredicativeTruncation_imp_Trm_rec; ImpredicativeTruncation_functor_imp_Trm; ImpredicativeTruncation_imp_Trm_rec_beta; ImpredicativeTruncation_resized_Trm; ImpredicativeTruncation_resized_trm; ImpredicativeTruncation_resized_Trm_rec; ImpredicativeTruncation_resized_Trm_rec_beta; };
+} /* END */

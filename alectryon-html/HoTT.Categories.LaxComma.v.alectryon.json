@@ -1,0 +1,54 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Lax Comma Categories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Since there are only notations in [LaxComma.Notations], we can just export those. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export LaxComma.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definitions *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require LaxComma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include LaxComma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We don't want to make UTF-8 notations the default, so we don't export them. *)\n"
+    }
+  ]
+]

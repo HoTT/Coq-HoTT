@@ -1,0 +1,54 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Subcategories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Full *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Subcategory.Full.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Wide *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Subcategory.Wide.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Subcategory.Full.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Subcategory.Wide.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,3 @@
+N: 2 "NotNot" [body=yes, kind=cnst, prop=no, path="Notnot", ];
+N: 1 "inO_notnot" [body=yes, kind=cnst, prop=no, path="Notnot", ];
+E: 1 2 [weight=1, ];

@@ -1,0 +1,13 @@
+digraph HoTT_Homotopy_EvaluationFibration {
+  graph [ratio=0.5]
+  node [style=filled]
+EvaluationFibration_ev1 [label="ev1", URL=<EvaluationFibration.html#ev1>, peripheries=3, fillcolor="#F070D1"] ;
+EvaluationFibration_pevfib [label="pevfib", URL=<EvaluationFibration.html#pevfib>, fillcolor="#F070D1"] ;
+EvaluationFibration_evfib [label="evfib", URL=<EvaluationFibration.html#evfib>, peripheries=3, fillcolor="#F070D1"] ;
+EvaluationFibration_ev [label="ev", URL=<EvaluationFibration.html#ev>, peripheries=3, fillcolor="#F070D1"] ;
+EvaluationFibration_selfmaps [label="selfmaps", URL=<EvaluationFibration.html#selfmaps>, fillcolor="#F070D1"] ;
+  EvaluationFibration_ev1 -> EvaluationFibration_pevfib [] ;
+  EvaluationFibration_ev -> EvaluationFibration_selfmaps [] ;
+subgraph cluster_EvaluationFibration { label="EvaluationFibration"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EvaluationFibration_selfmaps; EvaluationFibration_ev; EvaluationFibration_evfib; EvaluationFibration_pevfib; EvaluationFibration_ev1; };
+} /* END */

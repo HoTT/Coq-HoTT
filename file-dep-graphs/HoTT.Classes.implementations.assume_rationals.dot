@@ -1,0 +1,58 @@
+digraph HoTT_Classes_implementations_assume_rationals {
+  graph [ratio=0.5]
+  node [style=filled]
+assume_rationals_Qenum [label="Qenum", URL=<assume_rationals.html#Qenum>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_Qabs [label="Qabs", URL=<assume_rationals.html#Qabs>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_Qle_total [label="Qle_total", URL=<assume_rationals.html#Qle_total>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_Qlattice [label="Qlattice", URL=<assume_rationals.html#Qlattice>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_Qjoin [label="Qjoin", URL=<assume_rationals.html#Qjoin>, fillcolor="#FACDEF"] ;
+assume_rationals_Qmeet [label="Qmeet", URL=<assume_rationals.html#Qmeet>, fillcolor="#FACDEF"] ;
+assume_rationals_Qdec [label="Qdec", URL=<assume_rationals.html#Qdec>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_Qtrivialapart [label="Qtrivialapart", URL=<assume_rationals.html#Qtrivialapart>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_Qrats [label="Qrats", URL=<assume_rationals.html#Qrats>, peripheries=3, fillcolor="#FACDEF"] ;
+assume_rationals_QtoField [label="QtoField", URL=<assume_rationals.html#QtoField>, fillcolor="#FACDEF"] ;
+assume_rationals_Qlt [label="Qlt", URL=<assume_rationals.html#Qlt>, fillcolor="#FACDEF"] ;
+assume_rationals_Qle [label="Qle", URL=<assume_rationals.html#Qle>, fillcolor="#FACDEF"] ;
+assume_rationals_Qrecip [label="Qrecip", URL=<assume_rationals.html#Qrecip>, fillcolor="#FACDEF"] ;
+assume_rationals_Qneg [label="Qneg", URL=<assume_rationals.html#Qneg>, fillcolor="#FACDEF"] ;
+assume_rationals_Qone [label="Qone", URL=<assume_rationals.html#Qone>, fillcolor="#FACDEF"] ;
+assume_rationals_Qzero [label="Qzero", URL=<assume_rationals.html#Qzero>, fillcolor="#FACDEF"] ;
+assume_rationals_Qmult [label="Qmult", URL=<assume_rationals.html#Qmult>, fillcolor="#FACDEF"] ;
+assume_rationals_Qplus [label="Qplus", URL=<assume_rationals.html#Qplus>, fillcolor="#FACDEF"] ;
+assume_rationals_Qap [label="Qap", URL=<assume_rationals.html#Qap>, fillcolor="#FACDEF"] ;
+assume_rationals_Q [label="Q", URL=<assume_rationals.html#Q>, fillcolor="#FACDEF"] ;
+  assume_rationals_Qenum -> assume_rationals_Q [] ;
+  assume_rationals_Qabs -> assume_rationals_Qle [] ;
+  assume_rationals_Qabs -> assume_rationals_Qneg [] ;
+  assume_rationals_Qabs -> assume_rationals_Qzero [] ;
+  assume_rationals_Qle_total -> assume_rationals_Qle [] ;
+  assume_rationals_Qlattice -> assume_rationals_Qjoin [] ;
+  assume_rationals_Qlattice -> assume_rationals_Qmeet [] ;
+  assume_rationals_Qlattice -> assume_rationals_Qle [] ;
+  assume_rationals_Qjoin -> assume_rationals_Q [] ;
+  assume_rationals_Qmeet -> assume_rationals_Q [] ;
+  assume_rationals_Qdec -> assume_rationals_Q [] ;
+  assume_rationals_Qtrivialapart -> assume_rationals_Qap [] ;
+  assume_rationals_Qrats -> assume_rationals_QtoField [] ;
+  assume_rationals_Qrats -> assume_rationals_Qlt [] ;
+  assume_rationals_Qrats -> assume_rationals_Qle [] ;
+  assume_rationals_Qrats -> assume_rationals_Qrecip [] ;
+  assume_rationals_Qrats -> assume_rationals_Qneg [] ;
+  assume_rationals_Qrats -> assume_rationals_Qone [] ;
+  assume_rationals_Qrats -> assume_rationals_Qzero [] ;
+  assume_rationals_Qrats -> assume_rationals_Qmult [] ;
+  assume_rationals_Qrats -> assume_rationals_Qplus [] ;
+  assume_rationals_Qrats -> assume_rationals_Qap [] ;
+  assume_rationals_QtoField -> assume_rationals_Q [] ;
+  assume_rationals_Qlt -> assume_rationals_Q [] ;
+  assume_rationals_Qle -> assume_rationals_Q [] ;
+  assume_rationals_Qrecip -> assume_rationals_Q [] ;
+  assume_rationals_Qneg -> assume_rationals_Q [] ;
+  assume_rationals_Qone -> assume_rationals_Q [] ;
+  assume_rationals_Qzero -> assume_rationals_Q [] ;
+  assume_rationals_Qmult -> assume_rationals_Q [] ;
+  assume_rationals_Qplus -> assume_rationals_Q [] ;
+  assume_rationals_Qap -> assume_rationals_Q [] ;
+subgraph cluster_assume_rationals { label="assume_rationals"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+assume_rationals_Q; assume_rationals_Qap; assume_rationals_Qplus; assume_rationals_Qmult; assume_rationals_Qzero; assume_rationals_Qone; assume_rationals_Qneg; assume_rationals_Qrecip; assume_rationals_Qle; assume_rationals_Qlt; assume_rationals_QtoField; assume_rationals_Qrats; assume_rationals_Qtrivialapart; assume_rationals_Qdec; assume_rationals_Qmeet; assume_rationals_Qjoin; assume_rationals_Qlattice; assume_rationals_Qle_total; assume_rationals_Qabs; assume_rationals_Qenum; };
+} /* END */

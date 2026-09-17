@@ -1,0 +1,19 @@
+digraph HoTT_WildCat_SetoidRewrite {
+  graph [ratio=0.5]
+  node [style=filled]
+SetoidRewrite_transitive_hom [label="transitive_hom", URL=<SetoidRewrite.html#transitive_hom>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_Hom [label="IsProper_Hom", URL=<SetoidRewrite.html#IsProper_Hom>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_gpd_hom_to_hom_proper [label="gpd_hom_to_hom_proper", URL=<SetoidRewrite.html#gpd_hom_to_hom_proper>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_catcomp [label="IsProper_catcomp", URL=<SetoidRewrite.html#IsProper_catcomp>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_catcomp_g [label="IsProper_catcomp_g", URL=<SetoidRewrite.html#IsProper_catcomp_g>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_fmap [label="IsProper_fmap", URL=<SetoidRewrite.html#IsProper_fmap>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_symmetric_flip_snd [label="symmetric_flip_snd", URL=<SetoidRewrite.html#symmetric_flip_snd>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_symmetry_flip [label="symmetry_flip", URL=<SetoidRewrite.html#symmetry_flip>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_GpdHom_from_a [label="IsProper_GpdHom_from_a", URL=<SetoidRewrite.html#IsProper_GpdHom_from_a>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_GpdHom_to_a [label="IsProper_GpdHom_to_a", URL=<SetoidRewrite.html#IsProper_GpdHom_to_a>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_GpdHom_to [label="IsProper_GpdHom_to", URL=<SetoidRewrite.html#IsProper_GpdHom_to>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_IsProper_GpdHom_from [label="IsProper_GpdHom_from", URL=<SetoidRewrite.html#IsProper_GpdHom_from>, peripheries=3, fillcolor="#F070D1"] ;
+SetoidRewrite_reflexive_proper_proxy [label="reflexive_proper_proxy", URL=<SetoidRewrite.html#reflexive_proper_proxy>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_SetoidRewrite { label="SetoidRewrite"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+SetoidRewrite_reflexive_proper_proxy; SetoidRewrite_IsProper_GpdHom_from; SetoidRewrite_IsProper_GpdHom_to; SetoidRewrite_IsProper_GpdHom_to_a; SetoidRewrite_IsProper_GpdHom_from_a; SetoidRewrite_symmetry_flip; SetoidRewrite_symmetric_flip_snd; SetoidRewrite_IsProper_fmap; SetoidRewrite_IsProper_catcomp_g; SetoidRewrite_IsProper_catcomp; SetoidRewrite_gpd_hom_to_hom_proper; SetoidRewrite_IsProper_Hom; SetoidRewrite_transitive_hom; };
+} /* END */

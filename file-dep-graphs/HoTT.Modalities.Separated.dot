@@ -1,0 +1,48 @@
+digraph HoTT_Modalities_Separated {
+  graph [ratio=0.5]
+  node [style=filled]
+Separated_SepO_lex_leq [label="SepO_lex_leq", URL=<Separated.html#SepO_lex_leq>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_jc_factor2_isemb [label="jc_factor2_isemb", URL=<Separated.html#jc_factor2_isemb>, fillcolor="#FACDEF"] ;
+Separated_jc_factor1_issurj [label="jc_factor1_issurj", URL=<Separated.html#jc_factor1_issurj>, peripheries=3, fillcolor="#FACDEF"] ;
+Separated_jc_factors [label="jc_factors", URL=<Separated.html#jc_factors>, fillcolor="#FACDEF"] ;
+Separated_jc_factor2 [label="jc_factor2", URL=<Separated.html#jc_factor2>, fillcolor="#FACDEF"] ;
+Separated_jc_factor1 [label="jc_factor1", URL=<Separated.html#jc_factor1>, fillcolor="#FACDEF"] ;
+Separated_jc_image [label="jc_image", URL=<Separated.html#jc_image>, fillcolor="#FACDEF"] ;
+Separated_equiv_toSepO_inO [label="equiv_toSepO_inO", URL=<Separated.html#equiv_toSepO_inO>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_isequiv_toSepO_inO [label="isequiv_toSepO_inO", URL=<Separated.html#isequiv_toSepO_inO>, fillcolor="#F070D1"] ;
+Separated_reflectsD_SepO [label="reflectsD_SepO", URL=<Separated.html#reflectsD_SepO>, fillcolor="#F070D1"] ;
+Separated_inSepO_sigma [label="inSepO_sigma", URL=<Separated.html#inSepO_sigma>, fillcolor="#F070D1"] ;
+Separated_almost_inSepO_typeO [label="almost_inSepO_typeO", URL=<Separated.html#almost_inSepO_typeO>, fillcolor="#F070D1"] ;
+Separated_issurjective_to_SepO [label="issurjective_to_SepO", URL=<Separated.html#issurjective_to_SepO>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_sigma_closed_SepO [label="sigma_closed_SepO", URL=<Separated.html#sigma_closed_SepO>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_in_SepO_hprop [label="in_SepO_hprop", URL=<Separated.html#in_SepO_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_istrunc_embedding_trunc [label="istrunc_embedding_trunc", URL=<Separated.html#istrunc_embedding_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_in_SepO_embedding [label="in_SepO_embedding", URL=<Separated.html#in_SepO_embedding>, fillcolor="#F070D1"] ;
+Separated_O_leq_SepO [label="O_leq_SepO", URL=<Separated.html#O_leq_SepO>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_isaccmodality_sep [label="isaccmodality_sep", URL=<Separated.html#isaccmodality_sep>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_susp_nullgen [label="susp_nullgen", URL=<Separated.html#susp_nullgen>, fillcolor="#F070D1"] ;
+Separated_isaccrsu_sep [label="isaccrsu_sep", URL=<Separated.html#isaccrsu_sep>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_susp_localgen [label="susp_localgen", URL=<Separated.html#susp_localgen>, fillcolor="#F070D1"] ;
+Separated_mapinO_from_diagonal [label="mapinO_from_diagonal", URL=<Separated.html#mapinO_from_diagonal>, peripheries=3, fillcolor="#F070D1"] ;
+Separated_mapinO_diagonal [label="mapinO_diagonal", URL=<Separated.html#mapinO_diagonal>, peripheries=3, fillcolor="#F070D1"] ;
+  Separated_SepO_lex_leq -> Separated_jc_factor2_isemb [] ;
+  Separated_SepO_lex_leq -> Separated_jc_factors [] ;
+  Separated_SepO_lex_leq -> Separated_reflectsD_SepO [] ;
+  Separated_SepO_lex_leq -> Separated_almost_inSepO_typeO [] ;
+  Separated_jc_factor2_isemb -> Separated_jc_factor2 [] ;
+  Separated_jc_factor1_issurj -> Separated_jc_factor1 [] ;
+  Separated_jc_factors -> Separated_jc_factor2 [] ;
+  Separated_jc_factors -> Separated_jc_factor1 [] ;
+  Separated_jc_factor2 -> Separated_jc_image [] ;
+  Separated_jc_factor1 -> Separated_jc_image [] ;
+  Separated_equiv_toSepO_inO -> Separated_isequiv_toSepO_inO [] ;
+  Separated_isequiv_toSepO_inO -> Separated_reflectsD_SepO [] ;
+  Separated_reflectsD_SepO -> Separated_inSepO_sigma [] ;
+  Separated_issurjective_to_SepO -> Separated_in_SepO_embedding [] ;
+  Separated_in_SepO_hprop -> Separated_in_SepO_embedding [] ;
+  Separated_istrunc_embedding_trunc -> Separated_in_SepO_embedding [] ;
+  Separated_isaccmodality_sep -> Separated_susp_nullgen [] ;
+  Separated_isaccrsu_sep -> Separated_susp_localgen [] ;
+subgraph cluster_Separated { label="Separated"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Separated_mapinO_diagonal; Separated_mapinO_from_diagonal; Separated_susp_localgen; Separated_isaccrsu_sep; Separated_susp_nullgen; Separated_isaccmodality_sep; Separated_O_leq_SepO; Separated_in_SepO_embedding; Separated_istrunc_embedding_trunc; Separated_in_SepO_hprop; Separated_sigma_closed_SepO; Separated_issurjective_to_SepO; Separated_almost_inSepO_typeO; Separated_inSepO_sigma; Separated_reflectsD_SepO; Separated_isequiv_toSepO_inO; Separated_equiv_toSepO_inO; Separated_jc_image; Separated_jc_factor1; Separated_jc_factor2; Separated_jc_factors; Separated_jc_factor1_issurj; Separated_jc_factor2_isemb; Separated_SepO_lex_leq; };
+} /* END */

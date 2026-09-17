@@ -1,0 +1,8 @@
+digraph HoTT_Types_Option {
+  graph [ratio=0.5]
+  node [style=filled]
+Option_isinj_some [label="isinj_some", URL=<Option.html#isinj_some>, peripheries=3, fillcolor="#F070D1"] ;
+Option_functor_option [label="functor_option", URL=<Option.html#functor_option>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_Option { label="Option"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Option_functor_option; Option_isinj_some; };
+} /* END */

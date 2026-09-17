@@ -1,0 +1,18 @@
+digraph HoTT_HIT_unique_choice {
+  graph [ratio=0.5]
+  node [style=filled]
+unique_choice_unique_choice [label="unique_choice", URL=<unique_choice.html#unique_choice>, peripheries=3, fillcolor="#F070D1"] ;
+unique_choice_iota [label="iota", URL=<unique_choice.html#iota>, fillcolor="#F070D1"] ;
+unique_choice_atmost [label="atmost", URL=<unique_choice.html#atmost>, fillcolor="#F070D1"] ;
+unique_choice_hunique [label="hunique", URL=<unique_choice.html#hunique>, fillcolor="#F070D1"] ;
+unique_choice_atmost1P [label="atmost1P", URL=<unique_choice.html#atmost1P>, fillcolor="#F070D1"] ;
+unique_choice_atmost1 [label="atmost1", URL=<unique_choice.html#atmost1>, fillcolor="#F070D1"] ;
+  unique_choice_unique_choice -> unique_choice_iota [] ;
+  unique_choice_iota -> unique_choice_atmost [] ;
+  unique_choice_iota -> unique_choice_hunique [] ;
+  unique_choice_atmost -> unique_choice_atmost1P [] ;
+  unique_choice_atmost -> unique_choice_atmost1 [] ;
+  unique_choice_hunique -> unique_choice_atmost1P [] ;
+subgraph cluster_unique_choice { label="unique_choice"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+unique_choice_atmost1; unique_choice_atmost1P; unique_choice_hunique; unique_choice_atmost; unique_choice_iota; unique_choice_unique_choice; };
+} /* END */

@@ -1,0 +1,13 @@
+digraph HoTT_Classes_orders_integers {
+  graph [ratio=0.5]
+  node [style=filled]
+integers_slow_int_le_dec [label="slow_int_le_dec", URL=<integers.html#slow_int_le_dec>, peripheries=3, fillcolor="#F070D1"] ;
+integers_Biinduction_instance_0 [label="Biinduction_instance_0", URL=<integers.html#Biinduction_instance_0>, fillcolor="#F070D1"] ;
+integers_induction_nonneg [label="induction_nonneg", URL=<integers.html#induction_nonneg>, peripheries=3, fillcolor="#F070D1"] ;
+integers_induction [label="induction", URL=<integers.html#induction>, fillcolor="#F070D1"] ;
+  integers_slow_int_le_dec -> integers_Biinduction_instance_0 [] ;
+  integers_Biinduction_instance_0 -> integers_induction [] ;
+  integers_induction_nonneg -> integers_induction [] ;
+subgraph cluster_integers { label="integers"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+integers_induction; integers_induction_nonneg; integers_Biinduction_instance_0; integers_slow_int_le_dec; };
+} /* END */

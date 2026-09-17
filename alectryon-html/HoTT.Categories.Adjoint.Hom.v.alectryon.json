@@ -1,0 +1,274 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Hom-Set Adjunctions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.UnitCounit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Prod.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HomFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable F : Functor C D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable G : Functor D C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (**\n     Quoting the MIT 18.705 Lecture Notes:\n\n     Let [C] and [D] be categories, [F : C \u2192 D] and [G : D \u2192 C]\n     functors. We call [(F, G)] an adjoint pair, [F] the left adjoint\n     of [G], and [G] the right adjoint of [F] if, for each object [A :\n     C] and object [A' : D], there is a natural bijection\n\n     [Hom_D (F A) A' \u2245 Hom_C A (G A')]\n\n     Here natural means that maps [B \u2192 A] and [A' \u2192 B'] induce a\n     commutative diagram:\n\n<<\n       Hom_D (F A) A' \u2245 Hom_C A (G A')\n             |                 |\n             |                 |\n             |                 |\n             |                 |\n             V                 V\n       Hom_D (F B) B' \u2245 Hom_C B (G B')\n>>\n     *)\n\n  (** We want to [simpl] out the notation machinery *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Opaque NaturalIsomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let Adjunction_Type := Eval simpl in hom_functor D o (F^op, 1) <~=~> hom_functor C o (1, G).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (*Let Adjunction_Type := Eval simpl in HomFunctor D \u27e8 F \u27e8 1 \u27e9 , 1 \u27e9 \u2245 HomFunctor C \u27e8 1 , G \u27e8 1 \u27e9 \u27e9.*)\n  (*Set Printing All.\n  Print Adjunction_Type.*)\n  (** Just putting in [Adjunction_Type] breaks [AMateOf] *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record AdjunctionHom :=\n    {\n      mate_of : @NaturalIsomorphism\n                  H\n                  (Category.Prod.prod (Category.Dual.opposite C) D)\n                  (@Core.set_cat H)\n                  (@compose\n                     (Category.Prod.prod (Category.Dual.opposite C) D)\n                     (Category.Prod.prod (Category.Dual.opposite D) D)\n                     (@Core.set_cat H) (@hom_functor H D)\n                     (@pair (Category.Dual.opposite C)\n                            (Category.Dual.opposite D) D D\n                            (@opposite C D F) (identity D)))\n                  (@compose\n                     (Category.Prod.prod (Category.Dual.opposite C) D)\n                     (Category.Prod.prod (Category.Dual.opposite C) C)\n                     (@Core.set_cat H) (@hom_functor H C)\n                     (@pair (Category.Dual.opposite C)\n                            (Category.Dual.opposite C) D C\n                            (identity (Category.Dual.opposite C)) G))\n    }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion mate_of : AdjunctionHom >-> NaturalIsomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope adjunction_scope with AdjunctionHom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments mate_of {_} [C%_category D%_category F%_functor G%_functor] _%_adjunction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

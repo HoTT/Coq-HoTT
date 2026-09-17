@@ -1,0 +1,304 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(************************************************************************)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*         *   The Coq Proof Assistant / The Coq Development Team       *)\n(*  v      *         Copyright INRIA, CNRS and contributors             *)\n(* <O___,, * (see version control and CREDITS file for authors & dates) *)\n(*   \\VV/  **************************************************************)\n(*    //   *    This file is distributed under the terms of the         *)\n(*         *     GNU Lesser General Public License Version 2.1          *)\n(*         *     (see LICENSE file for the text of the license)         *)\n(************************************************************************)\n \n(************************************************************************)\n(* This file has been modified for use in the HoTT library              *)\n(************************************************************************)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Numerals.Decimal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Hexadecimal numbers *)\n\n(** These numbers coded in base 16 will be used for parsing and printing\n    other Coq numeral datatypes in an human-readable way.\n    See the [Numeral Notation] command.\n    We represent numbers in base 16 as lists of hexadecimal digits,\n    in big-endian order (most significant digit comes first). *)\n\n(** Unsigned integers are just lists of digits.\n    For instance, sixteen is (D1 (D0 Nil)) *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Inductive uint : Type0 :=\n | Nil\n | D0 (_:uint)\n | D1 (_:uint)\n | D2 (_:uint)\n | D3 (_:uint)\n | D4 (_:uint)\n | D5 (_:uint)\n | D6 (_:uint)\n | D7 (_:uint)\n | D8 (_:uint)\n | D9 (_:uint)\n | Da (_:uint)\n | Db (_:uint)\n | Dc (_:uint)\n | Dd (_:uint)\n | De (_:uint)\n | Df (_:uint).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [Nil] is the number terminator. Taken alone, it behaves as zero,\n    but rather use [D0 Nil] instead, since this form will be denoted\n    as [0], while [Nil] will be printed as [Nil]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation zero := (D0 Nil).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For signed integers, we use two constructors [Pos] and [Neg]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variant int : Type0 := Pos (d:uint) | Neg (d:uint).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For decimal numbers, we use two constructors [Hexadecimal] and\n    [HexadecimalExp], depending on whether or not they are given with an\n    exponent (e.g., 0x1.a2p+01). [i] is the integral part while [f] is\n    the fractional part (beware that leading zeroes do matter). *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variant hexadecimal : Type0 :=\n | Hexadecimal (i:int) (f:uint)\n | HexadecimalExp (i:int) (f:uint) (e:Decimal.int).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope hex_uint_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope hex_uint_scope with huint.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope hex_uint_scope with uint.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope hex_int_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope hex_int_scope with hint.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope hex_int_scope with int.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register uint as num.hexadecimal_uint.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register int as num.hexadecimal_int.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register hexadecimal as num.hexadecimal.type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint nb_digits d :=\n  match d with\n  | Nil => O\n  | D0 d | D1 d | D2 d | D3 d | D4 d | D5 d | D6 d | D7 d | D8 d | D9 d\n  | Da d | Db d | Dc d | Dd d | De d | Df d =>\n    S (nb_digits d)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This representation favors simplicity over canonicity.\n    For normalizing numbers, we need to remove head zero digits,\n    and choose our canonical representation of 0 (here [D0 Nil]\n    for unsigned numbers and [Pos (D0 Nil)] for signed numbers). *)\n\n(** [nzhead] removes all head zero digits *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint nzhead d :=\n  match d with\n  | D0 d => nzhead d\n  | _ => d\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [unorm] : normalization of unsigned integers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition unorm d :=\n  match nzhead d with\n  | Nil => zero\n  | d => d\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [norm] : normalization of signed integers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition norm d :=\n  match d with\n  | Pos d => Pos (unorm d)\n  | Neg d =>\n    match nzhead d with\n    | Nil => Pos zero\n    | d => Neg d\n    end\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A few easy operations. For more advanced computations, use the conversions\n    with other Coq numeral datatypes (e.g. Z) and the operations on them. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition opp (d:int) :=\n  match d with\n  | Pos d => Neg d\n  | Neg d => Pos d\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For conversions with binary numbers, it is easier to operate\n    on little-endian numbers. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint revapp (d d' : uint) :=\n  match d with\n  | Nil => d'\n  | D0 d => revapp d (D0 d')\n  | D1 d => revapp d (D1 d')\n  | D2 d => revapp d (D2 d')\n  | D3 d => revapp d (D3 d')\n  | D4 d => revapp d (D4 d')\n  | D5 d => revapp d (D5 d')\n  | D6 d => revapp d (D6 d')\n  | D7 d => revapp d (D7 d')\n  | D8 d => revapp d (D8 d')\n  | D9 d => revapp d (D9 d')\n  | Da d => revapp d (Da d')\n  | Db d => revapp d (Db d')\n  | Dc d => revapp d (Dc d')\n  | Dd d => revapp d (Dd d')\n  | De d => revapp d (De d')\n  | Df d => revapp d (Df d')\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition rev d := revapp d Nil.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition app d d' := revapp (rev d) d'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition app_int d1 d2 :=\n  match d1 with Pos d1 => Pos (app d1 d2) | Neg d1 => Neg (app d1 d2) end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [nztail] removes all trailing zero digits and return both the\n    result and the number of removed digits. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nztail d :=\n  let fix aux d_rev :=\n    match d_rev with\n    | D0 d_rev => let (r, n) := aux d_rev in pair r (S n)\n    | _ => pair d_rev O\n    end in\n  let (r, n) := aux (rev d) in pair (rev r) n.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition nztail_int d :=\n  match d with\n  | Pos d => let (r, n) := nztail d in pair (Pos r) n\n  | Neg d => let (r, n) := nztail d in pair (Neg r) n\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Little.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Successor of little-endian numbers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint succ d :=\n  match d with\n  | Nil => D1 Nil\n  | D0 d => D1 d\n  | D1 d => D2 d\n  | D2 d => D3 d\n  | D3 d => D4 d\n  | D4 d => D5 d\n  | D5 d => D6 d\n  | D6 d => D7 d\n  | D7 d => D8 d\n  | D8 d => D9 d\n  | D9 d => Da d\n  | Da d => Db d\n  | Db d => Dc d\n  | Dc d => Dd d\n  | Dd d => De d\n  | De d => Df d\n  | Df d => D0 (succ d)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Doubling little-endian numbers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint double d :=\n  match d with\n  | Nil => Nil\n  | D0 d => D0 (double d)\n  | D1 d => D2 (double d)\n  | D2 d => D4 (double d)\n  | D3 d => D6 (double d)\n  | D4 d => D8 (double d)\n  | D5 d => Da (double d)\n  | D6 d => Dc (double d)\n  | D7 d => De (double d)\n  | D8 d => D0 (succ_double d)\n  | D9 d => D2 (succ_double d)\n  | Da d => D4 (succ_double d)\n  | Db d => D6 (succ_double d)\n  | Dc d => D8 (succ_double d)\n  | Dd d => Da (succ_double d)\n  | De d => Dc (succ_double d)\n  | Df d => De (succ_double d)\n  end\n\nwith succ_double d :=\n  match d with\n  | Nil => D1 Nil\n  | D0 d => D1 (double d)\n  | D1 d => D3 (double d)\n  | D2 d => D5 (double d)\n  | D3 d => D7 (double d)\n  | D4 d => D9 (double d)\n  | D5 d => Db (double d)\n  | D6 d => Dd (double d)\n  | D7 d => Df (double d)\n  | D8 d => D1 (succ_double d)\n  | D9 d => D3 (succ_double d)\n  | Da d => D5 (succ_double d)\n  | Db d => D7 (succ_double d)\n  | Dc d => D9 (succ_double d)\n  | Dd d => Db (succ_double d)\n  | De d => Dd (succ_double d)\n  | Df d => Df (succ_double d)\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Little.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

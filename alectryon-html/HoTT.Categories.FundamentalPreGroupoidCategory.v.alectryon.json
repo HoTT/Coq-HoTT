@@ -1,0 +1,536 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Fundamental Pregroupoids *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting the HoTT Book:\n\n    Example. For _any_ type [X], there is a precategory with [X] as\n    its type of objects and with [hom(x,y) : \u2225x = y\u2225\u2080]. The\n    composition operation [\u2225y = z\u2225\u2080 \u2192 \u2225x = y\u2225\u2080 \u2192 \u2225x = z\u2225\u2080] is defined\n    by induction on truncation from concatenation [(y = z) \u2192 (x = y) \u2192\n    (x = z)]. We call this the fundamental pregroupoid of [X]. *)\n\n(** We don't want access to all of the internals of a groupoid category at top level. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module FundamentalPreGroupoidCategoryInternals.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section fundamental_pregroupoid_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable X : Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation object := X (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation morphism s d := (Trunc 0 (s = d :> X)) (only parsing).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose s d d' (m : morphism d d') (m' : morphism s d)\n    : morphism s d'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc 0 (s = d')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "Trunc 0 (d = d')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "Trunc 0 (s = d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc 0 (s = d')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "Trunc 0 (d = d')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "Trunc 0 (s = d)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert m'; apply Trunc_rec; intro m'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc 0 (s = d')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "Trunc 0 (d = d')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "s = d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert m; apply Trunc_rec; intro m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Trunc 0 (s = d')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "s = d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "d = d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "s = d'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m'"
+              ],
+              "body": null,
+              "type": "s = d"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "d = d'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (m' @ m).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition identity x : morphism x x\n      := tr (reflexivity _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments compose [s d d'] m m' / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments identity x / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End fundamental_pregroupoid_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End FundamentalPreGroupoidCategoryInternals.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Categorification of the fundamental pregroupoid of a type *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fundamental_pregroupoid_category (X : Type) : PreCategory.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PreCategory",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@Build_PreCategory\n            X\n            _\n            (@FundamentalPreGroupoidCategoryInternals.identity X)\n            (@FundamentalPreGroupoidCategoryInternals.compose X)\n            _\n            _\n            _\n            _);\n  simpl; intros;\n  abstract (\n      repeat match goal with\n               | [ m : Trunc _ _ |- _ ]\n                 => revert m;\n               apply Trunc_ind;\n               [ intro;\n                 match goal with\n                   | [ |- IsHSet (?a = ?b :> ?T) ]\n                     => generalize a b; intros;\n                        let H := fresh in\n                        assert (H : forall x y : T, IsHProp (x = y))\n                 end;\n                 typeclasses eauto\n               | intro ]\n             end;\n      simpl;\n      apply ap;\n      first [ apply concat_p_pp\n            | apply concat_1p\n            | apply concat_p1 ]\n    ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

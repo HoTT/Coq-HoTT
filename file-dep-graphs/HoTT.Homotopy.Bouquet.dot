@@ -1,0 +1,20 @@
+digraph HoTT_Homotopy_Bouquet {
+  graph [ratio=0.5]
+  node [style=filled]
+Bouquet_isfreegroupon_pi1bouquet [label="isfreegroupon_pi1bouquet", URL=<Bouquet.html#isfreegroupon_pi1bouquet>, peripheries=3, fillcolor="#F070D1"] ;
+Bouquet_pi1bouquet_incl [label="pi1bouquet_incl", URL=<Bouquet.html#pi1bouquet_incl>, fillcolor="#F070D1"] ;
+Bouquet_is1natural_equiv_pi1bouquet_rec [label="is1natural_equiv_pi1bouquet_rec", URL=<Bouquet.html#is1natural_equiv_pi1bouquet_rec>, fillcolor="#F070D1"] ;
+Bouquet_equiv_pi1bouquet_rec [label="equiv_pi1bouquet_rec", URL=<Bouquet.html#equiv_pi1bouquet_rec>, fillcolor="#F070D1"] ;
+Bouquet_natequiv_pi1bouquet_rec [label="natequiv_pi1bouquet_rec", URL=<Bouquet.html#natequiv_pi1bouquet_rec>, fillcolor="#F070D1"] ;
+Bouquet_isconnected_bouquet [label="isconnected_bouquet", URL=<Bouquet.html#isconnected_bouquet>, fillcolor="#F070D1"] ;
+Bouquet_Bouquet [label="Bouquet", URL=<Bouquet.html#Bouquet>, fillcolor="#F070D1"] ;
+  Bouquet_isfreegroupon_pi1bouquet -> Bouquet_pi1bouquet_incl [] ;
+  Bouquet_isfreegroupon_pi1bouquet -> Bouquet_is1natural_equiv_pi1bouquet_rec [] ;
+  Bouquet_pi1bouquet_incl -> Bouquet_equiv_pi1bouquet_rec [] ;
+  Bouquet_is1natural_equiv_pi1bouquet_rec -> Bouquet_equiv_pi1bouquet_rec [] ;
+  Bouquet_equiv_pi1bouquet_rec -> Bouquet_natequiv_pi1bouquet_rec [] ;
+  Bouquet_natequiv_pi1bouquet_rec -> Bouquet_isconnected_bouquet [] ;
+  Bouquet_isconnected_bouquet -> Bouquet_Bouquet [] ;
+subgraph cluster_Bouquet { label="Bouquet"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Bouquet_Bouquet; Bouquet_isconnected_bouquet; Bouquet_natequiv_pi1bouquet_rec; Bouquet_equiv_pi1bouquet_rec; Bouquet_is1natural_equiv_pi1bouquet_rec; Bouquet_pi1bouquet_incl; Bouquet_isfreegroupon_pi1bouquet; };
+} /* END */

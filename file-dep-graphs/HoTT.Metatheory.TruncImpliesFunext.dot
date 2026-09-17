@@ -1,0 +1,24 @@
+digraph HoTT_Metatheory_TruncImpliesFunext {
+  graph [ratio=0.5]
+  node [style=filled]
+TruncImpliesFunext_funext_type_from_finterval [label="funext_type_from_finterval", URL=<TruncImpliesFunext.html#funext_type_from_finterval>, peripheries=3, fillcolor="#F070D1"] ;
+TruncImpliesFunext_fseg [label="fseg", URL=<TruncImpliesFunext.html#fseg>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_finterval_rec_beta [label="finterval_rec_beta", URL=<TruncImpliesFunext.html#finterval_rec_beta>, peripheries=3, fillcolor="#F070D1"] ;
+TruncImpliesFunext_finterval_rec [label="finterval_rec", URL=<TruncImpliesFunext.html#finterval_rec>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_finterval [label="finterval", URL=<TruncImpliesFunext.html#finterval>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_funext_type_from_trunc [label="funext_type_from_trunc", URL=<TruncImpliesFunext.html#funext_type_from_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+TruncImpliesFunext_seg [label="seg", URL=<TruncImpliesFunext.html#seg>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_interval_rec [label="interval_rec", URL=<TruncImpliesFunext.html#interval_rec>, fillcolor="#F070D1"] ;
+TruncImpliesFunext_interval [label="interval", URL=<TruncImpliesFunext.html#interval>, fillcolor="#F070D1"] ;
+  TruncImpliesFunext_funext_type_from_finterval -> TruncImpliesFunext_fseg [] ;
+  TruncImpliesFunext_funext_type_from_finterval -> TruncImpliesFunext_finterval_rec [] ;
+  TruncImpliesFunext_fseg -> TruncImpliesFunext_finterval [] ;
+  TruncImpliesFunext_finterval_rec_beta -> TruncImpliesFunext_finterval_rec [] ;
+  TruncImpliesFunext_finterval_rec -> TruncImpliesFunext_finterval [] ;
+  TruncImpliesFunext_funext_type_from_trunc -> TruncImpliesFunext_seg [] ;
+  TruncImpliesFunext_funext_type_from_trunc -> TruncImpliesFunext_interval_rec [] ;
+  TruncImpliesFunext_seg -> TruncImpliesFunext_interval [] ;
+  TruncImpliesFunext_interval_rec -> TruncImpliesFunext_interval [] ;
+subgraph cluster_TruncImpliesFunext { label="TruncImpliesFunext"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+TruncImpliesFunext_interval; TruncImpliesFunext_interval_rec; TruncImpliesFunext_seg; TruncImpliesFunext_funext_type_from_trunc; TruncImpliesFunext_finterval; TruncImpliesFunext_finterval_rec; TruncImpliesFunext_finterval_rec_beta; TruncImpliesFunext_fseg; TruncImpliesFunext_funext_type_from_finterval; };
+} /* END */

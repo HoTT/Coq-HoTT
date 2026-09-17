@@ -1,0 +1,94 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Pseudofunctors *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Definition *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Helper lemmas for rewriting *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Pseudofunctor.RewriteLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Construction from a functor to cat *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Pseudofunctor.FromFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Identity pseudofunctor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Pseudofunctor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Pseudofunctor.RewriteLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Pseudofunctor.FromFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Pseudofunctor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,35 @@
+digraph HoTT_WildCat_Category {
+  graph [ratio=0.5]
+  node [style=filled]
+Category_is3graph_cat [label="is3graph_cat", URL=<Category.html#is3graph_cat>, peripheries=3, fillcolor="#F070D1"] ;
+Category_is2graph_cat [label="is2graph_cat", URL=<Category.html#is2graph_cat>, fillcolor="#F070D1"] ;
+Category_isgraph_cat [label="isgraph_cat", URL=<Category.html#isgraph_cat>, fillcolor="#F070D1"] ;
+Category_is1cat_category_carrier [label="is1cat_category_carrier", URL=<Category.html#is1cat_category_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+Category_is2graph_category_carrier [label="is2graph_category_carrier", URL=<Category.html#is2graph_category_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+Category_is01cat_category_carrier [label="is01cat_category_carrier", URL=<Category.html#is01cat_category_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+Category_isgraph_category_carrier [label="isgraph_category_carrier", URL=<Category.html#isgraph_category_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+Category_category_carrier [label="category_carrier", URL=<Category.html#category_carrier>, peripheries=3, fillcolor="#F070D1"] ;
+Category_Category_sind [label="Category_sind", URL=<Category.html#Category_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Category_Category_rec [label="Category_rec", URL=<Category.html#Category_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Category_Category_ind [label="Category_ind", URL=<Category.html#Category_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Category_Category_rect [label="Category_rect", URL=<Category.html#Category_rect>, fillcolor="#F070D1"] ;
+Category_Build_Category [label="Build_Category", URL=<Category.html#Build_Category>, fillcolor="#7FAAFF"] ;
+Category_Category [label="Category", URL=<Category.html#Category>, fillcolor="#E2CDFA"] ;
+  Category_is3graph_cat -> Category_is2graph_cat [] ;
+  Category_is2graph_cat -> Category_isgraph_cat [] ;
+  Category_isgraph_cat -> Category_Category [] ;
+  Category_is1cat_category_carrier -> Category_Category [] ;
+  Category_is2graph_category_carrier -> Category_Category [] ;
+  Category_is01cat_category_carrier -> Category_Category [] ;
+  Category_isgraph_category_carrier -> Category_Category [] ;
+  Category_category_carrier -> Category_Category [] ;
+  Category_Category_sind -> Category_Build_Category [] ;
+  Category_Category_sind -> Category_Category [] ;
+  Category_Category_rec -> Category_Category_rect [] ;
+  Category_Category_ind -> Category_Build_Category [] ;
+  Category_Category_ind -> Category_Category [] ;
+  Category_Category_rect -> Category_Build_Category [] ;
+  Category_Category_rect -> Category_Category [] ;
+subgraph cluster_Category { label="Category"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Category_Category; Category_Build_Category; Category_Category_rect; Category_Category_ind; Category_Category_rec; Category_Category_sind; Category_category_carrier; Category_isgraph_category_carrier; Category_is01cat_category_carrier; Category_is2graph_category_carrier; Category_is1cat_category_carrier; Category_isgraph_cat; Category_is2graph_cat; Category_is3graph_cat; };
+} /* END */

@@ -1,0 +1,20 @@
+digraph HoTT_Classes_categories_ua_category {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_category_category_algebra [label="category_algebra", URL=<ua_category.html#category_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+ua_category_iscategory_algebra [label="iscategory_algebra", URL=<ua_category.html#iscategory_algebra>, fillcolor="#F070D1"] ;
+ua_category_path_idtoiso_isomorphic_id [label="path_idtoiso_isomorphic_id", URL=<ua_category.html#path_idtoiso_isomorphic_id>, fillcolor="#F070D1"] ;
+ua_category_isequiv_catiso_to_uaiso [label="isequiv_catiso_to_uaiso", URL=<ua_category.html#isequiv_catiso_to_uaiso>, fillcolor="#F070D1"] ;
+ua_category_uaiso_to_catiso [label="uaiso_to_catiso", URL=<ua_category.html#uaiso_to_catiso>, fillcolor="#F070D1"] ;
+ua_category_catiso_to_uaiso [label="catiso_to_uaiso", URL=<ua_category.html#catiso_to_uaiso>, fillcolor="#F070D1"] ;
+ua_category_precategory_algebra [label="precategory_algebra", URL=<ua_category.html#precategory_algebra>, fillcolor="#F070D1"] ;
+  ua_category_category_algebra -> ua_category_iscategory_algebra [] ;
+  ua_category_iscategory_algebra -> ua_category_path_idtoiso_isomorphic_id [] ;
+  ua_category_path_idtoiso_isomorphic_id -> ua_category_isequiv_catiso_to_uaiso [] ;
+  ua_category_isequiv_catiso_to_uaiso -> ua_category_uaiso_to_catiso [] ;
+  ua_category_isequiv_catiso_to_uaiso -> ua_category_catiso_to_uaiso [] ;
+  ua_category_uaiso_to_catiso -> ua_category_precategory_algebra [] ;
+  ua_category_catiso_to_uaiso -> ua_category_precategory_algebra [] ;
+subgraph cluster_ua_category { label="ua_category"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_category_precategory_algebra; ua_category_catiso_to_uaiso; ua_category_uaiso_to_catiso; ua_category_isequiv_catiso_to_uaiso; ua_category_path_idtoiso_isomorphic_id; ua_category_iscategory_algebra; ua_category_category_algebra; };
+} /* END */

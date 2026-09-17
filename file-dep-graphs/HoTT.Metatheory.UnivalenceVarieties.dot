@@ -1,0 +1,39 @@
+digraph HoTT_Metatheory_UnivalenceVarieties {
+  graph [ratio=0.5]
+  node [style=filled]
+UnivalenceVarieties_VeryWeakUnivalence_implies_Univalence [label="VeryWeakUnivalence_implies_Univalence", URL=<UnivalenceVarieties.html#VeryWeakUnivalence_implies_Univalence>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_IncoherentWeakUnivalence_implies_Univalence [label="IncoherentWeakUnivalence_implies_Univalence", URL=<UnivalenceVarieties.html#IncoherentWeakUnivalence_implies_Univalence>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_WeakUnivalence_implies_Univalence [label="WeakUnivalence_implies_Univalence", URL=<UnivalenceVarieties.html#WeakUnivalence_implies_Univalence>, fillcolor="#F070D1"] ;
+UnivalenceVarieties_flip_comp [label="flip_comp", URL=<UnivalenceVarieties.html#flip_comp>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_unit_comp [label="unit_comp", URL=<UnivalenceVarieties.html#unit_comp>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_contract [label="contract", URL=<UnivalenceVarieties.html#contract>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_flip [label="flip", URL=<UnivalenceVarieties.html#flip>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_unit [label="unit", URL=<UnivalenceVarieties.html#unit>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_VeryWeakUnivalence_sind [label="VeryWeakUnivalence_sind", URL=<UnivalenceVarieties.html#VeryWeakUnivalence_sind>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_VeryWeakUnivalence_rec [label="VeryWeakUnivalence_rec", URL=<UnivalenceVarieties.html#VeryWeakUnivalence_rec>, peripheries=3, fillcolor="#F070D1"] ;
+UnivalenceVarieties_VeryWeakUnivalence_ind [label="VeryWeakUnivalence_ind", URL=<UnivalenceVarieties.html#VeryWeakUnivalence_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+UnivalenceVarieties_VeryWeakUnivalence_rect [label="VeryWeakUnivalence_rect", URL=<UnivalenceVarieties.html#VeryWeakUnivalence_rect>, fillcolor="#F070D1"] ;
+UnivalenceVarieties_Build_VeryWeakUnivalence [label="Build_VeryWeakUnivalence", URL=<UnivalenceVarieties.html#Build_VeryWeakUnivalence>, fillcolor="#7FAAFF"] ;
+UnivalenceVarieties_VeryWeakUnivalence [label="VeryWeakUnivalence", URL=<UnivalenceVarieties.html#VeryWeakUnivalence>, fillcolor="#E2CDFA"] ;
+UnivalenceVarieties_IncoherentWeakUnivalence [label="IncoherentWeakUnivalence", URL=<UnivalenceVarieties.html#IncoherentWeakUnivalence>, fillcolor="#F070D1"] ;
+UnivalenceVarieties_WeakUnivalence [label="WeakUnivalence", URL=<UnivalenceVarieties.html#WeakUnivalence>, fillcolor="#F070D1"] ;
+  UnivalenceVarieties_VeryWeakUnivalence_implies_Univalence -> UnivalenceVarieties_WeakUnivalence_implies_Univalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_implies_Univalence -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_IncoherentWeakUnivalence_implies_Univalence -> UnivalenceVarieties_WeakUnivalence_implies_Univalence [] ;
+  UnivalenceVarieties_IncoherentWeakUnivalence_implies_Univalence -> UnivalenceVarieties_IncoherentWeakUnivalence [] ;
+  UnivalenceVarieties_WeakUnivalence_implies_Univalence -> UnivalenceVarieties_WeakUnivalence [] ;
+  UnivalenceVarieties_flip_comp -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_unit_comp -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_contract -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_flip -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_unit -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_sind -> UnivalenceVarieties_Build_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_sind -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_rec -> UnivalenceVarieties_VeryWeakUnivalence_rect [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_ind -> UnivalenceVarieties_Build_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_ind -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_rect -> UnivalenceVarieties_Build_VeryWeakUnivalence [] ;
+  UnivalenceVarieties_VeryWeakUnivalence_rect -> UnivalenceVarieties_VeryWeakUnivalence [] ;
+subgraph cluster_UnivalenceVarieties { label="UnivalenceVarieties"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+UnivalenceVarieties_WeakUnivalence; UnivalenceVarieties_IncoherentWeakUnivalence; UnivalenceVarieties_VeryWeakUnivalence; UnivalenceVarieties_Build_VeryWeakUnivalence; UnivalenceVarieties_VeryWeakUnivalence_rect; UnivalenceVarieties_VeryWeakUnivalence_ind; UnivalenceVarieties_VeryWeakUnivalence_rec; UnivalenceVarieties_VeryWeakUnivalence_sind; UnivalenceVarieties_unit; UnivalenceVarieties_flip; UnivalenceVarieties_contract; UnivalenceVarieties_unit_comp; UnivalenceVarieties_flip_comp; UnivalenceVarieties_WeakUnivalence_implies_Univalence; UnivalenceVarieties_IncoherentWeakUnivalence_implies_Univalence; UnivalenceVarieties_VeryWeakUnivalence_implies_Univalence; };
+} /* END */

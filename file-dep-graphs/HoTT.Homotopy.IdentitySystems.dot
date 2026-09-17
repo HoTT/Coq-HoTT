@@ -1,0 +1,52 @@
+digraph HoTT_Homotopy_IdentitySystems {
+  graph [ratio=0.5]
+  node [style=filled]
+IdentitySystems_contr_sigma_sigma [label="contr_sigma_sigma", URL=<IdentitySystems.html#contr_sigma_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_equiv_path_issig_contr [label="equiv_path_issig_contr", URL=<IdentitySystems.html#equiv_path_issig_contr>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_equiv_path_along_equiv [label="equiv_path_along_equiv", URL=<IdentitySystems.html#equiv_path_along_equiv>, fillcolor="#F070D1"] ;
+IdentitySystems_equiv_path_from_contr [label="equiv_path_from_contr", URL=<IdentitySystems.html#equiv_path_from_contr>, fillcolor="#F070D1"] ;
+IdentitySystems_equiv_transport_identitysystem [label="equiv_transport_identitysystem", URL=<IdentitySystems.html#equiv_transport_identitysystem>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_isequiv_transport_identitysystem [label="isequiv_transport_identitysystem", URL=<IdentitySystems.html#isequiv_transport_identitysystem>, fillcolor="#F070D1"] ;
+IdentitySystems_homocontr_pfammap_contr [label="homocontr_pfammap_contr", URL=<IdentitySystems.html#homocontr_pfammap_contr>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_contr_pfammap_homocontr [label="contr_pfammap_homocontr", URL=<IdentitySystems.html#contr_pfammap_homocontr>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_identitysystem_contr_sigma [label="identitysystem_contr_sigma", URL=<IdentitySystems.html#identitysystem_contr_sigma>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_contr_sigma_equiv_path [label="contr_sigma_equiv_path", URL=<IdentitySystems.html#contr_sigma_equiv_path>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_equiv_path_homocontr_pfammap [label="equiv_path_homocontr_pfammap", URL=<IdentitySystems.html#equiv_path_homocontr_pfammap>, fillcolor="#F070D1"] ;
+IdentitySystems_homocontr_pfammap_identitysystem [label="homocontr_pfammap_identitysystem", URL=<IdentitySystems.html#homocontr_pfammap_identitysystem>, fillcolor="#F070D1"] ;
+IdentitySystems_reflexive_pfammap_homotopy [label="reflexive_pfammap_homotopy", URL=<IdentitySystems.html#reflexive_pfammap_homotopy>, fillcolor="#F070D1"] ;
+IdentitySystems_pfammap_homotopy [label="pfammap_homotopy", URL=<IdentitySystems.html#pfammap_homotopy>, fillcolor="#F070D1"] ;
+IdentitySystems_pfamMap [label="pfamMap", URL=<IdentitySystems.html#pfamMap>, fillcolor="#F070D1"] ;
+IdentitySystems_idsys_ind_beta [label="idsys_ind_beta", URL=<IdentitySystems.html#idsys_ind_beta>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_idsys_ind [label="idsys_ind", URL=<IdentitySystems.html#idsys_ind>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_IsIdentitySystem_sind [label="IsIdentitySystem_sind", URL=<IdentitySystems.html#IsIdentitySystem_sind>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_IsIdentitySystem_rec [label="IsIdentitySystem_rec", URL=<IdentitySystems.html#IsIdentitySystem_rec>, peripheries=3, fillcolor="#F070D1"] ;
+IdentitySystems_IsIdentitySystem_ind [label="IsIdentitySystem_ind", URL=<IdentitySystems.html#IsIdentitySystem_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+IdentitySystems_IsIdentitySystem_rect [label="IsIdentitySystem_rect", URL=<IdentitySystems.html#IsIdentitySystem_rect>, fillcolor="#F070D1"] ;
+IdentitySystems_Build_IsIdentitySystem [label="Build_IsIdentitySystem", URL=<IdentitySystems.html#Build_IsIdentitySystem>, fillcolor="#7FAAFF"] ;
+IdentitySystems_IsIdentitySystem [label="IsIdentitySystem", URL=<IdentitySystems.html#IsIdentitySystem>, fillcolor="#E2CDFA"] ;
+  IdentitySystems_equiv_path_issig_contr -> IdentitySystems_equiv_path_along_equiv [] ;
+  IdentitySystems_equiv_path_issig_contr -> IdentitySystems_equiv_path_from_contr [] ;
+  IdentitySystems_equiv_transport_identitysystem -> IdentitySystems_isequiv_transport_identitysystem [] ;
+  IdentitySystems_isequiv_transport_identitysystem -> IdentitySystems_equiv_path_homocontr_pfammap [] ;
+  IdentitySystems_isequiv_transport_identitysystem -> IdentitySystems_homocontr_pfammap_identitysystem [] ;
+  IdentitySystems_homocontr_pfammap_contr -> IdentitySystems_reflexive_pfammap_homotopy [] ;
+  IdentitySystems_contr_pfammap_homocontr -> IdentitySystems_pfammap_homotopy [] ;
+  IdentitySystems_identitysystem_contr_sigma -> IdentitySystems_Build_IsIdentitySystem [] ;
+  IdentitySystems_identitysystem_contr_sigma -> IdentitySystems_IsIdentitySystem [] ;
+  IdentitySystems_equiv_path_homocontr_pfammap -> IdentitySystems_pfammap_homotopy [] ;
+  IdentitySystems_homocontr_pfammap_identitysystem -> IdentitySystems_pfammap_homotopy [] ;
+  IdentitySystems_homocontr_pfammap_identitysystem -> IdentitySystems_IsIdentitySystem [] ;
+  IdentitySystems_reflexive_pfammap_homotopy -> IdentitySystems_pfammap_homotopy [] ;
+  IdentitySystems_pfammap_homotopy -> IdentitySystems_pfamMap [] ;
+  IdentitySystems_idsys_ind_beta -> IdentitySystems_IsIdentitySystem [] ;
+  IdentitySystems_idsys_ind -> IdentitySystems_IsIdentitySystem [] ;
+  IdentitySystems_IsIdentitySystem_sind -> IdentitySystems_Build_IsIdentitySystem [] ;
+  IdentitySystems_IsIdentitySystem_sind -> IdentitySystems_IsIdentitySystem [] ;
+  IdentitySystems_IsIdentitySystem_rec -> IdentitySystems_IsIdentitySystem_rect [] ;
+  IdentitySystems_IsIdentitySystem_ind -> IdentitySystems_Build_IsIdentitySystem [] ;
+  IdentitySystems_IsIdentitySystem_ind -> IdentitySystems_IsIdentitySystem [] ;
+  IdentitySystems_IsIdentitySystem_rect -> IdentitySystems_Build_IsIdentitySystem [] ;
+  IdentitySystems_IsIdentitySystem_rect -> IdentitySystems_IsIdentitySystem [] ;
+subgraph cluster_IdentitySystems { label="IdentitySystems"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+IdentitySystems_IsIdentitySystem; IdentitySystems_Build_IsIdentitySystem; IdentitySystems_IsIdentitySystem_rect; IdentitySystems_IsIdentitySystem_ind; IdentitySystems_IsIdentitySystem_rec; IdentitySystems_IsIdentitySystem_sind; IdentitySystems_idsys_ind; IdentitySystems_idsys_ind_beta; IdentitySystems_pfamMap; IdentitySystems_pfammap_homotopy; IdentitySystems_reflexive_pfammap_homotopy; IdentitySystems_homocontr_pfammap_identitysystem; IdentitySystems_equiv_path_homocontr_pfammap; IdentitySystems_contr_sigma_equiv_path; IdentitySystems_identitysystem_contr_sigma; IdentitySystems_contr_pfammap_homocontr; IdentitySystems_homocontr_pfammap_contr; IdentitySystems_isequiv_transport_identitysystem; IdentitySystems_equiv_transport_identitysystem; IdentitySystems_equiv_path_from_contr; IdentitySystems_equiv_path_along_equiv; IdentitySystems_equiv_path_issig_contr; IdentitySystems_contr_sigma_sigma; };
+} /* END */

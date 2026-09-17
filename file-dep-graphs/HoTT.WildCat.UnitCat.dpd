@@ -1,0 +1,13 @@
+N: 4 "is01cat_unit" [body=yes, kind=cnst, prop=no, path="UnitCat", ];
+N: 3 "is0gpd_unit" [body=yes, kind=cnst, prop=no, path="UnitCat", ];
+N: 1 "is1cat_unit" [body=yes, kind=cnst, prop=no, path="UnitCat", ];
+N: 2 "is2graph_unit" [body=yes, kind=cnst, prop=no, path="UnitCat", ];
+N: 5 "isgraph_unit" [body=yes, kind=cnst, prop=no, path="UnitCat", ];
+E: 1 2 [weight=8, ];
+E: 1 3 [weight=1, ];
+E: 1 4 [weight=5, ];
+E: 1 5 [weight=28, ];
+E: 2 5 [weight=2, ];
+E: 3 4 [weight=2, ];
+E: 3 5 [weight=3, ];
+E: 4 5 [weight=4, ];

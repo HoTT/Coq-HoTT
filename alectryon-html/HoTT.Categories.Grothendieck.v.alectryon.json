@@ -1,0 +1,44 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Grothendieck Construction *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)\n(** ** of a functor to Set *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Grothendieck.ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** of a pseudofunctor to Cat *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Grothendieck.PseudofunctorToCat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** of a functor to Cat *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Grothendieck.ToCat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

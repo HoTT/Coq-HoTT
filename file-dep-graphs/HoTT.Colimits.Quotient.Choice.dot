@@ -1,0 +1,63 @@
+digraph HoTT_Colimits_Quotient_Choice {
+  graph [ratio=0.5]
+  node [style=filled]
+Choice_choose_quotient_rec_compute [label="choose_quotient_rec_compute", URL=<Choice.html#choose_quotient_rec_compute>, peripheries=3, fillcolor="#F070D1"] ;
+Choice_choose_quotient_ind_compute [label="choose_quotient_ind_compute", URL=<Choice.html#choose_quotient_ind_compute>, fillcolor="#F070D1"] ;
+Choice_choose_quotient_rec [label="choose_quotient_rec", URL=<Choice.html#choose_quotient_rec>, fillcolor="#F070D1"] ;
+Choice_choose_quotient_ind_prop [label="choose_quotient_ind_prop", URL=<Choice.html#choose_quotient_ind_prop>, peripheries=3, fillcolor="#F070D1"] ;
+Choice_choose_quotient_ind [label="choose_quotient_ind", URL=<Choice.html#choose_quotient_ind>, fillcolor="#F070D1"] ;
+Choice_chooseprop_quotient_ind [label="chooseprop_quotient_ind", URL=<Choice.html#chooseprop_quotient_ind>, fillcolor="#F070D1"] ;
+Choice_ishprop_choose_quotient_ind_chooseprop [label="ishprop_choose_quotient_ind_chooseprop", URL=<Choice.html#ishprop_choose_quotient_ind_chooseprop>, fillcolor="#F070D1"] ;
+Choice_ChooseProp [label="ChooseProp", URL=<Choice.html#ChooseProp>, fillcolor="#F070D1"] ;
+Choice_qglue_forall [label="qglue_forall", URL=<Choice.html#qglue_forall>, fillcolor="#F070D1"] ;
+Choice_equiv_has_tr0_choice_has_quotient_choice [label="equiv_has_tr0_choice_has_quotient_choice", URL=<Choice.html#equiv_has_tr0_choice_has_quotient_choice>, peripheries=3, fillcolor="#F070D1"] ;
+Choice_isequiv_has_tr0_choice_to_has_quotient_choice [label="isequiv_has_tr0_choice_to_has_quotient_choice", URL=<Choice.html#isequiv_has_tr0_choice_to_has_quotient_choice>, fillcolor="#F070D1"] ;
+Choice_has_quotient_choice_tr0choice [label="has_quotient_choice_tr0choice", URL=<Choice.html#has_quotient_choice_tr0choice>, fillcolor="#F070D1"] ;
+Choice_has_tr0_choice_quotientchoice [label="has_tr0_choice_quotientchoice", URL=<Choice.html#has_tr0_choice_quotientchoice>, fillcolor="#F070D1"] ;
+Choice_ishprop_quotient_relunit [label="ishprop_quotient_relunit", URL=<Choice.html#ishprop_quotient_relunit>, fillcolor="#F070D1"] ;
+Choice_transitive_relunit [label="transitive_relunit", URL=<Choice.html#transitive_relunit>, fillcolor="#F070D1"] ;
+Choice_symmetric_relunit [label="symmetric_relunit", URL=<Choice.html#symmetric_relunit>, fillcolor="#F070D1"] ;
+Choice_reflexive_relunit [label="reflexive_relunit", URL=<Choice.html#reflexive_relunit>, fillcolor="#F070D1"] ;
+Choice_RelUnit [label="RelUnit", URL=<Choice.html#RelUnit>, fillcolor="#F070D1"] ;
+Choice_choose [label="choose", URL=<Choice.html#choose>, peripheries=3, fillcolor="#F070D1"] ;
+Choice_prechoose [label="prechoose", URL=<Choice.html#prechoose>, fillcolor="#F070D1"] ;
+Choice_hprop_choose_cod [label="hprop_choose_cod", URL=<Choice.html#hprop_choose_cod>, fillcolor="#F070D1"] ;
+Choice_transitive_relclass [label="transitive_relclass", URL=<Choice.html#transitive_relclass>, fillcolor="#F070D1"] ;
+Choice_symmetric_relclass [label="symmetric_relclass", URL=<Choice.html#symmetric_relclass>, fillcolor="#F070D1"] ;
+Choice_reflexive_relclass [label="reflexive_relclass", URL=<Choice.html#reflexive_relclass>, fillcolor="#F070D1"] ;
+Choice_RelClassEquiv [label="RelClassEquiv", URL=<Choice.html#RelClassEquiv>, fillcolor="#F070D1"] ;
+Choice_HasQuotientChoice [label="HasQuotientChoice", URL=<Choice.html#HasQuotientChoice>, fillcolor="#F070D1"] ;
+  Choice_choose_quotient_rec_compute -> Choice_choose_quotient_ind_compute [] ;
+  Choice_choose_quotient_rec_compute -> Choice_choose_quotient_rec [] ;
+  Choice_choose_quotient_ind_compute -> Choice_choose_quotient_ind [] ;
+  Choice_choose_quotient_rec -> Choice_choose_quotient_ind [] ;
+  Choice_choose_quotient_ind_prop -> Choice_choose_quotient_ind [] ;
+  Choice_choose_quotient_ind -> Choice_chooseprop_quotient_ind [] ;
+  Choice_chooseprop_quotient_ind -> Choice_ishprop_choose_quotient_ind_chooseprop [] ;
+  Choice_chooseprop_quotient_ind -> Choice_has_quotient_choice_tr0choice [] ;
+  Choice_ishprop_choose_quotient_ind_chooseprop -> Choice_ChooseProp [] ;
+  Choice_ChooseProp -> Choice_qglue_forall [] ;
+  Choice_equiv_has_tr0_choice_has_quotient_choice -> Choice_isequiv_has_tr0_choice_to_has_quotient_choice [] ;
+  Choice_isequiv_has_tr0_choice_to_has_quotient_choice -> Choice_has_quotient_choice_tr0choice [] ;
+  Choice_isequiv_has_tr0_choice_to_has_quotient_choice -> Choice_has_tr0_choice_quotientchoice [] ;
+  Choice_has_quotient_choice_tr0choice -> Choice_HasQuotientChoice [] ;
+  Choice_has_tr0_choice_quotientchoice -> Choice_ishprop_quotient_relunit [] ;
+  Choice_has_tr0_choice_quotientchoice -> Choice_transitive_relunit [] ;
+  Choice_has_tr0_choice_quotientchoice -> Choice_symmetric_relunit [] ;
+  Choice_has_tr0_choice_quotientchoice -> Choice_reflexive_relunit [] ;
+  Choice_has_tr0_choice_quotientchoice -> Choice_HasQuotientChoice [] ;
+  Choice_ishprop_quotient_relunit -> Choice_RelUnit [] ;
+  Choice_transitive_relunit -> Choice_RelUnit [] ;
+  Choice_symmetric_relunit -> Choice_RelUnit [] ;
+  Choice_reflexive_relunit -> Choice_RelUnit [] ;
+  Choice_choose -> Choice_prechoose [] ;
+  Choice_prechoose -> Choice_hprop_choose_cod [] ;
+  Choice_hprop_choose_cod -> Choice_transitive_relclass [] ;
+  Choice_hprop_choose_cod -> Choice_symmetric_relclass [] ;
+  Choice_hprop_choose_cod -> Choice_reflexive_relclass [] ;
+  Choice_transitive_relclass -> Choice_RelClassEquiv [] ;
+  Choice_symmetric_relclass -> Choice_RelClassEquiv [] ;
+  Choice_reflexive_relclass -> Choice_RelClassEquiv [] ;
+subgraph cluster_Choice { label="Choice"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Choice_HasQuotientChoice; Choice_RelClassEquiv; Choice_reflexive_relclass; Choice_symmetric_relclass; Choice_transitive_relclass; Choice_hprop_choose_cod; Choice_prechoose; Choice_choose; Choice_RelUnit; Choice_reflexive_relunit; Choice_symmetric_relunit; Choice_transitive_relunit; Choice_ishprop_quotient_relunit; Choice_has_tr0_choice_quotientchoice; Choice_has_quotient_choice_tr0choice; Choice_isequiv_has_tr0_choice_to_has_quotient_choice; Choice_equiv_has_tr0_choice_has_quotient_choice; Choice_qglue_forall; Choice_ChooseProp; Choice_ishprop_choose_quotient_ind_chooseprop; Choice_chooseprop_quotient_ind; Choice_choose_quotient_ind; Choice_choose_quotient_ind_prop; Choice_choose_quotient_rec; Choice_choose_quotient_ind_compute; Choice_choose_quotient_rec_compute; };
+} /* END */

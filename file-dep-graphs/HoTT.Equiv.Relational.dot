@@ -1,0 +1,43 @@
+digraph HoTT_Equiv_Relational {
+  graph [ratio=0.5]
+  node [style=filled]
+Relational_relequiv_idmap [label="relequiv_idmap", URL=<Relational.html#relequiv_idmap>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_reinv_V [label="reinv_V", URL=<Relational.html#reinv_V>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_inverse_relequiv [label="inverse_relequiv", URL=<Relational.html#inverse_relequiv>, fillcolor="#F070D1"] ;
+Relational_RelIsEquiv [label="RelIsEquiv", URL=<Relational.html#RelIsEquiv>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_equiv_of_relequiv [label="equiv_of_relequiv", URL=<Relational.html#equiv_of_relequiv>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_relequiv_of_equiv [label="relequiv_of_equiv", URL=<Relational.html#relequiv_of_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_issig_relequiv [label="issig_relequiv", URL=<Relational.html#issig_relequiv>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_relequiv_contr_g [label="relequiv_contr_g", URL=<Relational.html#relequiv_contr_g>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_relequiv_contr_f [label="relequiv_contr_f", URL=<Relational.html#relequiv_contr_f>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_equiv_rel [label="equiv_rel", URL=<Relational.html#equiv_rel>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_RelEquiv_sind [label="RelEquiv_sind", URL=<Relational.html#RelEquiv_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_RelEquiv_rec [label="RelEquiv_rec", URL=<Relational.html#RelEquiv_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Relational_RelEquiv_ind [label="RelEquiv_ind", URL=<Relational.html#RelEquiv_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Relational_RelEquiv_rect [label="RelEquiv_rect", URL=<Relational.html#RelEquiv_rect>, fillcolor="#F070D1"] ;
+Relational_Build_RelEquiv [label="Build_RelEquiv", URL=<Relational.html#Build_RelEquiv>, fillcolor="#7FAAFF"] ;
+Relational_RelEquiv [label="RelEquiv", URL=<Relational.html#RelEquiv>, fillcolor="#E2CDFA"] ;
+  Relational_relequiv_idmap -> Relational_Build_RelEquiv [] ;
+  Relational_relequiv_idmap -> Relational_RelEquiv [] ;
+  Relational_reinv_V -> Relational_inverse_relequiv [] ;
+  Relational_inverse_relequiv -> Relational_Build_RelEquiv [] ;
+  Relational_inverse_relequiv -> Relational_RelEquiv [] ;
+  Relational_RelIsEquiv -> Relational_RelEquiv [] ;
+  Relational_equiv_of_relequiv -> Relational_RelEquiv [] ;
+  Relational_relequiv_of_equiv -> Relational_Build_RelEquiv [] ;
+  Relational_relequiv_of_equiv -> Relational_RelEquiv [] ;
+  Relational_issig_relequiv -> Relational_Build_RelEquiv [] ;
+  Relational_issig_relequiv -> Relational_RelEquiv [] ;
+  Relational_relequiv_contr_g -> Relational_RelEquiv [] ;
+  Relational_relequiv_contr_f -> Relational_RelEquiv [] ;
+  Relational_equiv_rel -> Relational_RelEquiv [] ;
+  Relational_RelEquiv_sind -> Relational_Build_RelEquiv [] ;
+  Relational_RelEquiv_sind -> Relational_RelEquiv [] ;
+  Relational_RelEquiv_rec -> Relational_RelEquiv_rect [] ;
+  Relational_RelEquiv_ind -> Relational_Build_RelEquiv [] ;
+  Relational_RelEquiv_ind -> Relational_RelEquiv [] ;
+  Relational_RelEquiv_rect -> Relational_Build_RelEquiv [] ;
+  Relational_RelEquiv_rect -> Relational_RelEquiv [] ;
+subgraph cluster_Relational { label="Relational"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Relational_RelEquiv; Relational_Build_RelEquiv; Relational_RelEquiv_rect; Relational_RelEquiv_ind; Relational_RelEquiv_rec; Relational_RelEquiv_sind; Relational_equiv_rel; Relational_relequiv_contr_f; Relational_relequiv_contr_g; Relational_issig_relequiv; Relational_relequiv_of_equiv; Relational_equiv_of_relequiv; Relational_RelIsEquiv; Relational_inverse_relequiv; Relational_reinv_V; Relational_relequiv_idmap; };
+} /* END */

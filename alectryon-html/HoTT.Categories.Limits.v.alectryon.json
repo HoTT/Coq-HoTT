@@ -1,0 +1,54 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Limits and Colimits *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Definitions *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Limits.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** (co)limits assemble into functors *)\n(** *** which are adjoints to \u0394 *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Limits.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Limits.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Limits.Functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

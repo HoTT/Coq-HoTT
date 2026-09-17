@@ -1,0 +1,15 @@
+digraph HoTT_Classes_orders_fields {
+  graph [ratio=0.5]
+  node [style=filled]
+fields_field_split2 [label="field_split2", URL=<fields.html#field_split2>, peripheries=3, fillcolor="#F070D1"] ;
+fields_flip_lt_recip_r [label="flip_lt_recip_r", URL=<fields.html#flip_lt_recip_r>, peripheries=3, fillcolor="#F070D1"] ;
+fields_flip_lt_recip_l [label="flip_lt_recip_l", URL=<fields.html#flip_lt_recip_l>, fillcolor="#F070D1"] ;
+fields_flip_lt_recip [label="flip_lt_recip", URL=<fields.html#flip_lt_recip>, fillcolor="#F070D1"] ;
+fields_neg_recip_compat [label="neg_recip_compat", URL=<fields.html#neg_recip_compat>, peripheries=3, fillcolor="#F070D1"] ;
+fields_pos_recip_compat [label="pos_recip_compat", URL=<fields.html#pos_recip_compat>, fillcolor="#F070D1"] ;
+  fields_flip_lt_recip_r -> fields_flip_lt_recip_l [] ;
+  fields_flip_lt_recip_l -> fields_flip_lt_recip [] ;
+  fields_flip_lt_recip_l -> fields_pos_recip_compat [] ;
+subgraph cluster_fields { label="fields"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+fields_pos_recip_compat; fields_neg_recip_compat; fields_flip_lt_recip; fields_flip_lt_recip_l; fields_flip_lt_recip_r; fields_field_split2; };
+} /* END */
