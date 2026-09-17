@@ -60,6 +60,8 @@ Module Export Int.
   End Int.
 End Int.
 
+Bind Scope int_scope with Int.
+
 (** We sometimes want to treat the integers as a pointed type with basepoint given by 0. *)
 Instance ispointed_int : IsPointed Int := zero.
 
@@ -324,14 +326,17 @@ Definition int_neg_succ (z : Int) : -(z.+1) = (-z).-1
 Definition int_neg_pred (z : Int) : -(z.-1) = (-z).+1
   := idpath.
 
-(** *** Addition *)
+(** *** Addition and subtraction *)
 
 (** We define addition by recursion on the first argument. *)
 Definition int_add (x y : Int) : Int
   := int_iter int_succ x y.
 
 Infix "+" := int_add : int_scope.
-Infix "-" := (fun x y => x + -y) : int_scope.
+
+Definition int_sub (x y : Int) : Int := x + -y.
+
+Infix "-" := int_sub : int_scope.
 
 (** Integer addition with zero on the left is the identity by definition. *)
 Definition int_add_0_l (z : Int) : 0 + z = z
@@ -404,7 +409,7 @@ Proof.
 Defined.
 
 (** Negation is a right inverse with respect to integer addition. *)
-Definition int_add_neg_r (z : Int) : z - z = 0
+Definition int_add_neg_r (z : Int) : z + -z = 0
   := int_add_comm _ _ @ int_add_neg_l _.
 
 (** Negation distributes over addition. *)
