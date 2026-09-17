@@ -69,6 +69,9 @@ Record Ideal (R : Ring) := {
   ideal_subgroup :> Subgroup R;
   ideal_isideal :: IsIdeal ideal_subgroup;
 }.
+
+Bind Scope ideal_scope with Ideal.
+
 Definition issig_Ideal (R : Ring) : _ <~> Ideal R := ltac:(issig).
 
 Definition ideal_op (R : Ring) : Ideal R -> Ideal (rng_op R)

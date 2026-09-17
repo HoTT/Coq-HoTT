@@ -111,7 +111,7 @@ Section ChineseRemainderTheorem.
   Context (c : Coprime I J).
 
   (** The Chinese Remainder Theorem *)
-  Theorem chinese_remainder : R / (I ∩ J)%ideal ≅ (R / I) × (R / J).
+  Theorem chinese_remainder : R / (I ∩ J) ≅ (R / I) × (R / J).
   Proof.
     (** We use the first isomorphism theorem. Coq can already infer which map we wish to use, so for clarity we tell it not to do so. *)
     snapply rng_first_iso'.
@@ -143,7 +143,7 @@ End ChineseRemainderTheorem.
 (** We also have the same for products of ideals when in a commutative ring. *)
 Theorem chinese_remainder_prod `{Univalence}
   {R : CRing} (I J : Ideal R) (c : Coprime I J)
-  : R / (I ⋅ J)%ideal ≅ (R / I) × (R / J).
+  : R / (I ⋅ J) ≅ (R / I) × (R / J).
 Proof.
   etransitivity.
   { rapply rng_quotient_invar.
