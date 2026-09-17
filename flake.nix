@@ -52,7 +52,7 @@
         devShells = rec {
           default = coq_9_1;
 
-          devShells.coq_9_2 =
+          coq_9_2 =
             makeDevShell
               { coq = pkgs.coq_9_2; }
               { extraPackages = [ ]; };
@@ -60,11 +60,6 @@
           coq_9_1 =
             makeDevShell
               { coq = pkgs.coq_9_1; }
-              { };
-
-          coq_9_0 =
-            makeDevShell
-              { coq = pkgs.coq_9_0; }
               { };
 
           # To use, pass --impure to nix develop

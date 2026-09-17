@@ -10,8 +10,7 @@ concurrency:
 # - coq-version-supported: The main supported version used for documentation
 # - Other versions are tested but docs are only built with supported version
 env:
-  coq-version-supported: '9.0'
-  coq-version-9-1: '9.1'
+  coq-version-supported: '9.1'
   coq-version-9-2: '9.2'
   ocaml-version: '4.14-flambda'
   deployment-branch: 'gh-pages'
@@ -39,7 +38,6 @@ jobs:
       fail-fast: false
       matrix:
         coq-version:
-          - '9.0'
           - '9.1'
           - '9.2'
           - 'dev'
@@ -65,7 +63,6 @@ jobs:
       fail-fast: false
       matrix:
         coq-version:
-          - '9.0'
           - '9.1'
           - '9.2'
           - 'dev'
@@ -98,7 +95,6 @@ jobs:
       matrix:
         # We build on supported versions; artifacts used for docs and validation
         coq-version:
-          - '9.0'
           - '9.1'
           - '9.2'
         include:
@@ -376,7 +372,6 @@ jobs:
       fail-fast: false
       matrix:
         coq-version:
-          - '9.0'
           - '9.1'
           - '9.2'
           - 'dev'
@@ -415,7 +410,6 @@ jobs:
       fail-fast: false
       matrix:
         coq-version:
-          - '9.0'
           - '9.1'
           - '9.2'
           - 'dev'
@@ -523,9 +517,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Delete workspace artifacts
-    - uses: geekyeggo/delete-artifact@v5
-      with:
-        name: workspace-9.0
     - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-9.1
