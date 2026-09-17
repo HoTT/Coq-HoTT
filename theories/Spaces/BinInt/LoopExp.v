@@ -5,7 +5,6 @@ Require Import Spaces.BinInt.Core.
 Require Import Spaces.BinInt.Spec.
 Require Import Spaces.BinInt.Equiv.
 
-Local Open Scope positive_scope.
 Local Open Scope binint_scope.
 
 (** ** Exponentiation of loops *)
@@ -78,7 +77,7 @@ Proof.
 Qed.
 
 Lemma loopexp_pos_add {A : Type} {x : A} (p : x = x) (a b : Pos)
-  : loopexp_pos p (a + b)%pos = loopexp_pos p a @ loopexp_pos p b.
+  : loopexp_pos p (a + b) = loopexp_pos p a @ loopexp_pos p b.
 Proof.
   revert a b.
   induction a as [|a aH] using pos_peano_ind;
@@ -97,7 +96,7 @@ Proof.
   + rewrite pos_add_succ_l.
     unfold loopexp_pos.
     rewrite 2 pos_peano_ind_beta_pos_succ.
-    change (loopexp_pos p (a + pos_succ b)%pos @ p
+    change (loopexp_pos p (a + pos_succ b) @ p
       = (loopexp_pos p a @ p) @ loopexp_pos p (pos_succ b)).
     by rewrite aH, 2 concat_pp_p, loopexp_pos_concat.
 Qed.

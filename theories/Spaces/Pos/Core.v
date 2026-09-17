@@ -15,6 +15,7 @@ Inductive Pos : Type0 :=
 
 Declare Scope positive_scope.
 Delimit Scope positive_scope with pos.
+Bind Scope positive_scope with Pos.
 
 (** Here are some notations that let us write binary positive integers more easily. *)
 Notation "1" := xH : positive_scope.

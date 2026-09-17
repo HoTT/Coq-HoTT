@@ -162,7 +162,7 @@ Defined.
 
 (** ** Subtracting 1 from a successor gives the positive integer. *)
 Lemma binint_pos_sub_succ_l a
-  : binint_pos_sub (pos_succ a) 1%pos = pos a.
+  : binint_pos_sub (pos_succ a) 1 = pos a.
 Proof.
   destruct a; trivial.
   cbn; apply ap, pos_pred_double_succ.
@@ -170,7 +170,7 @@ Defined.
 
 (** ** Subtracting a successor from 1 gives minus the integer. *)
 Lemma binint_pos_sub_succ_r a
-  : binint_pos_sub 1%pos (pos_succ a) = neg a.
+  : binint_pos_sub 1 (pos_succ a) = neg a.
 Proof.
   destruct a; trivial.
   cbn; apply ap, pos_pred_double_succ.
@@ -305,13 +305,13 @@ Proof.
       rewrite <- pos_add_1_r.
       rewrite (binint_pred_succ (pos b)).
       cbn; rewrite pos_add_assoc.
-      change (binint_pred (binint_succ (pos (a + b)%pos)) = pos a + pos b).
+      change (binint_pred (binint_succ (pos (a + b))) = pos a + pos b).
       apply binint_pred_succ.
 Defined.
 
 (** ** Subtraction from a sum is the sum of a subtraction *)
 Lemma binint_pos_sub_add (a b c : Pos)
-  : binint_pos_sub (a + b)%pos c = pos a + binint_pos_sub b c.
+  : binint_pos_sub (a + b) c = pos a + binint_pos_sub b c.
 Proof.
   revert c b a.
   induction c as [|c ch] using pos_peano_ind.
@@ -386,7 +386,7 @@ Defined.
 (** Distributivity of multiplication over addition *)
 
 Lemma binint_pos_sub_mul_pos n m p
-  : binint_pos_sub n m * pos p = binint_pos_sub (n * p)%pos (m * p)%pos.
+  : binint_pos_sub n m * pos p = binint_pos_sub (n * p) (m * p).
 Proof.
   rewrite binint_mul_comm.
   rewrite 2 (pos_mul_comm _ p).
@@ -411,7 +411,7 @@ Proof.
 Defined.
 
 Lemma binint_pos_sub_mul_neg n m p
-  : binint_pos_sub m n  * neg p = binint_pos_sub (n * p)%pos (m * p)%pos.
+  : binint_pos_sub m n  * neg p = binint_pos_sub (n * p) (m * p).
 Proof.
   rewrite binint_mul_comm.
   rewrite 2 (pos_mul_comm _ p).

@@ -18,8 +18,6 @@ Inductive BinInt : Type0 :=
   | zero : BinInt
   | pos : Pos -> BinInt.
 
-Arguments pos p%_pos.
-
 Declare Scope binint_scope.
 Local Open Scope binint_scope.
 Delimit Scope binint_scope with binint.
@@ -121,7 +119,7 @@ Definition binint_succ_double x :=
 
 Definition binint_pred_double x :=
   match x with
-    | 0 => neg 1%pos
+    | 0 => neg 1
     | neg p => neg p~1
     | pos p => pos (pos_pred_double p)
   end.
@@ -177,7 +175,7 @@ Definition binint_succ x := x + 1.
 
 (** ** Predecessor *)
 
-Definition binint_pred x := x + neg 1%pos.
+Definition binint_pred x := x + neg 1.
 
 (** ** Subtraction *)
 
@@ -223,7 +221,7 @@ Definition binint_sgn z :=
   match z with
     | 0 => 0
     | pos p => 1
-    | neg p => neg 1%pos
+    | neg p => neg 1
   end.
 
 (* ** Decidable paths and truncation. *)
