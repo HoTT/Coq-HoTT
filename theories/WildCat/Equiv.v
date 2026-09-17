@@ -592,12 +592,10 @@ Instance is0functor_core_precomp {A : Type} `{HasEquivs A}
   Is0Functor (cat_precomp c h).
 Proof.
   apply Build_Is0Functor.
-  intros f g al; cbn in h.
-  (** TODO: Why can't Coq resolve this? *)
-  refine (compose_cate_fun f h
-           $@ (_ $@R h)
+  intros f g al; cbn in h, al.
+  exact (compose_cate_fun f h
+           $@ (al $@R h)
            $@ (compose_cate_fun g h)^$).
-  exact al.
 Defined.
 
 Instance is1cat_core {A : Type} `{HasEquivs A}
