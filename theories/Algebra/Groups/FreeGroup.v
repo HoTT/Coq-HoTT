@@ -262,7 +262,7 @@ Section Reduction.
   Defined.
 
   Definition words_rec_cons (G : Group) (s : A -> G) (x : A + A) (xs : Words)
-    : words_rec G s (x :: xs)%list = word_rec G s x * words_rec G s xs.
+    : words_rec G s (x :: xs) = word_rec G s x * words_rec G s xs.
   Proof.
     induction xs in x |- *.
     - symmetry; napply grp_unit_r.
