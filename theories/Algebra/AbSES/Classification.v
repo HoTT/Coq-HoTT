@@ -1,9 +1,9 @@
 From HoTT Require Import Basics Types Truncations.Core
   Truncations.Connectedness Truncations.SeparatedTrunc.
-From HoTT.WildCat Require Import Core Equiv NatTrans PointedCat.
+From HoTT.WildCat Require Import Core NatTrans PointedCat.
 Require Import Pointed.
 Require Import AbelianGroup.
-Require Import Algebra.AbSES.Core Algebra.AbSES.Ext.
+Require Import AbSES.Core AbSES.Ext.
 Require Import Spaces.Nat.Core.
 Require Import Universes.Smallness.
 Require Import Homotopy.HomotopyGroup Homotopy.EMSpace Homotopy.ExactSequence.
@@ -11,6 +11,7 @@ Require Import Homotopy.WhiteheadsPrinciple.
 Require Import Groups.Group Groups.ShortExactSequence.
 Require Import HSet.
 Require Import Modalities.Identity Modalities.Descent.
+Require Import Modalities.ReflectiveSubuniverse.
 
 (** * Classification of short exact sequences
 
