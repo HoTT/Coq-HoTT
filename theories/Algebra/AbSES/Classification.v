@@ -461,13 +461,9 @@ Section ClassifyingRoundTrip.
 
   (** The middle isomorphism of the round trip. *)
   Local Definition grp_iso_pi_pfiber_classifying_map
-    : GroupIsomorphism (abgroup_pi 0 (pfiber (abses_classifying_map E))) E.
-  Proof.
-    nrefine (grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_em E 2)) _).
-    nrefine (grp_iso_compose
-      (grp_iso_inverse (groupiso_pi_loops 1 K(E, 3))) _).
-    exact (groupiso_pi_functor 1 pequiv_pfiber_classifying_map).
-  Defined.
+    : GroupIsomorphism (abgroup_pi 0 (pfiber (abses_classifying_map E))) E
+    := grp_iso_compose (grp_iso_inverse (grp_iso_a_pi_loops 0))
+         (groupiso_pi_functor 1 pequiv_pfiber_classifying_map).
 
   (** It commutes with the inclusions. *)
   Local Definition grp_iso_pi_pfiber_classifying_map_inclusion (a : A)
@@ -475,10 +471,7 @@ Section ClassifyingRoundTrip.
         (abses_pfiber_incl 0 (abses_classifying_map E) a)
       = inclusion E a.
   Proof.
-    apply (equiv_inj (equiv_g_pi_n_em E 2)).
-    refine (eisretr (equiv_g_pi_n_em E 2) _ @ _).
-    apply (equiv_inj (groupiso_pi_loops 1 K(E, 3))).
-    refine (eisretr (groupiso_pi_loops 1 K(E, 3)) _ @ _).
+    apply moveR_equiv_V.
     refine ((fmap_comp (Pi 2)
               (connecting_map (pfib (abses_classifying_map E))
                  (abses_classifying_map E))
@@ -496,8 +489,7 @@ Section ClassifyingRoundTrip.
     : abses_pfiber_proj 0 (abses_classifying_map E) x
       = projection E (grp_iso_pi_pfiber_classifying_map x).
   Proof.
-    apply (equiv_inj (equiv_g_pi_n_em B 1)).
-    refine (eisretr (equiv_g_pi_n_em B 1) _ @ _).
+    apply moveR_equiv_V.
     apply (equiv_inj (groupiso_pi_functor 1 (pequiv_loops_em_em B 2))).
     (* The left side, through the pointed square. *)
     refine ((fmap_comp (Pi 2) (pfib (abses_classifying_map E))
