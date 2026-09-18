@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core Universe Equiv PointedCat Yoneda.
 Require Import Pointed.
+Require Import HSet.
 Require Import Spaces.Nat.Core.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
@@ -67,6 +68,21 @@ Definition path_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
 Proof.
   tapply (equiv_inj (fmap (Pi n.+1) (a:=X) (b:=Y))).
   exact (equiv_path_grouphomomorphism h).
+Defined.
+
+(** Pointed maps out of an [n]-connected type into an [n.+1]-truncated type are determined by their composite with a map that is an embedding on [Pi n.+1]. *)
+Definition path_pmap_isembedding_pi `{Univalence} {W X Y : pType} (n : nat)
+  `{IsConnected n W} `{IsTrunc n.+1 X}
+  (g : X ->* Y) (e : IsEmbedding (fmap (pPi n.+1) g))
+  {u v : W ->* X} (p : g o* u ==* g o* v)
+  : u = v.
+Proof.
+  rapply (path_pmap_pi_connected n).
+  intro x.
+  napply (isinj_embedding _ e).
+  lhs_V tapply (fmap_comp (Pi n.+1)).
+  rhs_V tapply (fmap_comp (Pi n.+1)).
+  exact (fmap2 (Pi n.+1) p x).
 Defined.
 
 (** Two [n]-connected [n.+1]-truncated pointed types with isomorphic [Pi n.+1] are pointed equivalent. *)

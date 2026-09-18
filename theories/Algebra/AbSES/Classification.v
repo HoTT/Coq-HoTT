@@ -246,29 +246,15 @@ Section PfiberDeloop.
       = (connect_fiberseq (pfib psi) psi).2 o* pequiv_loops_em_em A 3.
   Proof.
     (* The two sides have the same composite with [pfib (pfib psi)]: on the left the [pequiv_pfiber] square and [pfib_cxfib] turn it into [fmap (K' 3)] of the inclusion followed by the identification, and on the right it is the connecting map by definition. *)
-    assert (sq : pfib (pfib psi)
-                 o* (pequiv_pfiber
-                       (pequiv_em_connected_truncated (pfiber psi) 2)
-                       pequiv_pmap_idmap square_em_proj_pfib
-                     o* pequiv_cxfib
-                          (i := fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
-                          (f := fmap (K' 3) (projection (abses_pfiber 1 psi))))
-                 ==* pfib (pfib psi)
-                     o* ((connect_fiberseq (pfib psi) psi).2
-                         o* pequiv_loops_em_em A 3)).
-    { lhs_V' napply pmap_compose_assoc.
-      lhs_V' napply (pmap_prewhisker _
-        (square_pequiv_pfiber _ _ square_em_proj_pfib)).
-      lhs' napply pmap_compose_assoc.
-      lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
-      rhs_V' napply pmap_compose_assoc.
-      exact (phomotopy_path path_em_incl_connecting_map). }
-    rapply (path_pmap_pi_connected 2).
-    intro x.
-    napply (isinj_embedding _ isembedding_pi_pfib_pfib).
-    lhs_V refine (fmap_comp (Pi 3) _ (pfib (pfib psi)) x).
-    rhs_V refine (fmap_comp (Pi 3) _ (pfib (pfib psi)) x).
-    exact (fmap2 (Pi 3) sq x).
+    rapply (path_pmap_isembedding_pi 2 (pfib (pfib psi))
+      isembedding_pi_pfib_pfib).
+    lhs_V' napply pmap_compose_assoc.
+    lhs_V' napply (pmap_prewhisker _
+      (square_pequiv_pfiber _ _ square_em_proj_pfib)).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
+    rhs_V' napply pmap_compose_assoc.
+    exact (phomotopy_path path_em_incl_connecting_map).
   Qed.
 
   (** The connecting identification of [psi] inverts [pfiber2_loops], since the underlying [pequiv_pfiber] square is tautological. *)
@@ -561,28 +547,16 @@ Section Naturality.
       = em_cxfib_F o* fmap (K' 3) (component1 phi).
   Proof.
     (* Both sides have the same composite with [pfib] of the projection of [F]: on the left the [functor_pfiber] square, [pfib_cxfib] and the inclusion square, on the right [pfib_cxfib] alone. *)
-    assert (l : pfib (fmap (K' 3) (projection F))
-                o* (functor_pfiber (em_proj_square^*) o* em_cxfib_E)
-                ==* fmap (K' 3) (inclusion F)
-                    o* fmap (K' 3) (component1 phi)).
-    { lhs_V' napply pmap_compose_assoc.
-      lhs_V' napply (pmap_prewhisker _
-        (square_functor_pfiber (em_proj_square^*))).
-      lhs' napply pmap_compose_assoc.
-      lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
-      napply em_incl_square. }
-    assert (r : pfib (fmap (K' 3) (projection F))
-                o* (em_cxfib_F o* fmap (K' 3) (component1 phi))
-                ==* fmap (K' 3) (inclusion F)
-                    o* fmap (K' 3) (component1 phi)).
-    { lhs_V' napply pmap_compose_assoc.
-      napply (pmap_prewhisker _ (pfib_cxfib _)). }
-    rapply (path_pmap_pi_connected 2).
-    intro x.
-    refine (isinj_embedding _ (isembedding_pi_pfib_em F 2) _ _ _).
-    lhs_V refine (fmap_comp (Pi 3) _ (pfib (fmap (K' 3) (projection F))) x).
-    rhs_V refine (fmap_comp (Pi 3) _ (pfib (fmap (K' 3) (projection F))) x).
-    exact (fmap2 (Pi 3) (l @* r^*) x).
+    tapply (path_pmap_isembedding_pi 2 (pfib (fmap (K' 3) (projection F)))
+      (isembedding_pi_pfib_em F 2)).
+    lhs_V' napply pmap_compose_assoc.
+    lhs_V' napply (pmap_prewhisker _
+      (square_functor_pfiber (em_proj_square^*))).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
+    rhs_V' napply pmap_compose_assoc.
+    rhs' napply (pmap_prewhisker _ (pfib_cxfib _)).
+    napply em_incl_square.
   Qed.
 
   (** Hence the connecting maps of the two sequences are related by the morphism, through the loop identification of the bases. *)
