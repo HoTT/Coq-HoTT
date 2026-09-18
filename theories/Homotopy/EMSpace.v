@@ -59,25 +59,26 @@ Definition equiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
   : (X ->* Y) <~> (Pi n.+1 X $-> Pi n.+1 Y)
   := Build_Equiv _ _ _ (isequiv_fmap_pi_pmap n X Y).
 
-(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are equal. *)
-Definition path_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
+(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are homotopic. (It's even easier to show they are equal, but downstream users most often want a homotopy.) *)
+Definition phomotopy_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
   `{IsConnected n X} `{IsTrunc n.+1 Y}
   (phi psi : X ->* Y)
   (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
-  : phi = psi.
+  : phi ==* psi.
 Proof.
+  apply phomotopy_path.
   tapply (equiv_inj (fmap (Pi n.+1) (a:=X) (b:=Y))).
   exact (equiv_path_grouphomomorphism h).
 Defined.
 
 (** Pointed maps out of an [n]-connected type into an [n.+1]-truncated type are determined by their composite with a map that is an embedding on [Pi n.+1]. *)
-Definition path_pmap_isembedding_pi `{Univalence} {W X Y : pType} (n : nat)
+Definition phomotopy_pmap_isembedding_pi `{Univalence} {W X Y : pType} (n : nat)
   `{IsConnected n W} `{IsTrunc n.+1 X}
   (g : X ->* Y) (e : IsEmbedding (fmap (pPi n.+1) g))
   {u v : W ->* X} (p : g o* u ==* g o* v)
-  : u = v.
+  : u ==* v.
 Proof.
-  rapply (path_pmap_pi_connected n).
+  rapply (phomotopy_pmap_pi_connected n).
   intro x.
   napply (isinj_embedding _ e).
   lhs_V tapply (fmap_comp (Pi n.+1)).

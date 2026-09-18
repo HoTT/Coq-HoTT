@@ -192,11 +192,11 @@ Section PfiberDeloop.
     := fmap_pi_pequiv_em_connected_truncated (pfiber psi) 2 x.
 
   (** Through that identification, [fmap (K' 3)] of the projection is the fiber inclusion of [psi]. *)
-  Local Definition path_em_proj_pfib
+  Local Definition phomotopy_em_proj_pfib
     : fmap (K' 3) (abses_pfiber_proj 1 psi)
-      = pfib psi o* pequiv_em_connected_truncated (pfiber psi) 2.
+      ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) 2.
   Proof.
-    rapply (path_pmap_pi_connected 2).
+    rapply (phomotopy_pmap_pi_connected 2).
     intro x.
     lhs tapply (pi_em_fmap' (abses_pfiber_proj 1 psi) 2).
     lhs napply (eisretr (equiv_g_pi_n_em B 2)).
@@ -205,12 +205,12 @@ Section PfiberDeloop.
   Qed.
 
   (** Through that identification, [fmap (K' 3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,3)]. *)
-  Local Definition path_em_incl_connecting_map
+  Local Definition phomotopy_em_incl_connecting_map
     : pequiv_em_connected_truncated (pfiber psi) 2
         o* fmap (K' 3) (abses_pfiber_incl 1 psi)
-      = connecting_map (pfib psi) psi o* pequiv_loops_em_em A 3.
+      ==* connecting_map (pfib psi) psi o* pequiv_loops_em_em A 3.
   Proof.
-    rapply (path_pmap_pi_connected 2).
+    rapply (phomotopy_pmap_pi_connected 2).
     intro x.
     lhs tapply (fmap_comp (Pi 3)).
     lhs tapply (ap _ (pi_em_fmap' (abses_pfiber_incl 1 psi) 2 x)).
@@ -226,7 +226,7 @@ Section PfiberDeloop.
   Local Definition square_em_proj_pfib
     : pequiv_pmap_idmap o* fmap (K' 3) (projection (abses_pfiber 1 psi))
       ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) 2
-    := pmap_postcompose_idmap _ @* phomotopy_path path_em_proj_pfib.
+    := pmap_postcompose_idmap _ @* phomotopy_em_proj_pfib.
 
   (** [Pi 3] of the fiber inclusion of [pfib psi] is an embedding, since the homotopy group mapping into it vanishes. *)
   Local Definition isembedding_pi_pfib_pfib
@@ -238,15 +238,15 @@ Section PfiberDeloop.
   Defined.
 
   (** Through that identification, [cxfib] of the extracted sequence is the connecting identification of [psi], modulo the loop identification of [K(A,3)]. *)
-  Local Definition path_cxfib_connect
+  Local Definition phomotopy_cxfib_connect
     : pequiv_pfiber (pequiv_em_connected_truncated (pfiber psi) 2)
         pequiv_pmap_idmap square_em_proj_pfib
       o* pequiv_cxfib (i := fmap (K' 3) (inclusion (abses_pfiber 1 psi)))
            (f := fmap (K' 3) (projection (abses_pfiber 1 psi)))
-      = (connect_fiberseq (pfib psi) psi).2 o* pequiv_loops_em_em A 3.
+      ==* (connect_fiberseq (pfib psi) psi).2 o* pequiv_loops_em_em A 3.
   Proof.
     (* The two sides have the same composite with [pfib (pfib psi)]: on the left the [pequiv_pfiber] square and [pfib_cxfib] turn it into [fmap (K' 3)] of the inclusion followed by the identification, and on the right it is the connecting map by definition. *)
-    rapply (path_pmap_isembedding_pi 2 (pfib (pfib psi))
+    rapply (phomotopy_pmap_isembedding_pi 2 (pfib (pfib psi))
       isembedding_pi_pfib_pfib).
     lhs_V' napply pmap_compose_assoc.
     lhs_V' napply (pmap_prewhisker _
@@ -254,7 +254,7 @@ Section PfiberDeloop.
     lhs' napply pmap_compose_assoc.
     lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
     rhs_V' napply pmap_compose_assoc.
-    exact (phomotopy_path path_em_incl_connecting_map).
+    exact phomotopy_em_incl_connecting_map.
   Qed.
 
   (** The connecting identification of [psi] inverts [pfiber2_loops], since the underlying [pequiv_pfiber] square is tautological. *)
@@ -283,7 +283,7 @@ Section PfiberDeloop.
     lhs' napply pmap_compose_assoc.
     lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^*).
     lhs' napply (pmap_postwhisker _
-      (pmap_prewhisker _ (phomotopy_path path_cxfib_connect^))).
+      (pmap_prewhisker _ phomotopy_cxfib_connect^*)).
     (* Compare the connecting maps across the identification. *)
     lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     lhs' napply (pmap_postwhisker _
@@ -544,10 +544,10 @@ Section Naturality.
   (** The fiber-inclusion comparison commutes with the morphism on fibers. *)
   Local Definition em_cxfib_square
     : functor_pfiber (em_proj_square^*) o* em_cxfib_E
-      = em_cxfib_F o* fmap (K' 3) (component1 phi).
+      ==* em_cxfib_F o* fmap (K' 3) (component1 phi).
   Proof.
     (* Both sides have the same composite with [pfib] of the projection of [F]: on the left the [functor_pfiber] square, [pfib_cxfib] and the inclusion square, on the right [pfib_cxfib] alone. *)
-    tapply (path_pmap_isembedding_pi 2 (pfib (fmap (K' 3) (projection F)))
+    tapply (phomotopy_pmap_isembedding_pi 2 (pfib (fmap (K' 3) (projection F)))
       (isembedding_pi_pfib_em F 2)).
     lhs_V' napply pmap_compose_assoc.
     lhs_V' napply (pmap_prewhisker _
@@ -569,7 +569,7 @@ Section Naturality.
     lhs_V' tapply (pmap_prewhisker _
       (moveR_pequiv_Vf em_cxfib_F (fmap (K' 3) (component1 phi))
         (functor_pfiber (em_proj_square^*) o* em_cxfib_E)
-        (phomotopy_path em_cxfib_square))).
+        em_cxfib_square)).
     lhs' napply pmap_compose_assoc.
     lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     lhs' tapply (pmap_postwhisker _ (pmap_postwhisker _
