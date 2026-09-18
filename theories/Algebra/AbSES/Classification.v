@@ -148,7 +148,7 @@ Section AbSESPfiber.
     exact (isinj_embedding _ emb _ _ q).
   Defined.
 
-  Local Definition issurjection_abses_pfiber_proj
+  Local Instance issurjection_abses_pfiber_proj
     : IsSurjection abses_pfiber_proj.
   Proof.
     pose proof (isexact_pi_total (pfib f) f n.+2) as ex.
@@ -162,13 +162,9 @@ Section AbSESPfiber.
   Local Instance isexact_abses_pfiber
     : IsExact (Tr (-1)) abses_pfiber_incl abses_pfiber_proj.
   Proof.
-    assert (ex : IsExact (Tr (-1))
-                   (fmap (Pi n.+2) (connecting_map (pfib f) f))
-                   (fmap (Pi n.+2) (pfib f)))
-      by exact (isexact_pi_total (connecting_map (pfib f) f) (pfib f) n.+2).
     napply (isexact_square_if _
       grp_iso_a_pi_loops pequiv_pmap_idmap (equiv_g_pi_n_em B n.+1)).
-    3: exact ex.
+    3: exact (isexact_pi_total (connecting_map (pfib f) f) (pfib f) n.+2).
     1: srapply phomotopy_homotopy_hset; intro x; reflexivity.
     srapply phomotopy_homotopy_hset; intro x.
     exact (eisretr (equiv_g_pi_n_em B n.+1) _).
@@ -177,7 +173,7 @@ Section AbSESPfiber.
   (** The short exact sequence associated to [f]. *)
   Definition abses_pfiber : AbSES B A
     := Build_AbSES (abgroup_pi n (pfiber f)) abses_pfiber_incl abses_pfiber_proj
-         _ issurjection_abses_pfiber_proj _.
+         _ _ _.
 
 End AbSESPfiber.
 
@@ -537,24 +533,16 @@ Section Naturality.
   (** [K(-,3)] of the projection square of [phi]. *)
   Local Definition em_proj_square
     : fmap (K' 3) (projection F) o* fmap (K' 3) (component2 phi)
-      ==* fmap (K' 3) (component3 phi) o* fmap (K' 3) (projection E).
-  Proof.
-    refine ((fmap_comp (K' 3) _ _)^* @* _ @* fmap_comp (K' 3) _ _).
-    refine (phomotopy_path (ap (fun h => fmap (K' 3) h) _)).
-    apply equiv_path_grouphomomorphism; intro e.
-    exact (right_square phi e).
-  Defined.
+      ==* fmap (K' 3) (component3 phi) o* fmap (K' 3) (projection E)
+    := (fmap_comp (K' 3) _ _)^* @* fmap2 (K' 3) (right_square phi)
+       @* fmap_comp (K' 3) _ _.
 
   (** [K(-,3)] of the inclusion square of [phi]. *)
   Local Definition em_incl_square
     : fmap (K' 3) (component2 phi) o* fmap (K' 3) (inclusion E)
-      ==* fmap (K' 3) (inclusion F) o* fmap (K' 3) (component1 phi).
-  Proof.
-    refine ((fmap_comp (K' 3) _ _)^* @* _ @* fmap_comp (K' 3) _ _).
-    refine (phomotopy_path (ap (fun h => fmap (K' 3) h) _)).
-    apply equiv_path_grouphomomorphism; intro a.
-    exact (left_square phi a)^.
-  Defined.
+      ==* fmap (K' 3) (inclusion F) o* fmap (K' 3) (component1 phi)
+    := (fmap_comp (K' 3) _ _)^* @* fmap2 (K' 3) (fun a => (left_square phi a)^)
+       @* fmap_comp (K' 3) _ _.
 
   (** The fiber inclusions, as equivalences. *)
   Local Definition em_cxfib_E
