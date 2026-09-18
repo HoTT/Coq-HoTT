@@ -325,22 +325,11 @@ Section EilenbergMacLane.
   Proof.
     induction n as [|n IHn].
     - exact (isconnmap_fmap_pclassifyingspace f).
-    - snapply isconnmap_isconnmap_ap_surj.
-      + rapply (isconnmap_isconnected (-1)).
-      + assert (c : IsConnMap n (fmap loops (fmap (K' n.+2) f))).
-        { refine (conn_map_homotopic _
-            ((pequiv_loops_em_em G' n.+1 o* fmap (K' n.+1) f)
-             o* (pequiv_loops_em_em G n.+1)^-1*) _
-            (fun p =>
-              (moveL_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p) _). }
-        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        intro q.
-        pose (e2 := equiv_concat_l (point_eq (fmap (K' n.+2) f))^ _
-                    oE equiv_concat_r (point_eq (fmap (K' n.+2) f)) _).
-        exact (isconnected_equiv' n _
-                 (equiv_functor_sigma_id (fun p => equiv_ap e2 _ _))^-1%equiv
-                 (c _)).
+    - napply (isconnmap_isconnmap_fmap_loops (n:=n)).
+      1, 2: exact _.
+      nrefine (cancelR_conn_map n (pequiv_loops_em_em G n.+1) _).
+      1: exact _.
+      rapply (conn_map_homotopic n _ _ (em_fmap_loops_natural f _)^* ).
   Defined.
 
   (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps.  Since [K(G, n.+1)] is [n]-connected and [K(G', n.+1)] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps to the group homomorphisms [Pi n.+1 K(G, n.+1) $-> Pi n.+1 K(G', n.+1)], and by [pi_em_fmap'] the composite with [fmap (K' n.+1)] is conjugation by the identifications [equiv_g_pi_n_em], which is also an equivalence.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
