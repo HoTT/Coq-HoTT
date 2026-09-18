@@ -379,7 +379,7 @@ Section PfiberDeloop.
     refine (_ @* (pmap_prewhisker pequiv_neg_em
                     (equiv_deloop_em_pmap_unfold B A 0 psi)
                   @* pmap_compose_assoc _ _ _
-                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _))^*).
+                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _))^* ).
     refine (pmap_prewhisker (pequiv_loops_em_em B 2)
               (moveL_pequiv_Vf _ _ _ connecting_map_em_loops) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
@@ -683,7 +683,7 @@ Section Naturality.
       (connecting_map (pfib (fmap (K' 3) (projection F)))
         (fmap (K' 3) (projection F)))
       (connecting_map_cxfib (fmap (K' 3) (inclusion F))
-        (fmap (K' 3) (projection F)))^*).
+        (fmap (K' 3) (projection F)))^* ).
   Qed.
 
   (** A morphism of short exact sequences induces a commuting square of classifying maps. *)
@@ -700,4 +700,3 @@ Section Naturality.
   Qed.
 
 End Naturality.
-
