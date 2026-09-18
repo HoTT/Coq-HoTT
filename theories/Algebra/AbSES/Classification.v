@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types Truncations.Core
-  Truncations.Connectedness Truncations.SeparatedTrunc.
+  Truncations.SeparatedTrunc.
 From HoTT.WildCat Require Import Core NatTrans PointedCat.
 Require Import Pointed.
 Require Import AbelianGroup.
@@ -151,12 +151,10 @@ Section AbSESPfiber.
   Local Instance issurjection_abses_pfiber_proj
     : IsSurjection abses_pfiber_proj.
   Proof.
-    pose proof (isexact_pi_total (pfib f) f n.+2) as ex.
-    assert (surj : IsConnMap (Tr (-1)) (fmap (pPi n.+2) (pfib f)))
-      by exact (@isconnmap_O_isexact_base_contr (Tr (-1)) _ _ _ _
-                  (fmap (pPi n.+2) (pfib f)) (fmap (pPi n.+2) f) ex).
-    exact (conn_map_compose _ (fmap (pPi n.+2) (pfib f))
-             (grp_iso_inverse (equiv_g_pi_n_em B n.+1))).
+    napply conn_map_compose.
+    2: rapply conn_map_isequiv.
+    exact (isconnmap_O_isexact_base_contr _ _ _
+             (H := isexact_pi_total (pfib f) f n.+2)).
   Defined.
 
   Local Instance isexact_abses_pfiber
