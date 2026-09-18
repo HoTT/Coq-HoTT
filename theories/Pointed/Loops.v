@@ -194,21 +194,25 @@ Proof.
     (image n (fmap loops f)))).
 Defined.
 
-(** Loop inversion is a pointed equivalence *)
-Definition loops_inv (A : pType) : loops A <~>* loops A.
-Proof.
-  srapply Build_pEquiv.
-  1: exact (Build_pMap inverse 1).
-  apply isequiv_path_inverse.
-Defined.
+(** Loop inversion is a pointed equivalence, using [isequiv_path_inverse]. *)
+Definition loops_inv (A : pType) : loops A <~>* loops A
+  := Build_pEquiv (Build_pMap inverse 1) _.
 
-(** Loop inversion is an involution. *)
+(** Loop inversion is an involution, since the inverse function is definitionally the same. *)
 Definition loops_inv_inv (A : pType)
-  : loops_inv A o* loops_inv A ==* pmap_idmap.
+  : loops_inv A o* loops_inv A ==* pmap_idmap
+  := peisretr _.
+
+(** [loops_inv] is a natural transformation. *)
+Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
 Proof.
-  snapply Build_pHomotopy.
-  - exact inv_V.
-  - reflexivity.
+  snapply Build_Is1Natural; intros A B f.
+  srapply Build_pHomotopy.
+  + intros p; cbn.
+    nrefine (inv_Vp _ _ @ _ @ concat_pp_p _ _ _).
+    apply whiskerR.
+    exact (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
+  + by pointed_reduce.
 Defined.
 
 (** Loops functor preserves equivalences *)
@@ -452,17 +456,6 @@ Definition istrunc_iterated_loops `{Funext} (n : nat) (X : pType)
        (transport (fun k => IsTrunc k X)
           (ap trunc_S (trunc_index_inc_succ (-2) n))^ H0)
        (point X).
-
-(** [loops_inv] is a natural transformation. *)
-Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
-Proof.
-  snapply Build_Is1Natural.
-  intros A B f.
-  srapply Build_pHomotopy.
-  + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
-    exact (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
-  + pointed_reduce. reflexivity.
-Defined.
 
 (** Loops on the pointed type of dependent pointed maps correspond to pointed dependent maps into a family of loops.  We define this in this direction, because the forward map is pointed by reflexivity. *)
 Definition equiv_loops_ppforall `{Funext} {A : pType} (B : A -> pType)
