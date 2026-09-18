@@ -21,14 +21,13 @@ Local Open Scope pointed_scope.
 
 (** TODO: The main results of this file, such as [equiv_abses_classifying_map] and [issmall_abses], have a large number of universe variables, inherited from the delooping layer in EMSpace.v.  See the TODO there. *)
 
-(** [K(-, n)] is a pointed functor, so it takes the complex underlying a short exact sequence to a complex. *)
-Definition iscomplex_em_abses `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A)
-  (n : nat)
-  : IsComplex (fmap (K' n) (inclusion E)) (fmap (K' n) (projection E))
-  := fmap_iscomplex (K' n) _ _ (iscomplex_abses E).
-
 Section EMFiberSequence.
   Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A) (n : nat).
+
+  (** [K(-, m)] is a pointed functor, so it takes the complex underlying a short exact sequence to a complex. We use an independent argument [m] since we use it for [m:=n.+1] below. *)
+  Definition iscomplex_em_abses (m : nat)
+    : IsComplex (fmap (K' m) (inclusion E)) (fmap (K' m) (projection E))
+    := fmap_iscomplex (K' m) _ _ (iscomplex_abses E).
 
   (** The identifications [equiv_g_pi_n_em] carry [Pi n.+1] of the sequence [K(-, n.+1)] applied to [E] back to [E] itself, so that sequence is exact. *)
   Local Definition isexact_pi_em_abses
@@ -63,11 +62,11 @@ Section EMFiberSequence.
 
   (** Both [Pi n.+1 K(A, n.+1)] and [Pi n.+1] of the fiber are the kernel of [Pi n.+1] of the projection, so the comparison map identifies them. *)
   Local Instance isequiv_pi_cxfib
-    : IsEquiv (fmap (Pi n.+1) (cxfib (iscomplex_em_abses E n.+1))).
+    : IsEquiv (fmap (Pi n.+1) (cxfib (iscomplex_em_abses n.+1))).
   Proof.
     napply isequiv_isexact_factor.
     - intro x.
-      exact ((fmap_comp (Pi n.+1) (cxfib (iscomplex_em_abses E n.+1))
+      exact ((fmap_comp (Pi n.+1) (cxfib (iscomplex_em_abses n.+1))
                 (pfib (fmap (K' n.+1) (projection E))) x)^
              @ fmap2 (Pi n.+1) (pfib_cxfib _) x).
     - (* [Pi n.+1] of [K(-, n.+1)] of the inclusion is conjugate to the inclusion. *)
@@ -86,7 +85,7 @@ Section EMFiberSequence.
 
   (** Both sides are [n]-connected and [n.+1]-truncated, so the comparison map is an equivalence by Whitehead's principle. *)
   Local Instance isequiv_cxfib_em
-    : IsEquiv (cxfib (iscomplex_em_abses E n.+1)).
+    : IsEquiv (cxfib (iscomplex_em_abses n.+1)).
   Proof.
     pose proof (isconnmap_em_fmap (projection E) n (point _)).
     napply (isequiv_isconnected_istrunc_isequiv_pi n.+1).
@@ -99,7 +98,7 @@ Section EMFiberSequence.
     : IsExact purely (fmap (K' n.+1) (inclusion E))
         (fmap (K' n.+1) (projection E)).
   Proof.
-    exists (iscomplex_em_abses E n.+1).
+    exists (iscomplex_em_abses n.+1).
     rapply conn_map_isequiv.
   Defined.
 
