@@ -10,6 +10,7 @@ Require Import Homotopy.HomotopyGroup Homotopy.EMSpace Homotopy.ExactSequence.
 Require Import Homotopy.WhiteheadsPrinciple.
 Require Import Groups.Group Groups.ShortExactSequence.
 Require Import HSet.
+Require Import Equiv.BiInv.
 Require Import Modalities.Identity Modalities.Descent.
 Require Import Modalities.ReflectiveSubuniverse.
 
@@ -104,9 +105,9 @@ Section EMFiberSequence.
 
 End EMFiberSequence.
 
-(** ** The classifying map of a short exact sequence
+(** ** The classifying map of a short exact sequence *)
 
-The connecting map of the fiber sequence [K(A,3) -> K(E,3) -> K(B,3)], expressed as a pointed map [K(B,2) ->* K(A,3)]. *)
+(** We associate to each short exact sequence [A -> E -> B] the connecting map of the fiber sequence [K(A,3) -> K(E,3) -> K(B,3)], expressed as a pointed map [K(B,2) ->* K(A,3)]. *)
 Definition abses_classifying_map `{Univalence} {B A : AbGroup@{u}}
   (E : AbSES B A)
   : K(B, 2) ->* K(A, 3)
@@ -550,38 +551,31 @@ Section Classification.
     apply pmap_precompose_idmap.
   Qed.
 
-  (** The second round trip. *)
-  Local Definition abses_classifying_map_pfiber (f : K(B, 2) ->* K(A, 3))
-    : abses_classifying_map (abses_pfiber 0 f) = f.
+  (** The map [abses_classifying_map] has a retraction [abses_pfiber 0] by [abses_pfiber_classifying] and a section by [abses_classifying_section].  Therefore it is an equivalence.  This proof uses [abses_pfiber 0] as the inverse. *)
+  #[export] Instance isequiv_abses_classifying_map
+    : IsEquiv (abses_classifying_map (A:=A) (B:=B)).
   Proof.
-    transitivity (abses_classifying_map
-      (abses_pfiber 1 ((equiv_deloop_em_pmap B A 0)^-1
-         (f o* pequiv_neg_em^-1*)))).
-    - apply (ap abses_classifying_map).
-      refine ((ap (abses_pfiber 0) (abses_classifying_section f))^ @ _).
-      exact (abses_pfiber_classifying _).
-    - exact (abses_classifying_section f).
-  Qed.
+    snapply isequiv_isbiinv.
+    exact (Build_IsBiInv _ _ _ _ _ abses_classifying_section
+             abses_pfiber_classifying).
+  Defined.
 
   (** Short exact sequences [A -> E -> B] are classified by pointed maps [K(B,2) ->* K(A,3)]. *)
   Definition equiv_abses_classifying_map
     : AbSES B A <~> (K(B, 2) ->* K(A, 3))
-    := equiv_adjointify abses_classifying_map (abses_pfiber 0)
-         abses_classifying_map_pfiber abses_pfiber_classifying.
+    := Build_Equiv _ _ abses_classifying_map _.
 
   (** Consequently [Ext B A] is the set of path components of the classifying mapping type. *)
   Definition equiv_ext_classifying
     : Ext B A <~> Tr 0 (K(B, 2) ->* K(A, 3))
     := Trunc_functor_equiv 0 equiv_abses_classifying_map.
 
-  (** [AbSES B A] is essentially small, and so is [Ext B A] (Remark 2.2.5). *)
-  Definition issmall_abses : IsSmall@{u _} (AbSES B A)
-    := issmall_equiv_issmall (equiv_abses_classifying_map)^-1%equiv
-         (issmall_in _).
+  (** [AbSES B A] is essentially small, and so is [Ext B A]. *)
+  #[export] Instance issmall_abses : IsSmall@{u _} (AbSES B A)
+    := Build_IsSmall _ _ (equiv_abses_classifying_map)^-1%equiv.
 
-  Definition issmall_ext : IsSmall@{u _} (Ext B A)
-    := issmall_equiv_issmall (equiv_ext_classifying)^-1%equiv
-         (issmall_in _).
+  #[export] Instance issmall_ext : IsSmall@{u _} (Ext B A)
+    := Build_IsSmall _ _ (equiv_ext_classifying)^-1%equiv.
 
 End Classification.
 
