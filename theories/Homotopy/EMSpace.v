@@ -358,7 +358,7 @@ Section EilenbergMacLane.
     symmetry.
     destruct n as [|m].
     - exact grp_iso_g_pi1_bg.
-    - exact (equiv_g_pi_n_em (Build_AbGroup (Pi m.+2 X) _) m.+1).
+    - exact (equiv_g_pi_n_em (abgroup_pi m X) m.+1).
   Defined.
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
