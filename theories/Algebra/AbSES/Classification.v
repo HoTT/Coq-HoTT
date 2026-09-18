@@ -234,11 +234,10 @@ Section PfiberDeloop.
     snapply (path_pmap_pi_connected 2).
     1,2: exact _.
     intro x.
-    refine (pi_em_fmap' (abses_pfiber_proj 1 psi) 2 x @ _).
-    refine (eisretr (equiv_g_pi_n_em B 2) _ @ _).
-    refine (_ @ (fmap_comp (Pi 3)
-      (pequiv_em_connected_truncated (pfiber psi) 2) (pfib psi) x)^).
-    exact (ap (fmap (Pi 3) (pfib psi)) (fmap_pi_pequiv_em_pfiber x)^).
+    lhs tapply (pi_em_fmap' (abses_pfiber_proj 1 psi) 2).
+    lhs napply (eisretr (equiv_g_pi_n_em B 2)).
+    rhs tapply (fmap_comp (Pi 3)).
+    tapply (ap _ (fmap_pi_pequiv_em_pfiber x)^).
   Qed.
 
   (** Through that identification, [fmap (K' 3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,3)]. *)
@@ -250,21 +249,14 @@ Section PfiberDeloop.
     snapply (path_pmap_pi_connected 2).
     1,2: exact _.
     intro x.
-    refine (fmap_comp (Pi 3)
-      (fmap (K' 3) (abses_pfiber_incl 1 psi))
-      (pequiv_em_connected_truncated (pfiber psi) 2) x @ _).
-    refine (ap (fmap (Pi 3) (pequiv_em_connected_truncated (pfiber psi) 2))
-      (pi_em_fmap' (abses_pfiber_incl 1 psi) 2 x) @ _).
-    refine (fmap_pi_pequiv_em_pfiber _ @ _).
-    refine (eissect
-      (equiv_g_pi_n_em (abgroup_pi 1 (pfiber psi)) 2) _ @ _).
-    refine (_ @ (fmap_comp (Pi 3)
-      (pequiv_loops_em_em A 3)
-      (connecting_map (pfib psi) psi) x)^).
+    lhs tapply (fmap_comp (Pi 3)).
+    lhs tapply (ap _ (pi_em_fmap' (abses_pfiber_incl 1 psi) 2 x)).
+    lhs napply fmap_pi_pequiv_em_pfiber.
+    lhs napply (eissect (equiv_g_pi_n_em (abgroup_pi 1 (pfiber psi)) 2)).
+    rhs tapply (fmap_comp (Pi 3)).
     refine (ap (fmap (Pi 3) (connecting_map (pfib psi) psi)) _).
-    refine (eisretr (groupiso_pi_loops 2 K(A, 4)) _ @ _).
-    exact (ap (fmap (Pi 3) (pequiv_loops_em_em A 3))
-      (eisretr (equiv_g_pi_n_em A 2) x)).
+    lhs napply (eisretr (groupiso_pi_loops 2 K(A, 4))).
+    tapply (ap _ (eisretr (equiv_g_pi_n_em A 2) x)).
   Qed.
 
   (** The projection square as a square of pointed maps. *)
@@ -337,22 +329,22 @@ Section PfiberDeloop.
       ==* fmap loops psi o* loops_inv K(B, 3).
   Proof.
     (* Insert the identity [pfiber2_loops psi o* connect] in front. *)
-    refine ((pmap_postcompose_idmap _)^* @* _).
-    refine (pmap_prewhisker _ pfiber2_loops_connect^* @* _).
+    lhs_V' napply pmap_postcompose_idmap.
+    lhs' napply (pmap_prewhisker _ pfiber2_loops_connect^*).
     (* Reassociate to expose the connecting composite, then the cxfib square. *)
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_postwhisker _
-      (pmap_prewhisker _ (phomotopy_path path_cxfib_connect^)) @* _).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^*).
+    lhs' napply (pmap_postwhisker _
+      (pmap_prewhisker _ (phomotopy_path path_cxfib_connect^))).
     (* Compare the connecting maps across the identification. *)
-    refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _) @* _).
-    refine (pmap_postwhisker _
-      (pmap_postwhisker _ (connecting_map_cxfib _ _)) @* _).
-    refine (pmap_postwhisker _
-      (connecting_map_natural _ _ square_em_proj_pfib) @* _).
-    refine (pmap_postwhisker _
+    lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
+    lhs' napply (pmap_postwhisker _
+      (pmap_postwhisker _ (connecting_map_cxfib _ _))).
+    lhs' napply (pmap_postwhisker _
+      (connecting_map_natural _ _ square_em_proj_pfib)).
+    lhs' tapply (pmap_postwhisker _
       (pmap_postwhisker _ (fmap_id loops _)
-       @* pmap_precompose_idmap _) @* _).
+       @* pmap_precompose_idmap _)).
     exact (connecting_map_pfib2 psi).
   Qed.
 
@@ -376,14 +368,14 @@ Section PfiberDeloop.
     : abses_classifying_map (abses_pfiber 1 psi)
       ==* equiv_deloop_em_pmap B A 0 psi o* pequiv_neg_em.
   Proof.
-    refine (_ @* (pmap_prewhisker pequiv_neg_em
-                    (equiv_deloop_em_pmap_unfold B A 0 psi)
-                  @* pmap_compose_assoc _ _ _
-                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _))^* ).
-    refine (pmap_prewhisker (pequiv_loops_em_em B 2)
-              (moveL_pequiv_Vf _ _ _ connecting_map_em_loops) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _) @* _).
+    rhs' napply (pmap_prewhisker pequiv_neg_em
+                   (equiv_deloop_em_pmap_unfold B A 0 psi)
+                 @* pmap_compose_assoc _ _ _
+                 @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
+    lhs' napply (pmap_prewhisker _
+      (moveL_pequiv_Vf _ _ _ connecting_map_em_loops)).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     napply pmap_postwhisker.
     napply pmap_postwhisker.
     symmetry; exact pequiv_neg_em_loops.
@@ -421,11 +413,11 @@ Section ClassifyingRoundTrip.
       ==* fmap loops (fmap (K' 3) (projection E))
           o* pequiv_pfiber_classifying_map.
   Proof.
-    refine (square_pequiv_pfiber _ _ square_classifying_map @* _).
-    refine (pmap_prewhisker _ (pfib_connecting_map _ _) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
+    lhs' napply (square_pequiv_pfiber _ _ square_classifying_map).
+    lhs' napply (pmap_prewhisker _ (pfib_connecting_map _ _)).
+    lhs' napply pmap_compose_assoc.
     napply pmap_postwhisker.
-    refine (pmap_compose_assoc _ _ _ @* _).
+    lhs' napply pmap_compose_assoc.
     napply pmap_postwhisker.
     exact (pmap_compose_assoc _ _ _).
   Qed.
@@ -472,14 +464,14 @@ Section ClassifyingRoundTrip.
       = inclusion E a.
   Proof.
     apply moveR_equiv_V.
-    refine ((fmap_comp (Pi 2)
-              (connecting_map (pfib (abses_classifying_map E))
-                 (abses_classifying_map E))
-              pequiv_pfiber_classifying_map
-              (groupiso_pi_loops 1 K(A, 3) (equiv_g_pi_n_em A 2 a)))^ @ _).
-    refine (fmap2 (Pi 2) connecting_map_classifying_map _ @ _).
-    refine ((fmap_pi_loops 2 (fmap (K' 3) (inclusion E))
-              (equiv_g_pi_n_em A 2 a))^ @ _).
+    lhs_V exact (fmap_comp (Pi 2)
+      (connecting_map (pfib (abses_classifying_map E))
+        (abses_classifying_map E))
+      pequiv_pfiber_classifying_map
+      (groupiso_pi_loops 1 K(A, 3) (equiv_g_pi_n_em A 2 a))).
+    lhs tapply (fmap2 (Pi 2) connecting_map_classifying_map).
+    lhs_V exact (fmap_pi_loops 2 (fmap (K' 3) (inclusion E))
+      (equiv_g_pi_n_em A 2 a)).
     exact (ap (pi_loops 2 K(E, 3)) (pi_em_fmap (inclusion E) 2 a)).
   Qed.
 
@@ -492,22 +484,19 @@ Section ClassifyingRoundTrip.
     apply moveR_equiv_V.
     apply (equiv_inj (groupiso_pi_functor 1 (pequiv_loops_em_em B 2))).
     (* The left side, through the pointed square. *)
-    refine ((fmap_comp (Pi 2) (pfib (abses_classifying_map E))
-              (pequiv_loops_em_em B 2) x)^ @ _).
-    refine (fmap2 (Pi 2) square_pfib_classifying_map x @ _).
-    refine (fmap_comp (Pi 2) pequiv_pfiber_classifying_map
-              (fmap loops (fmap (K' 3) (projection E))) x @ _).
-    (* The right side, through naturality of [pi_loops] and [pi_em_fmap]. *)
-    refine (ap (fmap (pPi 2) (fmap loops (fmap (K' 3) (projection E))))
-      (eisretr (groupiso_pi_loops 1 K(E, 3))
-        (fmap (Pi 2) pequiv_pfiber_classifying_map x))^ @ _).
-    refine ((fmap_pi_loops 2 (fmap (K' 3) (projection E)) _)^ @ _).
-    refine (ap (groupiso_pi_loops 1 K(B, 3)) _ @ _).
-    { refine (ap (fmap (Pi 3) (fmap (K' 3) (projection E)))
-        (eisretr (equiv_g_pi_n_em E 2) _)^ @ _).
-      exact (pi_em_fmap (projection E) 2
-               (grp_iso_pi_pfiber_classifying_map x)). }
-    exact (eisretr (groupiso_pi_loops 1 K(B, 3)) _).
+    lhs_V tapply (fmap_comp (Pi 2)).
+    lhs tapply (fmap2 (Pi 2) square_pfib_classifying_map).
+    lhs tapply (fmap_comp (Pi 2)).
+    (* Change the left side into the right, via naturality of [pi_loops] and [pi_em_fmap]. *)
+    lhs_V exact (ap (fmap (pPi 2) (fmap loops (fmap (K' 3) (projection E))))
+                   (eisretr (groupiso_pi_loops 1 K(E, 3))
+                      (fmap (Pi 2) pequiv_pfiber_classifying_map x))).
+    lhs_V tapply (fmap_pi_loops 2 (fmap (K' 3) (projection E))).
+    lhs rapply (ap (groupiso_pi_loops 1 K(B, 3))).
+    { lhs_V tapply (ap (fmap (Pi 3) (fmap (K' 3) (projection E)))
+                      (eisretr (equiv_g_pi_n_em E 2) _)).
+      apply pi_em_fmap. }
+    napply eisretr.
   Qed.
 
   (** The first round trip: the short exact sequence extracted from the classifying map of [E] is [E]. *)
@@ -535,11 +524,11 @@ Section Classification.
       = f.
   Proof.
     apply path_pforall.
-    refine (abses_classifying_pfiber_deloop _ @* _).
-    refine (pmap_prewhisker pequiv_neg_em
-              (phomotopy_path (eisretr (equiv_deloop_em_pmap B A 0) _)) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (peissect pequiv_neg_em) @* _).
+    lhs' napply abses_classifying_pfiber_deloop.
+    lhs' napply (pmap_prewhisker _
+      (phomotopy_path (eisretr (equiv_deloop_em_pmap B A 0) _))).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (peissect pequiv_neg_em)).
     apply pmap_precompose_idmap.
   Qed.
 
@@ -650,18 +639,18 @@ Section Naturality.
       ==* connecting_map (fmap (K' 3) (inclusion F)) (fmap (K' 3) (projection F))
           o* fmap loops (fmap (K' 3) (component3 phi)).
   Proof.
-    refine (pmap_prewhisker _
+    lhs_V' tapply (pmap_prewhisker _
       (moveR_pequiv_Vf em_cxfib_F (fmap (K' 3) (component1 phi))
         (functor_pfiber (em_proj_square^*) o* em_cxfib_E)
-        (phomotopy_path em_cxfib_square))^* @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _) @* _).
-    refine (pmap_postwhisker _ (pmap_postwhisker _
+        (phomotopy_path em_cxfib_square))).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
+    lhs' tapply (pmap_postwhisker _ (pmap_postwhisker _
       (connecting_map_cxfib (fmap (K' 3) (inclusion E))
-        (fmap (K' 3) (projection E)))) @* _).
-    refine (pmap_postwhisker _
-      (connecting_map_natural_functor (em_proj_square^*)) @* _).
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
+        (fmap (K' 3) (projection E))))).
+    lhs' napply (pmap_postwhisker _
+      (connecting_map_natural_functor (em_proj_square^*))).
+    lhs_V' napply pmap_compose_assoc.
     napply pmap_prewhisker.
     exact (moveR_pequiv_Vf em_cxfib_F
       (connecting_map (fmap (K' 3) (inclusion F)) (fmap (K' 3) (projection F)))
@@ -676,11 +665,10 @@ Section Naturality.
     : fmap (K' 3) (component1 phi) o* abses_classifying_map E
       ==* abses_classifying_map F o* fmap (K' 2) (component3 phi).
   Proof.
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_prewhisker _ cm_natural @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (em_fmap_loops_natural (component3 phi) 2)
-            @* _).
+    lhs_V' napply pmap_compose_assoc.
+    lhs' napply (pmap_prewhisker _ cm_natural).
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _ (em_fmap_loops_natural (component3 phi) 2)).
     exact (pmap_compose_assoc _ _ _)^*.
   Qed.
 
