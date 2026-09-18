@@ -195,29 +195,9 @@ End AbSESPfiber.
 Section PfiberDeloop.
   Context `{Univalence} {B A : AbGroup@{u}} (psi : K(B, 3) ->* K(A, 4)).
 
-  (** The second homotopy group of the fiber is trivial, since it embeds into the trivial [Pi 2 K(B,3)]. *)
-  Local Instance contr_pi2_pfiber_em : Contr (Pi 2 (pfiber psi)).
-  Proof.
-    assert (emb : IsEmbedding (fmap (pPi 2) (pfib psi))).
-    { napply (isembedding_isexact (A := pPi 3 K(A, 4))).
-      1: exact (contr_pi_isconnected 3 K(A, 4)).
-      exact (isexact_pi_fiber _ _ 2). }
-    apply (Build_Contr _ mon_unit).
-    intro y.
-    napply (isinj_embedding _ emb).
-    napply path_contr.
-    exact (contr_pi_isconnected 2 K(B, 3)).
-  Defined.
-
-  (** The fiber is 2-connected. *)
-  Local Instance isconnected_pfiber_em : IsConnected 2 (pfiber psi).
-  Proof.
-    napply (isconnected_succ_contr_pi 1); only 2: exact _.
-    napply (OO_isconnected_hfiber (Tr 2) (Tr 1)); only 1: exact _.
-    all: apply isconnected_pred.
-    - apply (isconnected_em 2).
-    - apply (isconnected_em 3).
-  Defined.
+  (** The fiber of a map from a 2-connected type to a 3-connected type is 2-connected. *)
+  Local Instance isconnected_pfiber_em : IsConnected 2 (pfiber psi)
+    := OO_isconnected_hfiber (Tr 3%nat) (Tr 2%nat) psi pt.
 
   (** The fiber is the Eilenberg-Mac Lane space of its third homotopy group, by [pequiv_em_connected_truncated], and on [Pi 3] that identification inverts [equiv_g_pi_n_em]. *)
   Local Definition fmap_pi_pequiv_em_pfiber
