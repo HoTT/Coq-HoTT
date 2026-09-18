@@ -231,8 +231,7 @@ Section PfiberDeloop.
     : fmap (K' 3) (abses_pfiber_proj 1 psi)
       = pfib psi o* pequiv_em_connected_truncated (pfiber psi) 2.
   Proof.
-    snapply (path_pmap_pi_connected 2).
-    1,2: exact _.
+    rapply (path_pmap_pi_connected 2).
     intro x.
     lhs tapply (pi_em_fmap' (abses_pfiber_proj 1 psi) 2).
     lhs napply (eisretr (equiv_g_pi_n_em B 2)).
@@ -246,8 +245,7 @@ Section PfiberDeloop.
         o* fmap (K' 3) (abses_pfiber_incl 1 psi)
       = connecting_map (pfib psi) psi o* pequiv_loops_em_em A 3.
   Proof.
-    snapply (path_pmap_pi_connected 2).
-    1,2: exact _.
+    rapply (path_pmap_pi_connected 2).
     intro x.
     lhs tapply (fmap_comp (Pi 3)).
     lhs tapply (ap _ (pi_em_fmap' (abses_pfiber_incl 1 psi) 2 x)).
@@ -300,8 +298,7 @@ Section PfiberDeloop.
       lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
       rhs_V' napply pmap_compose_assoc.
       exact (phomotopy_path path_em_incl_connecting_map). }
-    snapply (path_pmap_pi_connected 2).
-    1,2: exact _.
+    rapply (path_pmap_pi_connected 2).
     intro x.
     napply (isinj_embedding _ isembedding_pi_pfib_pfib).
     lhs_V refine (fmap_comp (Pi 3) _ (pfib (pfib psi)) x).
@@ -623,8 +620,7 @@ Section Naturality.
                     o* fmap (K' 3) (component1 phi)).
     { lhs_V' napply pmap_compose_assoc.
       napply (pmap_prewhisker _ (pfib_cxfib _)). }
-    snapply (path_pmap_pi_connected 2).
-    1,2: exact _.
+    rapply (path_pmap_pi_connected 2).
     intro x.
     refine (isinj_embedding _ (isembedding_pi_pfib_em F 2) _ _ _).
     lhs_V refine (fmap_comp (Pi 3) _ (pfib (fmap (K' 3) (projection F))) x).
