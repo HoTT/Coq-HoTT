@@ -133,9 +133,9 @@ Defined.
 (** A pointed map between [n-1]-connected, [n]-truncated pointed types which induces an equivalence on [Pi n] is an equivalence.  Only the top homotopy group of such a type is non-trivial, so this is the only condition Whitehead's principle leaves to check. *)
 Definition isequiv_isconnected_istrunc_isequiv_pi `{Univalence} (n : nat) {X Y : pType}
   (f : X ->* Y)
-  (cX : IsConnected (nat_pred n) X) (tX : IsTrunc n X)
-  (cY : IsConnected (nat_pred n) Y) (tY : IsTrunc n Y)
-  (e : IsEquiv (fmap (pPi n) f))
+  {cX : IsConnected (nat_pred n) X} {tX : IsTrunc n X}
+  {cY : IsConnected (nat_pred n) Y} {tY : IsTrunc n Y}
+  {e : IsEquiv (fmap (pPi n) f)}
   : IsEquiv f.
 Proof.
   snapply (whiteheads_principle_is0connected n).

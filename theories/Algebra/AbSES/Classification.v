@@ -40,15 +40,9 @@ Section EMFiberSequence.
       (grp_iso_inverse (equiv_g_pi_n_em A n))
       (grp_iso_inverse (equiv_g_pi_n_em E n))
       (grp_iso_inverse (equiv_g_pi_n_em B n))).
-    - srapply phomotopy_homotopy_hset; intro x.
-      refine (ap (grp_iso_inverse (equiv_g_pi_n_em E n))
-                (pi_em_fmap' (inclusion E) n x) @ _).
-      exact (eissect (equiv_g_pi_n_em E n) _).
-    - srapply phomotopy_homotopy_hset; intro x.
-      refine (ap (grp_iso_inverse (equiv_g_pi_n_em B n))
-                (pi_em_fmap' (projection E) n x) @ _).
-      exact (eissect (equiv_g_pi_n_em B n) _).
-    - exact _.
+    1,2: srapply phomotopy_homotopy_hset; intro x;
+           apply moveR_equiv_V; apply pi_em_fmap'.
+    exact _.
   Defined.
 
   (** The fiber inclusion of [K(-, n.+1)] of the projection is an embedding on [Pi n.+1], since the homotopy group mapping into it vanishes. *)
@@ -86,13 +80,8 @@ Section EMFiberSequence.
 
   (** Both sides are [n]-connected and [n.+1]-truncated, so the comparison map is an equivalence by Whitehead's principle. *)
   Local Instance isequiv_cxfib_em
-    : IsEquiv (cxfib (iscomplex_em_abses n.+1)).
-  Proof.
-    pose proof (isconnmap_em_fmap (projection E) n (point _)).
-    napply (isequiv_isconnected_istrunc_isequiv_pi n.+1).
-    1,2,3,4: exact _.
-    exact isequiv_pi_cxfib.
-  Defined.
+    : IsEquiv (cxfib (iscomplex_em_abses n.+1))
+    := isequiv_isconnected_istrunc_isequiv_pi n.+1 _.
 
   (** [K(-, n.+1)] sends short exact sequences of abelian groups to fiber sequences of Eilenberg-Mac Lane spaces. *)
   #[export] Instance isexact_em_abses
@@ -570,13 +559,13 @@ Section Naturality.
   (** The fiber inclusions, as equivalences. *)
   Local Definition em_cxfib_E
     : K(A, 3) <~>* pfiber (fmap (K' 3) (projection E))
-    := @pequiv_cxfib _ _ _ (fmap (K' 3) (inclusion E))
-         (fmap (K' 3) (projection E)) (isexact_em_abses E 2).
+    := pequiv_cxfib (i := fmap (K' 3) (inclusion E))
+         (f := fmap (K' 3) (projection E)).
 
   Local Definition em_cxfib_F
     : K(X, 3) <~>* pfiber (fmap (K' 3) (projection F))
-    := @pequiv_cxfib _ _ _ (fmap (K' 3) (inclusion F))
-         (fmap (K' 3) (projection F)) (isexact_em_abses F 2).
+    := pequiv_cxfib (i := fmap (K' 3) (inclusion F))
+         (f := fmap (K' 3) (projection F)).
 
   (** The fiber-inclusion comparison commutes with the morphism on fibers. *)
   Local Definition em_cxfib_square
