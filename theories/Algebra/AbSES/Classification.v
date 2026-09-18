@@ -440,17 +440,17 @@ Section ClassifyingRoundTrip.
     lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     lhs' napply (pmap_postwhisker _
       (pmap_postwhisker _ (pmap_compose_assoc _ _ _))).
-    lhs' refine (pmap_postwhisker _ (pmap_postwhisker _ (pmap_postwhisker _
+    lhs' exact (pmap_postwhisker _ (pmap_postwhisker _ (pmap_postwhisker _
       (connecting_map_natural _ _ square_classifying_map
        @* (pmap_postwhisker _ (fmap_id loops _)
            @* pmap_precompose_idmap _))))).
-    lhs' refine (pmap_postwhisker _ (pmap_postwhisker _
+    lhs' exact (pmap_postwhisker _ (pmap_postwhisker _
       (connecting_map_natural _ _ _))).
-    lhs' refine (pmap_postwhisker _ (pmap_postwhisker _
+    lhs' exact (pmap_postwhisker _ (pmap_postwhisker _
       (pmap_postwhisker _ (fmap_id loops _)
        @* pmap_precompose_idmap _))).
     lhs' napply (pmap_postwhisker _ (connecting_map_pfib2 _)).
-    lhs' refine (pmap_postwhisker _
+    lhs' exact (pmap_postwhisker _
       (isnat_tr (F:=loops) (G:=loops) loops_inv
         (fmap (K' 3) (inclusion E)))).
     lhs_V' napply pmap_compose_assoc.
