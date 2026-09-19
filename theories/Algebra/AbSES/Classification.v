@@ -294,7 +294,7 @@ Section PfiberDeloop.
     exact (connecting_map_pfib2 psi).
   Qed.
 
-  (** Negation on [K(B,2)], as loop inversion conjugated by the loop identification. *)
+  (** Negation on [K(B,2)], as loop inversion conjugated by the loop identification.  It should agree with [fmap (K' 2) ab_homo_negation], since both act by inversion on [Pi 2], but we do not need that here. *)
   Local Definition pequiv_neg_em : K(B, 2) <~>* K(B, 2)
     := (pequiv_loops_em_em B 2)^-1*
        o*E (loops_inv K(B, 3) o*E pequiv_loops_em_em B 2).
@@ -302,12 +302,8 @@ Section PfiberDeloop.
   (** Under the loop identification, [pequiv_neg_em] is loop inversion. *)
   Local Definition pequiv_neg_em_loops
     : pequiv_loops_em_em B 2 o* pequiv_neg_em
-      ==* loops_inv K(B, 3) o* pequiv_loops_em_em B 2.
-  Proof.
-    lhs_V' napply pmap_compose_assoc.
-    lhs' napply (pmap_prewhisker _ (peisretr (pequiv_loops_em_em B 2))).
-    napply pmap_postcompose_idmap.
-  Qed.
+      ==* loops_inv K(B, 3) o* pequiv_loops_em_em B 2
+    := moveR_pequiv_Mf _ _ _ (reflexivity _).
 
   (** The classifying map of the extracted sequence is the delooping equivalence applied to [psi], twisted by [pequiv_neg_em]. *)
   Local Definition abses_classifying_pfiber_deloop
