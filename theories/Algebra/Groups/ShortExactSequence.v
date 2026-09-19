@@ -2,6 +2,7 @@ From HoTT Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import WildCat.Core Pointed.Core.
 Require Import Groups.Group Groups.Subgroup.
+Require Import Universes.HSet.
 Require Import Homotopy.ExactSequence Modalities.Identity.
 
 (** * Complexes of groups *)
@@ -15,16 +16,11 @@ Definition grp_iso_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C}
   : GroupIsomorphism A (grp_kernel f)
   := Build_GroupIsomorphism _ _ (grp_cxfib cx_isexact) (isequiv_cxfib ex).
 
-(** This is the same proof as for [equiv_cxfib_beta], but giving the proof is easier than specializing the general result. *)
-Proposition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}
+(** [grp_iso_cxfib] definitionally satisfies the homotopy [subgroup_incl (grp_kernel f) o grp_iso_cxfib ex == i].  Therefore, it also satisfies the following variant. *)
+Definition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}
             `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)
-  : i $o (grp_iso_inverse (grp_iso_cxfib ex)) $== subgroup_incl (grp_kernel f).
-Proof.
-  rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
-  intro x.
-  exact (ap (fun y => i y) (eissect _ x)).
-Defined.
+  : i $o grp_iso_inverse (grp_iso_cxfib ex) $== subgroup_incl (grp_kernel f)
+  := equiv_cxfib_beta ex.
 
 Definition grp_iscomplex_trivial {X Y : Group} (f : X $-> Y)
   : IsComplex (grp_trivial_rec X) f.
@@ -65,6 +61,36 @@ Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)
   : IsExact purely (grp_trivial_rec A) f <~> IsTrivialGroup (grp_kernel f)
   := (equiv_istrivial_kernel_isembedding f)^-1%equiv
        oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).
+
+(** Two maps which are exact at [B] with respect to the same [f] are both the kernel of [f], so they are isomorphic. *)
+Definition grp_iso_isexact_isexact {A B C D : Group}
+  {i : A $-> B} {j : C $-> B} {f : B $-> D}
+  `{IsEmbedding i} `{IsEmbedding j}
+  (exi : IsExact (Tr (-1)) i f) (exj : IsExact (Tr (-1)) j f)
+  : GroupIsomorphism A C
+  := grp_iso_compose (grp_iso_inverse (grp_iso_cxfib exj)) (grp_iso_cxfib exi).
+
+(** The isomorphism commutes with the embeddings. *)
+Definition grp_iso_isexact_isexact_beta {A B C D : Group}
+  {i : A $-> B} {j : C $-> B} {f : B $-> D}
+  `{IsEmbedding i} `{IsEmbedding j}
+  (exi : IsExact (Tr (-1)) i f) (exj : IsExact (Tr (-1)) j f)
+  : j $o grp_iso_isexact_isexact exi exj $== i
+  := fun a => grp_iso_cxfib_beta exj (grp_iso_cxfib exi a).
+
+(** Any factorization of [i] through [j] is therefore an equivalence, being homotopic to that isomorphism. *)
+Definition isequiv_isexact_factor {A B C D : Group}
+  {i : A $-> B} {j : C $-> B} (k : A $-> C) {f : B $-> D}
+  (p : j $o k $== i) `{IsEmbedding i} `{IsEmbedding j}
+  (exi : IsExact (Tr (-1)) i f) (exj : IsExact (Tr (-1)) j f)
+  : IsEquiv k.
+Proof.
+  rapply (isequiv_homotopic (grp_iso_isexact_isexact exi exj)).
+  intro a.
+  rapply (isinj_embedding j).
+  lhs napply (grp_iso_isexact_isexact_beta exi exj).
+  exact (p a)^.
+Defined.
 
 (** If [A -> B -> C -> D] is exact at [B] and [C], with [A] and [D] contractible, then the middle map is an isomorphism.  Only [B] and [C] need to be groups. *)
 Definition grp_iso_isexact {A : pType} {B C : Group} {D : pType}

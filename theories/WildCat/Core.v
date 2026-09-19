@@ -339,6 +339,11 @@ Definition mor_initial_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsInitial x}
   : mor_initial x y $== f
   := (h y).2 f.
 
+Definition mor_initial_unique' {A : Type} `{Is1Cat A} (x y : A) {h : IsInitial x}
+  (f g : x $-> y)
+  : f $== g
+  := (mor_initial_unique _ _ _)^$ $@ mor_initial_unique _ _ _.
+
 (** Terminal objects *)
 Definition IsTerminal {A : Type} `{Is1Cat A} (y : A)
   := forall (x : A), {f : x $-> y & forall g, f $== g}.
@@ -352,6 +357,11 @@ Definition mor_terminal_unique {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal 
   (f : x $-> y)
   : mor_terminal x y $== f
   := (h x).2 f.
+
+Definition mor_terminal_unique' {A : Type} `{Is1Cat A} (x y : A) {h : IsTerminal y}
+  (f g : x $-> y)
+  : f $== g
+  := (mor_terminal_unique _ _ _)^$ $@ mor_terminal_unique _ _ _.
 
 (** Generalizing function extensionality, "Morphism extensionality" states that homwise [GpdHom_path] is an equivalence. *)
 Class HasMorExt (A : Type) `{Is1Cat A} :=

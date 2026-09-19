@@ -143,37 +143,57 @@ Proof.
   apply equiv_moveR_pM.
 Defined.
 
+(** The fiber of [ap f] is equivalent to a fiber of [fmap loops f]. *)
+Definition hfiber_ap_loops {A B : pType} (f : A ->* B) (p : f pt = f pt)
+  : {q : loops A & fmap loops f q = (point_eq f)^ @ (p @ point_eq f)}
+    <~> hfiber (ap (x:=pt) (y:=pt) f) p.
+Proof.
+  apply equiv_functor_sigma_id; intros q; cbn.
+  exact (equiv_cancelR _ _ _ oE equiv_cancelL _ _ _).
+Defined.
+
 (** The loop space functor decreases the truncation level by one.  *)
-Instance istrunc_fmap_loops {n} (A B : pType) (f : A ->* B)
+Instance istrunc_fmap_loops {n} {A B : pType} (f : A ->* B)
   `{IsTruncMap n.+1 _ _ f} : IsTruncMap n (fmap loops f).
 Proof.
   intro p. exact (istrunc_equiv_istrunc _ (hfiber_fmap_loops f p)).
 Defined.
 
 (** And likewise the connectedness.  *)
-Instance conn_map_fmap_loops `{Univalence} {n : trunc_index}
-  (A B : pType) (f : A ->* B) `{IsConnMap n.+1 _ _ f}
+Instance isconnmap_fmap_loops `{Univalence} {n : trunc_index}
+  {A B : pType} (f : A ->* B) `{IsConnMap n.+1 _ _ f}
   : IsConnMap n (fmap loops f).
 Proof.
   intros p; eapply isconnected_equiv'.
-  - refine (hfiber_fmap_loops f p oE _).
-    symmetry; apply hfiber_ap.
+  - refine (hfiber_fmap_loops f p).
   - exact _.
 Defined.
 
-Definition conn_map_iterated_fmap_loops `{Univalence}
-  (n : trunc_index) (k : nat) (A B : pType) (f : A ->* B)
+Definition isconnmap_iterated_fmap_loops `{Univalence}
+  (n : trunc_index) (k : nat) {A B : pType} (f : A ->* B)
   (C : IsConnMap (trunc_index_inc' n k) f)
   : IsConnMap n (fmap (iterated_loops k) f).
 Proof.
   induction k in n, C |- *.
   - exact C.
-  - apply conn_map_fmap_loops.
-    apply IHk.
-    exact C.
+  - apply isconnmap_fmap_loops, IHk, C.
 Defined.
 
-(** It follows that loop spaces "commute with images". *)
+(** A converse to [isconnmap_fmap_loops] for connected types. *)
+Instance isconnmap_isconnmap_fmap_loops `{Univalence} {n : trunc_index}
+  {A B : pType} `{IsConnected 0 A} `{IsConnected 0 B}
+  (f : A ->* B) {cfmap : IsConnMap n (fmap loops f)}
+  : IsConnMap n.+1 f.
+Proof.
+  apply (isconnmap_isconnmap_ap_surj n).
+  - rapply (isconnmap_isconnected (-1)).
+  - rapply (conn_point_elim (-1)).
+    rapply (conn_point_elim (-1)).
+    intro p.
+    exact (isconnected_equiv' _ _ (hfiber_ap_loops f p) (cfmap _)).
+Defined.
+
+(** It follows from [istrunc_fmap_loops] and [isconnmap_fmap_loops] that loop spaces "commute with images". *)
 Definition equiv_loops_image `{Univalence} n {A B : pType} (f : A ->* B)
   : loops ([image n.+1 f, factor1 (image n.+1 f) (point A)])
   <~> image n (fmap loops f).
@@ -194,12 +214,25 @@ Proof.
     (image n (fmap loops f)))).
 Defined.
 
-(** Loop inversion is a pointed equivalence *)
-Definition loops_inv (A : pType) : loops A <~>* loops A.
+(** Loop inversion is a pointed equivalence, using [isequiv_path_inverse]. *)
+Definition loops_inv (A : pType) : loops A <~>* loops A
+  := Build_pEquiv (Build_pMap inverse 1) _.
+
+(** Loop inversion is an involution, since the inverse function is definitionally the same. *)
+Definition loops_inv_inv (A : pType)
+  : loops_inv A o* loops_inv A ==* pmap_idmap
+  := peisretr _.
+
+(** [loops_inv] is a natural transformation. *)
+Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
 Proof.
-  srapply Build_pEquiv.
-  1: exact (Build_pMap inverse 1).
-  apply isequiv_path_inverse.
+  snapply Build_Is1Natural; intros A B f.
+  srapply Build_pHomotopy.
+  + intros p; cbn.
+    nrefine (inv_Vp _ _ @ _ @ concat_pp_p _ _ _).
+    apply whiskerR.
+    exact (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
+  + by pointed_reduce.
 Defined.
 
 (** Loops functor preserves equivalences *)
@@ -443,17 +476,6 @@ Definition istrunc_iterated_loops `{Funext} (n : nat) (X : pType)
        (transport (fun k => IsTrunc k X)
           (ap trunc_S (trunc_index_inc_succ (-2) n))^ H0)
        (point X).
-
-(** [loops_inv] is a natural transformation. *)
-Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.
-Proof.
-  snapply Build_Is1Natural.
-  intros A B f.
-  srapply Build_pHomotopy.
-  + intros p. refine (inv_Vp _ _ @ whiskerR _ (point_eq f) @ concat_pp_p _ _ _).
-    exact (inv_pp _ _ @ whiskerL (point_eq f)^ (ap_V f p)^).
-  + pointed_reduce. reflexivity.
-Defined.
 
 (** Loops on the pointed type of dependent pointed maps correspond to pointed dependent maps into a family of loops.  We define this in this direction, because the forward map is pointed by reflexivity. *)
 Definition equiv_loops_ppforall `{Funext} {A : pType} (B : A -> pType)

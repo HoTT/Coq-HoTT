@@ -1,6 +1,8 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core Universe Equiv PointedCat Yoneda.
 Require Import Pointed.
+Require Import HSet.
+Require Import Spaces.Nat.Core.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.Core.
@@ -57,15 +59,31 @@ Definition equiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
   : (X ->* Y) <~> (Pi n.+1 X $-> Pi n.+1 Y)
   := Build_Equiv _ _ _ (isequiv_fmap_pi_pmap n X Y).
 
-(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are equal. *)
-Definition path_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
+(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are homotopic. (It's even easier to show they are equal, but downstream users most often want a homotopy.) *)
+Definition phomotopy_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
   `{IsConnected n X} `{IsTrunc n.+1 Y}
   (phi psi : X ->* Y)
   (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
-  : phi = psi.
+  : phi ==* psi.
 Proof.
+  apply phomotopy_path.
   tapply (equiv_inj (fmap (Pi n.+1) (a:=X) (b:=Y))).
   exact (equiv_path_grouphomomorphism h).
+Defined.
+
+(** Pointed maps out of an [n]-connected type into an [n.+1]-truncated type are determined by their composite with a map that is an embedding on [Pi n.+1]. *)
+Definition phomotopy_pmap_isembedding_pi `{Univalence} {W X Y : pType} (n : nat)
+  `{IsConnected n W} `{IsTrunc n.+1 X}
+  (g : X ->* Y) (e : IsEmbedding (fmap (pPi n.+1) g))
+  {u v : W ->* X} (p : g o* u ==* g o* v)
+  : u ==* v.
+Proof.
+  rapply (phomotopy_pmap_pi_connected n).
+  intro x.
+  napply (isinj_embedding _ e).
+  lhs_V tapply (fmap_comp (Pi n.+1)).
+  rhs_V tapply (fmap_comp (Pi n.+1)).
+  exact (fmap2 (Pi n.+1) p x).
 Defined.
 
 (** Two [n]-connected [n.+1]-truncated pointed types with isomorphic [Pi n.+1] are pointed equivalent. *)
@@ -317,7 +335,6 @@ Section EilenbergMacLane.
     rapply isequiv_contr_contr.
   Defined.
 
-
   (** [fmap (K' n.+1) f] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
@@ -325,22 +342,11 @@ Section EilenbergMacLane.
   Proof.
     induction n as [|n IHn].
     - exact (isconnmap_fmap_pclassifyingspace f).
-    - snapply isconnmap_isconnmap_ap_surj.
-      + rapply (isconnmap_isconnected (-1)).
-      + assert (c : IsConnMap n (fmap loops (fmap (K' n.+2) f))).
-        { refine (conn_map_homotopic _
-            ((pequiv_loops_em_em G' n.+1 o* fmap (K' n.+1) f)
-             o* (pequiv_loops_em_em G n.+1)^-1*) _
-            (fun p =>
-              (moveL_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p) _). }
-        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        intro q.
-        pose (e2 := equiv_concat_l (point_eq (fmap (K' n.+2) f))^ _
-                    oE equiv_concat_r (point_eq (fmap (K' n.+2) f)) _).
-        exact (isconnected_equiv' n _
-                 (equiv_functor_sigma_id (fun p => equiv_ap e2 _ _))^-1%equiv
-                 (c _)).
+    - napply (isconnmap_isconnmap_fmap_loops (n:=n)).
+      1, 2: exact _.
+      nrefine (cancelR_conn_map n (pequiv_loops_em_em G n.+1) _).
+      1: exact _.
+      rapply (conn_map_homotopic n _ _ (em_fmap_loops_natural f _)^* ).
   Defined.
 
   (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps.  Since [K(G, n.+1)] is [n]-connected and [K(G', n.+1)] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps to the group homomorphisms [Pi n.+1 K(G, n.+1) $-> Pi n.+1 K(G', n.+1)], and by [pi_em_fmap'] the composite with [fmap (K' n.+1)] is conjugation by the identifications [equiv_g_pi_n_em], which is also an equivalence.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
@@ -369,7 +375,7 @@ Section EilenbergMacLane.
     symmetry.
     destruct n as [|m].
     - exact grp_iso_g_pi1_bg.
-    - exact (equiv_g_pi_n_em (Build_AbGroup (Pi m.+2 X) _) m.+1).
+    - exact (equiv_g_pi_n_em (abgroup_pi m X) m.+1).
   Defined.
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
@@ -403,7 +409,7 @@ Section Deloop.
     napply (OO_isconnected_from_conn_map 0 (Tr (-1)) fu).
     1, 2: exact _.
     - napply isconnected_contr.
-      rapply contr_pi_succ_istrunc.
+      rapply contr_pi_istrunc.
     - apply (issurj_pi_connmap n.+2).
       napply (isconnmap_pred_add n.-2).
       rewrite 2 trunc_index_add_succ.
