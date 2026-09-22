@@ -8,7 +8,7 @@ Require Export
 
 Generalizable Variables N R f.
 
-Section Univ.
+Section Univalence.
 Context `{Funext} `{Univalence}.
 
 (**
@@ -170,4 +170,4 @@ Section another_semiring.
   Proof. split; try exact _. exact full_pseudo_order_reflecting. Qed.
 End another_semiring.
 End nat_int_order.
-End Univ.
+End Univalence.

@@ -46,7 +46,7 @@ Abort.
 (** As an example application, we define a tactic that takes a lemma whose definition is [idpath] and behaves like [rewrite], except that it doesn't insert any transport lemmas like [Overture.internal_paths_rew_r].  In other words, it does a [change], but leverages the pattern-matching and substitution engine of [rewrite] to decide what to [change] into. *)
 
 (** We use a dummy inductive type since [rewrite] acts on the *type* of a hypothesis rather than its body (if any). *)
-Inductive dummy (A:Type) := adummy : dummy A.
+Inductive dummy (A:Type) : Type0 := adummy : dummy A.
 
 Ltac rewrite_refl H :=
   match goal with
