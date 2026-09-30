@@ -163,12 +163,12 @@ Proof.
   napply conn_map_isequiv.
   napply (isequiv_isconnected_istrunc_isequiv_pi n.+1).
   1-4: exact _.
-  napply isequiv_isexact_factor.
+  pose (j := fmap (Pi n.+1) (pfib f)). (* To make the goals readable. *)
+  napply (isequiv_isexact_factor (j:=j) _ _ ex).
   - intro x.
     exact ((fmap_comp (Pi n.+1) (cxfib cx) (pfib f) x)^
            @ fmap2 (Pi n.+1) (pfib_cxfib cx) x).
   - exact _.
   - exact (isembedding_fmap_pi_isexact _ _ n (c := contr_pi_istrunc n.+1 _)).
-  - exact ex.
   - exact (isexact_pi_total _ _ n.+1).
 Defined.
