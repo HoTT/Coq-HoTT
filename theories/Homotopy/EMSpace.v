@@ -172,8 +172,8 @@ Section EilenbergMacLane.
     snapply Build_pEquiv.
     1: exact (fmap (pTr _) (loop_susp_unit _)).
     napply O_inverts_conn_map.
-    napply (isconnmap_pred_add n.-2).
-    rewrite 2 trunc_index_add_succ.
+    napply (conn_map_O_leq _ (Tr (n +2+ n))).
+    1: exact (O_leq_Tr_leq (trunc_index_leq_add_nat n n)).
     exact (conn_map_loop_susp_unit n X).
   Defined.
 
@@ -261,8 +261,6 @@ Section EilenbergMacLane.
         tapply (fmap2 psusp).
         exact IH.
   Defined.
-
-  (** TODO: Many results in this file, such as [pi_em_fmap] and [em_fmap_loops_natural], have a large number of universe variables.  These can be reduced by ending various definitions with Qed, but it would be better to fix the source of the explosion of universe variables. *)
 
   (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
   Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
@@ -457,8 +455,8 @@ Section Deloop.
     - napply isconnected_contr.
       rapply contr_pi_istrunc.
     - apply (issurj_pi_connmap n.+2).
-      napply (isconnmap_pred_add n.-2).
-      rewrite 2 trunc_index_add_succ.
+      napply (conn_map_O_leq _ (Tr (n +2+ n))).
+      1: exact (O_leq_Tr_leq (trunc_index_leq_add_nat n n)).
       exact (conn_map_loop_susp_unit n K(B, n.+2)).
   Defined.
 

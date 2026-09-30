@@ -473,8 +473,8 @@ Definition istrunc_iterated_loops `{Funext} (n : nat) (X : pType)
   `{H0 : IsTrunc n X}
   : IsTrunc 0 (iterated_loops n X)
   := equiv_istrunc_istrunc_iterated_loops n (-1) X
-       (transport (fun k => IsTrunc k X)
-          (ap trunc_S (trunc_index_inc_succ (-2) n))^ H0)
+       (transport@{Set _} (fun k => IsTrunc k X)
+          (inverse@{Set} (ap@{Set Set} trunc_S (trunc_index_inc_succ (-2) n))) H0)
        (point X).
 
 (** Loops on the pointed type of dependent pointed maps correspond to pointed dependent maps into a family of loops.  We define this in this direction, because the forward map is pointed by reflexivity. *)

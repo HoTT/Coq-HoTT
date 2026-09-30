@@ -294,11 +294,10 @@ Definition isequiv_pi_connmap' `{Univalence} (n : nat) {X Y : pType} (f : X ->* 
   `{!IsConnMap n f}
   : IsEquiv (fmap (pTr 0) (fmap (iterated_loops n) f)).
 Proof.
-  rapply O_inverts_conn_map.
-  rapply isconnmap_iterated_fmap_loops.
-  rewrite 2 trunc_index_inc'_succ.
-  rewrite <- trunc_index_inc_agree.
-  assumption.
+  napply O_inverts_conn_map.
+  napply isconnmap_iterated_fmap_loops.
+  by apply (transport@{Set _} (fun k => IsConnMap (Tr k) f)
+              (inverse@{Set} (trunc_index_inc'_0n n))).
 Defined.
 
 (** The same holds for [pPi n]. *)
@@ -340,8 +339,9 @@ Definition issurj_iterated_loops_connmap `{Univalence} (n : nat) {X Y : pType} (
   {C : IsConnMap n f}
   : IsSurjection (fmap (iterated_loops (n.+1)) f).
 Proof.
-  apply isconnmap_iterated_fmap_loops. cbn.
-  rewrite trunc_index_inc'_0n; assumption.
+  apply isconnmap_iterated_fmap_loops; cbn.
+  exact (transport@{Set _} (fun k => IsConnMap (Tr k) f)
+           (inverse@{Set} (trunc_index_inc'_0n n)) C).
 Defined.
 
 Definition issurj_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
@@ -424,9 +424,13 @@ Defined.
 
 Section PiLES.
   Local Open Scope succ_scope.
+  (** The next line gets rid of stray universe variables coming from things like [inr tt] and puts the successor structure [N3] in [Set], its natural level, since [NatSucc] is in [Set]. *)
+  Local Set Universe Minimization ToSet.
 
-  Context `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-    `{IsExact purely F X Y i f}.
+  (** Because of the use of wild category machinery, [F], [X] and [Y] end up constrained to lie in the same universe, so we declare this to be the case to reduce universe variables. *)
+  Universe u.
+  Context `{Univalence} {F X Y : pType@{u}}.
+  Context (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}.
 
   (** The types appearing in the sequence. *)
   Definition pi_carrier (n : N3) : pType :=

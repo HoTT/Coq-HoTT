@@ -137,10 +137,10 @@ Proof.
 Defined.
 
 (** Since [loops X] is an H-space, the Hopf construction provides a map [Join (loops X) (loops X) -> Susp (loops X)].  We show that this map is equivalent to the fiber of [loop_susp_counit X : Susp (loops X) -> X] over the base point, up to the automorphism of [Susp (loops X)] induced by inverting loops. *)
-Definition pequiv_pfiber_loops_susp_counit_join `{Univalence} (X : pType)
+Definition pequiv_pfiber_loops_susp_counit_join@{u v | u < v} `{Univalence} (X : pType@{u})
   : pfiber (loop_susp_counit X) <~>* pjoin (loops X) (loops X).
 Proof.
-  snrefine (pequiv_hopf_total_join (loops X) o*E _).
+  snrefine (pequiv_hopf_total_join@{v u u u u u u u} (loops X) o*E _).
   2: exact ishspace_loops.
   2,3: exact _.
   snapply Build_pEquiv'.

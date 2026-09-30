@@ -19,8 +19,6 @@ Short exact sequences [A -> E -> B] of abelian groups are classified by pointed 
 
 Local Open Scope pointed_scope.
 
-(** TODO: The main results of this file, such as [equiv_abses_classifying_map] and [issmall_abses], have a large number of universe variables, inherited from the delooping layer in EMSpace.v.  See the TODO there. *)
-
 Section EMFiberSequence.
   Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A) (n : nat).
 
