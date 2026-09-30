@@ -184,9 +184,13 @@ Section PfiberDeloop.
       o* pequiv_cxfib (i := fmap (K' 3) (inclusion (abses_pfiber psi)))
            (f := fmap (K' 3) (projection (abses_pfiber psi)))
       ==* pequiv_cxfib (i := pfib (pfib psi)) (f := pfib psi)
-          o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A 3)
-    := phomotopy_functor_pfiber_cxfib 2 phomotopy_em_incl_pfib
-         square_em_proj_pfib.
+          o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A 3).
+  Proof.
+    (* Writing this as a single term is slower for some reason. *)
+    napply (phomotopy_functor_pfiber_cxfib 2).
+    4: exact phomotopy_em_incl_pfib.
+    all: exact _.
+  Defined.
 
   (** Through the loop identification of [K(A,3)], the connecting map of the extracted fiber sequence is [loops psi], twisted by loop inversion. *)
   Local Definition connecting_map_em_loops
