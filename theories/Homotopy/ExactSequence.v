@@ -528,7 +528,7 @@ Proof.
          @* pmap_precompose_idmap _).
 Defined.
 
-(** The next two results are proved for the tautological fiber sequence.  They are extended to any purely exact sequence in [connecting_map_natural_isexact] below. *)
+(** The next three results are proved for the tautological fiber sequence.  The first, [connecting_map_natural_functor], is extended to any purely exact sequence in [connecting_map_natural_isexact] below. *)
 
 (** The connecting map of the tautological fiber sequence is natural in arbitrary squares of pointed maps. *)
 Definition connecting_map_natural_functor {X Y X' Y' : pType}
@@ -691,7 +691,7 @@ Proof.
                  (connecting_map_natural_idmap _))).
   lhs' napply (pmap_postwhisker _ (connecting_map_pfib2 i)).
   lhs' exact (pmap_postwhisker _
-                (isnat_tr (F:=loops) (G:=loops) loops_inv i)).
+                (isnat_tr (F:=loops) (G:=loops) loops_inv i : _ ==* _ o* _)).
   lhs_V' napply pmap_compose_assoc.
   lhs' napply (pmap_prewhisker _ (loops_inv_inv _)).
   napply pmap_postcompose_idmap.
