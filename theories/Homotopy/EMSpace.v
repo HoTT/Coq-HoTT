@@ -315,18 +315,12 @@ Section EilenbergMacLane.
     - exact (ap tr (bloop_natural G G' f g)).
     - lhs napply (ap _ (equiv_g_pi_n_em_succ G n g)).
       rhs napply (equiv_g_pi_n_em_succ G' n (f g)).
-      apply (equiv_inj (groupiso_pi_loops n _)).
-      rhs napply (eisretr (groupiso_pi_loops n _) _).
-      lhs refine (fmap_pi_loops n.+1 (fmap (K' n.+2) f) _).
+      apply moveL_equiv_V.
+      lhs tapply (fmap_pi_loops n.+1 (fmap (K' n.+2) f)).
       lhs napply (ap _ (eisretr (groupiso_pi_loops n _) _)).
-      lhs_V exact (fmap_comp (pPi n.+1)
-          (pequiv_loops_em_em G n.+1 : _ ->* _)
-          (fmap loops (fmap (K' n.+2) f)) (equiv_g_pi_n_em G n g)).
-      lhs exact (fmap2 (pPi n.+1) (em_fmap_loops_natural f n.+1)
-          (equiv_g_pi_n_em G n g)).
-      lhs exact (fmap_comp (pPi n.+1)
-          (fmap (K' n.+1) f) (pequiv_loops_em_em G' n.+1 : _ ->* _)
-          (equiv_g_pi_n_em G n g)).
+      lhs_V tapply (fmap_comp (pPi n.+1)).
+      lhs tapply (fmap2 (pPi n.+1) (em_fmap_loops_natural f n.+1)).
+      lhs tapply (fmap_comp (pPi n.+1)).
       exact (ap _ (IHn g)).
   Defined.
 
