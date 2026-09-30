@@ -342,9 +342,10 @@ Section EilenbergMacLane.
     (f : GroupHomomorphism G G') `{!IsEmbedding f} (n : nat)
     : IsEmbedding (fmap (Pi n.+1) (fmap (K' n.+1) f)).
   Proof.
-    rapply (mapinO_homotopic (Tr (-1))
-              (equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1)).
-    symmetry; apply pi_em_fmap'.
+    snapply (mapinO_homotopic (Tr (-1))
+               (equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1%equiv)).
+    - symmetry; apply pi_em_fmap'.
+    - rapply mapinO_compose.
   Defined.
 
   (** [G] is also the [n.+1]-st homotopy group of [loops K(G, n.+2)], through the loop identification [pequiv_loops_em_em].  Composing with the inverse of [groupiso_pi_loops] gives [equiv_g_pi_n_em G n.+1]. *)
