@@ -1,6 +1,8 @@
 Require Import
   HoTT.Classes.interfaces.abstract_algebra.
 
+Create HintDb lattice_hints.
+
 (** If [B] is a (bounded) lattice, then so is [A -> B], pointwise.
     This relies on functional extensionality. *)
 Section contents.
@@ -25,7 +27,6 @@ Section contents.
     fun (f g : A -> B) (a : A) => (f a) ⊓ (g a).
 
   (** Try to solve some of the lattice obligations automatically *)
-  Create HintDb lattice_hints.
   #[local]
   Hint Resolve
        associativity
