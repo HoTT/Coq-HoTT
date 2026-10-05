@@ -1117,8 +1117,8 @@ Definition Book_3_10_impred@{i j k | i < j, j < k} `{Univalence}
 Proof.
   snapply isequiv_adjointify.
   { intro A. destruct (LEM A).
-    - exact (Build_HProp Unit).
-    - exact (Build_HProp Empty).
+    - exact (Build_HProp@{i} Unit).
+    - exact (Build_HProp@{i} Empty).
   }
   1-2: intro A; destruct (LEM _) as [a|na];
     apply path_hprop, equiv_inverse; simpl.

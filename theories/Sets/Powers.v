@@ -27,7 +27,8 @@ Definition power_iterated_shift X n
   : power_iterated (X -> HProp) n = (power_iterated X n -> HProp)
   := (nat_iter_succ_r _ _ _)^.
 
-Instance hset_power {UA : Univalence} (X : HSet)
+(** This is not an instance: [istrunc_arrow] and [istrunc_trunctype] already suffice, and an instance hint can lift [HProp] to an unwanted universe. *)
+Lemma hset_power {UA : Univalence} (X : HSet)
   : IsHSet (X -> HProp).
 Proof.
   apply istrunc_S.
