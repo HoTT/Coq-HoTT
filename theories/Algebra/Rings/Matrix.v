@@ -2,6 +2,7 @@ Require Import Basics.Overture Basics.Trunc Basics.Tactics Basics.Decidable.
 Require Import Types.Sigma.
 Require Import Spaces.Nat.Core.
 Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
+Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.FiniteSum.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
@@ -1050,7 +1051,7 @@ Proof.
 Defined.
 
 (** The exchange matrix is symmetric. *)
-Global Instance issymmetric_exchange {R : Ring} {n : nat}
+Instance issymmetric_exchange {R : Ring} {n : nat}
   : IsSymmetric (exchange_matrix R n)
   := exchange_matrix_transpose.
 
@@ -1089,26 +1090,29 @@ Defined.
 #[local] Hint Immediate nat_pred_sub_lt : typeclass_instances.
 
 (** Multiplying a matrix by the exchange matrix on the left reverses the order of the rows. Similarly multiplying on the right reverses the order of the columns. *)
-Definition entry_matrix_mult_exchange_l {R : Ring} {n : nat} (M : Matrix R n n)
-  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
-  : entry (matrix_mult (exchange_matrix R n) M) i j
-      = entry M (nat_pred n - i) j.
+Definition entry_matrix_mult_exchange_l {R : Ring} {m n : nat}
+  (M : Matrix R m n)
+  (i j : nat) (Hi : (i < m)%nat) (Hj : (j < n)%nat)
+  : entry (matrix_mult (exchange_matrix R m) M) i j
+      = entry M (nat_pred m - i) j.
 Proof.
   lhs napply entry_Build_Matrix.
-  lhs rapply (path_ab_sum (g:=fun k Hk => kronecker_delta (nat_pred n - i)%nat k * entry M k j)).
+  lhs rapply (path_ab_sum (g:=fun (k : nat) (Hk : (k < m)%nat)
+    => kronecker_delta (nat_pred m - i)%nat k * entry M k j)).
   2: napply rng_sum_kronecker_delta_l.
   intros k Hk.
   apply (ap (.* _)).
   apply exchange_matrix_sub'.
 Defined.
 
-Definition entry_matrix_mult_exchange_r {A : Ring} {n : nat} (M : Matrix A n n)
-  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
+Definition entry_matrix_mult_exchange_r {A : Ring} {m n : nat}
+  (M : Matrix A m n)
+  (i j : nat) (Hi : (i < m)%nat) (Hj : (j < n)%nat)
   : entry (matrix_mult M (exchange_matrix A n)) i j
       = entry M i (nat_pred n - j).
 Proof.
   lhs napply entry_Build_Matrix.
-  lhs rapply (path_ab_sum (g:=fun k Hk
+  lhs rapply (path_ab_sum (g:=fun (k : nat) (Hk : (k < n)%nat)
     => entry M i k * kronecker_delta k (nat_pred n - j)%nat)).
   2: napply rng_sum_kronecker_delta_r'.
   intros k Hk.
@@ -1171,7 +1175,7 @@ Proof.
   exact (leq_pred Hi).
 Defined.
 
-Global Instance ishprop_iscentrosymmetric {A : Type@{i}} {n : nat}
+Instance ishprop_iscentrosymmetric {A : Type@{i}} {n : nat}
   (M : Matrix A n n)
   : IsHProp (IsCentrosymmetric M).
 Proof.
@@ -1179,7 +1183,7 @@ Proof.
 Defined.
 
 (** The zero matrix is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_zero {A : AbGroup@{i}} {n : nat}
+Instance iscentrosymmetric_matrix_zero {A : AbGroup@{i}} {n : nat}
   : IsCentrosymmetric (matrix_zero A n n).
 Proof.
   apply tr; intros i j Hi Hj.
@@ -1188,7 +1192,7 @@ Proof.
 Defined.
 
 (** The identity matrix is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_identity {R : Ring@{i}} {n : nat}
+Instance iscentrosymmetric_matrix_identity {R : Ring@{i}} {n : nat}
   : IsCentrosymmetric (identity_matrix R n).
 Proof.
   napply iscentrosymmetric_exchange_matrix.
@@ -1196,8 +1200,8 @@ Proof.
 Defined.
 
 (** The sum of two centrosymmetric matrices is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_plus {R : Ring@{i}} {n : nat}
-  (M N : Matrix R n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}
+Instance iscentrosymmetric_matrix_plus {A : AbGroup@{i}} {n : nat}
+  (M N : Matrix A n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}
   : IsCentrosymmetric (matrix_plus M N).
 Proof.
   unfold IsCentrosymmetric.
@@ -1209,8 +1213,8 @@ Proof.
 Defined.
 
 (** The negation of a centrosymmetric matrix is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_negate {R : Ring@{i}} {n : nat}
-  (M : Matrix R n n) {H : IsCentrosymmetric M}
+Instance iscentrosymmetric_matrix_negate {A : AbGroup@{i}} {n : nat}
+  (M : Matrix A n n) {H : IsCentrosymmetric M}
   : IsCentrosymmetric (matrix_negate M).
 Proof.
   unfold IsCentrosymmetric.
@@ -1220,7 +1224,7 @@ Proof.
 Defined.
 
 (** A scalar multiple of a centrosymmetric matrix is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+Instance iscentrosymmetric_matrix_scale {R : Ring@{i}} {n : nat}
   (r : R) (M : Matrix R n n) {H : IsCentrosymmetric M}
   : IsCentrosymmetric (matrix_lact r M).
 Proof.
@@ -1230,21 +1234,9 @@ Proof.
   apply ap, H.
 Defined.
 
-(** A centrosymmetric matrix is also centrosymmetric when considered over the opposite ring. *)
-#[export] Instance iscentrosymmetric_rng_op {R : Ring@{i}} {n : nat} (M : Matrix R n n)
-  `{!IsCentrosymmetric M}
-  : IsCentrosymmetric (A := rng_op R) M.
-Proof.
-  assumption.
-Defined.
-
-(** The opposite-ring instance has the same index-based goal as its hypothesis. Cut consecutive applications to prevent typeclass search from looping. *)
-#[export] Hint Cut [( _* ) iscentrosymmetric_rng_op
-  iscentrosymmetric_rng_op] : typeclass_instances.
-
 (** The transpose of a centrosymmetric matrix is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
-  (M : Matrix R n n) {H : IsCentrosymmetric M}
+Instance iscentrosymmetric_matrix_transpose {A : Type@{i}} {n : nat}
+  (M : Matrix A n n) {H : IsCentrosymmetric M}
   : IsCentrosymmetric (matrix_transpose M).
 Proof.
   unfold IsCentrosymmetric.
@@ -1254,7 +1246,7 @@ Proof.
 Defined.
 
 (** The product of two centrosymmetric matrices is centrosymmetric. *)
-Global Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
+Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
   (M N : Matrix R n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}
   : IsCentrosymmetric (matrix_mult M N).
 Proof.
