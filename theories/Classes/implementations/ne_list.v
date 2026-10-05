@@ -63,11 +63,11 @@ Section with_type.
     := match l with one _ => nil | cons _ x => to_list x end.
 
   Lemma decomp_eq (l: ne_list): l = from_list (head l) (tail l).
-  Proof with auto.
-    induction l...
-    destruct l...
+  Proof.
+    induction l; auto.
+    destruct l; auto.
     cbn in *.
-    rewrite IHl...
+    rewrite IHl; auto.
   Qed. 
 
   Definition last: ne_list → T := foldr1 (fun x y => y).
@@ -95,12 +95,12 @@ Section with_type.
     (Ptwo: ∀ x y, P (cons x (one y)))
     (Pmore: ∀ x y z, P z → (∀ y', P (cons y' z)) → P (cons x (cons y z)))
     : ∀ l, P l.
-  Proof with auto.
+  Proof.
    cut (∀ l, P l * ∀ x, P (cons x l)).
    - intros. apply X.
-   - destruct l...
+   - destruct l; auto.
      revert t.
-     induction l...
+     induction l; auto.
      intros.
      split.
      + apply IHl.
