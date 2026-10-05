@@ -31,6 +31,7 @@ Existing Instance isequiv_equiv_path.
 
 (** A proof that univalence implies function extensionality can be found in the metatheory file [UnivalenceImpliesFunext], but that actual proof can't be used on our dummy typeclasses.  So we assert the following axiomatic instance.  *)
 Instance Univalence_implies_Funext `{Univalence} : Funext.
+Proof.
 Admitted.
 
 Section Univalence.

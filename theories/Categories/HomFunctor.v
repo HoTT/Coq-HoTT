@@ -26,6 +26,7 @@ Section hom_functor.
     := fun g => snd hf o g o fst hf.
 
   Definition hom_functor : Functor (C^op * C) set_cat.
+  Proof.
     refine (Build_Functor (C^op * C) set_cat
                           (fun c'c => obj_of c'c)
                           hom_functor_morphism_of

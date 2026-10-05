@@ -250,6 +250,7 @@ Defined.
 
 (** Note that the cardinality function [fcard] actually computes.  The same will be true of all the other proofs in this section, though we don't always verify it. *)
 Goal fcard (Fin 3 + Fin 4) = 7.
+Proof.
   reflexivity.
 Abort.
 
@@ -349,6 +350,7 @@ Defined.
 
 (** [fcard] still computes, despite the funext: *)
 Goal forall fs:Funext, fcard (Fin 3 -> Fin 4) = 64.
+Proof.
   reflexivity.
 Abort.
 
@@ -386,6 +388,7 @@ Defined.
 
 (** [fcard] still computes: *)
 Goal forall fs:Funext, fcard (Fin 4 <~> Fin 4) = 24.
+Proof.
   reflexivity.
 Abort.
 

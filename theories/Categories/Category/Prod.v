@@ -14,6 +14,7 @@ Section prod.
   Variables C D : PreCategory.
 
   Definition prod : PreCategory.
+  Proof.
     refine (@Build_PreCategory
               (C * D)
               (fun s d => morphism C (fst s) (fst d)

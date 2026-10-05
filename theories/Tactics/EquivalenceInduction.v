@@ -356,6 +356,7 @@ Ltac equiv_induction p :=
         [ intros | repeat step_respects_equiv ].
 
 Goal forall `{Funext} A B (e : A <~> B), A -> { y : B & forall Q, Contr Q -> ((e^-1 y = e^-1 y) <~> (y = y)) * Q }.
+Proof.
   intros ? ? ? ? a.
   equiv_induction e.
   - simpl.

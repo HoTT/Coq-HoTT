@@ -132,6 +132,7 @@ Section Equiv.
 
   (** Theorem 10.1.8 *)
   Theorem sets_exact : forall x y, (class_of R x = class_of R y) <~> R x y.
+  Proof.
     intros ??. apply equiv_iff_hprop.
     - apply classes_eq_related.
     - apply related_classes_eq.
@@ -189,12 +190,14 @@ Section Equiv.
   (** From Ch10 *)
   Definition quotient_ump' (B:HSet): (quotient R -> B) ->
                                      (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0))).
+  Proof.
     intro f. exists (compose f (class_of R) ).
     intros. f_ap. by apply related_classes_eq.
   Defined.
 
   Definition quotient_ump'' (B:HSet): (sig (fun f : A-> B => (forall a a0:A, R a a0 -> f a =f a0)))
                                       -> quotient R -> B.
+  Proof.
     intros [f H'].
     exact (quotient_rec _ H').
   Defined.

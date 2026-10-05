@@ -160,10 +160,12 @@ Module Export Surreals.
 
   #[export] Instance ishprop_No_le {x y : GenNo}
   : IsHProp (x <= y).
+  Proof.
   Admitted.
 
   #[export] Instance ishprop_No_lt {x y : GenNo}
   : IsHProp (x < y).
+  Proof.
   Admitted.
 
   (** *** Now the induction principle. *)
