@@ -1,15 +1,15 @@
-We recommend [these install instructions](#1-installation-using-coq-platform) if you wish to install the HoTT
+We recommend [installation using opam](#2-installation-of-hott-library-using-opam) if you wish to install the HoTT
 library to use in your own project or to play around with.
 
 ## Table of contents
 
-- [1. Installation using Coq Platform](#1-installation-using-coq-platform)
+- [1. Using the HoTT library](#1-using-the-hott-library)
 - [2. Installation of HoTT library using opam](#2-installation-of-hott-library-using-opam)
   - [Released Versions](#released-versions)
   - [Source Versions](#source-versions)
   - [Development Versions](#development-versions)
 - [3. Setup for developers (using git)](#3-setup-for-developers-using-git)
-  - [3.1. Prerequisites (Installing Coq)](#31-prerequisites-installing-coq)
+  - [3.1. Prerequisites (Installing Rocq)](#31-prerequisites-installing-rocq)
     - [3.1.1. Development in OSX and Windows](#311-development-in-osx-and-windows)
   - [3.2. Forking and obtaining the HoTT library](#32-forking-and-obtaining-the-hott-library)
   - [3.3. Building the HoTT library](#33-building-the-hott-library)
@@ -19,17 +19,7 @@ library to use in your own project or to play around with.
 - [5. Updating the library](#5-updating-the-library)
 - [6. Troubleshooting](#6-troubleshooting)
 
-# 1. Installation using Coq Platform
-
-**Note:** As of version 9.0, Coq has been renamed Rocq.  When you install Coq-HoTT
-following the instructions in this section, it should automatically
-install the compatibility wrappers, so that the nothing about the build process
-needs to change.
-
-In order to install the HoTT library, we recommend that you use the [Coq
-Platform][1]. This will install the [Coq Proof Assistant][2] together with the
-HoTT library. The Coq Platform supports installation on **Linux**, **MacOS** and
-**Windows**.
+# 1. Using the HoTT library
 
 In order to use the HoTT library in your project, make sure you have a file
 called `_CoqProject` in your working directory which contains the following
@@ -40,9 +30,9 @@ lines:
 -arg -indices-matter
 ```
 
-This way when you open `.v` files using `coqide` or any other text editor for
-coq (see [Editors](#editors)), the editor will pass the correct arguments to
-`coq`.
+This way when you open `.v` files using `rocqide` or any other text editor for
+Rocq (see [Editors](#4-editors)), the editor will pass the correct arguments to
+Rocq.
 
 To import modules from the HoTT library inside your own file, you will need to
 write the following:
@@ -58,32 +48,18 @@ wish to import the entire library you can write:
 From HoTT Require Import HoTT.
 ```
 
-> ### Warning
->
-> The versions of the HoTT library appearing in the Coq Platform are released
-> twice a year. This means that there is a good chance that the Coq Platform
-> version is lagging behind the latest version of the library. If you wish to
-> use the latest version of the library, you should install it using `opam` as
-> described in the next section.
-
 # 2. Installation of HoTT library using opam
-
-**Note:** As of version 9.0, Coq has been renamed Rocq.  When you install Coq-HoTT
-following the instructions in this section, it should automatically
-install the compatibility wrappers, so that the nothing about the build process
-needs to change.
 
 ## Released Versions
 
-More advanced users may wish to install the HoTT library via `opam` ([See here
-for details on installing `opam`][3]). You need to add the released coq-archive
-packages to `opam` which can be done as follows:
+To install the HoTT library via `opam`, first [install opam][3] and add the
+released Rocq opam archive as follows:
 ```shell
-$ opam repo add coq-released https://coq.inria.fr/opam/released
+$ opam repo add rocq-released https://rocq-prover.org/opam/released
 ```
 This will let you install the released versions of the library. We typically do
-a release for each major version of `coq`. Note that the name of the HoTT
-library is `coq-hott` inside the coq-archive.
+a release for each major version of Rocq. The opam package is still named
+`coq-hott`.
 
 ```shell
 $ opam install coq-hott
@@ -96,40 +72,37 @@ After cloning the repository, you can install the library using `opam` by runnin
 
 ## Development Versions
 
-We also have the current development versions of the library available via
-`opam`. For this however, you will need to add the dev coq-archive packages:
+We also have the current development version of the library available via
+`opam`. Add the development repositories and install the package as follows:
 ```shell
-$ opam repo add coq-core-dev https://coq.inria.fr/opam/core-dev
-$ opam repo add coq-extra-dev https://coq.inria.fr/opam/extra-dev
+$ opam repo add rocq-core-dev https://rocq-prover.org/opam/core-dev
+$ opam repo add rocq-extra-dev https://rocq-prover.org/opam/extra-dev
+$ opam install coq-hott.dev
 ```
 
-This will make `coq.dev` the latest available version of `coq`. You can pin
-`coq` to a stable version by running `opam pin add coq.dev 8.19.1` for example.
-Then install the library with `opam install coq-hott`, as for the released version.
+The `coq-hott.dev` package requires the development version of Rocq. To use a
+released version of Rocq with the library's current sources, follow the
+[Source Versions](#source-versions) instructions instead.
 
 # 3. Setup for developers (using git)
 
-## 3.1. Prerequisites (Installing Coq)
+## 3.1. Prerequisites (Installing Rocq)
 
-We recommend that you use the `opam` package manager to install `coq`. Details
+The required Rocq and Dune versions are listed in the
+[package dependencies](../coq-hott.opam.template).
+We recommend that you use the `opam` package manager to install Rocq. Details
 about [installing Opam can be found here][3].
 We also recommend working within an [opam switch][20], to keep your work
 isolated from other packages installed via opam.
 
-After setting up a switch (if you choose to do so),
-you can install the latest 8.x version of `coq` by doing the following:
+After setting up a switch (if you choose to do so), install Rocq with:
 
 ```shell
-$ opam install coq
+$ opam install rocq-core
 ```
 
-To install the latest 9.x version of Rocq and the Coq compatibility wrappers, do
-
-```shell
-$ opam install rocq-core coq-core
-```
-
-You will also need `make` and `git` in a typical workflow.
+You will also need `make` and `git` in a typical workflow. For Dune builds,
+install Dune with `opam install dune`.
 
 
 ### 3.1.1. Development in OSX and Windows
@@ -137,8 +110,8 @@ You will also need `make` and `git` in a typical workflow.
 We don't recommend developing on platforms other than Linux, however it is still
 possible.
 
-Windows and OSX users may install `coq` directly using the [installer for the
-appropriate coq release][9].
+Windows and OSX users can find additional setup instructions in the
+[Rocq installation guide][9].
 
 For OSX users `git` and `make` should be readily available.
 
@@ -191,23 +164,21 @@ $ dune build
 
 ## 3.4. Installing the library using git
 
-We don't recommend you install the library using the repository and instead
-recommend [installing via opam](#installation-of-hott-library-using-opam),
-especially if you are intending to develop the library. However the `makefile`
-contains a target called `install` and therefore running
+When developing HoTT itself, build in the checkout; installation is not needed.
+To use your checkout from a separate project, install it with:
+
 ```shell
 $ make install
 ```
-will install the library.
 
 # 4. Editors
 
 We recommend the following text editors for the development of `.v` files:
 
  * [Emacs][10] together with [Proof General][11].
- * [CoqIDE][12] part of the [Coq Proof Assistant][13].
+ * [RocqIDE][12] part of the [Rocq Proof Assistant][13].
  * [Visual Studio Code][14] together with [coq-lsp][15].
- * For more editors, see the Coq website article on [User Interfaces][19].
+ * For more editors, see the Rocq website's [installation guide][19].
 
 ## 4.1. Tags for Emacs
 
@@ -229,14 +200,12 @@ dune build TAGS
 ```
 
 # 5. Updating the library
-If you installed the library via Coq Platform then [update your version of Coq
-Platform][1].
 
 If you installed the library via `opam` then simply run `opam update` and then
 `opam upgrade`.
 
 To upgrade your clone of the GitHub repository as set up in [the instructions on
-using git](#forking-and-obtaining-the-hott-library): Pull the latest version
+using git](#32-forking-and-obtaining-the-hott-library): Pull the latest version
 using `git pull upstream master` and then rebuild using `make` as above.
 
 To update your fork, use `git push origin master`. We also [have tags in the
@@ -249,8 +218,6 @@ In case of any problems, feel free to contact us by [opening an issue on
 GitHub](https://github.com/HoTT/HoTT).
 
 
-[1]: https://github.com/coq/platform/releases
-[2]: https://github.com/coq/coq
 [3]: https://opam.ocaml.org/doc/Install.html
 [4]: https://github.com/HoTT/HoTT
 [5]: https://docs.github.com/en/github/getting-started-with-github/fork-a-repo
@@ -258,18 +225,18 @@ GitHub](https://github.com/HoTT/HoTT).
 [6]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/configuring-a-remote-for-a-fork
 [7]: https://github.com/HoTT/HoTT/releases
 [8]: https://opam.ocaml.org/doc/Install.html#OSX
-[9]: https://github.com/coq/coq/releases
+[9]: https://rocq-prover.org/install
 [10]: http://www.gnu.org/software/emacs/
 
 [11]: http://proofgeneral.inf.ed.ac.uk
-[12]: https://coq.inria.fr/refman/practical-tools/coqide.html
-[13]: https://github.com/coq/coq
+[12]: https://rocq-prover.org/refman/practical-tools/coqide.html
+[13]: https://github.com/rocq-prover/rocq
 [14]: https://code.visualstudio.com/
 [15]: https://github.com/ejgallego/coq-lsp
 
 [16]: https://cygwin.com/install.html
 [17]: https://stackoverflow.com/a/54086635
 [18]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-[19]: https://coq.inria.fr/user-interfaces.html
+[19]: https://rocq-prover.org/install
 
 [20]: https://ocaml.org/docs/opam-switch-introduction
