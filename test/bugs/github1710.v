@@ -32,6 +32,23 @@ Definition lift_accessible@{a i j | a <= i, a < j}
 Definition truncated_universe@{i j | i < j} `{Univalence}
   (n : trunc_index) : IsTrunc_internal@{j} (TruncType@{i} n) n.+1 := _.
 
+(** Transparent aliases must retain truncation inference at the same universe. *)
+Definition TruncatedTypes@{i} (n : trunc_index) := TruncType@{i} n.
+Definition Sets@{i} := HSet@{i}.
+
+Definition aliased_truncated_universe@{i j | i < j} `{Univalence}
+  (n : trunc_index)
+  : IsTrunc_internal@{j} (TruncatedTypes@{i} n) n.+1 := _.
+
+Definition aliased_sets@{i j | i < j} `{Univalence}
+  : IsTrunc_internal@{j} Sets@{i} 1 := _.
+
+Definition aliased_contractible_types@{i j | i < j} `{Univalence}
+  : IsTrunc_internal@{j} (TruncatedTypes@{i} (-2)) (-1) := _.
+
+Fail Definition aliased_sets_without_univalence
+  : IsTrunc 1 Sets := _.
+
 Definition hprop_function_space@{a i j | a <= j, i < j}
   `{Univalence} (X : Type@{a})
   : IsTrunc_internal@{j} (X -> HProp@{i}) 0.

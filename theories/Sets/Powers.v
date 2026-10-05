@@ -1,4 +1,6 @@
-From HoTT Require Import Basics Types TruncType.
+From HoTT Require Import Basics Types.
+(** Export the universe-truncation hints needed to infer truncation of power sets. *)
+From HoTT Require Export Universes.TruncType.
 From HoTT Require Import Universes.Smallness.
 From HoTT Require Import Spaces.Card Spaces.Nat.Core.
 

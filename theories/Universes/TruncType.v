@@ -216,6 +216,8 @@ Section TruncType.
 
 End TruncType.
 
-(** Use [exact] rather than a precompiled instance hint: with cumulativity, the latter can instantiate [TruncType] at a different universe from the one in the goal. *)
-#[export] Hint Extern 0 (IsTrunc _ (TruncType _)) =>
-  exact istrunc_trunctype : typeclass_instances.
+(** Use [exact] rather than a precompiled instance hint: with cumulativity, the latter can instantiate [TruncType] at a different universe from the one in the goal.  Head-reduce the type before matching, so that transparent aliases are recognized without instantiating unknown types. *)
+#[export] Hint Extern 0 (IsTrunc _ ?A) =>
+  lazymatch eval hnf in A with
+  | TruncType _ => exact istrunc_trunctype
+  end : typeclass_instances.
