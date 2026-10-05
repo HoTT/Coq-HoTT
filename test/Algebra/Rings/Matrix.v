@@ -99,6 +99,13 @@ Definition test4_minor_1_1_eq
    : entries (matrix_minor 1 1 test4) = entries test4_minor_1_1
    := idpath.
 
+(** Squaring the exchange matrix gives the identity. *)
+Definition test_exchange_matrix_square
+  : entries (matrix_map int_reduce (matrix_mult
+      (exchange_matrix cring_Z 3) (exchange_matrix cring_Z 3)))
+    = entries (identity_matrix cring_Z 3)
+  := idpath.
+
 (** Centrosymmetry works without funext, including in dimension zero. *)
 Section Centrosymmetric.
   Context (R : Ring).

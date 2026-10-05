@@ -1116,21 +1116,18 @@ Proof.
   apply exchange_matrix_sub.
 Defined.
 
-(** The exchange matrix has order 2. This proof is only long because of arithmetic. *)
+(** The square of the exchange matrix is the identity matrix. *)
 Definition exchange_matrix_square {R : Ring} {n : nat}
   : matrix_mult (exchange_matrix R n) (exchange_matrix R n) = identity_matrix R n.
 Proof.
   apply path_matrix.
   intros i j Hi Hj.
   lhs napply entry_matrix_mult_exchange_l.
-  lhs napply entry_Build_Matrix.
+  lhs napply exchange_matrix_sub'.
   rhs napply entry_Build_Matrix.
-  (* We hide this [nat_pred n] in [t] so that the rewrite below changes the other [nat_pred n]. *)
-  set (t := (nat_pred n - i + j)%nat);
-    rewrite <- (nat_add_sub_l_cancel (leq_pred Hi));
-    unfold t; clear t.
-  rewrite (kronecker_delta_map_inj j i (fun x => nat_pred n - i + x)%nat).
-  apply kronecker_delta_symm.
+  apply (ap (fun k => kronecker_delta k j)).
+  apply nat_sub_sub_cancel_r.
+  exact (leq_pred Hi).
 Defined.
 
 (** ** Centrosymmetric matrices *)
