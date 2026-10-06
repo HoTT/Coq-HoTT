@@ -62,10 +62,12 @@
               { coq = pkgs.coq_9_1; }
               { };
 
-          # To use, pass --impure to nix develop
+          # To use, pass --impure to nix develop.
+          # The compatibility package still requests coqide-server from master;
+          # use the native runtime/prelude packages instead.
           coq_master =
             makeDevShell
-              { coq = pkgs.coq.override { version = "master"; }; }
+              { coq = pkgs.rocqPackages.rocq-core.override { version = "master"; }; }
               { extraPackages = [ ]; };
         };
 
