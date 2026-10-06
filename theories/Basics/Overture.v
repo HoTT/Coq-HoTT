@@ -273,6 +273,7 @@ Arguments idpath {A a} , [A] a.
 
 Scheme paths_ind := Induction for paths Sort Type.
 Arguments paths_ind [A] a P f y p : rename.
+Register Scheme paths_ind as rew_dep for paths.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p : rename.
 
