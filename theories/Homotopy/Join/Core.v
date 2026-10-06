@@ -580,6 +580,32 @@ Proof.
   apply diamond_symm.
 Defined.
 
+(** The horizontal and vertical degenerate diamonds fit together along any three paths forming a tree. No loop-filling hypothesis is needed. *)
+Definition diamond_hv {T : Type@{i}} {n e x y : T}
+  (h : n = x) (k : e = y) (p : x = y)
+  : transport
+      (fun t => zigzag@{i i j} n t e = zigzag@{i i j} n t t)
+      p (diamond_h e x h) = diamond_v n y k.
+Proof.
+  destruct h, k, p; cbn.
+  apply concat_pV.
+Defined.
+
+(** A join supplies diamonds on its self-join directly. The left vertices use horizontal diamonds and the right vertices use vertical diamonds. *)
+Definition diamond_join {A : Type@{i}} {B : Type@{j}}
+  (n e : A) (b0 : B)
+  : forall t : Join@{i j k} A B,
+    zigzag@{k k l} (joinl n) t (joinl e) = zigzag (joinl n) t t.
+Proof.
+  snapply Join_ind.
+  - intro a.
+    exact (diamond_h (joinl e) (joinl a) (zigzag n a b0)).
+  - intro b.
+    exact (diamond_v (joinl n) (joinr b) (jglue e b)).
+  - intros a b.
+    exact (diamond_hv (zigzag n a b0) (jglue e b) (jglue a b)).
+Defined.
+
 (** * Functoriality of Join. *)
 Section FunctorJoin.
 
