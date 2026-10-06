@@ -43,9 +43,6 @@ Global Set Printing Primitive Projection Parameters.
 
 (** This flag removes parameters from constructors in patterns that appear in a match statement. *)
 Global Set Asymmetric Patterns.
-(** The warning clause here can be removed once our minimum Rocq version is 9.3. *)
-#[warning="-unknown-option"]
-Global Set Asymmetric Patterns No Implicits.
 
 (** ** Unification *)
 
@@ -54,7 +51,8 @@ Global Set Keyed Unification.
 
 (** ** Typeclasses and Hint settings *)
 
-(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)
+(** This tells Rocq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available.  This setting is still needed on Rocq 9.1, but newer versions always use strict behavior and have removed the option.  Suppress only the unknown-option warning on this compatibility command. *)
+#[warning="-unknown-option"]
 Global Set Loose Hint Behavior "Strict".
 
 Create HintDb rewrite discriminated.
