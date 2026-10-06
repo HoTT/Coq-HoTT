@@ -1,0 +1,4 @@
+(rule
+ (alias runtest)
+ (deps test_without_coq_compat.py ../without_coq_compat.py)
+ (action (run python3 %{dep:test_without_coq_compat.py})))
