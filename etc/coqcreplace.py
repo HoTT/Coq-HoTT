@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-# A wrapper for coqc that will try to replace a regular expression
+# A wrapper for Rocq that will try to replace a regular expression
 # with a replacement string.  The results need to be inspected by
 # hand, as it will often be too eager.  See the "Limitations" section
 # below.
@@ -40,22 +40,22 @@
 
 # Can be used as
 #   path/to/coqcreplace.py path/tofile.v
-# but in order to get the right arguments passed to coqc, it is better to do
-#   make COQC=path/to/coqcreplace.py path/tofile.vo
+# but in order to get the right arguments passed to Rocq, it is better to do
+#   make ROCQ=path/to/coqcreplace.py path/tofile.vo
 # or
-#   export COQC=path/to/coqcreplace.py
+#   export ROCQ=path/to/coqcreplace.py
 #   make file.vo
 # To run on the whole library, avoiding test/ and contrib/, can do:
-#   export COQC=path/to/coqcreplace.py
+#   export ROCQ=path/to/coqcreplace.py
 #   make clean; make -j<fill in> theories/HoTT.vo theories/Categories.vo
-# Use "unset COQC" when done.
+# Use "unset ROCQ" when done.
 
 # You'll need to also adjust the timing policy.  See below.
 
 # Can be run with -j<#cores> or -j1.  Timing is more accurate with -j1.
 
-# Note that the make process sometimes calls coqc to, e.g., find out the
-# Coq version, so we transparently call coqc for such commands.
+# Note that the make process sometimes calls Rocq to, e.g., find out the
+# Rocq version, so we transparently call Rocq for such commands.
 
 # Also, stdout is usually redirected to a timing file, so we send all of
 # our additional output to stderr.
@@ -72,11 +72,11 @@
 #   add the first file to the file_excludes list below, or to mark the
 #   problematic line with "noreplace".
 
-import subprocess
 import sys
 import os
-import time
 import re
+
+from rocq_wrapper import prepare_command, run_compiler
 
 # You can choose a fixed timeout or a dynamic timeout.
 # For this script, you probably always want a dynamic timeout.
@@ -101,31 +101,9 @@ import re
 
 def calc_timeout(duration): return max(duration+0.1, duration*1.05)
 
-# time.perf_counter is better than time.time, since the latter is
-# affected by changes to the system clock.  Both return a floating point
-# value in seconds.
-timer = time.perf_counter
-
-# The default timeout value here will be used for the first run.
-# Returns (exit code of coqc, elapsed time).  If the elapsed time
-# is greater than the timeout, returns (1111, elapsed time).
+# Return the real compiler status and elapsed time, or 1111 on timeout.
 def coqc(quiet=False, timeout=60):
-    start = timer()
-    try:
-        if quiet:
-            cp = subprocess.run(['coqc'] + sys.argv[1:], timeout=timeout,
-                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-            cp = subprocess.run(['coqc'] + sys.argv[1:], timeout=timeout)
-    except subprocess.TimeoutExpired:
-        return 1111, timer() - start
-    # subprocess.run uses a busy loop to check the timeout, so it may allow
-    # the command to run longer than the limit.  So we also check here.
-    elapsed = timer() - start
-    if elapsed > timeout:
-        return 1111, elapsed
-    else:
-        return cp.returncode, elapsed
+    return run_compiler(command, quiet=quiet, timeout=timeout)
 
 # If set to a file name, add successfully completed files to the end of
 # the file, and use the file to avoid processing files that have already
@@ -227,11 +205,11 @@ def replace(vfile):
     return ret, changes, attempts, timeouts
 
 if __name__ == '__main__':
-    vfiles = [arg for arg in sys.argv if arg.endswith('.v')]
+    command, vfiles = prepare_command(sys.argv[1:])
 
     if len(vfiles) == 0:
         # We are called for some other reason.  Just call coqc and exit.
-        sys.exit(coqc()[0])
+        os.execvp(command[0], command)
     elif len(vfiles) > 1:
         print('!!! Called with more than one vfile???', file=sys.stderr)
         sys.exit(coqc()[0])
