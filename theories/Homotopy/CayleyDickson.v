@@ -230,12 +230,9 @@ Section SpheroidHSpace.
   Definition cd_diamond_map_l (a c : X) := fun x => a * (c * -x).
   Definition cd_diamond_map_r (b c : X) := fun y => c * (y * b).
 
-  (** This is [functor_join (cd_diamond_map_l a c) (cd_diamond_map_r b c)], expressed via [Join_rec] to avoid an unused universe parameter. *)
+  (** The join map induced by the two scalar boundary maps. *)
   Definition cd_diamond_map (a b c : X) : Join X X -> Join X X
-    := Join_rec (joinl o cd_diamond_map_l a c)
-         (joinr o cd_diamond_map_r b c)
-         (fun x y => jglue (cd_diamond_map_l a c x)
-           (cd_diamond_map_r b c y)).
+    := functor_join (cd_diamond_map_l a c) (cd_diamond_map_r b c).
 
   Definition cd_diamond_parameter (a b c d : X)
     := conj c * conj a * d * conj b.

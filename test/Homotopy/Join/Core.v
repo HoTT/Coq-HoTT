@@ -3,6 +3,17 @@ From HoTT Require Import Homotopy.Join.Core.
 
 Local Open Scope path_scope.
 
+(** The generic recursor does not constrain the target to the source join universe. *)
+Section RecursorUniverses.
+  Universes a b p s.
+  Constraint a <= s.
+  Constraint b <= s.
+  Context {A : Type@{a}} {B : Type@{b}} {P : Type@{p}}.
+
+  Succeed Definition test@{|} (f : JoinRecData A B P)
+    : Join@{a b s} A B -> P := join_rec@{a b p s} f.
+End RecursorUniverses.
+
 Section ZigzagNaturality.
   Universe u v w.
   Constraint u <= w.

@@ -96,9 +96,10 @@ Section Spheroid.
       = ap joinl (right_inverse (-b)) := idpath.
 
   Example doubled_negate_involutive
-    : Involutive (@cd_negate X _) := _.
+    : Involutive (@cd_negate@{u} X _) := involutive_cd_negate@{u}.
   Example doubled_conjugate_involutive
-    : Involutive (@cd_conjugate X _ _) := _.
+    : Involutive (@cd_conjugate@{u} X _ _)
+    := involutive_cd_conjugate@{u}.
   Example doubled_swapop
     : SwapOp (@cd_negate X _) (@cd_conjugate X _ _) := _.
   Example doubled_conjugate_unit

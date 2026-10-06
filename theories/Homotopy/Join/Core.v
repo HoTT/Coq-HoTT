@@ -185,9 +185,9 @@ Record JoinRecData {A B P : Type} := {
 Arguments JoinRecData : clear implicits.
 Arguments Build_JoinRecData {A B P}%_type_scope (jl jr jg)%_function_scope.
 
-(** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)
+(** We use the name [join_rec] for the version of [Join_rec] defined on this data. Its ordinary function type keeps the source and target universes independent; using [$->] here would introduce a common ambient universe for both types. *)
 Definition join_rec {A B P : Type} (f : JoinRecData A B P)
-  : Join A B $-> P
+  : Join A B -> P
   := Join_rec (jl f) (jr f) (jg f).
 
 Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : B)
@@ -418,15 +418,17 @@ Local Definition join_rec_natequiv_check (A B P : Type)
   := idpath.
 
 (** It follows that [join_rec A B P] is a 0-functor. *)
-Instance is0functor_join_rec (A B P : Type) : Is0Functor (@join_rec A B P).
+Instance is0functor_join_rec (A B P : Type)
+  : Is0Functor (B:=Join A B $-> P) (@join_rec A B P).
 Proof.
   change (Is0Functor (equiv_fun_0gpd (join_rec_natequiv A B P))).
   exact _.
 Defined.
 
-(** And that [join_rec A B] is natural.   The [$==] in the statement is just [==], but we use WildCat notation so that we can invert and compose these with WildCat notation. *)
+(** And that [join_rec A B] is natural. The [GpdHom] relation here is just [==], but making the WildCat structure explicit lets us invert and compose these with WildCat notation. *)
 Definition join_rec_nat (A B : Type) {P Q : Type} (g : P -> Q) (f : JoinRecData A B P)
-  : join_rec (joinrecdata_fun g f) $== g o join_rec f.
+  : GpdHom (A:=Join A B $-> Q)
+      (join_rec (joinrecdata_fun g f)) (g o join_rec f).
 Proof.
   exact (isnat (join_rec_natequiv A B) g f).
 Defined.
@@ -439,7 +441,7 @@ Definition Join_rec_homotopic (A B : Type) {P : Type}
   (hr : forall b, fr b = fr' b)
   (hg : forall a b, fg a b @ hr b = hl a @ fg' a b)
   : Join_rec fl fr fg == Join_rec fl' fr' fg'
-  := fmap join_rec (Build_JoinRecPath _ _ _
+  := fmap (B:=Join A B $-> P) join_rec (Build_JoinRecPath _ _ _
       {| jl:=fl; jr:=fr; jg:=fg |} {| jl:=fl'; jr:=fr'; jg:=fg' |} hl hr hg).
 
 Definition Join_rec_nat (A B : Type) {P Q : Type} (g : P -> Q)
@@ -614,7 +616,7 @@ Section FunctorJoin.
     : JoinRecData A B (Join C D)
     := {| jl := joinl o f; jr := joinr o g; jg := fun a b => jglue (f a) (g b); |}.
 
-  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
+  Definition functor_join {A B C D : Type} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D
     := join_rec (functor_join_recdata f g).
 
@@ -806,7 +808,7 @@ Section JoinSym.
   Proof.
     symmetry.
     (** Both sides are [join_rec] applied to [JoinRecData]: *)
-    tapply (fmap join_rec).
+    tapply (fmap (B:=Join A B $-> Join B A) join_rec).
     bundle_joinrecpath; intros; cbn.
     refine (ap inverse _).
     apply ap_idmap.
