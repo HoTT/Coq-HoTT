@@ -699,6 +699,7 @@ Inductive nat : Type0 :=
 Scheme nat_ind := Induction for nat Sort Type.
 Scheme nat_rect := Induction for nat Sort Type.
 Scheme nat_rec := Induction for nat Sort Type.
+Register Scheme nat_rec as rec_dep for nat.
 
 Declare Scope nat_scope.
 Delimit Scope nat_scope with nat.
@@ -712,6 +713,8 @@ Register Empty as core.False.type.
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
 Definition Empty_rect := Empty_ind.
+Register Scheme Empty_ind as rec_dep for Empty.
+Register Scheme Empty_rec as rec_nodep for Empty.
 
 Definition not (A : Type) := A -> Empty.
 Notation "~ x" := (not x) : type_scope.

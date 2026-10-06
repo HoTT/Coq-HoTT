@@ -134,6 +134,7 @@ Arguments leq_succ_r {n m} _.
 Scheme leq_ind := Induction for leq Sort Type.
 Scheme leq_rect := Induction for leq Sort Type.
 Scheme leq_rec := Induction for leq Sort Type.
+Register Scheme leq_rec as rec_dep for leq.
 
 Infix "<=" := leq : nat_scope.
 
