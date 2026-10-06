@@ -614,14 +614,15 @@ Section FunctorJoin.
     : JoinRecData A B (Join C D)
     := {| jl := joinl o f; jr := joinr o g; jg := fun a b => jglue (f a) (g b); |}.
 
-  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
+  (** The direct recursor avoids the extra universe constraints of the 0-groupoid notation in [join_rec]. It is definitionally the same map as [join_rec (functor_join_recdata f g)]. *)
+  Definition functor_join {A B C D : Type} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D
-    := join_rec (functor_join_recdata f g).
+    := Join_rec (joinl o f) (joinr o g) (fun a b => jglue (f a) (g b)).
 
   Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
     (a : A) (b : B)
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
-    := join_rec_beta_jg _ a b.
+    := Join_rec_beta_jglue _ _ _ a b.
 
   Definition functor_join_beta_zigzag {A B C D : Type} (f : A -> C) (g : B -> D)
     (a a' : A) (b : B)
