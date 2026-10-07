@@ -13,9 +13,9 @@ Require Import Equiv.BiInv.
 Require Import Modalities.Identity Modalities.Descent.
 Require Import Modalities.ReflectiveSubuniverse.
 
-(** * Classification of short exact sequences
+(** * Classification of short exact sequences *)
 
-Short exact sequences [A -> E -> B] of abelian groups are classified by pointed maps [K(B,2) ->* K(A,3)] (Christensen and Flaten, "Ext groups in homotopy type theory", Theorem 2.2.2). *)
+(** Short exact sequences [A -> E -> B] of abelian groups are classified by pointed maps [K(B,2) ->* K(A,3)] (Christensen and Flaten, "Ext groups in homotopy type theory", Theorem 2.2.2). *)
 
 Local Open Scope pointed_scope.
 
@@ -58,23 +58,23 @@ Definition abses_classifying_map `{Univalence} {B A : AbGroup@{u}}
   := connecting_map (fmap (K' 3) (inclusion E)) (fmap (K' 3) (projection E))
      o* pequiv_loops_em_em B 2.
 
-(** ** The short exact sequence of a pointed map
+(** ** The short exact sequence of a pointed map *)
 
-Conversely, a pointed map [f : K(B,2) ->* K(A,3)] yields a short exact sequence [A -> Pi 2 (pfiber f) -> B], by rotating the fiber sequence of [f] and taking homotopy groups. *)
+(** Conversely, a pointed map [f : K(B,2) ->* K(A,3)] yields a short exact sequence [A -> Pi 2 (pfiber f) -> B], by rotating the fiber sequence of [f] and taking homotopy groups.  We prove this with [2] replaced by [n.+2] for any [n : nat]. *)
 
 Section AbSESPfiber.
   Context `{Univalence} {B A : AbGroup@{u}} {n : nat}
     (f : K(B, n.+2) ->* K(A, n.+3)).
 
-  (** The inclusion, through the rotated fiber sequence [loops K(A,n+3) -> pfiber f -> K(B,n+2)] and the identification of [A] with [Pi n.+2 (loops K(A, n.+3))]. *)
+  (** The inclusion of the short exact sequence is given by the composite of the identification of [A] with [Pi n.+2 (loops K(A, n.+3))] and [Pi n.+2] applied to the connecting map [loops K(A,n+3) -> pfiber f] of the fiber sequence. *)
   Definition abses_pfiber_incl : A $-> abgroup_pi n (pfiber f)
-    := grp_homo_compose (fmap (Pi n.+2) (connecting_map (pfib f) f))
-         (equiv_g_pi_n_loops_em A n.+1).
+    := fmap (Pi n.+2) (connecting_map (pfib f) f)
+        $o equiv_g_pi_n_loops_em A n.+1.
 
-  (** The projection, induced by the fiber inclusion of [f]. *)
+  (** The projection is similarly induced by the fiber inclusion of [f]. *)
   Definition abses_pfiber_proj : abgroup_pi n (pfiber f) $-> B
-    := grp_homo_compose (grp_iso_inverse (equiv_g_pi_n_em B n.+1))
-         (fmap (Pi n.+2) (pfib f)).
+    := grp_iso_inverse (equiv_g_pi_n_em B n.+1)
+        $o fmap (Pi n.+2) (pfib f).
 
   (** The two homotopy groups neighbouring the sequence vanish: [Pi n.+2 K(A, n.+3)] lies below the connectivity of [K(A, n.+3)], and [Pi n.+3 K(B, n.+2)] lies above the truncation level of [K(B, n.+2)]. *)
   Local Instance contr_pi_em_below : Contr (Pi n.+2 K(A, n.+3))
@@ -123,7 +123,7 @@ End AbSESPfiber.
 
 (** ** The classifying map of the sequence of a delooped map *)
 
-(** For [psi : K(B,3) ->* K(A,4)], the classifying map of [abses_pfiber psi] is [fmap loops psi], twisted by negation on [K(B,2)].  Since every map [K(B,2) ->* K(A,3)] can be delooped to such a [psi], this gives a section of [abses_classifying_map] in [abses_classifying_section] below. *)
+(** Rather than proving that the other composite is the identity, we will define an a priori different section of [abses_classifying_map].  To do this, we first show that for [psi : K(B,3) ->* K(A,4)], the classifying map of [abses_pfiber psi] is [fmap loops psi], twisted by negation on [K(B,2)].  Since every map [K(B,2) ->* K(A,3)] can be delooped to such a [psi], this will give a section of [abses_classifying_map] in [abses_classifying_section] below. *)
 
 Section PfiberDeloop.
   Context `{Univalence} {B A : AbGroup@{u}} (psi : K(B, 3) ->* K(A, 4)).
@@ -239,9 +239,9 @@ Section PfiberDeloop.
 
 End PfiberDeloop.
 
-(** ** The first round trip
+(** ** The first round trip *)
 
-The short exact sequence extracted from the classifying map of [E] is [E] itself. *)
+(** The short exact sequence extracted from the classifying map of [E] is [E] itself. *)
 
 Section ClassifyingRoundTrip.
   Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A).
@@ -337,9 +337,9 @@ Section ClassifyingRoundTrip.
 
 End ClassifyingRoundTrip.
 
-(** ** The classification theorem
+(** ** The classification theorem *)
 
-[abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
+(** [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
 
 Section Classification.
   Context `{Univalence} {B A : AbGroup@{u}}.
@@ -388,9 +388,9 @@ Section Classification.
 
 End Classification.
 
-(** ** Naturality of the classifying map
+(** ** Naturality of the classifying map *)
 
-A morphism of short exact sequences induces a commuting square relating the two classifying maps. *)
+(** A morphism of short exact sequences induces a commuting square relating the two classifying maps. *)
 
 Section Naturality.
   Context `{Univalence} {B A Y X : AbGroup@{u}}
