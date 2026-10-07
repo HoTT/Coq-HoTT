@@ -121,6 +121,104 @@ Section AbSESPfiber.
 
 End AbSESPfiber.
 
+(** ** The first round trip *)
+
+(** The short exact sequence extracted from the classifying map of [E] is [E] itself. *)
+
+Section ClassifyingRoundTrip.
+  Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A).
+
+  (** The classifying map equals the connecting map after the loop identification, as a square. *)
+  Local Definition square_classifying_map
+    : pequiv_pmap_idmap o* abses_classifying_map E
+      ==* connecting_map (fmap (K' 3) (inclusion E))
+            (fmap (K' 3) (projection E))
+          o* pequiv_loops_em_em B 2
+    := pmap_postcompose_idmap _.
+
+  (** The fiber of the classifying map is [loops K(E,3)]: it is the fiber of the connecting map, which [pfib_connecting_map] identifies with the loop space of the total space. *)
+  Local Definition pequiv_pfiber_classifying_map
+    : pfiber (abses_classifying_map E) <~>* loops K(E, 3)
+    := (loops_inv _
+        o*E (pfiber2_loops (fmap (K' 3) (inclusion E))
+        o*E pequiv_pfiber_connecting_map (fmap (K' 3) (inclusion E))
+              (fmap (K' 3) (projection E))))
+       o*E pequiv_pfiber (pequiv_loops_em_em B 2) pequiv_pmap_idmap
+             square_classifying_map.
+
+  (** Through this identification, the fiber inclusion of the classifying map is [loops] of the projection. *)
+  Local Definition square_pfib_classifying_map
+    : pequiv_loops_em_em B 2 o* pfib (abses_classifying_map E)
+      ==* fmap loops (fmap (K' 3) (projection E))
+          o* pequiv_pfiber_classifying_map.
+  Proof.
+    lhs' napply (square_pequiv_pfiber _ _ square_classifying_map).
+    lhs' napply (pmap_prewhisker _ (pfib_connecting_map _ _)).
+    napply pmap_compose_assoc.
+  Qed.
+
+  (** Through the same identification, the connecting map of the fiber sequence of the classifying map is [loops] of the inclusion. *)
+  Local Definition connecting_map_classifying_map
+    : pequiv_pfiber_classifying_map
+      o* connecting_map (pfib (abses_classifying_map E))
+           (abses_classifying_map E)
+      ==* fmap loops (fmap (K' 3) (inclusion E)).
+  Proof.
+    lhs' napply pmap_compose_assoc.
+    lhs' napply (pmap_postwhisker _
+      (connecting_map_natural_idmap square_classifying_map)).
+    napply connecting_map_pfib_connecting_map.
+  Qed.
+
+  (** The middle isomorphism of the round trip. *)
+  Local Definition grp_iso_pi_pfiber_classifying_map
+    : GroupIsomorphism (abgroup_pi 0 (pfiber (abses_classifying_map E))) E
+    := grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_loops_em E 1))
+         (groupiso_pi_functor 1 pequiv_pfiber_classifying_map).
+
+  (** It commutes with the inclusions. *)
+  Local Definition grp_iso_pi_pfiber_classifying_map_inclusion (a : A)
+    : grp_iso_pi_pfiber_classifying_map
+        (abses_pfiber_incl (abses_classifying_map E) a)
+      = inclusion E a.
+  Proof.
+    apply moveR_equiv_V.
+    lhs_V exact (fmap_comp (Pi 2)
+      (connecting_map (pfib (abses_classifying_map E))
+        (abses_classifying_map E))
+      pequiv_pfiber_classifying_map (equiv_g_pi_n_loops_em A 1 a)).
+    lhs tapply (fmap2 (Pi 2) connecting_map_classifying_map).
+    napply pi_loops_em_fmap.
+  Qed.
+
+  (** It commutes with the projections. *)
+  Local Definition grp_iso_pi_pfiber_classifying_map_projection
+    (x : Pi 2 (pfiber (abses_classifying_map E)))
+    : abses_pfiber_proj (abses_classifying_map E) x
+      = projection E (grp_iso_pi_pfiber_classifying_map x).
+  Proof.
+    apply moveR_equiv_V.
+    apply (equiv_inj (groupiso_pi_functor 1 (pequiv_loops_em_em B 2))).
+    (* The left side, through the pointed square. *)
+    lhs_V tapply (fmap_comp (Pi 2)).
+    lhs tapply (fmap2 (Pi 2) square_pfib_classifying_map).
+    lhs tapply (fmap_comp (Pi 2)).
+    (* The right side, by naturality of [equiv_g_pi_n_loops_em]. *)
+    rhs_V napply (pi_loops_em_fmap (projection E) 1).
+    tapply (ap (fmap (Pi 2) (fmap loops (fmap (K' 3) (projection E))))).
+    symmetry; napply eisretr.
+  Qed.
+
+  (** The first round trip: the short exact sequence extracted from the classifying map of [E] is [E]. *)
+  Definition abses_pfiber_classifying
+    : abses_pfiber (abses_classifying_map E) = E
+    := path_abses (E := abses_pfiber (abses_classifying_map E)) (F := E)
+         grp_iso_pi_pfiber_classifying_map
+         grp_iso_pi_pfiber_classifying_map_inclusion
+         grp_iso_pi_pfiber_classifying_map_projection.
+
+End ClassifyingRoundTrip.
+
 (** ** The classifying map of the sequence of a delooped map *)
 
 (** Rather than proving that the other composite is the identity, we will define an a priori different section of [abses_classifying_map].  To do this, we first show that for [psi : K(B,3) ->* K(A,4)], the classifying map of [abses_pfiber psi] is [fmap loops psi], twisted by negation on [K(B,2)].  Since every map [K(B,2) ->* K(A,3)] can be delooped to such a [psi], this will give a section of [abses_classifying_map] in [abses_classifying_section] below. *)
@@ -238,104 +336,6 @@ Section PfiberDeloop.
   Qed.
 
 End PfiberDeloop.
-
-(** ** The first round trip *)
-
-(** The short exact sequence extracted from the classifying map of [E] is [E] itself. *)
-
-Section ClassifyingRoundTrip.
-  Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A).
-
-  (** The classifying map equals the connecting map after the loop identification, as a square. *)
-  Local Definition square_classifying_map
-    : pequiv_pmap_idmap o* abses_classifying_map E
-      ==* connecting_map (fmap (K' 3) (inclusion E))
-            (fmap (K' 3) (projection E))
-          o* pequiv_loops_em_em B 2
-    := pmap_postcompose_idmap _.
-
-  (** The fiber of the classifying map is [loops K(E,3)]: it is the fiber of the connecting map, which [pfib_connecting_map] identifies with the loop space of the total space. *)
-  Local Definition pequiv_pfiber_classifying_map
-    : pfiber (abses_classifying_map E) <~>* loops K(E, 3)
-    := (loops_inv _
-        o*E (pfiber2_loops (fmap (K' 3) (inclusion E))
-        o*E pequiv_pfiber_connecting_map (fmap (K' 3) (inclusion E))
-              (fmap (K' 3) (projection E))))
-       o*E pequiv_pfiber (pequiv_loops_em_em B 2) pequiv_pmap_idmap
-             square_classifying_map.
-
-  (** Through this identification, the fiber inclusion of the classifying map is [loops] of the projection. *)
-  Local Definition square_pfib_classifying_map
-    : pequiv_loops_em_em B 2 o* pfib (abses_classifying_map E)
-      ==* fmap loops (fmap (K' 3) (projection E))
-          o* pequiv_pfiber_classifying_map.
-  Proof.
-    lhs' napply (square_pequiv_pfiber _ _ square_classifying_map).
-    lhs' napply (pmap_prewhisker _ (pfib_connecting_map _ _)).
-    napply pmap_compose_assoc.
-  Qed.
-
-  (** Through the same identification, the connecting map of the fiber sequence of the classifying map is [loops] of the inclusion. *)
-  Local Definition connecting_map_classifying_map
-    : pequiv_pfiber_classifying_map
-      o* connecting_map (pfib (abses_classifying_map E))
-           (abses_classifying_map E)
-      ==* fmap loops (fmap (K' 3) (inclusion E)).
-  Proof.
-    lhs' napply pmap_compose_assoc.
-    lhs' napply (pmap_postwhisker _
-      (connecting_map_natural_idmap square_classifying_map)).
-    napply connecting_map_pfib_connecting_map.
-  Qed.
-
-  (** The middle isomorphism of the round trip. *)
-  Local Definition grp_iso_pi_pfiber_classifying_map
-    : GroupIsomorphism (abgroup_pi 0 (pfiber (abses_classifying_map E))) E
-    := grp_iso_compose (grp_iso_inverse (equiv_g_pi_n_loops_em E 1))
-         (groupiso_pi_functor 1 pequiv_pfiber_classifying_map).
-
-  (** It commutes with the inclusions. *)
-  Local Definition grp_iso_pi_pfiber_classifying_map_inclusion (a : A)
-    : grp_iso_pi_pfiber_classifying_map
-        (abses_pfiber_incl (abses_classifying_map E) a)
-      = inclusion E a.
-  Proof.
-    apply moveR_equiv_V.
-    lhs_V exact (fmap_comp (Pi 2)
-      (connecting_map (pfib (abses_classifying_map E))
-        (abses_classifying_map E))
-      pequiv_pfiber_classifying_map (equiv_g_pi_n_loops_em A 1 a)).
-    lhs tapply (fmap2 (Pi 2) connecting_map_classifying_map).
-    napply pi_loops_em_fmap.
-  Qed.
-
-  (** It commutes with the projections. *)
-  Local Definition grp_iso_pi_pfiber_classifying_map_projection
-    (x : Pi 2 (pfiber (abses_classifying_map E)))
-    : abses_pfiber_proj (abses_classifying_map E) x
-      = projection E (grp_iso_pi_pfiber_classifying_map x).
-  Proof.
-    apply moveR_equiv_V.
-    apply (equiv_inj (groupiso_pi_functor 1 (pequiv_loops_em_em B 2))).
-    (* The left side, through the pointed square. *)
-    lhs_V tapply (fmap_comp (Pi 2)).
-    lhs tapply (fmap2 (Pi 2) square_pfib_classifying_map).
-    lhs tapply (fmap_comp (Pi 2)).
-    (* The right side, by naturality of [equiv_g_pi_n_loops_em]. *)
-    rhs_V napply (pi_loops_em_fmap (projection E) 1).
-    tapply (ap (fmap (Pi 2) (fmap loops (fmap (K' 3) (projection E))))).
-    symmetry; napply eisretr.
-  Qed.
-
-  (** The first round trip: the short exact sequence extracted from the classifying map of [E] is [E]. *)
-  Definition abses_pfiber_classifying
-    : abses_pfiber (abses_classifying_map E) = E
-    := path_abses (E := abses_pfiber (abses_classifying_map E)) (F := E)
-         grp_iso_pi_pfiber_classifying_map
-         grp_iso_pi_pfiber_classifying_map_inclusion
-         grp_iso_pi_pfiber_classifying_map_projection.
-
-End ClassifyingRoundTrip.
 
 (** ** The classification theorem *)
 
