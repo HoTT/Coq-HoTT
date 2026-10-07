@@ -19,13 +19,10 @@ Short exact sequences [A -> E -> B] of abelian groups are classified by pointed 
 
 Local Open Scope pointed_scope.
 
+(** ** Applying [(K-, n.+1)] to a short exact sequence of an abelian groups gives a fiber sequence *)
+
 Section EMFiberSequence.
   Context `{Univalence} {B A : AbGroup@{u}} (E : AbSES B A) (n : nat).
-
-  (** [K(-, m)] is a pointed functor, so it takes the complex underlying a short exact sequence to a complex. We use an independent argument [m] since we use it for [m:=n.+1] below. *)
-  Definition iscomplex_em_abses (m : nat)
-    : IsComplex (fmap (K' m) (inclusion E)) (fmap (K' m) (projection E))
-    := fmap_iscomplex (K' m) _ _ (iscomplex_abses E).
 
   (** The identifications [equiv_g_pi_n_em] carry [Pi n.+1] of the sequence [K(-, n.+1)] applied to [E] back to [E] itself, so that sequence is exact. *)
   Local Definition isexact_pi_em_abses
@@ -46,8 +43,9 @@ Section EMFiberSequence.
   #[export] Instance isexact_em_abses
     : IsExact purely (fmap (K' n.+1) (inclusion E))
         (fmap (K' n.+1) (projection E))
-    := isexact_purely_isexact_pi n (iscomplex_em_abses n.+1)
-         isexact_pi_em_abses.
+    := isexact_purely_isexact_pi n
+        (fmap_iscomplex (K' n.+1) (iscomplex_abses E))
+        isexact_pi_em_abses.
 
 End EMFiberSequence.
 
