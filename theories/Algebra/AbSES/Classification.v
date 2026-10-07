@@ -121,6 +121,10 @@ Section AbSESPfiber.
 
 End AbSESPfiber.
 
+(** ** The classifying map of the sequence of a delooped map *)
+
+(** For [psi : K(B,3) ->* K(A,4)], the classifying map of [abses_pfiber psi] is [fmap loops psi], twisted by negation on [K(B,2)].  Since every map [K(B,2) ->* K(A,3)] can be delooped to such a [psi], this gives a section of [abses_classifying_map] in [abses_classifying_section] below. *)
+
 Section PfiberDeloop.
   Context `{Univalence} {B A : AbGroup@{u}} (psi : K(B, 3) ->* K(A, 4)).
 
@@ -215,13 +219,13 @@ Section PfiberDeloop.
       ==* loops_inv K(B, 3) o* pequiv_loops_em_em B 2
     := moveR_pequiv_Mf _ _ _ (reflexivity _).
 
-  (** The classifying map of the extracted sequence is the delooping equivalence applied to [psi], twisted by [pequiv_neg_em]. *)
-  Local Definition abses_classifying_pfiber_deloop
+  (** The classifying map of the extracted sequence is [equiv_loops_em_pmap] applied to [psi], twisted by [pequiv_neg_em]. *)
+  Local Definition abses_classifying_pfiber_loop
     : abses_classifying_map (abses_pfiber psi)
-      ==* equiv_deloop_em_pmap B A 0 psi o* pequiv_neg_em.
+      ==* equiv_loops_em_pmap B A 0 psi o* pequiv_neg_em.
   Proof.
     rhs' napply (pmap_prewhisker pequiv_neg_em
-                   (equiv_deloop_em_pmap_unfold B A 0 psi)
+                   (equiv_loops_em_pmap_unfold B A 0 psi)
                  @* pmap_compose_assoc _ _ _
                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     lhs' napply (pmap_prewhisker _
@@ -343,14 +347,14 @@ Section Classification.
   (** A section of the classifying map. *)
   Local Definition abses_classifying_section (f : K(B, 2) ->* K(A, 3))
     : abses_classifying_map
-        (abses_pfiber ((equiv_deloop_em_pmap B A 0)^-1
+        (abses_pfiber ((equiv_loops_em_pmap B A 0)^-1
            (f o* pequiv_neg_em^-1*)))
       = f.
   Proof.
     apply path_pforall.
-    lhs' napply abses_classifying_pfiber_deloop.
+    lhs' napply abses_classifying_pfiber_loop.
     lhs' napply (pmap_prewhisker _
-      (phomotopy_path (eisretr (equiv_deloop_em_pmap B A 0) _))).
+      (phomotopy_path (eisretr (equiv_loops_em_pmap B A 0) _))).
     lhs' napply pmap_compose_assoc.
     lhs' napply (pmap_postwhisker _ (peissect pequiv_neg_em)).
     apply pmap_precompose_idmap.

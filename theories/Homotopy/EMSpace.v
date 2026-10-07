@@ -494,20 +494,20 @@ Section Deloop.
   Qed.
 
   (** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)].  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7; as there, it follows from the truncated suspension-loops adjunction, with the Freudenthal input carried by [pequiv_loops_em_em]. *)
-  Definition equiv_deloop_em_pmap
+  Definition equiv_loops_em_pmap
     : (K(B, n.+3) ->* K(A, n.+4)) <~> (K(B, n.+2) ->* K(A, n.+3))
     := pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
        oE loop_susp_adjoint K(B, n.+2) K(A, n.+4)
        oE pequiv_ptr_rec
        oE pequiv_pequiv_precompose pequiv_ptr_psusp_em.
 
-  (** [equiv_deloop_em_pmap] as looping conjugated by the loop identifications. *)
-  Definition equiv_deloop_em_pmap_unfold (psi : K(B, n.+3) ->* K(A, n.+4))
-    : equiv_deloop_em_pmap psi
+  (** [equiv_loops_em_pmap] as [fmap loops] conjugated by the loop identifications. *)
+  Definition equiv_loops_em_pmap_unfold (psi : K(B, n.+3) ->* K(A, n.+4))
+    : equiv_loops_em_pmap psi
       ==* (pequiv_loops_em_em A n.+3)^-1*
           o* (fmap loops psi o* pequiv_loops_em_em B n.+2).
   Proof.
-    change (equiv_deloop_em_pmap psi) with
+    change (equiv_loops_em_pmap psi) with
       ((pequiv_loops_em_em A n.+3)^-1*
          o* (fmap loops (psi o* pequiv_ptr_psusp_em o* ptr)
                o* loop_susp_unit K(B, n.+2))).
