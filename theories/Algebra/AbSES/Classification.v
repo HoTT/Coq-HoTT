@@ -322,9 +322,7 @@ Section PfiberDeloop.
     : abses_classifying_map (abses_pfiber psi)
       ==* equiv_loops_em_pmap B A 0 psi o* pequiv_neg_em.
   Proof.
-    rhs' napply (pmap_prewhisker pequiv_neg_em
-                   (equiv_loops_em_pmap_unfold B A 0 psi)
-                 @* pmap_compose_assoc _ _ _
+    rhs' napply (pmap_compose_assoc _ _ _
                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     lhs' napply (pmap_prewhisker _
       (moveL_pequiv_Vf _ _ _ connecting_map_em_loops)).

@@ -10,8 +10,8 @@ Import ClassifyingSpaceNotation.
 Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.HomotopyGroup Homotopy.ExactSequence.
 Require Import Homotopy.Hopf.
-Require Import Modalities.Identity Modalities.Descent.
-Require Import Truncations.Core Truncations.Connectedness Truncations.SeparatedTrunc.
+Require Import Modalities.Identity.
+Require Import Truncations.Core Truncations.Connectedness.
 
 (** * Eilenberg-Mac Lane spaces *)
 
@@ -436,88 +436,16 @@ Section EilenbergMacLane.
 
 End EilenbergMacLane.
 
-(** ** Delooping Eilenberg-Mac Lane mapping types *)
+(** ** Delooping maps between Eilenberg-Mac Lane spaces *)
 
-Section Deloop.
-  Context `{Univalence} (B A : AbGroup@{u}) (n : nat).
-
-  (** [Pi n.+4 (psusp K(B,n.+2))] is trivial. *)
-  Local Instance contr_pi_psusp_em : Contr (Pi n.+4 (psusp K(B, n.+2))).
-  Proof.
-    nrefine (contr_equiv' (Pi n.+3 (loops (psusp K(B, n.+2)))) _).
-    1: exact (groupiso_pi_loops n.+2 (psusp K(B, n.+2)))^-1%equiv.
-    (* Since [Pi n.+3] is a set, it's enough to show it's 0-connected. *)
-    napply (contr_trunc_conn 0); only 1: exact _.
-    (* And for that, it's enough to show it's the target of a (-1)-connected map from a 0-connected type. *)
-    pose (fu := fmap (pPi n.+3) (loop_susp_unit K(B, n.+2))).
-    napply (OO_isconnected_from_conn_map 0 (Tr (-1)) fu).
-    1, 2: exact _.
-    - napply isconnected_contr.
-      rapply contr_pi_istrunc.
-    - apply (issurj_pi_connmap n.+2).
-      napply (conn_map_O_leq _ (Tr (n +2+ n))).
-      1: exact (O_leq_Tr_leq (trunc_index_leq_add_nat n n)).
-      exact (conn_map_loop_susp_unit n K(B, n.+2)).
-  Defined.
-
-  (** [pTr n.+4 (psusp K(B,n.+2))] is [n.+3]-truncated. *)
-  Local Instance istrunc_ptr_psusp_em
-    : IsTrunc n.+3 (pTr n.+4 (psusp K(B, n.+2))).
-  Proof.
-    napply (istrunc_contr_pi n.+3).
-    1,2: exact _.
-    exact (contr_equiv' _ (grp_iso_pi_Tr n.+3 (psusp K(B, n.+2)))).
-  Defined.
-
-  (** [K(B, n.+3)] is the [n.+3]-truncation of [pTr n.+4 (psusp K(B, n.+2))]. *)
-  Local Definition pequiv_ptr_ptr_psusp_em
-    : K(B, n.+3) <~>* pTr n.+3 (pTr n.+4 (psusp K(B, n.+2))).
-  Proof.
-    snapply Build_pEquiv'.
-    - rapply equiv_O_functor_to_O_O_leq.
-    - reflexivity.
-  Defined.
-
-  (** The canonical equivalence between the [n.+4]- and [n.+3]-truncations. *)
-  Local Definition pequiv_ptr_psusp_em
-    : pTr n.+4 (psusp K(B, n.+2)) <~>* K(B, n.+3)
-    := pequiv_ptr_ptr_psusp_em^-1* o*E pequiv_ptr.
-
-  (** [pequiv_ptr_psusp_em] commutes with the truncation unit [ptr]. *)
-  Local Definition tau_ptr_psusp_em
-    : pequiv_ptr_psusp_em o* ptr ==* ptr.
-  Proof.
-    unfold pequiv_ptr_psusp_em.
-    lhs' napply pmap_compose_assoc.
-    rapply (cate_moveR_Ve (H0:=hasequivs_ptype)).
-    apply ptr_natural.
-  Qed.
-
-  (** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)].  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7; as there, it follows from the truncated suspension-loops adjunction, with the Freudenthal input carried by [pequiv_loops_em_em]. *)
-  Definition equiv_loops_em_pmap
-    : (K(B, n.+3) ->* K(A, n.+4)) <~> (K(B, n.+2) ->* K(A, n.+3))
-    := pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
-       oE loop_susp_adjoint K(B, n.+2) K(A, n.+4)
-       oE pequiv_ptr_rec
-       oE pequiv_pequiv_precompose pequiv_ptr_psusp_em.
-
-  (** [equiv_loops_em_pmap] as [fmap loops] conjugated by the loop identifications. *)
-  Definition equiv_loops_em_pmap_unfold (psi : K(B, n.+3) ->* K(A, n.+4))
-    : equiv_loops_em_pmap psi
-      ==* (pequiv_loops_em_em A n.+3)^-1*
-          o* (fmap loops psi o* pequiv_loops_em_em B n.+2).
-  Proof.
-    change (equiv_loops_em_pmap psi) with
-      ((pequiv_loops_em_em A n.+3)^-1*
-         o* (fmap loops (psi o* pequiv_ptr_psusp_em o* ptr)
-               o* loop_susp_unit K(B, n.+2))).
-    napply pmap_postwhisker.
-    rhs' napply (pmap_postwhisker _ (loops_em_em_ptr_unit B n.+1)).
-    rhs_V' napply pmap_compose_assoc.
-    refine (pmap_prewhisker _ (_ @* fmap_comp loops _ _)).
-    tapply (fmap2 loops).
-    exact (pmap_compose_assoc psi _ ptr
-           @* pmap_postwhisker psi tau_ptr_psusp_em).
-  Qed.
-
-End Deloop.
+(** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)], via [fmap loops] conjugated by the loop identifications.  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7. *)
+Definition equiv_loops_em_pmap `{Univalence} (B A : AbGroup@{u}) (n : nat)
+  : (K(B, n.+3) ->** K(A, n.+4)) <~>* (K(B, n.+2) ->** K(A, n.+3)).
+Proof.
+  nrefine (pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
+             o*E pequiv_pequiv_precompose (pequiv_loops_em_em B n.+2)
+               o*E pequiv_fmap_loops_pmap (n:=n.+1) _ _).
+  - exact (isconnected_em n.+2).
+  - exact (istrunc_leq (m:=n.+4) (n:=n.+1 +2+ n.+1)
+             (trunc_index_leq_add_nat n.+1 n)).
+Defined.
