@@ -48,6 +48,9 @@ Notation "x + y" := (sum x y) : type_scope.
 Arguments inl {A B} _ , [A] B _.
 Arguments inr {A B} _ , A [B] _.
 
+(** Allow [sum] types to be used with [if] syntax. *)
+#[export] Register sum as core.sumor.type.
+
 (* A notation for coproduct that's less overloaded than [+] *)
 Notation "x |_| y" := (sum x y) (only parsing) : type_scope.
 
