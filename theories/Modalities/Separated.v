@@ -217,12 +217,24 @@ Section JoinConstruction.
   Context {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
           (ls : forall (y1 y2 : Y),
               @sig@{j j} Type@{i} (fun (Z : Type@{i}) => Equiv@{i j} Z (y1 = y2))).
-  Definition jc_image@{} : Type@{i}. Admitted.
-  Definition jc_factor1@{} : X -> jc_image. Admitted.
-  Definition jc_factor2@{} : jc_image -> Y. Admitted.
-  Definition jc_factors@{} : jc_factor2 o jc_factor1 == f. Admitted.
-  #[export] Instance jc_factor1_issurj@{} : IsSurjection jc_factor1. Admitted.
-  #[export] Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
+  Definition jc_image@{} : Type@{i}.
+  Proof.
+  Admitted.
+  Definition jc_factor1@{} : X -> jc_image.
+  Proof.
+  Admitted.
+  Definition jc_factor2@{} : jc_image -> Y.
+  Proof.
+  Admitted.
+  Definition jc_factors@{} : jc_factor2 o jc_factor1 == f.
+  Proof.
+  Admitted.
+  #[export] Instance jc_factor1_issurj@{} : IsSurjection jc_factor1.
+  Proof.
+  Admitted.
+  #[export] Instance jc_factor2_isemb : IsEmbedding jc_factor2.
+  Proof.
+  Admitted.
 End JoinConstruction.
 
 (** We'd like to say that the universe of [O]-modal types is [O]-separated, i.e. belongs to [Sep O].  But since a given subuniverse like [Sep O] lives only on a single universe size, trying to say that in the naive way yields a universe inconsistency. *)

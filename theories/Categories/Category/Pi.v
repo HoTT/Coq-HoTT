@@ -15,6 +15,7 @@ Section pi.
   Variable P : A -> PreCategory.
 
   Definition pi : PreCategory.
+  Proof.
     refine (@Build_PreCategory
               (forall a : A, P a)
               (fun s d => forall a : A, morphism (P a) (s a) (d a))

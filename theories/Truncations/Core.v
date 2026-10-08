@@ -31,6 +31,7 @@ Module Export Trunc.
   (** Because [IsTrunc] is cumulative, we can use only one universe variable here. *)
   #[export] Instance istrunc_truncation@{i} (n : trunc_index) (A : Type@{i})
     : IsTrunc@{i} n (Trunc@{i} n A).
+  Proof.
   Admitted.
 
   Definition Trunc_ind {n A}

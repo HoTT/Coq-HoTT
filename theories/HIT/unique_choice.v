@@ -7,6 +7,7 @@ Definition hunique {X} (P:X->Type):=(hexists P) * (atmost1P P).
 
 Lemma atmost {X} {P : X -> Type}:
   (forall x, IsHProp (P x)) -> (atmost1P P) -> atmost1 (sig  P).
+Proof.
 intros H H0 [x p] [y q].
 specialize (H0 x y p q).
 induction H0.
@@ -25,6 +26,7 @@ Qed.
 Lemma unique_choice {X Y} (R:X->Y->Type) :
  (forall x y, IsHProp (R x y)) -> (forall x, (hunique (R x)))
    -> {f : X -> Y & forall x, (R x (f x))}.
+Proof.
 intros X0 X1.
 exists (fun x:X => (pr1 (iota _ (X0 x) (X1 x)))).
 intro x. exact (pr2 (iota _ (X0 x) (X1 x))).
