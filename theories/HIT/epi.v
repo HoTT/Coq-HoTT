@@ -151,7 +151,7 @@ Section isepi_issurj.
     apply Trunc_rec.
     pose (fib y := hexists (fun x : X => f x = y)).
     refine (Pushout_rec HProp fib (fun _ => Unit_hp) (fun x => _)).
-    apply path_hprop.
+    napply path_hprop.
     napply equiv_contr_unit.
     rapply contr_inhabited_hprop.
     exact (tr (x; idpath)).

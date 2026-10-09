@@ -62,18 +62,18 @@ Definition alg_inj_Type_sigma@{u v uv suv | u <= uv, v <= uv, uv < suv} `{Unival
   : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.
 Proof.
   snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
-  - exact (f <| j).
+  - exact (LeftKanFam@{u v uv uv uv uv uv} f j).
   - intros x.
-    rapply isext_leftkanfam.
+    rapply isext_leftkanfam@{u v uv uv uv uv uv suv}.
 Defined.
 
 Instance alg_inj_Type_forall@{u v uv suv | u <= uv, v <= uv, uv < suv} `{Univalence}
   : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.
 Proof.
   snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
-  - exact (f |> j).
-  - intros x. 
-    rapply isext_rightkanfam.
+  - exact (RightKanFam@{u v uv uv uv uv uv} f j).
+  - intros x.
+    rapply isext_rightkanfam@{u v uv uv uv uv uv suv}.
 Defined.
 
 (** ** Constructions with algebraically injective types *)
@@ -120,9 +120,10 @@ End UniverseStructure.
 
 (** Algebraically injective types are retracts of any type that they embed into. *)
 Definition retract_alg_inj_embedding@{v w vw | v <= vw, w <= vw}
-  (D : Type@{w}) {Y : Type@{v}} (j : D -> Y) (isem : IsEmbedding j)
+  (D : Type@{w}) {Y : Type@{v}} (j : D -> Y)
+  (isem : IsEmbedding@{w v vw} j)
   (Dai : IsAlgebraicInjectiveType@{w v w vw w vw} D)
-  : { r : Y -> D & r o j == idmap }
+  : sig@{vw w} (fun r : Y -> D => r o j == idmap)
   := (lift_ai _ idmap; is_ext_ai _ idmap).
 
 (** Any algebraically [u],[su]-injective type [X : Type@{u}], is a retract of [X -> Type@{u}]. *)
@@ -199,8 +200,13 @@ Section UniverseStructure.
     : IsAlgebraicInjectiveType@{u v w uv uw vw} D.
   Proof.
     snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.
-    - intros y. exact (center_af (fun x : Build_HProp (hfiber j y) => f x.1)).
-    - intros x. exact (contr_af _ (x; idpath (j x))).
+    - intros y.
+      exact (center_af@{uv w} (fun x : Build_HProp@{uv} (hfiber@{u v} j y)
+        => f x.1)).
+    - intros x.
+      exact (contr_af@{uv w}
+        (P := Build_HProp@{uv} (hfiber@{u v} j (j x)))
+        (fun z => f z.1) (x; idpath (j x))).
   Defined.
 
 End UniverseStructure.

@@ -68,20 +68,11 @@ Section GBM.
                    glue q0 @ (glue q1)^ = r } }
           <~> ap left s = r.
     Proof.
+      destruct s.
       refine (_ oE equiv_sigma_assoc' _ _).
-      refine (_ oE equiv_functor_sigma'
-                (Q := fun qt => glue qt.1 @ (glue q1)^ = r)
-                (equiv_functor_sigma_id
-                   (fun q0 : Q x0 y =>
-                      equiv_moveL_transport_V
-                        (fun x => Q x y) s q0 q1))
-                (fun qt => equiv_idmap)).
       refine (_ oE equiv_contr_sigma _); cbn.
-      rewrite (ap_transport s^ (fun x q => glue q) q1).
-      rewrite (transport_paths_FlFr s^ (glue q1)).
-      rewrite ap_V, inv_V, ap_const, concat_p1.
-      exact (equiv_concat_l (concat_pp_V _ _)^ _).
-      (** Although we proved this lemma with [rewrite], we make it transparent, not so that *we* can reason about it, but so that Coq can evaluate it. *)
+      exact (equiv_concat_l (concat_pV _)^ _).
+      (** We keep this transparent so that Coq can evaluate it below. *)
     Defined.
     (* But except in one place, we don't want it to try (otherwise things get really slow). *)
     Opaque frobnicate.
