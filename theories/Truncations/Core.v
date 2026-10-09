@@ -401,20 +401,20 @@ Definition Trunc_min n m X : Tr (trunc_index_min n m) X <~> Tr n (Tr m X).
 Proof.
   destruct (trunc_index_min_path n m) as [p|q].
   + assert (l := trunc_index_min_leq_right n m).
-    destruct p^; clear p.
+    destruct (inverse@{Set} p); clear p.
     snapply (Build_Equiv _ _ (Trunc_functor _ tr)).
     napply O_inverts_conn_map.
     rapply (conn_map_O_leq _ (Tr m)).
     rapply O_leq_Tr_leq.
   + assert (l := trunc_index_min_leq_left n m).
-    destruct q^; clear q.
+    destruct (inverse@{Set} q); clear q.
     srapply equiv_tr.
     srapply istrunc_leq.
 Defined.
 
 Definition Trunc_swap n m X : Tr n (Tr m X) <~> Tr m (Tr n X).
 Proof.
-  refine (Trunc_min m n _ oE equiv_transport (fun k => Tr k _) _ oE (Trunc_min n m _)^-1).
+  refine (Trunc_min m n _ oE equiv_transport@{Set _} (fun k => Tr k _) _ oE (Trunc_min n m _)^-1).
   apply trunc_index_min_swap.
 Defined.
 

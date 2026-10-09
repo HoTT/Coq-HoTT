@@ -1,7 +1,7 @@
 From HoTT Require Import Basics Types.
 Require Import SuccessorStructure.
 Require Import Spaces.Finite.Tactics.
-From HoTT.WildCat Require Import Core PointedCat Square Equiv.
+From HoTT.WildCat Require Import Core NatTrans PointedCat Square Equiv Universe.
 From HoTT.Pointed Require Import Core pMap pEquiv pFiber pTrunc Loops.
 Require Import Modalities.Identity Modalities.Descent.
 Require Import Truncations.
@@ -296,14 +296,13 @@ Definition equiv_cxfib {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y
   : F <~>* pfiber f
   := Build_pEquiv _ (isequiv_cxfib ex).
 
-Proposition equiv_cxfib_beta {F X Y : pType} {i : F ->* X} {f : X ->* Y}
+(** [equiv_cxfib] definitionally satisfies the homotopy [pfib _ o equiv_cxfib ex == i].  Therefore, it also satisfies the following variant. *)
+Proposition equiv_cxfib_beta {O : Modality} {F X Y : pType} {i : F ->* X} {f : X ->* Y}
   `{forall y y' : Y, In O (y = y')} `{MapIn O _ _ i} (ex : IsExact O i f)
-  : i o pequiv_inverse (equiv_cxfib ex) == pfib _.
+  : i o (equiv_cxfib ex)^-1 == pfib _.
 Proof.
-  rapply equiv_ind.
-  1: exact (isequiv_cxfib ex).
-  intro x.
-  exact (ap (fun g => i g) (eissect _ x)).
+  tapply (cate_moveR_eV (A:=Type) (equiv_cxfib ex)).
+  reflexivity.
 Defined.
 
 (** A purely exact sequence is [O]-exact for any modality [O]. *)
@@ -519,7 +518,17 @@ Proof.
   - reflexivity.
 Defined.
 
-(** TODO: The next two results are proved for the tautological fiber sequence.  It would be nice to extend them to any [FiberSeq] or equivalently any purely-exact sequence. *)
+(** It follows that the connecting map of the tautological fiber sequence is the inverse of [pfiber2_loops] followed by the fiber inclusion. *)
+Definition connecting_map_pfib {X Y : pType} (f : X ->* Y)
+  : connecting_map (pfib f) f ==* pfib (pfib f) o* (pfiber2_loops f)^-1*.
+Proof.
+  napply pmap_postwhisker.
+  tapply (cate_inv2 (A:=pType)).
+  exact (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut f)
+         @* pmap_precompose_idmap _).
+Defined.
+
+(** The next three results are proved for the tautological fiber sequence.  The first, [connecting_map_natural_functor], is extended to any purely exact sequence in [connecting_map_natural_isexact] below. *)
 
 (** The connecting map of the tautological fiber sequence is natural in arbitrary squares of pointed maps. *)
 Definition connecting_map_natural_functor {X Y X' Y' : pType}
@@ -528,7 +537,8 @@ Definition connecting_map_natural_functor {X Y X' Y' : pType}
   : functor_pfiber q o* connecting_map (pfib f') f'
     ==* connecting_map (pfib f) f o* fmap loops k.
 Proof.
-  unfold connecting_map, i_fiberseq, connect_fiberseq, ".1", ".2".
+  lhs' napply (pmap_postwhisker _ (connecting_map_pfib f')).
+  rhs' napply (pmap_prewhisker _ (connecting_map_pfib f)).
   lhs_V' napply pmap_compose_assoc.
   lhs' napply (pmap_prewhisker _
                  (square_functor_pfiber (square_functor_pfiber q))).
@@ -537,13 +547,7 @@ Proof.
   napply pmap_postwhisker.
   napply moveL_pequiv_Vf.
   lhs_V' napply pmap_compose_assoc.
-  rapply moveR_pequiv_fV.
-  lhs' napply (pmap_prewhisker _
-                 (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut f)
-                    @* pmap_precompose_idmap _)).
-  rhs' napply (pmap_postwhisker _
-                 (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut f')
-                    @* pmap_precompose_idmap _)).
+  napply moveR_pequiv_fV.
   exact (pfiber2_loops_natural_functor q).
 Defined.
 
@@ -555,12 +559,24 @@ Definition connecting_map_natural {X Y X' Y' : pType}
     ==* connecting_map (pfib f) f o* fmap loops k
   := connecting_map_natural_functor q.
 
+(** When the square lies over the identity map, the [fmap loops] factor can be dropped. *)
+Definition connecting_map_natural_idmap {X X' Y : pType}
+  {f : X ->* Y} {f' : X' ->* Y} {h : X' ->* X}
+  (q : pmap_idmap o* f' ==* f o* h)
+  : functor_pfiber q o* connecting_map (pfib f') f'
+    ==* connecting_map (pfib f) f.
+Proof.
+  lhs' napply (connecting_map_natural_functor q).
+  lhs' tapply (pmap_postwhisker _ (fmap_id loops _)).
+  napply pmap_precompose_idmap.
+Defined.
+
 (** Through [cxfib], the connecting map of an exact sequence agrees with the connecting map of the tautological fiber sequence. *)
 Definition connecting_map_cxfib {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : pequiv_cxfib o* connecting_map i f ==* connecting_map (pfib f) f.
 Proof.
-  unfold connecting_map, i_fiberseq, connect_fiberseq, ".1", ".2".
+  rhs' napply connecting_map_pfib.
   lhs_V' napply pmap_compose_assoc.
   lhs' napply (pmap_prewhisker _
                  (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))).
@@ -568,10 +584,25 @@ Proof.
   napply pmap_postwhisker.
   napply moveR_pequiv_fV.
   napply moveL_pequiv_Vf.
+  reflexivity.
+Defined.
+
+(** The connecting map is natural with respect to maps of purely exact sequences.  Such a map consists of pointed maps [g], [h] and [k], a square [q], and a homotopy [c] saying that the map induced by [q] on fibers corresponds to [g] under the identifications [pequiv_cxfib].  The other square, [h o* i' ==* i o* g], follows from [c]. *)
+Definition connecting_map_natural_isexact {F X Y F' X' Y' : pType}
+  {i : F ->* X} {f : X ->* Y} `{IsExact purely F X Y i f}
+  {i' : F' ->* X'} {f' : X' ->* Y'} `{IsExact purely F' X' Y' i' f'}
+  {g : F' ->* F} {h : X' ->* X} {k : Y' ->* Y} {q : k o* f' ==* f o* h}
+  (c : functor_pfiber q o* pequiv_cxfib ==* pequiv_cxfib o* g)
+  : g o* connecting_map i' f' ==* connecting_map i f o* fmap loops k.
+Proof.
+  tapply (cate_monic_equiv (A:=pType) (pequiv_cxfib (i:=i) (f:=f))).
+  lhs_V' napply pmap_compose_assoc.
+  lhs_V' napply (pmap_prewhisker _ c).
   lhs' napply pmap_compose_assoc.
-  napply pmap_postwhisker.
-  lhs' napply (pmap_prewhisker _ (pequiv_pfiber_cxfib_taut f)).
-  napply pmap_postcompose_idmap.
+  lhs' napply (pmap_postwhisker _ (connecting_map_cxfib i' f')).
+  lhs' napply (connecting_map_natural_functor q).
+  rhs_V' napply pmap_compose_assoc.
+  exact (pmap_prewhisker _ (connecting_map_cxfib i f))^*.
 Defined.
 
 (** Through [pfiber2_loops], the connecting map of the doubly-iterated tautological fiber sequence is loop inversion followed by [loops] of the map. *)
@@ -579,15 +610,11 @@ Definition connecting_map_pfib2 {F X : pType} (i : F ->* X)
   : pfiber2_loops i o* connecting_map (pfib (pfib i)) (pfib i)
     ==* fmap loops i o* loops_inv F.
 Proof.
-  unfold connecting_map, i_fiberseq, connect_fiberseq, ".1", ".2".
+  lhs' napply (pmap_postwhisker _ (connecting_map_pfib _)).
   lhs_V' napply pmap_compose_assoc.
   napply moveR_pequiv_fV.
   lhs' napply (pfiber2_fmap_loops i).
-  rhs' napply pmap_compose_assoc.
-  napply pmap_postwhisker.
-  napply pmap_postwhisker.
-  napply (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut (pfib i))
-          @* pmap_precompose_idmap _)^*.
+  exact (pmap_compose_assoc _ _ _)^*.
 Defined.
 
 (** Through [pfiber2_loops], the double fiber projection of an exact sequence is loop inversion followed by [loops] of the projection. *)
@@ -613,6 +640,60 @@ Proof.
   napply pmap_postwhisker.
   napply pmap_postwhisker.
   lhs' refine (pmap_prewhisker _ (fmap_id loops X)).
+  napply pmap_postcompose_idmap.
+Defined.
+
+(** The fiber of the connecting map is the double fiber of [i], since the connecting map is [pfib i] composed with the identification of [loops Y] with [pfiber i]. *)
+Definition pequiv_pfiber_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : pfiber (connecting_map i f) <~>* pfiber (pfib i)
+  := pequiv_pfiber ((connect_fiberseq i f).2) pequiv_pmap_idmap
+       (pmap_postcompose_idmap _).
+
+(** Its defining square. *)
+Definition square_pfiber_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : (connect_fiberseq i f).2 o* pfib (connecting_map i f)
+    ==* pfib (pfib i) o* pequiv_pfiber_connecting_map i f
+  := square_pequiv_pfiber _ _ _.
+
+(** Through that identification, the fiber inclusion of the connecting map is [loops] of [f], twisted by loop inversion. *)
+Definition pfib_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : pfib (connecting_map i f)
+    ==* fmap loops f
+        o* (loops_inv X o* (pfiber2_loops i
+              o* pequiv_pfiber_connecting_map i f)).
+Proof.
+  lhs_V' napply pmap_postcompose_idmap.
+  lhs_V' rapply (pmap_prewhisker _
+                   (peisretr (pfiber2_loops f
+                                o*E pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ (square_pfiber_connecting_map i f)).
+  lhs_V' napply pmap_compose_assoc.
+  lhs' napply (pmap_prewhisker _ (pfiber2_loops_pfib2 i f)).
+  lhs' napply pmap_compose_assoc.
+  napply pmap_postwhisker.
+  apply pmap_compose_assoc.
+Defined.
+
+(** Through the same identification, the connecting map of the fiber sequence of the connecting map is [loops] of [i]. *)
+Definition connecting_map_pfib_connecting_map {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : (loops_inv X o* (pfiber2_loops i o* pequiv_pfiber_connecting_map i f))
+    o* connecting_map (pfib (connecting_map i f)) (connecting_map i f)
+    ==* fmap loops i.
+Proof.
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
+  lhs' napply (pmap_postwhisker _ (pmap_postwhisker _
+                 (connecting_map_natural_idmap _))).
+  lhs' napply (pmap_postwhisker _ (connecting_map_pfib2 i)).
+  lhs' exact (pmap_postwhisker _
+                (isnat_tr (F:=loops) (G:=loops) loops_inv i : _ ==* _ o* _)).
+  lhs_V' napply pmap_compose_assoc.
+  lhs' napply (pmap_prewhisker _ (loops_inv_inv _)).
   napply pmap_postcompose_idmap.
 Defined.
 

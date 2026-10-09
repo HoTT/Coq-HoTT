@@ -1,15 +1,17 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core Universe Equiv PointedCat Yoneda.
 Require Import Pointed.
+Require Import HSet.
+Require Import Spaces.Nat.Core.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.Core.
 Import ClassifyingSpaceNotation.
 Require Import Homotopy.HSpace.Coherent.
-Require Import Homotopy.HomotopyGroup.
+Require Import Homotopy.HomotopyGroup Homotopy.ExactSequence.
 Require Import Homotopy.Hopf.
-Require Import Modalities.Descent.
-Require Import Truncations.Core Truncations.Connectedness Truncations.SeparatedTrunc.
+Require Import Modalities.Identity.
+Require Import Truncations.Core Truncations.Connectedness.
 
 (** * Eilenberg-Mac Lane spaces *)
 
@@ -57,15 +59,53 @@ Definition equiv_fmap_pi_pmap `{Univalence} (n : nat) (X Y : pType)
   : (X ->* Y) <~> (Pi n.+1 X $-> Pi n.+1 Y)
   := Build_Equiv _ _ _ (isequiv_fmap_pi_pmap n X Y).
 
-(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are equal. *)
-Definition path_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
+(** Pointed maps from an [n]-connected type to an [n.+1]-truncated type which agree on [Pi n.+1] are homotopic. (It's even easier to show they are equal, but downstream users most often want a homotopy.) *)
+Definition phomotopy_pmap_pi_connected `{Univalence} (n : nat) {X Y : pType}
   `{IsConnected n X} `{IsTrunc n.+1 Y}
   (phi psi : X ->* Y)
   (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
-  : phi = psi.
+  : phi ==* psi.
 Proof.
+  apply phomotopy_path.
   tapply (equiv_inj (fmap (Pi n.+1) (a:=X) (b:=Y))).
   exact (equiv_path_grouphomomorphism h).
+Defined.
+
+(** Pointed maps out of an [n]-connected type into an [n.+1]-truncated type are determined by their composite with a map that is an embedding on [Pi n.+1]. *)
+Definition phomotopy_pmap_isembedding_pi `{Univalence} {W X Y : pType} (n : nat)
+  `{IsConnected n W} `{IsTrunc n.+1 X}
+  (g : X ->* Y) (e : IsEmbedding (fmap (pPi n.+1) g))
+  {u v : W ->* X} (p : g o* u ==* g o* v)
+  : u ==* v.
+Proof.
+  rapply (phomotopy_pmap_pi_connected n).
+  intro x.
+  napply (isinj_embedding _ e).
+  lhs_V tapply (fmap_comp (Pi n.+1)).
+  rhs_V tapply (fmap_comp (Pi n.+1)).
+  exact (fmap2 (Pi n.+1) p x).
+Defined.
+
+(** Two commuting squares between purely exact sequences form a map of fiber sequences, in the sense needed by [connecting_map_natural_isexact], whenever [F'] is [n]-connected and [X] and [Y] are [n.+1]-truncated.  The two sides agree after composing with [pfib f], which is an embedding on [Pi n.+1]. *)
+Definition phomotopy_functor_pfiber_cxfib `{Univalence} (n : nat)
+  {F X Y F' X' Y' : pType}
+  {i : F ->* X} {f : X ->* Y} `{IsExact purely F X Y i f}
+  {i' : F' ->* X'} {f' : X' ->* Y'} `{IsExact purely F' X' Y' i' f'}
+  {g : F' ->* F} {h : X' ->* X} {k : Y' ->* Y}
+  `{IsConnected n F'} `{IsTrunc n.+1 X} `{IsTrunc n.+1 Y}
+  (p : h o* i' ==* i o* g) (q : k o* f' ==* f o* h)
+  : functor_pfiber q o* pequiv_cxfib ==* pequiv_cxfib o* g.
+Proof.
+  rapply (phomotopy_pmap_isembedding_pi n (pfib f)
+            (isembedding_fmap_pi_isexact _ _ n
+               (c := contr_pi_istrunc n.+1 _))).
+  lhs_V' napply pmap_compose_assoc.
+  lhs_V' napply (pmap_prewhisker _ (square_functor_pfiber q)).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ (pfib_cxfib _)).
+  rhs_V' napply pmap_compose_assoc.
+  rhs' napply (pmap_prewhisker _ (pfib_cxfib _)).
+  exact p.
 Defined.
 
 (** Two [n]-connected [n.+1]-truncated pointed types with isomorphic [Pi n.+1] are pointed equivalent. *)
@@ -132,8 +172,8 @@ Section EilenbergMacLane.
     snapply Build_pEquiv.
     1: exact (fmap (pTr _) (loop_susp_unit _)).
     napply O_inverts_conn_map.
-    napply (isconnmap_pred_add n.-2).
-    rewrite 2 trunc_index_add_succ.
+    napply (conn_map_O_leq _ (Tr (n +2+ n))).
+    1: exact (O_leq_Tr_leq (trunc_index_leq_add_nat n n)).
     exact (conn_map_loop_susp_unit n X).
   Defined.
 
@@ -222,8 +262,6 @@ Section EilenbergMacLane.
         exact IH.
   Defined.
 
-  (** TODO: Many results in this file, such as [pi_em_fmap] and [em_fmap_loops_natural], have a large number of universe variables.  These can be reduced by ending various definitions with Qed, but it would be better to fix the source of the explosion of universe variables. *)
-
   (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
   Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
     : pequiv_loops_em_em G n.+1
@@ -275,18 +313,12 @@ Section EilenbergMacLane.
     - exact (ap tr (bloop_natural G G' f g)).
     - lhs napply (ap _ (equiv_g_pi_n_em_succ G n g)).
       rhs napply (equiv_g_pi_n_em_succ G' n (f g)).
-      apply (equiv_inj (groupiso_pi_loops n _)).
-      rhs napply (eisretr (groupiso_pi_loops n _) _).
-      lhs refine (fmap_pi_loops n.+1 (fmap (K' n.+2) f) _).
+      apply moveL_equiv_V.
+      lhs tapply (fmap_pi_loops n.+1 (fmap (K' n.+2) f)).
       lhs napply (ap _ (eisretr (groupiso_pi_loops n _) _)).
-      lhs_V exact (fmap_comp (pPi n.+1)
-          (pequiv_loops_em_em G n.+1 : _ ->* _)
-          (fmap loops (fmap (K' n.+2) f)) (equiv_g_pi_n_em G n g)).
-      lhs exact (fmap2 (pPi n.+1) (em_fmap_loops_natural f n.+1)
-          (equiv_g_pi_n_em G n g)).
-      lhs exact (fmap_comp (pPi n.+1)
-          (fmap (K' n.+1) f) (pequiv_loops_em_em G' n.+1 : _ ->* _)
-          (equiv_g_pi_n_em G n g)).
+      lhs_V tapply (fmap_comp (pPi n.+1)).
+      lhs tapply (fmap2 (pPi n.+1) (em_fmap_loops_natural f n.+1)).
+      lhs tapply (fmap_comp (pPi n.+1)).
       exact (ap _ (IHn g)).
   Defined.
 
@@ -296,6 +328,36 @@ Section EilenbergMacLane.
     : fmap (Pi n.+1) (fmap (K' n.+1) f)
       == equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1
     := cate_moveL_eV (A:=Group) _ _ (equiv_g_pi_n_em G' n $o f) (pi_em_fmap f n).
+
+  (** It follows that [fmap (Pi n.+1) (fmap (K' n.+1) f)] is an embedding when [f] is. *)
+  #[export] Instance isembedding_pi_em_fmap {G G' : AbGroup}
+    (f : GroupHomomorphism G G') `{!IsEmbedding f} (n : nat)
+    : IsEmbedding (fmap (Pi n.+1) (fmap (K' n.+1) f)).
+  Proof.
+    snapply (mapinO_homotopic (Tr (-1))
+               (equiv_g_pi_n_em G' n o f o (equiv_g_pi_n_em G n)^-1%equiv)).
+    - symmetry; apply pi_em_fmap'.
+    - rapply mapinO_compose.
+  Defined.
+
+  (** [G] is also the [n.+1]-st homotopy group of [loops K(G, n.+2)], through the loop identification [pequiv_loops_em_em].  Composing with the inverse of [groupiso_pi_loops] gives [equiv_g_pi_n_em G n.+1]. *)
+  Definition equiv_g_pi_n_loops_em (G : AbGroup) (n : nat)
+    : GroupIsomorphism G (Pi n.+1 (loops K(G, n.+2)))
+    := grp_iso_compose (groupiso_pi_functor n (pequiv_loops_em_em G n.+1))
+         (equiv_g_pi_n_em G n).
+
+  (** This identification is natural, since [pequiv_loops_em_em] and [equiv_g_pi_n_em] are. *)
+  Definition pi_loops_em_fmap {G G' : AbGroup}
+    (f : GroupHomomorphism G G') (n : nat)
+    : fmap (Pi n.+1) (fmap loops (fmap (K' n.+2) f)) o equiv_g_pi_n_loops_em G n
+      == equiv_g_pi_n_loops_em G' n o f.
+  Proof.
+    intro g.
+    lhs_V tapply (fmap_comp (Pi n.+1)).
+    lhs tapply (fmap2 (Pi n.+1) (em_fmap_loops_natural f n.+1)).
+    lhs tapply (fmap_comp (Pi n.+1)).
+    exact (ap _ (pi_em_fmap f n g)).
+  Defined.
 
   (** Eilenberg-Mac Lane spaces of a contractible group are contractible. *)
   #[export] Instance contr_em_contr {G : Group} `{Contr G} (n : nat)
@@ -317,7 +379,6 @@ Section EilenbergMacLane.
     rapply isequiv_contr_contr.
   Defined.
 
-
   (** [fmap (K' n.+1) f] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
@@ -325,22 +386,11 @@ Section EilenbergMacLane.
   Proof.
     induction n as [|n IHn].
     - exact (isconnmap_fmap_pclassifyingspace f).
-    - snapply isconnmap_isconnmap_ap_surj.
-      + rapply (isconnmap_isconnected (-1)).
-      + assert (c : IsConnMap n (fmap loops (fmap (K' n.+2) f))).
-        { refine (conn_map_homotopic _
-            ((pequiv_loops_em_em G' n.+1 o* fmap (K' n.+1) f)
-             o* (pequiv_loops_em_em G n.+1)^-1*) _
-            (fun p =>
-              (moveL_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p) _). }
-        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        intro q.
-        pose (e2 := equiv_concat_l (point_eq (fmap (K' n.+2) f))^ _
-                    oE equiv_concat_r (point_eq (fmap (K' n.+2) f)) _).
-        exact (isconnected_equiv' n _
-                 (equiv_functor_sigma_id (fun p => equiv_ap e2 _ _))^-1%equiv
-                 (c _)).
+    - napply (isconnmap_isconnmap_fmap_loops (n:=n)).
+      1, 2: exact _.
+      nrefine (cancelR_conn_map n (pequiv_loops_em_em G n.+1) _).
+      1: exact _.
+      rapply (conn_map_homotopic n _ _ (em_fmap_loops_natural f _)^* ).
   Defined.
 
   (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps.  Since [K(G, n.+1)] is [n]-connected and [K(G', n.+1)] is [n.+1]-truncated, [fmap (Pi n.+1)] is an equivalence from the pointed maps to the group homomorphisms [Pi n.+1 K(G, n.+1) $-> Pi n.+1 K(G', n.+1)], and by [pi_em_fmap'] the composite with [fmap (K' n.+1)] is conjugation by the identifications [equiv_g_pi_n_em], which is also an equivalence.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
@@ -369,7 +419,7 @@ Section EilenbergMacLane.
     symmetry.
     destruct n as [|m].
     - exact grp_iso_g_pi1_bg.
-    - exact (equiv_g_pi_n_em (Build_AbGroup (Pi m.+2 X) _) m.+1).
+    - exact (equiv_g_pi_n_em (abgroup_pi m X) m.+1).
   Defined.
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
@@ -386,88 +436,16 @@ Section EilenbergMacLane.
 
 End EilenbergMacLane.
 
-(** ** Delooping Eilenberg-Mac Lane mapping types *)
+(** ** Delooping maps between Eilenberg-Mac Lane spaces *)
 
-Section Deloop.
-  Context `{Univalence} (B A : AbGroup@{u}) (n : nat).
-
-  (** [Pi n.+4 (psusp K(B,n.+2))] is trivial. *)
-  Local Instance contr_pi_psusp_em : Contr (Pi n.+4 (psusp K(B, n.+2))).
-  Proof.
-    nrefine (contr_equiv' (Pi n.+3 (loops (psusp K(B, n.+2)))) _).
-    1: exact (groupiso_pi_loops n.+2 (psusp K(B, n.+2)))^-1%equiv.
-    (* Since [Pi n.+3] is a set, it's enough to show it's 0-connected. *)
-    napply (contr_trunc_conn 0); only 1: exact _.
-    (* And for that, it's enough to show it's the target of a (-1)-connected map from a 0-connected type. *)
-    pose (fu := fmap (pPi n.+3) (loop_susp_unit K(B, n.+2))).
-    napply (OO_isconnected_from_conn_map 0 (Tr (-1)) fu).
-    1, 2: exact _.
-    - napply isconnected_contr.
-      rapply contr_pi_succ_istrunc.
-    - apply (issurj_pi_connmap n.+2).
-      napply (isconnmap_pred_add n.-2).
-      rewrite 2 trunc_index_add_succ.
-      exact (conn_map_loop_susp_unit n K(B, n.+2)).
-  Defined.
-
-  (** [pTr n.+4 (psusp K(B,n.+2))] is [n.+3]-truncated. *)
-  Local Instance istrunc_ptr_psusp_em
-    : IsTrunc n.+3 (pTr n.+4 (psusp K(B, n.+2))).
-  Proof.
-    napply (istrunc_contr_pi n.+3).
-    1,2: exact _.
-    exact (contr_equiv' _ (grp_iso_pi_Tr n.+3 (psusp K(B, n.+2)))).
-  Defined.
-
-  (** [K(B, n.+3)] is the [n.+3]-truncation of [pTr n.+4 (psusp K(B, n.+2))]. *)
-  Local Definition pequiv_ptr_ptr_psusp_em
-    : K(B, n.+3) <~>* pTr n.+3 (pTr n.+4 (psusp K(B, n.+2))).
-  Proof.
-    snapply Build_pEquiv'.
-    - rapply equiv_O_functor_to_O_O_leq.
-    - reflexivity.
-  Defined.
-
-  (** The canonical equivalence between the [n.+4]- and [n.+3]-truncations. *)
-  Local Definition pequiv_ptr_psusp_em
-    : pTr n.+4 (psusp K(B, n.+2)) <~>* K(B, n.+3)
-    := pequiv_ptr_ptr_psusp_em^-1* o*E pequiv_ptr.
-
-  (** [pequiv_ptr_psusp_em] commutes with the truncation unit [ptr]. *)
-  Local Definition tau_ptr_psusp_em
-    : pequiv_ptr_psusp_em o* ptr ==* ptr.
-  Proof.
-    unfold pequiv_ptr_psusp_em.
-    lhs' napply pmap_compose_assoc.
-    rapply (cate_moveR_Ve (H0:=hasequivs_ptype)).
-    apply ptr_natural.
-  Qed.
-
-  (** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)].  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7; as there, it follows from the truncated suspension-loops adjunction, with the Freudenthal input carried by [pequiv_loops_em_em]. *)
-  Definition equiv_deloop_em_pmap
-    : (K(B, n.+3) ->* K(A, n.+4)) <~> (K(B, n.+2) ->* K(A, n.+3))
-    := pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
-       oE loop_susp_adjoint K(B, n.+2) K(A, n.+4)
-       oE pequiv_ptr_rec
-       oE pequiv_pequiv_precompose pequiv_ptr_psusp_em.
-
-  (** [equiv_deloop_em_pmap] as looping conjugated by the loop identifications. *)
-  Definition equiv_deloop_em_pmap_unfold (psi : K(B, n.+3) ->* K(A, n.+4))
-    : equiv_deloop_em_pmap psi
-      ==* (pequiv_loops_em_em A n.+3)^-1*
-          o* (fmap loops psi o* pequiv_loops_em_em B n.+2).
-  Proof.
-    change (equiv_deloop_em_pmap psi) with
-      ((pequiv_loops_em_em A n.+3)^-1*
-         o* (fmap loops (psi o* pequiv_ptr_psusp_em o* ptr)
-               o* loop_susp_unit K(B, n.+2))).
-    napply pmap_postwhisker.
-    rhs' napply (pmap_postwhisker _ (loops_em_em_ptr_unit B n.+1)).
-    rhs_V' napply pmap_compose_assoc.
-    refine (pmap_prewhisker _ (_ @* fmap_comp loops _ _)).
-    tapply (fmap2 loops).
-    exact (pmap_compose_assoc psi _ ptr
-           @* pmap_postwhisker psi tau_ptr_psusp_em).
-  Qed.
-
-End Deloop.
+(** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)], via [fmap loops] conjugated by the loop identifications.  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7. *)
+Definition equiv_loops_em_pmap `{Univalence} (B A : AbGroup@{u}) (n : nat)
+  : (K(B, n.+3) ->** K(A, n.+4)) <~>* (K(B, n.+2) ->** K(A, n.+3)).
+Proof.
+  nrefine (pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
+             o*E pequiv_pequiv_precompose (pequiv_loops_em_em B n.+2)
+               o*E pequiv_fmap_loops_pmap (n:=n.+1) _ _).
+  - exact (isconnected_em n.+2).
+  - exact (istrunc_leq (m:=n.+4) (n:=n.+1 +2+ n.+1)
+             (trunc_index_leq_add_nat n.+1 n)).
+Defined.

@@ -2,8 +2,10 @@ From HoTT Require Import Basics Types.
 Require Import Pointed.
 Require Import WildCat.Core HFiber.
 Require Import Truncations.
-Require Import Algebra.Groups.Group.
-Require Import Homotopy.HomotopyGroup.
+Require Import Algebra.Groups.Group Algebra.Groups.ShortExactSequence.
+Require Import Homotopy.HomotopyGroup Homotopy.ExactSequence.
+Require Import Modalities.Identity.
+Require Import Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope nat_scope.
@@ -52,7 +54,7 @@ Proof.
   exact (fun _ => concat_1p _ @ concat_p1 _).
 Defined.
 
-(** When the types are 0-connected and the map is pointed, just one [loops_functor] needs to be checked. *)
+(** When the types are pointed and 0-connected, and the map is pointed, just one [loops_functor] needs to be checked. *)
 Definition isequiv_is0connected_isequiv_loops
            `{Univalence} {A B : pType} `{IsConnected 0 A} `{IsConnected 0 B}
            (f : A ->* B)
@@ -111,4 +113,62 @@ Proof.
     nrefine (isequiv_commsq _ _ _ _ (fmap_pi_loops k.+1 (pmap_from_point f x))).
     2-3:exact (equiv_isequiv (pi_loops _ _)).
     exact (ii x k.+1).
+Defined.
+
+(** When the types are pointed and 0-connected, and the map is pointed, it's enough to check condition ii at the base point. *)
+Definition whiteheads_principle_is0connected
+           {ua : Univalence} {A B : pType} {f : A ->* B}
+           (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
+           {cA : IsConnected 0 A} {cB : IsConnected 0 B}
+           {ii : forall (k : nat), IsEquiv (fmap (Pi k.+1) f) }
+  : IsEquiv f.
+Proof.
+  snapply (whiteheads_principle n).
+  1, 2: assumption.
+  1: apply isequiv_contr_contr.
+  rapply conn_point_elim.
+  pointed_reduce_pmap f.
+  exact ii.
+Defined.
+
+(** A pointed map between [n-1]-connected, [n]-truncated pointed types which induces an equivalence on [Pi n] is an equivalence.  Only the top homotopy group of such a type is non-trivial, so this is the only condition Whitehead's principle leaves to check. *)
+Definition isequiv_isconnected_istrunc_isequiv_pi `{Univalence} (n : nat) {X Y : pType}
+  (f : X ->* Y)
+  {cX : IsConnected (nat_pred n) X} {tX : IsTrunc n X}
+  {cY : IsConnected (nat_pred n) Y} {tY : IsTrunc n Y}
+  {e : IsEquiv (fmap (pPi n) f)}
+  : IsEquiv f.
+Proof.
+  snapply (whiteheads_principle_is0connected n).
+  1, 2: assumption.
+  1, 2: rapply is0connected_isconnected.
+  intro k.
+  destruct (nat_trichotomy k.+1 n) as [[kltn | keqn] | kgtn].
+  - napply isequiv_contr_contr.
+    all: rapply (contr_pi_isconnected (nat_pred n) (mlen:=leq_pred kltn)).
+  - destruct keqn; exact e.
+  - napply isequiv_contr_contr.
+    all: rapply (contr_pi_istrunc n (nltm:=kgtn)).
+Defined.
+
+(** A complex [F -> X -> Y] of pointed types is a fiber sequence when [F] is [n]-connected and [n.+1]-truncated, [X] and [Y] are [n.+1]-truncated, [f] is an [n]-connected map, [fmap (Pi n.+1) i] is an embedding and the complex is exact on [Pi n.+1].  Indeed, [F] and the fiber of [f] are then both [n]-connected and [n.+1]-truncated, and on [Pi n.+1] both are the kernel of [fmap (Pi n.+1) f], so [cxfib] is an equivalence by the previous result. *)
+Definition isexact_purely_isexact_pi `{Univalence} (n : nat) {F X Y : pType}
+  {i : F ->* X} {f : X ->* Y} (cx : IsComplex i f)
+  `{IsConnected n F} `{IsTrunc n.+1 F} `{IsTrunc n.+1 X} `{IsTrunc n.+1 Y}
+  `{!IsConnMap n f} `{!IsEmbedding (fmap (pPi n.+1) i)}
+  (ex : IsExact (Tr (-1)) (fmap (pPi n.+1) i) (fmap (pPi n.+1) f))
+  : IsExact purely i f.
+Proof.
+  exists cx.
+  napply conn_map_isequiv.
+  napply (isequiv_isconnected_istrunc_isequiv_pi n.+1).
+  1-4: exact _.
+  pose (j := fmap (Pi n.+1) (pfib f)). (* To make the goals readable. *)
+  napply (isequiv_isexact_factor (j:=j) _ _ ex).
+  - intro x.
+    exact ((fmap_comp (Pi n.+1) (cxfib cx) (pfib f) x)^
+           @ fmap2 (Pi n.+1) (pfib_cxfib cx) x).
+  - exact _.
+  - exact (isembedding_fmap_pi_isexact _ _ n (c := contr_pi_istrunc n.+1 _)).
+  - exact (isexact_pi_total _ _ n.+1).
 Defined.
