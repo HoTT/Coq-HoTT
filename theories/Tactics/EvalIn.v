@@ -43,7 +43,7 @@ Abort.
 
 (** ** Rewriting with reflexivity *)
 
-(** As an example application, we define a tactic that takes a lemma whose definition is [idpath] and behaves like [rewrite], except that it doesn't insert any transport lemmas like [Overture.internal_paths_rew_r].  In other words, it does a [change], but leverages the pattern-matching and substitution engine of [rewrite] to decide what to [change] into. *)
+(** As an example application, we define a tactic that takes a lemma whose definition is [idpath] and behaves like [rewrite], except that it doesn't insert the registered rewriting scheme [Overture.paths_rew_r].  In other words, it does a [change], but leverages the pattern-matching and substitution engine of [rewrite] to decide what to [change] into. *)
 
 (** We use a dummy inductive type since [rewrite] acts on the *type* of a hypothesis rather than its body (if any). *)
 Inductive dummy (A:Type) : Type0 := adummy : dummy A.
@@ -65,8 +65,7 @@ Proof.
   reflexivity.
   (** Show Proof. *)
   (** ==> (fun (A B : Type) (x : A) (f : A -> B) =>
- Overture.internal_paths_rew_r (f x = f x) (ap f 1) 1
-   (fun p : f x = f x => p = 1) 1 (ap_1 x f)) *)
+  Overture.paths_rew_r (fun p : f x = f x => p = 1) 1 (ap_1 x f)) *)
 Abort.
 
 (** And here's what we get with [rewrite_refl]: *)
