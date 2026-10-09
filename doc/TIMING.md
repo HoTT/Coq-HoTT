@@ -40,7 +40,7 @@ Unless said otherwise, all of the commands should be run from the top-level repo
 
   The sleep helps with thermal issues on my machine.
 
-It's often better to get per file timing, as it's easier to see changes that way.  The [coq-scripts repository](https://github.com/JasonGross/coq-scripts) can help with this.  For some reason, it needs to be within the repo you are timing.  I clone it into the top-level dir of the HoTT repo.  See [coq-scripts/timing/README.md](https://github.com/JasonGross/coq-scripts/tree/master/timing) within that repo for documentation.
+It's often better to get per-file timing, as it's easier to see changes that way. The [coq-scripts repository](https://github.com/JasonGross/coq-scripts) is included as the `etc/coq-scripts` submodule; initialize it with `git submodule update --init etc/coq-scripts`. Run its timing scripts from the HoTT repository root. See [the timing tools' documentation](https://github.com/JasonGross/coq-scripts/tree/master/timing) for details.
 
 - If new changes are already committed and nothing is changed or staged, you can use the following.  Note that "tip" is a misnomer; it compares whatever is currently checked out (even in "detached head" state), to the previous commit or `PREV_COMMIT`.
 
@@ -48,7 +48,7 @@ It's often better to get per file timing, as it's easier to see changes that way
     export PREV_COMMIT=<hash>   [defaults to previous commit]
     export PREV_COMMIT=master   [etc.]
     make -j<num_cores>
-    nice -n -10 ./coq-scripts/timing/make-pretty-timed-only-diff-tip.sh -j1  [or -jJ]
+    nice -n -10 ./etc/coq-scripts/timing/make-pretty-timed-only-diff-tip.sh -j1  [or -jJ]
     sort -r -k 12 time-of-build-both.log | less   [biggest changes first]
     sort -r -k  1 time-of-build-both.log | less   [slowest files first]
     ```
@@ -62,7 +62,7 @@ It's often better to get per file timing, as it's easier to see changes that way
 - If new changes are not committed, stage them, and do:
 
     ```
-    nice -n -10 ./coq-scripts/timing/make-pretty-timed-only-diff.sh -j1  [or -jJ]
+    nice -n -10 ./etc/coq-scripts/timing/make-pretty-timed-only-diff.sh -j1  [or -jJ]
     sort -r -k 12 time-of-build-both.log | less
     ```
 
@@ -71,7 +71,7 @@ It's often better to get per file timing, as it's easier to see changes that way
 - To show the timing for the current working directory (no comparison), e.g. to search for slow files:
 
     ```
-    nice -n -10 ./coq-scripts/timing/make-pretty-timed.sh -j1  [or -jJ]
+    nice -n -10 ./etc/coq-scripts/timing/make-pretty-timed.sh -j1  [or -jJ]
     less time-of-build-pretty.log
     ```
 
@@ -92,7 +92,7 @@ Other timing methods:
 
   and then view that file in a browser.
 
-- For any Coq project, can do
+- For any Rocq project, can do
 
     ```
     rm time-of-build.log  [optional; gets appended to]
@@ -102,7 +102,7 @@ Other timing methods:
 
   to see a nice summary of the user time for each file, sorted.  Saved in time-of-build.log and time-of-build-pretty.log.  Add `TIMING_REAL=1` to see real time instead.  Can also compare revisions, etc.  See
 
-    https://coq.inria.fr/refman/practical-tools/utilities.html#timing-targets-and-performance-testing
+    https://rocq-prover.org/doc/V9.1.0/refman/practical-tools/utilities.html#timing-targets-and-performance-testing
 
 - To find the slowest lines in the whole library:
 
