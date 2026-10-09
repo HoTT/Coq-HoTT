@@ -1,0 +1,80 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Export Basics.Utf8 Basics.Overture Basics.Iff.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Basics.Utf8 Basics.Overture Basics.Iff.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Just enough UTF8/Unicode for the Classes library to build, without depending on everything that HoTT.Utf8 depends on. *)\n\n(* Logic *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2200  x .. y , P\" := (forall x, .. (forall y, P) ..) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u2203  x .. y , P\" := (exists x, .. (exists y, P) ..) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2227 y\" := (x /\\ y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2192 y\" := (x -> y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"x \u2194 y\" := (x <-> y) : type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*Notation \"\u00ac x\" := (not x) : type_scope.*)\n(*Notation \"x \u2260 y\" := (x <> y) : type_scope.*)\n\n(* Abstraction *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"'\u03bb'  x .. y , t\" := (fun x => .. (fun y => t) ..).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

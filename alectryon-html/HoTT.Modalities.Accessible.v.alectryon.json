@@ -1,0 +1,5680 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Accessible subuniverses and modalities *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Extensions NullHomotopy.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modality.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(** ** Accessible reflective subuniverses *)\n\n(** An accessible reflective subuniverse is one that is the localization at a small family of maps.  Accessibility is necessary for some constructions, and in practice it's a reasonable hypothesis that includes most examples (though a few examples, such as double negation, may only be accessible if we assume propositional resizing).\n\nWe now give the basic definitions related to accessibility, using [ooExtendableAlong] as our notion of equivalence as we did with reflective subuniverses.  The actual construction of a reflective subuniverse by localization will be in [Localization]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record LocalGenerators@{a} :=\n  { lgen_indices : Type@{a} ;\n    lgen_domain : lgen_indices -> Type@{a} ;\n    lgen_codomain : lgen_indices -> Type@{a} ;\n    lgenerator : forall i, lgen_domain i -> lgen_codomain i\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion lgenerator : LocalGenerators >-> Funclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We put this definition in a module so that no one outside of this file will use it accidentally.  It will be redefined in [Localization] to refer to the localization reflective subuniverse, which is judgmentally the same but will also pick up typeclass inference for [In]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Import IsLocal_Internal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsLocal f X :=\n    (forall (i : lgen_indices f), ooExtendableAlong (f i) (fun _ => X)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End IsLocal_Internal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsAccRSU@{a i} (O : Subuniverse@{i}) :=\n{\n  acc_lgen : LocalGenerators@{a} ;\n  inO_iff_islocal : forall (X : Type@{i}),\n      (** We call [iff] explicitly to control the number of universe parameters. *)\n      iff@{i i i} (In O X) (IsLocal acc_lgen X) ;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments acc_lgen O {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments inO_iff_islocal O {_} X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance O_inverts_generators {O : ReflectiveSubuniverse} `{IsAccRSU O}\n             (i : lgen_indices (acc_lgen O))\n  : O_inverts O (acc_lgen O i).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_inverts O (acc_lgen O i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_inverts O (acc_lgen O i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (ext_dom := fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i))) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_inverts O (acc_lgen O i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (ext_cod := fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i))) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_inverts O (acc_lgen O i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (isequiv_adjointify _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O (lgen_codomain (acc_lgen O) i) -> O (lgen_domain (acc_lgen O) i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_functor O (acc_lgen O i) o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o O_functor O (acc_lgen O i) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O (lgen_codomain (acc_lgen O) i) -> O (lgen_domain (acc_lgen O) i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply O_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "lgen_codomain (acc_lgen O) i -> O (lgen_domain (acc_lgen O) i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((fst (ext_dom i 1%nat) (to O _)).1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_functor O (acc_lgen O i)\no O_rec (fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1 == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply O_indpaths; intros x; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_functor O (acc_lgen O i)\n  (O_rec (fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1\n     (to O (lgen_codomain (acc_lgen O) i) x)) =\nto O (lgen_codomain (acc_lgen O) i) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_codomain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite O_rec_beta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_functor O (acc_lgen O i)\n  ((fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1 x) =\nto O (lgen_codomain (acc_lgen O) i) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_codomain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((fst (snd (ext_cod i 2)\n                        (fun x => O_functor O (acc_lgen O i)\n                                            ((fst (ext_dom i 1%nat) (to O _)).1 x))\n                        _) _).1 x); intros a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_functor O (acc_lgen O i)\n  ((fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1 (acc_lgen O i a)) =\nto O (lgen_codomain (acc_lgen O) i) (acc_lgen O i a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_codomain (acc_lgen O) i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "lgen_domain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ((fst (ext_dom i 1%nat) (to O _)).2 a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_functor O (acc_lgen O i) (to O (lgen_domain (acc_lgen O) i) a) =\nto O (lgen_codomain (acc_lgen O) i) (acc_lgen O i a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_codomain (acc_lgen O) i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "lgen_domain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply to_O_natural.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_rec (fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1\no O_functor O (acc_lgen O i) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply O_indpaths; intros x; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_rec (fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1\n  (O_functor O (acc_lgen O i) (to O (lgen_domain (acc_lgen O) i) x)) =\nto O (lgen_domain (acc_lgen O) i) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_domain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (to_O_natural O (acc_lgen O i) x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_rec (fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1\n  (to O (lgen_codomain (acc_lgen O) i) (acc_lgen O i x)) =\nto O (lgen_domain (acc_lgen O) i) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_domain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite O_rec_beta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fst (ext_dom i 1) (to O (lgen_domain (acc_lgen O) i))).1 (acc_lgen O i x) =\nto O (lgen_domain (acc_lgen O) i) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_dom"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_domain (acc_lgen O) i)))\n  (O_inO (lgen_domain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_domain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ext_cod"
+              ],
+              "body": "fst (inO_iff_islocal O (O (lgen_codomain (acc_lgen O) i)))\n  (O_inO (lgen_codomain (acc_lgen O) i))",
+              "type": "IsLocal (acc_lgen O) (O (lgen_codomain (acc_lgen O) i))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_domain (acc_lgen O) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((fst (ext_dom i 1%nat) (to O _)).2 x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The construction of the localization reflective subuniverse for any family of maps will be in [Localization]. *)\n\n\n(** ** Accessible modalities *)\n\n(** A modality is accessible just when its underlying reflective subuniverse is accessible.  However, for modalities we have a simpler characterization in terms of families of generating connected objects rather than families of generating inverted maps.  We call an object [S]-null if it is local with respect to the maps [S i -> Unit]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record NullGenerators :=\n  { ngen_indices : Type@{a} ;\n    ngen_type : ngen_indices -> Type@{a}\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion ngen_type : NullGenerators >-> Funclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition null_to_local_generators : NullGenerators@{a1} -> LocalGenerators@{a2}\n  := fun S => Build_LocalGenerators (ngen_indices S) (ngen_type S) (fun _ => Unit) (fun _ _ => tt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** As with [IsLocal], the real version of this notation will be defined in [Nullification]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Import IsNull_Internal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IsNull (S : NullGenerators@{a}) (X : Type@{i})\n    := IsLocal@{i i a} (null_to_local_generators@{a a} S) X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End IsNull_Internal.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A central fact: if a type [X] is null for all the fibers of a map [f], then it is [f]-local.  (NB: the converse is *not* generally true.)  TODO: Should this go in [Extensions]? *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition extendable_isnull_fibers (n : nat)\n           {A B} (f : A -> B) (C : B -> Type)\n: (forall b, ooExtendableAlong (const_tt (hfiber f b))\n                               (fun _ => C b))\n  -> ExtendableAlong n f C.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))) ->\nExtendableAlong n f C",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))) ->\nExtendableAlong n f C",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert C.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall C : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))) ->\nExtendableAlong n f C",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple_induction n n IHn; intros C null; [exact tt | split].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall g : forall a : A, C (f a), ExtensionAlong f C g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall h k : forall b : B, C b, ExtendableAlong n f (fun b : B => h b = k b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall g : forall a : A, C (f a), ExtensionAlong f C g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ExtensionAlong f C g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, C (f a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (fun b => (fst (null b 1%nat) (fun x => x.2 # g x.1)).1 tt).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\n(fst (null (f x) 1) (fun x0 : hfiber f (f x) => transport C x0.2 (g x0.1))).1\n  tt =\ng x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a : A, C (f a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fst (null (f a) 1) (fun x : hfiber f (f a) => transport C x.2 (g x.1))).1 tt =\ng a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : A, C (f a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (path_unit tt (const_tt _ a)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fst (null (f a) 1) (fun x : hfiber f (f a) => transport C x.2 (g x.1))).1\n  (const_tt A a) =\ng a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall a0 : A, C (f a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((fst (null (f a) 1%nat) _).2 (a ; 1)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall h k : forall b : B, C b, ExtendableAlong n f (fun b : B => h b = k b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h k.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ExtendableAlong n f (fun b : B => h b = k b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C0 b))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b : B, ooExtendableAlong (const_tt (hfiber f b)) (unit_name (C b))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "forall b : B, C b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply IHn; intros b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (const_tt (hfiber f b)) (unit_name (h b = k b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall C0 : B -> Type,\n(forall b0 : B,\n ooExtendableAlong (const_tt (hfiber f b0)) (unit_name (C0 b0))) ->\nExtendableAlong n f C0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "B -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "null"
+              ],
+              "body": null,
+              "type": "forall b0 : B, ooExtendableAlong (const_tt (hfiber f b0)) (unit_name (C b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h",
+                "k"
+              ],
+              "body": null,
+              "type": "forall b0 : B, C b0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_homotopy, null.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)\n: (forall b, ooExtendableAlong (const_tt (hfiber f b))\n                               (fun _ => C b))\n  -> ooExtendableAlong f C\n:= fun null n => extendable_isnull_fibers n f C null.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We define a modality to be accessible if it consists of the null types for some family of generators as above. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsAccModality@{a i} (O : Subuniverse@{i}) :=\n{\n  acc_ngen : NullGenerators@{a} ;\n  inO_iff_isnull : forall (X : Type@{i}),\n      iff@{i i i} (In O X) (IsNull acc_ngen X) ;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments acc_ngen O {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments inO_iff_isnull O {_} X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section AccessibleModalities.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (O : Modality) {acco : IsAccModality O}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Unsurprisingly, the generators are connected. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isconnected_acc_ngen i : IsConnected O (acc_ngen O i).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected O (acc_ngen O i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected O (acc_ngen O i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isconnected_from_elim_to_O.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy (to O (acc_ngen O i))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (H := fst (fst (inO_iff_isnull O (O (acc_ngen O i))) _ i 1%nat)\n                   (to O ((acc_ngen O) i))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy (to O (acc_ngen O i))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": "fst (fst (inO_iff_isnull O (O (acc_ngen O i))) (O_inO (acc_ngen O i)) i 1)\n  (to O (acc_ngen O i))",
+              "type": "ExtensionAlong (null_to_local_generators (acc_ngen O) i)\n  (fun _ : lgen_codomain (null_to_local_generators (acc_ngen O)) i =>\n   O (acc_ngen O i))\n  (to O (acc_ngen O i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (H.1 tt).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : acc_ngen O i, to O (acc_ngen O i) x = H.1 tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": "fst (fst (inO_iff_isnull O (O (acc_ngen O i))) (O_inO (acc_ngen O i)) i 1)\n  (to O (acc_ngen O i))",
+              "type": "ExtensionAlong (null_to_local_generators (acc_ngen O) i)\n  (fun _ : lgen_codomain (null_to_local_generators (acc_ngen O)) i =>\n   O (acc_ngen O i))\n  (to O (acc_ngen O i))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun x => (H.2 x)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** If all the generators are inhabited, some things become a bit simpler. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section InhabitedGenerators.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (inhab : forall i, acc_ngen O i).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** For testing modal-ness of types, it suffices for all maps out of a generator to be constant.  Probably one could do without [Funext].  *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition inO_const_fromgen `{Funext} A\n               (c : forall i (f : acc_ngen O i -> A), NullHomotopy f)\n    : In O A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i : ngen_indices (acc_ngen O), acc_ngen O i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i : ngen_indices (acc_ngen O)) (f : acc_ngen O i -> A),\nNullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i : ngen_indices (acc_ngen O), acc_ngen O i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i : ngen_indices (acc_ngen O)) (f : acc_ngen O i -> A),\nNullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (snd (inO_iff_isnull O A)); intros i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (null_to_local_generators (acc_ngen O) i)\n  (fun _ : lgen_codomain (null_to_local_generators (acc_ngen O)) i => A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ((equiv_ooextendable_isequiv _ _)^-1%equiv).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv\n  (fun g : lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A =>\n   g oD null_to_local_generators (acc_ngen O) i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply isequiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(lgen_domain (null_to_local_generators (acc_ngen O)) i -> A) ->\nlgen_codomain (null_to_local_generators (acc_ngen O)) i -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun g : lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A =>\n g oD null_to_local_generators (acc_ngen O) i)\no ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g\no (fun g : lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A =>\n   g oD null_to_local_generators (acc_ngen O) i) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(lgen_domain (null_to_local_generators (acc_ngen O)) i -> A) ->\nlgen_codomain (null_to_local_generators (acc_ngen O)) i -> A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f []; exact (c i f).1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun g : lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A =>\n g oD null_to_local_generators (acc_ngen O) i)\no (fun (f : lgen_domain (null_to_local_generators (acc_ngen O)) i -> A)\n     (b : lgen_codomain (null_to_local_generators (acc_ngen O)) i) =>\n   match b with\n   | tt => (c i f).1\n   end) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f; apply path_arrow; intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((fun b : lgen_codomain (null_to_local_generators (acc_ngen O)) i =>\n  match b with\n  | tt => (c i f).1\n  end)\n oD null_to_local_generators (acc_ngen O) i) x =\nf x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f0 : acc_ngen O i0 -> A),\nNullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "lgen_domain (null_to_local_generators (acc_ngen O)) i -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_domain (null_to_local_generators (acc_ngen O)) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; unfold composeD.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(c i f).1 = f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f0 : acc_ngen O i0 -> A),\nNullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "lgen_domain (null_to_local_generators (acc_ngen O)) i -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "lgen_domain (null_to_local_generators (acc_ngen O)) i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; exact ((c i f).2 x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun (f : lgen_domain (null_to_local_generators (acc_ngen O)) i -> A)\n   (b : lgen_codomain (null_to_local_generators (acc_ngen O)) i) =>\n match b with\n | tt => (c i f).1\n end)\no (fun g : lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A =>\n   g oD null_to_local_generators (acc_ngen O) i) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g; apply path_arrow; intros [].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(c i (g oD null_to_local_generators (acc_ngen O) i)).1 = g tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose ((c i (g oD (null_to_local_generators (acc_ngen O)) i)).2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(c i (g oD null_to_local_generators (acc_ngen O) i)).1 = g tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "(c i (g oD null_to_local_generators (acc_ngen O) i)).2",
+              "type": "(fun y : A =>\n forall x : acc_ngen O i,\n (g oD null_to_local_generators (acc_ngen O) i) x = y)\n  (c i (g oD null_to_local_generators (acc_ngen O) i)).1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in p; unfold composeD in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(c i (g oD null_to_local_generators (acc_ngen O) i)).1 = g tt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "forall (i0 : ngen_indices (acc_ngen O)) (f : acc_ngen O i0 -> A),\nNullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (null_to_local_generators (acc_ngen O))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "lgen_codomain (null_to_local_generators (acc_ngen O)) i -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "(c i (fun _ : acc_ngen O i => g tt)).2",
+              "type": "acc_ngen O i -> g tt = (c i (fun _ : acc_ngen O i => g tt)).1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; apply p, inhab.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** In particular, all hprops are modal. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition inO_hprop_inhab_gen `{Funext} (A : Type) `{IsHProp A}\n    : In O A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i : ngen_indices (acc_ngen O), acc_ngen O i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHProp0"
+              ],
+              "body": null,
+              "type": "IsHProp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i : ngen_indices (acc_ngen O), acc_ngen O i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHProp0"
+              ],
+              "body": null,
+              "type": "IsHProp A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply inO_const_fromgen; intros i f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHProp0"
+              ],
+              "body": null,
+              "type": "IsHProp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "acc_ngen O i -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (f (inhab i)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : acc_ngen O i, f x = f (inhab i)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "acco"
+              ],
+              "body": null,
+              "type": "IsAccModality O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "inhab"
+              ],
+              "body": null,
+              "type": "forall i0 : ngen_indices (acc_ngen O), acc_ngen O i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsHProp0"
+              ],
+              "body": null,
+              "type": "IsHProp A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "ngen_indices (acc_ngen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "acc_ngen O i -> A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End InhabitedGenerators.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End AccessibleModalities.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We will now show that a modality is accessible in this sense if and only if its underlying reflective subuniverse is accessible in the sense previously defined.  We (almost?) never need to actually use this, though; in practice accessible modalities usually seem to be given to us with the appropriate sort of generators. *)\n\n(** One direction of this implication is trivial. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance acc_rsu_modality (O : Modality) `{IsAccModality O}\n  : IsAccRSU O\n  := Build_IsAccRSU O (null_to_local_generators (acc_ngen O)) (fun X => inO_iff_isnull O X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For the less trivial converse, the idea is as follows.  By [ooextendable_isnull_fibers], we can detect locality with respect to a map by nullity with respect to its fibers.  Therefore, our first thought might be to just consider all the fibers of all the maps that we are localizing at.  However, this doesn't quite work because [ooextendable_isnull_fibers] is not an if-and-only-if, so not every modal type would necessarily be null for that type family.\n\n     We do know, however, that if [f] is an [O]-connected map, then any [O]-modal type is null for its fibers (since they are [O]-connected types).  There is no *a priori* why all the maps we localize at should end up being connected for the modality; they will always be inverted, but not every inverted map is connected (unless the modality is lex).  But if [f : A -> B] is [O]-inverted, then the [O]-connected map [to O A] is (up to equivalence) the composite of [f] with the [O]-connected map [to O B].  Thus, if [X] is null for the fibers of [to O A] and [to O B], it will be [f]-local and hence [O]-modal, while all [O]-modal types will be null for these fibers since they are connected. *)\n\n(** We don't make this an [Instance] since it is rarely used, and would cause loops when combined with the previous one. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition acc_modality_rsu (O : Modality) `{IsAccRSU O}\n  : IsAccModality O.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAccModality O",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAccModality O",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unshelve econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullGenerators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, In O X <-> IsNull ?acc_ngen X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullGenerators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Build_NullGenerators\n              (  { i : lgen_indices@{a} (acc_lgen O)\n                   & O (lgen_domain@{a} (acc_lgen O) i) }\n               + { i : lgen_indices@{a} (acc_lgen O)\n                   & O (lgen_codomain@{a} (acc_lgen O) i) })\n              _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n{i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)} -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [ [i x] | [i x] ]; exact (hfiber (to O _) x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type,\nIn O X <->\nIsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s =>\n          (fun\n             s0 : {i : lgen_indices (acc_lgen O) &\n                  O (lgen_domain (acc_lgen O) i)} =>\n           (fun (i : lgen_indices (acc_lgen O))\n              (x : O (lgen_domain (acc_lgen O) i)) =>\n            hfiber (to O (lgen_domain (acc_lgen O) i)) x) s0.1 s0.2) s\n      | inr s =>\n          (fun\n             s0 : {i : lgen_indices (acc_lgen O) &\n                  O (lgen_codomain (acc_lgen O) i)} =>\n           (fun (i : lgen_indices (acc_lgen O))\n              (x : O (lgen_codomain (acc_lgen O) i)) =>\n            hfiber (to O (lgen_codomain (acc_lgen O) i)) x) s0.1 s0.2) s\n      end\n  |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type,\nIn O X <->\nIsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s =>\n          (fun\n             s0 : {i : lgen_indices (acc_lgen O) &\n                  O (lgen_domain (acc_lgen O) i)} =>\n           (fun (i : lgen_indices (acc_lgen O))\n              (x : O (lgen_domain (acc_lgen O) i)) =>\n            hfiber (to O (lgen_domain (acc_lgen O) i)) x) s0.1 s0.2) s\n      | inr s =>\n          (fun\n             s0 : {i : lgen_indices (acc_lgen O) &\n                  O (lgen_codomain (acc_lgen O) i)} =>\n           (fun (i : lgen_indices (acc_lgen O))\n              (x : O (lgen_codomain (acc_lgen O) i)) =>\n            hfiber (to O (lgen_codomain (acc_lgen O) i)) x) s0.1 s0.2) s\n      end\n  |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assert (cm := @conn_map_to_O O).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type,\nIn O X <->\nIsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s =>\n          (fun\n             s0 : {i : lgen_indices (acc_lgen O) &\n                  O (lgen_domain (acc_lgen O) i)} =>\n           (fun (i : lgen_indices (acc_lgen O))\n              (x : O (lgen_domain (acc_lgen O) i)) =>\n            hfiber (to O (lgen_domain (acc_lgen O) i)) x) s0.1 s0.2) s\n      | inr s =>\n          (fun\n             s0 : {i : lgen_indices (acc_lgen O) &\n                  O (lgen_codomain (acc_lgen O) i)} =>\n           (fun (i : lgen_indices (acc_lgen O))\n              (x : O (lgen_codomain (acc_lgen O) i)) =>\n            hfiber (to O (lgen_codomain (acc_lgen O) i)) x) s0.1 s0.2) s\n      end\n  |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O X ->\nIsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X ->\nIn O X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O X ->\nIsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X_inO [ [i x] | [i x] ];\n        exact (ooextendable_const_isconnected_inO O _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X ->\nIn O X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros Xnull.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "In O X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n      {i : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i)};\n    ngen_type :=\n      fun\n        X0 : {i : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i)} +\n             {i : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (snd (inO_iff_islocal O X)); intros i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (acc_lgen O i) (fun _ : lgen_codomain (acc_lgen O) i => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cancelL_ooextendable (fun _ => X) (acc_lgen O i)\n                                   (to O (lgen_codomain (acc_lgen O) i)) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (to O (lgen_codomain (acc_lgen O) i))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong\n  (fun x : lgen_domain (acc_lgen O) i =>\n   to O (lgen_codomain (acc_lgen O) i) (acc_lgen O i x))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (to O (lgen_codomain (acc_lgen O) i))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_isnull_fibers; intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (const_tt (hfiber (to O (lgen_codomain (acc_lgen O) i)) x))\n  (unit_name X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "O_reflector O (lgen_codomain (acc_lgen O) i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Xnull (inr (i;x))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong\n  (fun x : lgen_domain (acc_lgen O) i =>\n   to O (lgen_codomain (acc_lgen O) i) (acc_lgen O i x))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ooextendable_homotopic _\n                                       (O_functor O (acc_lgen O i)\n                                                  o to O (lgen_domain (acc_lgen O) i)) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : lgen_domain (acc_lgen O) i =>\n O_functor O (acc_lgen O i) (to O (lgen_domain (acc_lgen O) i) x)) ==\n(fun x : lgen_domain (acc_lgen O) i =>\n to O (lgen_codomain (acc_lgen O) i) (acc_lgen O i x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong\n  (fun x : lgen_domain (acc_lgen O) i =>\n   O_functor O (acc_lgen O i) (to O (lgen_domain (acc_lgen O) i) x))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1:apply to_O_natural.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong\n  (fun x : lgen_domain (acc_lgen O) i =>\n   O_functor O (acc_lgen O i) (to O (lgen_domain (acc_lgen O) i) x))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (O_functor O (acc_lgen O i))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (to O (lgen_domain (acc_lgen O) i))\n  (fun _ : O (lgen_domain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (O_functor O (acc_lgen O i))\n  (fun _ : O_reflector O (lgen_codomain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_equiv, O_inverts_generators.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (to O (lgen_domain (acc_lgen O) i))\n  (fun _ : O (lgen_domain (acc_lgen O) i) => X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ooextendable_isnull_fibers; intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooExtendableAlong (const_tt (hfiber (to O (lgen_domain (acc_lgen O) i)) x))\n  (unit_name X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Modality"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsAccRSU O"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "forall A : Type, IsConnMap O (to O A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xnull"
+              ],
+              "body": null,
+              "type": "IsNull\n  {|\n    ngen_indices :=\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_domain (acc_lgen O) i0)} +\n      {i0 : lgen_indices (acc_lgen O) & O (lgen_codomain (acc_lgen O) i0)};\n    ngen_type :=\n      fun\n        X0 : {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_domain (acc_lgen O) i0)} +\n             {i0 : lgen_indices (acc_lgen O) &\n             O (lgen_codomain (acc_lgen O) i0)} =>\n      match X0 with\n      | inl s => hfiber (to O (lgen_domain (acc_lgen O) s.1)) s.2\n      | inr s => hfiber (to O (lgen_codomain (acc_lgen O) s.1)) s.2\n      end\n  |} X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "lgen_indices (acc_lgen O)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "O (lgen_domain (acc_lgen O) i)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n          "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Xnull (inl (i;x))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The construction of the nullification modality for any family of types will be in [Nullification]. *)\n"
+    }
+  ]
+]

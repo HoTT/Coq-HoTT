@@ -1,0 +1,50 @@
+digraph HoTT_Misc_UStructures {
+  graph [ratio=0.5]
+  node [style=filled]
+UStructures_iscontinuous_uniformly_continuous [label="iscontinuous_uniformly_continuous", URL=<UStructures.html#iscontinuous_uniformly_continuous>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_uniformly_continuous_has_modulus [label="uniformly_continuous_has_modulus", URL=<UStructures.html#uniformly_continuous_has_modulus>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_is_modulus_of_uniform_continuity [label="is_modulus_of_uniform_continuity", URL=<UStructures.html#is_modulus_of_uniform_continuity>, fillcolor="#F070D1"] ;
+UStructures_uniformly_continuous [label="uniformly_continuous", URL=<UStructures.html#uniformly_continuous>, fillcolor="#F070D1"] ;
+UStructures_IsContinuous [label="IsContinuous", URL=<UStructures.html#IsContinuous>, fillcolor="#F070D1"] ;
+UStructures_trunc_us [label="trunc_us", URL=<UStructures.html#trunc_us>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_trivial_us [label="trivial_us", URL=<UStructures.html#trivial_us>, fillcolor="#F070D1"] ;
+UStructures_us_rel_leq [label="us_rel_leq", URL=<UStructures.html#us_rel_leq>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_us_pred [label="us_pred", URL=<UStructures.html#us_pred>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_us_transitive [label="us_transitive", URL=<UStructures.html#us_transitive>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_us_symmetric [label="us_symmetric", URL=<UStructures.html#us_symmetric>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_us_reflexive [label="us_reflexive", URL=<UStructures.html#us_reflexive>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_us_rel [label="us_rel", URL=<UStructures.html#us_rel>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_UStructure_sind [label="UStructure_sind", URL=<UStructures.html#UStructure_sind>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_UStructure_rec [label="UStructure_rec", URL=<UStructures.html#UStructure_rec>, peripheries=3, fillcolor="#F070D1"] ;
+UStructures_UStructure_ind [label="UStructure_ind", URL=<UStructures.html#UStructure_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+UStructures_UStructure_rect [label="UStructure_rect", URL=<UStructures.html#UStructure_rect>, fillcolor="#F070D1"] ;
+UStructures_Build_UStructure [label="Build_UStructure", URL=<UStructures.html#Build_UStructure>, fillcolor="#7FAAFF"] ;
+UStructures_UStructure [label="UStructure", URL=<UStructures.html#UStructure>, fillcolor="#E2CDFA"] ;
+  UStructures_iscontinuous_uniformly_continuous -> UStructures_uniformly_continuous [] ;
+  UStructures_iscontinuous_uniformly_continuous -> UStructures_IsContinuous [] ;
+  UStructures_uniformly_continuous_has_modulus -> UStructures_is_modulus_of_uniform_continuity [] ;
+  UStructures_uniformly_continuous_has_modulus -> UStructures_uniformly_continuous [] ;
+  UStructures_uniformly_continuous_has_modulus -> UStructures_trivial_us [] ;
+  UStructures_is_modulus_of_uniform_continuity -> UStructures_UStructure [] ;
+  UStructures_uniformly_continuous -> UStructures_UStructure [] ;
+  UStructures_IsContinuous -> UStructures_UStructure [] ;
+  UStructures_trunc_us -> UStructures_Build_UStructure [] ;
+  UStructures_trunc_us -> UStructures_UStructure [] ;
+  UStructures_trivial_us -> UStructures_Build_UStructure [] ;
+  UStructures_trivial_us -> UStructures_UStructure [] ;
+  UStructures_us_rel_leq -> UStructures_UStructure [] ;
+  UStructures_us_pred -> UStructures_UStructure [] ;
+  UStructures_us_transitive -> UStructures_UStructure [] ;
+  UStructures_us_symmetric -> UStructures_UStructure [] ;
+  UStructures_us_reflexive -> UStructures_UStructure [] ;
+  UStructures_us_rel -> UStructures_UStructure [] ;
+  UStructures_UStructure_sind -> UStructures_Build_UStructure [] ;
+  UStructures_UStructure_sind -> UStructures_UStructure [] ;
+  UStructures_UStructure_rec -> UStructures_UStructure_rect [] ;
+  UStructures_UStructure_ind -> UStructures_Build_UStructure [] ;
+  UStructures_UStructure_ind -> UStructures_UStructure [] ;
+  UStructures_UStructure_rect -> UStructures_Build_UStructure [] ;
+  UStructures_UStructure_rect -> UStructures_UStructure [] ;
+subgraph cluster_UStructures { label="UStructures"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+UStructures_UStructure; UStructures_Build_UStructure; UStructures_UStructure_rect; UStructures_UStructure_ind; UStructures_UStructure_rec; UStructures_UStructure_sind; UStructures_us_rel; UStructures_us_reflexive; UStructures_us_symmetric; UStructures_us_transitive; UStructures_us_pred; UStructures_us_rel_leq; UStructures_trivial_us; UStructures_trunc_us; UStructures_IsContinuous; UStructures_uniformly_continuous; UStructures_is_modulus_of_uniform_continuity; UStructures_uniformly_continuous_has_modulus; UStructures_iscontinuous_uniformly_continuous; };
+} /* END */

@@ -1,0 +1,15 @@
+digraph HoTT_Metatheory_PropTrunc {
+  graph [ratio=0.5]
+  node [style=filled]
+PropTrunc_ishprop_proptrunc [label="ishprop_proptrunc", URL=<PropTrunc.html#ishprop_proptrunc>, peripheries=3, fillcolor="#F070D1"] ;
+PropTrunc_equiv_PropTrunc_rec [label="equiv_PropTrunc_rec", URL=<PropTrunc.html#equiv_PropTrunc_rec>, fillcolor="#F070D1"] ;
+PropTrunc_ptr_in [label="ptr_in", URL=<PropTrunc.html#ptr_in>, peripheries=3, fillcolor="#F070D1"] ;
+PropTrunc_PropTrunc [label="PropTrunc", URL=<PropTrunc.html#PropTrunc>, fillcolor="#F070D1"] ;
+PropTrunc_Join_seq [label="Join_seq", URL=<PropTrunc.html#Join_seq>, fillcolor="#F070D1"] ;
+  PropTrunc_ishprop_proptrunc -> PropTrunc_equiv_PropTrunc_rec [] ;
+  PropTrunc_equiv_PropTrunc_rec -> PropTrunc_PropTrunc [] ;
+  PropTrunc_ptr_in -> PropTrunc_PropTrunc [] ;
+  PropTrunc_PropTrunc -> PropTrunc_Join_seq [] ;
+subgraph cluster_PropTrunc { label="PropTrunc"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PropTrunc_Join_seq; PropTrunc_PropTrunc; PropTrunc_ptr_in; PropTrunc_equiv_PropTrunc_rec; PropTrunc_ishprop_proptrunc; };
+} /* END */

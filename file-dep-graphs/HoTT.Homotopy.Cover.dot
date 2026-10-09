@@ -1,0 +1,35 @@
+digraph HoTT_Homotopy_Cover {
+  graph [ratio=0.5]
+  node [style=filled]
+Cover_equiv_comp_equiv_map [label="equiv_comp_equiv_map", URL=<Cover.html#equiv_comp_equiv_map>, peripheries=3, fillcolor="#F070D1"] ;
+Cover_equiv_comp_property [label="equiv_comp_property", URL=<Cover.html#equiv_comp_property>, fillcolor="#F070D1"] ;
+Cover_pequiv_pfunctor_pcomp [label="pequiv_pfunctor_pcomp", URL=<Cover.html#pequiv_pfunctor_pcomp>, peripheries=3, fillcolor="#F070D1"] ;
+Cover_pfunctor_pcomp [label="pfunctor_pcomp", URL=<Cover.html#pfunctor_pcomp>, peripheries=3, fillcolor="#F070D1"] ;
+Cover_pcomp [label="pcomp", URL=<Cover.html#pcomp>, peripheries=3, fillcolor="#F070D1"] ;
+Cover_comp [label="comp", URL=<Cover.html#comp>, fillcolor="#F070D1"] ;
+Cover_pequiv_pfunctor_pTr_pcover [label="pequiv_pfunctor_pTr_pcover", URL=<Cover.html#pequiv_pfunctor_pTr_pcover>, fillcolor="#F070D1"] ;
+Cover_pfunctor_pTr_pcover [label="pfunctor_pTr_pcover", URL=<Cover.html#pfunctor_pTr_pcover>, fillcolor="#F070D1"] ;
+Cover_pequiv_pfunctor_O_pcover [label="pequiv_pfunctor_O_pcover", URL=<Cover.html#pequiv_pfunctor_O_pcover>, peripheries=3, fillcolor="#F070D1"] ;
+Cover_pfunctor_O_pcover [label="pfunctor_O_pcover", URL=<Cover.html#pfunctor_O_pcover>, fillcolor="#F070D1"] ;
+Cover_equiv_functor_O_cover [label="equiv_functor_O_cover", URL=<Cover.html#equiv_functor_O_cover>, fillcolor="#F070D1"] ;
+Cover_functor_O_cover [label="functor_O_cover", URL=<Cover.html#functor_O_cover>, fillcolor="#F070D1"] ;
+Cover_O_pcover_prod [label="O_pcover_prod", URL=<Cover.html#O_pcover_prod>, peripheries=3, fillcolor="#F070D1"] ;
+Cover_O_pcover [label="O_pcover", URL=<Cover.html#O_pcover>, fillcolor="#F070D1"] ;
+Cover_O_cover [label="O_cover", URL=<Cover.html#O_cover>, fillcolor="#F070D1"] ;
+  Cover_equiv_comp_equiv_map -> Cover_equiv_comp_property [] ;
+  Cover_equiv_comp_equiv_map -> Cover_equiv_functor_O_cover [] ;
+  Cover_equiv_comp_property -> Cover_comp [] ;
+  Cover_pequiv_pfunctor_pcomp -> Cover_pequiv_pfunctor_pTr_pcover [] ;
+  Cover_pfunctor_pcomp -> Cover_pfunctor_pTr_pcover [] ;
+  Cover_pcomp -> Cover_O_pcover [] ;
+  Cover_comp -> Cover_O_cover [] ;
+  Cover_pequiv_pfunctor_pTr_pcover -> Cover_pfunctor_pTr_pcover [] ;
+  Cover_pfunctor_pTr_pcover -> Cover_O_pcover [] ;
+  Cover_pequiv_pfunctor_O_pcover -> Cover_pfunctor_O_pcover [] ;
+  Cover_pfunctor_O_pcover -> Cover_O_pcover [] ;
+  Cover_equiv_functor_O_cover -> Cover_functor_O_cover [] ;
+  Cover_functor_O_cover -> Cover_O_cover [] ;
+  Cover_O_pcover_prod -> Cover_O_pcover [] ;
+subgraph cluster_Cover { label="Cover"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Cover_O_cover; Cover_O_pcover; Cover_O_pcover_prod; Cover_functor_O_cover; Cover_equiv_functor_O_cover; Cover_pfunctor_O_pcover; Cover_pequiv_pfunctor_O_pcover; Cover_pfunctor_pTr_pcover; Cover_pequiv_pfunctor_pTr_pcover; Cover_comp; Cover_pcomp; Cover_pfunctor_pcomp; Cover_pequiv_pfunctor_pcomp; Cover_equiv_comp_property; Cover_equiv_comp_equiv_map; };
+} /* END */

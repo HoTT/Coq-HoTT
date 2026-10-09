@@ -1,0 +1,54 @@
+digraph HoTT_Modalities_CoreflectiveSubuniverse {
+  graph [ratio=0.5]
+  node [style=filled]
+CoreflectiveSubuniverse_coopen_equiv_open [label="coopen_equiv_open", URL=<CoreflectiveSubuniverse.html#coopen_equiv_open>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_coopen_isequiv_open [label="coopen_isequiv_open", URL=<CoreflectiveSubuniverse.html#coopen_isequiv_open>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_coOp [label="coOp", URL=<CoreflectiveSubuniverse.html#coOp>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_inF_equiv_implies_funit [label="inF_equiv_implies_funit", URL=<CoreflectiveSubuniverse.html#inF_equiv_implies_funit>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_inF_fromF_sect [label="inF_fromF_sect", URL=<CoreflectiveSubuniverse.html#inF_fromF_sect>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_ishprop_coreflection [label="ishprop_coreflection", URL=<CoreflectiveSubuniverse.html#ishprop_coreflection>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_F_functor [label="F_functor", URL=<CoreflectiveSubuniverse.html#F_functor>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_F_coindpaths [label="F_coindpaths", URL=<CoreflectiveSubuniverse.html#F_coindpaths>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_F_corec_beta [label="F_corec_beta", URL=<CoreflectiveSubuniverse.html#F_corec_beta>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_F_corec [label="F_corec", URL=<CoreflectiveSubuniverse.html#F_corec>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_isequiv_fromF_postcompose [label="isequiv_fromF_postcompose", URL=<CoreflectiveSubuniverse.html#isequiv_fromF_postcompose>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_fromF [label="fromF", URL=<CoreflectiveSubuniverse.html#fromF>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_F_inF [label="F_inF", URL=<CoreflectiveSubuniverse.html#F_inF>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_F_coreflector [label="F_coreflector", URL=<CoreflectiveSubuniverse.html#F_coreflector>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_inF [label="inF", URL=<CoreflectiveSubuniverse.html#inF>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_CoreflectiveSubuniverse_sind [label="CoreflectiveSubuniverse_sind", URL=<CoreflectiveSubuniverse.html#CoreflectiveSubuniverse_sind>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_CoreflectiveSubuniverse_rec [label="CoreflectiveSubuniverse_rec", URL=<CoreflectiveSubuniverse.html#CoreflectiveSubuniverse_rec>, peripheries=3, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_CoreflectiveSubuniverse_ind [label="CoreflectiveSubuniverse_ind", URL=<CoreflectiveSubuniverse.html#CoreflectiveSubuniverse_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+CoreflectiveSubuniverse_CoreflectiveSubuniverse_rect [label="CoreflectiveSubuniverse_rect", URL=<CoreflectiveSubuniverse.html#CoreflectiveSubuniverse_rect>, fillcolor="#F070D1"] ;
+CoreflectiveSubuniverse_Build_CoreflectiveSubuniverse [label="Build_CoreflectiveSubuniverse", URL=<CoreflectiveSubuniverse.html#Build_CoreflectiveSubuniverse>, fillcolor="#7FAAFF"] ;
+CoreflectiveSubuniverse_CoreflectiveSubuniverse [label="CoreflectiveSubuniverse", URL=<CoreflectiveSubuniverse.html#CoreflectiveSubuniverse>, fillcolor="#E2CDFA"] ;
+  CoreflectiveSubuniverse_coopen_equiv_open -> CoreflectiveSubuniverse_coopen_isequiv_open [] ;
+  CoreflectiveSubuniverse_coopen_isequiv_open -> CoreflectiveSubuniverse_coOp [] ;
+  CoreflectiveSubuniverse_coOp -> CoreflectiveSubuniverse_Build_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_coOp -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_inF_equiv_implies_funit -> CoreflectiveSubuniverse_inF_fromF_sect [] ;
+  CoreflectiveSubuniverse_inF_equiv_implies_funit -> CoreflectiveSubuniverse_ishprop_coreflection [] ;
+  CoreflectiveSubuniverse_inF_equiv_implies_funit -> CoreflectiveSubuniverse_F_functor [] ;
+  CoreflectiveSubuniverse_inF_equiv_implies_funit -> CoreflectiveSubuniverse_F_corec_beta [] ;
+  CoreflectiveSubuniverse_inF_fromF_sect -> CoreflectiveSubuniverse_F_coindpaths [] ;
+  CoreflectiveSubuniverse_inF_fromF_sect -> CoreflectiveSubuniverse_F_inF [] ;
+  CoreflectiveSubuniverse_ishprop_coreflection -> CoreflectiveSubuniverse_F_coindpaths [] ;
+  CoreflectiveSubuniverse_F_functor -> CoreflectiveSubuniverse_F_corec [] ;
+  CoreflectiveSubuniverse_F_coindpaths -> CoreflectiveSubuniverse_isequiv_fromF_postcompose [] ;
+  CoreflectiveSubuniverse_F_corec_beta -> CoreflectiveSubuniverse_F_corec [] ;
+  CoreflectiveSubuniverse_F_corec -> CoreflectiveSubuniverse_isequiv_fromF_postcompose [] ;
+  CoreflectiveSubuniverse_isequiv_fromF_postcompose -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_fromF -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_F_inF -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_F_coreflector -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_inF -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_sind -> CoreflectiveSubuniverse_Build_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_sind -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_rec -> CoreflectiveSubuniverse_CoreflectiveSubuniverse_rect [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_ind -> CoreflectiveSubuniverse_Build_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_ind -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_rect -> CoreflectiveSubuniverse_Build_CoreflectiveSubuniverse [] ;
+  CoreflectiveSubuniverse_CoreflectiveSubuniverse_rect -> CoreflectiveSubuniverse_CoreflectiveSubuniverse [] ;
+subgraph cluster_CoreflectiveSubuniverse { label="CoreflectiveSubuniverse"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+CoreflectiveSubuniverse_CoreflectiveSubuniverse; CoreflectiveSubuniverse_Build_CoreflectiveSubuniverse; CoreflectiveSubuniverse_CoreflectiveSubuniverse_rect; CoreflectiveSubuniverse_CoreflectiveSubuniverse_ind; CoreflectiveSubuniverse_CoreflectiveSubuniverse_rec; CoreflectiveSubuniverse_CoreflectiveSubuniverse_sind; CoreflectiveSubuniverse_inF; CoreflectiveSubuniverse_F_coreflector; CoreflectiveSubuniverse_F_inF; CoreflectiveSubuniverse_fromF; CoreflectiveSubuniverse_isequiv_fromF_postcompose; CoreflectiveSubuniverse_F_corec; CoreflectiveSubuniverse_F_corec_beta; CoreflectiveSubuniverse_F_coindpaths; CoreflectiveSubuniverse_F_functor; CoreflectiveSubuniverse_ishprop_coreflection; CoreflectiveSubuniverse_inF_fromF_sect; CoreflectiveSubuniverse_inF_equiv_implies_funit; CoreflectiveSubuniverse_coOp; CoreflectiveSubuniverse_coopen_isequiv_open; CoreflectiveSubuniverse_coopen_equiv_open; };
+} /* END */

@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Spaces.SInt</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Spaces.SInt</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Nat.html#"><span class="id" title="library">Basics.Nat</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.Decidable.html#"><span class="id" title="library">Basics.Decidable</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Numerals.Decimal.html#"><span class="id" title="library">Basics.Numerals.Decimal</span></a> <a class="idref" href="HoTT.Basics.Numeral.html#"><span class="id" title="library">Basics.Numeral</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Nat.Core.html#"><span class="id" title="library">Spaces.Nat.Core</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1770"></a><h1 class="section">The signed integers</h1>
+
+<div class="paragraph"> </div>
+
+ In this file, we give a simple inductive type that represents the integers.  It is straightforward to show that this type has decidable equality and is therefore a set, and it is also straightforward to print and parse integers using this type.  However, we only use it for these purposes, and treat the HIT integers as our main definition of the integers, since they have an induction principle with better computational behaviour. 
+<div class="paragraph"> </div>
+
+<a id="lab1771"></a><h2 class="section">Definition</h2>
+
+<div class="paragraph"> </div>
+
+ We define the signed integers as two copies of <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> glued together around a <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#zero"><span class="id" title="definition">zero</span></a></span>.  <span class="inlinecode"><a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a></span> represents <span class="inlinecode">-(<a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a></span> represents <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a>+1</span>.  The trailing "S" indicates the successor. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="SInt" class="idref" href="#SInt"><span class="id" title="inductive">SInt</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> :=<br/>
+| <a id="sint_NegS" class="idref" href="#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#SInt:1"><span class="id" title="inductive">SInt</span></a><br/>
+| <a id="sint_zero" class="idref" href="#sint_zero"><span class="id" title="constructor">sint_zero</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt:1"><span class="id" title="inductive">SInt</span></a><br/>
+| <a id="sint_PosS" class="idref" href="#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#SInt:1"><span class="id" title="inductive">SInt</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can convert a <span class="inlinecode"><a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a></span> to an <span class="inlinecode"><a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a></span> by mapping <span class="inlinecode">0</span> to <span class="inlinecode"><a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Types.IWType.html#Paths.Ind.S"><span class="id" title="variable">S</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="sint_of_nat" class="idref" href="#sint_of_nat"><span class="id" title="definition">sint_of_nat</span></a> (<a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#n:3"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:3"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Symmetrically, we can send <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#TruncationModality.n"><span class="id" title="variable">n</span></a></span> to "-n" in this way: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="negsint_of_nat" class="idref" href="#negsint_of_nat"><span class="id" title="definition">negsint_of_nat</span></a> (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#n:5"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:5"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1772"></a><h2 class="section">Parsing and printing</h2>
+
+<div class="paragraph"> </div>
+
+ Here we define some printing and parsing functions that convert the integers between numeral representations.  We don't register these, but they are used for printing and parsing of the HIT integers in Int.v. 
+<div class="paragraph"> </div>
+
+ Printing 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="sint_to_number_int" class="idref" href="#sint_to_number_int"><span class="id" title="definition">sint_to_number_int</span></a> (<a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>) : <a class="idref" href="HoTT.Basics.Numeral.html#int"><span class="id" title="inductive">Numeral.int</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#n:7"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <span class="id" title="var">m</span> ⇒ <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">IntDec</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#to_uint"><span class="id" title="definition">to_uint</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span>)))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> ⇒ <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">IntDec</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#to_uint"><span class="id" title="definition">to_uint</span></a> 0))<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <span class="id" title="var">m</span> ⇒ <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">IntDec</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#to_uint"><span class="id" title="definition">to_uint</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span>)))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Parsing 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="sint_of_number_int" class="idref" href="#sint_of_number_int"><span class="id" title="definition">sint_of_number_int</span></a> (<a id="d:9" class="idref" href="#d:9"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Basics.Numeral.html#int"><span class="id" title="inductive">Numeral.int</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#d:9"><span class="id" title="variable">d</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">IntDec</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Pos"><span class="id" title="constructor">Pos</span></a> <span class="id" title="var">u</span>) ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_of_nat"><span class="id" title="definition">sint_of_nat</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#of_uint"><span class="id" title="definition">of_uint</span></a> <span class="id" title="var">u</span>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntDec"><span class="id" title="constructor">IntDec</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Decimal.html#Neg"><span class="id" title="constructor">Neg</span></a> <span class="id" title="var">u</span>) ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#negsint_of_nat"><span class="id" title="definition">negsint_of_nat</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#of_uint"><span class="id" title="definition">of_uint</span></a> <span class="id" title="var">u</span>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntHex"><span class="id" title="constructor">IntHex</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Pos"><span class="id" title="constructor">Hexadecimal.Pos</span></a> <span class="id" title="var">u</span>) ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_of_nat"><span class="id" title="definition">sint_of_nat</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#of_hex_uint"><span class="id" title="definition">of_hex_uint</span></a> <span class="id" title="var">u</span>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Numeral.html#IntHex"><span class="id" title="constructor">IntHex</span></a> (<a class="idref" href="HoTT.Basics.Numerals.Hexadecimal.html#Neg"><span class="id" title="constructor">Hexadecimal.Neg</span></a> <span class="id" title="var">u</span>) ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#negsint_of_nat"><span class="id" title="definition">negsint_of_nat</span></a> (<a class="idref" href="HoTT.Basics.Nat.html#of_hex_uint"><span class="id" title="definition">of_hex_uint</span></a> <span class="id" title="var">u</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1773"></a><h2 class="section">Successor, predecessor and negation</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="sint_succ" class="idref" href="#sint_succ"><span class="id" title="definition">sint_succ</span></a> (<a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#n:11"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:11"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> 0<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#negsint_of_nat"><span class="id" title="definition">negsint_of_nat</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:11"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="sint_pred" class="idref" href="#sint_pred"><span class="id" title="definition">sint_pred</span></a> (<a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#n:13"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_of_nat"><span class="id" title="definition">sint_of_nat</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:13"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> 0<br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:13"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="sint_neg" class="idref" href="#sint_neg"><span class="id" title="definition">sint_neg@</span></a>{} (<a id="x:15" class="idref" href="#x:15"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Spaces.SInt.html#x:15"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <span class="id" title="var">x</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:15"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <span class="id" title="var">x</span> ⇒ <a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:15"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The successor of a predecessor is the identity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="sint_succ_pred" class="idref" href="#sint_succ_pred"><span class="id" title="definition">sint_succ_pred@</span></a>{} (<a id="x:17" class="idref" href="#x:17"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#sint_succ"><span class="id" title="definition">sint_succ</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_pred"><span class="id" title="definition">sint_pred</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:17"><span class="id" title="variable">x</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:17"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [ | | []].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The predecessor of a successor is the identity. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="sint_pred_succ" class="idref" href="#sint_pred_succ"><span class="id" title="definition">sint_pred_succ@</span></a>{} (<a id="x:18" class="idref" href="#x:18"><span class="id" title="binder">x</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>) : <a class="idref" href="HoTT.Spaces.SInt.html#sint_pred"><span class="id" title="definition">sint_pred</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_succ"><span class="id" title="definition">sint_succ</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:18"><span class="id" title="variable">x</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:18"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [[] | | ].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1774"></a><h2 class="section">Decidable Equality</h2>
+
+<div class="paragraph"> </div>
+
+ The signed integers have decidable equality. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="decidablepaths_sint" class="idref" href="#decidablepaths_sint"><span class="id" title="instance">decidablepaths_sint@</span></a>{} : <a class="idref" href="HoTT.Basics.Decidable.html#DecidablePaths"><span class="id" title="class">DecidablePaths</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> | | <span class="id" title="var">x</span>] [<span class="id" title="var">y</span> | | <span class="id" title="var">y</span>].<br/>
+&nbsp;&nbsp;2-4,6-8: <span class="id" title="tactic">right</span>; <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">discriminate</span>.<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">by</span> <span class="id" title="tactic">left</span>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Decidable.html#decidable_iff"><span class="id" title="definition">decidable_iff</span></a>.<br/>
+&nbsp;&nbsp;1,3: <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;1,3: <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">by</span> <span class="id" title="tactic">injection</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;1,2: <span class="id" title="tactic">exact</span> <span class="id" title="var">_</span>. <span class="comment">(*&nbsp;Uses&nbsp;decidable&nbsp;equality&nbsp;of&nbsp;<span class="inlinecode"><span class="id" title="var">nat</span></span>.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+By Hedberg's theorem, we have that the signed integers are a set. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="ishset_sint" class="idref" href="#ishset_sint"><span class="id" title="instance">ishset_sint@</span></a>{} : <a class="idref" href="HoTT.Basics.Overture.html#IsHSet"><span class="id" title="abbreviation">IsHSet</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> := <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1775"></a><h2 class="section">Signed integer induction</h2>
+
+<div class="paragraph"> </div>
+
+ The induction principle for signed integers is similar to the induction principle for natural numbers. However we have two induction hypotheses going in either direction starting from <span class="inlinecode">0</span>.  This is used only in Int.v. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="SInt_ind" class="idref" href="#SInt_ind"><span class="id" title="definition">SInt_ind@</span></a>{<span class="id" title="var">i</span>} (<a id="P:19" class="idref" href="#P:19"><span class="id" title="binder">P</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#SInt"><span class="id" title="inductive">SInt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>})<br/>
+&nbsp;&nbsp;(<a id="H0:20" class="idref" href="#H0:20"><span class="id" title="binder">H0</span></a> : <a class="idref" href="HoTT.Spaces.SInt.html#P:19"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#sint_zero"><span class="id" title="constructor">sint_zero</span></a>)<br/>
+&nbsp;&nbsp;(<a id="HP:22" class="idref" href="#HP:22"><span class="id" title="binder">HP</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:21" class="idref" href="#n:21"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#P:19"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_of_nat"><span class="id" title="definition">sint_of_nat</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:21"><span class="id" title="variable">n</span></a>) <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#P:19"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_PosS"><span class="id" title="constructor">sint_PosS</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:21"><span class="id" title="variable">n</span></a>))<br/>
+&nbsp;&nbsp;(<a id="HN:24" class="idref" href="#HN:24"><span class="id" title="binder">HN</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#P:19"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_neg"><span class="id" title="definition">sint_neg</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_of_nat"><span class="id" title="definition">sint_of_nat</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:23"><span class="id" title="variable">n</span></a>)) <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#P:19"><span class="id" title="variable">P</span></a> (<a class="idref" href="HoTT.Spaces.SInt.html#sint_NegS"><span class="id" title="constructor">sint_NegS</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#n:23"><span class="id" title="variable">n</span></a>))<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:25" class="idref" href="#x:25"><span class="id" title="binder">x</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#P:19"><span class="id" title="variable">P</span></a> <a class="idref" href="HoTT.Spaces.SInt.html#x:25"><span class="id" title="variable">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> | | <span class="id" title="var">x</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">x</span> <span class="id" title="var">IHx</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> (<span class="id" title="var">HN</span> 0%<span class="id" title="var">nat</span>), <span class="id" title="var">H0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> (<span class="id" title="var">HN</span> <span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>%<span class="id" title="var">nat</span>), <span class="id" title="var">IHx</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">H0</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">x</span> <span class="id" title="var">IHx</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> (<span class="id" title="var">HP</span> 0%<span class="id" title="var">nat</span>), <span class="id" title="var">H0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> (<span class="id" title="var">HP</span> <span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Nat.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>%<span class="id" title="var">nat</span>), <span class="id" title="var">IHx</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We record these so that they can be used with the <span class="inlinecode"><span class="id" title="tactic">induction</span></span> tactic. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="SInt_rect" class="idref" href="#SInt_rect"><span class="id" title="definition">SInt_rect</span></a> := <a class="idref" href="HoTT.Spaces.SInt.html#SInt_ind"><span class="id" title="definition">SInt_ind</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="SInt_rec" class="idref" href="#SInt_rec"><span class="id" title="definition">SInt_rec</span></a> := <a class="idref" href="HoTT.Spaces.SInt.html#SInt_ind"><span class="id" title="definition">SInt_ind</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

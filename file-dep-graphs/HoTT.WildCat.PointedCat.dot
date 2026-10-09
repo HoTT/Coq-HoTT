@@ -1,0 +1,67 @@
+digraph HoTT_WildCat_PointedCat {
+  graph [ratio=0.5]
+  node [style=filled]
+PointedCat_ispointedcat_op [label="ispointedcat_op", URL=<PointedCat.html#ispointedcat_op>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_fmap_zero_morphism [label="fmap_zero_morphism", URL=<PointedCat.html#fmap_zero_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_pfunctor_zero [label="pfunctor_zero", URL=<PointedCat.html#pfunctor_zero>, fillcolor="#F070D1"] ;
+PointedCat_Build_IsPointedFunctor_ [label="Build_IsPointedFunctor'", URL=<PointedCat.html#Build_IsPointedFunctor'>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_preservesterminal_pfunctor [label="preservesterminal_pfunctor", URL=<PointedCat.html#preservesterminal_pfunctor>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_preservesinitial_pfunctor [label="preservesinitial_pfunctor", URL=<PointedCat.html#preservesinitial_pfunctor>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_IsPointedFunctor_sind [label="IsPointedFunctor_sind", URL=<PointedCat.html#IsPointedFunctor_sind>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_IsPointedFunctor_rec [label="IsPointedFunctor_rec", URL=<PointedCat.html#IsPointedFunctor_rec>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_IsPointedFunctor_ind [label="IsPointedFunctor_ind", URL=<PointedCat.html#IsPointedFunctor_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+PointedCat_IsPointedFunctor_rect [label="IsPointedFunctor_rect", URL=<PointedCat.html#IsPointedFunctor_rect>, fillcolor="#F070D1"] ;
+PointedCat_Build_IsPointedFunctor [label="Build_IsPointedFunctor", URL=<PointedCat.html#Build_IsPointedFunctor>, fillcolor="#7FAAFF"] ;
+PointedCat_IsPointedFunctor [label="IsPointedFunctor", URL=<PointedCat.html#IsPointedFunctor>, fillcolor="#E2CDFA"] ;
+PointedCat_cat_zero_m [label="cat_zero_m", URL=<PointedCat.html#cat_zero_m>, fillcolor="#F070D1"] ;
+PointedCat_cat_zero_r [label="cat_zero_r", URL=<PointedCat.html#cat_zero_r>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_cat_zero_l [label="cat_zero_l", URL=<PointedCat.html#cat_zero_l>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_cat_zero_target [label="cat_zero_target", URL=<PointedCat.html#cat_zero_target>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_cat_zero_source [label="cat_zero_source", URL=<PointedCat.html#cat_zero_source>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_zero_morphism [label="zero_morphism", URL=<PointedCat.html#zero_morphism>, fillcolor="#F070D1"] ;
+PointedCat_isterminal_zero_object [label="isterminal_zero_object", URL=<PointedCat.html#isterminal_zero_object>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_isinitial_zero_object [label="isinitial_zero_object", URL=<PointedCat.html#isinitial_zero_object>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_zero_object [label="zero_object", URL=<PointedCat.html#zero_object>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_IsPointedCat_sind [label="IsPointedCat_sind", URL=<PointedCat.html#IsPointedCat_sind>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_IsPointedCat_rec [label="IsPointedCat_rec", URL=<PointedCat.html#IsPointedCat_rec>, peripheries=3, fillcolor="#F070D1"] ;
+PointedCat_IsPointedCat_ind [label="IsPointedCat_ind", URL=<PointedCat.html#IsPointedCat_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+PointedCat_IsPointedCat_rect [label="IsPointedCat_rect", URL=<PointedCat.html#IsPointedCat_rect>, fillcolor="#F070D1"] ;
+PointedCat_Build_IsPointedCat [label="Build_IsPointedCat", URL=<PointedCat.html#Build_IsPointedCat>, fillcolor="#7FAAFF"] ;
+PointedCat_IsPointedCat [label="IsPointedCat", URL=<PointedCat.html#IsPointedCat>, fillcolor="#E2CDFA"] ;
+  PointedCat_ispointedcat_op -> PointedCat_Build_IsPointedCat [] ;
+  PointedCat_ispointedcat_op -> PointedCat_IsPointedCat [] ;
+  PointedCat_fmap_zero_morphism -> PointedCat_pfunctor_zero [] ;
+  PointedCat_fmap_zero_morphism -> PointedCat_cat_zero_m [] ;
+  PointedCat_pfunctor_zero -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_pfunctor_zero -> PointedCat_IsPointedCat [] ;
+  PointedCat_Build_IsPointedFunctor_ -> PointedCat_Build_IsPointedFunctor [] ;
+  PointedCat_Build_IsPointedFunctor_ -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_Build_IsPointedFunctor_ -> PointedCat_IsPointedCat [] ;
+  PointedCat_preservesterminal_pfunctor -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_preservesinitial_pfunctor -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_IsPointedFunctor_sind -> PointedCat_Build_IsPointedFunctor [] ;
+  PointedCat_IsPointedFunctor_sind -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_IsPointedFunctor_rec -> PointedCat_IsPointedFunctor_rect [] ;
+  PointedCat_IsPointedFunctor_ind -> PointedCat_Build_IsPointedFunctor [] ;
+  PointedCat_IsPointedFunctor_ind -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_IsPointedFunctor_rect -> PointedCat_Build_IsPointedFunctor [] ;
+  PointedCat_IsPointedFunctor_rect -> PointedCat_IsPointedFunctor [] ;
+  PointedCat_cat_zero_m -> PointedCat_zero_morphism [] ;
+  PointedCat_cat_zero_r -> PointedCat_zero_morphism [] ;
+  PointedCat_cat_zero_l -> PointedCat_zero_morphism [] ;
+  PointedCat_cat_zero_target -> PointedCat_zero_morphism [] ;
+  PointedCat_cat_zero_source -> PointedCat_zero_morphism [] ;
+  PointedCat_zero_morphism -> PointedCat_IsPointedCat [] ;
+  PointedCat_isterminal_zero_object -> PointedCat_IsPointedCat [] ;
+  PointedCat_isinitial_zero_object -> PointedCat_IsPointedCat [] ;
+  PointedCat_zero_object -> PointedCat_IsPointedCat [] ;
+  PointedCat_IsPointedCat_sind -> PointedCat_Build_IsPointedCat [] ;
+  PointedCat_IsPointedCat_sind -> PointedCat_IsPointedCat [] ;
+  PointedCat_IsPointedCat_rec -> PointedCat_IsPointedCat_rect [] ;
+  PointedCat_IsPointedCat_ind -> PointedCat_Build_IsPointedCat [] ;
+  PointedCat_IsPointedCat_ind -> PointedCat_IsPointedCat [] ;
+  PointedCat_IsPointedCat_rect -> PointedCat_Build_IsPointedCat [] ;
+  PointedCat_IsPointedCat_rect -> PointedCat_IsPointedCat [] ;
+subgraph cluster_PointedCat { label="PointedCat"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PointedCat_IsPointedCat; PointedCat_Build_IsPointedCat; PointedCat_IsPointedCat_rect; PointedCat_IsPointedCat_ind; PointedCat_IsPointedCat_rec; PointedCat_IsPointedCat_sind; PointedCat_zero_object; PointedCat_isinitial_zero_object; PointedCat_isterminal_zero_object; PointedCat_zero_morphism; PointedCat_cat_zero_source; PointedCat_cat_zero_target; PointedCat_cat_zero_l; PointedCat_cat_zero_r; PointedCat_cat_zero_m; PointedCat_IsPointedFunctor; PointedCat_Build_IsPointedFunctor; PointedCat_IsPointedFunctor_rect; PointedCat_IsPointedFunctor_ind; PointedCat_IsPointedFunctor_rec; PointedCat_IsPointedFunctor_sind; PointedCat_preservesinitial_pfunctor; PointedCat_preservesterminal_pfunctor; PointedCat_Build_IsPointedFunctor_; PointedCat_pfunctor_zero; PointedCat_fmap_zero_morphism; PointedCat_ispointedcat_op; };
+} /* END */

@@ -1,0 +1,29 @@
+digraph HoTT_Classes_theory_apartness {
+  graph [ratio=0.5]
+  node [style=filled]
+apartness_dec_strong_binary_morphism [label="dec_strong_binary_morphism", URL=<apartness.html#dec_strong_binary_morphism>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_dec_strong_injective [label="dec_strong_injective", URL=<apartness.html#dec_strong_injective>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_dec_strong_morphism [label="dec_strong_morphism", URL=<apartness.html#dec_strong_morphism>, fillcolor="#F070D1"] ;
+apartness_dec_strong_setoid [label="dec_strong_setoid", URL=<apartness.html#dec_strong_setoid>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_ne_apart [label="ne_apart", URL=<apartness.html#ne_apart>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_default_apart_trivial [label="default_apart_trivial", URL=<apartness.html#default_apart_trivial>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_default_apart [label="default_apart", URL=<apartness.html#default_apart>, fillcolor="#F070D1"] ;
+apartness_strong_binary_setoid_morphism_commutative [label="strong_binary_setoid_morphism_commutative", URL=<apartness.html#strong_binary_setoid_morphism_commutative>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_strong_binary_setoid_morphism_both_coordinates [label="strong_binary_setoid_morphism_both_coordinates", URL=<apartness.html#strong_binary_setoid_morphism_both_coordinates>, fillcolor="#F070D1"] ;
+apartness_strong_setoid_morphism_unary_2 [label="strong_setoid_morphism_unary_2", URL=<apartness.html#strong_setoid_morphism_unary_2>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_strong_setoid_morphism_1 [label="strong_setoid_morphism_1", URL=<apartness.html#strong_setoid_morphism_1>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_strong_injective_injective [label="strong_injective_injective", URL=<apartness.html#strong_injective_injective>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_sig_strong_setoid [label="sig_strong_setoid", URL=<apartness.html#sig_strong_setoid>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_sg_apart_mere [label="sg_apart_mere", URL=<apartness.html#sg_apart_mere>, fillcolor="#F070D1"] ;
+apartness_projected_strong_setoid [label="projected_strong_setoid", URL=<apartness.html#projected_strong_setoid>, fillcolor="#F070D1"] ;
+apartness_stable_eq_apartness [label="stable_eq_apartness", URL=<apartness.html#stable_eq_apartness>, peripheries=3, fillcolor="#F070D1"] ;
+apartness_apart_ne [label="apart_ne", URL=<apartness.html#apart_ne>, fillcolor="#F070D1"] ;
+  apartness_dec_strong_injective -> apartness_dec_strong_morphism [] ;
+  apartness_default_apart_trivial -> apartness_default_apart [] ;
+  apartness_strong_binary_setoid_morphism_commutative -> apartness_strong_binary_setoid_morphism_both_coordinates [] ;
+  apartness_sig_strong_setoid -> apartness_sg_apart_mere [] ;
+  apartness_sig_strong_setoid -> apartness_projected_strong_setoid [] ;
+  apartness_stable_eq_apartness -> apartness_apart_ne [] ;
+subgraph cluster_apartness { label="apartness"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+apartness_apart_ne; apartness_stable_eq_apartness; apartness_projected_strong_setoid; apartness_sg_apart_mere; apartness_sig_strong_setoid; apartness_strong_injective_injective; apartness_strong_setoid_morphism_1; apartness_strong_setoid_morphism_unary_2; apartness_strong_binary_setoid_morphism_both_coordinates; apartness_strong_binary_setoid_morphism_commutative; apartness_default_apart; apartness_default_apart_trivial; apartness_ne_apart; apartness_dec_strong_setoid; apartness_dec_strong_morphism; apartness_dec_strong_injective; apartness_dec_strong_binary_morphism; };
+} /* END */

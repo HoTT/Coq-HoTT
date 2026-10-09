@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.InitialTerminalCategory.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Initial and terminal categories *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Definitions *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> InitialTerminalCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> InitialTerminalCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don&#39;t get the ability to rename subfolders by [Including] into other modules. *)</span>
+<span class="sd">(** ** Functors to and from initial and terminal categories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> InitialTerminalCategory.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Natural transformations between functors from initial categories and to terminal categories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> InitialTerminalCategory.NaturalTransformations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Pseudofunctors from initial and terminal categories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> InitialTerminalCategory.Pseudofunctors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> InitialTerminalCategory.Notations.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

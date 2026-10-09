@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.Category.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * Categories *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** We collect here all of the files about categories. *)</span>
+<span class="sd">(** Since there are only notations in [Category.Notations], we can just export those. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> Category.Notations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** ** Definition of precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Opposite precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Morphisms in precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Classification of path space *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Universal objects *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Objects.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Product precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Dependent product precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Pi.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** ∑-precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Strict categories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Coproduct precategories *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Sum.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** ** Categories (univalent or saturated) *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Univalent.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Objects.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Pi.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** We use the [Sigma] folder only to allow us to split up the various files and group conceptually similar lemmas, but not for namespacing.  So we include the main file in it. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Sum.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Category.Univalent.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt"><span class="sd">(** We don&#39;t want to make UTF-8 notations the default, so we don&#39;t export them. *)</span>
+
+<span class="sd">(** ** Subcategories *)</span>
+<span class="sd">(** For the subfolders, we need to re-create the module structure.  Alas, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don&#39;t get the ability to rename subfolders by [Including] into other modules. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Category.Subcategory.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

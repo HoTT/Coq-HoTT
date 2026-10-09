@@ -1,0 +1,19 @@
+digraph HoTT_Misc_FanTheorem {
+  graph [ratio=0.5]
+  node [style=filled]
+FanTheorem_uniform_continuity_fantheorem [label="uniform_continuity_fantheorem", URL=<FanTheorem.html#uniform_continuity_fantheorem>, peripheries=3, fillcolor="#F070D1"] ;
+FanTheorem_is_bar_uc_theorem_family [label="is_bar_uc_theorem_family", URL=<FanTheorem.html#is_bar_uc_theorem_family>, fillcolor="#F070D1"] ;
+FanTheorem_uc_theorem_family [label="uc_theorem_family", URL=<FanTheorem.html#uc_theorem_family>, fillcolor="#F070D1"] ;
+FanTheorem_fantheorem_contr [label="fantheorem_contr", URL=<FanTheorem.html#fantheorem_contr>, peripheries=3, fillcolor="#F070D1"] ;
+FanTheorem_fantheorem_empty [label="fantheorem_empty", URL=<FanTheorem.html#fantheorem_empty>, peripheries=3, fillcolor="#F070D1"] ;
+FanTheorem_FanTheorem [label="FanTheorem", URL=<FanTheorem.html#FanTheorem>, fillcolor="#F070D1"] ;
+FanTheorem_MonotoneFanTheorem [label="MonotoneFanTheorem", URL=<FanTheorem.html#MonotoneFanTheorem>, peripheries=3, fillcolor="#F070D1"] ;
+FanTheorem_DecidableFanTheorem [label="DecidableFanTheorem", URL=<FanTheorem.html#DecidableFanTheorem>, peripheries=3, fillcolor="#F070D1"] ;
+  FanTheorem_uniform_continuity_fantheorem -> FanTheorem_is_bar_uc_theorem_family [] ;
+  FanTheorem_uniform_continuity_fantheorem -> FanTheorem_FanTheorem [] ;
+  FanTheorem_is_bar_uc_theorem_family -> FanTheorem_uc_theorem_family [] ;
+  FanTheorem_fantheorem_contr -> FanTheorem_FanTheorem [] ;
+  FanTheorem_fantheorem_empty -> FanTheorem_FanTheorem [] ;
+subgraph cluster_FanTheorem { label="FanTheorem"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FanTheorem_DecidableFanTheorem; FanTheorem_MonotoneFanTheorem; FanTheorem_FanTheorem; FanTheorem_fantheorem_empty; FanTheorem_fantheorem_contr; FanTheorem_uc_theorem_family; FanTheorem_is_bar_uc_theorem_family; FanTheorem_uniform_continuity_fantheorem; };
+} /* END */

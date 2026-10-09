@@ -1,0 +1,40 @@
+digraph HoTT_Universes_HSet {
+  graph [ratio=0.5]
+  node [style=filled]
+HSet_cancelL_isembedding [label="cancelL_isembedding", URL=<HSet.html#cancelL_isembedding>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_ismono_isequiv [label="ismono_isequiv", URL=<HSet.html#ismono_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_isinj_ismono [label="isinj_ismono", URL=<HSet.html#isinj_ismono>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_ismono_isinj [label="ismono_isinj", URL=<HSet.html#ismono_isinj>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_isembedding_isinj_hset [label="isembedding_isinj_hset", URL=<HSet.html#isembedding_isinj_hset>, fillcolor="#F070D1"] ;
+HSet_isinj_section [label="isinj_section", URL=<HSet.html#isinj_section>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_isinj_embedding_beta [label="isinj_embedding_beta", URL=<HSet.html#isinj_embedding_beta>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_isinj_embedding [label="isinj_embedding", URL=<HSet.html#isinj_embedding>, fillcolor="#F070D1"] ;
+HSet_ismono [label="ismono", URL=<HSet.html#ismono>, fillcolor="#F070D1"] ;
+HSet_isequiv_hrel_subpaths [label="isequiv_hrel_subpaths", URL=<HSet.html#isequiv_hrel_subpaths>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_ishset_hrel_subpaths [label="ishset_hrel_subpaths", URL=<HSet.html#ishset_hrel_subpaths>, fillcolor="#F070D1"] ;
+HSet_axiomK_idpath [label="axiomK_idpath", URL=<HSet.html#axiomK_idpath>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_hset_path2 [label="hset_path2", URL=<HSet.html#hset_path2>, fillcolor="#F070D1"] ;
+HSet_axiomK_isprop [label="axiomK_isprop", URL=<HSet.html#axiomK_isprop>, peripheries=3, fillcolor="#F070D1"] ;
+HSet_equiv_hset_axiomK [label="equiv_hset_axiomK", URL=<HSet.html#equiv_hset_axiomK>, fillcolor="#F070D1"] ;
+HSet_hset_axiomK [label="hset_axiomK", URL=<HSet.html#hset_axiomK>, fillcolor="#F070D1"] ;
+HSet_axiomK_hset [label="axiomK_hset", URL=<HSet.html#axiomK_hset>, fillcolor="#F070D1"] ;
+HSet_axiomK [label="axiomK", URL=<HSet.html#axiomK>, fillcolor="#F070D1"] ;
+  HSet_cancelL_isembedding -> HSet_isembedding_isinj_hset [] ;
+  HSet_cancelL_isembedding -> HSet_isinj_embedding [] ;
+  HSet_ismono_isequiv -> HSet_ismono [] ;
+  HSet_isinj_ismono -> HSet_ismono [] ;
+  HSet_ismono_isinj -> HSet_ismono [] ;
+  HSet_isinj_embedding_beta -> HSet_isinj_embedding [] ;
+  HSet_isequiv_hrel_subpaths -> HSet_ishset_hrel_subpaths [] ;
+  HSet_ishset_hrel_subpaths -> HSet_hset_axiomK [] ;
+  HSet_axiomK_idpath -> HSet_hset_path2 [] ;
+  HSet_axiomK_idpath -> HSet_hset_axiomK [] ;
+  HSet_hset_path2 -> HSet_axiomK_hset [] ;
+  HSet_axiomK_isprop -> HSet_equiv_hset_axiomK [] ;
+  HSet_equiv_hset_axiomK -> HSet_hset_axiomK [] ;
+  HSet_equiv_hset_axiomK -> HSet_axiomK_hset [] ;
+  HSet_hset_axiomK -> HSet_axiomK [] ;
+  HSet_axiomK_hset -> HSet_axiomK [] ;
+subgraph cluster_HSet { label="HSet"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+HSet_axiomK; HSet_axiomK_hset; HSet_hset_axiomK; HSet_equiv_hset_axiomK; HSet_axiomK_isprop; HSet_hset_path2; HSet_axiomK_idpath; HSet_ishset_hrel_subpaths; HSet_isequiv_hrel_subpaths; HSet_ismono; HSet_isinj_embedding; HSet_isinj_embedding_beta; HSet_isinj_section; HSet_isembedding_isinj_hset; HSet_ismono_isinj; HSet_isinj_ismono; HSet_ismono_isequiv; HSet_cancelL_isembedding; };
+} /* END */

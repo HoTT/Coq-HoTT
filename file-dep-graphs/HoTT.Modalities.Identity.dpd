@@ -1,0 +1,3 @@
+N: 1 "accmodality_purely" [body=yes, kind=cnst, prop=no, path="Identity", ];
+N: 2 "purely" [body=yes, kind=cnst, prop=no, path="Identity", ];
+E: 1 2 [weight=5, ];

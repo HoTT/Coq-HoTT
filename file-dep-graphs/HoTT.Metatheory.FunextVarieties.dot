@@ -1,0 +1,37 @@
+digraph HoTT_Metatheory_FunextVarieties {
+  graph [ratio=0.5]
+  node [style=filled]
+FunextVarieties_Funext_downward_closed [label="Funext_downward_closed", URL=<FunextVarieties.html#Funext_downward_closed>, peripheries=3, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveNondepFunext_implies_Funext [label="NaiveNondepFunext_implies_Funext", URL=<FunextVarieties.html#NaiveNondepFunext_implies_Funext>, peripheries=3, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveNondepFunext_implies_WeakFunext [label="NaiveNondepFunext_implies_WeakFunext", URL=<FunextVarieties.html#NaiveNondepFunext_implies_WeakFunext>, fillcolor="#F070D1"] ;
+FunextVarieties_equiv_postcompose_from_NaiveNondepFunext [label="equiv_postcompose_from_NaiveNondepFunext", URL=<FunextVarieties.html#equiv_postcompose_from_NaiveNondepFunext>, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveFunext_implies_Funext [label="NaiveFunext_implies_Funext", URL=<FunextVarieties.html#NaiveFunext_implies_Funext>, peripheries=3, fillcolor="#F070D1"] ;
+FunextVarieties_WeakFunext_implies_Funext [label="WeakFunext_implies_Funext", URL=<FunextVarieties.html#WeakFunext_implies_Funext>, fillcolor="#F070D1"] ;
+FunextVarieties_htpy_ind_beta [label="htpy_ind_beta", URL=<FunextVarieties.html#htpy_ind_beta>, fillcolor="#F070D1"] ;
+FunextVarieties_htpy_ind [label="htpy_ind", URL=<FunextVarieties.html#htpy_ind>, fillcolor="#F070D1"] ;
+FunextVarieties_contr_basedhtpy [label="contr_basedhtpy", URL=<FunextVarieties.html#contr_basedhtpy>, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveFunext_implies_NaiveNondepFunext [label="NaiveFunext_implies_NaiveNondepFunext", URL=<FunextVarieties.html#NaiveFunext_implies_NaiveNondepFunext>, peripheries=3, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveFunext_implies_WeakFunext [label="NaiveFunext_implies_WeakFunext", URL=<FunextVarieties.html#NaiveFunext_implies_WeakFunext>, fillcolor="#F070D1"] ;
+FunextVarieties_Funext_implies_NaiveFunext [label="Funext_implies_NaiveFunext", URL=<FunextVarieties.html#Funext_implies_NaiveFunext>, peripheries=3, fillcolor="#F070D1"] ;
+FunextVarieties_WeakFunext [label="WeakFunext", URL=<FunextVarieties.html#WeakFunext>, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveNondepFunext [label="NaiveNondepFunext", URL=<FunextVarieties.html#NaiveNondepFunext>, fillcolor="#F070D1"] ;
+FunextVarieties_NaiveFunext [label="NaiveFunext", URL=<FunextVarieties.html#NaiveFunext>, fillcolor="#F070D1"] ;
+  FunextVarieties_NaiveNondepFunext_implies_Funext -> FunextVarieties_NaiveNondepFunext_implies_WeakFunext [] ;
+  FunextVarieties_NaiveNondepFunext_implies_Funext -> FunextVarieties_WeakFunext_implies_Funext [] ;
+  FunextVarieties_NaiveNondepFunext_implies_WeakFunext -> FunextVarieties_equiv_postcompose_from_NaiveNondepFunext [] ;
+  FunextVarieties_NaiveNondepFunext_implies_WeakFunext -> FunextVarieties_WeakFunext [] ;
+  FunextVarieties_equiv_postcompose_from_NaiveNondepFunext -> FunextVarieties_NaiveNondepFunext [] ;
+  FunextVarieties_NaiveFunext_implies_Funext -> FunextVarieties_WeakFunext_implies_Funext [] ;
+  FunextVarieties_NaiveFunext_implies_Funext -> FunextVarieties_NaiveFunext_implies_WeakFunext [] ;
+  FunextVarieties_WeakFunext_implies_Funext -> FunextVarieties_htpy_ind_beta [] ;
+  FunextVarieties_htpy_ind_beta -> FunextVarieties_htpy_ind [] ;
+  FunextVarieties_htpy_ind -> FunextVarieties_contr_basedhtpy [] ;
+  FunextVarieties_contr_basedhtpy -> FunextVarieties_WeakFunext [] ;
+  FunextVarieties_NaiveFunext_implies_NaiveNondepFunext -> FunextVarieties_NaiveNondepFunext [] ;
+  FunextVarieties_NaiveFunext_implies_NaiveNondepFunext -> FunextVarieties_NaiveFunext [] ;
+  FunextVarieties_NaiveFunext_implies_WeakFunext -> FunextVarieties_WeakFunext [] ;
+  FunextVarieties_NaiveFunext_implies_WeakFunext -> FunextVarieties_NaiveFunext [] ;
+  FunextVarieties_Funext_implies_NaiveFunext -> FunextVarieties_NaiveFunext [] ;
+subgraph cluster_FunextVarieties { label="FunextVarieties"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+FunextVarieties_NaiveFunext; FunextVarieties_NaiveNondepFunext; FunextVarieties_WeakFunext; FunextVarieties_Funext_implies_NaiveFunext; FunextVarieties_NaiveFunext_implies_WeakFunext; FunextVarieties_NaiveFunext_implies_NaiveNondepFunext; FunextVarieties_contr_basedhtpy; FunextVarieties_htpy_ind; FunextVarieties_htpy_ind_beta; FunextVarieties_WeakFunext_implies_Funext; FunextVarieties_NaiveFunext_implies_Funext; FunextVarieties_equiv_postcompose_from_NaiveNondepFunext; FunextVarieties_NaiveNondepFunext_implies_WeakFunext; FunextVarieties_NaiveNondepFunext_implies_Funext; FunextVarieties_Funext_downward_closed; };
+} /* END */

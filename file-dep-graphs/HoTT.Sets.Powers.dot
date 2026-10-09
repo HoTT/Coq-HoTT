@@ -1,0 +1,23 @@
+digraph HoTT_Sets_Powers {
+  graph [ratio=0.5]
+  node [style=filled]
+Powers_infinite_power_iterated [label="infinite_power_iterated", URL=<Powers.html#infinite_power_iterated>, peripheries=3, fillcolor="#F070D1"] ;
+Powers_infinite_inject [label="infinite_inject", URL=<Powers.html#infinite_inject>, fillcolor="#F070D1"] ;
+Powers_Injection_power_iterated [label="Injection_power_iterated", URL=<Powers.html#Injection_power_iterated>, fillcolor="#F070D1"] ;
+Powers_hset_power_iterated [label="hset_power_iterated", URL=<Powers.html#hset_power_iterated>, fillcolor="#F070D1"] ;
+Powers_hset_power [label="hset_power", URL=<Powers.html#hset_power>, fillcolor="#F070D1"] ;
+Powers_power_iterated_shift [label="power_iterated_shift", URL=<Powers.html#power_iterated_shift>, peripheries=3, fillcolor="#F070D1"] ;
+Powers_power_iterated [label="power_iterated", URL=<Powers.html#power_iterated>, fillcolor="#F070D1"] ;
+Powers_Injection_power [label="Injection_power", URL=<Powers.html#Injection_power>, fillcolor="#F070D1"] ;
+Powers_power_type [label="power_type", URL=<Powers.html#power_type>, fillcolor="#F070D1"] ;
+  Powers_infinite_power_iterated -> Powers_infinite_inject [] ;
+  Powers_infinite_power_iterated -> Powers_Injection_power_iterated [] ;
+  Powers_Injection_power_iterated -> Powers_hset_power_iterated [] ;
+  Powers_Injection_power_iterated -> Powers_Injection_power [] ;
+  Powers_hset_power_iterated -> Powers_hset_power [] ;
+  Powers_hset_power_iterated -> Powers_power_iterated [] ;
+  Powers_power_iterated_shift -> Powers_power_iterated [] ;
+  Powers_power_iterated -> Powers_power_type [] ;
+subgraph cluster_Powers { label="Powers"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Powers_power_type; Powers_Injection_power; Powers_power_iterated; Powers_power_iterated_shift; Powers_hset_power; Powers_hset_power_iterated; Powers_Injection_power_iterated; Powers_infinite_inject; Powers_infinite_power_iterated; };
+} /* END */

@@ -1,0 +1,6 @@
+N: 4 "encode_decode" [body=yes, kind=cnst, prop=no, path="EncodeDecode", ];
+N: 2 "encode_decode_loops" [body=yes, kind=cnst, prop=no, path="EncodeDecode", ];
+N: 3 "encode_decode_trunc" [body=yes, kind=cnst, prop=no, path="EncodeDecode", ];
+N: 1 "encode_decode_trunc_loops" [body=yes, kind=cnst, prop=no, path="EncodeDecode", ];
+E: 1 3 [weight=1, ];
+E: 2 4 [weight=1, ];

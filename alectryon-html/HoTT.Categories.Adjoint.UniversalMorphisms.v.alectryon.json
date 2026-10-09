@@ -1,0 +1,34 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Adjunctions as universal morphisms *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Definitions *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Adjoint.UniversalMorphisms.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include Adjoint.UniversalMorphisms.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

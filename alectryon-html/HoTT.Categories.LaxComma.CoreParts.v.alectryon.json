@@ -1,0 +1,4275 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Trunc Types.Sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Functor.Identity.FunctorIdentityNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope type_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting David Spivak:\n\n    David: ok\n       so an object of [FC \u21d3 D] is a pair [(X, G)], where [X] is a\n       finite category (or a small category or whatever you wanted)\n       and [G : X --> D] is a functor.\n       a morphism in [FC \u21d3 D] is a ``natural transformation diagram''\n       (as opposed to a commutative diagram, in which the natural\n       transformation would be ``identity'')\n       so a map in [FC \u21d3 D] from [(X, G)] to [(X', G')] is a pair\n       [(F, \u03b1)] where [F : X --> X'] is a functor and\n       [\u03b1 : G --> G' \u2218 F] is a natural transformation\n       and the punchline is that there is a functor\n       [colim : FC \u21d3 D --> D]\n\n     David: consider for yourself the case where [F : X --> X'] is\n       identity ([X = X']) and (separately) the case where\n       [\u03b1 : G --> G \u2218 F] is identity.\n       the point is, you've already done the work to get this colim\n       functor.\n       because every map in [FC \u21d3 D] can be written as a composition\n       of two maps, one where the [F]-part is identity and one where\n       the [\u03b1]-part is identity.\n       and you've worked both of those cases out already.\n       *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Import LaxCommaCategoryParts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section lax_comma_category_parts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A B : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S : Pseudofunctor A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : Pseudofunctor B.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall a b, IsHSet (Functor (S a) (T b))}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record object :=\n      {\n        a : A;\n        b : B;\n        f : Functor (S a) (T b)\n      }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation object_sig_T :=\n      ({ a : A\n       | { b : B\n         | Functor (S a) (T b) }}).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma issig_object\n    : object_sig_T <~> object.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{a0 : A & {b0 : B & Functor (S a0) (T b0)}} <~> object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{a0 : A & {b0 : B & Functor (S a0) (T b0)}} <~> object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_object `{IsTrunc n A, IsTrunc n B}\n           `{forall s d, IsTrunc n (Functor (S s) (T d))}\n    : IsTrunc n object.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc1"
+              ],
+              "body": null,
+              "type": "IsTrunc n B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall (s : A) (d : B), IsTrunc n (Functor (S s) (T d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n object",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc1"
+              ],
+              "body": null,
+              "type": "IsTrunc n B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall (s : A) (d : B), IsTrunc n (Functor (S s) (T d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply istrunc_equiv_istrunc;\n      [ exact issig_object | ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n {a0 : A & {b0 : B & Functor (S a0) (T b0)}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc1"
+              ],
+              "body": null,
+              "type": "IsTrunc n B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall (s : A) (d : B), IsTrunc n (Functor (S s) (T d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "typeclasses eauto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_object (x y : object)\n    : forall (Ha : x.(a) = y.(a))\n             (Hb : x.(b) = y.(b)),\n        match Ha in _ = X, Hb in _ = Y return Functor (S X) (T Y) with\n          | idpath, idpath => x.(f)\n        end = y.(f)\n        -> x = y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Ha : a x = a y) (Hb : b x = b y),\nmatch Ha in (_ = X) return (Functor (S X) (T (b y))) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S (a x)) (T Y)) with\n    | 1%path => f x\n    end\nend = f y -> x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Ha : a x = a y) (Hb : b x = b y),\nmatch Ha in (_ = X) return (Functor (S X) (T (b y))) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S (a x)) (T Y)) with\n    | 1%path => f x\n    end\nend = f y -> x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x, y; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Ha : a0 = a1) (Hb : b0 = b1),\nmatch Ha in (_ = X) return (Functor (S X) (T b1)) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S a0) (T Y)) with\n    | 1%path => f0\n    end\nend = f1 -> {| a := a0; b := b0; f := f0 |} = {| a := a1; b := b1; f := f1 |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a2 : A) (b2 : B), IsHSet (Functor (S a2) (T b2))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b0"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Functor (S a0) (T b0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f1"
+              ],
+              "body": null,
+              "type": "Functor (S a1) (T b1)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; path_induction; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_object_uncurried x y\n               (H : { HaHb : (x.(a) = y.(a)) * (x.(b) = y.(b))\n                    | match fst HaHb in _ = X, snd HaHb in _ = Y return Functor (S X) (T Y) with\n                        | idpath, idpath => x.(f)\n                      end = y.(f) })\n    : x = y\n      := @path_object x y (fst H.1) (snd H.1) H.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma ap_a_path_object x y Ha Hb Hf\n    : ap (@a) (@path_object x y Ha Hb Hf) = Ha.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap a (path_object x y Ha Hb Hf) = Ha",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ha"
+              ],
+              "body": null,
+              "type": "a x = a y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hb"
+              ],
+              "body": null,
+              "type": "b x = b y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hf"
+              ],
+              "body": null,
+              "type": "match Ha in (_ = X) return (Functor (S X) (T (b y))) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S (a x)) (T Y)) with\n    | 1%path => f x\n    end\nend = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap a (path_object x y Ha Hb Hf) = Ha",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ha"
+              ],
+              "body": null,
+              "type": "a x = a y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hb"
+              ],
+              "body": null,
+              "type": "b x = b y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hf"
+              ],
+              "body": null,
+              "type": "match Ha in (_ = X) return (Functor (S X) (T (b y))) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S (a x)) (T Y)) with\n    | 1%path => f x\n    end\nend = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x, y; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap a\n  (path_object {| a := a0; b := b0; f := f0 |}\n     {| a := a1; b := b1; f := f1 |} Ha Hb Hf) =\nHa",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a2 : A) (b2 : B), IsHSet (Functor (S a2) (T b2))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b0"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Functor (S a0) (T b0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f1"
+              ],
+              "body": null,
+              "type": "Functor (S a1) (T b1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ha"
+              ],
+              "body": null,
+              "type": "a0 = a1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hb"
+              ],
+              "body": null,
+              "type": "b0 = b1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hf"
+              ],
+              "body": null,
+              "type": "match Ha in (_ = X) return (Functor (S X) (T b1)) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S a0) (T Y)) with\n    | 1%path => f0\n    end\nend = f1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct Ha, Hb, Hf; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1%path = 1%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a1 : A) (b1 : B), IsHSet (Functor (S a1) (T b1))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b0"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Functor (S a0) (T b0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma ap_b_path_object x y Ha Hb Hf\n    : ap (@b) (@path_object x y Ha Hb Hf) = Hb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap b (path_object x y Ha Hb Hf) = Hb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ha"
+              ],
+              "body": null,
+              "type": "a x = a y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hb"
+              ],
+              "body": null,
+              "type": "b x = b y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hf"
+              ],
+              "body": null,
+              "type": "match Ha in (_ = X) return (Functor (S X) (T (b y))) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S (a x)) (T Y)) with\n    | 1%path => f x\n    end\nend = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap b (path_object x y Ha Hb Hf) = Hb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ha"
+              ],
+              "body": null,
+              "type": "a x = a y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hb"
+              ],
+              "body": null,
+              "type": "b x = b y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hf"
+              ],
+              "body": null,
+              "type": "match Ha in (_ = X) return (Functor (S X) (T (b y))) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S (a x)) (T Y)) with\n    | 1%path => f x\n    end\nend = f y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct x, y; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap b\n  (path_object {| a := a0; b := b0; f := f0 |}\n     {| a := a1; b := b1; f := f1 |} Ha Hb Hf) =\nHb",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a2 : A) (b2 : B), IsHSet (Functor (S a2) (T b2))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b0"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Functor (S a0) (T b0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a1"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b1"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f1"
+              ],
+              "body": null,
+              "type": "Functor (S a1) (T b1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ha"
+              ],
+              "body": null,
+              "type": "a0 = a1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hb"
+              ],
+              "body": null,
+              "type": "b0 = b1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hf"
+              ],
+              "body": null,
+              "type": "match Ha in (_ = X) return (Functor (S X) (T b1)) with\n| 1%path =>\n    match Hb in (_ = Y) return (Functor (S a0) (T Y)) with\n    | 1%path => f0\n    end\nend = f1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct Ha, Hb, Hf; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1%path = 1%path",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a1 : A) (b1 : B), IsHSet (Functor (S a1) (T b1))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a0"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b0"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f0"
+              ],
+              "body": null,
+              "type": "Functor (S a0) (T b0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Opaque path_object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record morphism (abf a'b'f' : object) :=\n      {\n        g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a));\n        h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b));\n        p : NaturalTransformation (p_morphism_of T h o abf.(f))\n                                  (a'b'f'.(f) o p_morphism_of S g)\n      }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation morphism_sig_T abf a'b'f' :=\n      ({ g : Category.Core.morphism A (abf.(a)) (a'b'f'.(a))\n       | { h : Category.Core.morphism B (abf.(b)) (a'b'f'.(b))\n         | NaturalTransformation (p_morphism_of T h o abf.(f))\n                                 (a'b'f'.(f) o p_morphism_of S g) }}).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma issig_morphism abf a'b'f'\n    : (morphism_sig_T abf a'b'f')\n        <~> morphism abf a'b'f'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism_sig_T abf a'b'f' <~> morphism abf a'b'f'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism_sig_T abf a'b'f' <~> morphism abf a'b'f'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "issig.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance trunc_morphism abf a'b'f'\n           `{IsTrunc n (Category.Core.morphism A (abf.(a)) (a'b'f'.(a)))}\n           `{IsTrunc n (Category.Core.morphism B (abf.(b)) (a'b'f'.(b)))}\n           `{forall m1 m2,\n               IsTrunc n (NaturalTransformation\n                            (p_morphism_of T m2 o abf.(f))\n                            (a'b'f'.(f) o p_morphism_of S m1))}\n    : IsTrunc n (morphism abf a'b'f').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (morphism abf a'b'f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n (Core.morphism A (a abf) (a a'b'f'))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc1"
+              ],
+              "body": null,
+              "type": "IsTrunc n (Core.morphism B (b abf) (b a'b'f'))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall (m1 : Core.morphism A (a abf) (a a'b'f'))\n(m2 : Core.morphism B (b abf) (b a'b'f')),\nIsTrunc n\n  (NaturalTransformation (p_morphism_of T m2 o f abf)\n     (f a'b'f' o p_morphism_of S m1))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (morphism abf a'b'f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n (Core.morphism A (a abf) (a a'b'f'))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc1"
+              ],
+              "body": null,
+              "type": "IsTrunc n (Core.morphism B (b abf) (b a'b'f'))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall (m1 : Core.morphism A (a abf) (a a'b'f'))\n(m2 : Core.morphism B (b abf) (b a'b'f')),\nIsTrunc n\n  (NaturalTransformation (p_morphism_of T m2 o f abf)\n     (f a'b'f' o p_morphism_of S m1))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply istrunc_equiv_istrunc;\n      [ exact (issig_morphism _ _) | ].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n (morphism_sig_T abf a'b'f')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n (Core.morphism A (a abf) (a a'b'f'))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc1"
+              ],
+              "body": null,
+              "type": "IsTrunc n (Core.morphism B (b abf) (b a'b'f'))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall (m1 : Core.morphism A (a abf) (a a'b'f'))\n(m2 : Core.morphism B (b abf) (b a'b'f')),\nIsTrunc n\n  (NaturalTransformation (p_morphism_of T m2 o f abf)\n     (f a'b'f' o p_morphism_of S m1))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "typeclasses eauto.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_morphism abf a'b'f'\n          (gh g'h' : morphism abf a'b'f')\n    : forall\n        (Hg : gh.(g) = g'h'.(g))\n        (Hh : gh.(h) = g'h'.(h)),\n        match Hg in _ = g, Hh in _ = h\n              return NaturalTransformation\n                       (p_morphism_of T h o abf.(f))\n                       (a'b'f'.(f) o p_morphism_of S g)\n        with\n          | idpath, idpath => gh.(p)\n        end = g'h'.(p)\n         -> gh = g'h'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hg : g gh = g g'h') (Hh : h gh = h g'h'),\nmatch\n  Hg in (_ = g)\n  return\n    (NaturalTransformation (p_morphism_of T (h g'h') o f abf)\n       (f a'b'f' o p_morphism_of S g))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h)\n      return\n        (NaturalTransformation (p_morphism_of T h o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p g'h' -> gh = g'h'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh",
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hg : g gh = g g'h') (Hh : h gh = h g'h'),\nmatch\n  Hg in (_ = g)\n  return\n    (NaturalTransformation (p_morphism_of T (h g'h') o f abf)\n       (f a'b'f' o p_morphism_of S g))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h)\n      return\n        (NaturalTransformation (p_morphism_of T h o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p g'h' -> gh = g'h'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh",
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros Hg Hh Hp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "gh = g'h'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh",
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hg"
+              ],
+              "body": null,
+              "type": "g gh = g g'h'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hh"
+              ],
+              "body": null,
+              "type": "h gh = h g'h'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hp"
+              ],
+              "body": null,
+              "type": "match\n  Hg in (_ = g0)\n  return\n    (NaturalTransformation (p_morphism_of T (h g'h') o f abf)\n       (f a'b'f' o p_morphism_of S g0))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h0)\n      return\n        (NaturalTransformation (p_morphism_of T h0 o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p g'h'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct gh, g'h'; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| g := g0; h := h0; p := p0 |} = {| g := g1; h := h1; p := p1 |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g0"
+              ],
+              "body": null,
+              "type": "Core.morphism A (a abf) (a a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h0"
+              ],
+              "body": null,
+              "type": "Core.morphism B (b abf) (b a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p0"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (p_morphism_of T h0 o f abf)\n  (f a'b'f' o p_morphism_of S g0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1"
+              ],
+              "body": null,
+              "type": "Core.morphism A (a abf) (a a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h1"
+              ],
+              "body": null,
+              "type": "Core.morphism B (b abf) (b a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p1"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (p_morphism_of T h1 o f abf)\n  (f a'b'f' o p_morphism_of S g1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hg"
+              ],
+              "body": null,
+              "type": "g0 = g1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hh"
+              ],
+              "body": null,
+              "type": "h0 = h1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hp"
+              ],
+              "body": null,
+              "type": "match\n  Hg in (_ = g2)\n  return\n    (NaturalTransformation (p_morphism_of T h1 o f abf)\n       (f a'b'f' o p_morphism_of S g2))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h2)\n      return\n        (NaturalTransformation (p_morphism_of T h2 o f abf)\n           (f a'b'f' o p_morphism_of S g0))\n    with\n    | 1%path => p0\n    end\nend = p1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct Hg, Hh, Hp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| g := g0; h := h0; p := p0 |} = {| g := g0; h := h0; p := p0 |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g0"
+              ],
+              "body": null,
+              "type": "Core.morphism A (a abf) (a a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h0"
+              ],
+              "body": null,
+              "type": "Core.morphism B (b abf) (b a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p0"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (p_morphism_of T h0 o f abf)\n  (f a'b'f' o p_morphism_of S g0)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_morphism_uncurried abf a'b'f' gh g'h'\n               (H : { HgHh : (gh.(g) = g'h'.(g)) * (gh.(h) = g'h'.(h))\n                    | match fst HgHh in _ = g, snd HgHh in _ = h\n                            return NaturalTransformation\n                                     (p_morphism_of T h o abf.(f))\n                                     (a'b'f'.(f) o p_morphism_of S g)\n                      with\n                        | idpath, idpath => gh.(p)\n                      end = g'h'.(p) })\n    : gh = g'h'\n      := @path_morphism abf a'b'f' gh g'h' (fst H.1) (snd H.1) H.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma path_morphism'_helper abf a'b'f'\n          (gh g'h' : morphism abf a'b'f')\n    : forall\n        (Hg : gh.(g) = g'h'.(g))\n        (Hh : gh.(h) = g'h'.(h)),\n        ((_ oL (Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ S _ _) Hg) : Category.Core.morphism _ _ _))\n           o (gh.(p))\n           o ((Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ T _ _) Hh) : Category.Core.morphism _ _ _)^-1 oR _)\n         = g'h'.(p))%natural_transformation\n        -> match Hg in _ = g, Hh in _ = h\n                 return NaturalTransformation\n                          (p_morphism_of T h o abf.(f))\n                          (a'b'f'.(f) o p_morphism_of S g)\n           with\n             | idpath, idpath => gh.(p)\n           end = g'h'.(p).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hg : g gh = g g'h') (Hh : h gh = h g'h'),\n(f a'b'f'\n oL (idtoiso (S (a abf) -> S (a a'b'f')) (ap (p_morphism_of S) Hg)\n     :\n     Core.morphism (S (a abf) -> S (a a'b'f')) (p_morphism_of S (g gh))\n       (p_morphism_of S (g g'h')))\n o p gh\n o ((idtoiso (T (b abf) -> T (b a'b'f')) (ap (p_morphism_of T) Hh))^-1\n    oR f abf))%natural_transformation =\np g'h' ->\nmatch\n  Hg in (_ = g0)\n  return\n    (NaturalTransformation (p_morphism_of T (h g'h') o f abf)\n       (f a'b'f' o p_morphism_of S g0))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h0)\n      return\n        (NaturalTransformation (p_morphism_of T h0 o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p g'h'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh",
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (Hg : g gh = g g'h') (Hh : h gh = h g'h'),\n(f a'b'f'\n oL (idtoiso (S (a abf) -> S (a a'b'f')) (ap (p_morphism_of S) Hg)\n     :\n     Core.morphism (S (a abf) -> S (a a'b'f')) (p_morphism_of S (g gh))\n       (p_morphism_of S (g g'h')))\n o p gh\n o ((idtoiso (T (b abf) -> T (b a'b'f')) (ap (p_morphism_of T) Hh))^-1\n    oR f abf))%natural_transformation =\np g'h' ->\nmatch\n  Hg in (_ = g0)\n  return\n    (NaturalTransformation (p_morphism_of T (h g'h') o f abf)\n       (f a'b'f' o p_morphism_of S g0))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h0)\n      return\n        (NaturalTransformation (p_morphism_of T h0 o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p g'h'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh",
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; intros Hg Hh Hp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "match\n  Hg in (_ = g0)\n  return\n    (NaturalTransformation (p_morphism_of T (h g'h') o f abf)\n       (f a'b'f' o p_morphism_of S g0))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h0)\n      return\n        (NaturalTransformation (p_morphism_of T h0 o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p g'h'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh",
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hg"
+              ],
+              "body": null,
+              "type": "g gh = g g'h'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hh"
+              ],
+              "body": null,
+              "type": "h gh = h g'h'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hp"
+              ],
+              "body": null,
+              "type": "(f a'b'f' oL idtoiso (S (a abf) -> S (a a'b'f')) (ap (p_morphism_of S) Hg)\n o p gh\n o ((idtoiso (T (b abf) -> T (b a'b'f')) (ap (p_morphism_of T) Hh))^-1\n    oR f abf))%natural_transformation =\np g'h'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct g'h'; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "match\n  Hg in (_ = g1)\n  return\n    (NaturalTransformation (p_morphism_of T h0 o f abf)\n       (f a'b'f' o p_morphism_of S g1))\nwith\n| 1%path =>\n    match\n      Hh in (_ = h1)\n      return\n        (NaturalTransformation (p_morphism_of T h1 o f abf)\n           (f a'b'f' o p_morphism_of S (g gh)))\n    with\n    | 1%path => p gh\n    end\nend = p0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g0"
+              ],
+              "body": null,
+              "type": "Core.morphism A (a abf) (a a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h0"
+              ],
+              "body": null,
+              "type": "Core.morphism B (b abf) (b a'b'f')"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p0"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (p_morphism_of T h0 o f abf)\n  (f a'b'f' o p_morphism_of S g0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hg"
+              ],
+              "body": null,
+              "type": "g gh = g0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hh"
+              ],
+              "body": null,
+              "type": "h gh = h0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hp"
+              ],
+              "body": null,
+              "type": "(f a'b'f' oL idtoiso (S (a abf) -> S (a a'b'f')) (ap (p_morphism_of S) Hg)\n o p gh\n o ((idtoiso (T (b abf) -> T (b a'b'f')) (ap (p_morphism_of T) Hh))^-1\n    oR f abf))%natural_transformation =\np0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct Hg, Hh, Hp; simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p gh =\n(f a'b'f' oL NaturalTransformation.Identity.identity (p_morphism_of S (g gh))\n o p gh\n o (NaturalTransformation.Identity.identity (p_morphism_of T (h gh)) oR f abf))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p gh x = (f a'b'f') _1 1 o p gh x o 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S (a abf)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "autorewrite with functor morphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p gh x = p gh x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "abf",
+                "a'b'f'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism abf a'b'f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "S (a abf)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_morphism' abf a'b'f'\n               (gh g'h' : morphism abf a'b'f')\n               (Hg : gh.(g) = g'h'.(g))\n               (Hh : gh.(h) = g'h'.(h))\n               (Hp : ((_ oL (Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ S _ _) Hg) : Category.Core.morphism _ _ _))\n                        o (gh.(p))\n                        o ((Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ T _ _) Hh) : Category.Core.morphism _ _ _)^-1 oR _)\n                      = g'h'.(p))%natural_transformation)\n    : gh = g'h'\n      := @path_morphism abf a'b'f' gh g'h' Hg Hh\n                        (@path_morphism'_helper abf a'b'f' gh g'h' Hg Hh Hp).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_morphism'_uncurried abf a'b'f' gh g'h'\n               (H : { HgHh : (gh.(g) = g'h'.(g)) * (gh.(h) = g'h'.(h))\n                    | ((_ oL (Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ S _ _) (fst HgHh)) : Category.Core.morphism _ _ _))\n                         o (gh.(p))\n                         o ((Category.Morphisms.idtoiso (_ -> _) (ap (@p_morphism_of _ _ T _ _) (snd HgHh)) : Category.Core.morphism _ _ _)^-1 oR _)\n                       = g'h'.(p))%natural_transformation })\n    : gh = g'h'\n      := @path_morphism' abf a'b'f' gh g'h' (fst H.1) (snd H.1) H.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose s d d'\n               (gh : morphism d d') (g'h' : morphism s d)\n    : morphism s d'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism s d'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism d d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism s d'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism d d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (gh.(g) o g'h'.(g)) (gh.(h) o g'h'.(h)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaturalTransformation (p_morphism_of T (h gh o h g'h') o f s)\n  (f d' o p_morphism_of S (g gh o g g'h'))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d",
+                "d'"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "gh"
+              ],
+              "body": null,
+              "type": "morphism d d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g'h'"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((_ oL (p_composition_of S _ _ _ _ _)^-1)\n               o (associator_1 _ _ _)\n               o (gh.(p) oR _)\n               o (associator_2 _ _ _)\n               o (_ oL g'h'.(p))\n               o (associator_1 _ _ _)\n               o ((p_composition_of T _ _ _ _ _ : Category.Core.morphism _ _ _)\n                    oR _))%natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments compose _ _ _ _ _ / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition identity x : morphism x x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism x x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism x x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (identity (x.(a))) (identity (x.(b))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaturalTransformation (p_morphism_of T 1 o f x) (f x o p_morphism_of S 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((_ oL (p_identity_of S _ : Category.Core.morphism _ _ _)^-1)\n               o (right_identity_natural_transformation_2 _)\n               o (left_identity_natural_transformation_1 _)\n               o ((p_identity_of T _ : Category.Core.morphism _ _ _)\n                    oR _))%natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments identity _ / .",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End lax_comma_category_parts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End LaxCommaCategoryParts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

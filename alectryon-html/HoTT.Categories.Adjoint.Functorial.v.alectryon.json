@@ -1,0 +1,44 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functoriality of the construction of adjunctions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Computational components *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Adjoint.Functorial.Parts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Functor laws *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Adjoint.Functorial.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Adjunction functor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Adjoint.Functorial.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

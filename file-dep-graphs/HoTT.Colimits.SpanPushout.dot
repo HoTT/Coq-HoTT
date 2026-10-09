@@ -1,0 +1,42 @@
+digraph HoTT_Colimits_SpanPushout {
+  graph [ratio=0.5]
+  node [style=filled]
+SpanPushout_spushout_sjoin_map [label="spushout_sjoin_map", URL=<SpanPushout.html#spushout_sjoin_map>, peripheries=3, fillcolor="#F070D1"] ;
+SpanPushout_equiv_pushout_spushout [label="equiv_pushout_spushout", URL=<SpanPushout.html#equiv_pushout_spushout>, peripheries=3, fillcolor="#F070D1"] ;
+SpanPushout_functor_spushout_homotopic [label="functor_spushout_homotopic", URL=<SpanPushout.html#functor_spushout_homotopic>, peripheries=3, fillcolor="#F070D1"] ;
+SpanPushout_functor_spushout_idmap [label="functor_spushout_idmap", URL=<SpanPushout.html#functor_spushout_idmap>, peripheries=3, fillcolor="#F070D1"] ;
+SpanPushout_functor_spushout_compose [label="functor_spushout_compose", URL=<SpanPushout.html#functor_spushout_compose>, peripheries=3, fillcolor="#F070D1"] ;
+SpanPushout_functor_spushout [label="functor_spushout", URL=<SpanPushout.html#functor_spushout>, fillcolor="#F070D1"] ;
+SpanPushout_spushout_ind_beta_spglue [label="spushout_ind_beta_spglue", URL=<SpanPushout.html#spushout_ind_beta_spglue>, peripheries=3, fillcolor="#F070D1"] ;
+SpanPushout_spushout_ind [label="spushout_ind", URL=<SpanPushout.html#spushout_ind>, fillcolor="#F070D1"] ;
+SpanPushout_spushout_rec_beta_spglue [label="spushout_rec_beta_spglue", URL=<SpanPushout.html#spushout_rec_beta_spglue>, fillcolor="#F070D1"] ;
+SpanPushout_spushout_rec [label="spushout_rec", URL=<SpanPushout.html#spushout_rec>, fillcolor="#F070D1"] ;
+SpanPushout_spglue [label="spglue", URL=<SpanPushout.html#spglue>, fillcolor="#F070D1"] ;
+SpanPushout_spushr [label="spushr", URL=<SpanPushout.html#spushr>, fillcolor="#F070D1"] ;
+SpanPushout_spushl [label="spushl", URL=<SpanPushout.html#spushl>, fillcolor="#F070D1"] ;
+SpanPushout_SPushout [label="SPushout", URL=<SpanPushout.html#SPushout>, fillcolor="#F070D1"] ;
+  SpanPushout_spushout_sjoin_map -> SpanPushout_spglue [] ;
+  SpanPushout_equiv_pushout_spushout -> SpanPushout_SPushout [] ;
+  SpanPushout_functor_spushout_homotopic -> SpanPushout_functor_spushout [] ;
+  SpanPushout_functor_spushout_homotopic -> SpanPushout_spushout_ind [] ;
+  SpanPushout_functor_spushout_homotopic -> SpanPushout_spushout_rec_beta_spglue [] ;
+  SpanPushout_functor_spushout_idmap -> SpanPushout_functor_spushout [] ;
+  SpanPushout_functor_spushout_idmap -> SpanPushout_spushout_ind [] ;
+  SpanPushout_functor_spushout_idmap -> SpanPushout_spushout_rec_beta_spglue [] ;
+  SpanPushout_functor_spushout_compose -> SpanPushout_functor_spushout [] ;
+  SpanPushout_functor_spushout_compose -> SpanPushout_spushout_ind [] ;
+  SpanPushout_functor_spushout_compose -> SpanPushout_spushout_rec_beta_spglue [] ;
+  SpanPushout_functor_spushout -> SpanPushout_spushout_rec [] ;
+  SpanPushout_functor_spushout -> SpanPushout_spglue [] ;
+  SpanPushout_spushout_ind_beta_spglue -> SpanPushout_spushout_ind [] ;
+  SpanPushout_spushout_ind -> SpanPushout_spglue [] ;
+  SpanPushout_spushout_rec_beta_spglue -> SpanPushout_spushout_rec [] ;
+  SpanPushout_spushout_rec_beta_spglue -> SpanPushout_spglue [] ;
+  SpanPushout_spushout_rec -> SpanPushout_SPushout [] ;
+  SpanPushout_spglue -> SpanPushout_spushr [] ;
+  SpanPushout_spglue -> SpanPushout_spushl [] ;
+  SpanPushout_spushr -> SpanPushout_SPushout [] ;
+  SpanPushout_spushl -> SpanPushout_SPushout [] ;
+subgraph cluster_SpanPushout { label="SpanPushout"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+SpanPushout_SPushout; SpanPushout_spushl; SpanPushout_spushr; SpanPushout_spglue; SpanPushout_spushout_rec; SpanPushout_spushout_rec_beta_spglue; SpanPushout_spushout_ind; SpanPushout_spushout_ind_beta_spglue; SpanPushout_functor_spushout; SpanPushout_functor_spushout_compose; SpanPushout_functor_spushout_idmap; SpanPushout_functor_spushout_homotopic; SpanPushout_equiv_pushout_spushout; SpanPushout_spushout_sjoin_map; };
+} /* END */

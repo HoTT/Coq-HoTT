@@ -1,0 +1,19 @@
+digraph HoTT_Spaces_No_Negation {
+  graph [ratio=0.5]
+  node [style=filled]
+Negation_Unnamed_thm [label="Unnamed_thm", URL=<Negation.html#Unnamed_thm>, peripheries=3, fillcolor="#F070D1"] ;
+Negation_negate_cut [label="negate_cut", URL=<Negation.html#negate_cut>, fillcolor="#F070D1"] ;
+Negation_negate [label="negate", URL=<Negation.html#negate>, fillcolor="#F070D1"] ;
+Negation_hasnegation_decsort [label="hasnegation_decsort", URL=<Negation.html#hasnegation_decsort>, peripheries=3, fillcolor="#F070D1"] ;
+Negation_hasnegation_maxsort [label="hasnegation_maxsort", URL=<Negation.html#hasnegation_maxsort>, peripheries=3, fillcolor="#F070D1"] ;
+Negation_symmetric_options [label="symmetric_options", URL=<Negation.html#symmetric_options>, fillcolor="#F070D1"] ;
+Negation_HasNegation [label="HasNegation", URL=<Negation.html#HasNegation>, fillcolor="#F070D1"] ;
+  Negation_Unnamed_thm -> Negation_negate_cut [] ;
+  Negation_negate_cut -> Negation_negate [] ;
+  Negation_negate -> Negation_symmetric_options [] ;
+  Negation_hasnegation_decsort -> Negation_HasNegation [] ;
+  Negation_hasnegation_maxsort -> Negation_HasNegation [] ;
+  Negation_symmetric_options -> Negation_HasNegation [] ;
+subgraph cluster_Negation { label="Negation"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Negation_HasNegation; Negation_symmetric_options; Negation_hasnegation_maxsort; Negation_hasnegation_decsort; Negation_negate; Negation_negate_cut; Negation_Unnamed_thm; };
+} /* END */

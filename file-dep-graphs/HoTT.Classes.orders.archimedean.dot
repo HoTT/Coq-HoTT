@@ -1,0 +1,10 @@
+digraph HoTT_Classes_orders_archimedean {
+  graph [ratio=0.5]
+  node [style=filled]
+archimedean_hexists4 [label="hexists4", URL=<archimedean.html#hexists4>, peripheries=3, fillcolor="#F070D1"] ;
+archimedean_char_minus_right [label="char_minus_right", URL=<archimedean.html#char_minus_right>, peripheries=3, fillcolor="#F070D1"] ;
+archimedean_char_minus_left [label="char_minus_left", URL=<archimedean.html#char_minus_left>, peripheries=3, fillcolor="#F070D1"] ;
+archimedean_qinc [label="qinc", URL=<archimedean.html#qinc>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_archimedean { label="archimedean"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+archimedean_qinc; archimedean_char_minus_left; archimedean_char_minus_right; archimedean_hexists4; };
+} /* END */

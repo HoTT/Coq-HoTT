@@ -1,0 +1,1464 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Theorems about the 2-sphere [S^2]. *)\n\n(* ** Definition of the 2-sphere. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Private Inductive TwoSphere : Type0 :=\n    | base : TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Axiom surf : idpath base = idpath base.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition TwoSphere_ind (P : TwoSphere -> Type)\n    (b : P base) (s : idpath b = transport2 P surf b)\n    : forall (x : TwoSphere), P x\n    := fun x => match x with base => fun _ => b end s.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Axiom TwoSphere_ind_beta_surf : forall (P : TwoSphere -> Type)\n    (b : P base) (s : idpath b = transport2 P surf b),\n    apD02 (TwoSphere_ind P b s) surf = s @ (concat_p1 _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ** The non-dependent eliminator *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition TwoSphere_rec (P : Type) (b : P) (s : idpath b = idpath b)\n  : TwoSphere -> P\n  := TwoSphere_ind (fun _ => P) b (s @ (transport2_const surf b) @ (concat_p1 _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition TwoSphere_rec_beta_surf (P : Type) (b : P) (s : idpath b = idpath b)\n  : ap02 (TwoSphere_rec P b s) surf = s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap02 (TwoSphere_rec P b s) surf = s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap02 (TwoSphere_rec P b s) surf = s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancel2L (transport2_const surf b)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport2_const surf b @@ ap02 (TwoSphere_rec P b s) surf =\ntransport2_const surf b @@ s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancelL (apD_const (TwoSphere_rec P b s) (idpath base))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "apD_const (TwoSphere_rec P b s) 1 @\n(transport2_const surf b @@ ap02 (TwoSphere_rec P b s) surf) =\napD_const (TwoSphere_rec P b s) 1 @ (transport2_const surf b @@ s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancelR _ _ (concat_p_pp _ (transport_const _ b) _)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(apD_const (TwoSphere_rec P b s) 1 @\n (transport2_const surf b @@ ap02 (TwoSphere_rec P b s) surf)) @\n(concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n   (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^ =\n(apD_const (TwoSphere_rec P b s) 1 @ (transport2_const surf b @@ s)) @\n(concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n   (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancelR _ _ (whiskerL (transport2 _ surf b) (apD_const _ _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((apD_const (TwoSphere_rec P b s) 1 @\n  (transport2_const surf b @@ ap02 (TwoSphere_rec P b s) surf)) @\n (concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n    (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^) @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b)\n  (apD_const (fun _ : TwoSphere => b) 1)^ =\n((apD_const (TwoSphere_rec P b s) 1 @ (transport2_const surf b @@ s)) @\n (concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n    (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^) @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b)\n  (apD_const (fun _ : TwoSphere => b) 1)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((apD02_const (TwoSphere_rec P b s) surf)^ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "apD02 (TwoSphere_rec P b s) surf =\n((apD_const (TwoSphere_rec P b s) 1 @ (transport2_const surf b @@ s)) @\n (concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n    (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^) @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b)\n  (apD_const (fun _ : TwoSphere => b) 1)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((TwoSphere_ind_beta_surf _ _ _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n((apD_const (TwoSphere_rec P b s) 1 @ (transport2_const surf b @@ s)) @\n (concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n    (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^) @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b)\n  (apD_const (fun _ : TwoSphere => b) 1)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => _ @ w) \n                  (triangulator \n                     (transport2 (fun _ : TwoSphere => P) surf b) _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n((apD_const (TwoSphere_rec P b s) 1 @ (transport2_const surf b @@ s)) @\n (concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b)\n    (transport_const 1 b) (ap (TwoSphere_rec P b s) 1))^) @\n(concat_p_pp (transport2 (fun _ : TwoSphere => P) surf b) 1\n   (apD\n      (TwoSphere_ind (fun _ : TwoSphere => P) b\n         ((s @ transport2_const surf b) @\n          concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)))\n      1) @\n whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))\n   (apD\n      (TwoSphere_ind (fun _ : TwoSphere => P) b\n         ((s @ transport2_const surf b) @\n          concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)))\n      1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n((1 @ (transport2_const surf b @@ s)) @\n match\n   transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n   return (p @ 1 = (p @ 1) @ 1)\n with\n | 1 => 1\n end^) @\n(match\n   transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n   return (p @ 1 = (p @ 1) @ 1)\n with\n | 1 => 1\n end @ whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => (w @ _) @ _) (concat_1p _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n((transport2_const surf b @@ s) @\n match\n   transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n   return (p @ 1 = (p @ 1) @ 1)\n with\n | 1 => 1\n end^) @\n(match\n   transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n   return (p @ 1 = (p @ 1) @ 1)\n with\n | 1 => 1\n end @ whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (concat_p_pp _ _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n(transport2_const surf b @@ s) @\n(match\n   transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n   return (p @ 1 = (p @ 1) @ 1)\n with\n | 1 => 1\n end^ @\n (match\n    transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n    return (p @ 1 = (p @ 1) @ 1)\n  with\n  | 1 => 1\n  end @ whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => _ @ w) (concat_pp_p _ _ _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n(transport2_const surf b @@ s) @\n((match\n    transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n    return (p @ 1 = (p @ 1) @ 1)\n  with\n  | 1 => 1\n  end^ @\n  match\n    transport2 (fun _ : TwoSphere => P) surf b as p in (_ = a)\n    return (p @ 1 = (p @ 1) @ 1)\n  with\n  | 1 => 1\n  end) @\n whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => _ @ (w @ _)) (concat_Vp _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n(transport2_const surf b @@ s) @\n(1 @ whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => _ @ (w @ _)) \n                  (concat_pV (concat_p1 \n                                (transport2 (fun _ : TwoSphere => P) surf b @ 1))))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n(transport2_const surf b @@ s) @\n((concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1) @\n  (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1))^) @\n whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => _ @ w) (concat_p_pp _ _ _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n(transport2_const surf b @@ s) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1) @\n ((concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1))^ @\n  whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (concat_pp_p _ _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((s @ transport2_const surf b) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) @\n(concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))^ =\n((transport2_const surf b @@ s) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)) @\n((concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1))^ @\n whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_pV.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s @ transport2_const surf b) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b) =\n(((transport2_const surf b @@ s) @\n  concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)) @\n ((concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1))^ @\n  whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1)) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (concat_p_pp _ _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s @ transport2_const surf b) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b) =\n((transport2_const surf b @@ s) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)) @\n(((concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1))^ @\n  whiskerR (concat_p1 (transport2 (fun _ : TwoSphere => P) surf b)) 1) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => _ @ w) (whiskerR_p1 _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(s @ transport2_const surf b) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b) =\n((transport2_const surf b @@ s) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "s @ transport2_const surf b =\n(transport2_const surf b @@ s) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap (fun w => w @ _) (whiskerL_1p_1 _)^) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "whiskerL 1 s @ transport2_const surf b =\n(transport2_const surf b @@ s) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap (fun w => _ @ w) (whiskerR_p1 _)^) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "whiskerL 1 s @\n(((concat_p1 (1 @ 1))^ @ whiskerR (transport2_const surf b) 1) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)) =\n(transport2_const surf b @@ s) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "whiskerL 1 s @\n((1 @ whiskerR (transport2_const surf b) 1) @\n concat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)) =\n(transport2_const surf b @@ s) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((concat_p_pp _ _ _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(whiskerL 1 s @ (1 @ whiskerR (transport2_const surf b) 1)) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1) =\n(transport2_const surf b @@ s) @\nconcat_p1 (transport2 (fun _ : TwoSphere => P) surf b @ 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "whiskerL 1 s @ (1 @ whiskerR (transport2_const surf b) 1) =\ntransport2_const surf b @@ s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap (fun w => _ @ w) (concat_1p _)) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "whiskerL 1 s @ whiskerR (transport2_const surf b) 1 =\ntransport2_const surf b @@ s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((concat_whisker 1 _ _ 1 (transport2_const surf b) s)^ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "whiskerR (transport2_const surf b) 1 @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b @ transport_const 1 b) s =\ntransport2_const surf b @@ s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport2_const surf b @@ s =\nwhiskerR (transport2_const surf b) 1 @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b @ transport_const 1 b) s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap (fun w => w @@ _) (concat_p1 _)^) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport2_const surf b @ 1) @@ s =\nwhiskerR (transport2_const surf b) 1 @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b @ transport_const 1 b) s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap (fun w => _ @@ w) (concat_1p _)^) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport2_const surf (transport (fun _ : TwoSphere => P) 1 b) @ 1) @@\n(1 @ s) =\nwhiskerR (transport2_const surf b) 1 @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b @ transport_const 1 b) s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((concat_concat2 _ _ _ _)^ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport2_const surf (transport (fun _ : TwoSphere => P) 1 b) @@ 1) @\n(1 @@ s) =\nwhiskerR (transport2_const surf b) 1 @\nwhiskerL (transport2 (fun _ : TwoSphere => P) surf b @ transport_const 1 b) s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "P"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "1 = 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

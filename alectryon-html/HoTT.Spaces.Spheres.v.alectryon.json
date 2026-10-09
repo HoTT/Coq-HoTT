@@ -1,0 +1,5268 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.NullHomotopy.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.Suspension.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Circle Spaces.TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * The spheres, in all dimensions. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables X A B f g n.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Definition, by iterated suspension. *)\n\n(** To match the usual indexing for spheres, we have to pad the sequence with a dummy term [Sphere -2]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint Sphere (n : trunc_index)\n  := match n return Type with\n       | -2 => Empty\n       | -1 => Empty\n       | n'.+1 => Susp (Sphere n')\n     end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Pointed sphere for non-negative dimensions. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition psphere (n : nat) : pType := [Sphere n, _].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments Sphere : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments psphere : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Explicit equivalences in low dimensions  *)\n\n(** *** [Sphere 0] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition S0_to_Bool : (Sphere 0) -> Bool.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 0 -> Bool",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 0 -> Bool",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 0 -> Bool",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Susp_rec true false).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty -> true = false",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Bool_to_S0 : Bool -> (Sphere 0).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Bool -> Sphere 0",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Bool -> Sphere 0",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun b => if b then North else South).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_S0_to_Bool : IsEquiv (S0_to_Bool) | 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv S0_to_Bool",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv S0_to_Bool",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_adjointify with Bool_to_S0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Bool => S0_to_Bool (Bool_to_S0 x)) == idmap",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Sphere 0 => Bool_to_S0 (S0_to_Bool x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Bool => S0_to_Bool (Bool_to_S0 x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [ | ]; exact 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Sphere 0 => Bool_to_S0 (S0_to_Bool x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Susp_ind _ 1 1 _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Empty,\ntransport (fun y : Susp Empty => Bool_to_S0 (S0_to_Bool y) = y) (merid x) 1 =\n1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_S0_Bool : Sphere 0 <~> Bool\n  := Build_Equiv _ _ _ isequiv_S0_to_Bool.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ispointed_bool : IsPointed Bool := true.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pBool := [Bool, true].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pequiv_S0_Bool : psphere 0 <~>* pBool\n  := @Build_pEquiv' (psphere 0) pBool equiv_S0_Bool 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In [pmap_from_psphere_iterated_loops] below, we'll use this universal property of [pBool]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pmap_from_bool `{Funext} (X : pType)\n  : (pBool ->** X) <~>* X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pBool ->** X) <~>* X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pBool ->** X) <~>* X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_pEquiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pBool ->** X) <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(pBool ->** X) <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE (issig_pmap _ _)^-1%equiv).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : pBool -> X & f pt = pt} <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE (equiv_functor_sigma_pb (equiv_bool_rec_uncurried X))^-1%equiv); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X * X & snd x = pt} <~> X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "make_equiv_contr_basedpaths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((equiv_adjointify\n    (fun H0 : {x : X * X & snd x = pt} =>\n     (fun H1 : X * X =>\n      (fun (H2 H3 : X) (_ : snd (H2, H3) = pt) => H2 : X) (fst H1) (snd H1))\n       H0.1 H0.2)\n    (fun H0 : X =>\n     ((H0 : X, let H1 := pt in H1) : X * X;\n     1%path : snd ((H0 : X, let H1 := pt in H1) : X * X) = pt)\n     :\n     {x : X * X & snd x = pt})\n    ((fun H0 : X => 1%path)\n     :\n     (fun H0 : {x : X * X & snd x = pt} =>\n      (fun H1 : X * X =>\n       (fun (H2 H3 : X) (_ : snd (H2, H3) = pt) => H2 : X) (fst H1) (snd H1))\n        H0.1 H0.2)\n     o (fun H0 : X =>\n        ((H0 : X, let H1 := pt in H1) : X * X;\n        1%path : snd ((H0 : X, let H1 := pt in H1) : X * X) = pt)\n        :\n        {x : X * X & snd x = pt}) ==\n     idmap)\n    ((fun H0 : {x : X * X & snd x = pt} =>\n      (fun H1 : X * X =>\n       (fun (H2 H3 : X) (H4 : snd (H2, H3) = pt) =>\n        paths_ind_r pt\n          (fun (y : X) (p : y = pt) =>\n           ((H2, let H5 := pt in H5); 1%path) = ((H2, y); p))\n          1%path H3 H4)\n         (fst H1) (snd H1))\n        H0.1 H0.2)\n     :\n     (fun H0 : X =>\n      ((H0 : X, let H1 := pt in H1) : X * X;\n      1%path : snd ((H0 : X, let H1 := pt in H1) : X * X) = pt)\n      :\n      {x : X * X & snd x = pt})\n     o (fun H0 : {x : X * X & snd x = pt} =>\n        (fun H1 : X * X =>\n         (fun (H2 H3 : X) (_ : snd (H2, H3) = pt) => H2 : X) \n           (fst H1) (snd H1))\n          H0.1 H0.2) ==\n     idmap)\n  :\n  {x : X * X & equiv_bool_rec_uncurried X x pt = pt} <~> X)\n oE (equiv_functor_sigma_pb (equiv_bool_rec_uncurried X))^-1\n oE (issig_pmap pBool X)^-1) pt =\npt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** [Sphere 1] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition S1_to_Circle : (Sphere 1) -> Circle.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 1 -> Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 1 -> Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Susp_rec Circle.base Circle.base).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Susp Empty -> Circle.base = Circle.base",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun x => if (S0_to_Bool x) then loop else 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Circle_to_S1 : Circle -> (Sphere 1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle -> Sphere 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle -> Sphere 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Circle_rec _ North).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "North = North",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (merid North @ (merid South)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_S1_to_Circle : IsEquiv (S1_to_Circle) | 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv S1_to_Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv S1_to_Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_adjointify with Circle_to_S1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Circle => S1_to_Circle (Circle_to_S1 x)) == idmap",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Sphere 1 => Circle_to_S1 (S1_to_Circle x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Circle => S1_to_Circle (Circle_to_S1 x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Circle_ind _ 1 _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : Circle => S1_to_Circle (Circle_to_S1 x) = x) loop 1 = 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_paths FFlr; apply equiv_p1_1q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap S1_to_Circle (ap Circle_to_S1 loop) = loop",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap _ (Circle_rec_beta_loop _ _ _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap S1_to_Circle (merid North @ (merid South)^) = loop",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply Susp_rec_beta_zigzag.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(if S0_to_Bool North then loop else 1) @\n(if S0_to_Bool South then loop else 1)^ = loop",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "loop @ 1 = loop",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply concat_p1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Sphere 1 => Circle_to_S1 (S1_to_Circle x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Susp_ind_FFlr; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "North = North",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "North = South",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\nap Circle_to_S1 (ap S1_to_Circle (merid x)) @ ?Goal0 = ?Goal @ merid x",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "North = South",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\nap Circle_to_S1 (ap S1_to_Circle (merid x)) @ ?Goal = 1 @ merid x",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (merid South).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\nap Circle_to_S1 (ap S1_to_Circle (merid x)) @ merid South = 1 @ merid x",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Circle_to_S1 (ap S1_to_Circle (merid x)) @ merid South = 1 @ merid x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold S1_to_Circle; rewrite (Susp_rec_beta_merid x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Circle_to_S1 (if S0_to_Bool x then loop else 1) @ merid South =\n1 @ merid x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\nap Circle_to_S1 (if S0_to_Bool x then loop else 1) @ merid South =\n1 @ merid x",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (Susp Empty) with (Sphere 0).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Sphere 0,\nap Circle_to_S1 (if S0_to_Bool x then loop else 1) @ merid South =\n1 @ merid x",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_ind (S0_to_Bool ^-1)); intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Circle_to_S1 (if S0_to_Bool (S0_to_Bool^-1 x) then loop else 1) @\nmerid South = 1 @ merid (S0_to_Bool^-1 x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "case x; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Circle_to_S1 loop @ merid South = 1 @ merid North",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 @ merid South = 1 @ merid South",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Circle_to_S1 loop @ merid South = 1 @ merid North",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs napply concat_1p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap Circle_to_S1 loop @ merid South = merid North",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Circle_to_S1; rewrite Circle_rec_beta_loop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(merid North @ (merid South)^) @ merid South = merid North",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply concat_pV_p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_S1_Circle : Sphere 1 <~> Circle\n  := Build_Equiv _ _ _ isequiv_S1_to_Circle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pequiv_S1_Circle : psphere 1 <~>* [Circle, _].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psphere 1 <~>* [Circle, ispointed_Circle]",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psphere 1 <~>* [Circle, ispointed_Circle]",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pEquiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "psphere 1 <~> [Circle, ispointed_Circle]",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact equiv_S1_Circle.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_S1_Circle pt = pt",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** [Sphere 2] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition S2_to_TwoSphere : (Sphere 2) -> TwoSphere.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 2 -> TwoSphere",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sphere 2 -> TwoSphere",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Susp_rec base base).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Susp (Susp Empty) -> base = base",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Susp_rec (idpath base) (idpath base)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Susp Empty -> 1 = 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Susp_rec surf (idpath (idpath base))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty -> surf = 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact Empty_rec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition TwoSphere_to_S2 : TwoSphere -> (Sphere 2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "TwoSphere -> Sphere 2",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "TwoSphere -> Sphere 2",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (TwoSphere_rec (Sphere 2) North).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (transport (fun x => x = x) (concat_pV (merid North)) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merid North @ (merid North)^ = merid North @ (merid North)^",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (((ap (fun u => merid u @ (merid North)^) \n               (merid North @ (merid South)^)))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issect_TwoSphere_to_S2 : S2_to_TwoSphere o TwoSphere_to_S2 == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "S2_to_TwoSphere o TwoSphere_to_S2 == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "S2_to_TwoSphere o TwoSphere_to_S2 == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (TwoSphere_ind _ 1 _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\ntransport2 (fun x : TwoSphere => S2_to_TwoSphere (TwoSphere_to_S2 x) = x)\n  surf 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V rapply concat_p1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\ntransport2 (fun x : TwoSphere => S2_to_TwoSphere (TwoSphere_to_S2 x) = x)\n  surf 1 @\n1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs exact (@concat_Ap (base = base) _ _\n                          (fun p => (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)\n                          (fun x =>\n                             (transport_paths_FFlr x 1) \n                               @ ap (fun u => u @ x) (concat_p1 _)\n                               @ ap (fun w => _ @ w) (inv_V x)^ \n                               @ (inv_pp _ _)^) \n                          1 1 surf).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\n(((transport_paths_FFlr 1 1 @\n   ap (fun u : S2_to_TwoSphere (TwoSphere_to_S2 base) = base => u @ 1)\n     (concat_p1 (ap S2_to_TwoSphere (ap TwoSphere_to_S2 1))^)) @\n  ap\n    (fun w : base = base => (ap S2_to_TwoSphere (ap TwoSphere_to_S2 1))^ @ w)\n    (inv_V 1)^) @\n (inv_pp 1^ (ap S2_to_TwoSphere (ap TwoSphere_to_S2 1)))^) @\nap (fun p : base = base => (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)\n  surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs rapply concat_1p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\nap (fun p : base = base => (p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))^)\n  surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs exact (ap_compose (fun p => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))\n                          inverse\n                          surf).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\nap inverse\n  (ap (fun p : base = base => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))\n     surf)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@ap _ _ (ap inverse) 1 _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\nap (fun p : base = base => p^ @ ap S2_to_TwoSphere (ap TwoSphere_to_S2 p))\n  surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V rapply concat2_ap_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 =\nap inverse surf @@\nap (fun u : base = base => ap S2_to_TwoSphere (ap TwoSphere_to_S2 u)) surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs exact (ap (fun w => inverse2 surf @@ w)\n                  (ap_compose (ap TwoSphere_to_S2) (ap S2_to_TwoSphere) surf)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = inverse2 surf @@ ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V exact (concat_Vp_inverse2 _ _ surf).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(inverse2 surf @@ surf) @ concat_Vp 1 =\ninverse2 surf @@ ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs rapply concat_p1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inverse2 surf @@ surf =\ninverse2 surf @@ ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (fun p : 1 = 1 => inverse2 surf @@ p) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "surf = ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (ap S2_to_TwoSphere) (ap (ap TwoSphere_to_S2) surf) = surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs refine ((ap (ap (ap S2_to_TwoSphere))\n                        (TwoSphere_rec_beta_surf (Sphere 2) North _))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (ap S2_to_TwoSphere)\n  (transport (fun x : North = North => x = x) (concat_pV (merid North))\n     (ap (fun u : Susp (Susp Empty) => merid u @ (merid North)^)\n        (merid North @ (merid South)^))) =\nsurf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs refine (ap_transport (concat_pV (merid North))\n                        (fun z => @ap _ _ _ z z) \n                        (ap (fun u => merid u @ (merid North)^)\n                            (merid North @ (merid South)^))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun z : North = North => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)\n  (concat_pV (merid North))\n  (ap (ap S2_to_TwoSphere)\n     (ap (fun u : Susp (Susp Empty) => merid u @ (merid North)^)\n        (merid North @ (merid South)^))) =\nsurf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V exact (ap (transport (fun z => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)\n                      (concat_pV (merid North)))\n               (ap_compose (fun u => merid u @ (merid North)^) (ap S2_to_TwoSphere)\n                           (merid North @ (merid South)^))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun z : North = North => ap S2_to_TwoSphere z = ap S2_to_TwoSphere z)\n  (concat_pV (merid North))\n  (ap\n     (fun x : Susp (Susp Empty) =>\n      ap S2_to_TwoSphere (merid x @ (merid North)^))\n     (merid North @ (merid South)^)) =\nsurf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_paths FlFr; symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (fun x : Susp (Susp Empty) => ap S2_to_TwoSphere (merid x @ (merid North)^))\n  (merid North @ (merid South)^) @\nap (ap S2_to_TwoSphere) (concat_pV (merid North)) =\nap (ap S2_to_TwoSphere) (concat_pV (merid North)) @ surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V refine (1 @@ ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (fun x : Susp (Susp Empty) => ap S2_to_TwoSphere (merid x @ (merid North)^))\n  (merid North @ (merid South)^) @\n(ap_pV (Susp_rec base base (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)))\n   (merid North) (merid North) @\n ((Susp_rec_beta_merid North @@ inverse2 (Susp_rec_beta_merid North)) @\n  concat_pV (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) North))) =\nap (ap S2_to_TwoSphere) (concat_pV (merid North)) @ surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (fun x : Susp (Susp Empty) => ap S2_to_TwoSphere (merid x @ (merid North)^))\n  (merid North @ (merid South)^) @\n(ap_pV (Susp_rec base base (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)))\n   (merid North) (merid North) @\n ((Susp_rec_beta_merid North @@ inverse2 (Susp_rec_beta_merid North)) @ 1)) =\nap (ap S2_to_TwoSphere) (concat_pV (merid North)) @ surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs exact (concat_Ap (fun x => ap_pV S2_to_TwoSphere (merid x) (merid North)\n                                  @ ((Susp_rec_beta_merid x\n                                        @@ inverse2 (Susp_rec_beta_merid North))\n                                       @ 1))\n               (merid North @ (merid South)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap_pV S2_to_TwoSphere (merid North) (merid North) @\n ((Susp_rec_beta_merid North @@ inverse2 (Susp_rec_beta_merid North)) @ 1)) @\nap\n  (fun x : Susp (Susp Empty) =>\n   Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x @\n   (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) North)^)\n  (merid North @ (merid South)^) =\nap (ap S2_to_TwoSphere) (concat_pV (merid North)) @ surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap_pV S2_to_TwoSphere (merid North) (merid North) @\n((Susp_rec_beta_merid North @@ inverse2 (Susp_rec_beta_merid North)) @ 1) =\nap (ap S2_to_TwoSphere) (concat_pV (merid North))",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (fun x : Susp (Susp Empty) =>\n   Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x @\n   (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) North)^)\n  (merid North @ (merid South)^) =\nsurf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (ap_ap_concat_pV _ _ _ (Susp_rec_beta_merid North)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (fun x : Susp (Susp Empty) =>\n   Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x @\n   (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) North)^)\n  (merid North @ (merid South)^) =\nsurf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V exact (concat2_ap_ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec))\n                         (fun _ => 1)\n                         (merid North @ (merid South)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)) (merid North @ (merid South)^) @@\nap (fun _ : Susp (Susp Empty) => 1) (merid North @ (merid South)^) = surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs nrefine (ap (fun w => _ @@ w) (ap_const _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)) (merid North @ (merid South)^) @@\n1 = surf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply whiskerR_p1_1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)) (merid North @ (merid South)^) =\nsurf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs_V napply concat_p1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)) (merid North @ (merid South)^) =\nsurf @ 1",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply Susp_rec_beta_zigzag.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* A bit slow, ~0.2s. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issect_S2_to_TwoSphere : TwoSphere_to_S2 o S2_to_TwoSphere == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "TwoSphere_to_S2 o S2_to_TwoSphere == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "TwoSphere_to_S2 o S2_to_TwoSphere == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "TwoSphere_to_S2 (S2_to_TwoSphere x) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Sphere 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((Susp_rec_eta_homotopic (TwoSphere_to_S2 o S2_to_TwoSphere) x) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n  (TwoSphere_to_S2 (S2_to_TwoSphere South))\n  (fun x0 : Susp (Susp Empty) =>\n   ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1)) (merid x0))\n  x =\nx",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Sphere 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x =\nSusp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n  (TwoSphere_to_S2 (S2_to_TwoSphere South))\n  (fun x0 : Susp (Susp Empty) =>\n   ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1)) (merid x0))\n  x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Sphere 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize dependent x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Sphere 2,\nx =\nSusp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n  (TwoSphere_to_S2 (S2_to_TwoSphere South))\n  (fun x0 : Susp (Susp Empty) =>\n   ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1)) (merid x0))\n  x",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Susp_ind _ 1 (merid North)^ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp (Susp Empty),\ntransport\n  (fun y : Susp (Susp (Susp Empty)) =>\n   y =\n   Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n     (TwoSphere_to_S2 (S2_to_TwoSphere South))\n     (fun x0 : Susp (Susp Empty) =>\n      ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1))\n        (merid x0))\n     y)\n  (merid x) 1 =\n(merid North)^",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun y : Susp (Susp (Susp Empty)) =>\n   y =\n   Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n     (TwoSphere_to_S2 (S2_to_TwoSphere South))\n     (fun x0 : Susp (Susp Empty) =>\n      ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1))\n        (merid x0))\n     y)\n  (merid x) 1 =\n(merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((transport_paths_FlFr (f := fun y => y) _ _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((ap idmap (merid x))^ @ 1) @\nap\n  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n     (TwoSphere_to_S2 (S2_to_TwoSphere South))\n     (fun x0 : Susp (Susp Empty) =>\n      ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1))\n        (merid x0)))\n  (merid x) =\n(merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite_moveR_Vp_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 @\nap\n  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n     (TwoSphere_to_S2 (S2_to_TwoSphere South))\n     (fun x0 : Susp (Susp Empty) =>\n      ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1))\n        (merid x0)))\n  (merid x) =\nap idmap (merid x) @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((concat_1p _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n     (TwoSphere_to_S2 (S2_to_TwoSphere South))\n     (fun x0 : Susp (Susp Empty) =>\n      ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1))\n        (merid x0)))\n  (merid x) =\nap idmap (merid x) @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => w @ _) (ap_idmap _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap\n  (Susp_rec (TwoSphere_to_S2 (S2_to_TwoSphere North))\n     (TwoSphere_to_S2 (S2_to_TwoSphere South))\n     (fun x0 : Susp (Susp Empty) =>\n      ap (fun x1 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x1))\n        (merid x0)))\n  (merid x) =\nmerid x @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((Susp_rec_beta_merid _) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x0 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x0)) (merid x) =\nmerid x @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x0 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x0)) (merid x) =\nap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) = merid x @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x0 : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x0)) (merid x) =\nap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap_compose S2_to_TwoSphere TwoSphere_to_S2 (merid x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) = merid x @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via (ap TwoSphere_to_S2 \n               (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) =\nap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x) =\nmerid x @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap TwoSphere_to_S2 (ap S2_to_TwoSphere (merid x)) =\nap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat f_ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap S2_to_TwoSphere (merid x) = Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Susp_rec_beta_merid.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x) =\nmerid x @ (merid North)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merid x @ (merid North)^ =\nap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp (Susp Empty)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize dependent x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp (Susp Empty),\nmerid x @ (merid North)^ =\nap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Susp_ind _ (concat_pV (merid North)) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun y : Susp (Susp Empty) =>\n merid y @ (merid North)^ =\n ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) y)) South",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\ntransport\n  (fun y : Susp (Susp Empty) =>\n   merid y @ (merid North)^ =\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) y))\n  (merid x) (concat_pV (merid North)) =\n?H_S",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun y : Susp (Susp Empty) =>\n merid y @ (merid North)^ =\n ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) y)) South",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (concat_pV (merid North))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merid South @ (merid North)^ = merid North @ (merid North)^",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (fun w => merid w @ (merid North)^) (merid South)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\ntransport\n  (fun y : Susp (Susp Empty) =>\n   merid y @ (merid North)^ =\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) y))\n  (merid x) (concat_pV (merid North)) =\nap (fun w : Susp (Susp Empty) => merid w @ (merid North)^) (merid South)^ @\nconcat_pV (merid North)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun y : Susp (Susp Empty) =>\n   merid y @ (merid North)^ =\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) y))\n  (merid x) (concat_pV (merid North)) =\nap (fun w : Susp (Susp Empty) => merid w @ (merid North)^) (merid South)^ @\nconcat_pV (merid North)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((transport_paths_FlFr (merid x) (concat_pV (merid North))) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^) (merid x))^ @\n concat_pV (merid North)) @\nap\n  (fun x0 : Susp (Susp Empty) =>\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x0))\n  (merid x) =\nap (fun w : Susp (Susp Empty) => merid w @ (merid North)^) (merid South)^ @\nconcat_pV (merid North)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite_moveR_Vp_p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "concat_pV (merid North) @\nap\n  (fun x0 : Susp (Susp Empty) =>\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x0))\n  (merid x) =\n(ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^) (merid x) @\n ap (fun w : Susp (Susp Empty) => merid w @ (merid North)^) (merid South)^) @\nconcat_pV (merid North)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^) (merid x) @\n ap (fun w : Susp (Susp Empty) => merid w @ (merid North)^) (merid South)^) @\nconcat_pV (merid North) =\nconcat_pV (merid North) @\nap\n  (fun x0 : Susp (Susp Empty) =>\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x0))\n  (merid x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((dpath_path_lr _ _ _)^-1 _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n  (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^) (merid x) @\n   ap (fun w : Susp (Susp Empty) => merid w @ (merid North)^) (merid South)^) =\nap\n  (fun x0 : Susp (Susp Empty) =>\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x0))\n  (merid x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap (transport _ _) (ap_pp _ (merid x) (merid South)^)^) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n  (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n     (merid x @ (merid South)^)) =\nap\n  (fun x0 : Susp (Susp Empty) =>\n   ap TwoSphere_to_S2 (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) x0))\n  (merid x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap_compose (Susp_rec 1 1 \n                              (Susp_rec surf 1 \n                                Empty_rec)) \n                            (ap TwoSphere_to_S2) (merid x))^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n  (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n     (merid x @ (merid South)^)) =\nap (ap TwoSphere_to_S2)\n  (ap (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec)) (merid x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (ap02 TwoSphere_to_S2) (Susp_rec_beta_merid _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n  (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n     (merid x @ (merid South)^)) =\nap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec x) =\ntransport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n  (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n     (merid x @ (merid South)^))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Susp Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "generalize dependent x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Susp Empty,\nap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec x) =\ntransport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n  (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n     (merid x @ (merid South)^))",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    \n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Susp_ind _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun y : Susp Empty =>\n ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec y) =\n transport (fun x : North = North => x = x) (concat_pV (merid North))\n   (ap (fun x : Susp (Susp Empty) => merid x @ (merid North)^)\n      (merid y @ (merid South)^)))\n  North",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun y : Susp Empty =>\n ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec y) =\n transport (fun x : North = North => x = x) (concat_pV (merid North))\n   (ap (fun x : Susp (Susp Empty) => merid x @ (merid North)^)\n      (merid y @ (merid South)^)))\n  South",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Empty,\ntransport\n  (fun y : Susp Empty =>\n   ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec y) =\n   transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n     (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n        (merid y @ (merid South)^)))\n  (merid x) ?H_N =\n?H_S",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun y : Susp Empty =>\n ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec y) =\n transport (fun x : North = North => x = x) (concat_pV (merid North))\n   (ap (fun x : Susp (Susp Empty) => merid x @ (merid North)^)\n      (merid y @ (merid South)^)))\n  North",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (TwoSphere_rec_beta_surf _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun y : Susp Empty =>\n ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec y) =\n transport (fun x : North = North => x = x) (concat_pV (merid North))\n   (ap (fun x : Susp (Susp Empty) => merid x @ (merid North)^)\n      (merid y @ (merid South)^)))\n  South",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => transport _ _ (ap _ w))\n                      (concat_pV (merid South))^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec South) =\ntransport (fun x : North = North => x = x) (concat_pV (merid North))\n  (ap (fun x : Susp (Susp Empty) => merid x @ (merid North)^) 1)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (transport_paths_lr _ _)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec South) =\n((concat_pV (merid North))^ @\n ap (fun x : Susp (Susp Empty) => merid x @ (merid North)^) 1) @\nconcat_pV (merid North)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ (ap (fun w => w @ _) (concat_p1 _)^)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec South) =\n(concat_pV (merid North))^ @ concat_pV (merid North)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (concat_Vp _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Empty,\ntransport\n  (fun y : Susp Empty =>\n   ap02 TwoSphere_to_S2 (Susp_rec surf 1 Empty_rec y) =\n   transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n     (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^)\n        (merid y @ (merid South)^)))\n  (merid x)\n  (TwoSphere_rec_beta_surf (Sphere 2) North\n     (transport (fun x0 : North = North => x0 = x0) \n        (concat_pV (merid North))\n        (ap (fun u : Susp (Susp Empty) => merid u @ (merid North)^)\n           (merid North @ (merid South)^)))) =\n(((concat_Vp (concat_pV (merid North)))^ @\n  ap\n    (fun\n       w : ap TwoSphere_to_S2\n             (Susp_rec 1 1 (Susp_rec surf 1 Empty_rec) North) =\n           merid North @ (merid North)^ =>\n     w @ concat_pV (merid North))\n    (concat_p1 (concat_pV (merid North))^)^) @\n (transport_paths_lr (concat_pV (merid North))\n    (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^) 1))^) @\nap\n  (fun w : North = North =>\n   transport (fun x0 : North = North => x0 = x0) (concat_pV (merid North))\n     (ap (fun x0 : Susp (Susp Empty) => merid x0 @ (merid North)^) w))\n  (concat_pV (merid South))^",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Empty_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isequiv_S2_to_TwoSphere : IsEquiv (S2_to_TwoSphere) | 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv S2_to_TwoSphere",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv S2_to_TwoSphere",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_adjointify with TwoSphere_to_S2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : TwoSphere => S2_to_TwoSphere (TwoSphere_to_S2 x)) == idmap",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : TwoSphere => S2_to_TwoSphere (TwoSphere_to_S2 x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact issect_TwoSphere_to_S2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Sphere 2 => TwoSphere_to_S2 (S2_to_TwoSphere x)) == idmap",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact issect_S2_to_TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_S2_TwoSphere : Sphere 2 <~> TwoSphere\n  := Build_Equiv _ _ _ isequiv_S2_to_TwoSphere.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Truncation and connectedness of spheres. *)\n\n(** S0 is 0-truncated. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance istrunc_s0 : IsHSet (Sphere 0).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (Sphere 0)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (Sphere 0)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (istrunc_isequiv_istrunc _ S0_to_Bool^-1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** S1 is 1-truncated. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance istrunc_s1 `{Univalence} : IsTrunc 1 (Sphere 1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc 1 (Sphere 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc 1 (Sphere 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (istrunc_isequiv_istrunc _ S1_to_Circle^-1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isconnected_sn n : IsConnected n.+1 (Sphere n.+2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr n.+1) (Sphere n.+2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr n.+1) (Sphere n.+2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr (-1)) (Sphere 0)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr n.+2) (Sphere n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr n.+1) (Sphere n.+2)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr (-1)) (Sphere 0)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply contr_inhabited_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1) (Sphere 0)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply tr, North.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr n.+2) (Sphere n.+3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr n.+1) (Sphere n.+2)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact isconnected_susp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Truncatedness via spheres  *)\n\n(** We show here that a type is n-truncated if and only if every map from the (n+1)-sphere into it is null-homotopic.  (One direction of this is of course the assertion that the (n+1)-sphere is n-connected.) *)\n\n(** TODO: re-type these lemmas in terms of truncation. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint allnullhomot_trunc {n : trunc_index} {X : Type} `{IsTrunc n X}\n  (f : Sphere n.+1 -> X) {struct n}\n: NullHomotopy f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n0 : trunc_index) (X0 : Type),\nIsTrunc n0 X0 -> forall f0 : Sphere n0.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere n.+1 -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n0 : trunc_index) (X0 : Type),\nIsTrunc n0 X0 -> forall f0 : Sphere n0.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere n.+1 -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n as [ | n'].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\nIsTrunc n X0 -> forall f0 : Sphere n.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "Contr X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere (-1) -> X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\nIsTrunc n X0 -> forall f0 : Sphere n.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n'.+1 X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere n'.+2 -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\nIsTrunc n X0 -> forall f0 : Sphere n.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "Contr X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere (-1) -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (center X).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Sphere (-1), f x = center X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\nIsTrunc n X0 -> forall f0 : Sphere n.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "Contr X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere (-1) -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\nIsTrunc n X0 -> forall f0 : Sphere n.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n'.+1 X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere n'.+2 -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply nullhomot_susp_from_paths.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy\n  (fun\n     x : match n' with\n         | -2 => Empty\n         | _.+1 =>\n             Susp\n               ((fix Sphere (n : trunc_index) : Type :=\n                   match n with\n                   | (_.+1 as n'0).+1 => Susp (Sphere n'0)\n                   | _ => Empty\n                   end)\n                  n')\n         end =>\n   ap f (merid x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "allnullhomot_trunc"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\nIsTrunc n X0 -> forall f0 : Sphere n.+1 -> X0, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsTrunc0"
+              ],
+              "body": null,
+              "type": "IsTrunc n'.+1 X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere n'.+2 -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply allnullhomot_trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Fixpoint istrunc_allnullhomot {n : trunc_index} {X : Type}\n  (HX : forall (f : Sphere n.+2 -> X), NullHomotopy f) {struct n}\n: IsTrunc n.+1 X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n0 : trunc_index) (X0 : Type),\n(forall f : Sphere n0.+2 -> X0, NullHomotopy f) -> IsTrunc n0.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere n.+2 -> X, NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n.+1 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n0 : trunc_index) (X0 : Type),\n(forall f : Sphere n0.+2 -> X0, NullHomotopy f) -> IsTrunc n0.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere n.+2 -> X, NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct n as [ | n'].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere 0 -> X, NullHomotopy f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n'.+2 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere n'.+3 -> X, NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere 0 -> X, NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* n = -2 *) "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_allpath.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : X, x = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere 0 -> X, NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x0 x1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x0 = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere 0 -> X, NullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (f := (fun b => if (S0_to_Bool b) then x0 else x1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x0 = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f0 : Sphere n.+2 -> X0, NullHomotopy f0) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f0 : Sphere 0 -> X, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun b : Sphere 0 => if S0_to_Bool b then x0 else x1",
+              "type": "Sphere 0 -> X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (n := HX f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x0 = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n0 : trunc_index) (X0 : Type),\n(forall f0 : Sphere n0.+2 -> X0, NullHomotopy f0) -> IsTrunc n0.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f0 : Sphere 0 -> X, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "fun b : Sphere 0 => if S0_to_Bool b then x0 else x1",
+              "type": "Sphere 0 -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": "HX f",
+              "type": "NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (n.2 North @ (n.2 South)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n'.+2 X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere n'.+3 -> X, NullHomotopy f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* n \u2265 -1 *) "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply istrunc_S; intros x0 x1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTrunc n'.+1 (x0 = x1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere n'.+3 -> X, NullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (istrunc_allnullhomot n').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall f : Sphere n'.+2 -> x0 = x1, NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f : Sphere n.+2 -> X0, NullHomotopy f) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f : Sphere n'.+3 -> X, NullHomotopy f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NullHomotopy f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "istrunc_allnullhomot"
+              ],
+              "body": null,
+              "type": "forall (n : trunc_index) (X0 : Type),\n(forall f0 : Sphere n.+2 -> X0, NullHomotopy f0) -> IsTrunc n.+1 X0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n'"
+              ],
+              "body": null,
+              "type": "trunc_index"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HX"
+              ],
+              "body": null,
+              "type": "forall f0 : Sphere n'.+3 -> X, NullHomotopy f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0",
+                "x1"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "Sphere n'.+2 -> x0 = x1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply nullhomot_paths_from_susp, HX.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Iterated loop spaces can be described using pointed maps from spheres.  The [n = 0] case of this is stated using [Bool] in [pmap_from_bool] above, and the [n = 1] case of this is stated using [Circle] in [pmap_from_circle_loops] in Circle.v. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pmap_from_psphere_iterated_loops `{Funext} (n : nat) (X : pType)\n  : (psphere n ->** X) <~>* iterated_loops n X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere n ->** X) <~>* iterated_loops n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere n ->** X) <~>* iterated_loops n X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n as [|n IHn]; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere 0 ->** X) <~>* X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere n.+1 ->** X) <~>* loops (iterated_loops n X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(psphere n ->** X) <~>* iterated_loops n X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere 0 ->** X) <~>* X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (pmap_from_bool X o*E pequiv_pequiv_precompose pequiv_S0_Bool^-1* ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere n.+1 ->** X) <~>* loops (iterated_loops n X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(psphere n ->** X) <~>* iterated_loops n X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (emap loops IHn o*E _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere n.+1 ->** X) <~>* loops (psphere n ->** X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(psphere n ->** X) <~>* iterated_loops n X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o*E loop_susp_adjoint (psphere n) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(psphere n ->** loops X) <~>* loops (psphere n ->** X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "(psphere n ->** X) <~>* iterated_loops n X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; apply equiv_loops_ppforall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

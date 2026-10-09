@@ -1,0 +1,9 @@
+digraph HoTT_Diagrams_Span {
+  graph [ratio=0.5]
+  node [style=filled]
+Span_span [label="span", URL=<Span.html#span>, peripheries=3, fillcolor="#F070D1"] ;
+Span_span_graph [label="span_graph", URL=<Span.html#span_graph>, fillcolor="#F070D1"] ;
+  Span_span -> Span_span_graph [] ;
+subgraph cluster_Span { label="Span"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Span_span_graph; Span_span; };
+} /* END */

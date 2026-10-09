@@ -1,0 +1,134 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functoriality of composition of natural transformations *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core Functor.Composition.Core NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section functorial_composition.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D E : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** whiskering on the left is a functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerL_functor (F : (D -> E)%category)\n  : ((C -> D) -> (C -> E))%category\n    := Build_Functor\n         (C -> D) (C -> E)\n         (fun G => F o G)%functor\n         (fun _ _ T => F oL T)\n         (fun _ _ _ _ _ => composition_of_whisker_l _ _ _)\n         (fun _ => whisker_l_right_identity _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** ** whiskering on the right is a functor *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition whiskerR_functor (G : (C -> D)%category)\n  : ((D -> E) -> (C -> E))%category\n    := Build_Functor\n         (D -> E) (C -> E)\n         (fun F => F o G)%functor\n         (fun _ _ T => T oR G)\n         (fun _ _ _ _ _ => composition_of_whisker_r _ _ _)\n         (fun _ => whisker_r_left_identity _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End functorial_composition.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

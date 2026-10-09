@@ -1,0 +1,14 @@
+digraph HoTT_Spaces_Torus_TorusHomotopy {
+  graph [ratio=0.5]
+  node [style=filled]
+TorusHomotopy_loops_torus [label="loops_torus", URL=<TorusHomotopy.html#loops_torus>, peripheries=3, fillcolor="#F070D1"] ;
+TorusHomotopy_pi1_torus [label="pi1_torus", URL=<TorusHomotopy.html#pi1_torus>, fillcolor="#F070D1"] ;
+TorusHomotopy_pequiv_torus_prod_circles [label="pequiv_torus_prod_circles", URL=<TorusHomotopy.html#pequiv_torus_prod_circles>, fillcolor="#F070D1"] ;
+TorusHomotopy_isconnected_torus [label="isconnected_torus", URL=<TorusHomotopy.html#isconnected_torus>, peripheries=3, fillcolor="#F070D1"] ;
+TorusHomotopy_is1type_torus [label="is1type_torus", URL=<TorusHomotopy.html#is1type_torus>, fillcolor="#F070D1"] ;
+  TorusHomotopy_loops_torus -> TorusHomotopy_pi1_torus [] ;
+  TorusHomotopy_loops_torus -> TorusHomotopy_is1type_torus [] ;
+  TorusHomotopy_pi1_torus -> TorusHomotopy_pequiv_torus_prod_circles [] ;
+subgraph cluster_TorusHomotopy { label="TorusHomotopy"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+TorusHomotopy_is1type_torus; TorusHomotopy_isconnected_torus; TorusHomotopy_pequiv_torus_prod_circles; TorusHomotopy_pi1_torus; TorusHomotopy_loops_torus; };
+} /* END */

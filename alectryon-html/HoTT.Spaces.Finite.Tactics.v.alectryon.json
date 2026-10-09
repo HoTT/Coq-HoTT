@@ -1,0 +1,40 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics Fin.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics Fin.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Tactics *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac FinIndOn X := repeat\n  match type of X with\n  | Fin 0 => destruct X\n  | Empty => destruct X\n  | Unit => destruct X\n  | Fin ?n => destruct X as [X|X]\n  | ?L + Unit => destruct X as [X|X]\n  end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This tactic can be used to generate n cases from a goal like forall (x : Fin n), _ *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac FinInd := let X := fresh \"X\" in intro X; FinIndOn X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

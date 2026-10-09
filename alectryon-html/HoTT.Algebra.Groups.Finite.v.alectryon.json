@@ -1,0 +1,1411 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.Group.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.Subgroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.QuotientGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Finite.Finite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Nat.Core Spaces.Nat.Division.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Finite Groups *)\n\n(** ** Basic Properties *)\n\n(** The order of a group is strictly positive. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance lt_zero_fcard_grp (G : Group) (fin_G : Finite G) : 0 < fcard G.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < fcard G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < fcard G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose proof (merely_equiv_fin G) as f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < fcard G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "merely (G <~> Fin.Fin (fcard G))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < fcard G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G <~> Fin.Fin (fcard G)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (fcard G).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G <~> Fin.Fin 0"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G <~> Fin.Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G <~> Fin.Fin 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "contradiction (f mon_unit).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "0 < n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G <~> Fin.Fin n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Lagrange's theorem *)\n\n(** Lagrange's Theorem - Given a finite group [G] and a finite subgroup [H] of [G], the order of [H] divides the order of [G].\n\nNote that constructively, a subgroup of a finite group cannot be shown to be finite without excluded middle. We therefore have to assume it is. This in turn implies that the subgroup is decidable. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition divides_fcard_subgroup {U : Univalence}\n  (G : Group) (H : Subgroup G) {fin_G : Finite G} {fin_H : Finite H}\n  : (fcard H | fcard G).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fcard H | fcard G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fcard H | fcard G)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (subgroup_index G H).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(subgroup_index G H * fcard H)%nat = fcard G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fcard G = (subgroup_index G H * fcard H)%nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (fcard_quotient (in_cosetL H) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finadd\n  (fun z : Quotient (in_cosetL H) =>\n   fcard\n     {x : G & (fun x0 : G => trunctype_type (in_class (in_cosetL H) z x0)) x}) =\n(subgroup_index G H * fcard H)%nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ finadd_const _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "finadd\n  (fun z : Quotient (in_cosetL H) =>\n   fcard\n     {x : G & (fun x0 : G => trunctype_type (in_class (in_cosetL H) z x0)) x}) =\nfinadd (fun _ : LeftCoset G H => fcard H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, path_forall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun z : Quotient (in_cosetL H) =>\n fcard\n   {x : G & (fun x0 : G => trunctype_type (in_class (in_cosetL H) z x0)) x}) ==\n(fun _ : LeftCoset G H => fcard H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Quotient_ind_hprop; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : G, fcard {x : G & (fun x0 : G => H (a^ * x0)) x} = fcard H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fcard {x0 : G & (fun x1 : G => H (x^ * x1)) x0} = fcard H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply fcard_equiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x0 : G & H (x^ * x0)} <~> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_sigma_in_cosetL_subgroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** As a corollary, the index of a subgroup is the order of the group divided by the order of the subgroup. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition subgroup_index_fcard_div {U : Univalence}\n  (G : Group) (H : Subgroup G) (fin_G : Finite G) (fin_H : Finite H)\n  : subgroup_index G H = fcard G / fcard H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subgroup_index G H = fcard G / fcard H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "subgroup_index G H = fcard G / fcard H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply nat_div_moveL_nV.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(subgroup_index G H * fcard H)%nat = fcard G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Subgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply divides_fcard_subgroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Therefore we can show that the order of the quotient group [G / H] is the order of [G] divided by the order of [H]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition fcard_grp_quotient {U : Univalence}\n  (G : Group) (H : NormalSubgroup G)\n  (fin_G : Finite G) (fin_H : Finite H)\n  : fcard (QuotientGroup G H) = fcard G / fcard H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fcard (QuotientGroup G H) = fcard G / fcard H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fcard (QuotientGroup G H) = fcard G / fcard H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "NormalSubgroup G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_G"
+              ],
+              "body": null,
+              "type": "Finite G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fin_H"
+              ],
+              "body": null,
+              "type": "Finite H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply subgroup_index_fcard_div.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,7 @@
+digraph HoTT_Axioms_Univalence {
+  graph [ratio=0.5]
+  node [style=filled]
+Univalence_univalence_axiom [label="univalence_axiom", URL=<Univalence.html#univalence_axiom>, peripheries=3, fillcolor="#FACDEF"] ;
+subgraph cluster_Univalence { label="Univalence"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Univalence_univalence_axiom; };
+} /* END */

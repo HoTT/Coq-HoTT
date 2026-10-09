@@ -1,0 +1,60 @@
+digraph HoTT_WildCat_Square {
+  graph [ratio=0.5]
+  node [style=filled]
+Square_fmap_square [label="fmap_square", URL=<Square.html#fmap_square>, peripheries=3, fillcolor="#F070D1"] ;
+Square_move_top_right [label="move_top_right", URL=<Square.html#move_top_right>, peripheries=3, fillcolor="#F070D1"] ;
+Square_move_right_top [label="move_right_top", URL=<Square.html#move_right_top>, peripheries=3, fillcolor="#F070D1"] ;
+Square_move_left_bottom [label="move_left_bottom", URL=<Square.html#move_left_bottom>, peripheries=3, fillcolor="#F070D1"] ;
+Square_move_bottom_left [label="move_bottom_left", URL=<Square.html#move_bottom_left>, peripheries=3, fillcolor="#F070D1"] ;
+Square_whiskerRT [label="whiskerRT", URL=<Square.html#whiskerRT>, peripheries=3, fillcolor="#F070D1"] ;
+Square_whiskerTR [label="whiskerTR", URL=<Square.html#whiskerTR>, peripheries=3, fillcolor="#F070D1"] ;
+Square_whiskerLB [label="whiskerLB", URL=<Square.html#whiskerLB>, peripheries=3, fillcolor="#F070D1"] ;
+Square_whiskerBL [label="whiskerBL", URL=<Square.html#whiskerBL>, peripheries=3, fillcolor="#F070D1"] ;
+Square_whiskerBR [label="whiskerBR", URL=<Square.html#whiskerBR>, peripheries=3, fillcolor="#F070D1"] ;
+Square_whiskerTL [label="whiskerTL", URL=<Square.html#whiskerTL>, peripheries=3, fillcolor="#F070D1"] ;
+Square_vinverse [label="vinverse", URL=<Square.html#vinverse>, peripheries=3, fillcolor="#F070D1"] ;
+Square_vconcatR [label="vconcatR", URL=<Square.html#vconcatR>, peripheries=3, fillcolor="#F070D1"] ;
+Square_vconcatL [label="vconcatL", URL=<Square.html#vconcatL>, peripheries=3, fillcolor="#F070D1"] ;
+Square_hconcatR [label="hconcatR", URL=<Square.html#hconcatR>, peripheries=3, fillcolor="#F070D1"] ;
+Square_hconcatL [label="hconcatL", URL=<Square.html#hconcatL>, peripheries=3, fillcolor="#F070D1"] ;
+Square_hinverse [label="hinverse", URL=<Square.html#hinverse>, fillcolor="#F070D1"] ;
+Square_vconcat [label="vconcat", URL=<Square.html#vconcat>, peripheries=3, fillcolor="#F070D1"] ;
+Square_hconcat [label="hconcat", URL=<Square.html#hconcat>, peripheries=3, fillcolor="#F070D1"] ;
+Square_transpose [label="transpose", URL=<Square.html#transpose>, fillcolor="#F070D1"] ;
+Square_vrefl [label="vrefl", URL=<Square.html#vrefl>, peripheries=3, fillcolor="#F070D1"] ;
+Square_hrefl [label="hrefl", URL=<Square.html#hrefl>, peripheries=3, fillcolor="#F070D1"] ;
+Square_vdeg_square [label="vdeg_square", URL=<Square.html#vdeg_square>, fillcolor="#F070D1"] ;
+Square_hdeg_square [label="hdeg_square", URL=<Square.html#hdeg_square>, fillcolor="#F070D1"] ;
+Square_gpdhom_square [label="gpdhom_square", URL=<Square.html#gpdhom_square>, peripheries=3, fillcolor="#F070D1"] ;
+Square_Build_Square [label="Build_Square", URL=<Square.html#Build_Square>, peripheries=3, fillcolor="#F070D1"] ;
+Square_Square [label="Square", URL=<Square.html#Square>, fillcolor="#F070D1"] ;
+  Square_fmap_square -> Square_Square [] ;
+  Square_move_top_right -> Square_Square [] ;
+  Square_move_right_top -> Square_Square [] ;
+  Square_move_left_bottom -> Square_Square [] ;
+  Square_move_bottom_left -> Square_Square [] ;
+  Square_whiskerRT -> Square_Square [] ;
+  Square_whiskerTR -> Square_Square [] ;
+  Square_whiskerLB -> Square_Square [] ;
+  Square_whiskerBL -> Square_Square [] ;
+  Square_whiskerBR -> Square_Square [] ;
+  Square_whiskerTL -> Square_Square [] ;
+  Square_vinverse -> Square_hinverse [] ;
+  Square_vinverse -> Square_transpose [] ;
+  Square_vconcatR -> Square_Square [] ;
+  Square_vconcatL -> Square_Square [] ;
+  Square_hconcatR -> Square_Square [] ;
+  Square_hconcatL -> Square_Square [] ;
+  Square_hinverse -> Square_Square [] ;
+  Square_vconcat -> Square_Square [] ;
+  Square_hconcat -> Square_Square [] ;
+  Square_transpose -> Square_Square [] ;
+  Square_vrefl -> Square_vdeg_square [] ;
+  Square_hrefl -> Square_hdeg_square [] ;
+  Square_vdeg_square -> Square_Square [] ;
+  Square_hdeg_square -> Square_Square [] ;
+  Square_gpdhom_square -> Square_Square [] ;
+  Square_Build_Square -> Square_Square [] ;
+subgraph cluster_Square { label="Square"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Square_Square; Square_Build_Square; Square_gpdhom_square; Square_hdeg_square; Square_vdeg_square; Square_hrefl; Square_vrefl; Square_transpose; Square_hconcat; Square_vconcat; Square_hinverse; Square_hconcatL; Square_hconcatR; Square_vconcatL; Square_vconcatR; Square_vinverse; Square_whiskerTL; Square_whiskerBR; Square_whiskerBL; Square_whiskerLB; Square_whiskerTR; Square_whiskerRT; Square_move_bottom_left; Square_move_left_bottom; Square_move_right_top; Square_move_top_right; Square_fmap_square; };
+} /* END */

@@ -1,0 +1,5516 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Injectivity of Sigma types *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here we characterize the condition for which a sigma type over an injective type is itself injective, and we also provide some examples.\n\nMany proofs guided by original Agda formalization in the Type Topology Library which can be found at: https://martinescardo.github.io/TypeTopology/InjectiveTypes.Sigma and InjectiveTypes.MathematicalStructuresMoreGeneral. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Forall Types.Sigma Types.Universe.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Modalities.ReflectiveSubuniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import InjectiveTypes.InjectiveTypes InjectiveTypes.TypeFamKanExt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section AlgFlabSigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {X : Type} (A : X -> Type) (Xaf : IsAlgebraicFlabbyType X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The condition for a sigma type over an algebraically flabby type to be algebraically flabby can be described as the existence of a section to the following map for every [P] and [f]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_map (P : HProp) (f : P -> X)\n    : (A (center_af f)) -> (forall h, A (f h))\n    := fun a h => contr_af f h # a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Here is the condition.  (It would in fact be enough to assume that [s] is section up to homotopies in its domain.) *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_sigma_condition\n    := forall P f, {s : _ & alg_flab_map P f o s == idmap}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A sigma type over an algebraically flabby type is also algebraically flabby, and thus algebraically injective, when the above condition holds. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_sigma (cond : alg_flab_sigma_condition)\n    : IsAlgebraicFlabbyType {x : X & A x}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {x : X & A x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {x : X & A x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_IsAlgebraicFlabbyType; intros P f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & A x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : P,\n(fun (P0 : HProp) (f0 : P0 -> {x : X & A x}) => ?Goal@{P:=P0; f:=f0}) P f =\nf p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: pose (C := cond P (pr1 o f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & A x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h : P, A ((pr1 o f) h)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : P,\n(fun (P0 : HProp) (f0 : P0 -> {x : X & A x}) =>\n let C0 := cond P0 (pr1 o f0) in ?Goal@{P:=P0; f:=f0}) P f =\nf p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h : P, A ((pr1 o f) h)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & A x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h : P, A ((pr1 o f) h)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* We need to give a point in [{x : X * A x}].  Since [X] is algebraically flabby, we get a point in [X]: *)\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (center_af (pr1 o f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A (center_af (fun x : P => (f x).1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h : P, A ((pr1 o f) h)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      (* For the point in [A (above)], we use the section component of [cond P (pr1 o f)]: *)\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (C.1 (pr2 o f)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall p : P,\n(fun (P0 : HProp) (f0 : P0 -> {x : X & A x}) =>\n let C0 := cond P0 (pr1 o f0) in\n (center_af (fun x : P0 => (f0 x).1); C0.1 (pr2 o f0))) P f =\nf p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h : P, A ((pr1 o f) h)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(center_af (fun x : P => (f x).1);\n(cond P (fun x : P => (f x).1)).1 (fun x : P => (f x).2)) = \nf h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h0 : P, A ((pr1 o f) h0)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (cond P (fun x : P => (f x).1)) with C.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(center_af (fun x : P => (f x).1); C.1 (fun x : P => (f x).2)) = f h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h0 : P, A ((pr1 o f) h0)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      (* We need to show that the point we gave is equal to [f h]. *)\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply path_sigma; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "center_af (fun x : P => (f x).1) = (f h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h0 : P, A ((pr1 o f) h0)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : X => A x) ?Goal (C.1 (fun x : P => (f x).2)) = (f h).2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h0 : P, A ((pr1 o f) h0)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "center_af (fun x : P => (f x).1) = (f h).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h0 : P, A ((pr1 o f) h0)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply contr_af.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : X => A x) (contr_af (fun x : P => (f x).1) h)\n  (C.1 (fun x : P => (f x).2)) =\n(f h).2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Xaf"
+              ],
+              "body": null,
+              "type": "IsAlgebraicFlabbyType X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cond"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> {x : X & A x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": "cond P (pr1 o f)",
+              "type": "{s : (forall h0 : P, A ((pr1 o f) h0)) -> A (center_af (pr1 o f)) &\nalg_flab_map P (pr1 o f) o s == idmap}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (apD10 (C.2 (pr2 o f)) h).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_inj_sigma (cond : alg_flab_sigma_condition)\n    : IsAlgebraicInjectiveType {x : X & A x}\n    := alg_inj_alg_flab (alg_flab_sigma cond).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End AlgFlabSigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Taking our algebraically flabby type [X] to be [Type], we introduce our primary examples (the types of pointed types, monoids, etc.), and give a few simplifying lemmas. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section AlgFlabUniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** [T] is a version of transport in the type family [A].  It could be defined to be transport combined with univalence, but we allow the user to choose different \"implementations\" of transport that might be more convenient. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (A : Type -> Type) (T : forall {X Y}, X <~> Y -> A X -> A Y)\n    (Trefl : forall X, (T (equiv_idmap X) == idmap)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments T {X Y} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* This is needed, despite the braces above. *)\n\n  (** When studying the sigma type [{X : Type & A X}], the map [alg_flab_map] can be exchanged for either of these simpler maps.  This first one will turn out to be homotopic to [alg_flab_map] when [Type] is given its \"forall\" flabbiness structure. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_map_forall `{Funext}\n    (P : HProp) (f : P -> Type)\n    : A (forall h, f h) -> (forall h, A (f h)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A (forall h : P, f h) -> forall h : P, A (f h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A (forall h : P, f h) -> forall h : P, A (f h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A (f h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A (forall h0 : P, f h0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (T _ a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall h0 : P, f h0) <~> f h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A (forall h0 : P, f h0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (@equiv_contr_forall _ _ (contr_inhabited_hprop _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** And this one is homotopic to [alg_flab_map] when [Type] is given its \"sigma\" flabbiness structure. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_map_sigma\n    (P : HProp) (f : P -> Type)\n    : A {h : P & f h} -> (forall h, A (f h)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A {h : P & f h} -> forall h : P, A (f h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A {h : P & f h} -> forall h : P, A (f h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A (f h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A {h0 : P & f h0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (T _ a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h0 : P & f h0} <~> f h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A {h0 : P & f h0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (@equiv_contr_sigma _ _ (contr_inhabited_hprop _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The following conditions can be thought of as closure conditions under pi or sigma types for the type family [A]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_sigma_condition_forall `{Funext}\n    := forall P f, {s : _ & alg_flab_map_forall P f o s == idmap}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_sigma_condition_sigma\n    := forall P f, {s : _ & alg_flab_map_sigma P f o s == idmap}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition homotopic_alg_flab_map_alg_flab_map_forall `{Univalence}\n    (P : HProp) (f : P -> Type)\n    : alg_flab_map_forall P f == alg_flab_map A alg_flab_Type_forall P f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_forall P f == alg_flab_map A alg_flab_Type_forall P f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_forall P f == alg_flab_map A alg_flab_Type_forall P f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_forall P f a = alg_flab_map A alg_flab_Type_forall P f a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A (forall h : P, f h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_forall P f a h = alg_flab_map A alg_flab_Type_forall P f a h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A (forall h0 : P, f h0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (homotopic_trequiv A (@T) (@univalent_transport H A) Trefl _ _ a).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, univalent_transport A 1 == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A (forall h0 : P, f h0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply univalent_transport_idequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition homotopic_alg_flab_map_alg_flab_map_sigma `{Univalence}\n    (P : HProp) (f : P -> Type)\n    : alg_flab_map_sigma P f == alg_flab_map A alg_flab_Type_sigma P f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_sigma P f == alg_flab_map A alg_flab_Type_sigma P f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_sigma P f == alg_flab_map A alg_flab_Type_sigma P f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_sigma P f s = alg_flab_map A alg_flab_Type_sigma P f s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "A {h : P & f h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_sigma P f s h = alg_flab_map A alg_flab_Type_sigma P f s h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "A {h0 : P & f h0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (homotopic_trequiv A (@T) (@univalent_transport H A) Trefl _ _ s).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, univalent_transport A 1 == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "A {h0 : P & f h0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply univalent_transport_idequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The original [sigma_condition] is implied by our reformulated conditions [alg_flab_sigma_condition_forall] and [alg_flab_sigma_condition_sigma]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sigma_condition_sigma_condition_forall `{Univalence}\n    (condf : alg_flab_sigma_condition_forall)\n    : alg_flab_sigma_condition A _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition A alg_flab_Type_forall",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition A alg_flab_Type_forall",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : (forall h : P, A (f h)) -> A (center_af f) &\n(fun x : forall h : P, A (f h) =>\n alg_flab_map A alg_flab_Type_forall P f (s x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (condf _ f) as [s J].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s0 : (forall h : P, A (f h)) -> A (center_af f) &\n(fun x : forall h : P, A (f h) =>\n alg_flab_map A alg_flab_Type_forall P f (s0 x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A (forall h : P, f h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_forall P f (s x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : forall h : P, A (f h) =>\n alg_flab_map A alg_flab_Type_forall P f (s x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A (forall h : P, f h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_forall P f (s x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map A alg_flab_Type_forall P f (s g) = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A (forall h : P, f h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_forall P f (s x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall h : P, A (f h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V napply (homotopic_alg_flab_map_alg_flab_map_forall P f (s g)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_forall P f (s g) = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A (forall h : P, f h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_forall P f (s x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall h : P, A (f h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply J.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_sigma_forall `{Univalence} (condf : alg_flab_sigma_condition_forall)\n    : IsAlgebraicFlabbyType {X : Type & A X}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {X : Type & A X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {X : Type & A X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply alg_flab_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition A ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_forall"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (sigma_condition_sigma_condition_forall condf).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sigma_condition_sigma_condition_sigma `{Univalence}\n    (condf : alg_flab_sigma_condition_sigma)\n    : alg_flab_sigma_condition A alg_flab_Type_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition A alg_flab_Type_sigma",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition A alg_flab_Type_sigma",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : (forall h : P, A (f h)) -> A (center_af f) &\n(fun x : forall h : P, A (f h) =>\n alg_flab_map A alg_flab_Type_sigma P f (s x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (condf _ f) as [s J].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s0 : (forall h : P, A (f h)) -> A (center_af f) &\n(fun x : forall h : P, A (f h) =>\n alg_flab_map A alg_flab_Type_sigma P f (s0 x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A {h : P & f h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_sigma P f (s x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : forall h : P, A (f h) =>\n alg_flab_map A alg_flab_Type_sigma P f (s x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A {h : P & f h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_sigma P f (s x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map A alg_flab_Type_sigma P f (s g) = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A {h : P & f h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_sigma P f (s x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall h : P, A (f h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs_V napply (homotopic_alg_flab_map_alg_flab_map_sigma P f (s g)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_sigma P f (s g) = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condf"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(forall h : P, A (f h)) -> A {h : P & f h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "J"
+              ],
+              "body": null,
+              "type": "(fun x : forall h : P, A (f h) => alg_flab_map_sigma P f (s x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall h : P, A (f h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply J.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_sigma_sigma `{Univalence} (conds : alg_flab_sigma_condition_sigma)\n    : IsAlgebraicFlabbyType {X : Type & A X}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {X : Type & A X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "conds"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {X : Type & A X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "conds"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply alg_flab_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition A ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "forall X Y : Type, X <~> Y -> A X -> A Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Trefl"
+              ],
+              "body": null,
+              "type": "forall X : Type, T 1 == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "conds"
+              ],
+              "body": null,
+              "type": "alg_flab_sigma_condition_sigma"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (sigma_condition_sigma_condition_sigma conds).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End AlgFlabUniverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The type of pointed types is algebraically flabby. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_pType `{Univalence}\n  : IsAlgebraicFlabbyType {X : Type & X}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {X : Type & X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType {X : Type & X}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (alg_flab_sigma_forall _ (@equiv_fun)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, 1%equiv == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition_forall idmap (@equiv_fun)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, 1%equiv == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition_forall idmap (@equiv_fun)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : (forall h : P, f h) -> forall h : P, f h &\n(fun x : forall h : P, f h =>\n alg_flab_map_forall idmap (@equiv_fun) P f (s x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : forall h : P, f h => alg_flab_map_forall idmap (@equiv_fun) P f x) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following results are adapted from section 7 of Injective Types in Univalent Mathematics by Mart\u00edn Escard\u00f3, using the above results. *)\n\n(** For a subuniverse, the flabbiness condition is equivalent to closure under proposition indexed pi types (or sigma types), so using this we can state a simpler theorem for proving flabbiness of subuniverses. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_subuniverse_forall `{Univalence} (O : Subuniverse)\n  (condForall : forall (P : HProp) A, (forall h : P, In O (A h)) -> In O (forall h : P, A h))\n  : IsAlgebraicFlabbyType@{u su} (Type_ O).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType (Type_ O)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O (forall h : P, A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType (Type_ O)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O (forall h : P, A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (alg_flab_sigma_forall _ (fun X Y f H => @inO_equiv_inO' O X Y H f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, (fun H0 : In O X => inO_equiv_inO' X 1) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O (forall h : P, A h)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition_forall (In O)\n  (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O (forall h : P, A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, (fun H0 : In O X => inO_equiv_inO' X 1) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O (forall h : P, A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inO_equiv_inO' X 1 = A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A0 : P -> Type),\n(forall h : P, In O (A0 h)) -> In O (forall h : P, A0 h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "In O X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition_forall (In O)\n  (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O (forall h : P, A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : (forall h : P, In O (A h)) -> In O (forall h : P, A h) &\n(fun x : forall h : P, In O (A h) =>\n alg_flab_map_forall (In O)\n   (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f) P A\n   (s x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P0 : HProp) (A0 : P0 -> Type),\n(forall h : P0, In O (A0 h)) -> In O (forall h : P0, A0 h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : forall h : P, In O (A h) =>\n alg_flab_map_forall (In O)\n   (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f) P A\n   (condForall P A x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P0 : HProp) (A0 : P0 -> Type),\n(forall h : P0, In O (A0 h)) -> In O (forall h : P0, A0 h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_forall (In O)\n  (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f) P A\n  (condForall P A s) =\ns",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condForall"
+              ],
+              "body": null,
+              "type": "forall (P0 : HProp) (A0 : P0 -> Type),\n(forall h : P0, In O (A0 h)) -> In O (forall h : P0, A0 h)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall h : P, In O (A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_subuniverse_sigma `{Univalence} (O : Subuniverse)\n  (condSigma : forall (P : HProp) A, (forall h : P, In O (A h)) -> In O {h : P & A h})\n  : IsAlgebraicFlabbyType@{u su} (Type_ O).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType (Type_ O)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O {h : P & A h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsAlgebraicFlabbyType (Type_ O)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O {h : P & A h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (alg_flab_sigma_sigma _ (fun X Y f H => @inO_equiv_inO' O X Y H f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, (fun H0 : In O X => inO_equiv_inO' X 1) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O {h : P & A h}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition_sigma (In O)\n  (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O {h : P & A h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall X : Type, (fun H0 : In O X => inO_equiv_inO' X 1) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O {h : P & A h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros X A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "inO_equiv_inO' X 1 = A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A0 : P -> Type),\n(forall h : P, In O (A0 h)) -> In O {h : P & A0 h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "In O X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_sigma_condition_sigma (In O)\n  (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P : HProp) (A : P -> Type),\n(forall h : P, In O (A h)) -> In O {h : P & A h}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : (forall h : P, In O (A h)) -> In O {h : P & A h} &\n(fun x : forall h : P, In O (A h) =>\n alg_flab_map_sigma (In O)\n   (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f) P A\n   (s x)) ==\nidmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P0 : HProp) (A0 : P0 -> Type),\n(forall h : P0, In O (A0 h)) -> In O {h : P0 & A0 h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : forall h : P, In O (A h) =>\n alg_flab_map_sigma (In O)\n   (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f) P A\n   (condSigma P A x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P0 : HProp) (A0 : P0 -> Type),\n(forall h : P0, In O (A0 h)) -> In O {h : P0 & A0 h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "alg_flab_map_sigma (In O)\n  (fun (X Y : Type) (f : X <~> Y) (H0 : In O X) => inO_equiv_inO' X f) P A\n  (condSigma P A s) =\ns",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "Subuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "condSigma"
+              ],
+              "body": null,
+              "type": "forall (P0 : HProp) (A0 : P0 -> Type),\n(forall h : P0, In O (A0 h)) -> In O {h : P0 & A0 h}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HProp"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "P -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "forall h : P, In O (A h)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** As an immediate corollary, we get that reflective subuniverses are algebraically flabby. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition alg_flab_reflective_subuniverse `{Univalence} (O : ReflectiveSubuniverse)\n  : IsAlgebraicFlabbyType@{u su} (Type_ O)\n  := alg_flab_subuniverse_forall _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

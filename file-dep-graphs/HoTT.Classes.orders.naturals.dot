@@ -1,0 +1,24 @@
+digraph HoTT_Classes_orders_naturals {
+  graph [ratio=0.5]
+  node [style=filled]
+naturals_between_to_ring [label="between_to_ring", URL=<naturals.html#between_to_ring>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_negate_to_ring_nonpos [label="negate_to_ring_nonpos", URL=<naturals.html#negate_to_ring_nonpos>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_slow_nat_le_dec [label="slow_nat_le_dec", URL=<naturals.html#slow_nat_le_dec>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_orderreflecting_left_mult [label="orderreflecting_left_mult", URL=<naturals.html#orderreflecting_left_mult>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_ne_0_ge_1 [label="nat_ne_0_ge_1", URL=<naturals.html#nat_ne_0_ge_1>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_ne_0_pos [label="nat_ne_0_pos", URL=<naturals.html#nat_ne_0_pos>, fillcolor="#F070D1"] ;
+naturals_nat_0_or_ge_1 [label="nat_0_or_ge_1", URL=<naturals.html#nat_0_or_ge_1>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_0_or_pos [label="nat_0_or_pos", URL=<naturals.html#nat_0_or_pos>, fillcolor="#F070D1"] ;
+naturals_nat_not_neg [label="nat_not_neg", URL=<naturals.html#nat_not_neg>, fillcolor="#F070D1"] ;
+naturals_nat_le_plus [label="nat_le_plus", URL=<naturals.html#nat_le_plus>, peripheries=3, fillcolor="#F070D1"] ;
+naturals_nat_nonneg [label="nat_nonneg", URL=<naturals.html#nat_nonneg>, fillcolor="#F070D1"] ;
+  naturals_orderreflecting_left_mult -> naturals_nat_ne_0_pos [] ;
+  naturals_nat_ne_0_ge_1 -> naturals_nat_ne_0_pos [] ;
+  naturals_nat_ne_0_pos -> naturals_nat_0_or_pos [] ;
+  naturals_nat_0_or_ge_1 -> naturals_nat_0_or_pos [] ;
+  naturals_nat_0_or_pos -> naturals_nat_not_neg [] ;
+  naturals_nat_not_neg -> naturals_nat_nonneg [] ;
+  naturals_nat_le_plus -> naturals_nat_nonneg [] ;
+subgraph cluster_naturals { label="naturals"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+naturals_nat_nonneg; naturals_nat_le_plus; naturals_nat_not_neg; naturals_nat_0_or_pos; naturals_nat_0_or_ge_1; naturals_nat_ne_0_pos; naturals_nat_ne_0_ge_1; naturals_orderreflecting_left_mult; naturals_slow_nat_le_dec; naturals_negate_to_ring_nonpos; naturals_between_to_ring; };
+} /* END */

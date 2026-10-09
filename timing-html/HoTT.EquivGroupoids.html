@@ -1,0 +1,1202 @@
+<html>
+<head>
+<title>EquivGroupoids.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for EquivGroupoids.v</h1>
+
+<div class="code" title="File: EquivGroupoids.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * The pregroupoid structure of [Equiv] *)
+
+</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 2
+Time: 0.031s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Equivalences Types.Equiv.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope equiv_scope.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** See PathGroupoids.v for the naming conventions *)
+(** TODO: Consider using a definition of [IsEquiv] and [Equiv] for which more of these are judgmental, or at least don't require [Funext]. *)</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumeFunext.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext}.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** ** The 1-dimensional groupoid structure. *)
+
+  (** The identity equivalence is a right unit. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ecompose_e1 {A B} (e : A &lt;~&gt; B) : e oE 1 = e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The identity is a left unit. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ecompose_1e {A B} (e : A &lt;~&gt; B) : 1 oE e = e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Composition is associative. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ecompose_e_ee {A B C D} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C) (g : C &lt;~&gt; D)
+  : g oE (f oE e) = (g oE f) oE e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ecompose_ee_e {A B C D} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C) (g : C &lt;~&gt; D)
+  : (g oE f) oE e = g oE (f oE e).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The left inverse law. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ecompose_eV {A B} (e : A &lt;~&gt; B) : e oE e^-1 = 1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; apply path_forall; intro; apply eisretr.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The right inverse law. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ecompose_Ve {A B} (e : A &lt;~&gt; B) : e^-1 oE e = 1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; apply path_forall; intro; apply eissect.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Several auxiliary theorems about canceling inverses across associativity.  These are somewhat redundant, following from earlier theorems.  *)
+
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ecompose_V_ee {A B C} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C)
+  : f^-1 oE (f oE e) = e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; apply path_forall; intro; simpl; apply eissect.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ecompose_e_Ve {A B C} (e : A &lt;~&gt; B) (f : C &lt;~&gt; B)
+  : e oE (e^-1 oE f) = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; apply path_forall; intro; simpl; apply eisretr.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ecompose_ee_V {A B C} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C)
+  : (f oE e) oE e^-1 = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; apply path_forall; intro; simpl; apply ap; apply eisretr.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ecompose_eV_e {A B C} (e : B &lt;~&gt; A) (f : B &lt;~&gt; C)
+  : (f oE e^-1) oE e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; apply path_forall; intro; simpl; apply ap; apply eissect.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Inverse distributes over composition *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition einv_ee {A B C} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C)
+  : (f oE e)^-1 = e^-1 oE f^-1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition einv_Ve {A B C} (e : A &lt;~&gt; C) (f : B &lt;~&gt; C)
+  : (f^-1 oE e)^-1 = e^-1 oE f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition einv_eV {A B C} (e : C &lt;~&gt; A) (f : C &lt;~&gt; B)
+  : (f oE e^-1)^-1 = e oE f^-1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition einv_VV {A B C} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C)
+  : (e^-1 oE f^-1)^-1 = f oE e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Inverse is an involution. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition einv_V {A B} (e : A &lt;~&gt; B)
+  : (e^-1)^-1 = e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv; reflexivity.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Theorems for moving things around in equations. *)
+ </pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition emoveR_Me {A B C} (e : B &lt;~&gt; A) (f : B &lt;~&gt; C) (g : A &lt;~&gt; C)
+  : e = g^-1 oE f -&gt; g oE e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (fun e =&gt; g oE e) h @ ecompose_e_Ve _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_eM {A B C} (e : B &lt;~&gt; A) (f : B &lt;~&gt; C) (g : A &lt;~&gt; C)
+  : g = f oE e^-1 -&gt; g oE e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (fun g =&gt; g oE e) h @ ecompose_eV_e _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_Ve {A B C} (e : B &lt;~&gt; A) (f : B &lt;~&gt; C) (g : C &lt;~&gt; A)
+  : e = g oE f -&gt; g^-1 oE e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (fun e =&gt; g^-1 oE e) h @ ecompose_V_ee _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_eV {A B C} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C) (g : A &lt;~&gt; C)
+  : g = f oE e -&gt; g oE e^-1 = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (fun g =&gt; g oE e^-1) h @ ecompose_ee_V _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_Me {A B C} (e : A &lt;~&gt; B) (f : A &lt;~&gt; C) (g : B &lt;~&gt; C)
+  : g^-1 oE f = e -&gt; f = g oE e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_e_Ve _ _)^ @ ap (fun e =&gt; g oE e) h).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_eM {A B C} (e : A &lt;~&gt; B) (f : A &lt;~&gt; C) (g : B &lt;~&gt; C)
+  : f oE e^-1 = g -&gt; f = g oE e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_eV_e _ _)^ @ ap (fun g =&gt; g oE e) h).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_Ve {A B C} (e : A &lt;~&gt; C) (f : A &lt;~&gt; B) (g : B &lt;~&gt; C)
+  : g oE f = e -&gt; f = g^-1 oE e.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_V_ee _ _)^ @ ap (fun e =&gt; g^-1 oE e) h).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_eV {A B C} (e : A &lt;~&gt; B) (f : B &lt;~&gt; C) (g : A &lt;~&gt; C)
+  : f oE e = g -&gt; f = g oE e^-1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_ee_V _ _)^ @ ap (fun g =&gt; g oE e^-1) h).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_1M {A B} (e f : A &lt;~&gt; B)
+  : e oE f^-1 = 1 -&gt; e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_eV_e _ _)^ @ ap (fun ef =&gt; ef oE f) h @ ecompose_1e _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_M1 {A B} (e f : A &lt;~&gt; B)
+  : f^-1 oE e = 1 -&gt; e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_e_Ve _ _)^ @ ap (fun fe =&gt; f oE fe) h @ ecompose_e1 _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_1V {A B} (e : A &lt;~&gt; B) (f : B &lt;~&gt; A)
+  : e oE f = 1 -&gt; e = f^-1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_ee_V _ _)^ @ ap (fun ef =&gt; ef oE f^-1) h @ ecompose_1e _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveL_V1 {A B} (e : A &lt;~&gt; B) (f : B &lt;~&gt; A)
+  : f oE e = 1 -&gt; e = f^-1.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_V_ee _ _)^ @ ap (fun fe =&gt; f^-1 oE fe) h @ ecompose_e1 _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_M1 {A B} (e f : A &lt;~&gt; B)
+  : 1 = e^-1 oE f -&gt; e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_e1 _)^ @ ap (fun ef =&gt; e oE ef) h @ ecompose_e_Ve _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_1M {A B} (e f : A &lt;~&gt; B)
+  : 1 = f oE e^-1 -&gt; e = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_1e _)^ @ ap (fun fe =&gt; fe oE e) h @ ecompose_eV_e _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_1V {A B} (e : A &lt;~&gt; B) (f : B &lt;~&gt; A)
+  : 1 = f oE e -&gt; e^-1 = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_1e _)^ @ ap (fun fe =&gt; fe oE e^-1) h @ ecompose_ee_V _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition emoveR_V1 {A B} (e : A &lt;~&gt; B) (f : B &lt;~&gt; A)
+  : 1 = e oE f -&gt; e^-1 = f.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro h.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ecompose_e1 _)^ @ ap (fun ef =&gt; e^-1 oE ef) h @ ecompose_V_ee _ _).</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We could package these up into tactics, much the same as the [with_rassoc] and [rewrite_move*] of [PathGroupoids.v].  I have not done so yet because there is currently no place where we would use these tactics.  If there is a use case, they are easy enough to copy from [PathGroupoids.v]. *)</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 219
+Time: 0.002s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>End AssumeFunext.</pre>
+</div>
+<div class="code" title="File: EquivGroupoids.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

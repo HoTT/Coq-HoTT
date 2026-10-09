@@ -1,0 +1,1586 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.NatTrans.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Wild (2,1)-categories *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Is21Cat (A : Type) `{Is1Cat A, !Is3Graph A} :=\n{\n  is1cat_hom :: forall (a b : A), Is1Cat (a $-> b) ;\n  is1gpd_hom :: forall (a b : A), Is1Gpd (a $-> b) ;\n  is1functor_postcomp :: forall (a b c : A) (g : b $-> c), Is1Functor (cat_postcomp a g) ;\n  is1functor_precomp :: forall (a b c : A) (f : a $-> b), Is1Functor (cat_precomp c f) ;\n  bifunctor_coh_comp : forall {a b c : A} {f f' : a $-> b}  {g g' : b $-> c}\n    (p : f $== f') (p' : g $== g'),\n    (p' $@R f) $@ (g' $@L p) $== (g $@L p) $@ (p' $@R f') ;\n\n  (** Naturality of the associator in each variable separately *)\n  is1natural_cat_assoc_l :: forall (a b c d : A) (f : a $-> b) (g : b $-> c),\n      Is1Natural (cat_precomp d f o cat_precomp d g) (cat_precomp d (g $o f))\n                 (cat_assoc f g);\n  is1natural_cat_assoc_m :: forall (a b c d : A) (f : a $-> b) (h : c $-> d),\n      Is1Natural (cat_precomp d f o cat_postcomp b h) (cat_postcomp a h o cat_precomp c f)\n                 (fun g => cat_assoc f g h);\n  is1natural_cat_assoc_r :: forall (a b c d : A) (g : b $-> c) (h : c $-> d),\n      Is1Natural (cat_postcomp a (h $o g)) (cat_postcomp a h o cat_postcomp a g)\n                 (fun f => cat_assoc f g h);\n\n  (** Naturality of the unitors *)\n  is1natural_cat_idl :: forall (a b : A),\n      Is1Natural (cat_postcomp a (Id b)) idmap\n                 cat_idl ;\n\n  is1natural_cat_idr :: forall (a b : A),\n      Is1Natural (cat_precomp b (Id a)) idmap\n                 cat_idr;\n\n  (** Coherence *)\n  cat_pentagon : forall (a b c d e : A)\n                        (f : a $-> b) (g : b $-> c) (h : c $-> d) (k : d $-> e),\n      (k $@L cat_assoc f g h) $o (cat_assoc f (h $o g) k) $o (cat_assoc g h k $@R f)\n      $== (cat_assoc (g $o f) h k) $o (cat_assoc f g (k $o h)) ;\n\n  cat_tril : forall (a b c : A) (f : a $-> b) (g : b $-> c),\n      (g $@L cat_idl f) $o (cat_assoc f (Id b) g) $== (cat_idr g $@R f)\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Whiskering functoriality *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_postwhisker_pp {A} `{Is21Cat A} {a b c : A}\n  {f g h : a $-> b} (k : b $-> c) (p : f $== g) (q : g $== h)\n  : k $@L (p $@ q) $== (k $@L p) $@ (k $@L q)\n  := fmap_comp _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_prewhisker_pp {A} `{Is21Cat A} {a b c : A}\n  {f g h : b $-> c} (k : a $-> b) (p : f $== g) (q : g $== h)\n  : (p $@ q) $@R k $== (p $@R k) $@ (q $@R k)\n  := fmap_comp _ _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Exchange law *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_exchange {A : Type} `{Is21Cat A} {a b c : A}\n  {f f' f'' : a $-> b} {g g' g'' : b $-> c}\n  (p : f $== f') (q : f' $== f'') (r : g $== g') (s : g' $== g'')\n  : (p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(p $@ q) $@@ (r $@ s) $== (p $@@ r) $@ (q $@@ s)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold \"$@@\".",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((r $@ s) $@R f) $@ (g'' $@L (p $@ q)) $==\n((r $@R f) $@ (g' $@L p)) $@ ((s $@R f') $@ (g'' $@L q))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** We use the distributivity of [$@R] and [$@L] in a (2,1)-category (since they are functors) to see that we have the same data on both sides of the 3-morphism. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine ((_ $@L cat_prewhisker_pp _ _ _ ) $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L (p $@ q) $o (r $@R f) $@ (s $@R f) $==\n((r $@R f) $@ (g' $@L p)) $@ ((s $@R f') $@ (g'' $@L q))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine ((cat_postwhisker_pp _ _ _ $@R _) $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(g'' $@L p) $@ (g'' $@L q) $o (r $@R f) $@ (s $@R f) $==\n((r $@R f) $@ (g' $@L p)) $@ ((s $@R f') $@ (g'' $@L q))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Now we reassociate and whisker on the left and right. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cat_assoc _ _ _ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L q $o (g'' $@L p $o (r $@R f) $@ (s $@R f)) $==\n((r $@R f) $@ (g' $@L p)) $@ ((s $@R f') $@ (g'' $@L q))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $@ (cat_assoc _ _ _)^$).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L q $o (g'' $@L p $o (r $@R f) $@ (s $@R f)) $==\ng'' $@L q $o (s $@R f' $o (r $@R f) $@ (g' $@L p))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (_ $@L _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L p $o (r $@R f) $@ (s $@R f) $== s $@R f' $o (r $@R f) $@ (g' $@L p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ $@ cat_assoc _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L p $o (r $@R f) $@ (s $@R f) $== s $@R f' $o g' $@L p $o r $@R f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((cat_assoc _ _ _)^$ $@ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L p $o s $@R f $o r $@R f $== s $@R f' $o g' $@L p $o r $@R f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (_ $@R _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g'' $@L p $o s $@R f $== s $@R f' $o g' $@L p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is3Graph0"
+              ],
+              "body": null,
+              "type": "Is3Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is21Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "f'",
+                "f''"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'",
+                "g''"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f $== f'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "f' $== f''"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "g $== g'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "g' $== g''"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Finally we are left with the bifunctoriality condition for left and right whiskering which is part of the data of the (2,1)-cat. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply bifunctor_coh_comp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

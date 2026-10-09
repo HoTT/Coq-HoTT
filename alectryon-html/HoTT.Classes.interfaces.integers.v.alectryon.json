@@ -1,0 +1,110 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.interfaces.abstract_algebra\n  HoTT.Classes.interfaces.orders\n  HoTT.Classes.interfaces.naturals\n  HoTT.Classes.theory.rings (* for Ring -> SemiRing *).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IntegersToRing@{i j} (A:Type@{i})\n  := integers_to_ring: forall (R:Type@{j}) `{IsCRing R}, A -> R.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments integers_to_ring A {_} R {_ _ _ _ _ _} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Integers A {Aap:Apart A} {Aplus Amult Azero Aone Anegate Ale Alt}\n  `{U : IntegersToRing A} :=\n  { integers_ring :: @IsCRing A Aplus Amult Azero Aone Anegate\n  ; integers_order :: FullPseudoSemiRingOrder Ale Alt\n  ; integers_to_ring_mor :: forall {B} `{IsCRing B}, IsSemiRingPreserving (integers_to_ring A B)\n  ; integers_initial: forall {B} `{IsCRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,\n      integers_to_ring A B x = h x}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section specializable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (Z N : Type) `{Integers Z} `{Naturals N}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IntAbs := int_abs_sig : forall x,\n    { n : N | naturals_to_semiring N Z n = x } |_|\n    { n : N | naturals_to_semiring N Z n = -x }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition int_abs `{ia : IntAbs} (x : Z) : N :=\n    match int_abs_sig x with\n    | inl (n;_) => n\n    | inr (n;_) => n\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition int_to_nat `{Zero N} `{ia : IntAbs} (x : Z) : N :=\n    match int_abs_sig x with\n    | inl (n;_) => n\n    | inr (n;_) => 0\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End specializable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

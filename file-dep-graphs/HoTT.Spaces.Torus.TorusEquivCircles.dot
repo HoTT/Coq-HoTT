@@ -1,0 +1,27 @@
+digraph HoTT_Spaces_Torus_TorusEquivCircles {
+  graph [ratio=0.5]
+  node [style=filled]
+TorusEquivCircles_equiv_torus_prod_Circle [label="equiv_torus_prod_Circle", URL=<TorusEquivCircles.html#equiv_torus_prod_Circle>, peripheries=3, fillcolor="#F070D1"] ;
+TorusEquivCircles_c2t2c [label="c2t2c", URL=<TorusEquivCircles.html#c2t2c>, fillcolor="#F070D1"] ;
+TorusEquivCircles_sq_ap011_compose [label="sq_ap011_compose", URL=<TorusEquivCircles.html#sq_ap011_compose>, fillcolor="#F070D1"] ;
+TorusEquivCircles_t2c2t [label="t2c2t", URL=<TorusEquivCircles.html#t2c2t>, fillcolor="#F070D1"] ;
+TorusEquivCircles_c2t__beta [label="c2t'_beta", URL=<TorusEquivCircles.html#c2t'_beta>, fillcolor="#F070D1"] ;
+TorusEquivCircles_c2t [label="c2t", URL=<TorusEquivCircles.html#c2t>, fillcolor="#F070D1"] ;
+TorusEquivCircles_c2t_ [label="c2t'", URL=<TorusEquivCircles.html#c2t'>, fillcolor="#F070D1"] ;
+TorusEquivCircles_t2c [label="t2c", URL=<TorusEquivCircles.html#t2c>, fillcolor="#F070D1"] ;
+TorusEquivCircles_c2t_square_and_cube [label="c2t_square_and_cube", URL=<TorusEquivCircles.html#c2t_square_and_cube>, fillcolor="#F070D1"] ;
+  TorusEquivCircles_equiv_torus_prod_Circle -> TorusEquivCircles_c2t2c [] ;
+  TorusEquivCircles_equiv_torus_prod_Circle -> TorusEquivCircles_t2c2t [] ;
+  TorusEquivCircles_c2t2c -> TorusEquivCircles_sq_ap011_compose [] ;
+  TorusEquivCircles_c2t2c -> TorusEquivCircles_c2t__beta [] ;
+  TorusEquivCircles_c2t2c -> TorusEquivCircles_c2t [] ;
+  TorusEquivCircles_c2t2c -> TorusEquivCircles_t2c [] ;
+  TorusEquivCircles_t2c2t -> TorusEquivCircles_c2t__beta [] ;
+  TorusEquivCircles_t2c2t -> TorusEquivCircles_c2t [] ;
+  TorusEquivCircles_t2c2t -> TorusEquivCircles_t2c [] ;
+  TorusEquivCircles_c2t__beta -> TorusEquivCircles_c2t_ [] ;
+  TorusEquivCircles_c2t -> TorusEquivCircles_c2t_ [] ;
+  TorusEquivCircles_c2t_ -> TorusEquivCircles_c2t_square_and_cube [] ;
+subgraph cluster_TorusEquivCircles { label="TorusEquivCircles"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+TorusEquivCircles_c2t_square_and_cube; TorusEquivCircles_t2c; TorusEquivCircles_c2t_; TorusEquivCircles_c2t; TorusEquivCircles_c2t__beta; TorusEquivCircles_t2c2t; TorusEquivCircles_sq_ap011_compose; TorusEquivCircles_c2t2c; TorusEquivCircles_equiv_torus_prod_Circle; };
+} /* END */

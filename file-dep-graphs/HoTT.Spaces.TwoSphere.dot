@@ -1,0 +1,22 @@
+digraph HoTT_Spaces_TwoSphere {
+  graph [ratio=0.5]
+  node [style=filled]
+TwoSphere_TwoSphere_TwoSphere_ind_beta_surf [label="TwoSphere_ind_beta_surf", URL=<TwoSphere.html#TwoSphere.TwoSphere_ind_beta_surf>, fillcolor="#FACDEF"] ;
+TwoSphere_TwoSphere_TwoSphere_ind [label="TwoSphere_ind", URL=<TwoSphere.html#TwoSphere.TwoSphere_ind>, fillcolor="#F070D1"] ;
+TwoSphere_TwoSphere_surf [label="surf", URL=<TwoSphere.html#TwoSphere.surf>, fillcolor="#FACDEF"] ;
+TwoSphere_TwoSphere_base [label="base", URL=<TwoSphere.html#TwoSphere.base>, fillcolor="#7FAAFF"] ;
+TwoSphere_TwoSphere_TwoSphere [label="TwoSphere", URL=<TwoSphere.html#TwoSphere.TwoSphere>, fillcolor="#E2CDFA"] ;
+TwoSphere_TwoSphere_rec_beta_surf [label="TwoSphere_rec_beta_surf", URL=<TwoSphere.html#TwoSphere_rec_beta_surf>, peripheries=3, fillcolor="#F070D1"] ;
+TwoSphere_TwoSphere_rec [label="TwoSphere_rec", URL=<TwoSphere.html#TwoSphere_rec>, fillcolor="#F070D1"] ;
+  TwoSphere_TwoSphere_TwoSphere_ind_beta_surf -> TwoSphere_TwoSphere_TwoSphere_ind [] ;
+  TwoSphere_TwoSphere_TwoSphere_ind -> TwoSphere_TwoSphere_surf [] ;
+  TwoSphere_TwoSphere_surf -> TwoSphere_TwoSphere_base [] ;
+  TwoSphere_TwoSphere_surf -> TwoSphere_TwoSphere_TwoSphere [] ;
+  TwoSphere_TwoSphere_rec_beta_surf -> TwoSphere_TwoSphere_TwoSphere_ind_beta_surf [] ;
+  TwoSphere_TwoSphere_rec_beta_surf -> TwoSphere_TwoSphere_rec [] ;
+  TwoSphere_TwoSphere_rec -> TwoSphere_TwoSphere_TwoSphere_ind [] ;
+subgraph cluster_TwoSphere { label="TwoSphere"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_TwoSphere_TwoSphere { label="TwoSphere"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+TwoSphere_TwoSphere_TwoSphere; TwoSphere_TwoSphere_base; TwoSphere_TwoSphere_surf; TwoSphere_TwoSphere_TwoSphere_ind; TwoSphere_TwoSphere_TwoSphere_ind_beta_surf; };
+TwoSphere_TwoSphere_rec; TwoSphere_TwoSphere_rec_beta_surf; };
+} /* END */

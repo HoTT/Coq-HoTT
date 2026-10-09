@@ -1,0 +1,13 @@
+N: 4 "is01cat_forall" [body=yes, kind=cnst, prop=no, path="Forall", ];
+N: 3 "is0gpd_forall" [body=yes, kind=cnst, prop=no, path="Forall", ];
+N: 1 "is1cat_forall" [body=yes, kind=cnst, prop=no, path="Forall", ];
+N: 2 "is2graph_forall" [body=yes, kind=cnst, prop=no, path="Forall", ];
+N: 5 "isgraph_forall" [body=yes, kind=cnst, prop=no, path="Forall", ];
+E: 1 2 [weight=14, ];
+E: 1 3 [weight=5, ];
+E: 1 4 [weight=25, ];
+E: 1 5 [weight=42, ];
+E: 2 5 [weight=5, ];
+E: 3 4 [weight=2, ];
+E: 3 5 [weight=4, ];
+E: 4 5 [weight=6, ];

@@ -1,0 +1,3755 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Spaces.No.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope surreal_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Negation of surreal numbers *)\n\n(** Negation requires the option sorts to be symmetric. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class HasNegation (S : OptionSort) \n  := symmetric_options :: forall L R, InSort S L R -> InSort S R L.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasnegation_maxsort : HasNegation MaxSort\n  := fun _ _ _ => tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasnegation_decsort : HasNegation DecSort.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasNegation DecSort",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasNegation DecSort",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros L R [? ?]; split; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section HasNegation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universe i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {S : OptionSort@{i}} `{HasNegation S}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let No := GenNo S.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition negate : No -> No.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "No -> No",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "No -> No",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (No_rec No (fun x y => y <= x) (fun x y => y < x)\n                          _ _ _ _ _); intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "No",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), (fun x y : No => y < x) (fxL l) (fxR r)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x) a b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x) b a"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x y : No => y <= x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (xcut0 : forall (l : L0) (r : R0), xL0 l < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L R s xL xR xcut fxL fxR fxcut)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (xcut0 : forall (l : L0) (r : R0), xL0 l < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L' R' s' yL yR ycut fyL fyR fycut)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), (fun x y : No => y < x) (fxL l) (fxR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r : R'), yL l < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r : R'), (fun x y : No => y < x) (fyL l) (fyR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall l : L, xL l < {{ yL | yR//ycut }}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "forall l : L,\n(fun x y : No => y < x) (fxL l)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L' R' s' yL yR ycut fyL fyR fycut)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall r : R', {{ xL | xR//xcut }} < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dq"
+              ],
+              "body": null,
+              "type": "forall r : R',\n(fun x y : No => y < x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l : L0) (r0 : R0), xL0 l < xR0 r0) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L R s xL xR xcut fxL fxR fxcut)\n  (fyR r)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x y : No => y < x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L R s xL xR xcut fxL fxR fxcut)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L' R' s' yL yR ycut fyL fyR fycut)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L) (r : R), xL l0 < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L) (r : R), (fun x y : No => y < x) (fxL l0) (fxR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L') (r : R'), yL l0 < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L') (r : R'), (fun x y : No => y < x) (fyL l0) (fyR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "L'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{{ xL | xR//xcut }} <= yL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L R s xL xR xcut fxL fxR fxcut)\n  (fyL l)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x y : No => y < x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l : L0) (r0 : R0), xL0 l < xR0 r0) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L R s xL xR xcut fxL fxR fxcut)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l : L0) (r0 : R0), xL0 l < xR0 r0) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L' R' s' yL yR ycut fyL fyR fycut)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r0 : R), xL l < xR r0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r0 : R), (fun x y : No => y < x) (fxL l) (fxR r0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r0 : R'), yL l < yR r0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r0 : R'), (fun x y : No => y < x) (fyL l) (fyR r0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "xR r <= {{ yL | yR//ycut }}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x) (fxR r)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S)\n      (xcut0 : forall (l : L0) (r0 : R0), xL0 l < xR0 r0) \n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    ?Goal@{L:=L0; R:=R0; s:=s0; xL:=xL0; xR:=xR0; xcut:=xcut0; fxL:=fxL0;\n           fxR:=fxR0; fxcut:=fxcut0})\n     L' R' s' yL yR ycut fyL fyR fycut)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "No",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), (fun x y : No => y < x) (fxL l) (fxR r)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact {{ fxR | fxL // fun r l => fxcut l r }}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x) a b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X0"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x) b a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_No; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x y : No => y <= x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r : R0), xL0 l < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r)) =>\n    {{ fxR0 | fxL0//fun (r : R0) (l : L0) => fxcut0 l r }}) L R s xL xR xcut\n     fxL fxR fxcut)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r : R0), xL0 l < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r)) =>\n    {{ fxR0 | fxL0//fun (r : R0) (l : L0) => fxcut0 l r }}) L' R' s' yL yR\n     ycut fyL fyR fycut)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), (fun x y : No => y < x) (fxL l) (fxR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r : R'), yL l < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r : R'), (fun x y : No => y < x) (fyL l) (fyR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall l : L, xL l < {{ yL | yR//ycut }}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "forall l : L,\n(fun x y : No => y < x) (fxL l)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    {{ fxR0 | fxL0//fun (r : R0) (l0 : L0) => fxcut0 l0 r }}) L' R' s' yL yR\n     ycut fyL fyR fycut)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall r : R', {{ xL | xR//xcut }} < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dq"
+              ],
+              "body": null,
+              "type": "forall r : R',\n(fun x y : No => y < x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r0 : R0), xL0 l < xR0 r0)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    {{ fxR0 | fxL0//fun (r0 : R0) (l : L0) => fxcut0 l r0 }}) L R s xL xR\n     xcut fxL fxR fxcut)\n  (fyR r)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fyR | fyL//fun (r : R') (l : L') => fycut l r }} <=\n{{ fxR | fxL//fun (r : R) (l : L) => fxcut l r }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), fxR r < fxL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r : R'), yL l < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r : R'), fyR r < fyL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall l : L, xL l < {{ yL | yR//ycut }}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "forall l : L, {{ fyR | fyL//fun (r : R') (l0 : L') => fycut l0 r }} < fxL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "forall r : R', {{ xL | xR//xcut }} < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dq"
+              ],
+              "body": null,
+              "type": "forall r : R', fyR r < {{ fxR | fxL//fun (r0 : R) (l : L) => fxcut l r0 }}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply le_lr; intros; [ apply dq | apply dp ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x y : No => y < x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    {{ fxR0 | fxL0//fun (r : R0) (l0 : L0) => fxcut0 l0 r }}) L R s xL xR\n     xcut fxL fxR fxcut)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    {{ fxR0 | fxL0//fun (r : R0) (l0 : L0) => fxcut0 l0 r }}) L' R' s' yL yR\n     ycut fyL fyR fycut)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L) (r : R), xL l0 < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L) (r : R), (fun x y : No => y < x) (fxL l0) (fxR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L') (r : R'), yL l0 < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L') (r : R'), (fun x y : No => y < x) (fyL l0) (fyR r)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "L'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{{ xL | xR//xcut }} <= yL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l0 : L0) (r : R0),\n                (fun x y : No => y < x) (fxL0 l0) (fxR0 r)) =>\n    {{ fxR0 | fxL0//fun (r : R0) (l0 : L0) => fxcut0 l0 r }}) L R s xL xR\n     xcut fxL fxR fxcut)\n  (fyL l)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fyR | fyL//fun (r : R') (l0 : L') => fycut l0 r }} <\n{{ fxR | fxL//fun (r : R) (l0 : L) => fxcut l0 r }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L) (r : R), xL l0 < xR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L) (r : R), fxR r < fxL l0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L') (r : R'), yL l0 < yR r"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l0 : L') (r : R'), fyR r < fyL l0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "L'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{{ xL | xR//xcut }} <= yL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "fyL l <= {{ fxR | fxL//fun (r : R) (l0 : L) => fxcut l0 r }}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lt_r with l; intros; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x y : No => y < x)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r0 : R0), xL0 l < xR0 r0)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    {{ fxR0 | fxL0//fun (r0 : R0) (l : L0) => fxcut0 l r0 }}) L R s xL xR\n     xcut fxL fxR fxcut)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r0 : R0), xL0 l < xR0 r0)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    {{ fxR0 | fxL0//fun (r0 : R0) (l : L0) => fxcut0 l r0 }}) L' R' s' yL yR\n     ycut fyL fyR fycut)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r0 : R), xL l < xR r0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r0 : R), (fun x y : No => y < x) (fxL l) (fxR r0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r0 : R'), yL l < yR r0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r0 : R'), (fun x y : No => y < x) (fyL l) (fyR r0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "xR r <= {{ yL | yR//ycut }}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "(fun x y : No => y <= x) (fxR r)\n  ((fun (L0 R0 : Type) (s0 : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n      (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r0 : R0), xL0 l < xR0 r0)\n      (fxL0 : L0 -> No) (fxR0 : R0 -> No)\n      (fxcut0 : forall (l : L0) (r0 : R0),\n                (fun x y : No => y < x) (fxL0 l) (fxR0 r0)) =>\n    {{ fxR0 | fxL0//fun (r0 : R0) (l : L0) => fxcut0 l r0 }}) L' R' s' yL yR\n     ycut fyL fyR fycut)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fyR | fyL//fun (r0 : R') (l : L') => fycut l r0 }} <\n{{ fxR | fxL//fun (r0 : R) (l : L) => fxcut l r0 }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r0 : R), xL l < xR r0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fxcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r0 : R), fxR r0 < fxL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L'",
+                "R'"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": null,
+              "type": "InSort S L' R'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yL"
+              ],
+              "body": null,
+              "type": "L' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "yR"
+              ],
+              "body": null,
+              "type": "R' -> GenNo S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r0 : R'), yL l < yR r0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyL"
+              ],
+              "body": null,
+              "type": "L' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fyR"
+              ],
+              "body": null,
+              "type": "R' -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fycut"
+              ],
+              "body": null,
+              "type": "forall (l : L') (r0 : R'), fyR r0 < fyL l"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "xR r <= {{ yL | yR//ycut }}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "dp"
+              ],
+              "body": null,
+              "type": "{{ fyR | fyL//fun (r0 : R') (l : L') => fycut l r0 }} <= fxR r"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lt_l with r; intros; assumption.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** More useful is the following rewriting lemma. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition negate_cut\n             {L R : Type@{i} } {Sx : InSort S L R}\n             (xL : L -> No) (xR : R -> No)\n             (xcut : forall (l : L) (r : R), xL l < xR r)\n    : { nxcut : forall r l, negate (xR r) < negate (xL l) &\n        negate {{ xL | xR // xcut }} =\n        {{ (fun r => negate (xR r)) | (fun l => negate (xL l)) // nxcut }} }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{nxcut : forall (r : R) (l : L), negate (xR r) < negate (xL l) &\nnegate {{ xL | xR//xcut }} =\n{{ fun r : R => negate (xR r) | (fun l : L => negate (xL l))//nxcut }}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Sx"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{nxcut : forall (r : R) (l : L), negate (xR r) < negate (xL l) &\nnegate {{ xL | xR//xcut }} =\n{{ fun r : R => negate (xR r) | (fun l : L => negate (xL l))//nxcut }}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Sx"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eexists.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate {{ xL | xR//xcut }} =\n{{ fun r : R => negate (xR r) | (fun l : L => negate (xL l))//\n?nxcut }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Sx"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold negate at 1; rewrite No_rec_cut.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fun r : R =>\n   No_rec No (fun x y : No => y <= x) (fun x y : No => y < x)\n     (fun (L0 R0 : Type) (s : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n        (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r0 : R0), xL0 l < xR0 r0)\n        (fxL : L0 -> No) (fxR : R0 -> No)\n        (fxcut : forall (l : L0) (r0 : R0), fxR r0 < fxL l) =>\n      {{ fxR | fxL//fun (r0 : R0) (l : L0) => fxcut l r0 }})\n     (fun (a b : No) (H0 : b <= a) (H1 : a <= b) => path_No a b H1 H0)\n     (fun (L0 R0 : Type) (s : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n        (xR0 : R0 -> GenNo S)\n        (xcut0 : forall (l : L0) (r0 : R0), xL0 l < xR0 r0) \n        (fxL : L0 -> No) (fxR : R0 -> No)\n        (fxcut : forall (l : L0) (r0 : R0), fxR r0 < fxL l) \n        (L' R' : Type) (s' : InSort S L' R') (yL : L' -> GenNo S)\n        (yR : R' -> GenNo S) (ycut : forall (l : L') (r0 : R'), yL l < yR r0)\n        (fyL : L' -> No) (fyR : R' -> No)\n        (fycut : forall (l : L') (r0 : R'), fyR r0 < fyL l)\n        (_ : forall l : L0, xL0 l < {{ yL | yR//ycut }})\n        (dp : forall l : L0,\n              {{ fyR | fyL//fun (r0 : R') (l0 : L') => fycut l0 r0 }} < fxL l)\n        (_ : forall r0 : R', {{ xL0 | xR0//xcut0 }} < yR r0)\n        (dq : forall r0 : R',\n              fyR r0 < {{ fxR | fxL//fun (r1 : R0) (l : L0) => fxcut l r1 }}) =>\n      le_lr fyR fyL (fun (r0 : R') (l : L') => fycut l r0) fxR fxL\n        (fun (r0 : R0) (l : L0) => fxcut l r0) (fun l : R' => dq l)\n        (fun r0 : L0 => dp r0))\n     (fun (L0 R0 : Type) (s : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n        (xR0 : R0 -> GenNo S)\n        (xcut0 : forall (l : L0) (r0 : R0), xL0 l < xR0 r0) \n        (fxL : L0 -> No) (fxR : R0 -> No)\n        (fxcut : forall (l : L0) (r0 : R0), fxR r0 < fxL l) \n        (L' R' : Type) (s' : InSort S L' R') (yL : L' -> GenNo S)\n        (yR : R' -> GenNo S) (_ : forall (l : L') (r0 : R'), yL l < yR r0)\n        (fyL : L' -> No) (fyR : R' -> No)\n        (fycut : forall (l : L') (r0 : R'), fyR r0 < fyL l) \n        (l : L') (_ : {{ xL0 | xR0//xcut0 }} <= yL l)\n        (dp : fyL l <=\n              {{ fxR | fxL//fun (r0 : R0) (l0 : L0) => fxcut l0 r0 }}) =>\n      lt_r fyR fyL (fun (r0 : R') (l0 : L') => fycut l0 r0) fxR fxL\n        (fun (r0 : R0) (l0 : L0) => fxcut l0 r0) l dp)\n     (fun (L0 R0 : Type) (s : InSort S L0 R0) (xL0 : L0 -> GenNo S)\n        (xR0 : R0 -> GenNo S) (_ : forall (l : L0) (r0 : R0), xL0 l < xR0 r0)\n        (fxL : L0 -> No) (fxR : R0 -> No)\n        (fxcut : forall (l : L0) (r0 : R0), fxR r0 < fxL l) \n        (L' R' : Type) (s' : InSort S L' R') (yL : L' -> GenNo S)\n        (yR : R' -> GenNo S) (ycut : forall (l : L') (r0 : R'), yL l < yR r0)\n        (fyL : L' -> No) (fyR : R' -> No)\n        (fycut : forall (l : L') (r0 : R'), fyR r0 < fyL l) \n        (r0 : R0) (_ : xR0 r0 <= {{ yL | yR//ycut }})\n        (dp : {{ fyR | fyL//fun (r1 : R') (l : L') => fycut l r1 }} <= fxR r0) =>\n      lt_l fyR fyL (fun (r1 : R') (l : L') => fycut l r1) fxR fxL\n        (fun (r1 : R0) (l : L0) => fxcut l r1) r0 dp)\n     (xR r) | (fun l : L =>\n               No_rec No (fun x y : No => y <= x) \n                 (fun x y : No => y < x)\n                 (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                    (xL0 : L0 -> GenNo S) (xR0 : R0 -> GenNo S)\n                    (_ : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n                    (fxL : L0 -> No) (fxR : R0 -> No)\n                    (fxcut : forall (l0 : L0) (r : R0), fxR r < fxL l0) =>\n                  {{ fxR | fxL//fun (r : R0) (l0 : L0) => fxcut l0 r }})\n                 (fun (a b : No) (H0 : b <= a) (H1 : a <= b) =>\n                  path_No a b H1 H0)\n                 (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                    (xL0 : L0 -> GenNo S) (xR0 : R0 -> GenNo S)\n                    (xcut0 : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n                    (fxL : L0 -> No) (fxR : R0 -> No)\n                    (fxcut : forall (l0 : L0) (r : R0), fxR r < fxL l0)\n                    (L' R' : Type) (s' : InSort S L' R') \n                    (yL : L' -> GenNo S) (yR : R' -> GenNo S)\n                    (ycut : forall (l0 : L') (r : R'), yL l0 < yR r)\n                    (fyL : L' -> No) (fyR : R' -> No)\n                    (fycut : forall (l0 : L') (r : R'), fyR r < fyL l0)\n                    (_ : forall l0 : L0, xL0 l0 < {{ yL | yR//ycut }})\n                    (dp : forall l0 : L0,\n                          {{ fyR | fyL//fun (r : R') (l1 : L') => fycut l1 r }} <\n                          fxL l0)\n                    (_ : forall r : R', {{ xL0 | xR0//xcut0 }} < yR r)\n                    (dq : forall r : R',\n                          fyR r <\n                          {{ fxR | fxL//fun (r0 : R0) (l0 : L0) =>\n                                        fxcut l0 r0 }}) =>\n                  le_lr fyR fyL (fun (r : R') (l0 : L') => fycut l0 r) fxR\n                    fxL (fun (r : R0) (l0 : L0) => fxcut l0 r)\n                    (fun l0 : R' => dq l0) (fun r : L0 => dp r))\n                 (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                    (xL0 : L0 -> GenNo S) (xR0 : R0 -> GenNo S)\n                    (xcut0 : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n                    (fxL : L0 -> No) (fxR : R0 -> No)\n                    (fxcut : forall (l0 : L0) (r : R0), fxR r < fxL l0)\n                    (L' R' : Type) (s' : InSort S L' R') \n                    (yL : L' -> GenNo S) (yR : R' -> GenNo S)\n                    (_ : forall (l0 : L') (r : R'), yL l0 < yR r)\n                    (fyL : L' -> No) (fyR : R' -> No)\n                    (fycut : forall (l0 : L') (r : R'), fyR r < fyL l0)\n                    (l0 : L') (_ : {{ xL0 | xR0//xcut0 }} <= yL l0)\n                    (dp : fyL l0 <=\n                          {{ fxR | fxL//fun (r : R0) (l1 : L0) => fxcut l1 r }}) =>\n                  lt_r fyR fyL (fun (r : R') (l1 : L') => fycut l1 r) fxR fxL\n                    (fun (r : R0) (l1 : L0) => fxcut l1 r) l0 dp)\n                 (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                    (xL0 : L0 -> GenNo S) (xR0 : R0 -> GenNo S)\n                    (_ : forall (l0 : L0) (r : R0), xL0 l0 < xR0 r)\n                    (fxL : L0 -> No) (fxR : R0 -> No)\n                    (fxcut : forall (l0 : L0) (r : R0), fxR r < fxL l0)\n                    (L' R' : Type) (s' : InSort S L' R') \n                    (yL : L' -> GenNo S) (yR : R' -> GenNo S)\n                    (ycut : forall (l0 : L') (r : R'), yL l0 < yR r)\n                    (fyL : L' -> No) (fyR : R' -> No)\n                    (fycut : forall (l0 : L') (r : R'), fyR r < fyL l0)\n                    (r : R0) (_ : xR0 r <= {{ yL | yR//ycut }})\n                    (dp : {{ fyR | fyL//fun (r0 : R') (l0 : L') =>\n                                        fycut l0 r0 }} <=\n                          fxR r) =>\n                  lt_l fyR fyL (fun (r0 : R') (l0 : L') => fycut l0 r0) fxR\n                    fxL (fun (r0 : R0) (l0 : L0) => fxcut l0 r0) r dp)\n                 (xL l))//fun (r : R) (l : L) =>\n                          No_rec_lt No (fun x y : No => y <= x)\n                            (fun x y : No => y < x)\n                            (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                               (xL0 : L0 -> GenNo S) \n                               (xR0 : R0 -> GenNo S)\n                               (_ : forall (l0 : L0) \n                                    (r0 : R0), xL0 l0 < xR0 r0)\n                               (fxL : L0 -> No) (fxR : R0 -> No)\n                               (fxcut : forall (l0 : L0) \n                                        (r0 : R0), \n                                        fxR r0 < fxL l0) =>\n                             {{ fxR | fxL//fun (r0 : R0) (l0 : L0) =>\n                                           fxcut l0 r0 }})\n                            (fun (a b : No) (H0 : b <= a) (H1 : a <= b) =>\n                             path_No a b H1 H0)\n                            (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                               (xL0 : L0 -> GenNo S) \n                               (xR0 : R0 -> GenNo S)\n                               (xcut0 : forall (l0 : L0) \n                                        (r0 : R0), \n                                        xL0 l0 < xR0 r0)\n                               (fxL : L0 -> No) (fxR : R0 -> No)\n                               (fxcut : forall (l0 : L0) \n                                        (r0 : R0), \n                                        fxR r0 < fxL l0)\n                               (L' R' : Type) (s' : InSort S L' R')\n                               (yL : L' -> GenNo S) \n                               (yR : R' -> GenNo S)\n                               (ycut : forall (l0 : L') \n                                       (r0 : R'), \n                                       yL l0 < yR r0)\n                               (fyL : L' -> No) (fyR : R' -> No)\n                               (fycut : forall (l0 : L') \n                                        (r0 : R'), \n                                        fyR r0 < fyL l0)\n                               (_ : forall l0 : L0,\n                                    xL0 l0 < {{ yL | yR//ycut }})\n                               (dp : forall l0 : L0,\n                                     {{ fyR | fyL//\n                                     fun (r0 : R') (l1 : L') => \n                                     fycut l1 r0 }} < \n                                     fxL l0)\n                               (_ : forall r0 : R',\n                                    {{ xL0 | xR0//xcut0 }} < yR r0)\n                               (dq : forall r0 : R',\n                                     fyR r0 <\n                                     {{ fxR | fxL//\n                                     fun (r1 : R0) (l0 : L0) => \n                                     fxcut l0 r1 }}) =>\n                             le_lr fyR fyL\n                               (fun (r0 : R') (l0 : L') => fycut l0 r0) fxR\n                               fxL (fun (r0 : R0) (l0 : L0) => fxcut l0 r0)\n                               (fun l0 : R' => dq l0) \n                               (fun r0 : L0 => dp r0))\n                            (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                               (xL0 : L0 -> GenNo S) \n                               (xR0 : R0 -> GenNo S)\n                               (xcut0 : forall (l0 : L0) \n                                        (r0 : R0), \n                                        xL0 l0 < xR0 r0)\n                               (fxL : L0 -> No) (fxR : R0 -> No)\n                               (fxcut : forall (l0 : L0) \n                                        (r0 : R0), \n                                        fxR r0 < fxL l0)\n                               (L' R' : Type) (s' : InSort S L' R')\n                               (yL : L' -> GenNo S) \n                               (yR : R' -> GenNo S)\n                               (_ : forall (l0 : L') (r0 : R'), yL l0 < yR r0)\n                               (fyL : L' -> No) (fyR : R' -> No)\n                               (fycut : forall (l0 : L') \n                                        (r0 : R'), \n                                        fyR r0 < fyL l0)\n                               (l0 : L')\n                               (_ : {{ xL0 | xR0//xcut0 }} <= yL l0)\n                               (dp : fyL l0 <=\n                                     {{ fxR | fxL//\n                                     fun (r0 : R0) (l1 : L0) => \n                                     fxcut l1 r0 }}) =>\n                             lt_r fyR fyL\n                               (fun (r0 : R') (l1 : L') => fycut l1 r0) fxR\n                               fxL (fun (r0 : R0) (l1 : L0) => fxcut l1 r0)\n                               l0 dp)\n                            (fun (L0 R0 : Type) (s : InSort S L0 R0)\n                               (xL0 : L0 -> GenNo S) \n                               (xR0 : R0 -> GenNo S)\n                               (_ : forall (l0 : L0) \n                                    (r0 : R0), xL0 l0 < xR0 r0)\n                               (fxL : L0 -> No) (fxR : R0 -> No)\n                               (fxcut : forall (l0 : L0) \n                                        (r0 : R0), \n                                        fxR r0 < fxL l0)\n                               (L' R' : Type) (s' : InSort S L' R')\n                               (yL : L' -> GenNo S) \n                               (yR : R' -> GenNo S)\n                               (ycut : forall (l0 : L') \n                                       (r0 : R'), \n                                       yL l0 < yR r0)\n                               (fyL : L' -> No) (fyR : R' -> No)\n                               (fycut : forall (l0 : L') \n                                        (r0 : R'), \n                                        fyR r0 < fyL l0)\n                               (r0 : R0) (_ : xR0 r0 <= {{ yL | yR//ycut }})\n                               (dp : {{ fyR | fyL//\n                                     fun (r1 : R') (l0 : L') => \n                                     fycut l0 r1 }} <= \n                                     fxR r0) =>\n                             lt_l fyR fyL\n                               (fun (r1 : R') (l0 : L') => fycut l0 r1) fxR\n                               fxL (fun (r1 : R0) (l0 : L0) => fxcut l0 r1)\n                               r0 dp)\n                            (xL l) (xR r) (xcut l r) }} =\n{{ fun r : R => negate (xR r) | (fun l : L => negate (xL l))//\n?nxcut }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "L",
+                "R"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Sx"
+              ],
+              "body": null,
+              "type": "InSort S L R"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xL"
+              ],
+              "body": null,
+              "type": "L -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xR"
+              ],
+              "body": null,
+              "type": "R -> No"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xcut"
+              ],
+              "body": null,
+              "type": "forall (l : L) (r : R), xL l < xR r"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The following proof verifies that [No_rec] applied to a cut reduces definitionally to a cut with the expected options (although it does produce quite a large term). *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{InSort S Empty Empty} `{InSort S Unit Empty}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Goal negate one = minusone.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate one = minusone",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate one = minusone",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold one; rewrite (negate_cut _ _ _).2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fun r : Empty => negate (Empty.Empty_rec r) | (fun _ : Unit => negate zero)//\n(negate_cut (fun _ : Unit => zero) Empty.Empty_rec rempty_cut).1 }} =\nminusone",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_No; apply le_lr; intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate (Empty.Empty_rec l) <\n{{ Empty.Empty_rec | (fun _ : Unit => zero)//lempty_cut }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fun r0 : Empty => negate (Empty.Empty_rec r0) | \n(fun _ : Unit => negate zero)//(negate_cut (fun _ : Unit => zero)\n                                  Empty.Empty_rec rempty_cut).1 }} <\nzero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty.Empty_rec l <\n{{ fun r : Empty => negate (Empty.Empty_rec r) | (fun _ : Unit => negate zero)//\n(negate_cut (fun _ : Unit => zero) Empty.Empty_rec rempty_cut).1 }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ Empty.Empty_rec | (fun _ : Unit => zero)//lempty_cut }} < negate zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn't compute to a cut when applied to a cut. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate (Empty.Empty_rec l) <\n{{ Empty.Empty_rec | (fun _ : Unit => zero)//lempty_cut }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fun r0 : Empty => negate (Empty.Empty_rec r0) | \n(fun _ : Unit => negate zero)//(negate_cut (fun _ : Unit => zero)\n                                  Empty.Empty_rec rempty_cut).1 }} <\nzero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lt_r with r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "negate zero <= {{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold zero; rewrite (negate_cut _ _ _).2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ fun r0 : Empty => negate (Empty.Empty_rec r0) | \n(fun l : Empty => negate (Empty.Empty_rec l))//(negate_cut Empty.Empty_rec\n                                                 Empty.Empty_rec lempty_cut).1 }} <=\n{{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply le_lr; apply Empty_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty.Empty_rec l <\n{{ fun r : Empty => negate (Empty.Empty_rec r) | (fun _ : Unit => negate zero)//\n(negate_cut (fun _ : Unit => zero) Empty.Empty_rec rempty_cut).1 }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "l"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ Empty.Empty_rec | (fun _ : Unit => zero)//lempty_cut }} < negate zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold zero; rewrite (negate_cut _ _ _).2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ Empty.Empty_rec | (fun _ : Unit =>\n                      {{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }})//lempty_cut }} <\n{{ fun r0 : Empty => negate (Empty.Empty_rec r0) | \n(fun l : Empty => negate (Empty.Empty_rec l))//(negate_cut Empty.Empty_rec\n                                                 Empty.Empty_rec lempty_cut).1 }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply lt_r with r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{{ Empty.Empty_rec | Empty.Empty_rec//lempty_cut }} <=\n{{ fun r0 : Empty => negate (Empty.Empty_rec r0) | \n(fun l : Empty => negate (Empty.Empty_rec l))//(negate_cut Empty.Empty_rec\n                                                 Empty.Empty_rec lempty_cut).1 }}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "OptionSort"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "HasNegation S"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "No"
+              ],
+              "body": "GenNo S",
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "InSort S Empty Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "InSort S Unit Empty"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply le_lr; apply Empty_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End HasNegation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

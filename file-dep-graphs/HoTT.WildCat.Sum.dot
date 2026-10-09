@@ -1,0 +1,14 @@
+digraph HoTT_WildCat_Sum {
+  graph [ratio=0.5]
+  node [style=filled]
+Sum_is1cat_sum [label="is1cat_sum", URL=<Sum.html#is1cat_sum>, peripheries=3, fillcolor="#F070D1"] ;
+Sum_is2graph_sum [label="is2graph_sum", URL=<Sum.html#is2graph_sum>, fillcolor="#F070D1"] ;
+Sum_is01cat_sum [label="is01cat_sum", URL=<Sum.html#is01cat_sum>, fillcolor="#F070D1"] ;
+Sum_isgraph_sum [label="isgraph_sum", URL=<Sum.html#isgraph_sum>, fillcolor="#F070D1"] ;
+  Sum_is1cat_sum -> Sum_is2graph_sum [] ;
+  Sum_is1cat_sum -> Sum_is01cat_sum [] ;
+  Sum_is2graph_sum -> Sum_isgraph_sum [] ;
+  Sum_is01cat_sum -> Sum_isgraph_sum [] ;
+subgraph cluster_Sum { label="Sum"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Sum_isgraph_sum; Sum_is01cat_sum; Sum_is2graph_sum; Sum_is1cat_sum; };
+} /* END */

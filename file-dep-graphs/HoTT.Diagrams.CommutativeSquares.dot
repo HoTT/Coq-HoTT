@@ -1,0 +1,15 @@
+digraph HoTT_Diagrams_CommutativeSquares {
+  graph [ratio=0.5]
+  node [style=filled]
+CommutativeSquares_comm_square_inverse_is_retr [label="comm_square_inverse_is_retr", URL=<CommutativeSquares.html#comm_square_inverse_is_retr>, peripheries=3, fillcolor="#F070D1"] ;
+CommutativeSquares_comm_square_inverse_is_sect [label="comm_square_inverse_is_sect", URL=<CommutativeSquares.html#comm_square_inverse_is_sect>, peripheries=3, fillcolor="#F070D1"] ;
+CommutativeSquares_comm_square_inverse [label="comm_square_inverse", URL=<CommutativeSquares.html#comm_square_inverse>, fillcolor="#F070D1"] ;
+CommutativeSquares_comm_square_comp_ [label="comm_square_comp'", URL=<CommutativeSquares.html#comm_square_comp'>, peripheries=3, fillcolor="#F070D1"] ;
+CommutativeSquares_comm_square_comp [label="comm_square_comp", URL=<CommutativeSquares.html#comm_square_comp>, fillcolor="#F070D1"] ;
+  CommutativeSquares_comm_square_inverse_is_retr -> CommutativeSquares_comm_square_inverse [] ;
+  CommutativeSquares_comm_square_inverse_is_retr -> CommutativeSquares_comm_square_comp [] ;
+  CommutativeSquares_comm_square_inverse_is_sect -> CommutativeSquares_comm_square_inverse [] ;
+  CommutativeSquares_comm_square_inverse_is_sect -> CommutativeSquares_comm_square_comp [] ;
+subgraph cluster_CommutativeSquares { label="CommutativeSquares"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+CommutativeSquares_comm_square_comp; CommutativeSquares_comm_square_comp_; CommutativeSquares_comm_square_inverse; CommutativeSquares_comm_square_inverse_is_sect; CommutativeSquares_comm_square_inverse_is_retr; };
+} /* END */

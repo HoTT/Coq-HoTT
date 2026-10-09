@@ -1,0 +1,32 @@
+digraph HoTT_Classes_interfaces_rationals {
+  graph [ratio=0.5]
+  node [style=filled]
+rationals_rationals_initial [label="rationals_initial", URL=<rationals.html#rationals_initial>, peripheries=3, fillcolor="#F070D1"] ;
+rationals_rationals_to_field_mor [label="rationals_to_field_mor", URL=<rationals.html#rationals_to_field_mor>, peripheries=3, fillcolor="#F070D1"] ;
+rationals_rationals_order [label="rationals_order", URL=<rationals.html#rationals_order>, peripheries=3, fillcolor="#F070D1"] ;
+rationals_rationals_field [label="rationals_field", URL=<rationals.html#rationals_field>, peripheries=3, fillcolor="#F070D1"] ;
+rationals_Rationals_sind [label="Rationals_sind", URL=<rationals.html#Rationals_sind>, peripheries=3, fillcolor="#F070D1"] ;
+rationals_Rationals_rec [label="Rationals_rec", URL=<rationals.html#Rationals_rec>, peripheries=3, fillcolor="#F070D1"] ;
+rationals_Rationals_ind [label="Rationals_ind", URL=<rationals.html#Rationals_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+rationals_Rationals_rect [label="Rationals_rect", URL=<rationals.html#Rationals_rect>, fillcolor="#F070D1"] ;
+rationals_Build_Rationals [label="Build_Rationals", URL=<rationals.html#Build_Rationals>, fillcolor="#7FAAFF"] ;
+rationals_Rationals [label="Rationals", URL=<rationals.html#Rationals>, fillcolor="#E2CDFA"] ;
+rationals_rationals_to_field [label="rationals_to_field", URL=<rationals.html#rationals_to_field>, fillcolor="#F070D1"] ;
+rationals_RationalsToField [label="RationalsToField", URL=<rationals.html#RationalsToField>, fillcolor="#F070D1"] ;
+  rationals_rationals_initial -> rationals_Rationals [] ;
+  rationals_rationals_to_field_mor -> rationals_Rationals [] ;
+  rationals_rationals_order -> rationals_Rationals [] ;
+  rationals_rationals_field -> rationals_Rationals [] ;
+  rationals_Rationals_sind -> rationals_Build_Rationals [] ;
+  rationals_Rationals_sind -> rationals_Rationals [] ;
+  rationals_Rationals_rec -> rationals_Rationals_rect [] ;
+  rationals_Rationals_ind -> rationals_Build_Rationals [] ;
+  rationals_Rationals_ind -> rationals_Rationals [] ;
+  rationals_Rationals_rect -> rationals_Build_Rationals [] ;
+  rationals_Rationals_rect -> rationals_Rationals [] ;
+  rationals_Build_Rationals -> rationals_rationals_to_field [] ;
+  rationals_Rationals -> rationals_rationals_to_field [] ;
+  rationals_rationals_to_field -> rationals_RationalsToField [] ;
+subgraph cluster_rationals { label="rationals"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+rationals_RationalsToField; rationals_rationals_to_field; rationals_Rationals; rationals_Build_Rationals; rationals_Rationals_rect; rationals_Rationals_ind; rationals_Rationals_rec; rationals_Rationals_sind; rationals_rationals_field; rationals_rationals_order; rationals_rationals_to_field_mor; rationals_rationals_initial; };
+} /* END */

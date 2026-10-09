@@ -1,0 +1,50 @@
+digraph HoTT_WildCat_TwoOneCat {
+  graph [ratio=0.5]
+  node [style=filled]
+TwoOneCat_cat_exchange [label="cat_exchange", URL=<TwoOneCat.html#cat_exchange>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_cat_prewhisker_pp [label="cat_prewhisker_pp", URL=<TwoOneCat.html#cat_prewhisker_pp>, fillcolor="#F070D1"] ;
+TwoOneCat_cat_postwhisker_pp [label="cat_postwhisker_pp", URL=<TwoOneCat.html#cat_postwhisker_pp>, fillcolor="#F070D1"] ;
+TwoOneCat_cat_tril [label="cat_tril", URL=<TwoOneCat.html#cat_tril>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_cat_pentagon [label="cat_pentagon", URL=<TwoOneCat.html#cat_pentagon>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1natural_cat_idr [label="is1natural_cat_idr", URL=<TwoOneCat.html#is1natural_cat_idr>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1natural_cat_idl [label="is1natural_cat_idl", URL=<TwoOneCat.html#is1natural_cat_idl>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1natural_cat_assoc_r [label="is1natural_cat_assoc_r", URL=<TwoOneCat.html#is1natural_cat_assoc_r>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1natural_cat_assoc_m [label="is1natural_cat_assoc_m", URL=<TwoOneCat.html#is1natural_cat_assoc_m>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1natural_cat_assoc_l [label="is1natural_cat_assoc_l", URL=<TwoOneCat.html#is1natural_cat_assoc_l>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_bifunctor_coh_comp [label="bifunctor_coh_comp", URL=<TwoOneCat.html#bifunctor_coh_comp>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1functor_precomp [label="is1functor_precomp", URL=<TwoOneCat.html#is1functor_precomp>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1functor_postcomp [label="is1functor_postcomp", URL=<TwoOneCat.html#is1functor_postcomp>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1gpd_hom [label="is1gpd_hom", URL=<TwoOneCat.html#is1gpd_hom>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_is1cat_hom [label="is1cat_hom", URL=<TwoOneCat.html#is1cat_hom>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_Is21Cat_sind [label="Is21Cat_sind", URL=<TwoOneCat.html#Is21Cat_sind>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_Is21Cat_rec [label="Is21Cat_rec", URL=<TwoOneCat.html#Is21Cat_rec>, peripheries=3, fillcolor="#F070D1"] ;
+TwoOneCat_Is21Cat_ind [label="Is21Cat_ind", URL=<TwoOneCat.html#Is21Cat_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+TwoOneCat_Is21Cat_rect [label="Is21Cat_rect", URL=<TwoOneCat.html#Is21Cat_rect>, fillcolor="#F070D1"] ;
+TwoOneCat_Build_Is21Cat [label="Build_Is21Cat", URL=<TwoOneCat.html#Build_Is21Cat>, fillcolor="#7FAAFF"] ;
+TwoOneCat_Is21Cat [label="Is21Cat", URL=<TwoOneCat.html#Is21Cat>, fillcolor="#E2CDFA"] ;
+  TwoOneCat_cat_exchange -> TwoOneCat_cat_prewhisker_pp [] ;
+  TwoOneCat_cat_exchange -> TwoOneCat_cat_postwhisker_pp [] ;
+  TwoOneCat_cat_prewhisker_pp -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_cat_postwhisker_pp -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_cat_tril -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_cat_pentagon -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1natural_cat_idr -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1natural_cat_idl -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1natural_cat_assoc_r -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1natural_cat_assoc_m -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1natural_cat_assoc_l -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_bifunctor_coh_comp -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1functor_precomp -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1functor_postcomp -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1gpd_hom -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_is1cat_hom -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_Is21Cat_sind -> TwoOneCat_Build_Is21Cat [] ;
+  TwoOneCat_Is21Cat_sind -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_Is21Cat_rec -> TwoOneCat_Is21Cat_rect [] ;
+  TwoOneCat_Is21Cat_ind -> TwoOneCat_Build_Is21Cat [] ;
+  TwoOneCat_Is21Cat_ind -> TwoOneCat_Is21Cat [] ;
+  TwoOneCat_Is21Cat_rect -> TwoOneCat_Build_Is21Cat [] ;
+  TwoOneCat_Is21Cat_rect -> TwoOneCat_Is21Cat [] ;
+subgraph cluster_TwoOneCat { label="TwoOneCat"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+TwoOneCat_Is21Cat; TwoOneCat_Build_Is21Cat; TwoOneCat_Is21Cat_rect; TwoOneCat_Is21Cat_ind; TwoOneCat_Is21Cat_rec; TwoOneCat_Is21Cat_sind; TwoOneCat_is1cat_hom; TwoOneCat_is1gpd_hom; TwoOneCat_is1functor_postcomp; TwoOneCat_is1functor_precomp; TwoOneCat_bifunctor_coh_comp; TwoOneCat_is1natural_cat_assoc_l; TwoOneCat_is1natural_cat_assoc_m; TwoOneCat_is1natural_cat_assoc_r; TwoOneCat_is1natural_cat_idl; TwoOneCat_is1natural_cat_idr; TwoOneCat_cat_pentagon; TwoOneCat_cat_tril; TwoOneCat_cat_postwhisker_pp; TwoOneCat_cat_prewhisker_pp; TwoOneCat_cat_exchange; };
+} /* END */

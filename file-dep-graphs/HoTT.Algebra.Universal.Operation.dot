@@ -1,0 +1,51 @@
+digraph HoTT_Algebra_Universal_Operation {
+  graph [ratio=0.5]
+  node [style=filled]
+Operation_equiv_operation_curry [label="equiv_operation_curry", URL=<Operation.html#equiv_operation_curry>, peripheries=3, fillcolor="#F070D1"] ;
+Operation_isequiv_operation_curry [label="isequiv_operation_curry", URL=<Operation.html#isequiv_operation_curry>, fillcolor="#F070D1"] ;
+Operation_path_operation_uncurry_to_curry [label="path_operation_uncurry_to_curry", URL=<Operation.html#path_operation_uncurry_to_curry>, fillcolor="#F070D1"] ;
+Operation_path_operation_curry_to_cunurry [label="path_operation_curry_to_cunurry", URL=<Operation.html#path_operation_curry_to_cunurry>, fillcolor="#F070D1"] ;
+Operation_expand_cons_dom [label="expand_cons_dom", URL=<Operation.html#expand_cons_dom>, fillcolor="#F070D1"] ;
+Operation_expand_cons_dom_ [label="expand_cons_dom'", URL=<Operation.html#expand_cons_dom'>, fillcolor="#F070D1"] ;
+Operation_computation_example_operation_curry [label="computation_example_operation_curry", URL=<Operation.html#computation_example_operation_curry>, peripheries=3, fillcolor="#F070D1"] ;
+Operation_operation_curry [label="operation_curry", URL=<Operation.html#operation_curry>, fillcolor="#F070D1"] ;
+Operation_computation_example_operation_uncurry [label="computation_example_operation_uncurry", URL=<Operation.html#computation_example_operation_uncurry>, peripheries=3, fillcolor="#F070D1"] ;
+Operation_operation_uncurry [label="operation_uncurry", URL=<Operation.html#operation_uncurry>, fillcolor="#F070D1"] ;
+Operation_CurriedOperation [label="CurriedOperation", URL=<Operation.html#CurriedOperation>, fillcolor="#F070D1"] ;
+Operation_FiniteOperation [label="FiniteOperation", URL=<Operation.html#FiniteOperation>, fillcolor="#F070D1"] ;
+Operation_nil_dom [label="nil_dom", URL=<Operation.html#nil_dom>, fillcolor="#F070D1"] ;
+Operation_cons_dom [label="cons_dom", URL=<Operation.html#cons_dom>, fillcolor="#F070D1"] ;
+Operation_cons_dom_ [label="cons_dom'", URL=<Operation.html#cons_dom'>, fillcolor="#F070D1"] ;
+Operation_tail_dom [label="tail_dom", URL=<Operation.html#tail_dom>, fillcolor="#F070D1"] ;
+Operation_tail_dom_ [label="tail_dom'", URL=<Operation.html#tail_dom'>, fillcolor="#F070D1"] ;
+Operation_head_dom [label="head_dom", URL=<Operation.html#head_dom>, fillcolor="#F070D1"] ;
+Operation_head_dom_ [label="head_dom'", URL=<Operation.html#head_dom'>, fillcolor="#F070D1"] ;
+  Operation_equiv_operation_curry -> Operation_isequiv_operation_curry [] ;
+  Operation_isequiv_operation_curry -> Operation_path_operation_uncurry_to_curry [] ;
+  Operation_isequiv_operation_curry -> Operation_path_operation_curry_to_cunurry [] ;
+  Operation_path_operation_uncurry_to_curry -> Operation_operation_curry [] ;
+  Operation_path_operation_uncurry_to_curry -> Operation_operation_uncurry [] ;
+  Operation_path_operation_curry_to_cunurry -> Operation_expand_cons_dom [] ;
+  Operation_path_operation_curry_to_cunurry -> Operation_operation_curry [] ;
+  Operation_path_operation_curry_to_cunurry -> Operation_operation_uncurry [] ;
+  Operation_expand_cons_dom -> Operation_expand_cons_dom_ [] ;
+  Operation_expand_cons_dom -> Operation_cons_dom [] ;
+  Operation_expand_cons_dom -> Operation_tail_dom [] ;
+  Operation_expand_cons_dom -> Operation_head_dom [] ;
+  Operation_expand_cons_dom_ -> Operation_cons_dom_ [] ;
+  Operation_expand_cons_dom_ -> Operation_tail_dom_ [] ;
+  Operation_expand_cons_dom_ -> Operation_head_dom_ [] ;
+  Operation_computation_example_operation_curry -> Operation_operation_curry [] ;
+  Operation_computation_example_operation_curry -> Operation_nil_dom [] ;
+  Operation_operation_curry -> Operation_CurriedOperation [] ;
+  Operation_operation_curry -> Operation_FiniteOperation [] ;
+  Operation_operation_curry -> Operation_cons_dom [] ;
+  Operation_computation_example_operation_uncurry -> Operation_operation_uncurry [] ;
+  Operation_operation_uncurry -> Operation_CurriedOperation [] ;
+  Operation_operation_uncurry -> Operation_FiniteOperation [] ;
+  Operation_cons_dom -> Operation_cons_dom_ [] ;
+  Operation_tail_dom -> Operation_tail_dom_ [] ;
+  Operation_head_dom -> Operation_head_dom_ [] ;
+subgraph cluster_Operation { label="Operation"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Operation_head_dom_; Operation_head_dom; Operation_tail_dom_; Operation_tail_dom; Operation_cons_dom_; Operation_cons_dom; Operation_nil_dom; Operation_FiniteOperation; Operation_CurriedOperation; Operation_operation_uncurry; Operation_computation_example_operation_uncurry; Operation_operation_curry; Operation_computation_example_operation_curry; Operation_expand_cons_dom_; Operation_expand_cons_dom; Operation_path_operation_curry_to_cunurry; Operation_path_operation_uncurry_to_curry; Operation_isequiv_operation_curry; Operation_equiv_operation_curry; };
+} /* END */

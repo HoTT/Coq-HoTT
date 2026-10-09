@@ -1,0 +1,19 @@
+digraph HoTT_Spaces_NatSeq_UStructure {
+  graph [ratio=0.5]
+  node [style=filled]
+UStructure_cons_decreases_modulus [label="cons_decreases_modulus", URL=<UStructure.html#cons_decreases_modulus>, peripheries=3, fillcolor="#F070D1"] ;
+UStructure_uniformly_continuous_extensionality [label="uniformly_continuous_extensionality", URL=<UStructure.html#uniformly_continuous_extensionality>, peripheries=3, fillcolor="#F070D1"] ;
+UStructure_list_restrict_eq_iff_seq_agree_inductive [label="list_restrict_eq_iff_seq_agree_inductive", URL=<UStructure.html#list_restrict_eq_iff_seq_agree_inductive>, peripheries=3, fillcolor="#F070D1"] ;
+UStructure_list_restrict_eq_iff_seq_agree_lt [label="list_restrict_eq_iff_seq_agree_lt", URL=<UStructure.html#list_restrict_eq_iff_seq_agree_lt>, fillcolor="#F070D1"] ;
+UStructure_seq_cons_of_eq [label="seq_cons_of_eq", URL=<UStructure.html#seq_cons_of_eq>, fillcolor="#F070D1"] ;
+UStructure_sequence_type_us_zero [label="sequence_type_us_zero", URL=<UStructure.html#sequence_type_us_zero>, peripheries=3, fillcolor="#F070D1"] ;
+UStructure_sequence_type_us [label="sequence_type_us", URL=<UStructure.html#sequence_type_us>, fillcolor="#F070D1"] ;
+  UStructure_cons_decreases_modulus -> UStructure_seq_cons_of_eq [] ;
+  UStructure_uniformly_continuous_extensionality -> UStructure_sequence_type_us [] ;
+  UStructure_list_restrict_eq_iff_seq_agree_inductive -> UStructure_list_restrict_eq_iff_seq_agree_lt [] ;
+  UStructure_list_restrict_eq_iff_seq_agree_lt -> UStructure_sequence_type_us [] ;
+  UStructure_seq_cons_of_eq -> UStructure_sequence_type_us [] ;
+  UStructure_sequence_type_us_zero -> UStructure_sequence_type_us [] ;
+subgraph cluster_UStructure { label="UStructure"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+UStructure_sequence_type_us; UStructure_sequence_type_us_zero; UStructure_seq_cons_of_eq; UStructure_list_restrict_eq_iff_seq_agree_lt; UStructure_list_restrict_eq_iff_seq_agree_inductive; UStructure_uniformly_continuous_extensionality; UStructure_cons_decreases_modulus; };
+} /* END */

@@ -1,0 +1,11 @@
+digraph HoTT_Basics_Settings {
+  graph [ratio=0.5]
+  node [style=filled]
+Settings_reverse_coercion [label="reverse_coercion", URL=<Settings.html#reverse_coercion>, peripheries=3, fillcolor="#F070D1"] ;
+Settings_ReverseCoercionTarget [label="ReverseCoercionTarget", URL=<Settings.html#ReverseCoercionTarget>, fillcolor="#F070D1"] ;
+Settings_ReverseCoercionSource [label="ReverseCoercionSource", URL=<Settings.html#ReverseCoercionSource>, fillcolor="#F070D1"] ;
+  Settings_reverse_coercion -> Settings_ReverseCoercionTarget [] ;
+  Settings_reverse_coercion -> Settings_ReverseCoercionSource [] ;
+subgraph cluster_Settings { label="Settings"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Settings_ReverseCoercionSource; Settings_ReverseCoercionTarget; Settings_reverse_coercion; };
+} /* END */

@@ -1,0 +1,18 @@
+N: 1 "between_to_ring" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 7 "nat_0_or_ge_1" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 8 "nat_0_or_pos" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 10 "nat_le_plus" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 5 "nat_ne_0_ge_1" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 6 "nat_ne_0_pos" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 11 "nat_nonneg" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 9 "nat_not_neg" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 2 "negate_to_ring_nonpos" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 4 "orderreflecting_left_mult" [body=yes, kind=cnst, prop=no, path="naturals", ];
+N: 3 "slow_nat_le_dec" [body=yes, kind=cnst, prop=no, path="naturals", ];
+E: 4 6 [weight=1, ];
+E: 5 6 [weight=1, ];
+E: 6 8 [weight=1, ];
+E: 7 8 [weight=1, ];
+E: 8 9 [weight=1, ];
+E: 9 11 [weight=1, ];
+E: 10 11 [weight=1, ];

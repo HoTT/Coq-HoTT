@@ -1,0 +1,29 @@
+digraph HoTT_Spaces_Nat_Binomial {
+  graph [ratio=0.5]
+  node [style=filled]
+Binomial_nat_choose_sub [label="nat_choose_sub", URL=<Binomial.html#nat_choose_sub>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose_succ_mul [label="nat_choose_succ_mul", URL=<Binomial.html#nat_choose_succ_mul>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose_factorial [label="nat_choose_factorial", URL=<Binomial.html#nat_choose_factorial>, fillcolor="#F070D1"] ;
+Binomial_nat_choose_succ_l_diag [label="nat_choose_succ_l_diag", URL=<Binomial.html#nat_choose_succ_l_diag>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose_one_r [label="nat_choose_one_r", URL=<Binomial.html#nat_choose_one_r>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose_diag [label="nat_choose_diag", URL=<Binomial.html#nat_choose_diag>, fillcolor="#F070D1"] ;
+Binomial_nat_choose_lt [label="nat_choose_lt", URL=<Binomial.html#nat_choose_lt>, fillcolor="#F070D1"] ;
+Binomial_nat_choose_zero_l [label="nat_choose_zero_l", URL=<Binomial.html#nat_choose_zero_l>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose_zero_r [label="nat_choose_zero_r", URL=<Binomial.html#nat_choose_zero_r>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose_succ [label="nat_choose_succ", URL=<Binomial.html#nat_choose_succ>, peripheries=3, fillcolor="#F070D1"] ;
+Binomial_nat_choose [label="nat_choose", URL=<Binomial.html#nat_choose>, fillcolor="#F070D1"] ;
+Binomial_nat_choose_step [label="nat_choose_step", URL=<Binomial.html#nat_choose_step>, fillcolor="#F070D1"] ;
+  Binomial_nat_choose_sub -> Binomial_nat_choose_factorial [] ;
+  Binomial_nat_choose_succ_mul -> Binomial_nat_choose_factorial [] ;
+  Binomial_nat_choose_factorial -> Binomial_nat_choose_diag [] ;
+  Binomial_nat_choose_succ_l_diag -> Binomial_nat_choose_diag [] ;
+  Binomial_nat_choose_one_r -> Binomial_nat_choose [] ;
+  Binomial_nat_choose_diag -> Binomial_nat_choose_lt [] ;
+  Binomial_nat_choose_lt -> Binomial_nat_choose [] ;
+  Binomial_nat_choose_zero_l -> Binomial_nat_choose [] ;
+  Binomial_nat_choose_zero_r -> Binomial_nat_choose [] ;
+  Binomial_nat_choose_succ -> Binomial_nat_choose [] ;
+  Binomial_nat_choose -> Binomial_nat_choose_step [] ;
+subgraph cluster_Binomial { label="Binomial"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Binomial_nat_choose_step; Binomial_nat_choose; Binomial_nat_choose_succ; Binomial_nat_choose_zero_r; Binomial_nat_choose_zero_l; Binomial_nat_choose_lt; Binomial_nat_choose_diag; Binomial_nat_choose_one_r; Binomial_nat_choose_succ_l_diag; Binomial_nat_choose_factorial; Binomial_nat_choose_succ_mul; Binomial_nat_choose_sub; };
+} /* END */
