@@ -352,7 +352,7 @@ intros [h p].
   apply gpd_rev_rev.
 Defined.
 
-Notation "h ^*$" := (ptransformation_inverse _ _ h) (at level 5).
+Notation "h ^*$" := (ptransformation_inverse _ _ h) (at level 1).
 
 Definition ptransformation_compose {B C : Type} `{Is1Cat B, Is1Gpd C}
   `{IsPointed B, IsPointed C} {F0 F1 F2 : B -->* C}
