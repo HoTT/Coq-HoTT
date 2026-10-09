@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types.
-Require Import Cubical.DPath Cubical.PathSquare.
+Require Import Cubical.PathSquare.
 Require Import Homotopy.NullHomotopy.
 Require Import Extensions.
 Require Import Colimits.Pushout.
@@ -460,6 +460,17 @@ Section JoinNatSq.
     apply concat_1p_p1.
   Defined.
 
+  (** Naturality of a zigzag under paths in its endpoints and its intermediate vertex. *)
+  Definition zigzag_natsq {A B : Type}
+    {a a' c c' : A} {b b' : B}
+    (p : a = a') (q : c = c') (r : b = b')
+    : ap joinl p @ zigzag a' c' b'
+      = zigzag a c b @ ap joinl q.
+  Proof.
+    destruct p, q, r.
+    apply concat_1p_p1.
+  Defined.
+
   Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
     (p : a = a') (q : b = b')
     : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').
@@ -554,20 +565,45 @@ Section Diamond.
   Defined.
 
   Lemma diamond_symm (a : A) (b : B)
-    : diamond_v_sq a a 1 = diamond_h_sq b b 1.
+    : diamond_v a a 1 = diamond_h b b 1.
   Proof.
-    unfold diamond_v_sq, diamond_h_sq, diamond_v, diamond_h.
-    symmetry; apply ap, concat_pV.
+    exact (concat_pV (concat_pV (jglue a b)))^.
   Defined.
 
 End Diamond.
 
 Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
-  : DPath (fun x => Diamond a' x a x) p
-    (diamond_v_sq a' a 1) (diamond_h_sq a a' 1).
+  : transport (fun x => zigzag a' x a = zigzag a' x x) p
+      (diamond_v a' a 1) = diamond_h a a' 1.
 Proof.
   destruct p.
   apply diamond_symm.
+Defined.
+
+(** The horizontal and vertical degenerate diamonds fit together along any three paths forming a tree. No loop-filling hypothesis is needed. *)
+Definition diamond_hv {T : Type@{i}} {n e x y : T}
+  (h : n = x) (k : e = y) (p : x = y)
+  : transport
+      (fun t => zigzag@{i i j} n t e = zigzag@{i i j} n t t)
+      p (diamond_h e x h) = diamond_v n y k.
+Proof.
+  destruct h, k, p; cbn.
+  apply concat_pV.
+Defined.
+
+(** A join supplies diamonds on its self-join directly. The left vertices use horizontal diamonds and the right vertices use vertical diamonds. *)
+Definition diamond_join {A : Type@{i}} {B : Type@{j}}
+  (n e : A) (b0 : B)
+  : forall t : Join@{i j k} A B,
+    zigzag@{k k l} (joinl n) t (joinl e) = zigzag (joinl n) t t.
+Proof.
+  snapply Join_ind.
+  - intro a.
+    exact (diamond_h (joinl e) (joinl a) (zigzag n a b0)).
+  - intro b.
+    exact (diamond_v (joinl n) (joinr b) (jglue e b)).
+  - intros a b.
+    exact (diamond_hv (zigzag n a b0) (jglue e b) (jglue a b)).
 Defined.
 
 (** * Functoriality of Join. *)
@@ -578,14 +614,15 @@ Section FunctorJoin.
     : JoinRecData A B (Join C D)
     := {| jl := joinl o f; jr := joinr o g; jg := fun a b => jglue (f a) (g b); |}.
 
-  Definition functor_join {A B C D} (f : A -> C) (g : B -> D)
+  (** The direct recursor avoids the extra universe constraints of the 0-groupoid notation in [join_rec]. It is definitionally the same map as [join_rec (functor_join_recdata f g)]. *)
+  Definition functor_join {A B C D : Type} (f : A -> C) (g : B -> D)
     : Join A B -> Join C D
-    := join_rec (functor_join_recdata f g).
+    := Join_rec (joinl o f) (joinr o g) (fun a b => jglue (f a) (g b)).
 
   Definition functor_join_beta_jglue {A B C D : Type} (f : A -> C) (g : B -> D)
     (a : A) (b : B)
     : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
-    := join_rec_beta_jg _ a b.
+    := Join_rec_beta_jglue _ _ _ a b.
 
   Definition functor_join_beta_zigzag {A B C D : Type} (f : A -> C) (g : B -> D)
     (a a' : A) (b : B)
