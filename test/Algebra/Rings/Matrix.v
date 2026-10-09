@@ -1,5 +1,6 @@
 From HoTT Require Import Basics.
-From HoTT Require Import Algebra.Rings.Matrix.
+From HoTT Require Import Algebra.AbGroups.AbelianGroup.
+From HoTT Require Import Algebra.Rings.Ring Algebra.Rings.Matrix.
 From HoTT Require Import Spaces.Nat.Core Spaces.List.Core.
 From HoTT Require Import Algebra.Rings.Z Spaces.Int Algebra.Rings.CRing.
 From HoTT Require Import Classes.interfaces.canonical_names.
@@ -98,4 +99,133 @@ Definition test4_minor_1_1 := Build_Matrix' cring_Z 2 2
 Definition test4_minor_1_1_eq
    : entries (matrix_minor 1 1 test4) = entries test4_minor_1_1
    := idpath.
+
+(** Squaring the exchange matrix gives the identity. *)
+Definition test_exchange_matrix_square
+  : entries (matrix_map int_reduce (matrix_mult
+      (exchange_matrix cring_Z 3) (exchange_matrix cring_Z 3)))
+    = entries (identity_matrix cring_Z 3)
+  := idpath.
+
+(** Exchange matrices reverse rows and columns of rectangular matrices. *)
+Definition test_exchange_matrix_rows_expected := Build_Matrix' cring_Z 3 2
+  [ [ 1 ,  1 ]
+  , [ 2 , -1 ]
+  , [ 1 ,  3 ] ]
+  ltac:(decide)
+  ltac:(decide).
+
+Definition test_exchange_matrix_columns_expected := Build_Matrix' cring_Z 3 2
+  [ [  3 , 1 ]
+  , [ -1 , 2 ]
+  , [  1 , 1 ] ]
+  ltac:(decide)
+  ltac:(decide).
+
+Definition test_exchange_matrix_rows
+  : entries (matrix_map int_reduce
+      (matrix_mult (exchange_matrix cring_Z 3) test3_A))
+    = entries test_exchange_matrix_rows_expected
+  := idpath.
+
+Definition test_exchange_matrix_columns
+  : entries (matrix_map int_reduce
+      (matrix_mult test3_A (exchange_matrix cring_Z 2)))
+    = entries test_exchange_matrix_columns_expected
+  := idpath.
+
+Definition test_exchange_matrix_rows_entry
+  := entry_matrix_mult_exchange_l (R:=cring_Z)
+      test3_A 0 1 ltac:(decide) ltac:(decide).
+
+Definition test_exchange_matrix_columns_entry
+  := entry_matrix_mult_exchange_r (A:=cring_Z)
+      test3_A 1 0 ltac:(decide) ltac:(decide).
+
+(** Centrosymmetry works without funext, including in dimension zero. *)
+Section Centrosymmetric.
+  Context (R : Ring).
+
+  Goal IsCentrosymmetric (identity_matrix R 0).
+  Proof.
+    exact _.
+  Qed.
+
+  Goal IsCentrosymmetric (identity_matrix R 1).
+  Proof.
+    exact _.
+  Qed.
+
+  Context (n : nat) (M N : Matrix R n n).
+  Context `{!IsCentrosymmetric M} `{!IsCentrosymmetric N}.
+
+  Goal IsCentrosymmetric (matrix_mult M N).
+  Proof.
+    exact _.
+  Qed.
+
+  (** Closure instances can be applied repeatedly. *)
+  Goal IsCentrosymmetric (matrix_negate (matrix_negate M)).
+  Proof.
+    exact _.
+  Qed.
+
+  Goal IsCentrosymmetric (matrix_plus M (matrix_negate N)).
+  Proof.
+    exact _.
+  Qed.
+
+  Goal IsCentrosymmetric
+    (matrix_transpose (matrix_negate (matrix_transpose M))).
+  Proof.
+    exact _.
+  Qed.
+
+  (** Changing to the opposite ring requires no additional instance. *)
+  Goal IsCentrosymmetric (A:=rng_op R) M.
+  Proof.
+    exact _.
+  Qed.
+
+  Goal matrix_mult (exchange_matrix R n) M
+    = matrix_mult M (exchange_matrix R n).
+  Proof.
+    exact (exchange_matrix_iscentrosymmetric M).
+  Qed.
+
+  Goal forall P : Matrix R 0 0,
+    matrix_mult (exchange_matrix R 0) P
+      = matrix_mult P (exchange_matrix R 0) -> IsCentrosymmetric P.
+  Proof.
+    intros P p.
+    exact (iscentrosymmetric_exchange_matrix p).
+  Qed.
+End Centrosymmetric.
+
+(** Transpose does not require any algebraic structure on the entries. *)
+Section CentrosymmetricType.
+  Context (A : Type) (n : nat) (M : Matrix A n n).
+  Context `{!IsCentrosymmetric M}.
+
+  Goal IsCentrosymmetric (matrix_transpose M).
+  Proof.
+    exact _.
+  Qed.
+End CentrosymmetricType.
+
+(** Addition and negation only require an abelian group of entries. *)
+Section CentrosymmetricAbGroup.
+  Context (A : AbGroup) (n : nat) (M N : Matrix A n n).
+  Context `{!IsCentrosymmetric M} `{!IsCentrosymmetric N}.
+
+  Goal IsCentrosymmetric (matrix_plus M N).
+  Proof.
+    exact _.
+  Qed.
+
+  Goal IsCentrosymmetric (matrix_negate M).
+  Proof.
+    exact _.
+  Qed.
+End CentrosymmetricAbGroup.
 

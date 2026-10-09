@@ -1,6 +1,8 @@
 Require Import Basics.Overture Basics.Trunc Basics.Tactics Basics.Decidable.
 Require Import Types.Sigma.
+Require Import Spaces.Nat.Core.
 Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.
+Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.FiniteSum.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
   Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.
 Require Import abstract_algebra.
@@ -88,6 +90,16 @@ Proof.
   exact (H i j Hi Hj).
 Defined.
 
+Definition path_entry_matrix {R : Type} {m n} {M M' : Matrix R m n}
+  (p : M = M') {i i' j j' : nat} (q : i = i') (r : j = j')
+  (Hi : (i < m)%nat) (Hj : (j < n)%nat)
+  (Hi' : (i' < m)%nat) (Hj' : (j' < n)%nat)
+  : entry M i j = entry M' i' j'.
+Proof.
+  snapply path_entry_vector; trivial.
+  by snapply path_entry_vector.
+Defined.
+
 (** ** Addition and module structure *)
 
 (** Here we define the abelian group of (n x m)-matrices over a ring. This follows from the abelian group structure of the underlying vectors. We are also able to derive a left module structure when the entries come from a left module. *)
@@ -101,6 +113,14 @@ Definition matrix_plus {A : AbGroup} {m n}
 
 Definition matrix_zero (A : AbGroup) m n : Matrix A m n
   := @mon_unit (abgroup_matrix A m n) _.
+  
+Definition entry_matrix_zero {A : AbGroup} {m n} (i j : nat)
+  (Hi : (i < m)%nat) (Hj : (j < n)%nat)
+  : entry (matrix_zero A m n) i j = 0.
+Proof.
+  unfold entry, matrix_zero.
+  by rewrite 2 entry_Build_Vector.
+Defined.
 
 Definition matrix_negate {A : AbGroup} {m n}
   : Matrix A m n -> Matrix A m n
@@ -1012,6 +1032,245 @@ Proof.
 Defined.
 
 (** Skew-symmetric matrices degenerate to symmetric matrices in rings with characteristic 2. In odd characteristic the module of matrices can be decomposed into the direct sum of symmetric and skew-symmetric matrices. *)
+
+(** ** Exchange matrix *)
+
+(** The exchange matrix is the matrix with ones on the anti-diagonal and zeros elsewhere. It will play an important role in defining classes of matrices with certain symmetric properties. *)
+Definition exchange_matrix (R : Ring) n : Matrix R n n
+  := Build_Matrix R n n (fun i j Hi Hj
+      => kronecker_delta (R:=R) (i + j) (nat_pred n))%nat.
+
+(** The exchange matrix is invariant under transpose. *)
+Definition exchange_matrix_transpose {R n}
+  : matrix_transpose (exchange_matrix R n) = exchange_matrix R n.
+Proof.
+  apply path_matrix.
+  intros i j Hi Hj.
+  rewrite 3 entry_Build_Matrix.
+  by rewrite nat_add_comm.
+Defined.
+
+(** The exchange matrix is symmetric. *)
+Instance issymmetric_exchange {R : Ring} {n : nat}
+  : IsSymmetric (exchange_matrix R n)
+  := exchange_matrix_transpose.
+
+(** An alternate way to write the exchange matrix. *)
+Definition exchange_matrix_sub {R n}
+  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
+  : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) i (nat_pred n - j)%nat.
+Proof.
+  lhs napply entry_Build_Matrix.
+  rhs_V napply (kronecker_delta_map_inj _ _ (fun m => m + j)).
+  2: napply isinj_nat_add_r.
+  apply ap.
+  symmetry; napply nat_add_sub_l_cancel.
+  exact (leq_pred Hj).
+Defined.
+
+(** And another way to write the exchange matrix. *)
+Definition exchange_matrix_sub' {R n}
+  (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat)
+  : entry (exchange_matrix R n) i j = kronecker_delta (R:=R) (nat_pred n - i)%nat j.
+Proof.
+  rewrite <- exchange_matrix_transpose.
+  lhs napply entry_Build_Matrix.
+  lhs napply exchange_matrix_sub.
+  apply kronecker_delta_symm.
+Defined.
+
+(** A lemma that is needed to ensure that [nat_pred n - i] is a valid matrix index.  The hypothesis [i < n] is only used to force that [0 < n], and matches what we have when we use this. *)
+Local Definition nat_pred_sub_lt (n i : nat) (Hi : (i < n)%nat) : (nat_pred n - i < n)%nat.
+Proof.
+  destruct n.
+  1: by destruct (not_lt_zero_r _ Hi).
+  apply leq_succ, leq_sub_l.
+Defined.
+
+#[local] Hint Immediate nat_pred_sub_lt : typeclass_instances.
+
+(** Multiplying a matrix by the exchange matrix on the left reverses the order of the rows. Similarly multiplying on the right reverses the order of the columns. *)
+Definition entry_matrix_mult_exchange_l {R : Ring} {m n : nat}
+  (M : Matrix R m n)
+  (i j : nat) (Hi : (i < m)%nat) (Hj : (j < n)%nat)
+  : entry (matrix_mult (exchange_matrix R m) M) i j
+      = entry M (nat_pred m - i) j.
+Proof.
+  lhs napply entry_Build_Matrix.
+  lhs rapply (path_ab_sum (g:=fun (k : nat) (Hk : (k < m)%nat)
+    => kronecker_delta (nat_pred m - i)%nat k * entry M k j)).
+  2: napply rng_sum_kronecker_delta_l.
+  intros k Hk.
+  apply (ap (.* _)).
+  apply exchange_matrix_sub'.
+Defined.
+
+Definition entry_matrix_mult_exchange_r {A : Ring} {m n : nat}
+  (M : Matrix A m n)
+  (i j : nat) (Hi : (i < m)%nat) (Hj : (j < n)%nat)
+  : entry (matrix_mult M (exchange_matrix A n)) i j
+      = entry M i (nat_pred n - j).
+Proof.
+  lhs napply entry_Build_Matrix.
+  lhs rapply (path_ab_sum (g:=fun (k : nat) (Hk : (k < n)%nat)
+    => entry M i k * kronecker_delta k (nat_pred n - j)%nat)).
+  2: napply rng_sum_kronecker_delta_r'.
+  intros k Hk.
+  apply (ap (fun r => entry M i k * r)).
+  apply exchange_matrix_sub.
+Defined.
+
+(** The square of the exchange matrix is the identity matrix. *)
+Definition exchange_matrix_square {R : Ring} {n : nat}
+  : matrix_mult (exchange_matrix R n) (exchange_matrix R n) = identity_matrix R n.
+Proof.
+  apply path_matrix.
+  intros i j Hi Hj.
+  lhs napply entry_matrix_mult_exchange_l.
+  lhs napply exchange_matrix_sub'.
+  rhs napply entry_Build_Matrix.
+  apply (ap (fun k => kronecker_delta k j)).
+  apply nat_sub_sub_cancel_r.
+  exact (leq_pred Hi).
+Defined.
+
+(** ** Centrosymmetric matrices *)
+
+(** A centrosymmetric matrix is symmetric about its center. We propositionally truncate this statement to avoid funext. *)
+Class IsCentrosymmetric {A : Type@{i}} {n : nat} (M : Matrix@{i} A n n) : Type@{i}
+  := iscentrosymmetric
+    : merely (
+        forall (i j : nat) (Hi : (i < n)%nat) (Hj : (j < n)%nat),
+        entry M i j = entry M (nat_pred n - i) (nat_pred n - j)).
+
+(** The characterizing property of centrosymmetric matrices is that they commute with the exchange matrix. *)
+Definition exchange_matrix_iscentrosymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix@{i} R n n) `{!IsCentrosymmetric M}
+  : matrix_mult (exchange_matrix R n) M = matrix_mult M (exchange_matrix R n).
+Proof.
+  apply path_matrix.
+  intros k l Hk Hl.
+  lhs napply entry_matrix_mult_exchange_l.
+  rhs napply entry_matrix_mult_exchange_r.
+  pose proof (p := iscentrosymmetric).
+  strip_truncations.
+  lhs napply p.
+  apply path_entry_matrix; trivial.
+  apply nat_sub_sub_cancel_r.
+  exact (leq_pred Hk).
+Defined.
+
+(** Conversely, a matrix commuting with the exchange matrix is centrosymmetric. *)
+Definition iscentrosymmetric_exchange_matrix {R : Ring@{i}} {n : nat}
+  {M : Matrix@{i} R n n}
+  (p : matrix_mult (exchange_matrix R n) M = matrix_mult M (exchange_matrix R n))
+  : IsCentrosymmetric M.
+Proof.
+  apply tr; intros i j Hi Hj.
+  rhs_V napply entry_matrix_mult_exchange_r.
+  rhs_V napply (ap (fun N => entry N (nat_pred n - i)%nat j) p).
+  rhs napply entry_matrix_mult_exchange_l.
+  apply path_entry_matrix; trivial.
+  symmetry; apply nat_sub_sub_cancel_r.
+  exact (leq_pred Hi).
+Defined.
+
+Instance ishprop_iscentrosymmetric {A : Type@{i}} {n : nat}
+  (M : Matrix A n n)
+  : IsHProp (IsCentrosymmetric M).
+Proof.
+  unfold IsCentrosymmetric; exact _.
+Defined.
+
+(** The zero matrix is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_zero {A : AbGroup@{i}} {n : nat}
+  : IsCentrosymmetric (matrix_zero A n n).
+Proof.
+  apply tr; intros i j Hi Hj.
+  lhs napply entry_matrix_zero.
+  by rhs napply entry_matrix_zero.
+Defined.
+
+(** The identity matrix is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_identity {R : Ring@{i}} {n : nat}
+  : IsCentrosymmetric (identity_matrix R n).
+Proof.
+  napply iscentrosymmetric_exchange_matrix.
+  exact (rng_mult_one_r (A:=matrix_ring R n) _ @ (rng_mult_one_l _)^).
+Defined.
+
+(** The sum of two centrosymmetric matrices is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_plus {A : AbGroup@{i}} {n : nat}
+  (M N : Matrix A n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}
+  : IsCentrosymmetric (matrix_plus M N).
+Proof.
+  unfold IsCentrosymmetric.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply ap011.
+  - apply H1.
+  - apply H2.
+Defined.
+
+(** The negation of a centrosymmetric matrix is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_negate {A : AbGroup@{i}} {n : nat}
+  (M : Matrix A n n) {H : IsCentrosymmetric M}
+  : IsCentrosymmetric (matrix_negate M).
+Proof.
+  unfold IsCentrosymmetric.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply ap, H.
+Defined.
+
+(** A scalar multiple of a centrosymmetric matrix is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) {H : IsCentrosymmetric M}
+  : IsCentrosymmetric (matrix_lact r M).
+Proof.
+  unfold IsCentrosymmetric.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply ap, H.
+Defined.
+
+(** The transpose of a centrosymmetric matrix is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_transpose {A : Type@{i}} {n : nat}
+  (M : Matrix A n n) {H : IsCentrosymmetric M}
+  : IsCentrosymmetric (matrix_transpose M).
+Proof.
+  unfold IsCentrosymmetric.
+  strip_truncations; apply tr; intros i j Hi Hj.
+  rewrite 2 entry_Build_Matrix.
+  apply H.
+Defined.
+
+(** The product of two centrosymmetric matrices is centrosymmetric. *)
+Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) {H1 : IsCentrosymmetric M} {H2 : IsCentrosymmetric N}
+  : IsCentrosymmetric (matrix_mult M N).
+Proof.
+  napply iscentrosymmetric_exchange_matrix.
+  lhs napply (rng_mult_assoc (A:=matrix_ring R n)).
+  rhs_V napply (rng_mult_assoc (A:=matrix_ring R n)).
+  change (matrix_mult (matrix_mult (exchange_matrix R n) M) N
+    = matrix_mult M (matrix_mult N (exchange_matrix R n))).
+  rewrite (exchange_matrix_iscentrosymmetric M).
+  lhs_V napply (rng_mult_assoc (A:=matrix_ring R n)).
+  apply ap.
+  exact (exchange_matrix_iscentrosymmetric N).
+Defined.
+
+(** Centrosymmetric matrices form a subring of the matrix ring. *)
+Definition centrosymmetric_matrix_ring (R : Ring@{i}) (n : nat)
+  : Subring (matrix_ring R n).
+Proof.
+  napply (Build_Subring' (fun M : matrix_ring R n => IsCentrosymmetric M)).
+  - exact _.
+  - intros x y ? ?; exact (iscentrosymmetric_matrix_plus x (-y)).
+  - exact iscentrosymmetric_matrix_mult.
+  - exact iscentrosymmetric_matrix_identity.
+Defined.
 
 Section MatrixCat.
 
