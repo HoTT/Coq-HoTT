@@ -1515,6 +1515,8 @@ Defined.
 
     The hints in [path_hints] are designed to push concatenation *outwards*, eliminate identities and inverses, and associate to the left as far as possible. *)
 
+Create HintDb path_hints.
+
 #[export]
 Hint Resolve
   inverse
