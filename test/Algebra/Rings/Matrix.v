@@ -139,7 +139,7 @@ Definition test_exchange_matrix_rows_entry
       test3_A 0 1 ltac:(decide) ltac:(decide).
 
 Definition test_exchange_matrix_columns_entry
-  := entry_matrix_mult_exchange_r (A:=cring_Z)
+  := entry_matrix_mult_exchange_r (R:=cring_Z)
       test3_A 1 0 ltac:(decide) ltac:(decide).
 
 (** Centrosymmetry works without funext, including in dimension zero. *)

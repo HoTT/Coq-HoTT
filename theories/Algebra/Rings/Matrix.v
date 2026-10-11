@@ -92,8 +92,8 @@ Defined.
 
 Definition path_entry_matrix {R : Type} {m n} {M M' : Matrix R m n}
   (p : M = M') {i i' j j' : nat} (q : i = i') (r : j = j')
-  (Hi : (i < m)%nat) (Hj : (j < n)%nat)
-  (Hi' : (i' < m)%nat) (Hj' : (j' < n)%nat)
+  {Hi : (i < m)%nat} {Hj : (j < n)%nat}
+  {Hi' : (i' < m)%nat} {Hj' : (j' < n)%nat}
   : entry M i j = entry M' i' j'.
 Proof.
   snapply path_entry_vector; trivial.
@@ -113,7 +113,7 @@ Definition matrix_plus {A : AbGroup} {m n}
 
 Definition matrix_zero (A : AbGroup) m n : Matrix A m n
   := @mon_unit (abgroup_matrix A m n) _.
-  
+
 Definition entry_matrix_zero {A : AbGroup} {m n} (i j : nat)
   (Hi : (i < m)%nat) (Hj : (j < n)%nat)
   : entry (matrix_zero A m n) i j = 0.
@@ -1035,7 +1035,7 @@ Defined.
 
 (** ** Exchange matrix *)
 
-(** The exchange matrix is the matrix with ones on the anti-diagonal and zeros elsewhere. It will play an important role in defining classes of matrices with certain symmetric properties. *)
+(** The exchange matrix is the matrix with ones on the anti-diagonal and zeros elsewhere. It will play an important role in our treatment of centrosymmetric matrices below. *)
 Definition exchange_matrix (R : Ring) n : Matrix R n n
   := Build_Matrix R n n (fun i j Hi Hj
       => kronecker_delta (R:=R) (i + j) (nat_pred n))%nat.
@@ -1105,10 +1105,10 @@ Proof.
   apply exchange_matrix_sub'.
 Defined.
 
-Definition entry_matrix_mult_exchange_r {A : Ring} {m n : nat}
-  (M : Matrix A m n)
+Definition entry_matrix_mult_exchange_r {R : Ring} {m n : nat}
+  (M : Matrix R m n)
   (i j : nat) (Hi : (i < m)%nat) (Hj : (j < n)%nat)
-  : entry (matrix_mult M (exchange_matrix A n)) i j
+  : entry (matrix_mult M (exchange_matrix R n)) i j
       = entry M i (nat_pred n - j).
 Proof.
   lhs napply entry_Build_Matrix.
@@ -1252,13 +1252,10 @@ Instance iscentrosymmetric_matrix_mult {R : Ring@{i}} {n : nat}
 Proof.
   napply iscentrosymmetric_exchange_matrix.
   lhs napply (rng_mult_assoc (A:=matrix_ring R n)).
-  rhs_V napply (rng_mult_assoc (A:=matrix_ring R n)).
-  change (matrix_mult (matrix_mult (exchange_matrix R n) M) N
-    = matrix_mult M (matrix_mult N (exchange_matrix R n))).
-  rewrite (exchange_matrix_iscentrosymmetric M).
+  lhs exact (ap (fun X => matrix_mult X N) (exchange_matrix_iscentrosymmetric M)).
   lhs_V napply (rng_mult_assoc (A:=matrix_ring R n)).
-  apply ap.
-  exact (exchange_matrix_iscentrosymmetric N).
+  lhs exact (ap (matrix_mult M) (exchange_matrix_iscentrosymmetric N)).
+  napply (rng_mult_assoc (A:=matrix_ring R n)).
 Defined.
 
 (** Centrosymmetric matrices form a subring of the matrix ring. *)
