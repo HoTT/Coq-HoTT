@@ -135,12 +135,14 @@ Definition test_exchange_matrix_columns
   := idpath.
 
 Definition test_exchange_matrix_rows_entry
-  := entry_matrix_mult_exchange_l (R:=cring_Z)
-      test3_A 0 1 ltac:(decide) ltac:(decide).
+  : entry (matrix_mult (exchange_matrix cring_Z 3) test3_A) 0 1
+    = entry test3_A 2 1
+  := entry_matrix_mult_exchange_l test3_A 0 1 _ _.
 
 Definition test_exchange_matrix_columns_entry
-  := entry_matrix_mult_exchange_r (R:=cring_Z)
-      test3_A 1 0 ltac:(decide) ltac:(decide).
+  : entry (matrix_mult test3_A (exchange_matrix cring_Z 2)) 1 0
+    = entry test3_A 1 1
+  := entry_matrix_mult_exchange_r test3_A 1 0 _ _.
 
 (** Centrosymmetry works without funext, including in dimension zero. *)
 Section Centrosymmetric.
