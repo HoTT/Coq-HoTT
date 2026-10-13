@@ -29,12 +29,6 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - Do not add new axioms: no `Axiom`, `Parameter`, `Conjecture` or top-level `Hypothesis`/`Variable`. Assumptions such as `Funext`, `Univalence`, `PropResizing` or `ExcludedMiddle` enter only as typeclass arguments or `Context`, following `doc/STYLE.md`.
 - `Admitted`, `admit` and `give_up` are allowed only in files marked as stubs: a file is a stub when one of its first ten lines is exactly `(* STUB *)`. A hook in `.claude/settings.json` blocks other edits that add them. Stub files must not be added to `theories/HoTT.v` or other meta-files; remove the marker once the file is complete.
 
-## Locators
-
-- Never `rewrite`, `transport` (`#`), `destruct` a path in, or otherwise move a locator along an identification. Locators are structure; transporting one obscures what it computes and can block evaluation.
-- Only rewrite or transport propositions. To get a locator for `y` from one for `x` with `p : x = y`, build it explicitly: case on the old locator and transport only the resulting inequality, e.g. `fun q r nu => match l q r nu with inl a => inl (transport (fun z => ' q < z) p a) | inr b => inr (transport (fun z => z < ' r) p b) end`.
-- The existing `locator_recip` in `Locator.v` rewrites a locator and should be rewritten along these lines.
-
 ## Building
 
 - `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon (start one with `dockerd &` if `docker info` fails).

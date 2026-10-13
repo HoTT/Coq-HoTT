@@ -16,7 +16,6 @@ Throughout Chapters 6–8 the thesis works with an arbitrary Cauchy complete Arc
 
 These are not thesis items, but they affect the rows below.
 
-- **A locator is rewritten.** `locator_recip` (`Analysis/Locator.v`) moves a locator along `recip_proper_alt` with `rewrite … in l'`, which `CLAUDE.md` forbids.
 - **Unproved hypotheses.** `locator_plus` takes the characterizations `char_plus_left` and `char_plus_right` as `Context` hypotheses. In `Classes/orders/archimedean.v` these and the other characterizations of Lemma 6.7.1 are stated and then `Abort`ed (only `char_minus_left` and `char_minus_right` are proved). `locator_times` is `Abort`ed.
 - **Order preservation of Q → F is assumed.** `Classes/interfaces/cauchy.v` and `Analysis/Locator.v` take `IsSemiRingStrongPreserving qinc` and `StrictlyOrderPreserving qinc` as context (marked TODO); see Lemma 4.3.3.
 
@@ -192,7 +191,7 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | Lem 6.7.2 | x < y ⇒ ∃ q : Q, ε : Q+, x < q − ε < q + ε < y. | 4.3.5 | `Analysis/Locator.v` · `lem_6_7_2` | todo | Inline only, as the local `P_inhab` in section `arch_struct` (Analysis/Locator.v). |
 | Lem 6.7.3 | For x, y with locators, x < y → Σ q : Q, x < q < y. | 6.7.2, 6.5.4, 6.4.6 | existing name | todo | `archimedean_structure` (Analysis/Locator.v), using `QQpos_eq`. |
 | Cor 6.7.4 | For x, y with locators and s : Q, x < y → (x < s) + (s < y). | 6.7.3 | `Analysis/Locator.v` · `cor_6_7_4` | todo | None. |
-| Thm 6.7.6 | Locators for −x, x + y, xy, x⁻¹ (x # 0), min(x, y), max(x, y). | 6.6.3, 6.7.1, 6.7.4, 6.3.1, Rem 6.7.7 | existing names, plus `Analysis/Locator.v` · `thm_6_7_6_times` | todo | `locator_minus`, `locator_plus` (needs 6.7.1 as hypotheses), `locator_meet`, `locator_join`, `locator_recip_pos`, `locator_recip_neg`, `locator_recip` (rewrites a locator) (Analysis/Locator.v). `locator_times` is `Abort`ed. |
+| Thm 6.7.6 | Locators for −x, x + y, xy, x⁻¹ (x # 0), min(x, y), max(x, y). | 6.6.3, 6.7.1, 6.7.4, 6.3.1, Rem 6.7.7 | existing names, plus `Analysis/Locator.v` · `thm_6_7_6_times` | todo | `locator_minus`, `locator_plus` (needs 6.7.1 as hypotheses), `locator_meet`, `locator_join`, `locator_recip_pos`, `locator_recip_neg`, `locator_recip` (Analysis/Locator.v). `locator_times` is `Abort`ed. |
 | Lem 6.8.1 | If x has a modulus M and every x_n has a locator, then lim x has a locator. | 4.4.1, 4.4.2, 6.1.1 | existing name | todo | `locator_limit` (Analysis/Locator.v) using `modulus_close_limit` (Classes/interfaces/cauchy.v). |
 | Ex 6.8.3 | *optional.* exp(x) has a locator when x has one. | 4.4.8, 6.6.1, 6.8.1 | `Analysis/Locator.v` · `ex_6_8_3` | todo | None. |
 | Ex 6.8.4 | *optional.* Constants such as π and e have locators. | 6.8.1, 6.3.1 | `Analysis/Locator.v` · `ex_6_8_4` | todo | None. |
