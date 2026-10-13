@@ -1,1 +1,48 @@
 @AGENTS.md
+
+# Formalizing Booij's thesis (branch `abooij/claude-locators`)
+
+The goal on this branch is to formalize Chapters 3–8 of A. B. Booij, *Analysis in Univalent Type Theory* (PhD thesis, Birmingham, 2020), `Booij2020PhD.pdf` in the repository root, next to `theories/Analysis/Locator.v`. `BLUEPRINT.md` lists every numbered result with its dependencies, target file, status and what Coq-HoTT already provides; keep it up to date as you work (status: `todo` → `stated` → `proved`).
+
+The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
+
+## Structure versus property
+
+- Use Σ-types (`{x : A & P x}`, records) for structure: data you compute with, such as a locator, a bound `{q : Q & ' q < x}`, a modulus, a limit operator or a chosen witness.
+- Use the truncated `∃` (`hexists`, `merely`, `hor`, i.e. `Tr (-1)`) for properties. Where the thesis writes `∃` or `∨`, the formal statement uses `hexists`/`hor`; where it writes `Σ` or `+`, it uses `sig`/`sum`.
+- Never weaken a structure to a property or strengthen a property to a structure silently. When the thesis turns property into structure (bounded search, Lemma 6.7.3, Theorem 6.10.3), make that the content of an explicit lemma.
+
+## Naming
+
+- Name each result after its thesis number, with a prefix for its kind: `def_6_1_1`, `lem_6_6_1`, `thm_6_7_6`, `prop_3_2_1`, `cor_6_5_4`, `ex_4_4_8`, `rem_6_7_5`, `conj_5_4_1`.
+- When one numbered item has several parts, add a short suffix per part in the thesis order, e.g. `def_3_1_1_reflexive`, `lem_6_7_1_plus_left`, `thm_6_7_6_times`.
+- Begin each result with a comment giving the thesis number and the statement in words, e.g. `(** Lemma 6.6.1. A real with a locator has rational bounds. *)`.
+- Do not add a thesis-numbered alias for a definition that Coq-HoTT already has (see `AGENTS.md`). Use the existing name directly and record it in `BLUEPRINT.md`. Helper lemmas that have no thesis number get ordinary descriptive names.
+
+## Search first
+
+- Before assuming a lemma exists, and before stating a new one, search for it: `Search`, `SearchPattern`, `Locate` and `About` (through the Rocq MCP server if available, or in a scratch file built with `bin/build`), and `grep` over `theories/`.
+- Never cite a lemma name from memory or from `BLUEPRINT.md` without checking that it exists with the expected statement; the blueprint records what existed when it was written.
+
+## Axioms and stubs
+
+- Do not add new axioms: no `Axiom`, `Parameter`, `Conjecture` or top-level `Hypothesis`/`Variable`. Assumptions such as `Funext`, `Univalence`, `PropResizing` or `ExcludedMiddle` enter only as typeclass arguments or `Context`, following `doc/STYLE.md`.
+- `Admitted`, `admit` and `give_up` are allowed only in files marked as stubs: a file is a stub when one of its first ten lines is exactly `(* STUB *)`. A hook in `.claude/settings.json` blocks other edits that add them. Stub files must not be added to `theories/HoTT.v` or other meta-files; remove the marker once the file is complete.
+
+## Defined, not Qed
+
+- Anything with computational content ends in `Defined`, never `Qed`: locators, bounds, moduli, limits, signed-digit expansions, chosen witnesses, equivalences, functions, and any term whose type is not a proposition.
+- `Qed` is only for proofs of propositions (`IsHProp`, `hexists`, `<`, `≤`, equalities in a set, …). Inside a `Defined` proof, propositional subgoals may be closed with `abstract`.
+- Existing definitions in `theories/Analysis/Locator.v` that compute (e.g. `locator_left`, `lower_bound`, `tight_bound`, `archimedean_structure`, `locator_plus`) currently end in `Qed`; switch them to `Defined` when you touch them.
+
+## Locators
+
+- Never `rewrite`, `transport` (`#`), `destruct` a path in, or otherwise move a locator along an identification. Locators are structure; transporting one obscures what it computes and can block evaluation.
+- Only rewrite or transport propositions. To get a locator for `y` from one for `x` with `p : x = y`, build it explicitly: case on the old locator and transport only the resulting inequality, e.g. `fun q r nu => match l q r nu with inl a => inl (transport (fun z => ' q < z) p a) | inr b => inr (transport (fun z => z < ' r) p b) end`.
+- The existing `locator_recip` in `Locator.v` rewrites a locator and should be rewritten along these lines.
+
+## Building
+
+- `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon (start one with `dockerd &` if `docker info` fails).
+- A hook in `.claude/settings.json` runs `bin/build` on every edited `.v` file and reports errors back. Fix them before moving on.
+- A clean build of the library takes about 1.5 minutes on 4 cores; `bin/build check` takes about 30 seconds more.
