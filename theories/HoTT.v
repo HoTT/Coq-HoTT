@@ -157,6 +157,7 @@ Require Export HoTT.Analysis.Dcpo.
 Require Export HoTT.Analysis.Locator.
 Require Export HoTT.Analysis.IntervalObject.
 Require Export HoTT.Analysis.MetricSpace.
+Require Export HoTT.Analysis.BanachFixedPoint.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.PiSpheres.

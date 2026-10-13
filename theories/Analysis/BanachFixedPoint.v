@@ -1,0 +1,407 @@
+(** * The Banach fixed point theorem *)
+
+(** For a map [T] on a pseudometric space with a rational Lipschitz constant [0 < c < 1], the iterates of [T] at any point have an explicit modulus of Cauchy convergence, so that a limit operator gives a point [x] with [d (T x) x = 0], unique up to distance zero. We first develop the powers of an element of an ordered ring and a logarithm-like function on the rationals that the modulus uses. *)
+
+From HoTT Require Import Basics Types.Sigma Truncations.Core.
+From HoTT.Spaces Require Import Nat.Core.
+From HoTT.Classes Require Import
+  interfaces.abstract_algebra
+  interfaces.orders
+  interfaces.naturals
+  interfaces.rationals
+  interfaces.round
+  interfaces.archimedean
+  theory.rationals
+  implementations.peano_naturals
+  theory.rings
+  orders.orders
+  orders.semirings
+  orders.rings
+  orders.rationals.
+From HoTT.Analysis Require Import MetricSpace.
+
+Generalizable Variables A B Q R Rle Rlt.
+
+(** ** Powers *)
+
+(** We write [nat_iter n (mult c) 1] for the [n]th power of [c]. *)
+
+Section powers.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
+
+  Local Notation nR := (naturals_to_semiring nat R).
+
+  Lemma power_nonneg (c : R) (n : nat) : 0 ≤ c -> 0 ≤ nat_iter n (mult c) 1.
+  Proof.
+    intro c0; induction n as [|n IH].
+    - exact le_0_1.
+    - exact (nonneg_mult_compat _ _ c0 IH).
+  Qed.
+
+  (** Powers of an element of [[0, 1]] decrease. *)
+  Lemma power_antitone (c : R) (k n : nat) : 0 ≤ c -> c ≤ 1 -> (k <= n)%nat
+    -> nat_iter n (mult c) 1 ≤ nat_iter k (mult c) 1.
+  Proof.
+    intros c0 c1 lekn; induction lekn as [|n lekn IH].
+    - reflexivity.
+    - refine (transitivity _ IH); cbn.
+      pose proof (power_nonneg c n c0).
+      refine (transitivity (order_preserving (.* nat_iter n (mult c) 1) c 1 c1) _).
+      cbn; rewrite mult_1_l; reflexivity.
+  Qed.
+
+  Local Lemma nR_succ (n : nat) : nR (S n) = 1 + nR n.
+  Proof.
+    exact (preserves_plus (f:=nR) 1%nat n).
+  Qed.
+
+  (** Unlike [to_semiring_nonneg], this does not need univalence. *)
+  Lemma nat_to_semiring_nonneg (n : nat) : 0 ≤ nR n.
+  Proof.
+    induction n as [|n IH].
+    - reflexivity.
+    - rewrite nR_succ; exact (nonneg_plus_compat _ _ le_0_1 IH).
+  Qed.
+
+  (** A form of Bernoulli's inequality: [c^n (1 + n (1 - c)) ≤ 1] for [c] in [[0, 1]]. *)
+  Lemma power_bernoulli (c : R) (n : nat) : 0 ≤ c -> c ≤ 1
+    -> nat_iter n (mult c) 1 * (1 + nR n * (1 - c)) ≤ 1.
+  Proof.
+    intros c0 c1.
+    assert (b0 : 0 ≤ 1 - c) by exact (snd (flip_nonneg_minus c 1) c1).
+    induction n as [|n IH].
+    - apply eq_le.
+      exact (mult_1_l _ @ ap (plus one) (mult_0_l _) @ plus_0_r one).
+    - refine (transitivity _ IH).
+      change (nat_iter (S n) (mult c) 1) with (c * nat_iter n (mult c) 1).
+      rewrite nR_succ.
+      rewrite (plus_mult_distr_r 1 (nR n) (1 - c)), (mult_1_l (1 - c)).
+      set (P := nat_iter n (mult c) 1); set (X := 1 - c + nR n * (1 - c)).
+      rewrite (mult_comm c P), <- (mult_assoc P c).
+      pose proof (power_nonneg c n c0).
+      apply (order_preserving (P *.)).
+      assert (p : c * (1 + X) + (1 - c) * X = 1 + nR n * (1 - c)).
+      { rewrite plus_mult_distr_l, mult_1_r, <- plus_assoc, <- plus_mult_distr_r.
+        rewrite (plus_comm c (1 - c)), <- (plus_assoc 1 (- c) c), plus_negate_l, plus_0_r.
+        rewrite mult_1_l; unfold X.
+        rewrite (plus_assoc c (1 - c)), (plus_comm c (1 - c)).
+        rewrite <- (plus_assoc 1 (- c) c), plus_negate_l, plus_0_r; reflexivity. }
+      rewrite <- p.
+      apply nonneg_plus_le_compat_r, nonneg_mult_compat; [exact b0|].
+      apply nonneg_plus_compat; [exact b0|].
+      apply nonneg_mult_compat; [|exact b0].
+      apply nat_to_semiring_nonneg.
+  Qed.
+
+End powers.
+
+Section preserves_powers.
+  Context `{IsSemiCRing A} `{IsSemiCRing B} (f : A -> B) `{!IsSemiRingPreserving f}.
+
+  Lemma preserves_power (c : A) (n : nat)
+    : f (nat_iter n (mult c) 1) = nat_iter n (mult (f c)) 1.
+  Proof.
+    induction n as [|n IH].
+    - exact preserves_1.
+    - exact (preserves_mult (f:=f) c _ @ ap (mult (f c)) IH).
+  Qed.
+
+End preserves_powers.
+
+(** ** A logarithm-like function on the rationals *)
+
+Section rational_log.
+  Context `{Rationals Q} `{!RoundUpStrict Q}.
+
+  Local Notation nQ := (naturals_to_semiring nat Q).
+
+  (** A logarithm-like function: for a rational [0 < c < 1] and a positive rational [q], an exponent [n] with [c^n < q]. *)
+  Definition rational_log (c : Q) (c0 : 0 < c) (c1 : c < 1) (q : Qpos Q)
+    : {n : nat & nat_iter n (mult c) 1 < ' q}.
+  Proof.
+    assert (lt01 : 0 < 1) by exact (transitivity c0 c1).
+    set (b := 1 - c).
+    assert (b0 : 0 < b) by exact (snd (flip_pos_minus c 1) c1).
+    assert (qb0 : PropHolds (0 < ' q * b)) by exact (pos_mult_compat (' q) b (pos_is_pos q) b0).
+    destruct (round_up_strict Q (/ (' q * b))) as [n ltn].
+    exists n.
+    set (B := 1 + nQ n * b).
+    assert (B0 : PropHolds (0 < B)).
+    { refine (lt_le_trans 0 1 B _ _); [exact lt01|].
+      apply (fst (nonneg_plus_le_compat_r 1 _)), nonneg_mult_compat.
+      - apply nat_to_semiring_nonneg.
+      - exact (lt_le _ _ b0). }
+    apply (strictly_order_reflecting (.* B)).
+    refine (le_lt_trans _ _ _ (power_bernoulli c n (lt_le _ _ c0) (lt_le _ _ c1)) _).
+    assert (E : (' q * b) / (' q * b) = 1).
+    { apply dec_recip_inverse, lt_ne_flip, qb0. }
+    assert (L : (' q * b) / (' q * b) < (' q * b) * nQ n)
+      by exact (strictly_order_preserving _ _ _ ltn).
+    rewrite E, <- (mult_assoc (' q) b), (mult_comm b) in L.
+    refine (transitivity L _).
+    pose proof (pos_is_pos q).
+    apply (strictly_order_preserving (' q *.)).
+    apply pos_plus_lt_compat_l, lt01.
+  Defined.
+End rational_log.
+
+(** ** Lipschitz maps *)
+
+Section lipschitz.
+  Context {F : Type} `{OrderedField F}.
+
+  (** A Lipschitz constant for a map between spaces with distances. *)
+  Class IsLipschitz {X Y : Type} (dX : X -> X -> F) (dY : Y -> Y -> F) (f : X -> Y) (c : F)
+    := is_lipschitz : forall x y, dY (f x) (f y) ≤ c * dX x y.
+
+  Context {X : Type} (d : X -> X -> F) `{!IsPseudoMetric d}.
+
+  (** For [c < 1], a pseudo-fixed point of a map with Lipschitz constant [c] is unique up to distance zero. *)
+  Lemma pseudo_fixed_point_unique (T : X -> X) (c : F) (c1 : c < 1)
+    (Tc : IsLipschitz d d T c) (x y : X) (px : d (T x) x = 0) (py : d (T y) y = 0)
+    : d x y = 0.
+  Proof.
+    apply (antisymmetry (≤)); [|apply pseudometric_nonneg].
+    apply not_lt_le_flip; intro dpos.
+    apply (irreflexivity (<) (d x y)).
+    refine (le_lt_trans _ (c * d x y) _ _ _).
+    - refine (transitivity (pseudometric_triangle x (T x) y) _).
+      rewrite (pseudometric_symmetric x (T x)), px, plus_0_l.
+      refine (transitivity (pseudometric_triangle (T x) (T y) y) _).
+      rewrite py, plus_0_r.
+      apply Tc.
+    - pose proof dpos.
+      refine (lt_eq_trans _ _ _ (strictly_order_preserving (.* d x y) _ _ c1) _).
+      apply mult_1_l.
+  Qed.
+
+End lipschitz.
+
+Section fixed_points.
+  Context {F : Type} `{OrderedField F}.
+  Context {X : Type} (d : X -> X -> F) `{!IsMetric d}.
+
+  (** In a metric space, a map with a Lipschitz constant [c < 1] has at most one fixed point. *)
+  Lemma ishprop_fixed_point (T : X -> X) (c : F) (c1 : c < 1) (Tc : IsLipschitz d d T c)
+    : IsHProp {x : X & T x = x}.
+  Proof.
+    pose proof (ishset_metric d).
+    apply hprop_allpath; intros [x p] [y q].
+    apply path_sigma_hprop; cbn.
+    apply (metric_separated x y).
+    apply (pseudo_fixed_point_unique d T c c1 Tc);
+      [rewrite p | rewrite q]; apply pseudometric_diag.
+  Qed.
+
+  (** Since this is a proposition, it suffices that such a Lipschitz constant merely exists. *)
+  Lemma ishprop_fixed_point_merely `{Funext} (T : X -> X)
+    (Tc : hexists (fun c : F => c < 1 /\ IsLipschitz d d T c))
+    : IsHProp {x : X & T x = x}.
+  Proof.
+    strip_truncations; destruct Tc as [c [c1 Tc]].
+    exact (ishprop_fixed_point T c c1 Tc).
+  Qed.
+
+End fixed_points.
+
+(** ** Lipschitz maps are uniformly continuous *)
+
+Section lipschitz_uniform.
+  Context (Q : Type) `{Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
+  Context {F : Type} `{OrderedField F}.
+  Let qinc : Cast Q F := rationals_to_field Q F.
+  Existing Instance qinc.
+
+  Context {X Y : Type} (dX : X -> X -> F) (dY : Y -> Y -> F).
+
+  (** A positive rational Lipschitz constant [c] gives the modulus of uniform continuity [e / c]. *)
+  Lemma isuniformmodulus_lipschitz (f : X -> Y) (c : Qpos Q)
+    (fc : IsLipschitz dX dY f (' (' c)))
+    : IsUniformModulus Q dX dY f (fun e => e / c).
+  Proof.
+    intros e x y close; unfold metric_close in *.
+    refine (le_lt_trans _ _ _ (fc x y) _).
+    assert (p : ' (' c) * ' (' (e / c)) = ' (' e)).
+    { rewrite <- (preserves_mult (f:=cast Q F)).
+      apply (ap (cast Q F)); change (' (c * (e / c)) = ' e); apply ap.
+      rewrite (associativity c e (/ c)); apply pos_unconjugate. }
+    rewrite <- p.
+    assert (PropHolds (0 < (' (' c) : F))).
+    { rewrite <- (preserves_0 (f:=cast Q F)).
+      apply (strictly_order_preserving _), pos_is_pos. }
+    exact (strictly_order_preserving _ _ _ close).
+  Qed.
+
+  Context {Farch : ArchimedeanProperty Q F} `{!IsPseudoMetric dX}.
+
+  (** A positive Lipschitz constant in [F] merely gives a modulus of uniform continuity. *)
+  Lemma merely_isuniformmodulus_lipschitz (f : X -> Y) (c : F) (c0 : 0 < c)
+    (fc : IsLipschitz dX dY f c)
+    : hexists (fun w : Qpos Q -> Qpos Q => IsUniformModulus Q dX dY f w).
+  Proof.
+    assert (r := archimedean_property Q F c (c + 1)
+                   (fst (pos_plus_lt_compat_r c 1) lt_0_1)).
+    strip_truncations; destruct r as [r [ltcr _]].
+    assert (r0 : 0 < r).
+    { apply (strictly_order_reflecting (cast Q F)).
+      rewrite (preserves_0 (f:=cast Q F)); exact (transitivity c0 ltcr). }
+    apply tr; exists (fun e => e / mkQpos r r0).
+    apply isuniformmodulus_lipschitz.
+    intros x y; refine (transitivity (fc x y) _).
+    pose proof (pseudometric_nonneg (d:=dX) x y).
+    exact (order_preserving (.* dX x y) _ _ (lt_le _ _ ltcr)).
+  Qed.
+
+End lipschitz_uniform.
+
+(** ** Banach's fixed point theorem *)
+
+Section banach.
+  Context (Q : Type) `{Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
+    `{!RoundUpStrict Q}.
+  Context {F : Type} `{OrderedField F}.
+  Let qinc : Cast Q F := rationals_to_field Q F.
+  Existing Instance qinc.
+
+  Context {X : Type} (d : X -> X -> F) `{!IsPseudoMetric d}.
+  Context (T : X -> X) (c : Q) (c0 : 0 < c) (c1 : c < 1) (Tc : IsLipschitz d d T (' c)).
+
+  Local Lemma c_nonneg : PropHolds (0 ≤ (' c : F)).
+  Proof.
+    apply lt_le; rewrite <- (preserves_0 (f:=cast Q F)).
+    exact (strictly_order_preserving _ _ _ c0).
+  Qed.
+
+  Local Lemma c_lt_1 : (' c : F) < 1.
+  Proof.
+    rewrite <- (preserves_1 (f:=cast Q F)).
+    exact (strictly_order_preserving _ _ _ c1).
+  Qed.
+
+  Local Lemma one_minus_c_pos : PropHolds (0 < 1 - (' c : F)).
+  Proof.
+    exact (snd (flip_pos_minus _ _) c_lt_1).
+  Qed.
+
+  Local Existing Instances c_nonneg one_minus_c_pos.
+
+  (** The distance between consecutive iterates decreases geometrically. *)
+  Lemma iterate_step_le (y : X) (j : nat)
+    : d (nat_iter (S j) T y) (nat_iter j T y) ≤ nat_iter j (mult (' c)) 1 * d (T y) y.
+  Proof.
+    induction j as [|j IH].
+    - apply eq_le; symmetry; apply mult_1_l.
+    - refine (transitivity (Tc _ _) _).
+      change (nat_iter (S j) (mult (' c)) 1) with (' c * nat_iter j (mult (' c)) 1).
+      rewrite <- mult_assoc.
+      exact (order_preserving (' c *.) _ _ IH).
+  Qed.
+
+  Local Lemma iterate_dist_le_power (y : X) (j : nat)
+    : (1 - ' c) * d (nat_iter j T y) y ≤ (1 - nat_iter j (mult (' c)) 1) * d (T y) y.
+  Proof.
+    induction j as [|j IH].
+    - apply eq_le; cbn.
+      rewrite (pseudometric_diag (d:=d)), mult_0_r, plus_negate_r, mult_0_l.
+      reflexivity.
+    - set (P := nat_iter j (mult (' c)) 1).
+      change (nat_iter (S j) (mult (' c)) 1) with (' c * P).
+      refine (transitivity (order_preserving ((1 - ' c) *.) _ _
+                (pseudometric_triangle _ (nat_iter j T y) _)) _).
+      rewrite plus_mult_distr_l.
+      refine (transitivity (plus_le_compat _ _ _ _
+                (order_preserving ((1 - ' c) *.) _ _ (iterate_step_le y j)) IH) _).
+      apply eq_le.
+      rewrite mult_assoc, <- plus_mult_distr_r.
+      apply (ap (.* d (T y) y)).
+      rewrite plus_mult_distr_r, mult_1_l, <- negate_mult_distr_l.
+      rewrite <- (plus_assoc P (- (' c * P))), (plus_comm (- (' c * P))).
+      rewrite (plus_assoc P (1 - P)), (plus_comm 1 (- P)), (plus_assoc P (- P) 1).
+      rewrite plus_negate_r, plus_0_l.
+      reflexivity.
+  Qed.
+
+  (** The distance from a point to its iterates is bounded in terms of its distance to its image. *)
+  Lemma iterate_dist_le (y : X) (j : nat)
+    : (1 - ' c) * d (nat_iter j T y) y ≤ d (T y) y.
+  Proof.
+    refine (transitivity (iterate_dist_le_power y j) _).
+    pose proof (pseudometric_nonneg (d:=d) (T y) y).
+    refine (transitivity (order_preserving (.* d (T y) y) _ 1 _) _).
+    - apply nonneg_minus_compat; [|reflexivity].
+      exact (power_nonneg _ j c_nonneg).
+    - apply eq_le, mult_1_l.
+  Qed.
+
+  (** The modulus [log_c (e (1 - c) / C)]. *)
+  Definition iterates_modulus (C : Qpos Q) (e : Qpos Q) : nat
+    := (rational_log c c0 c1 (e * Qpos_diff c 1 c1 / C)).1.
+
+  (** If [d (T x0) x0 ≤ C], then the iterates of [T] at [x0] form a sequence with a modulus of Cauchy convergence. *)
+  Lemma metriccauchymodulus_iterates (C : Qpos Q) (x0 : X) (C0 : d (T x0) x0 ≤ ' (' C))
+    : MetricCauchyModulus Q d (fun n => nat_iter n T x0) (iterates_modulus C).
+  Proof.
+    intro e.
+    set (M := iterates_modulus C e).
+    set (b := Qpos_diff c 1 c1).
+    (* The key estimate, from which the claim follows by symmetry. *)
+    assert (key : forall n k, (M <= n)%nat
+              -> d (nat_iter (k + n) T x0) (nat_iter n T x0) < ' (' e)).
+    { intros n k leMn.
+      rewrite nat_iter_add.
+      apply (strictly_order_reflecting ((1 - ' c) *.)).
+      refine (le_lt_trans _ _ _ (iterate_dist_le _ k) _).
+      refine (le_lt_trans _ _ _ (iterate_step_le x0 n) _).
+      pose proof (power_nonneg (' c : F) n c_nonneg).
+      pose proof (power_nonneg (' c : F) M c_nonneg).
+      assert (Cpos : PropHolds (0 < (' (' C) : F))).
+      { rewrite <- (preserves_0 (f:=cast Q F)).
+        apply (strictly_order_preserving _), pos_is_pos. }
+      refine (le_lt_trans _ _ _ (order_preserving (_ *.) _ _ C0) _).
+      refine (le_lt_trans _ _ _ (order_preserving (.* ' (' C)) _ _
+                (power_antitone _ M n c_nonneg (lt_le _ _ c_lt_1) leMn)) _).
+      assert (spec : nat_iter M (mult c) 1 < ' (e * b / C))
+        by exact (rational_log c c0 c1 (e * b / C)).2.
+      assert (spec' := strictly_order_preserving (cast Q F) _ _ spec).
+      rewrite (preserves_power (cast Q F)) in spec'.
+      refine (lt_eq_trans _ _ _ (strictly_order_preserving (.* ' (' C)) _ _ spec') _).
+      cbn beta; rewrite <- (preserves_mult (f:=cast Q F)).
+      rewrite (mult_comm (1 - ' c)), <- (preserves_1 (f:=cast Q F)).
+      rewrite <- (preserves_negate (f:=cast Q F)), <- (preserves_plus (f:=cast Q F)).
+      rewrite <- (preserves_mult (f:=cast Q F)).
+      apply (ap (cast Q F)).
+      (* The positive rational [b] is [1 - c] by definition. *)
+      change (' (e * b / C * C) = ' (e * b)); apply ap.
+      rewrite (commutativity _ C), (associativity C _ (/ C)).
+      apply pos_unconjugate. }
+    intros m n lem len.
+    destruct (leq_dichotomy n m) as [lenm|ltmn].
+    - destruct (equiv_leq_add n m lenm) as [k p].
+      unfold metric_close; rewrite <- p.
+      exact (key n k len).
+    - destruct (equiv_leq_add m n (leq_succ_l ltmn)) as [k p].
+      unfold metric_close; rewrite (pseudometric_symmetric (d:=d)), <- p.
+      exact (key m k lem).
+  Qed.
+
+  Context {Farch : ArchimedeanProperty Q F} `{!MetricCauchyComplete Q d}.
+
+  (** Banach's fixed point theorem: in a Cauchy complete pseudometric space, a map with a rational Lipschitz constant [0 < c < 1] has a pseudo-fixed point, which is unique up to distance zero. The point [x0] with [d (T x0) x0 ≤ C] can be any point when the space is bounded by [C]. *)
+  Definition banach_fixed_point (C : Qpos Q) (x0 : X) (C0 : d (T x0) x0 ≤ ' (' C))
+    : {x : X & d (T x) x = 0 /\ forall y, d (T y) y = 0 -> d x y = 0}.
+  Proof.
+    set (xs := fun n => nat_iter n T x0).
+    set (l := metric_limit Q d xs (iterates_modulus C)
+                (metriccauchymodulus_iterates C x0 C0)).
+    assert (islim : IsMetricLimit Q d xs l) by apply ismetriclimit_metric_limit.
+    assert (p : d (T l) l = 0).
+    { apply (metric_limit_distance_zero Q d (fun n => xs (S n))).
+      - exact (preservesmetriclimits_uniform Q d d T _
+                 (isuniformmodulus_lipschitz Q d d T (mkQpos c c0) Tc) xs l islim).
+      - exact (ismetriclimit_tail Q d xs l islim). }
+    exists l; split; [exact p|].
+    intros y py.
+    exact (pseudo_fixed_point_unique d T (' c) c_lt_1 Tc l y p py).
+  Defined.
+
+End banach.

@@ -65,7 +65,8 @@ End metric.
 Section convergence.
   Context (Q : Type) `{Rationals Q}.
   Context {F : Type} `{OrderedField F}.
-  Local Instance qinc : Cast Q F := rationals_to_field Q F.
+  Let qinc : Cast Q F := rationals_to_field Q F.
+  Existing Instance qinc.
 
   Section premetric.
     Context {X : Type} (d : X -> X -> F).
@@ -90,6 +91,16 @@ Section convergence.
       ismetriclimit_metric_limit : forall (x : nat -> X) (M : Qpos Q -> nat)
         (Mmod : MetricCauchyModulus x M), IsMetricLimit x (metric_limit x M Mmod)
     }.
+
+    (** A limit of a sequence is a limit of its tail. *)
+    Lemma ismetriclimit_tail (x : nat -> X) (l : X) (islim : IsMetricLimit x l)
+      : IsMetricLimit (fun n => x (S n)) l.
+    Proof.
+      intro e; assert (c := islim e); strip_truncations; apply tr.
+      destruct c as [N close].
+      exists N; intros n leNn.
+      exact (close (S n) (leq_succ_r leNn)).
+    Defined.
 
   End premetric.
 

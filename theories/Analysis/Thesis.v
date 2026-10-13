@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -216,3 +216,31 @@ Check PreservesMetricLimits.
 
 (** Lemma 8.1.10. Uniformly continuous maps preserve limits. *)
 Check @preservesmetriclimits_uniform.
+
+(** Definition 8.3.1. Lipschitz constants. *)
+Check IsLipschitz.
+
+(** Lemma 8.3.2. A positive rational Lipschitz constant [c] gives the modulus of uniform continuity [e / c]. *)
+Check @isuniformmodulus_lipschitz.
+
+(** Corollary 8.3.3. A positive Lipschitz constant in the ordered field merely gives a modulus of uniform continuity. *)
+Check @merely_isuniformmodulus_lipschitz.
+
+(** Lemma 8.3.4. For a Lipschitz constant [c < 1], pseudo-fixed points are unique up to distance zero. *)
+Check @pseudo_fixed_point_unique.
+
+(** Corollary 8.3.5. In a metric space, for a Lipschitz constant [c < 1], the type of fixed points is a proposition. *)
+Check @ishprop_fixed_point.
+
+(** Remark 8.3.6. It suffices that such a Lipschitz constant merely exists. *)
+Check @ishprop_fixed_point_merely.
+
+(** Lemma 8.3.7. For a rational [0 < c < 1], a logarithm-like function giving for each positive rational [q] an exponent [n] with [c^n < q]. *)
+Check @rational_log.
+
+(** Lemma 8.3.8. For a rational Lipschitz constant [0 < c < 1] and [d (T x0) x0 ≤ C], the iterates of [T] at [x0] have the modulus of Cauchy convergence [log_c (e (1 - c) / C)]. *)
+Check @iterates_modulus.
+Check @metriccauchymodulus_iterates.
+
+(** Theorem 8.3.11. Banach's fixed point theorem: in a Cauchy complete pseudometric space, a map with a rational Lipschitz constant [0 < c < 1] has a pseudo-fixed point, unique up to distance zero. *)
+Check @banach_fixed_point.

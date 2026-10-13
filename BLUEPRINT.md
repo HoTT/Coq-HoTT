@@ -251,14 +251,14 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | Cor 8.2.8 | UL[a,b][c,d] is a pseudometric space with distance computed as on U. | 8.2.3, 8.2.6, 8.2.7 | `Analysis/FunctionSpace.v` | todo | None. |
 | Lem 8.2.9 | Elements of UL at distance 0 have equal underlying maps. | 8.2.8, 8.2.2, Funext | `Analysis/FunctionSpace.v` | todo | None. |
 | Lem 8.2.10 | UL[a,b][c,d] is Cauchy complete. | 8.2.7, 8.1.6, 6.8.1, 4.4.4 | `Analysis/FunctionSpace.v` | todo | None. |
-| Def 8.3.1 | Lipschitz constant c : R for a map of pseudometric spaces. | 8.1.1 | `Analysis/BanachFixedPoint.v` | todo | `Lipschitz` (Classes/theory/premetric.v): closeness-based with c : Q+. |
-| Lem 8.3.2 | A rational Lipschitz constant c gives the modulus ε/c. | 8.3.1, 8.1.7 | `Analysis/BanachFixedPoint.v` | todo | Premetric analogue only: `lipschitz_continuous` (Classes/theory/premetric.v) gives `Continuous`. |
-| Cor 8.3.3 | A real Lipschitz constant gives the mere existence of a modulus. | 8.3.2, 4.3.5 | `Analysis/BanachFixedPoint.v` | todo | None. |
-| Lem 8.3.4 | For c < 1, pseudo-fixed points are pseudo-unique. | 8.3.1, 8.1.1 | `Analysis/BanachFixedPoint.v` | todo | None. |
-| Cor 8.3.5 | In a metric space with c < 1, the type of fixed points is a proposition. | 8.3.4, 2.6.20 | `Analysis/BanachFixedPoint.v` | todo | None. |
-| Lem 8.3.7 | For 0 < c < 1 rational, log_c : Q+ → N with c^(log_c q) < q. | U-4 | `Analysis/BanachFixedPoint.v` | todo | None. |
-| Lem 8.3.8 | With rational Lipschitz constant 0 < c < 1 and ρ(T x₀, x₀) ≤ C, the iterates T^n(x₀) have modulus log_c(ε(1 − c)/C). | 8.3.7, 8.3.1, 8.1.1, 4.5.3 | `Analysis/BanachFixedPoint.v` | todo | None. |
-| Thm 8.3.11 | Banach: a Cauchy complete pseudometric space with a point, bounded by C : Q, and T with rational Lipschitz constant 0 < c < 1 has a pseudo-unique pseudo-fixed point. | 8.3.8, 8.3.2, 8.3.4, 8.1.6, 8.1.10, 8.1.5 | `Analysis/BanachFixedPoint.v` | todo | None. The proof uses ρ(T x₀, x₀) ≤ C from Lemma 8.3.8 rather than the boundedness of X (Rem 8.3.9). |
+| Def 8.3.1 | Lipschitz constant c : R for a map of pseudometric spaces. | 8.1.1 | `Analysis/BanachFixedPoint.v` | proved | `IsLipschitz dX dY f c` with `c : F`. `Lipschitz` (Classes/theory/premetric.v) is closeness-based with c : Q+. |
+| Lem 8.3.2 | A rational Lipschitz constant c gives the modulus ε/c. | 8.3.1, 8.1.7 | `Analysis/BanachFixedPoint.v` | proved | `isuniformmodulus_lipschitz` (`c : Qpos Q`, modulus `fun e => e / c`). |
+| Cor 8.3.3 | A real Lipschitz constant gives the mere existence of a modulus. | 8.3.2, 4.3.5 | `Analysis/BanachFixedPoint.v` | proved | `merely_isuniformmodulus_lipschitz`; needs `ArchimedeanProperty Q F` and the pseudometric axioms on the domain. |
+| Lem 8.3.4 | For c < 1, pseudo-fixed points are pseudo-unique. | 8.3.1, 8.1.1 | `Analysis/BanachFixedPoint.v` | proved | `pseudo_fixed_point_unique`. |
+| Cor 8.3.5 | In a metric space with c < 1, the type of fixed points is a proposition. | 8.3.4, 2.6.20 | `Analysis/BanachFixedPoint.v` | proved | `ishprop_fixed_point`, using `ishset_metric` (Analysis/MetricSpace.v). |
+| Lem 8.3.7 | For 0 < c < 1 rational, log_c : Q+ → N with c^(log_c q) < q. | U-4 | `Analysis/BanachFixedPoint.v` | proved | `rational_log` returns `{n : nat & nat_iter n (mult c) 1 < q}`; assumes `RoundUpStrict Q` (as `Analysis/Locator.v` does) instead of the thesis's numerator and denominator, and uses the Bernoulli-type bound `power_bernoulli` instead of the binomial theorem. Powers are `nat_iter n (mult c) 1`, with `power_nonneg`, `power_antitone`, `power_bernoulli`, `preserves_power`, `nat_to_semiring_nonneg` for ordered rings in the same file. |
+| Lem 8.3.8 | With rational Lipschitz constant 0 < c < 1 and ρ(T x₀, x₀) ≤ C, the iterates T^n(x₀) have modulus log_c(ε(1 − c)/C). | 8.3.7, 8.3.1, 8.1.1, 4.5.3 | `Analysis/BanachFixedPoint.v` | proved | `iterates_modulus`, `metriccauchymodulus_iterates`, with `C : Qpos Q` (the modulus divides by C). Instead of geometric sums it bounds `(1 - c) d(T^j y, y) ≤ (1 - c^j) d(T y, y)` by induction (`iterate_dist_le`). |
+| Thm 8.3.11 | Banach: a Cauchy complete pseudometric space with a point, bounded by C : Q, and T with rational Lipschitz constant 0 < c < 1 has a pseudo-unique pseudo-fixed point. | 8.3.8, 8.3.2, 8.3.4, 8.1.6, 8.1.10, 8.1.5 | `Analysis/BanachFixedPoint.v` | proved | `banach_fixed_point`, assuming `d (T x0) x0 ≤ C` for `C : Qpos Q` instead of a bound on X (Rem 8.3.9), and `ArchimedeanProperty Q F`, `MetricCauchyComplete Q d`, `RoundUpStrict Q`. |
 | Def 8.4.1 | Product of pseudometric spaces with the sum metric; a product of metrics is a metric. | 8.1.1 | `Analysis/PicardLindelof.v` | todo | None. Do binary products first; n-ary via `Fin` if needed. |
 | Lem 8.4.3 | f₁ × ⋯ × f_n is uniformly continuous with modulus min_i ω_i(ε/n). | 8.4.1, 8.1.7 | `Analysis/PicardLindelof.v` | todo | None. |
 | Lem 8.4.4 | The diagonal X → Xⁿ has modulus ε/n. | 8.4.1, 8.1.7 | `Analysis/PicardLindelof.v` | todo | None. |
@@ -280,7 +280,7 @@ Remarks are not numbered results, but these contain claims that later proofs use
 | Rem 6.7.5 | Strong cotransitivity: for x < y with locators and z with a locator, (x < z) + (z < y). | 6.7.4 | `Analysis/Locator.v` | todo | None. |
 | Rem 6.7.7 | \|x\| = max(x, −x) has a locator when x has one. | 6.7.6 | `Analysis/Locator.v` | todo | None (from `locator_join` and `locator_minus`). |
 | Rem 6.9.8 | ‖locator(x)‖ ⇒ (Π q r, ‖q < r → …‖) ⇔ locatedness. | 6.9.7 | `Analysis/LocatorDigits.v` | todo | None. |
-| Rem 8.3.6 | Cor 8.3.5 only needs the mere existence of a Lipschitz constant. | 8.3.5 | `Analysis/BanachFixedPoint.v` | todo | None. |
+| Rem 8.3.6 | Cor 8.3.5 only needs the mere existence of a Lipschitz constant. | 8.3.5 | `Analysis/BanachFixedPoint.v` | proved | `ishprop_fixed_point_merely` (needs `Funext`). |
 
 ## Unnumbered prerequisites
 
