@@ -31,6 +31,6 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 
 ## Building
 
-- `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon (start one with `dockerd &` if `docker info` fails).
+- `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon; a SessionStart hook starts one, and otherwise run `dockerd &`.
 - A hook in `.claude/settings.json` runs `bin/build` on every edited `.v` file and reports errors back. Fix them before moving on.
 - A clean build of the library takes about 1.5 minutes on 4 cores; `bin/build check` takes about 30 seconds more.
