@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo Locator.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -88,6 +88,36 @@ Check IsComplete.
 
 (** Definition 4.5.17. Dependent identifications. *)
 Check DPath.
+
+(** ** Chapter 5: Universal properties of real numbers *)
+
+(** Definition 5.3.1. Cancellative midpoint algebras: sets with an idempotent, commutative, medial and cancellative binary operation. *)
+Check Midpoint.
+Check Medial.
+Check IsCancellativeMidpointAlgebra.
+
+(** Definition 5.3.2. Convex bodies: cancellative midpoint algebras with an iteration operator. *)
+Check @IsIterationOperator.
+Check IterationOperator.
+Check IsConvexBody.
+
+(** Lemma 5.3.3. Any two iteration operators are equal, so having one is a proposition. *)
+Check @path_iteration_operator.
+Check @ishprop_iterationoperator.
+
+(** Theorem 5.3.4. An iteration operator is equivalently the contractibility, for every sequence [x], of the type of sequences [a] with [a i = m(x i, a i.+1)] for all [i]. *)
+Check @equiv_iteration_operator_contr_iterated_midpoints.
+
+(** Definition 5.3.5. Bipointed convex bodies and their homomorphisms. *)
+Check BipointedConvexBody.
+Check @IsConvexBodyHom.
+Check ConvexBodyHom.
+
+(** Definition 5.3.6. Interval objects: homotopy-initial bipointed convex bodies. *)
+Check IsIntervalObject.
+
+(** Remark 5.3.7. Contractibility of the type of homomorphisms of bipointed convex bodies means existence of a homomorphism and pointwise uniqueness. *)
+Check @contr_convexbodyhom_iff.
 
 (** ** Chapter 6: Locators *)
 
