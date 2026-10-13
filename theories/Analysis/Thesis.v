@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -85,6 +85,17 @@ Check IsLimit.
 
 (** Definition 4.4.4. Cauchy complete ordered fields. *)
 Check IsComplete.
+
+(** Lemma 4.4.5. In an Archimedean ordered field, limits of sequences are unique, so the type of limits of a sequence is a proposition. *)
+Check limit_unique.
+Check ishprop_limit.
+
+(** Corollary 4.4.6. A limit that merely exists can be computed. *)
+Check limit_merely.
+
+(** Corollary 4.4.7. If a limit can be computed from a modulus of Cauchy convergence, it can be computed from the mere existence of a modulus; in particular in a Cauchy complete Archimedean ordered field. *)
+Check limit_merely_modulus.
+Check limit_complete.
 
 (** Definition 4.5.17. Dependent identifications. *)
 Check DPath.

@@ -114,9 +114,9 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | Def 4.4.1 | Modulus of Cauchy convergence M : Q+ → N of a sequence in F. | 4.1.10, 4.3.3 | existing name | todo | `CauchyModulus` (Classes/interfaces/cauchy.v), with −ε < x_m − x_n < ε in place of the absolute value. |
 | Def 4.4.2 | l is a limit of x: ∀ ε ∃ N ∀ n ≥ N, \|x_n − l\| < ε. | 4.1.10 | existing name | todo | `IsLimit` (Classes/interfaces/cauchy.v), using `hexists`. |
 | Def 4.4.4 | Cauchy complete: from a sequence with modulus we can compute a limit. | 4.4.1, 4.4.2 | existing name | todo | `IsComplete` (Classes/interfaces/cauchy.v), Σ-valued as required. |
-| Lem 4.4.5 | In an Archimedean field the type of limits of a fixed sequence is a proposition. | 4.4.2, 4.3.5, 2.6.20 | `Analysis/CauchyCompleteness.v` | todo | None for `cauchy.v`. `limit_unique` (Classes/theory/premetric.v) is the analogue for separated premetric spaces. |
-| Cor 4.4.6 | If a limit merely exists, we can compute it. | 4.4.5, 2.4.3 | `Analysis/CauchyCompleteness.v` | todo | None. |
-| Cor 4.4.7 | If a limit can be computed from a modulus, then the mere existence of a modulus suffices to compute it. | 4.4.4, 4.4.5 | `Analysis/CauchyCompleteness.v` | todo | None. |
+| Lem 4.4.5 | In an Archimedean field the type of limits of a fixed sequence is a proposition. | 4.4.2, 4.3.5, 2.6.20 | `Analysis/CauchyCompleteness.v` | proved | `limit_unique`, `ishprop_limit` (`Funext`), via `field_close_eq`: in an Archimedean field, `field_close e u v` (`-e < u - v < e`) for all `e` gives `u = v`. |
+| Cor 4.4.6 | If a limit merely exists, we can compute it. | 4.4.5, 2.4.3 | `Analysis/CauchyCompleteness.v` | proved | `limit_merely`. |
+| Cor 4.4.7 | If a limit can be computed from a modulus, then the mere existence of a modulus suffices to compute it. | 4.4.4, 4.4.5 | `Analysis/CauchyCompleteness.v` | proved | `limit_merely_modulus`; `limit_complete` for `IsComplete Q F`. |
 | Ex 4.4.8 | *optional.* exp(x) = Σ x^k/k! in a Cauchy complete Archimedean field, via 4.4.7 and bounds on x. | 4.4.7, 4.3.6, U-3 | `Analysis/CauchyCompleteness.v` | todo | None. |
 | Def 4.4.9 | Cauchy reals R_C: rational sequences with modulus, quotiented by (∀ ε) \|x_{M(ε/4)} − y_{M(ε/4)}\| < ε. | 4.4.1, 2.7.2 | `Analysis/CauchyReals.v` | todo | None. `Quotient` (Colimits/Quotient.v). The unnumbered claim that R_C is an Archimedean ordered field is U-1. |
 
