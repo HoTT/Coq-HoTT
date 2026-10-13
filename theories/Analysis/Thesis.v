@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Locator.
+From HoTT.Analysis Require Import Dcpo Locator.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -22,6 +22,38 @@ Check CoTransitive.
 (** Definition 3.1.3. Preorders and partial orders. *)
 Check PreOrder.
 Check PartialOrder.
+
+(** Definition 3.1.4. Inflationary endomaps; semidirected and directed subsets; joins; dcpos and subdcpos, at a universe level [i] given by universe polymorphism. *)
+Check IsInflationary.
+Check IsSemidirected.
+Check IsDirected.
+Check IsJoin.
+Check IsDcpo.
+Check IsSubdcpo.
+
+(** Lemma 3.1.5. The elements of a subdcpo form a dcpo under the restricted order. *)
+Check @isdcpo_sig.
+
+(** Lemma 3.1.6. Functions into a dcpo form a dcpo under the pointwise order. *)
+Check @partialorder_pointwise.
+Check @isdcpo_pointwise.
+
+(** Lemma 3.1.7. Assuming propositional resizing, the subsets [A -> HProp@{i}] of a type [A] in universe [i] form a dcpo at level [i+1] under inclusion: propositions form such a dcpo under implication, and the subsets are its pointwise order. *)
+Check @isdcpo_hprop.
+Check @isdcpo_pointwise.
+
+(** Proposition 3.2.1. The inflationary endomaps of a dcpo form a subdcpo of the endomaps, which as a subset of itself is directed, so that it has a top element; its values are common fixed points of all inflationary endomaps. *)
+Check @issubdcpo_inflationary.
+Check @isdirected_inflationary.
+Check @top_inflationary.
+Check @top_inflationary_greatest.
+Check @top_inflationary_fixed_point.
+
+(** Corollary 3.2.2. A point of a subdcpo closed under an inflationary endomap gives a fixed point of it, without propositional resizing. *)
+Check @fixed_point_subdcpo.
+
+(** Theorem 3.2.3. Pataraia's theorem: assuming propositional resizing, a monotone endomap of a dcpo with a bottom element has a least fixed point. *)
+Check @least_fixed_point.
 
 (** ** Chapter 4: Real numbers *)
 
