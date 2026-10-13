@@ -6,6 +6,7 @@ From HoTT Require Import Basics.Overture Basics.Classes.
 From HoTT.Classes.interfaces Require Import canonical_names orders archimedean cauchy.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
+From HoTT.Classes.orders Require Import archimedean.
 From HoTT.Analysis Require Import Locator.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
@@ -77,8 +78,35 @@ Check upper_bound.
 (** Lemma 6.6.3. A real with a locator has arbitrarily tight rational bounds. *)
 Check tight_bound.
 
+(** Lemma 6.7.1. Characterizations of [-x], [x + y], [x y], reciprocals, [min] and [max] in terms of the strict order with rationals. *)
+Check char_minus_left.
+Check char_minus_right.
+Check char_plus_left.
+Check char_plus_right.
+Check char_times_left.
+Check char_times_right.
+Check char_recip_pos_left.
+Check char_recip_pos_right.
+Check char_recip_neg_left.
+Check char_recip_neg_right.
+Check char_meet_left.
+Check char_meet_right.
+Check char_join_left.
+Check char_join_right.
+
 (** Lemma 6.7.3. For reals with locators, [x < y] gives a rational between them. *)
 Check archimedean_structure.
+
+(** Corollary 6.7.4. For reals [x < y] with locators and a rational [s], we can choose [x < s] or [s < y]. *)
+Check locator_cotransitive_rational.
+
+(** Theorem 6.7.6. If [x] and [y] have locators, then so do [-x], [x + y], [x y], [x⁻¹] (for [x # 0]), [min(x, y)] and [max(x, y)]. *)
+Check locator_minus.
+Check locator_plus.
+Check locator_times.
+Check locator_recip.
+Check locator_meet.
+Check locator_join.
 
 (** Lemma 6.8.1. A limit of a sequence with modulus whose terms have locators has a locator. *)
 Check locator_limit.
