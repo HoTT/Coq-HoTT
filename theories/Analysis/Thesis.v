@@ -3,10 +3,10 @@
 (** This file lists, in thesis order, the numbered items of Chapters 3–8 of A. B. Booij, _Analysis in Univalent Type Theory_ (PhD thesis, University of Birmingham, 2020) that have been formalized, each as a [Check] of the results that formalize it. It defines nothing; it fails to build if a listed result is renamed or removed. See [BLUEPRINT.md] for the plan and for the items that are not formalized yet. *)
 
 From HoTT Require Import Basics.Overture Basics.Classes.
-From HoTT.Classes.interfaces Require Import canonical_names orders archimedean cauchy.
+From HoTT.Classes.interfaces Require Import canonical_names orders rationals archimedean cauchy.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
-From HoTT.Classes.orders Require Import archimedean.
+From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.Analysis Require Import Locator.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
@@ -30,6 +30,17 @@ Check LatticeOrder.
 
 (** Lemma 4.1.12. An ordered field is a constructive field. *)
 Check @ordered_field_field.
+
+(** Lemma 4.3.3. There is a unique morphism of ordered fields from the rationals to an ordered field, and it preserves and reflects the strict order. *)
+Check rationals_to_field.
+Check rationals_initial.
+Check strictly_order_preserving_rationals_to_field.
+Check strictly_order_reflecting_rationals_to_field.
+Check issemiringstrongpreserving_rationals_to_field.
+
+(** Remark 4.3.4. The morphism from the rationals to an ordered field is an embedding. *)
+Check isinjective_rationals_to_field.
+Check isembedding_rationals_to_field.
 
 (** Definition 4.3.5. Archimedean ordered fields. *)
 Check ArchimedeanProperty.

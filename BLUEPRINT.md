@@ -17,7 +17,7 @@ Throughout Chapters 6–8 the thesis works with an arbitrary Cauchy complete Arc
 These are not thesis items, but they affect the rows below.
 
 - **`premetric.v` uses axiomatized rationals.** `Classes/theory/premetric.v` (`Closeness`, `Approximation`, `IsLimit`, `CauchyComplete`, `Lipschitz`, `Uniform`, `Interval`, …) is stated over `assume_rationals.Q` from `Classes/implementations/assume_rationals.v`, which declares the rationals and their structure with `Parameter`s. Rows below that cite `premetric.v` mean that its definitions have the right shape, but using it as is would bring in those axioms; generalize it to an arbitrary `Q` (as `Locator.v` does) or redo the definitions.
-- **Order preservation of Q → F is assumed.** `Classes/interfaces/cauchy.v`, `Analysis/Locator.v` and the `char_times_*` lemmas in `Classes/orders/archimedean.v` take `IsSemiRingStrongPreserving qinc` and `StrictlyOrderPreserving qinc` as context (marked TODO); see Lemma 4.3.3.
+- **Order preservation of Q → F is assumed.** Resolved: the TODO assumptions are gone from `Classes/interfaces/cauchy.v`, `Analysis/Locator.v` and `Classes/orders/archimedean.v`, replaced by the instances of Lemma 4.3.3. The `char_times_*` lemmas in `Classes/orders/archimedean.v` now assume `PropHolds ((1 : Q) ≶ 0)` instead, which reflecting < from F to Q needs; `locator_minus` (Analysis/Locator.v) now uses `TrivialApart Q`, and `all_reals_locators` now uses `Rationals Q`, from the section context.
 
 ## Chapter 2 prerequisites
 
@@ -103,7 +103,7 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | ID | Statement | Depends on | Target | Status | Coq-HoTT has |
 |---|---|---|---|---|---|
 | Def 4.3.1 | Morphism of ordered fields: ring morphism reflecting <. | 4.1.10 | `Analysis/OrderedField.v` | todo | Parts only: `IsSemiRingPreserving`, `IsSemiRingStrongPreserving` (Classes/interfaces/abstract_algebra.v), `StrictlyOrderReflecting` (Classes/interfaces/orders.v). No bundled notion. |
-| Lem 4.3.3 | There is a unique morphism i : Q → F of ordered fields, and it preserves <. | 4.3.1, 4.1.10 | `Analysis/OrderedField.v` | todo | `rationals_to_field`, `rationals_to_field_mor`, `rationals_initial` (Classes/interfaces/rationals.v) give existence and uniqueness as a ring map, but require `FieldCharacteristic F 0`, which is not derived for ordered fields. Preservation of < is **missing**: `cauchy.v` and `Locator.v` assume it (TODO). Proving it lets those assumptions go. |
+| Lem 4.3.3 | There is a unique morphism i : Q → F of ordered fields, and it preserves <. | 4.3.1, 4.1.10 | `Classes/orders/rationals.v` | proved | Existence and uniqueness as a ring map: `rationals_to_field`, `rationals_to_field_mor`, `rationals_initial` (Classes/interfaces/rationals.v); `FieldCharacteristic F 0` comes from the instance `ordered_characteristic_0` (Classes/orders/semirings.v). New in Classes/orders/rationals.v: `strictly_order_preserving_rationals_to_field` (no extra hypotheses), `strictly_order_reflecting_rationals_to_field` and `issemiringstrongpreserving_rationals_to_field` (both assume `PropHolds (1 ≶ 0)` in Q, derived from `TrivialApart Q` by `decfield_nontrivial_apart` in Classes/theory/dec_fields.v). Reflection genuinely needs such a hypothesis: `Rationals` does not tie the apartness of Q to ≠, and Q with its order restricted by a ¬¬-dense proposition still satisfies `Rationals`. The proof differs from the thesis: by initiality of Q, every rational q satisfies q·d + b = a for naturals a, b and d > 0, because such elements of F form a subfield. |
 | Def 4.3.5 | Archimedean: ∀ x y, x < y ⇒ ∃ q : Q, x < q < y. | 4.3.3 | existing name | todo | `ArchimedeanProperty` (Classes/interfaces/archimedean.v). Complete. |
 | Ex 4.3.6 | *optional.* In an Archimedean field every x has rational bounds ∃ q r, q < x < r. | 4.3.5 | `Analysis/OrderedField.v` | todo | Inline only, inside `P_lower_inhab` and `P_upper_inhab` (Analysis/Locator.v). |
 
@@ -272,7 +272,7 @@ Remarks are not numbered results, but these contain claims that later proofs use
 
 | ID | Statement | Used by | Target | Status | Coq-HoTT has |
 |---|---|---|---|---|---|
-| Rem 4.3.4 | i : Q → F is an embedding. | 6.3.1, 5.1.1 | `Analysis/OrderedField.v` | todo | None. |
+| Rem 4.3.4 | i : Q → F is an embedding. | 6.3.1, 5.1.1 | `Classes/orders/rationals.v` | proved | `isinjective_rationals_to_field` and `isembedding_rationals_to_field` (Classes/orders/rationals.v), with no hypotheses beyond `Rationals Q` and `OrderedField F`; proved from tightness of the apartness of Q rather than from preservation of <. |
 | Rem 4.5.9 | Morphisms of Cauchy structures automatically preserve the distance laws, act on Cauchy approximations, and contain identities and compositions. | 4.5.18, 5.1.3 | `Analysis/CauchyStructure.v` | todo | None. |
 | Rem 4.6.2 | Given the other cut axioms, transitivity is equivalent to disjointness. | 4.6.1 | `Analysis/DedekindReals.v` | todo | None. |
 | Rem 5.2.2 | For S a set, contractibility of CS-hom(R_E, S) means existence plus pointwise uniqueness. | 5.2.1 | `Analysis/EuclideanReals.v` | todo | None. |
