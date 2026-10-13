@@ -12,12 +12,11 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - Use the truncated `∃` (`hexists`, `merely`, `hor`, i.e. `Tr (-1)`) for properties. Where the thesis writes `∃` or `∨`, the formal statement uses `hexists`/`hor`; where it writes `Σ` or `+`, it uses `sig`/`sum`.
 - Never weaken a structure to a property or strengthen a property to a structure silently. When the thesis turns property into structure (bounded search, Lemma 6.7.3, Theorem 6.10.3), make that the content of an explicit lemma.
 
-## Naming
+## Naming and `Thesis.v`
 
-- Name each result after its thesis number, with a prefix for its kind: `def_6_1_1`, `lem_6_6_1`, `thm_6_7_6`, `prop_3_2_1`, `cor_6_5_4`, `ex_4_4_8`, `rem_6_7_5`, `conj_5_4_1`.
-- When one numbered item has several parts, add a short suffix per part in the thesis order, e.g. `def_3_1_1_reflexive`, `lem_6_7_1_plus_left`, `thm_6_7_6_times`.
-- Begin each result with a comment giving the thesis number and the statement in words, e.g. `(** Lemma 6.6.1. A real with a locator has rational bounds. *)`.
-- Do not add a thesis-numbered alias for a definition that Coq-HoTT already has (see `AGENTS.md`). Use the existing name directly and record it in `BLUEPRINT.md`. Helper lemmas that have no thesis number get ordinary descriptive names.
+- Give results ordinary descriptive names in the style of the surrounding code (see `doc/STYLE.md`); do not encode thesis numbers in names. Reuse existing Coq-HoTT names rather than adding aliases (see `AGENTS.md`).
+- Register every numbered item of the thesis that has been formalized in `theories/Analysis/Thesis.v`, under a comment with its thesis number and statement in words, as a `Check` of the result(s) that formalize it, e.g. `(** Lemma 6.6.1. A real with a locator has rational bounds. *)` followed by `Check lower_bound.` and `Check upper_bound.` Keep the file in thesis order, and add an entry only once the item is proved.
+- In the result's own file, a short comment citing the thesis number (e.g. `(** Lemma 6.6.1 of Booij's thesis. *)`) is welcome but optional.
 
 ## Search first
 
