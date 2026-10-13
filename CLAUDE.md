@@ -29,12 +29,6 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - Do not add new axioms: no `Axiom`, `Parameter`, `Conjecture` or top-level `Hypothesis`/`Variable`. Assumptions such as `Funext`, `Univalence`, `PropResizing` or `ExcludedMiddle` enter only as typeclass arguments or `Context`, following `doc/STYLE.md`.
 - `Admitted`, `admit` and `give_up` are allowed only in files marked as stubs: a file is a stub when one of its first ten lines is exactly `(* STUB *)`. A hook in `.claude/settings.json` blocks other edits that add them. Stub files must not be added to `theories/HoTT.v` or other meta-files; remove the marker once the file is complete.
 
-## Defined, not Qed
-
-- Anything with computational content ends in `Defined`, never `Qed`: locators, bounds, moduli, limits, signed-digit expansions, chosen witnesses, equivalences, functions, and any term whose type is not a proposition.
-- `Qed` is only for proofs of propositions (`IsHProp`, `hexists`, `<`, `≤`, equalities in a set, …). Inside a `Defined` proof, propositional subgoals may be closed with `abstract`.
-- Existing definitions in `theories/Analysis/Locator.v` that compute (e.g. `locator_left`, `lower_bound`, `tight_bound`, `archimedean_structure`, `locator_plus`) currently end in `Qed`; switch them to `Defined` when you touch them.
-
 ## Locators
 
 - Never `rewrite`, `transport` (`#`), `destruct` a path in, or otherwise move a locator along an identification. Locators are structure; transporting one obscures what it computes and can block evaluation.
