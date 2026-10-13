@@ -2,7 +2,7 @@
 
 # Formalizing Booij's thesis (branch `abooij/claude-locators`)
 
-The goal on this branch is to formalize Chapters 3–8 of A. B. Booij, *Analysis in Univalent Type Theory* (PhD thesis, Birmingham, 2020), `Booij2020PhD.pdf` in the repository root, next to `theories/Analysis/Locator.v`. `BLUEPRINT.md` lists every numbered result with its dependencies, target file, status and what Coq-HoTT already provides; keep it up to date as you work (status: `todo` → `stated` → `proved`).
+The goal on this branch is to formalize Chapters 3–8 of A. B. Booij, *Analysis in Univalent Type Theory* (PhD thesis, Birmingham, 2020), `Booij2020PhD.pdf` in the repository root, next to `theories/Analysis/Locator.v`. `BLUEPRINT.md` lists every numbered result with its dependencies, target file, status and what Coq-HoTT already provides; keep it up to date as you work (status: `todo` → `stated` → `proved`). Page numbers in this file and in task briefs are the thesis's own printed page numbers; the PDF's page numbers are 11 higher (thesis page 130 is PDF page 141).
 
 The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 
@@ -16,20 +16,26 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 
 - Give results ordinary descriptive names in the style of the surrounding code (see `doc/STYLE.md`); do not encode thesis numbers in names. Reuse existing Coq-HoTT names rather than adding aliases (see `AGENTS.md`).
 - Register every numbered item of the thesis that has been formalized in `theories/Analysis/Thesis.v`, under a comment with its thesis number and statement in words, as a `Check` of the result(s) that formalize it, e.g. `(** Lemma 6.6.1. A real with a locator has rational bounds. *)` followed by `Check lower_bound.` and `Check upper_bound.` Keep the file in thesis order, and add an entry only once the item is proved.
-- In the result's own file, a short comment citing the thesis number (e.g. `(** Lemma 6.6.1 of Booij's thesis. *)`) is welcome but optional.
+- Thesis numbers appear only in `Thesis.v` and `BLUEPRINT.md`. Do not mention them anywhere else: not in names, doc comments, proof comments or TODOs in `.v` files; hooks block edits and commits that add them. Describe the mathematics instead (e.g. "TODO: prove that the inclusion of [Q] preserves the order", not "TODO: Lemma 4.3.3").
 
 ## Search first
 
-- Before assuming a lemma exists, and before stating a new one, search for it: `Search`, `SearchPattern`, `Locate` and `About` (through the Rocq MCP server if available, or in a scratch file built with `bin/build`), and `grep` over `theories/`.
+- Before assuming a lemma exists, and before stating a new one, search for it: `Search`, `SearchPattern`, `Locate` and `About` (through the Rocq MCP server if available, or in a scratch file checked with `bin/build scratch FILE.v`), and `grep` over `theories/`.
 - Never cite a lemma name from memory or from `BLUEPRINT.md` without checking that it exists with the expected statement; the blueprint records what existed when it was written.
 
 ## Axioms and stubs
 
 - Do not add new axioms: no `Axiom`, `Parameter`, `Conjecture` or top-level `Hypothesis`/`Variable`. Assumptions such as `Funext`, `Univalence`, `PropResizing` or `ExcludedMiddle` enter only as typeclass arguments or `Context`, following `doc/STYLE.md`.
-- `Admitted`, `admit` and `give_up` are allowed only in files marked as stubs: a file is a stub when one of its first ten lines is exactly `(* STUB *)`. A hook in `.claude/settings.json` blocks other edits that add them. Stub files must not be added to `theories/HoTT.v` or other meta-files; remove the marker once the file is complete.
+- `Admitted`, `admit` and `give_up` are allowed only in files marked as stubs: a file is a stub when one of its first ten lines is exactly `(* STUB *)`. Hooks in `.claude/settings.json` block other edits that add them, and block commits that add them. Stub files must not be added to `theories/HoTT.v` or other meta-files; remove the marker once the file is complete.
 
 ## Building
 
 - `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon; a SessionStart hook starts one, and otherwise run `dockerd &`.
-- A hook in `.claude/settings.json` runs `bin/build` on every edited `.v` file and reports errors back. Fix them before moving on.
+- `bin/build scratch FILE.v` builds the library and then compiles `FILE.v`, which may live anywhere (e.g. your scratchpad), against it, printing its output. Use it for `Search`, `Check` and drafting proofs; it takes under a second once the library is built.
+- A hook in `.claude/settings.json` runs `bin/build` on every `.v` file edited with the Edit or Write tools and reports errors back; fix them before moving on. Files changed from the shell are not checked until you commit: another hook typechecks every changed `.v` file, and checks it for axioms and admits, before each `git commit`, and blocks the commit if anything fails.
+
+## Working on a track
+
+- Re-read this file before each commit: the rules may have changed since you started, and changes are announced only by updating it.
+- Edit only your own rows of `BLUEPRINT.md`.
 - A clean build of the library takes about 1.5 minutes on 4 cores; `bin/build check` takes about 30 seconds more.
