@@ -1,4 +1,5 @@
 {
+  "autoContinueAtUsageLimit": true,
   "hooks": {
     "PreToolUse": [
       {
