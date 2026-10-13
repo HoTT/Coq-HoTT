@@ -290,6 +290,6 @@ The thesis uses these without stating them as numbered results. Each needs its o
 |---|---|---|---|---|---|
 | U-1 | The ordered-field structure on R_C and on R_D (operations, Archimedean property): "we will not show this in detail". | 4.4.9, 4.6.6, 4.6.7, 6.9.6 | `Analysis/CauchyReals.v`, `Analysis/DedekindReals.v` | todo | None. |
 | U-2 | The HoTT book development of R_H (§11.3): Cauchy completeness (11.3.2) and the embedding into R_D (Thm 11.3.50). | 4.5.13, 4.6.7 | `Analysis/HoTTBookReals.v` | todo | None. |
-| U-3 | Finite sums, natural powers, factorials and geometric-series bounds in an ordered field. | 4.4.8, 6.9.2, 8.3.7, 8.3.8 | `Analysis/OrderedField.v` | todo | Partial: ring-level tools in `Classes/`; `nat_iter`. Search before adding. |
+| U-3 | Finite sums, natural powers, factorials and geometric-series bounds in an ordered field. | 4.4.8, 6.9.2, 8.3.7, 8.3.8 | `Analysis/OrderedField.v` | todo | Partial: ring-level tools in `Classes/`; `nat_iter`. Search before adding. Powers as `nat_iter n (mult c) 1` with geometric-sum bounds in `Analysis/BanachFixedPoint.v`. |
 | U-4 | Integer floor on Q and the binomial bound used for log_c. | 6.9.4, 8.3.7 | `Analysis/OrderedField.v` | todo | `RoundUpStrict` (Classes/interfaces/round.v) only. |
 | U-5 | The Riemann integral of a uniformly continuous function on [a, b] (as a limit of Riemann sums), with linearity, monotonicity, \|∫ f\| ≤ ∫ \|f\| and ∫ c = c(b − a). | 7.2.1, 8.4.7 | `Analysis/Integral.v` | todo | None. |
