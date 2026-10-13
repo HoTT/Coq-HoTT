@@ -26,6 +26,10 @@ IMAGE="${ROCQ_IMAGE:-rocq/rocq-prover:9.1}"
 SWITCH=/home/rocq/.opam/4.14.2+flambda
 
 if ! docker info >/dev/null 2>&1; then
+  # Fresh cloud containers start without a daemon; start one if we can.
+  bash "$ROOT/.claude/hooks/start_docker.sh" || true
+fi
+if ! docker info >/dev/null 2>&1; then
   echo "bin/build: cannot reach the Docker daemon; start it (e.g. \`dockerd &\`) and retry." >&2
   exit 125
 fi

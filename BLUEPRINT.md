@@ -32,7 +32,7 @@ These are used throughout and already exist.
 | 2.5.18, 2.5.1 | univalence, function extensionality | `Univalence`, `Funext`, `path_forall` (Basics/Overture.v) |
 | 2.6.1–2.6.3 | subtypes, embeddings | predicates `A -> HProp`; `IsEmbedding` (Basics/Trunc.v); `path_sigma_hprop`, `equiv_path_sigma_hprop` (Types/Sigma.v) |
 | 2.6.13 | propositional resizing | `PropResizing`, `issmall_hprop`, `smalltype`, `equiv_smalltype` (Basics/Overture.v) |
-| 2.6.8, 2.6.12, 2.6.15 | joins and meets of subsets | none; power types `power_type` (Sets/Powers.v) only |
+| 2.6.8, 2.6.12, 2.6.15 | joins and meets of subsets | `hprop_join`, `hprop_meet` (Analysis/Dcpo.v; with propositional resizing, pointwise for subsets); power types `power_type` (Sets/Powers.v) |
 | 2.6.20 | a type is a proposition iff all its elements are equal | `hprop_allpath` (Basics/Trunc.v), `equiv_hprop_allpath` (Universes/HProp.v) |
 | 2.7.2 | set quotients | `Quotient`, `class_of`, `qglue`, `Quotient_ind` (Colimits/Quotient.v) |
 | 2.8.2 | excluded middle | `ExcludedMiddle`, `LEM` (ExcludedMiddle.v) |

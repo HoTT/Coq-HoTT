@@ -30,7 +30,7 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 
 ## Building
 
-- `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon; a SessionStart hook starts one, and otherwise run `dockerd &`.
+- `bin/build` builds the library with Rocq 9.1 inside the `rocq/rocq-prover:9.1` Docker image (`dune build`); `bin/build FILE.v` builds one file and its dependencies; `bin/build test` builds `test/`; `bin/build check` runs `dune test` (including `rocqchk`). It needs a running Docker daemon, which it starts itself when it can; otherwise run `dockerd &`.
 - `bin/build scratch FILE.v` builds the library and then compiles `FILE.v`, which may live anywhere (e.g. your scratchpad), against it, printing its output. Use it for `Search`, `Check` and drafting proofs; it takes under a second once the library is built.
 - A hook in `.claude/settings.json` runs `bin/build` on every `.v` file edited with the Edit or Write tools and reports errors back; fix them before moving on. Files changed from the shell are not checked until you commit: another hook typechecks every changed `.v` file, and checks it for axioms and admits, before each `git commit`, and blocks the commit if anything fails.
 
@@ -43,4 +43,5 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 ## Proof tips
 
 - Do not use the `ring` tactics from `Classes/tactics/` (`ring_with_nat`, `ring_with_integers`): they need extra assumptions such as `Univalence` and can run for minutes even on small identities. Prove ring identities by hand with rewriting lemmas.
+- Universe levels: constants such as `Le` and `relation_pointwise` are not cumulative, so an instance stated at other levels is silently not found. Inspect levels with `Set Printing Universes` and `About`, and state levels explicitly where instances must match.
 - A scratch file must `Require Import` every module whose `#[export]` instances and hints it relies on; a missing import looks like a missing instance.

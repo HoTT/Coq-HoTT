@@ -43,7 +43,7 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/start_docker.sh\"",
-            "timeout": 60,
+            "timeout": 120,
             "statusMessage": "Starting Docker daemon..."
           }
         ]

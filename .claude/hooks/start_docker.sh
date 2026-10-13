@@ -18,12 +18,12 @@ if ! pgrep -x dockerd >/dev/null 2>&1; then
   nohup dockerd >"${TMPDIR:-/tmp}/dockerd.log" 2>&1 &
 fi
 
-for _ in $(seq 1 30); do
+for _ in $(seq 1 90); do
   if docker info >/dev/null 2>&1; then
     exit 0
   fi
   sleep 1
 done
 
-echo "Started dockerd, but it did not come up within 30 seconds; see ${TMPDIR:-/tmp}/dockerd.log." >&2
+echo "Started dockerd, but it did not come up within 90 seconds; see ${TMPDIR:-/tmp}/dockerd.log." >&2
 exit 0
