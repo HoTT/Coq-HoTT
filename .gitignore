@@ -119,8 +119,6 @@ file_to_bench
 
 # Local AI assistant state
 /.agents/
-/.claude/*
-!/.claude/settings.json
-!/.claude/hooks/
+/.claude/
 /.codex/
 /.pi/
