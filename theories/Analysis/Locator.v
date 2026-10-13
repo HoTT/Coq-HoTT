@@ -14,6 +14,7 @@ From HoTT Require Import
   Classes.theory.apartness
   Classes.theory.rationals
   Classes.orders.fields
+  Classes.orders.rationals
   Classes.theory.fields
   Classes.theory.dec_fields.
 
@@ -39,11 +40,6 @@ Section locator.
   Context (QQpos_eq : nat <~> Q * Qpos Q).
 
   Instance qinc : Cast Q F := rationals_to_field Q F.
-  (* TODO The following two instances should probably come from the `Rationals` instance. *)
-  Context (cast_pres_ordering : StrictlyOrderPreserving qinc)
-          (qinc_strong_presving : IsSemiRingStrongPreserving qinc).
-  Existing Instance cast_pres_ordering.
-  Existing Instance qinc_strong_presving.
 
   (* Definition of a locator for a fixed real number. *)
   Definition locator (x : F) := forall q r : Q, q < r -> (' q < x) + (x < ' r).
@@ -317,7 +313,7 @@ Section locator.
       }
       assert (ap30 : (3 : Q) <> 0)
         by apply lt_ne_flip, lt_0_3.
-      clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths H cast_pres_ordering.
+      clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths H.
       assert (ltn3eps : r < q + ' n * ' epsilon / 3).
       {
         rewrite (commutativity q (' n * ' epsilon / 3)).
@@ -397,14 +393,14 @@ Section locator.
         rewrite (associativity ('n) ('epsilon) (/3)).
         transitivity ('r).
         - exact ltxr.
-        - apply strictly_order_preserving; try trivial.
+        - apply (strictly_order_preserving _); exact ltn3eps.
       }
       destruct (sperners_lemma_1d P left_true right_false) as [u [Pltux Pltxueps]].
       exists (grid (fin_incl (fin_incl u))).
       unfold P in Pltux, Pltxueps.
       split.
       - exact (locates_right_true l (lt_grid (fin_incl u)) Pltux).
-      - clear - Pltxueps Qtriv Qdec_paths ap30 cast_pres_ordering.
+      - clear - Pltxueps Qtriv Qdec_paths ap30.
         set (ltxbla := locates_right_false l (lt_grid (fsucc u)) Pltxueps).
         unfold grid in *.
         change (' fin_incl (fin_incl u)) with (fin_to_nat (fin_incl (fin_incl u))).

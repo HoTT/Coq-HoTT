@@ -189,7 +189,7 @@ Qed.
 
 (* Due to bug #2528 *)
 #[export]
-Hint Extern 6 (PropHolds (1 ≶ 0)) =>
+Hint Extern 5 (PropHolds (1 ≶ 0)) =>
   eapply @decfield_nontrivial_apart : typeclass_instances.
 
 (* Given a decidable field we can easily construct a constructive field. *)

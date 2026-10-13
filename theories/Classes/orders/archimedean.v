@@ -8,7 +8,8 @@ Require Import
   HoTT.Classes.orders.maps
   HoTT.Classes.orders.rings
   HoTT.Classes.orders.fields
-  HoTT.Classes.orders.lattices.
+  HoTT.Classes.orders.lattices
+  HoTT.Classes.orders.rationals.
 
 Generalizable Variables Q F.
 
@@ -189,13 +190,8 @@ Section strict_field_order.
                             end).
 
   Section times.
-    (* TODO The following two assumptions should follow from the fact that the inclusion of [Q] into an ordered field preserves the order and the ring structure; [Analysis/Locator.v] makes the same assumptions. They are used to move strict inequalities between [Q] and [F]. *)
-    Context `{!StrictlyOrderPreserving qinc} `{!IsSemiRingStrongPreserving qinc}.
-
-    Local Instance qinc_strictly_order_reflecting : StrictlyOrderReflecting qinc.
-    Proof.
-      pose proof (full_pseudo_order_reflecting (f:=qinc)). exact _.
-    Qed.
+    (* Reflecting strict inequalities from [F] to [Q] needs [1] to be apart from [0] in [Q]; this holds for instance when the apartness of [Q] is trivial. *)
+    Context `{!PropHolds ((1 : Q) ≶ 0)}.
 
     (** Rational bounds [a < x < b] and [c < y < d] such that [u * w] is within [e] of [x * y] for all [u] in [[a, b]] and [w] in [[c, d]]. *)
     Lemma archimedean_mult_approx (x y e : F) (epos : 0 < e)
