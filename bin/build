@@ -6,6 +6,9 @@
 #   bin/build test             build the test suite: `dune build test/`
 #   bin/build check            full validation, including rocqchk: `dune test`
 #   bin/build FILE.v [...]     build the given file(s) and their dependencies
+#   bin/build scratch FILE.v   build the library, then compile FILE.v (which may live
+#                              anywhere, e.g. a scratchpad) against it and print its
+#                              output; FILE.v is not added to the library
 #   bin/build -- ARGS...       run `dune ARGS...` in the container
 #
 # Environment:
@@ -40,6 +43,16 @@ elif [ "$1" = "test" ] && [ $# -eq 1 ]; then
   dune_args=(build "${jobs[@]}" test/)
 elif [ "$1" = "check" ] && [ $# -eq 1 ]; then
   dune_args=(test "${jobs[@]}")
+elif [ "$1" = "scratch" ]; then
+  if [ $# -ne 2 ] || [ ! -f "$2" ]; then
+    echo "bin/build: usage: bin/build scratch FILE.v" >&2; exit 2
+  fi
+  scratch="$2"
+  name="$(basename "$scratch" .v)"
+  case "$name" in
+    [A-Za-z_]*) ;;
+    *) echo "bin/build: '$name' is not a valid module name" >&2; exit 2 ;;
+  esac
 else
   targets=()
   for f in "$@"; do
@@ -60,7 +73,7 @@ else
 fi
 
 tty=()
-if [ -t 0 ] && [ -t 1 ]; then tty=(-t); fi
+if [ -z "${scratch:-}" ] && [ -t 0 ] && [ -t 1 ]; then tty=(-t); fi
 
 lock="${TMPDIR:-/tmp}/hott-bin-build-$(printf '%s' "$ROOT" | cksum | cut -d' ' -f1).lock"
 exec 9>"$lock"
@@ -69,7 +82,7 @@ flock 9
 # Run as the calling user so build products are owned by them. The image's
 # entrypoint (`opam exec`) refuses to run as a foreign user, so we set up the
 # opam switch environment by hand instead.
-exec docker run --rm -i "${tty[@]}" \
+run=(docker run --rm -i "${tty[@]}" \
   --user "$(id -u):$(id -g)" \
   --entrypoint "" \
   -v "$ROOT:/work" -w /work \
@@ -78,4 +91,19 @@ exec docker run --rm -i "${tty[@]}" \
   -e OPAM_SWITCH_PREFIX="$SWITCH" \
   -e CAML_LD_LIBRARY_PATH="$SWITCH/lib/stublibs:$SWITCH/lib/ocaml/stublibs:$SWITCH/lib/ocaml" \
   -e PATH="$SWITCH/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-  "$IMAGE" dune "${dune_args[@]}"
+  "$IMAGE")
+
+if [ -n "${scratch:-}" ]; then
+  # The scratch file is passed on stdin rather than mounted, so it may live in
+  # a directory that the Docker daemon cannot see.
+  exec "${run[@]}" sh -c '
+    set -e
+    dune build "$@" 2>&1
+    mkdir -p /tmp/scratch && cat > "/tmp/scratch/$0.v"
+    exec rocq compile -noinit -indices-matter \
+      -R _build/default/theories HoTT -R _build/default/contrib HoTT_Contrib \
+      -o "/tmp/scratch/$0.vo" "/tmp/scratch/$0.v"
+  ' "$name" "${jobs[@]}" < "$scratch"
+fi
+
+exec "${run[@]}" dune "${dune_args[@]}"
