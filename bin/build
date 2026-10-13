@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Build the HoTT library with Rocq 9.1 inside the rocq/rocq-prover:9.1 container.
+#
+# Usage:
+#   bin/build                  build the library (theories/ and contrib/): `dune build`
+#   bin/build test             build the test suite: `dune build test/`
+#   bin/build check            full validation, including rocqchk: `dune test`
+#   bin/build FILE.v [...]     build the given file(s) and their dependencies
+#   bin/build -- ARGS...       run `dune ARGS...` in the container
+#
+# Environment:
+#   ROCQ_IMAGE   container image (default: rocq/rocq-prover:9.1)
+#   DUNE_JOBS    passed to dune as -j (default: dune's own default)
+#
+# The repository is bind-mounted into the container, so build products land in
+# the usual _build/ directory and incremental builds work across invocations.
+# Concurrent invocations are serialised with a lock, since dune locks _build/.
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+IMAGE="${ROCQ_IMAGE:-rocq/rocq-prover:9.1}"
+SWITCH=/home/rocq/.opam/4.14.2+flambda
+
+if ! docker info >/dev/null 2>&1; then
+  echo "bin/build: cannot reach the Docker daemon; start it (e.g. \`dockerd &\`) and retry." >&2
+  exit 125
+fi
+
+jobs=()
+if [ -n "${DUNE_JOBS:-}" ]; then jobs=(-j "$DUNE_JOBS"); fi
+
+# Translate the command line into dune arguments.
+if [ $# -eq 0 ]; then
+  dune_args=(build "${jobs[@]}")
+elif [ "$1" = "--" ]; then
+  shift
+  dune_args=("$@")
+elif [ "$1" = "test" ] && [ $# -eq 1 ]; then
+  dune_args=(build "${jobs[@]}" test/)
+elif [ "$1" = "check" ] && [ $# -eq 1 ]; then
+  dune_args=(test "${jobs[@]}")
+else
+  targets=()
+  for f in "$@"; do
+    case "$f" in
+      *.v) ;;
+      *) echo "bin/build: expected a .v file, got '$f'" >&2; exit 2 ;;
+    esac
+    abs="$(cd "$(dirname "$f")" 2>/dev/null && pwd)/$(basename "$f")" \
+      || { echo "bin/build: no such file '$f'" >&2; exit 2; }
+    case "$abs" in
+      "$ROOT"/*) rel="${abs#"$ROOT"/}" ;;
+      *) echo "bin/build: '$f' is not inside $ROOT" >&2; exit 2 ;;
+    esac
+    [ -f "$abs" ] || { echo "bin/build: no such file '$f'" >&2; exit 2; }
+    targets+=("${rel%.v}.vo")
+  done
+  dune_args=(build "${jobs[@]}" "${targets[@]}")
+fi
+
+tty=()
+if [ -t 0 ] && [ -t 1 ]; then tty=(-t); fi
+
+lock="${TMPDIR:-/tmp}/hott-bin-build-$(printf '%s' "$ROOT" | cksum | cut -d' ' -f1).lock"
+exec 9>"$lock"
+flock 9
+
+# Run as the calling user so build products are owned by them. The image's
+# entrypoint (`opam exec`) refuses to run as a foreign user, so we set up the
+# opam switch environment by hand instead.
+exec docker run --rm -i "${tty[@]}" \
+  --user "$(id -u):$(id -g)" \
+  --entrypoint "" \
+  -v "$ROOT:/work" -w /work \
+  -e HOME=/tmp \
+  -e DUNE_CACHE=disabled \
+  -e OPAM_SWITCH_PREFIX="$SWITCH" \
+  -e CAML_LD_LIBRARY_PATH="$SWITCH/lib/stublibs:$SWITCH/lib/ocaml/stublibs:$SWITCH/lib/ocaml" \
+  -e PATH="$SWITCH/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+  "$IMAGE" dune "${dune_args[@]}"
