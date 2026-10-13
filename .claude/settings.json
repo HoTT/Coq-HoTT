@@ -11,6 +11,17 @@
             "onFailure": "block"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I \"$CLAUDE_PROJECT_DIR/.claude/hooks/commit_guard.py\"",
+            "timeout": 900,
+            "statusMessage": "Checking .v files before commit..."
+          }
+        ]
       }
     ],
     "PostToolUse": [

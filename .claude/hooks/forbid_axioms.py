@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""PreToolUse hook: block edits to .v files that add Axiom, Admitted or admit.
+"""PreToolUse hook: block edits to .v files that add Axiom, Admitted or admit,
+or that add references to Booij's thesis outside theories/Analysis/Thesis.v.
 
 Files marked as stubs are exempt. A file is a stub when one of its first ten
 lines is exactly the comment
@@ -13,6 +14,10 @@ the marker in its content.
 The check counts occurrences outside comments and strings, so an edit that
 merely moves or keeps existing admits is allowed. Parameter and Conjecture are
 treated like Axiom, since they declare axioms too, and give_up like admit.
+
+Thesis references ("Lemma 6.7.1", "Booij", "thesis", ...) belong only in
+Thesis.v and BLUEPRINT.md (see CLAUDE.md); this applies to stubs too. Lines
+mentioning the HoTT book are exempt, since its numbering looks the same.
 """
 
 import json
@@ -27,6 +32,30 @@ FORBIDDEN = re.compile(
     r"(Axioms?|Parameters?|Conjectures?|Admitted|admit|give_up)"
     r"(?![\w']|\.\w)"
 )
+
+
+THESIS_REF = re.compile(
+    r"\b(?:Lemma|Theorem|Thm|Definition|Def|Corollary|Cor|Proposition|Prop|Remark|Rem"
+    r"|Example|Ex|Conjecture|Conj|Section|Discussion)\.?\s+[3-8](?:\.[0-9]+){1,2}\b"
+    r"|\bBooij\b|\b[Tt]hesis\b"
+)
+
+
+def thesis_refs(text):
+    return [
+        m.group(0)
+        for line in (text or "").splitlines()
+        if "book" not in line.lower()
+        for m in THESIS_REF.finditer(line)
+    ]
+
+
+def added_thesis_refs(pairs):
+    added = []
+    for old, new in pairs:
+        before, after = thesis_refs(old), thesis_refs(new)
+        added += [w for w in dict.fromkeys(after) if after.count(w) > before.count(w)]
+    return added
 
 
 def strip_comments_and_strings(text):
@@ -99,6 +128,15 @@ def main():
     else:
         return 0
 
+    refs = [] if os.path.basename(path) == "Thesis.v" else added_thesis_refs(pairs)
+    if refs:
+        deny(
+            f"Blocked: this edit adds thesis references ({', '.join(refs)}) to {os.path.relpath(path)}. "
+            "Thesis numbers belong only in theories/Analysis/Thesis.v and BLUEPRINT.md (see CLAUDE.md); "
+            "describe the mathematics instead, and register the result in Thesis.v once it is proved."
+        )
+        return 0
+
     if stub:
         return 0
 
@@ -119,6 +157,11 @@ def main():
         "Do not introduce axioms or admitted proofs (see CLAUDE.md). Finish the proof, or, if this "
         f"file is a deliberate blueprint stub, one of its first ten lines must already be {STUB_MARKER}."
     )
+    deny(reason)
+    return 0
+
+
+def deny(reason):
     json.dump(
         {
             "hookSpecificOutput": {
@@ -129,7 +172,6 @@ def main():
         },
         sys.stdout,
     )
-    return 0
 
 
 if __name__ == "__main__":
