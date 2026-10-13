@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -183,3 +183,36 @@ Check locator_join.
 
 (** Lemma 6.8.1. A limit of a sequence with modulus whose terms have locators has a locator. *)
 Check locator_limit.
+
+(** ** Chapter 8: Metric spaces *)
+
+(** Definition 8.1.1. Pseudometrics and metrics, with values in the nonnegative elements of an ordered field. *)
+Check IsPseudoMetric.
+Check IsMetric.
+
+(** Lemma 8.1.3. The Euclidean distance [|x - y|] is a metric. *)
+Check @ismetric_abs_minus.
+
+(** Lemma 8.1.5. Two limits of a sequence in a pseudometric space have distance zero; in a metric space limits are unique. Here [x] and [y] are [e]-close when their distance is less than [e], which defines moduli of Cauchy convergence and limits. *)
+Check metric_close.
+Check MetricCauchyModulus.
+Check IsMetricLimit.
+Check @metric_limit_distance_zero.
+Check @metric_limit_unique.
+
+(** Definition 8.1.6. Cauchy completeness: a limit operator for sequences with a modulus of Cauchy convergence. *)
+Check MetricCauchyComplete.
+
+(** Definition 8.1.7. Moduli of uniform continuity, with the identity and composition. *)
+Check IsUniformModulus.
+Check @isuniformmodulus_idmap.
+Check @isuniformmodulus_compose.
+
+(** Lemma 8.1.8. A uniformly continuous map with modulus [w] sends a sequence with modulus [M] to one with modulus [M o w]. *)
+Check @metriccauchymodulus_uniform.
+
+(** Definition 8.1.9. Maps preserving limits. *)
+Check PreservesMetricLimits.
+
+(** Lemma 8.1.10. Uniformly continuous maps preserve limits. *)
+Check @preservesmetriclimits_uniform.

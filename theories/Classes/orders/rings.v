@@ -384,6 +384,112 @@ Section full_pseudo_ring_order.
 
 End full_pseudo_ring_order.
 
+(** ** Absolute values *)
+
+(** The order need not be total, so an element is only nonnegative or nonpositive up to double negation; this suffices for the inequalities and equalities below. *)
+Section abs.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt} `{!Abs R}.
+  Local Existing Instance pseudo_order_apart.
+
+  (** Up to double negation, every element is nonnegative or nonpositive. *)
+  Lemma nonneg_or_nonpos_not_not (x : R) : ~~ ((0 ≤ x) + (x ≤ 0)).
+  Proof.
+    intro n; apply n, inr, not_lt_le_flip.
+    intro lt0x; exact (n (inl (lt_le _ _ lt0x))).
+  Qed.
+
+  (** Hence inequalities and equalities, which are stable under double negation, can be proved by cases on the sign of an element. *)
+  Local Lemma le_by_sign (x a b : R)
+    : (0 ≤ x -> a ≤ b) -> (x ≤ 0 -> a ≤ b) -> a ≤ b.
+  Proof.
+    intros nonneg nonpos; apply not_lt_le_flip; intro ltba.
+    apply (nonneg_or_nonpos_not_not x); intros [c|c].
+    - exact (le_not_lt_flip _ _ (nonneg c) ltba).
+    - exact (le_not_lt_flip _ _ (nonpos c) ltba).
+  Qed.
+
+  Local Lemma eq_by_sign (x a b : R)
+    : (0 ≤ x -> a = b) -> (x ≤ 0 -> a = b) -> a = b.
+  Proof.
+    intros nonneg nonpos; apply (fst (tight_apart a b)); intro apab.
+    apply (nonneg_or_nonpos_not_not x); intros [c|c].
+    - exact (snd (tight_apart a b) (nonneg c) apab).
+    - exact (snd (tight_apart a b) (nonpos c) apab).
+  Qed.
+
+  Definition abs_of_nonneg (x : R) : 0 ≤ x -> abs x = x
+    := fst (abs_sig x).2.
+
+  Definition abs_of_nonpos (x : R) : x ≤ 0 -> abs x = - x
+    := snd (abs_sig x).2.
+
+  Lemma abs_nonneg (x : R) : 0 ≤ abs x.
+  Proof.
+    apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c); exact c.
+    - rewrite (abs_of_nonpos x c); exact (fst (flip_nonpos_negate x) c).
+  Qed.
+
+  Lemma abs_0 : abs 0 = 0 :> R.
+  Proof.
+    exact (abs_of_nonneg 0 (reflexivity 0)).
+  Qed.
+
+  Lemma abs_negate (x : R) : abs (- x) = abs x.
+  Proof.
+    apply (eq_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c).
+      rewrite (abs_of_nonpos (- x) (fst (flip_nonneg_negate x) c)).
+      apply negate_involutive.
+    - rewrite (abs_of_nonpos x c).
+      exact (abs_of_nonneg (- x) (fst (flip_nonpos_negate x) c)).
+  Qed.
+
+  Lemma le_abs (x : R) : x ≤ abs x.
+  Proof.
+    apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c); reflexivity.
+    - rewrite (abs_of_nonpos x c).
+      exact (transitivity c (fst (flip_nonpos_negate x) c)).
+  Qed.
+
+  Lemma negate_le_abs (x : R) : - x ≤ abs x.
+  Proof.
+    rewrite <- (abs_negate x); apply le_abs.
+  Qed.
+
+  Lemma abs_le (x y : R) : - y ≤ x -> x ≤ y -> abs x ≤ y.
+  Proof.
+    intros leyx lexy; apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c); exact lexy.
+    - rewrite (abs_of_nonpos x c); apply flip_le_negate.
+      rewrite negate_involutive; exact leyx.
+  Qed.
+
+  Lemma abs_triangle (x y : R) : abs (x + y) ≤ abs x + abs y.
+  Proof.
+    apply abs_le.
+    - rewrite negate_plus_distr.
+      apply plus_le_compat; apply flip_le_negate; rewrite negate_involutive;
+        apply negate_le_abs.
+    - apply plus_le_compat; apply le_abs.
+  Qed.
+
+  Lemma abs_eq_0 (x : R) : abs x = 0 -> x = 0.
+  Proof.
+    intro p; apply (eq_by_sign x); intro c.
+    - exact ((abs_of_nonneg x c)^ @ p).
+    - rewrite <- (negate_involutive x), <- (abs_of_nonpos x c), p.
+      apply negate_0.
+  Qed.
+
+  Lemma abs_minus_swap (x y : R) : abs (x - y) = abs (y - x).
+  Proof.
+    rewrite (negate_swap_r x y); apply abs_negate.
+  Qed.
+
+End abs.
+
 Section another_ring_order.
   Context `{IsCRing R1} `{!SemiRingOrder R1le} `{IsCRing R2} `{R2le : Le R2}
     `{is_mere_relation R2 R2le}.

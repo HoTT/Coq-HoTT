@@ -233,15 +233,15 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 
 | ID | Statement | Depends on | Target | Status | Coq-HoTT has |
 |---|---|---|---|---|---|
-| Def 8.1.1 | Metric and pseudometric ρ : X × X → R≥0 on a set. | 4.1.10 | `Analysis/MetricSpace.v` | todo | None. `PreMetric` (Classes/theory/premetric.v) is closeness-based, not distance-based. |
-| Lem 8.1.3 | ρ(x, y) = \|x − y\| is a metric on R. | 8.1.1 | `Analysis/MetricSpace.v` | todo | `Abs`, `abs` (Classes/interfaces/canonical_names.v); \|·\| lemmas for Q only (`Q_triangle_le`, …, Classes/theory/rationals.v). |
+| Def 8.1.1 | Metric and pseudometric ρ : X × X → R≥0 on a set. | 4.1.10 | `Analysis/MetricSpace.v` | proved | `IsPseudoMetric d`, `IsMetric d` for `d : X -> X -> F` (curried, nonnegativity as a field; `X` need not be a set, and `ishset_metric` shows it is one for a metric). `PreMetric` (Classes/theory/premetric.v) is closeness-based, not distance-based. |
+| Lem 8.1.3 | ρ(x, y) = \|x − y\| is a metric on R. | 8.1.1 | `Analysis/MetricSpace.v` | proved | `ismetric_abs_minus` (needs `Abs F`), from new lemmas `abs_nonneg`, `abs_0`, `abs_negate`, `le_abs`, `abs_le`, `abs_triangle`, `abs_eq_0`, `abs_minus_swap` for ordered rings (Classes/orders/rings.v), proved by cases on the sign under double negation. |
 | Ex 8.1.4 | *optional.* Pointer to the space of Def 8.2.7. | 8.2.7 | none | todo | Nothing to formalize. |
-| Lem 8.1.5 | Two limits of a sequence in a pseudometric space have distance 0; limits are unique in metric spaces. | 8.1.1, 4.5.4 | `Analysis/MetricSpace.v` | todo | `limit_unique` (Classes/theory/premetric.v) is the separated-premetric analogue. |
-| Def 8.1.6 | Cauchy complete pseudometric space: a lim function on sequences with modulus. | 8.1.1, 4.5.3, 4.5.4 | `Analysis/MetricSpace.v` | todo | None for sequences; `CauchyComplete` (Classes/theory/premetric.v) is for approximations. |
-| Def 8.1.7 | Modulus of uniform continuity between premetric spaces. | 4.5.2 | existing name | todo | `Uniform` (Classes/theory/premetric.v); composition `uniform_compose`. Complete. |
-| Lem 8.1.8 | A uniformly continuous map sends a sequence with modulus M to one with modulus M ∘ ω. | 8.1.7, 4.5.3 | `Analysis/MetricSpace.v` | todo | None. |
-| Def 8.1.9 | f preserves limits. | 4.5.4 | `Analysis/MetricSpace.v` | todo | None. |
-| Lem 8.1.10 | Uniformly continuous maps preserve limits. | 8.1.7, 8.1.9 | `Analysis/MetricSpace.v` | todo | None. |
+| Lem 8.1.5 | Two limits of a sequence in a pseudometric space have distance 0; limits are unique in metric spaces. | 8.1.1, 4.5.4 | `Analysis/MetricSpace.v` | proved | `metric_limit_distance_zero`, `metric_limit_unique`; needs `ArchimedeanProperty Q F` (via `nonpos_lt_qpos`). The induced premetric is `metric_close`, with `MetricCauchyModulus` and `IsMetricLimit`. |
+| Def 8.1.6 | Cauchy complete pseudometric space: a lim function on sequences with modulus. | 8.1.1, 4.5.3, 4.5.4 | `Analysis/MetricSpace.v` | proved | `MetricCauchyComplete` (class with fields `metric_limit`, `ismetriclimit_metric_limit`). `CauchyComplete` (Classes/theory/premetric.v) is for approximations. |
+| Def 8.1.7 | Modulus of uniform continuity between premetric spaces. | 4.5.2 | `Analysis/MetricSpace.v` | proved | `IsUniformModulus dX dY f w`, stated for the premetrics induced by distances; `isuniformmodulus_idmap`, `isuniformmodulus_compose`. `Uniform` (Classes/theory/premetric.v) uses axiomatized rationals. |
+| Lem 8.1.8 | A uniformly continuous map sends a sequence with modulus M to one with modulus M ∘ ω. | 8.1.7, 4.5.3 | `Analysis/MetricSpace.v` | proved | `metriccauchymodulus_uniform`; uses no pseudometric axioms. |
+| Def 8.1.9 | f preserves limits. | 4.5.4 | `Analysis/MetricSpace.v` | proved | `PreservesMetricLimits`. |
+| Lem 8.1.10 | Uniformly continuous maps preserve limits. | 8.1.7, 8.1.9 | `Analysis/MetricSpace.v` | proved | `preservesmetriclimits_uniform`; uses no pseudometric axioms. |
 | Def 8.2.1 | U[a,b][c,d]: maps [a, b] → [c, d] with a modulus of uniform continuity. | 7.1.5 | `Analysis/FunctionSpace.v` | todo | `Interval` (Classes/theory/premetric.v). |
 | Lem 8.2.2 | The supremum of a uniformly continuous f : [a, b] → R is the limit of maxima over equidistant samples, with modulus (b − a)/ω(ε). | 7.1.5, 4.4.4, 4.4.7, 4.1.8 | `Analysis/FunctionSpace.v` | todo | None. (b − a)/ω(ε) is real; turning it into a natural needs a rational bound, via 4.4.7 or locators for a and b. |
 | Lem 8.2.3 | U[a,b][c,d] is a pseudometric space with the sup distance. | 8.2.1, 8.2.2, 8.1.1 | `Analysis/FunctionSpace.v` | todo | None. |
