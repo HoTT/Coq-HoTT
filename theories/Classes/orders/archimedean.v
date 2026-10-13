@@ -21,21 +21,21 @@ Section strict_field_order.
   Definition qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.
 
-  (** Lemma 6.7.1 characterizes the algebraic operations in terms of the strict order and rationals. Its parts are the [char_*] lemmas below. *)
+  (** The [char_*] lemmas below characterize the algebraic operations in terms of the strict order and rationals. *)
 
-  (** Lemma 6.7.1, [-x < r] iff [-r < x]. *)
+  (** [-x < r] iff [-r < x]. *)
   Lemma char_minus_left x y : - x < y -> - y < x.
   Proof.
     intros ltnxy. rewrite <- (negate_involutive x). apply (snd (flip_lt_negate _ _)). assumption.
   Qed.
 
-  (** Lemma 6.7.1, [q < -x] iff [x < -q]. *)
+  (** [q < -x] iff [x < -q]. *)
   Lemma char_minus_right x y : x < - y -> y < - x.
   Proof.
     intros ltnxy. rewrite <- (negate_involutive y). apply (snd (flip_lt_negate _ _)). assumption.
   Qed.
 
-  (** Lemma 6.7.1, [q < x + y] iff there is [s : Q] with [s < x] and [q - s < y]. *)
+  (** [q < x + y] iff there is [s : Q] with [s < x] and [q - s < y]. *)
   Lemma char_plus_left : forall (q : Q) (x y : F),
       ' q < x + y <-> hexists (fun s : Q => (' s < x) /\ (' (q - s) < y)).
   Proof.
@@ -54,7 +54,7 @@ Section strict_field_order.
       apply (strictly_order_preserving (y +)); assumption.
   Qed.
 
-  (** Lemma 6.7.1, [x + y < r] iff there is [t : Q] with [x < t] and [y < r - t]. *)
+  (** [x + y < r] iff there is [t : Q] with [x < t] and [y < r - t]. *)
   Lemma char_plus_right : forall (r : Q) (x y : F),
       x + y < ' r <-> hexists (fun t : Q => (x < ' t) /\ (y < ' (r - t))).
   Proof.
@@ -73,7 +73,7 @@ Section strict_field_order.
       apply (strictly_order_preserving (+ y)); assumption.
   Qed.
 
-  (** Lemma 6.7.1, for [0 < z], [q < z⁻¹] iff [q z < 1]. *)
+  (** For [0 < z], [q < z⁻¹] iff [q z < 1]. *)
   Lemma char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
     'q < recip' z (positive_apart_zero z nu) <-> ' q * z < 1.
   Proof.
@@ -84,7 +84,7 @@ Section strict_field_order.
     - apply (strictly_order_reflecting (.* z)).
   Qed.
 
-  (** Lemma 6.7.1, for [0 < z], [z⁻¹ < r] iff [1 < r z]. *)
+  (** For [0 < z], [z⁻¹ < r] iff [1 < r z]. *)
   Lemma char_recip_pos_right : forall (r : Q) (z : F) (nu : 0 < z),
     recip' z (positive_apart_zero z nu) < ' r <-> 1 < ' r * z.
   Proof.
@@ -95,7 +95,7 @@ Section strict_field_order.
     - apply (strictly_order_reflecting (.* z)).
   Qed.
 
-  (** Lemma 6.7.1, for [w < 0], [q < w⁻¹] iff [1 < q w]. *)
+  (** For [w < 0], [q < w⁻¹] iff [1 < q w]. *)
   Lemma char_recip_neg_left : forall (q : Q) (w : F) (nu : w < 0),
     'q < recip' w (negative_apart_zero w nu) <-> 1 < ' q * w.
   Proof.
@@ -111,7 +111,7 @@ Section strict_field_order.
       exact lt.
   Qed.
 
-  (** Lemma 6.7.1, for [w < 0], [w⁻¹ < r] iff [r w < 1]. *)
+  (** For [w < 0], [w⁻¹ < r] iff [r w < 1]. *)
   Lemma char_recip_neg_right : forall (r : Q) (w : F) (nu : w < 0),
     recip' w (negative_apart_zero w nu) < ' r <-> ' r * w < 1.
   Proof.
@@ -127,7 +127,7 @@ Section strict_field_order.
       exact lt.
   Qed.
 
-  (** Lemma 6.7.1, [q < min(x, y)] iff [q < x] and [q < y]. *)
+  (** [q < min(x, y)] iff [q < x] and [q < y]. *)
   Lemma char_meet_left : forall (q : Q) (x y : F),
       ' q < meet x y <-> ' q < x /\ ' q < y.
   Proof.
@@ -138,7 +138,7 @@ Section strict_field_order.
     - intros [ltqx ltqy]; apply meet_lt_l; assumption.
   Qed.
 
-  (** Lemma 6.7.1, [min(x, y) < r] iff [x < r] or [y < r]. *)
+  (** [min(x, y) < r] iff [x < r] or [y < r]. *)
   Lemma char_meet_right : forall (r : Q) (x y : F),
       meet x y < 'r <-> hor (x < 'r) (y < 'r).
   Proof.
@@ -155,7 +155,7 @@ Section strict_field_order.
       + apply meet_lt_r_r; assumption.
   Qed.
 
-  (** Lemma 6.7.1, [q < max(x, y)] iff [q < x] or [q < y]. *)
+  (** [q < max(x, y)] iff [q < x] or [q < y]. *)
   Lemma char_join_left : forall (q : Q) (x y : F),
       ' q < join x y <-> hor ('q < x) ('q < y).
   Proof.
@@ -172,7 +172,7 @@ Section strict_field_order.
       + apply join_lt_l_r; assumption.
   Qed.
 
-  (** Lemma 6.7.1, [max(x, y) < r] iff [x < r] and [y < r]. *)
+  (** [max(x, y) < r] iff [x < r] and [y < r]. *)
   Lemma char_join_right : forall (r : Q) (x y : F),
       join x y < ' r <-> x < ' r /\ y < ' r.
   Proof.
@@ -189,7 +189,7 @@ Section strict_field_order.
                             end).
 
   Section times.
-    (* TODO The following two assumptions should follow from Lemma 4.3.3; [Analysis/Locator.v] makes the same assumptions. They are used to move strict inequalities between [Q] and [F]. *)
+    (* TODO The following two assumptions should follow from the fact that the inclusion of [Q] into an ordered field preserves the order and the ring structure; [Analysis/Locator.v] makes the same assumptions. They are used to move strict inequalities between [Q] and [F]. *)
     Context `{!StrictlyOrderPreserving qinc} `{!IsSemiRingStrongPreserving qinc}.
 
     Local Instance qinc_strictly_order_reflecting : StrictlyOrderReflecting qinc.
@@ -265,7 +265,7 @@ Section strict_field_order.
         apply flip_lt_minus_r; exact lo.
     Qed.
 
-    (** Lemma 6.7.1, [q < x y] iff there are [a < x < b] and [c < y < d] with [q < min(ac, ad, bc, bd)]. *)
+    (** [q < x y] iff there are [a < x < b] and [c < y < d] with [q < min(ac, ad, bc, bd)]. *)
     Lemma char_times_left : forall (q : Q) (x y : F),
             ' q < x * y
         <-> hexists4 (fun a b c d : Q =>
@@ -319,7 +319,7 @@ Section strict_field_order.
           rewrite (mult_comm _ x); assumption.
     Qed.
 
-    (** Lemma 6.7.1, [x y < r] iff there are [a < x < b] and [c < y < d] with [max(ac, ad, bc, bd) < r]. *)
+    (** [x y < r] iff there are [a < x < b] and [c < y < d] with [max(ac, ad, bc, bd) < r]. *)
     Lemma char_times_right : forall (r : Q) (x y : F),
             x * y < ' r
         <-> hexists4 (fun a b c d : Q =>

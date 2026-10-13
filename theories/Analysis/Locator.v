@@ -529,7 +529,7 @@ Section locator.
 
   End arch_struct.
 
-  (** For reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. This is Corollary 6.7.4 of Booij's thesis. *)
+  (** For reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. *)
   Definition locator_cotransitive_rational {x y : F} (l : locator x) (m : locator y) (s : Q)
     : x < y -> (x < ' s) + (' s < y).
   Proof.
@@ -767,10 +767,10 @@ Section locator.
             (l : locator x)
             (m : locator y).
 
-    (** Theorem 6.7.6, multiplication. If [x] and [y] have locators, then so does [x * y]. *)
+    (** If [x] and [y] have locators, then so does [x * y]. *)
     Definition locator_times : locator (x * y).
     Proof.
-      (* By Remark 6.7.7, the absolute values of [x] and [y], and hence their maximum, have locators. This gives a rational bound [Z]. *)
+      (* The absolute values of [x] and [y], and hence their maximum, have locators. This gives a rational bound [Z]. *)
       set (J := join (join x (- x)) (join y (- y))).
       destruct (upper_bound (locator_join (locator_join l (locator_minus l))
                                           (locator_join m (locator_minus m))))
