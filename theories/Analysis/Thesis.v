@@ -4,7 +4,6 @@
 
 From HoTT Require Import Basics.Overture Basics.Classes.
 From HoTT.Classes.interfaces Require Import canonical_names orders archimedean cauchy.
-From HoTT.Classes.theory Require Import premetric.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Analysis Require Import Locator.
@@ -38,17 +37,10 @@ Check ArchimedeanProperty.
 Check CauchyModulus.
 
 (** Definition 4.4.2. Limit of a sequence. *)
-Check cauchy.IsLimit.
+Check IsLimit.
 
 (** Definition 4.4.4. Cauchy complete ordered fields. *)
 Check IsComplete.
-
-(** Definition 4.5.5. Cauchy approximations. *)
-Check Approximation.
-
-(** Definition 4.5.7. Limits of Cauchy approximations; Cauchy complete premetric spaces. *)
-Check premetric.IsLimit.
-Check CauchyComplete.
 
 (** Definition 4.5.17. Dependent identifications. *)
 Check DPath.
@@ -90,8 +82,3 @@ Check archimedean_structure.
 
 (** Lemma 6.8.1. A limit of a sequence with modulus whose terms have locators has a locator. *)
 Check locator_limit.
-
-(** ** Chapter 8: Metric spaces *)
-
-(** Definition 8.1.7. Modulus of uniform continuity. *)
-Check Uniform.

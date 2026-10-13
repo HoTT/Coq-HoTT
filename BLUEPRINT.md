@@ -17,6 +17,7 @@ Throughout Chapters 6–8 the thesis works with an arbitrary Cauchy complete Arc
 These are not thesis items, but they affect the rows below.
 
 - **Unproved hypotheses.** `locator_plus` takes the characterizations `char_plus_left` and `char_plus_right` as `Context` hypotheses. In `Classes/orders/archimedean.v` these and the other characterizations of Lemma 6.7.1 are stated and then `Abort`ed (only `char_minus_left` and `char_minus_right` are proved). `locator_times` is `Abort`ed.
+- **`premetric.v` uses axiomatized rationals.** `Classes/theory/premetric.v` (`Closeness`, `Approximation`, `IsLimit`, `CauchyComplete`, `Lipschitz`, `Uniform`, `Interval`, …) is stated over `assume_rationals.Q` from `Classes/implementations/assume_rationals.v`, which declares the rationals and their structure with `Parameter`s. Rows below that cite `premetric.v` mean that its definitions have the right shape, but using it as is would bring in those axioms; generalize it to an arbitrary `Q` (as `Locator.v` does) or redo the definitions.
 - **Order preservation of Q → F is assumed.** `Classes/interfaces/cauchy.v` and `Analysis/Locator.v` take `IsSemiRingStrongPreserving qinc` and `StrictlyOrderPreserving qinc` as context (marked TODO); see Lemma 4.3.3.
 
 ## Chapter 2 prerequisites
