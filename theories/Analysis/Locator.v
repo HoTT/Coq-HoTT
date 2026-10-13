@@ -529,8 +529,8 @@ Section locator.
 
   End arch_struct.
 
-  (** Corollary 6.7.4. For reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. *)
-  Definition cor_6_7_4 {x y : F} (l : locator x) (m : locator y) (s : Q)
+  (** For reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. This is Corollary 6.7.4 of Booij's thesis. *)
+  Definition locator_cotransitive_rational {x y : F} (l : locator x) (m : locator y) (s : Q)
     : x < y -> (x < ' s) + (' s < y).
   Proof.
     intros ltxy.
