@@ -702,10 +702,6 @@ Section locator.
         assumption.
     Qed.
 
-    (* TODO construct locators for multiplications. *)
-    Lemma locator_times : locator (x * y).
-    Proof. Abort.
-
     Lemma locator_meet : locator (meet x y).
     Proof.
       intros q r ltqr.
@@ -727,6 +723,129 @@ Section locator.
     Qed.
 
   End binary_ops.
+
+  (** A real number that has rational approximations of any precision has a locator. *)
+  Definition locator_from_approx {z : F}
+    (approx : forall e : Qpos Q, {p : Q | ' (p - ' e) < z < ' (p + ' e)})
+    : locator z.
+  Proof.
+    intros q r ltqr.
+    set (e := (Qpos_diff q r ltqr) / 2).
+    assert (qeer : q + ' e + ' e = r).
+    { assert (p : q + ' e = r - ' e)
+        by (rewrite path_avg_split_diff_l, path_avg_split_diff_r; reflexivity).
+      rewrite p, <- plus_assoc, plus_negate_l, plus_0_r; reflexivity. }
+    destruct (approx e) as [p [ltpz ltzp]].
+    destruct (trichotomy _ (q + ' e) p) as [ltqep|[eqqep|ltpqe]].
+    - apply inl. refine (transitivity _ ltpz).
+      apply (strictly_order_preserving _), flip_lt_minus_r; assumption.
+    - apply inl. rewrite <- eqqep, <- plus_assoc, plus_negate_r, plus_0_r in ltpz.
+      exact ltpz.
+    - apply inr. refine (transitivity ltzp _).
+      apply (strictly_order_preserving _).
+      rewrite <- qeer.
+      apply (strictly_order_preserving (+ ' e)); assumption.
+  Defined.
+
+  Section times.
+
+    Context {x y : F}
+            (l : locator x)
+            (m : locator y).
+
+    (** Theorem 6.7.6, multiplication. If [x] and [y] have locators, then so does [x * y]. *)
+    Definition locator_times : locator (x * y).
+    Proof.
+      (* By Remark 6.7.7, the absolute values of [x] and [y], and hence their maximum, have locators. This gives a rational bound [Z]. *)
+      set (J := join (join x (- x)) (join y (- y))).
+      destruct (upper_bound (locator_join (locator_join l (locator_minus l))
+                                          (locator_join m (locator_minus m))))
+        as [Z ltJZ].
+      fold J in ltJZ.
+      assert (ltZx : - ' Z < x < ' Z).
+      { split.
+        - apply flip_lt_negate_l.
+          refine (le_lt_trans _ _ _ _ ltJZ).
+          exact (transitivity (join_ub_r x (- x)) (join_ub_l _ _)).
+        - refine (le_lt_trans _ _ _ _ ltJZ).
+          exact (transitivity (join_ub_l x (- x)) (join_ub_l _ _)). }
+      assert (ltZy : - ' Z < y < ' Z).
+      { split.
+        - apply flip_lt_negate_l.
+          refine (le_lt_trans _ _ _ _ ltJZ).
+          exact (transitivity (join_ub_r y (- y)) (join_ub_r _ _)).
+        - refine (le_lt_trans _ _ _ _ ltJZ).
+          exact (transitivity (join_ub_l y (- y)) (join_ub_r _ _)). }
+      assert (Zpos : 0 < Z).
+      { assert (StrictlyOrderReflecting qinc)
+          by (pose proof (full_pseudo_order_reflecting (f:=qinc)); exact _).
+        apply (strictly_order_reflecting qinc).
+        rewrite preserves_0.
+        exact (pos_between_negate _ _ ltZx). }
+      apply locator_from_approx; intros e.
+      (* We approximate [x] and [y] up to [d = e / (e + 2Z + 1)], which is less than [1] and satisfies [d (2Z + 1) < e]. *)
+      set (K := ' e + (Z + Z + 1)).
+      assert (Kpos : 0 < K).
+      { apply pos_plus_compat; [apply e|].
+        apply pos_plus_compat; [apply pos_plus_compat; assumption|exact lt_0_1]. }
+      set (d := ' e / K).
+      assert (dpos : 0 < d)
+        by (apply pos_mult; [apply e|apply pos_dec_recip_compat, Kpos]).
+      assert (dK : d * K = ' e).
+      { unfold d. rewrite <- (associativity (' e)), (commutativity (/ K)).
+        rewrite dec_recip_inverse; [apply mult_1_r|].
+        apply lt_ne_flip, Kpos. }
+      assert (ltd1 : d < 1).
+      { apply (strictly_order_reflecting (.* K)).
+        rewrite dK, mult_1_l.
+        apply (fst (pos_plus_lt_compat_r _ _)).
+        apply pos_plus_compat; [apply pos_plus_compat; assumption|exact lt_0_1]. }
+      assert (ltdZe : d * (Z + Z + 1) < ' e).
+      { rewrite <- dK. unfold K.
+        rewrite (plus_mult_distr_l d (' e) (Z + Z + 1)), (commutativity (d * ' e)).
+        apply (fst (pos_plus_lt_compat_r _ _)), pos_mult; [assumption|apply e]. }
+      set (d' := mkQpos d dpos).
+      destruct (tight_bound l d') as [a [ltax ltxa]].
+      destruct (tight_bound m d') as [c [ltcy ltyc]].
+      exists (a * c).
+      rewrite (preserves_plus (f:=cast Q F)) in ltxa, ltyc.
+      change (' d') with d in ltxa, ltyc.
+      assert (ltd1' : ' d < (1 : F))
+        by (rewrite <- (preserves_1 (f:=cast Q F)); apply (strictly_order_preserving _), ltd1).
+      assert (ltZc : - (' Z + 1) < ' c < ' Z + 1).
+      { split.
+        - rewrite negate_plus_distr.
+          refine (transitivity _ (snd (flip_lt_minus_l _ _ _) ltyc)).
+          apply plus_lt_compat; [apply ltZy|].
+          apply (snd (flip_lt_negate _ _)); assumption.
+        - refine (transitivity ltcy (transitivity (snd ltZy) _)).
+          apply (fst (pos_plus_lt_compat_r _ _)), lt_0_1. }
+      assert (close : forall v u, ' u < v -> v < ' u + ' d -> - ' d < v - ' u < ' d).
+      { intros v u ltuv ltvud; split.
+        - refine (transitivity _ (snd (flip_pos_minus _ _) ltuv)).
+          apply flip_pos_negate.
+          rewrite <- (preserves_0 (f:=cast Q F)); apply (strictly_order_preserving _), dpos.
+        - apply flip_lt_minus_l; rewrite (commutativity (' d)); assumption. }
+      destruct (mult_minus_mult_lt_bound x y (' a) (' c) (' Z) (' Z + 1) (' d)
+                  ltZx ltZc (close x a ltax ltxa) (close y c ltcy ltyc))
+        as [lo hi].
+      assert (ltbound : ' Z * ' d + ' d * (' Z + 1) < ' (' e)).
+      { assert (p : ' Z * ' d + ' d * (' Z + 1) = ' (d * (Z + Z + 1))).
+        { rewrite (preserves_mult (f:=cast Q F)), 2!(preserves_plus (f:=cast Q F)), (preserves_1 (f:=cast Q F)).
+          rewrite (commutativity (' Z) (' d)), <- plus_mult_distr_l, plus_assoc.
+          reflexivity. }
+        rewrite p; apply (strictly_order_preserving _), ltdZe. }
+      rewrite (preserves_minus (f:=cast Q F) (a * c) (' e)), (preserves_plus (f:=cast Q F) (a * c) (' e)), (preserves_mult (f:=cast Q F) a c).
+      split.
+      - rewrite (commutativity (' a * ' c)).
+        apply flip_lt_minus_r.
+        exact (transitivity (snd (flip_lt_negate _ _) ltbound) lo).
+      - rewrite (commutativity (' a * ' c)).
+        apply flip_lt_minus_l.
+        exact (transitivity hi ltbound).
+    Defined.
+
+  End times.
 
   Section limit.
 
