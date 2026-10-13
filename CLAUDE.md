@@ -39,3 +39,8 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - Re-read this file before each commit: the rules may have changed since you started, and changes are announced only by updating it.
 - Edit only your own rows of `BLUEPRINT.md`.
 - A clean build of the library takes about 1.5 minutes on 4 cores; `bin/build check` takes about 30 seconds more.
+
+## Proof tips
+
+- Do not use the `ring` tactics from `Classes/tactics/` (`ring_with_nat`, `ring_with_integers`): they need extra assumptions such as `Univalence` and can run for minutes even on small identities. Prove ring identities by hand with rewriting lemmas.
+- A scratch file must `Require Import` every module whose `#[export]` instances and hints it relies on; a missing import looks like a missing instance.

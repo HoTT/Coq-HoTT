@@ -10,7 +10,7 @@ This file plans the formalization of Chapters 3–8 of A. B. Booij, *Analysis in
 - **Status** is `todo` for every entry at the time of writing. Use `stated` once the statement typechecks (in a file marked `(* STUB *)`), and `proved` once it is proved without `Admitted`.
 - **Coq-HoTT has** says what existed when this blueprint was written, with file (below `theories/`) and name, and how it differs from the thesis. Check the names before relying on them (see `CLAUDE.md`).
 
-Throughout Chapters 6–8 the thesis works with an arbitrary Cauchy complete Archimedean ordered field R. In Coq-HoTT this is the `Context` of `Analysis/Locator.v`: rationals `Q` with `Rationals Q`, a field `F` with `OrderedField F`, `ArchimedeanProperty Q F` and `IsComplete Q F`, together with assumptions still marked TODO there (`StrictlyOrderPreserving qinc`, `IsSemiRingStrongPreserving qinc`, enumerations `Q_eq : nat <~> Q` and `QQpos_eq : nat <~> Q * Qpos Q`). Removing the TODO assumptions is part of Lemma 4.3.3 below.
+Throughout Chapters 6–8 the thesis works with an arbitrary Cauchy complete Archimedean ordered field R. In Coq-HoTT this is the `Context` of `Analysis/Locator.v`: rationals `Q` with `Rationals Q`, a field `F` with `OrderedField F`, `ArchimedeanProperty Q F` and `IsComplete Q F`, decidable equality and trivial apartness on `Q`, and enumerations `Q_eq : nat <~> Q` and `QQpos_eq : nat <~> Q * Qpos Q`. The order properties of the inclusion `qinc : Q -> F` are instances in `Classes/orders/rationals.v`.
 
 ## Known problems in the existing code
 
