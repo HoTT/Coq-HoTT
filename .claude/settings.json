@@ -25,6 +25,18 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/start_docker.sh\"",
+            "timeout": 60,
+            "statusMessage": "Starting Docker daemon..."
+          }
+        ]
+      }
     ]
   }
 }
