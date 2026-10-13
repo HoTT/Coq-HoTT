@@ -19,7 +19,11 @@ From HoTT.Analysis Require Import MetricSpace.
 (** In an Archimedean ordered field, limits of sequences are unique, so the type of limits of a sequence is a proposition. Hence a limit that merely exists can be computed, and so can a limit of a sequence that merely has a modulus of Cauchy convergence, if the field is Cauchy complete. *)
 
 Section completeness.
-  Context (Q : Type) `{Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
+  Universe UQ.
+  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
+    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
+    {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
   Context {F : Type} `{OrderedField F}.
   Let qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.

@@ -159,6 +159,7 @@ Require Export HoTT.Analysis.IntervalObject.
 Require Export HoTT.Analysis.MetricSpace.
 Require Export HoTT.Analysis.BanachFixedPoint.
 Require Export HoTT.Analysis.CauchyCompleteness.
+Require Export HoTT.Analysis.CauchyStructure.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.PiSpheres.

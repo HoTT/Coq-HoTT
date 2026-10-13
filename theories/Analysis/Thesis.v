@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -96,6 +96,40 @@ Check limit_merely.
 (** Corollary 4.4.7. If a limit can be computed from a modulus of Cauchy convergence, it can be computed from the mere existence of a modulus; in particular in a Cauchy complete Archimedean ordered field. *)
 Check limit_merely_modulus.
 Check limit_complete.
+
+(** Definition 4.5.2. Premetrics: families of relations indexed by the positive rationals, valued in propositions. *)
+Check IsPremetric.
+
+(** Definition 4.5.3. Moduli of Cauchy convergence of sequences in a premetric space. *)
+Check MetricCauchyModulus.
+
+(** Definition 4.5.4. Limits of sequences in a premetric space. *)
+Check IsMetricLimit.
+
+(** Definition 4.5.5. Cauchy approximations. *)
+Check IsCauchyApproximation.
+Check CauchyApproximation.
+
+(** Definition 4.5.7. Limits of Cauchy approximations, and Cauchy complete premetric spaces. *)
+Check IsApproximationLimit.
+Check CauchyComplete.
+
+(** Definition 4.5.8. Cauchy structures and their morphisms. *)
+Check CauchyStructure.
+Check CauchyStructureHom.
+
+(** Remark 4.5.9. A morphism of Cauchy structures, indeed any map preserving closeness, acts on Cauchy approximations; identity maps are morphisms, and morphisms compose. *)
+Check @map_cauchy_approximation.
+Check cshom_idmap.
+Check @cshom_compose.
+
+(** Lemma 4.5.10. In an Archimedean ordered field with [u] and [v] being [e]-close when [|u - v| < e], a limit [u] of a Cauchy approximation [x] satisfies [|x d - u| ≤ d]. *)
+Check field_close.
+Check @isapproximationlimit_le.
+
+(** Corollary 4.5.11. A Cauchy complete Archimedean ordered field is Cauchy complete as a premetric space, and has a canonical Cauchy structure. *)
+Check @cauchycomplete_field.
+Check @cauchy_structure_field.
 
 (** Definition 4.5.17. Dependent identifications. *)
 Check DPath.

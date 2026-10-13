@@ -124,14 +124,14 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 
 | ID | Statement | Depends on | Target | Status | Coq-HoTT has |
 |---|---|---|---|---|---|
-| Def 4.5.2 | Premetric: an HProp-valued relation ∼ : Q+ × R × R → HProp, no axioms. | 2.4.1 | existing name | todo | `Closeness` (Classes/theory/premetric.v), Type-valued; HProp-ness must be added as a hypothesis (as in `approx_eq`). `PreMetric` there adds axioms the thesis deliberately omits. |
-| Def 4.5.3 | Modulus of Cauchy convergence for a sequence in a premetric space. | 4.5.2 | `Analysis/CauchyStructure.v` | todo | None for premetric spaces. |
-| Def 4.5.4 | Limit of a sequence in a premetric space. | 4.5.2 | `Analysis/CauchyStructure.v` | todo | None for sequences. |
-| Def 4.5.5 | Cauchy approximation x : Q+ → R with x_δ ∼_{δ+ε} x_ε; type C_R. | 4.5.2 | existing name | todo | `Approximation` (Classes/theory/premetric.v). Complete. |
-| Def 4.5.7 | u is a limit of a Cauchy approximation: ∀ ε θ, x_ε ∼_{ε+θ} u; Cauchy complete premetric space. | 4.5.5 | existing names | todo | `IsLimit`, `Lim`, `CauchyComplete` (Classes/theory/premetric.v). Complete. |
-| Def 4.5.8 | Cauchy structure (rat, lim, eq and four distance laws, as a Σ-type) and morphisms CS-hom(R, S). | 4.5.2, 4.5.5 | `Analysis/CauchyStructure.v` | todo | None. |
-| Lem 4.5.10 | In an Archimedean field with u ∼_ε v := \|u − v\| < ε, a limit u of x satisfies \|x_δ − u\| ≤ δ. | 4.5.7, 4.3.5 | `Analysis/CauchyStructure.v` | todo | None for ordered fields. |
-| Cor 4.5.11 | A Cauchy complete Archimedean ordered field has a canonical Cauchy structure. | 4.3.3, 4.4.4, 4.5.8, 4.5.10 | `Analysis/CauchyStructure.v` | todo | None. |
+| Def 4.5.2 | Premetric: an HProp-valued relation ∼ : Q+ × R × R → HProp, no axioms. | 2.4.1 | `Analysis/MetricSpace.v` | proved | `IsPremetric Q close` for a Type-valued `close : Qpos Q -> X -> X -> Type` (closeness is a proposition); instance `ispremetric_metric_close`. `Closeness` (Classes/theory/premetric.v) uses axiomatized rationals. |
+| Def 4.5.3 | Modulus of Cauchy convergence for a sequence in a premetric space. | 4.5.2 | `Analysis/MetricSpace.v` | proved | `MetricCauchyModulus Q close`, generalized in place from distances to arbitrary closeness relations (the metric case is `close := metric_close Q d`). |
+| Def 4.5.4 | Limit of a sequence in a premetric space. | 4.5.2 | `Analysis/MetricSpace.v` | proved | `IsMetricLimit Q close`, generalized in place as for Def 4.5.3. |
+| Def 4.5.5 | Cauchy approximation x : Q+ → R with x_δ ∼_{δ+ε} x_ε; type C_R. | 4.5.2 | `Analysis/CauchyStructure.v` | proved | `IsCauchyApproximation`, record `CauchyApproximation` (coercion `approximation`). `Approximation` (Classes/theory/premetric.v) uses axiomatized rationals. |
+| Def 4.5.7 | u is a limit of a Cauchy approximation: ∀ ε θ, x_ε ∼_{ε+θ} u; Cauchy complete premetric space. | 4.5.5 | `Analysis/CauchyStructure.v` | proved | `IsApproximationLimit`, class `CauchyComplete` (a limit operator). Not the premetric.v names, which use axiomatized rationals. |
+| Def 4.5.8 | Cauchy structure (rat, lim, eq and four distance laws, as a Σ-type) and morphisms CS-hom(R, S). | 4.5.2, 4.5.5 | `Analysis/CauchyStructure.v` | proved | Records `CauchyStructure Q` (bundling the carrier and premetric) and `CauchyStructureHom R S`; the action on approximations in the `lim` law is `map_cauchy_approximation`. |
+| Lem 4.5.10 | In an Archimedean field with u ∼_ε v := \|u − v\| < ε, a limit u of x satisfies \|x_δ − u\| ≤ δ. | 4.5.7, 4.3.5 | `Analysis/CauchyStructure.v` | proved | `isapproximationlimit_le`, for `field_close` (Analysis/CauchyCompleteness.v), which writes \|u − v\| < ε as −ε < u − v < ε; needs no Cauchy condition on x. |
+| Cor 4.5.11 | A Cauchy complete Archimedean ordered field has a canonical Cauchy structure. | 4.3.3, 4.4.4, 4.5.8, 4.5.10 | `Analysis/CauchyStructure.v` | proved | `cauchy_structure_field`, `cauchycomplete_field`; uses the sequence x(1/(n+1)) and `RoundUpStrict Q` for its modulus (as in `Analysis/Locator.v`). |
 | Def 4.5.12 | R_H is a homotopy-initial Cauchy structure: CS-hom(R_H, S) is contractible for every Cauchy structure S. | 4.5.8 | `Analysis/HoTTBookReals.v` | todo | None. The HoTT book's Cauchy reals (§11.3) are not in Coq-HoTT; state as a predicate on a Cauchy structure. |
 | Thm 4.5.13 | R_H is Cauchy complete. | 4.5.12, 4.5.18, U-2 | `Analysis/HoTTBookReals.v` | todo | None. The thesis defers to HoTT book §11.3.2. |
 | Def 4.5.14 | For A : R_H → U and B over ∼, the premetric (u, a) ∼_ε (v, b) := Σ ζ : u ∼_ε v, B(…, ζ) on Σ u, A(u). | 4.5.2, 4.5.12 | `Analysis/HoTTBookReals.v` | todo | None. |
@@ -273,7 +273,7 @@ Remarks are not numbered results, but these contain claims that later proofs use
 | ID | Statement | Used by | Target | Status | Coq-HoTT has |
 |---|---|---|---|---|---|
 | Rem 4.3.4 | i : Q → F is an embedding. | 6.3.1, 5.1.1 | `Classes/orders/rationals.v` | proved | `isinjective_rationals_to_field` and `isembedding_rationals_to_field` (Classes/orders/rationals.v), with no hypotheses beyond `Rationals Q` and `OrderedField F`; proved from tightness of the apartness of Q rather than from preservation of <. |
-| Rem 4.5.9 | Morphisms of Cauchy structures automatically preserve the distance laws, act on Cauchy approximations, and contain identities and compositions. | 4.5.18, 5.1.3 | `Analysis/CauchyStructure.v` | todo | None. |
+| Rem 4.5.9 | Morphisms of Cauchy structures automatically preserve the distance laws, act on Cauchy approximations, and contain identities and compositions. | 4.5.18, 5.1.3 | `Analysis/CauchyStructure.v` | proved | Items 2–3: `map_cauchy_approximation`, `cshom_idmap`, `cshom_compose`. Item 1 is automatic: the distance laws are not part of `CauchyStructureHom`. Item 4 (a two-point example) is not formalized. |
 | Rem 4.6.2 | Given the other cut axioms, transitivity is equivalent to disjointness. | 4.6.1 | `Analysis/DedekindReals.v` | todo | None. |
 | Rem 5.2.2 | For S a set, contractibility of CS-hom(R_E, S) means existence plus pointwise uniqueness. | 5.2.1 | `Analysis/EuclideanReals.v` | todo | None. |
 | Rem 5.3.7 | For bipointed convex bodies A, B, contractibility of the homomorphisms A → B means existence plus pointwise uniqueness. | 5.3.6 | `Analysis/IntervalObject.v` | proved | `contr_convexbodyhom_iff` (logical equivalence, `Funext`). |

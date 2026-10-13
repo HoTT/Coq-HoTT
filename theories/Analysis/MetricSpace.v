@@ -60,29 +60,33 @@ Section metric.
 
 End metric.
 
-(** ** Convergence and uniform continuity *)
+(** ** Premetrics, convergence and uniform continuity *)
 
 Section convergence.
-  Context (Q : Type) `{Rationals Q}.
-  Context {F : Type} `{OrderedField F}.
-  Let qinc : Cast Q F := rationals_to_field Q F.
-  Existing Instance qinc.
+  (** The order on [Q] is at the level of [Q], as for [Qpos], so that instances are found for closeness relations passed as arguments. *)
+  Universe UQ.
+  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
+    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
+    {Qrats : Rationals Q}.
+
+  (** A premetric on [X] is a family of relations [close e] indexed by the positive rationals [e], where [close e x y] says that [x] and [y] are [e]-close. Closeness is a proposition, and no other axioms are imposed. The definitions below make sense for any family of relations. *)
+  Class IsPremetric {X : Type} (close : Qpos Q -> X -> X -> Type)
+    := ishprop_premetric : forall e x y, IsHProp (close e x y).
+  #[export] Existing Instance ishprop_premetric.
 
   Section premetric.
-    Context {X : Type} (d : X -> X -> F).
-
-    (** A distance function induces a premetric: [x] and [y] are [e]-close when their distance is less than [e]. *)
-    Definition metric_close (e : Qpos Q) (x y : X) := d x y < ' (' e).
+    Context {X : Type} (close : Qpos Q -> X -> X -> Type).
 
     (** A modulus of Cauchy convergence for a sequence. *)
     Class MetricCauchyModulus (x : nat -> X) (M : Qpos Q -> nat)
       := metric_cauchy_convergence : forall (e : Qpos Q) (m n : nat),
-           (M e <= m)%nat -> (M e <= n)%nat -> metric_close e (x m) (x n).
+           (M e <= m)%nat -> (M e <= n)%nat -> close e (x m) (x n).
 
     (** A limit of a sequence. *)
     Class IsMetricLimit (x : nat -> X) (l : X)
       := is_metric_limit : forall e : Qpos Q,
-           hexists (fun N : nat => forall n : nat, (N <= n)%nat -> metric_close e (x n) l).
+           hexists (fun N : nat => forall n : nat, (N <= n)%nat -> close e (x n) l).
 
     (** Cauchy completeness is the structure of a limit operator, which computes a limit of each sequence with a modulus of Cauchy convergence. *)
     Class MetricCauchyComplete := {
@@ -97,45 +101,47 @@ Section convergence.
       : IsMetricLimit (fun n => x (S n)) l.
     Proof.
       intro e; assert (c := islim e); strip_truncations; apply tr.
-      destruct c as [N close].
+      destruct c as [N close'].
       exists N; intros n leNn.
-      exact (close (S n) (leq_succ_r leNn)).
+      exact (close' (S n) (leq_succ_r leNn)).
     Defined.
 
   End premetric.
 
   (** A modulus of uniform continuity for a map. *)
-  Class IsUniformModulus {X Y : Type} (dX : X -> X -> F) (dY : Y -> Y -> F)
-    (f : X -> Y) (w : Qpos Q -> Qpos Q)
+  Class IsUniformModulus {X Y : Type} (closeX : Qpos Q -> X -> X -> Type)
+    (closeY : Qpos Q -> Y -> Y -> Type) (f : X -> Y) (w : Qpos Q -> Qpos Q)
     := uniform_modulus : forall (e : Qpos Q) (x y : X),
-         metric_close dX (w e) x y -> metric_close dY e (f x) (f y).
+         closeX (w e) x y -> closeY e (f x) (f y).
 
   Section uniform.
-    Context {X Y Z : Type} (dX : X -> X -> F) (dY : Y -> Y -> F) (dZ : Z -> Z -> F).
+    Context {X Y Z : Type} (closeX : Qpos Q -> X -> X -> Type)
+      (closeY : Qpos Q -> Y -> Y -> Type) (closeZ : Qpos Q -> Z -> Z -> Type).
 
-    Definition isuniformmodulus_idmap : IsUniformModulus dX dX idmap idmap
+    Definition isuniformmodulus_idmap : IsUniformModulus closeX closeX idmap idmap
       := fun e x y c => c.
 
     (** Moduli compose in the reverse order. *)
     Definition isuniformmodulus_compose (f : X -> Y) (g : Y -> Z) (w v : Qpos Q -> Qpos Q)
-      (fw : IsUniformModulus dX dY f w) (gv : IsUniformModulus dY dZ g v)
-      : IsUniformModulus dX dZ (g o f) (w o v)
+      (fw : IsUniformModulus closeX closeY f w) (gv : IsUniformModulus closeY closeZ g v)
+      : IsUniformModulus closeX closeZ (g o f) (w o v)
       := fun e x y c => gv e _ _ (fw (v e) x y c).
 
     (** A uniformly continuous map sends a sequence with a modulus of Cauchy convergence to one with a modulus. *)
     Definition metriccauchymodulus_uniform (f : X -> Y) (w : Qpos Q -> Qpos Q)
-      (fw : IsUniformModulus dX dY f w) (x : nat -> X) (M : Qpos Q -> nat)
-      (xM : MetricCauchyModulus dX x M)
-      : MetricCauchyModulus dY (f o x) (M o w)
+      (fw : IsUniformModulus closeX closeY f w) (x : nat -> X) (M : Qpos Q -> nat)
+      (xM : MetricCauchyModulus closeX x M)
+      : MetricCauchyModulus closeY (f o x) (M o w)
       := fun e m n lem len => fw e _ _ (xM (w e) m n lem len).
 
     (** A map preserves limits if it sends limits of sequences to limits of the image sequences. *)
     Definition PreservesMetricLimits (f : X -> Y)
-      := forall (x : nat -> X) (l : X), IsMetricLimit dX x l -> IsMetricLimit dY (f o x) (f l).
+      := forall (x : nat -> X) (l : X),
+           IsMetricLimit closeX x l -> IsMetricLimit closeY (f o x) (f l).
 
     (** Uniformly continuous maps preserve limits. *)
     Lemma preservesmetriclimits_uniform (f : X -> Y) (w : Qpos Q -> Qpos Q)
-      (fw : IsUniformModulus dX dY f w)
+      (fw : IsUniformModulus closeX closeY f w)
       : PreservesMetricLimits f.
     Proof.
       intros x l islim e.
@@ -146,6 +152,20 @@ Section convergence.
     Defined.
 
   End uniform.
+
+  Context {F : Type} `{OrderedField F}.
+  Let qinc : Cast Q F := rationals_to_field Q F.
+  Existing Instance qinc.
+
+  (** A distance function induces a premetric: [x] and [y] are [e]-close when their distance is less than [e]. *)
+  Definition metric_close {X : Type} (d : X -> X -> F) (e : Qpos Q) (x y : X)
+    := d x y < ' (' e).
+
+  #[export] Instance ispremetric_metric_close {X : Type} (d : X -> X -> F)
+    : IsPremetric (metric_close d).
+  Proof.
+    intros e x y; unfold metric_close; exact _.
+  Defined.
 
   (** ** Uniqueness of limits *)
 
@@ -169,7 +189,8 @@ Section convergence.
 
     (** Two limits of the same sequence have distance zero. *)
     Lemma metric_limit_distance_zero `{!IsPseudoMetric d} (x : nat -> X) (l l' : X)
-      (islim : IsMetricLimit d x l) (islim' : IsMetricLimit d x l')
+      (islim : IsMetricLimit (metric_close d) x l)
+      (islim' : IsMetricLimit (metric_close d) x l')
       : d l l' = 0.
     Proof.
       apply (antisymmetry (≤)); [|apply pseudometric_nonneg].
@@ -188,7 +209,8 @@ Section convergence.
 
     (** In a metric space, limits are unique. *)
     Lemma metric_limit_unique `{!IsMetric d} (x : nat -> X) (l l' : X)
-      (islim : IsMetricLimit d x l) (islim' : IsMetricLimit d x l')
+      (islim : IsMetricLimit (metric_close d) x l)
+      (islim' : IsMetricLimit (metric_close d) x l')
       : l = l'.
     Proof.
       exact (metric_separated l l' (metric_limit_distance_zero x l l' islim islim')).

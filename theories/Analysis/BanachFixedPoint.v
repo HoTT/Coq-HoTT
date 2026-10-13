@@ -217,7 +217,7 @@ Section lipschitz_uniform.
   (** A positive rational Lipschitz constant [c] gives the modulus of uniform continuity [e / c]. *)
   Lemma isuniformmodulus_lipschitz (f : X -> Y) (c : Qpos Q)
     (fc : IsLipschitz dX dY f (' (' c)))
-    : IsUniformModulus Q dX dY f (fun e => e / c).
+    : IsUniformModulus Q (metric_close Q dX) (metric_close Q dY) f (fun e => e / c).
   Proof.
     intros e x y close; unfold metric_close in *.
     refine (le_lt_trans _ _ _ (fc x y) _).
@@ -237,7 +237,7 @@ Section lipschitz_uniform.
   (** A positive Lipschitz constant in [F] merely gives a modulus of uniform continuity. *)
   Lemma merely_isuniformmodulus_lipschitz (f : X -> Y) (c : F) (c0 : 0 < c)
     (fc : IsLipschitz dX dY f c)
-    : hexists (fun w : Qpos Q -> Qpos Q => IsUniformModulus Q dX dY f w).
+    : hexists (IsUniformModulus Q (metric_close Q dX) (metric_close Q dY) f).
   Proof.
     assert (r := archimedean_property Q F c (c + 1)
                    (fst (pos_plus_lt_compat_r c 1) lt_0_1)).
@@ -339,7 +339,7 @@ Section banach.
 
   (** If [d (T x0) x0 ≤ C], then the iterates of [T] at [x0] form a sequence with a modulus of Cauchy convergence. *)
   Lemma metriccauchymodulus_iterates (C : Qpos Q) (x0 : X) (C0 : d (T x0) x0 ≤ ' (' C))
-    : MetricCauchyModulus Q d (fun n => nat_iter n T x0) (iterates_modulus C).
+    : MetricCauchyModulus Q (metric_close Q d) (fun n => nat_iter n T x0) (iterates_modulus C).
   Proof.
     intro e.
     set (M := iterates_modulus C e).
@@ -384,21 +384,22 @@ Section banach.
       exact (key m k lem).
   Qed.
 
-  Context {Farch : ArchimedeanProperty Q F} `{!MetricCauchyComplete Q d}.
+  Context {Farch : ArchimedeanProperty Q F} `{!MetricCauchyComplete Q (metric_close Q d)}.
 
   (** Banach's fixed point theorem: in a Cauchy complete pseudometric space, a map with a rational Lipschitz constant [0 < c < 1] has a pseudo-fixed point, which is unique up to distance zero. The point [x0] with [d (T x0) x0 ≤ C] can be any point when the space is bounded by [C]. *)
   Definition banach_fixed_point (C : Qpos Q) (x0 : X) (C0 : d (T x0) x0 ≤ ' (' C))
     : {x : X & d (T x) x = 0 /\ forall y, d (T y) y = 0 -> d x y = 0}.
   Proof.
     set (xs := fun n => nat_iter n T x0).
-    set (l := metric_limit Q d xs (iterates_modulus C)
+    set (l := metric_limit Q (metric_close Q d) xs (iterates_modulus C)
                 (metriccauchymodulus_iterates C x0 C0)).
-    assert (islim : IsMetricLimit Q d xs l) by apply ismetriclimit_metric_limit.
+    assert (islim : IsMetricLimit Q (metric_close Q d) xs l)
+      by apply ismetriclimit_metric_limit.
     assert (p : d (T l) l = 0).
     { apply (metric_limit_distance_zero Q d (fun n => xs (S n))).
-      - exact (preservesmetriclimits_uniform Q d d T _
+      - exact (preservesmetriclimits_uniform Q (metric_close Q d) (metric_close Q d) T _
                  (isuniformmodulus_lipschitz Q d d T (mkQpos c c0) Tc) xs l islim).
-      - exact (ismetriclimit_tail Q d xs l islim). }
+      - exact (ismetriclimit_tail Q (metric_close Q d) xs l islim). }
     exists l; split; [exact p|].
     intros y py.
     exact (pseudo_fixed_point_unique d T (' c) c_lt_1 Tc l y p py).
