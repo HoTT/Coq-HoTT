@@ -75,14 +75,24 @@ fi
 tty=()
 if [ -z "${scratch:-}" ] && [ -t 0 ] && [ -t 1 ]; then tty=(-t); fi
 
-lock="${TMPDIR:-/tmp}/hott-bin-build-$(printf '%s' "$ROOT" | cksum | cut -d' ' -f1).lock"
+key="$(printf '%s' "$ROOT" | cksum | cut -d' ' -f1)"
+lock="${TMPDIR:-/tmp}/hott-bin-build-$key.lock"
 exec 9>"$lock"
 flock 9
+
+# Holding the lock means no other bin/build for this checkout is running, so
+# any container still labelled with this checkout was orphaned by an earlier
+# bin/build that was killed (e.g. by a timeout); it would otherwise keep
+# dune's own lock on _build/ and make this build hang.
+stale="$(docker ps -q --filter "label=hott-bin-build=$key")"
+if [ -n "$stale" ]; then docker kill $stale >/dev/null 2>&1 || true; fi
 
 # Run as the calling user so build products are owned by them. The image's
 # entrypoint (`opam exec`) refuses to run as a foreign user, so we set up the
 # opam switch environment by hand instead.
-run=(docker run --rm -i "${tty[@]}" \
+# --init forwards interrupts to dune, which as PID 1 would otherwise ignore them.
+run=(docker run --rm -i --init "${tty[@]}" \
+  --label "hott-bin-build=$key" \
   --user "$(id -u):$(id -g)" \
   --entrypoint "" \
   -v "$ROOT:/work" -w /work \
