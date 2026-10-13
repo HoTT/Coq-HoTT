@@ -651,12 +651,6 @@ Section locator.
             (l : locator x)
             (m : locator y).
 
-    (** TODO the following two should be proven in Classes/orders/archimedean.v *)
-    Context (char_plus_left : forall (q : Q) (x y : F),
-                ' q < x + y <-> hexists (fun s : Q => (' s < x) /\ (' (q - s) < y)))
-            (char_plus_right : forall (r : Q) (x y : F),
-                x + y < ' r <-> hexists (fun t : Q => (x < ' t) /\ (y < ' (r - t)))).
-
     Definition locator_plus : locator (x + y).
     Proof.
       intros q r ltqr.
