@@ -3,8 +3,12 @@ Require Import
   HoTT.Classes.interfaces.orders
   HoTT.Classes.interfaces.rationals
   HoTT.Classes.interfaces.archimedean
+  HoTT.Classes.theory.rings
   HoTT.Classes.theory.fields
-  HoTT.Classes.orders.rings.
+  HoTT.Classes.orders.maps
+  HoTT.Classes.orders.rings
+  HoTT.Classes.orders.fields
+  HoTT.Classes.orders.lattices.
 
 Generalizable Variables Q F.
 
@@ -17,73 +21,357 @@ Section strict_field_order.
   Definition qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.
 
+  (** Lemma 6.7.1 characterizes the algebraic operations in terms of the strict order and rationals. Its parts are the [char_*] lemmas below. *)
+
+  (** Lemma 6.7.1, [-x < r] iff [-r < x]. *)
   Lemma char_minus_left x y : - x < y -> - y < x.
   Proof.
     intros ltnxy. rewrite <- (negate_involutive x). apply (snd (flip_lt_negate _ _)). assumption.
   Qed.
 
+  (** Lemma 6.7.1, [q < -x] iff [x < -q]. *)
   Lemma char_minus_right x y : x < - y -> y < - x.
   Proof.
     intros ltnxy. rewrite <- (negate_involutive y). apply (snd (flip_lt_negate _ _)). assumption.
   Qed.
 
+  (** Lemma 6.7.1, [q < x + y] iff there is [s : Q] with [s < x] and [q - s < y]. *)
   Lemma char_plus_left : forall (q : Q) (x y : F),
       ' q < x + y <-> hexists (fun s : Q => (' s < x) /\ (' (q - s) < y)).
-  Proof. Abort.
+  Proof.
+    intros q x y; split.
+    - intros ltqxy.
+      assert (hs := archimedean_property Q F (' q - y) x (snd (flip_lt_minus_l _ _ _) ltqxy)).
+      strip_truncations; destruct hs as [s [ltqys ltsx]].
+      apply tr; exists s; split; [exact ltsx|].
+      rewrite preserves_minus.
+      apply flip_lt_minus_l; rewrite (commutativity y).
+      apply flip_lt_minus_l; assumption.
+    - intros hs; strip_truncations; destruct hs as [s [ltsx ltqsy]].
+      rewrite preserves_minus in ltqsy.
+      apply (transitivity (fst (flip_lt_minus_l _ _ _) ltqsy)).
+      rewrite (commutativity x).
+      apply (strictly_order_preserving (y +)); assumption.
+  Qed.
+
+  (** Lemma 6.7.1, [x + y < r] iff there is [t : Q] with [x < t] and [y < r - t]. *)
   Lemma char_plus_right : forall (r : Q) (x y : F),
       x + y < ' r <-> hexists (fun t : Q => (x < ' t) /\ (y < ' (r - t))).
-  Proof. Abort.
+  Proof.
+    intros r x y; split.
+    - intros ltxyr.
+      assert (ht := archimedean_property Q F x (' r - y) (snd (flip_lt_minus_r _ _ _) ltxyr)).
+      strip_truncations; destruct ht as [t [ltxt lttry]].
+      apply tr; exists t; split; [exact ltxt|].
+      rewrite preserves_minus.
+      apply flip_lt_minus_r; rewrite (commutativity y).
+      apply flip_lt_minus_r; assumption.
+    - intros ht; strip_truncations; destruct ht as [t [ltxt ltyrt]].
+      rewrite preserves_minus in ltyrt.
+      refine (transitivity _ (fst (flip_lt_minus_r _ _ _) ltyrt)).
+      rewrite (commutativity y).
+      apply (strictly_order_preserving (+ y)); assumption.
+  Qed.
+
+  (** Lemma 6.7.1, for [0 < z], [q < z⁻¹] iff [q z < 1]. *)
+  Lemma char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
+    'q < recip' z (positive_apart_zero z nu) <-> ' q * z < 1.
+  Proof.
+    intros q z nu.
+    rewrite <- (recip_inverse' z (positive_apart_zero z nu)), (commutativity z).
+    split.
+    - apply (strictly_order_preserving (.* z)).
+    - apply (strictly_order_reflecting (.* z)).
+  Qed.
+
+  (** Lemma 6.7.1, for [0 < z], [z⁻¹ < r] iff [1 < r z]. *)
+  Lemma char_recip_pos_right : forall (r : Q) (z : F) (nu : 0 < z),
+    recip' z (positive_apart_zero z nu) < ' r <-> 1 < ' r * z.
+  Proof.
+    intros r z nu.
+    rewrite <- (recip_inverse' z (positive_apart_zero z nu)), (commutativity z).
+    split.
+    - apply (strictly_order_preserving (.* z)).
+    - apply (strictly_order_reflecting (.* z)).
+  Qed.
+
+  (** Lemma 6.7.1, for [w < 0], [q < w⁻¹] iff [1 < q w]. *)
+  Lemma char_recip_neg_left : forall (q : Q) (w : F) (nu : w < 0),
+    'q < recip' w (negative_apart_zero w nu) <-> 1 < ' q * w.
+  Proof.
+    intros q w nu.
+    set (w' := recip' w (negative_apart_zero w nu)).
+    assert (ww' : w * w' = 1) by apply recip_inverse'.
+    split.
+    - intros ltqw'. rewrite <- ww', (commutativity w). exact (flip_neg_mult_r _ _ _ nu ltqw').
+    - intros lt1qw.
+      assert (w'neg : w' < 0) by apply neg_recip_compat.
+      assert (lt := flip_neg_mult_r _ _ _ w'neg lt1qw).
+      rewrite <- (associativity _ w w'), ww', mult_1_r, mult_1_l in lt.
+      exact lt.
+  Qed.
+
+  (** Lemma 6.7.1, for [w < 0], [w⁻¹ < r] iff [r w < 1]. *)
+  Lemma char_recip_neg_right : forall (r : Q) (w : F) (nu : w < 0),
+    recip' w (negative_apart_zero w nu) < ' r <-> ' r * w < 1.
+  Proof.
+    intros r w nu.
+    set (w' := recip' w (negative_apart_zero w nu)).
+    assert (ww' : w * w' = 1) by apply recip_inverse'.
+    split.
+    - intros ltw'r. rewrite <- ww', (commutativity w). exact (flip_neg_mult_r _ _ _ nu ltw'r).
+    - intros ltrw1.
+      assert (w'neg : w' < 0) by apply neg_recip_compat.
+      assert (lt := flip_neg_mult_r _ _ _ w'neg ltrw1).
+      rewrite <- (associativity _ w w'), ww', mult_1_r, mult_1_l in lt.
+      exact lt.
+  Qed.
+
+  (** Lemma 6.7.1, [q < min(x, y)] iff [q < x] and [q < y]. *)
+  Lemma char_meet_left : forall (q : Q) (x y : F),
+      ' q < meet x y <-> ' q < x /\ ' q < y.
+  Proof.
+    intros q x y; split.
+    - intros ltqm; split; refine (lt_le_trans _ _ _ ltqm _).
+      + apply meet_lb_l.
+      + apply meet_lb_r.
+    - intros [ltqx ltqy]; apply meet_lt_l; assumption.
+  Qed.
+
+  (** Lemma 6.7.1, [min(x, y) < r] iff [x < r] or [y < r]. *)
+  Lemma char_meet_right : forall (r : Q) (x y : F),
+      meet x y < 'r <-> hor (x < 'r) (y < 'r).
+  Proof.
+    intros r x y; split.
+    - intros ltmr.
+      assert (cx := cotransitive ltmr x).
+      assert (cy := cotransitive ltmr y).
+      strip_truncations.
+      destruct cx as [ltmx|ltxr]; [|exact (tr (inl ltxr))].
+      destruct cy as [ltmy|ltyr]; [|exact (tr (inr ltyr))].
+      destruct (irreflexivity _ _ (meet_lt_l _ _ _ ltmx ltmy)).
+    - intros h; strip_truncations; destruct h as [ltxr|ltyr].
+      + apply meet_lt_r_l; assumption.
+      + apply meet_lt_r_r; assumption.
+  Qed.
+
+  (** Lemma 6.7.1, [q < max(x, y)] iff [q < x] or [q < y]. *)
+  Lemma char_join_left : forall (q : Q) (x y : F),
+      ' q < join x y <-> hor ('q < x) ('q < y).
+  Proof.
+    intros q x y; split.
+    - intros ltqj.
+      assert (cx := cotransitive ltqj x).
+      assert (cy := cotransitive ltqj y).
+      strip_truncations.
+      destruct cx as [ltqx|ltxj]; [exact (tr (inl ltqx))|].
+      destruct cy as [ltqy|ltyj]; [exact (tr (inr ltqy))|].
+      destruct (irreflexivity _ _ (join_lt_r _ _ _ ltxj ltyj)).
+    - intros h; strip_truncations; destruct h as [ltqx|ltqy].
+      + apply join_lt_l_l; assumption.
+      + apply join_lt_l_r; assumption.
+  Qed.
+
+  (** Lemma 6.7.1, [max(x, y) < r] iff [x < r] and [y < r]. *)
+  Lemma char_join_right : forall (r : Q) (x y : F),
+      join x y < ' r <-> x < ' r /\ y < ' r.
+  Proof.
+    intros r x y; split.
+    - intros ltjr; split; refine (le_lt_trans _ _ _ _ ltjr).
+      + apply join_ub_l.
+      + apply join_ub_r.
+    - intros [ltxr ltyr]; apply join_lt_r; assumption.
+  Qed.
 
   Definition hexists4 {X Y Z W} (f : X -> Y -> Z -> W -> Type) : HProp
     := hexists (fun xyzw => match xyzw with
                             | ((x , y) , (z , w)) => f x y z w
                             end).
 
-  Lemma char_times_left : forall (q : Q) (x y : F),
-          ' q < x * y
-      <-> hexists4 (fun a b c d : Q =>
-                      (q < meet (meet a b) (meet c d))
-                      /\
-                      ((' a < x < ' b)
-                       /\
-                       (' c < y < ' d)
-                      )
-                   ).
-  Proof. Abort.
-  Lemma char_times_right : forall (r : Q) (x y : F),
-          x * y < ' r
-      <-> hexists4 (fun a b c d : Q =>
-                      and (join (join a b) (join c d) < r)
-                          (and
-                             (' a < x < ' b)
-                             (' c < y < ' d)
-                          )
-                   ).
-  Proof. Abort.
-  Lemma char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
-    'q < recip' z (positive_apart_zero z nu) <-> ' q * z < 1.
-  Proof. Abort.
-  Lemma char_recip_pos_right : forall (r : Q) (z : F) (nu : 0 < z),
-    recip' z (positive_apart_zero z nu) < ' r <-> 1 < ' r * z.
-  Proof. Abort.
-  Lemma char_recip_neg_left : forall (q : Q) (w : F) (nu : w < 0),
-    'q < recip' w (negative_apart_zero w nu) <-> ' q * w < 1.
-  Proof. Abort.
-  Lemma char_recip_neg_right : forall (r : Q) (w : F) (nu : w < 0),
-    recip' w (negative_apart_zero w nu) < ' r <-> ' r * w < 1.
-  Proof. Abort.
+  Section times.
+    (* TODO The following two assumptions should follow from Lemma 4.3.3; [Analysis/Locator.v] makes the same assumptions. They are used to move strict inequalities between [Q] and [F]. *)
+    Context `{!StrictlyOrderPreserving qinc} `{!IsSemiRingStrongPreserving qinc}.
 
-  Lemma char_meet_left : forall (q : Q) (x y : F),
-      ' q < meet x y <-> ' q < x /\ ' q < y.
-  Proof. Abort.
-  Lemma char_meet_right : forall (r : Q) (x y : F),
-      meet x y < 'r <-> hor (x < 'r) (y < 'r).
-  Proof. Abort.
-  Lemma char_join_left : forall (q : Q) (x y : F),
-      ' q < join x y <-> hor ('q < x) ('q < y).
-  Proof. Abort.
-  Lemma char_join_right : forall (r : Q) (x y : F),
-      join x y < ' r <-> x < ' r /\ y < ' r.
-  Proof. Abort.
+    Local Instance qinc_strictly_order_reflecting : StrictlyOrderReflecting qinc.
+    Proof.
+      pose proof (full_pseudo_order_reflecting (f:=qinc)). exact _.
+    Qed.
+
+    (** Rational bounds [a < x < b] and [c < y < d] such that [u * w] is within [e] of [x * y] for all [u] in [[a, b]] and [w] in [[c, d]]. *)
+    Lemma archimedean_mult_approx (x y e : F) (epos : 0 < e)
+      : hexists4 (fun a b c d : Q =>
+                    (' a < x < ' b) /\ (' c < y < ' d)
+                    /\ forall u w, ' a ≤ u -> u ≤ ' b -> ' c ≤ w -> w ≤ ' d
+                                   -> x * y - e < u * w < x * y + e).
+    Proof.
+      set (J := join (join x (- x)) (join y (- y))).
+      set (Z := J + 1).
+      assert (ltZ : forall v, v ≤ J -> v < Z)
+        by (intros v lev; exact (le_lt_trans _ _ _ lev (fst (pos_plus_lt_compat_r J 1) lt_0_1))).
+      assert (ltxZ : x < Z)
+        by (apply ltZ; exact (transitivity (join_ub_l x (- x)) (join_ub_l _ _))).
+      assert (ltZx : - Z < x).
+      { apply flip_lt_negate_l, ltZ.
+        exact (transitivity (join_ub_r x (- x)) (join_ub_l _ _)). }
+      assert (ltyZ : y < Z)
+        by (apply ltZ; exact (transitivity (join_ub_l y (- y)) (join_ub_r _ _))).
+      assert (ltZy : - Z < y).
+      { apply flip_lt_negate_l, ltZ.
+        exact (transitivity (join_ub_r y (- y)) (join_ub_r _ _)). }
+      assert (Zpos : 0 < Z + Z).
+      { assert (Zpos := pos_between_negate x Z (ltZx, ltxZ)).
+        apply pos_plus_compat; assumption. }
+      set (D := e * recip' (Z + Z) (positive_apart_zero _ Zpos)).
+      assert (Dpos : 0 < D) by exact (pos_mult _ _ epos (pos_recip_compat _ _)).
+      assert (ZDDZ : Z * D + D * Z = e).
+      { rewrite (commutativity D Z), <- plus_mult_distr_r.
+        unfold D, recip'.
+        rewrite (commutativity e), (associativity (Z + Z)), recip_inverse', mult_1_l.
+        reflexivity. }
+      assert (ha := archimedean_property Q F _ x (join_lt_r _ _ _ (fst (pos_minus_lt_compat_r x D) Dpos) ltZx)).
+      assert (hb := archimedean_property Q F x _ (meet_lt_l _ _ _ (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
+      assert (hc := archimedean_property Q F _ y (join_lt_r _ _ _ (fst (pos_minus_lt_compat_r y D) Dpos) ltZy)).
+      assert (hd := archimedean_property Q F y _ (meet_lt_l _ _ _ (fst (pos_plus_lt_compat_r y D) Dpos) ltyZ)).
+      strip_truncations.
+      destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]],
+        hc as [c [ltjc ltcy]], hd as [d [ltyd ltdm]].
+      apply tr; exists ((a, b), (c, d)).
+      refine ((ltax, ltxb), ((ltcy, ltyd), _)).
+      intros u w leau leub lecw lewd.
+      (* For [v] in [[a', b']] with [v - D < a'] and [b' < v + D], we have [- D < v - u < D]. *)
+      assert (close : forall v a' b' u, join (v - D) (- Z) < a' -> b' < meet (v + D) Z
+                                        -> a' ≤ u -> u ≤ b' -> - D < v - u < D).
+      { clear - Dpos.
+        intros v a' b' u ltja' ltb'm lea'u leub'.
+        split.
+        - apply flip_lt_minus_r; rewrite (commutativity (- D)).
+          apply flip_lt_minus_l.
+          refine (le_lt_trans _ _ _ leub' (lt_le_trans _ _ _ ltb'm (meet_lb_l _ _))).
+        - apply flip_lt_minus_l; rewrite (commutativity D).
+          apply flip_lt_minus_l.
+          exact (lt_le_trans _ _ _ (le_lt_trans _ _ _ (join_ub_l _ _) ltja') lea'u). }
+      assert (ltZw : - Z < w)
+        by exact (lt_le_trans _ _ _ (le_lt_trans _ _ _ (join_ub_r _ _) ltjc) lecw).
+      assert (ltwZ : w < Z)
+        by exact (le_lt_trans _ _ _ lewd (lt_le_trans _ _ _ ltdm (meet_lb_r _ _))).
+      destruct (mult_minus_mult_lt_bound x y u w Z Z D (ltZx, ltxZ) (ltZw, ltwZ)
+                  (close x _ _ u ltja ltbm leau leub) (close y _ _ w ltjc ltdm lecw lewd))
+        as [lo hi].
+      rewrite ZDDZ in lo, hi.
+      split.
+      - apply flip_lt_minus_l; rewrite (commutativity (u * w)).
+        apply flip_lt_minus_l; exact hi.
+      - apply flip_lt_minus_l; rewrite <- (commutativity (- e)).
+        apply flip_lt_minus_r; exact lo.
+    Qed.
+
+    (** Lemma 6.7.1, [q < x y] iff there are [a < x < b] and [c < y < d] with [q < min(ac, ad, bc, bd)]. *)
+    Lemma char_times_left : forall (q : Q) (x y : F),
+            ' q < x * y
+        <-> hexists4 (fun a b c d : Q =>
+                        (q < meet (meet (a * c) (a * d)) (meet (b * c) (b * d)))
+                        /\
+                        ((' a < x < ' b)
+                         /\
+                         (' c < y < ' d)
+                        )
+                     ).
+    Proof.
+      intros q x y; split.
+      - intros ltqxy.
+        assert (h := archimedean_mult_approx x y (x * y - ' q)
+                       (snd (flip_pos_minus _ _) ltqxy)).
+        strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
+        apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
+        assert (corner : forall u w, ' a ≤ ' u -> ' u ≤ ' b -> ' c ≤ ' w -> ' w ≤ ' d
+                                     -> q < u * w).
+        { intros u w leau leub lecw lewd.
+          apply (strictly_order_reflecting qinc).
+          rewrite preserves_mult.
+          assert (p : x * y - (x * y - ' q) = ' q).
+          { rewrite negate_plus_distr, negate_involutive, plus_assoc,
+              plus_negate_r, plus_0_l.
+            reflexivity. }
+          exact (transport (fun z => z < _) p (fst (approx _ _ leau leub lecw lewd))). }
+        destruct ltaxb as [ltax ltxb], ltcyd as [ltcy ltyd].
+        assert (leab := lt_le _ _ (transitivity ltax ltxb)).
+        assert (lecd := lt_le _ _ (transitivity ltcy ltyd)).
+        repeat apply meet_lt_l; apply corner; first [reflexivity | assumption].
+      - intros h; strip_truncations; destruct h as [[[a b] [c d]] [ltqm [[ltax ltxb] [ltcy ltyd]]]].
+        assert (corner : forall u w, meet (meet (a * c) (a * d)) (meet (b * c) (b * d)) ≤ u * w
+                                     -> ' q < ' u * ' w).
+        { intros u w lemuw.
+          rewrite <- preserves_mult.
+          apply (strictly_order_preserving qinc).
+          exact (lt_le_trans _ _ _ ltqm lemuw). }
+        assert (ltqxc : ' q < x * ' c).
+        { apply (lt_mult_endpoints_l _ (' a) (' b) x (' c) (lt_le _ _ ltax) (lt_le _ _ ltxb));
+            apply corner.
+          - exact (transitivity (meet_lb_l _ _) (meet_lb_l _ _)).
+          - exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)). }
+        assert (ltqxd : ' q < x * ' d).
+        { apply (lt_mult_endpoints_l _ (' a) (' b) x (' d) (lt_le _ _ ltax) (lt_le _ _ ltxb));
+            apply corner.
+          - exact (transitivity (meet_lb_l _ _) (meet_lb_r _ _)).
+          - exact (transitivity (meet_lb_r _ _) (meet_lb_r _ _)). }
+        rewrite (mult_comm x y).
+        apply (lt_mult_endpoints_l _ (' c) (' d) y x (lt_le _ _ ltcy) (lt_le _ _ ltyd));
+          rewrite (mult_comm _ x); assumption.
+    Qed.
+
+    (** Lemma 6.7.1, [x y < r] iff there are [a < x < b] and [c < y < d] with [max(ac, ad, bc, bd) < r]. *)
+    Lemma char_times_right : forall (r : Q) (x y : F),
+            x * y < ' r
+        <-> hexists4 (fun a b c d : Q =>
+                        (join (join (a * c) (a * d)) (join (b * c) (b * d)) < r)
+                        /\
+                        ((' a < x < ' b)
+                         /\
+                         (' c < y < ' d)
+                        )
+                     ).
+    Proof.
+      intros r x y; split.
+      - intros ltxyr.
+        assert (h := archimedean_mult_approx x y (' r - x * y)
+                       (snd (flip_pos_minus _ _) ltxyr)).
+        strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
+        apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
+        assert (corner : forall u w, ' a ≤ ' u -> ' u ≤ ' b -> ' c ≤ ' w -> ' w ≤ ' d
+                                     -> u * w < r).
+        { intros u w leau leub lecw lewd.
+          apply (strictly_order_reflecting qinc).
+          rewrite preserves_mult.
+          assert (p : x * y + (' r - x * y) = ' r).
+          { rewrite (commutativity (' r)), plus_assoc, plus_negate_r, plus_0_l.
+            reflexivity. }
+          exact (transport (fun z => _ < z) p (snd (approx _ _ leau leub lecw lewd))). }
+        destruct ltaxb as [ltax ltxb], ltcyd as [ltcy ltyd].
+        assert (leab := lt_le _ _ (transitivity ltax ltxb)).
+        assert (lecd := lt_le _ _ (transitivity ltcy ltyd)).
+        repeat apply join_lt_r; apply corner; first [reflexivity | assumption].
+      - intros h; strip_truncations; destruct h as [[[a b] [c d]] [ltjr [[ltax ltxb] [ltcy ltyd]]]].
+        assert (corner : forall u w, u * w ≤ join (join (a * c) (a * d)) (join (b * c) (b * d))
+                                     -> ' u * ' w < ' r).
+        { intros u w leuwj.
+          rewrite <- preserves_mult.
+          apply (strictly_order_preserving qinc).
+          exact (le_lt_trans _ _ _ leuwj ltjr). }
+        assert (ltxcr : x * ' c < ' r).
+        { apply (mult_endpoints_lt_r _ (' a) (' b) x (' c) (lt_le _ _ ltax) (lt_le _ _ ltxb));
+            apply corner.
+          - exact (transitivity (join_ub_l _ _) (join_ub_l _ _)).
+          - exact (transitivity (join_ub_l _ _) (join_ub_r _ _)). }
+        assert (ltxdr : x * ' d < ' r).
+        { apply (mult_endpoints_lt_r _ (' a) (' b) x (' d) (lt_le _ _ ltax) (lt_le _ _ ltxb));
+            apply corner.
+          - exact (transitivity (join_ub_r _ _) (join_ub_l _ _)).
+          - exact (transitivity (join_ub_r _ _) (join_ub_r _ _)). }
+        rewrite (mult_comm x y).
+        apply (mult_endpoints_lt_r _ (' c) (' d) y x (lt_le _ _ ltcy) (lt_le _ _ ltyd));
+          rewrite (mult_comm _ x); assumption.
+    Qed.
+
+  End times.
 
 End strict_field_order.

@@ -281,6 +281,109 @@ Section strict_ring_apart.
 
 End strict_ring_apart.
 
+Section full_pseudo_ring_order.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
+
+  Lemma pos_between_negate x y : - y < x < y -> 0 < y.
+  Proof.
+    intros [ltyx ltxy].
+    assert (c := cotransitive (transitivity ltyx ltxy) 0).
+    strip_truncations; destruct c as [ltny0|lt0y].
+    - apply flip_pos_negate; assumption.
+    - assumption.
+  Qed.
+
+  (** If [|s| < S] and [|t| < T], then [|s * t| < S * T]. *)
+  Lemma mult_lt_bound s t S T
+    : - S < s < S -> - T < t < T -> - (S * T) < s * t < S * T.
+  Proof.
+    assert (upper : forall s t, - S < s < S -> - T < t < T -> s * t < S * T).
+    { clear s t.
+      intros s t [ltSs ltsS] [ltTt lttT].
+      assert (Spos := pos_between_negate s S (ltSs, ltsS)).
+      assert (Tpos := pos_between_negate t T (ltTt, lttT)).
+      assert (c := cotransitive (pos_mult S T Spos Tpos) (s * t)).
+      strip_truncations; destruct c as [ltst|]; [|assumption].
+      destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
+      - apply mult_lt_compat; assumption.
+      - rewrite <- negate_mult_negate.
+        apply mult_lt_compat.
+        + apply flip_neg_negate; assumption.
+        + apply flip_neg_negate; assumption.
+        + exact (flip_lt_negate_l S s ltSs).
+        + exact (flip_lt_negate_l T t ltTt). }
+    intros [ltSs ltsS] ltTtT; split.
+    - apply flip_lt_negate_l.
+      rewrite negate_mult_distr_l.
+      apply upper; [split|exact ltTtT].
+      + exact (snd (flip_lt_negate s S) ltsS).
+      + exact (flip_lt_negate_l S s ltSs).
+    - apply upper; [split|]; assumption.
+  Qed.
+
+  Lemma mult_minus_mult x y u w
+    : x * y - u * w = x * (y - w) + (x - u) * w.
+  Proof.
+    rewrite plus_mult_distr_l, plus_mult_distr_r.
+    rewrite <- negate_mult_distr_r, <- negate_mult_distr_l.
+    rewrite <- (plus_assoc (x * y) (- (x * w)) (x * w + - (u * w))).
+    rewrite (plus_assoc (- (x * w)) (x * w) (- (u * w))).
+    rewrite plus_negate_l, plus_0_l.
+    reflexivity.
+  Qed.
+
+  (** If [|x| < X], [|w| < W], [|x - u| < D] and [|y - w| < D], then [|x * y - u * w| < X * D + D * W]. *)
+  Lemma mult_minus_mult_lt_bound x y u w X W D
+    : - X < x < X -> - W < w < W -> - D < x - u < D -> - D < y - w < D
+      -> - (X * D + D * W) < x * y - u * w < X * D + D * W.
+  Proof.
+    intros ltx ltw ltxu ltyw.
+    destruct (mult_lt_bound x (y - w) X D ltx ltyw) as [lt1 lt1'].
+    destruct (mult_lt_bound (x - u) w D W ltxu ltw) as [lt2 lt2'].
+    rewrite mult_minus_mult, negate_plus_distr.
+    split; apply plus_lt_compat; assumption.
+  Qed.
+
+  (** Multiplication by [v] is monotone on [[a, b]], so [u * v] cannot lie strictly below both [a * v] and [b * v]. *)
+  Lemma not_lt_mult_endpoints a b u v
+    : a ≤ u -> u ≤ b -> u * v < a * v -> u * v < b * v -> Empty.
+  Proof.
+    intros leau leub ltua ltub.
+    assert (ltua' := snd (flip_neg_minus (a * v) (u * v)) ltua).
+    assert (ltub' := snd (flip_pos_minus (u * v) (b * v)) ltub).
+    rewrite negate_mult_distr_l, <- plus_mult_distr_r in ltua', ltub'.
+    destruct (neg_mult_decompose _ _ ltua') as [[ltua'' _]|[_ vneg]].
+    - exact (fst (le_iff_not_lt_flip _ _) (snd (flip_nonneg_minus a u) leau) ltua'').
+    - destruct (pos_mult_decompose _ _ ltub') as [[_ vpos]|[ltub'' _]].
+      + exact (irreflexivity _ _ (transitivity vneg vpos)).
+      + exact (fst (le_iff_not_lt_flip _ _) (snd (flip_nonneg_minus u b) leub) ltub'').
+  Qed.
+
+  Lemma lt_mult_endpoints_l q a b u v
+    : a ≤ u -> u ≤ b -> q < a * v -> q < b * v -> q < u * v.
+  Proof.
+    intros leau leub ltqa ltqb.
+    assert (c := cotransitive ltqa (u * v)).
+    strip_truncations; destruct c as [|ltua]; [assumption|].
+    assert (c := cotransitive ltqb (u * v)).
+    strip_truncations; destruct c as [|ltub]; [assumption|].
+    destruct (not_lt_mult_endpoints a b u v leau leub ltua ltub).
+  Qed.
+
+  Lemma mult_endpoints_lt_r r a b u v
+    : a ≤ u -> u ≤ b -> a * v < r -> b * v < r -> u * v < r.
+  Proof.
+    intros leau leub ltar ltbr.
+    assert (c := cotransitive ltar (u * v)).
+    strip_truncations; destruct c as [ltau|]; [|assumption].
+    assert (c := cotransitive ltbr (u * v)).
+    strip_truncations; destruct c as [ltbu|]; [|assumption].
+    destruct (not_lt_mult_endpoints a b u (- v) leau leub);
+      rewrite <- 2!negate_mult_distr_r; apply (snd (flip_lt_negate _ _)); assumption.
+  Qed.
+
+End full_pseudo_ring_order.
+
 Section another_ring_order.
   Context `{IsCRing R1} `{!SemiRingOrder R1le} `{IsCRing R2} `{R2le : Le R2}
     `{is_mere_relation R2 R2le}.
