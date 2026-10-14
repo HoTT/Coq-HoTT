@@ -46,3 +46,5 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - Universe levels: constants such as `Le` and `relation_pointwise` are not cumulative, so an instance stated at other levels is silently not found. Inspect levels with `Set Printing Universes` and `About`, and state levels explicitly where instances must match. Avoid unnecessary universe parameters on main definitions, but an extra parameter that would take many `@{...}` annotations to remove is acceptable; readability wins.
 - Definitions that quantify over `Qpos Q` should take `{Qlt : Lt@{UQ UQ} Q}` (as `Classes/theory/rationals.v` does); otherwise instantiating them with a closeness relation can leave an unsolvable `Lt` evar.
 - A scratch file must `Require Import` every module whose `#[export]` instances and hints it relies on; a missing import looks like a missing instance.
+- `rewrite ... at n` fails with "Setoid library not loaded"; use `lhs`/`rhs`, `ap`, or a local `assert` instead.
+- Inside `mc_scope`, `*` is multiplication even in a type; write `(A * B)%type` for a product type, for example inside a Σ-type.
