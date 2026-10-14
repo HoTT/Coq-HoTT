@@ -214,6 +214,18 @@ Section ivt.
   Local Definition locator_1 : locator Q F 1
     := transport (locator Q F) (preserves_1 (f:=cast Q F)) (locator_left Q F 1).
 
+  (** A nonnegative element with a locator has a positive rational upper bound. *)
+  Local Definition qpos_upper_bound `{Funext} (Q_eq : nat <~> Q) {u : F} (lu : locator Q F u) (u0 : 0 ≤ u)
+    : {B : Qpos Q & u ≤ ' (' B)}.
+  Proof.
+    destruct (upper_bound Q F Q_eq lu) as [B ltB].
+    assert (Bpos : 0 < B).
+    { apply (strictly_order_reflecting (cast Q F)).
+      rewrite (preserves_0 (f:=cast Q F)).
+      exact (le_lt_trans _ _ _ u0 ltB). }
+    exact (mkQpos B Bpos; lt_le _ _ ltB).
+  Defined.
+
   (** *** Interpolating bisection *)
 
   Local Notation half := (' (1 / 2 : Qpos Q) : Q).
@@ -488,57 +500,81 @@ Section ivt.
          | S n => c n
          end.
 
-    (** The approximate intermediate value theorem: [f] is less than [e] in absolute value at one of the candidates. *)
-    Lemma approximate_ivt_candidates
-      (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y)
-      : hexists (fun n => - ' (' e) < f (approximate_candidate n) < ' (' e)).
+    (** The limit lies in all the intervals, and is also the limit of the upper endpoints and of the midpoints. *)
+    Local Definition approximate_root_between
+      := nested_limit_between z w zinc wdec zw _ approximate_root_islimit.2.
+
+    Local Lemma islimit_bisect_upper : IsLimit Q F w approximate_root.
     Proof.
       assert (B := merely_bound); strip_truncations; destruct B as [B leB].
-      set (x := approximate_root).
-      assert (zlim : IsLimit Q F z x) by exact approximate_root_islimit.2.
-      assert (zxw := nested_limit_between z w zinc wdec zw x zlim).
-      assert (wlim : IsLimit Q F w x).
-      { exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
-                 (bisect_width_le dec a b B leB) w (fun n => (zw n, reflexivity _)) x zxw). }
-      assert (clim : IsLimit Q F c x).
-      { exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
-                 (bisect_width_le dec a b B leB) c
-                 (bisect_mid_between dec (bisect_weight_between f _) a b leab) x zxw). }
-      assert (cont' := cont x (zxw 0)).
-      assert (ltte := qpos_half_lt e).
-      assert (ltte' : (' (' (e / 2)) : F) < ' (' e))
-        by exact (strictly_order_preserving _ _ _ ltte).
-      assert (h := cotransitive ltte' (f x)); strip_truncations; destruct h as [ltt|lte].
-      - (* If [f x] is above [e / 2], the lower endpoints stop moving. *)
-        refine (Trunc_functor (-1)
-                  (fun nc : {n : nat & - ' (' e) < f (c n) < ' (' e)} => (S nc.1; nc.2)) _).
-        refine (endpoint_close f z c x (e / 2) e ltte fa _ _ zlim clim cont' ltt).
-        + intros n lt; exact (bisect_lower_1 dec a b n (bisect_weight_1 f _ _ lt)).
-        + intros n lt; exact (bisect_lower_0 dec a b n (bisect_weight_0 f _ _ lt)).
-      - assert (h := cotransitive (snd (flip_lt_negate _ _) ltte') (f x)); strip_truncations.
-        destruct h as [lte'|ltt].
-        + exact (tr (0%nat; (lte', lte))).
-        + (* If [f x] is below [- e / 2], the upper endpoints stop moving. *)
-          refine (Trunc_functor (-1)
-                    (fun nc : {n : nat & - ' (' e) < - f (c n) < ' (' e)} => (S nc.1; _)) _).
-          { assert (bd := lt_bound_negate _ _ nc.2); cbn in bd.
-            rewrite negate_involutive in bd; exact bd. }
-          refine (endpoint_close (fun y => - f y) w c x (e / 2) e ltte
-                    (fst (flip_pos_negate _) fb) _ _ wlim clim
-                    (iscontinuousat_negate Q F f x cont') (flip_lt_negate_r _ _ ltt)).
-          * intros n lt.
-            exact (bisect_upper_0 dec a b n (bisect_weight_0 f _ _ (flip_lt_negate_r _ _ lt))).
-          * intros n lt.
-            apply (snd (flip_lt_negate _ _)) in lt; rewrite 2!negate_involutive in lt.
-            exact (bisect_upper_1 dec a b n (bisect_weight_1 f _ _ lt)).
+      exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
+               (bisect_width_le dec a b B leB) w (fun n => (zw n, reflexivity _)) _
+               approximate_root_between).
+    Qed.
+
+    Local Lemma islimit_bisect_mid : IsLimit Q F c approximate_root.
+    Proof.
+      assert (B := merely_bound); strip_truncations; destruct B as [B leB].
+      exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
+               (bisect_width_le dec a b B leB) c
+               (bisect_mid_between dec (bisect_weight_between f _) a b leab) _
+               approximate_root_between).
+    Qed.
+
+    Context (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y).
+
+    Local Definition cont_root := cont approximate_root (approximate_root_between 0).
+
+    (** If [f] is above [e / 2] at the limit, the lower endpoints eventually stop moving, so [f] is close to [0] at a midpoint. *)
+    Local Lemma approximate_ivt_above (lt : ' (' (e / 2)) < f approximate_root)
+      : hexists (fun n => - ' (' e) < f (c n) < ' (' e)).
+    Proof.
+      refine (endpoint_close f z c _ (e / 2) e (qpos_half_lt e) fa _ _
+                approximate_root_islimit.2 islimit_bisect_mid cont_root lt).
+      - intros n lt'; exact (bisect_lower_1 dec a b n (bisect_weight_1 f _ _ lt')).
+      - intros n lt'; exact (bisect_lower_0 dec a b n (bisect_weight_0 f _ _ lt')).
+    Qed.
+
+    (** Dually, if [f] is below [- e / 2] at the limit, the upper endpoints eventually stop moving. *)
+    Local Lemma approximate_ivt_below (lt : f approximate_root < - ' (' (e / 2)))
+      : hexists (fun n => - ' (' e) < f (c n) < ' (' e)).
+    Proof.
+      refine (Trunc_functor (-1) (fun nc : {n : nat & - ' (' e) < - f (c n) < ' (' e)} => (nc.1; _)) _).
+      { assert (bd := lt_bound_negate _ _ nc.2); cbn in bd.
+        rewrite negate_involutive in bd; exact bd. }
+      refine (endpoint_close (fun y => - f y) w c _ (e / 2) e (qpos_half_lt e)
+                (fst (flip_pos_negate _) fb) _ _ islimit_bisect_upper islimit_bisect_mid
+                (iscontinuousat_negate Q F f _ cont_root) (flip_lt_negate_r _ _ lt)).
+      - intros n lt'.
+        exact (bisect_upper_0 dec a b n (bisect_weight_0 f _ _ (flip_lt_negate_r _ _ lt'))).
+      - intros n lt'.
+        apply (snd (flip_lt_negate _ _)) in lt'; rewrite 2!negate_involutive in lt'.
+        exact (bisect_upper_1 dec a b n (bisect_weight_1 f _ _ lt')).
+    Qed.
+
+    (** The approximate intermediate value theorem: [f] is less than [e] in absolute value at one of the candidates. *)
+    Lemma approximate_ivt_candidates
+      : hexists (fun n => - ' (' e) < f (approximate_candidate n) < ' (' e)).
+    Proof.
+      pose (S' (nc : {n : nat & - ' (' e) < f (c n) < ' (' e)})
+        := (S nc.1; nc.2) : {n : nat & - ' (' e) < f (approximate_candidate n) < ' (' e)}).
+      assert (ltte : (' (' (e / 2)) : F) < ' (' e))
+        by exact (strictly_order_preserving _ _ _ (qpos_half_lt e)).
+      assert (h := cotransitive ltte (f approximate_root)); strip_truncations.
+      destruct h as [ltt|lte].
+      1: exact (Trunc_functor (-1) S' (approximate_ivt_above ltt)).
+      assert (h := cotransitive (snd (flip_lt_negate _ _) ltte) (f approximate_root)).
+      strip_truncations; destruct h as [lte'|ltt].
+      - exact (tr (0%nat; (lte', lte))).
+      - exact (Trunc_functor (-1) S' (approximate_ivt_below ltt)).
     Qed.
 
     (** Hence [f] merely takes values arbitrarily close to [0]. *)
-    Definition approximate_ivt (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y)
+    Definition approximate_ivt
       : hexists (fun y => - ' (' e) < f y < ' (' e))
       := Trunc_functor (-1) (fun nc : {n : nat & - ' (' e) < f (approximate_candidate n) < ' (' e)}
                                => (approximate_candidate nc.1; nc.2))
-           (approximate_ivt_candidates cont).
+           approximate_ivt_candidates.
 
     (** *** Locators *)
 
@@ -570,30 +606,16 @@ Section ivt.
     Definition bisect_mid_locator (n : nat) : locator Q F (c n)
       := locator_mid (fst (bisect_locators n)) (snd (bisect_locators n)).
 
-    (** A rational bound on the width of the interval. *)
-    Local Definition width_bound : {B : Qpos Q & b - a ≤ ' (' B)}.
-    Proof.
-      destruct (upper_bound Q F Q_eq (plus lb (minus la))) as [B ltB].
-      assert (Bpos : 0 < B).
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)).
-        exact (le_lt_trans _ _ _ (snd (flip_nonneg_minus _ _) leab) ltB). }
-      exact (mkQpos B Bpos; lt_le _ _ ltB).
-    Defined.
-
     (** The limit of the bisection has a locator, as a limit of midpoints with locators. *)
     Definition approximate_root_locator : locator Q F approximate_root.
     Proof.
-      destruct width_bound as [B leB].
-      assert (zxw := nested_limit_between z w zinc wdec zw _ approximate_root_islimit.2).
+      destruct (qpos_upper_bound Q_eq (plus lb (minus la)) (snd (flip_nonneg_minus _ _) leab))
+        as [B leB].
       refine (locator_limit Q F (xs:=c) (M:=nested_modulus B half (pos_is_pos _) half_lt_1)
-                bisect_mid_locator _).
-      - exact (cauchymodulus_nested z w zinc wdec B half (pos_is_pos _) half_lt_1
-                 (bisect_width_le dec a b B leB) c
-                 (bisect_mid_between dec (bisect_weight_between f _) a b leab)).
-      - exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
-                 (bisect_width_le dec a b B leB) c
-                 (bisect_mid_between dec (bisect_weight_between f _) a b leab) _ zxw).
+                bisect_mid_locator islimit_bisect_mid).
+      exact (cauchymodulus_nested z w zinc wdec B half (pos_is_pos _) half_lt_1
+               (bisect_width_le dec a b B leB) c
+               (bisect_mid_between dec (bisect_weight_between f _) a b leab)).
     Defined.
 
     Definition approximate_candidate_locator (n : nat)
@@ -694,39 +716,33 @@ Section ivt.
     Qed.
 
     (** Using locators, we can find such a rational. This turns the property of being locally nonconstant into structure. *)
-    Definition locally_nonconstant_rational {x y t : F} (lx : locator Q F x) (ly : locator Q F y)
-      (lt : locator Q F t) (ltxy : x < y)
-      : {r : Q & ((x < ' r < y) * (f (' r) ≶ t))%type}.
-    Proof.
-      (* For a rational [r] and a positive rational [n], we decide approximately whether [r] is [n]-far from [x] and [y], and whether [f r] is [n]-far from [t]. *)
-      set (lu r := locator_plus Q F Q_eq (lift _ (locator_left Q F r)) (locator_minus Q F lt)).
-      set (P (rn : Q * Qpos Q)
-            := let (r, n) := rn in
-               (locates_left Q F (lx : locator' Q F x) (lt_minus_qpos r n)
-                * locates_right Q F _ (ly : locator' Q F y) _ _ (lt_plus_qpos r n)
-                * (locates_right Q F _ (lu r : locator' Q F _) _ _ (qpos_half_lt n)
-                   + locates_left Q F (lu r : locator' Q F _)
-                       (snd (flip_lt_negate _ _) (qpos_half_lt n))))%type).
-      assert (Pdec : forall rn, Decidable (P rn)).
-      { intros [r n]; exact _. }
-      assert (inh : hexists P).
-      { assert (h := merely_rational_apart x y t ltxy); strip_truncations.
-        destruct h as [r [[xr ry] ap]].
-        set (D := match ap with inl _ => f (' r) - t | inr _ => t - f (' r) end).
-        assert (Dpos : 0 < D).
-        { unfold D; destruct ap as [l|l]; exact (snd (flip_pos_minus _ _) l). }
-        assert (lt0 : 0 < meet (meet (' r - x) (y - ' r)) D).
-        { apply meet_lt_l; [apply meet_lt_l|exact Dpos]; apply (snd (flip_pos_minus _ _)); assumption. }
-        assert (q := archimedean_property Q F _ _ lt0); strip_truncations.
-        destruct q as [q [lt0q ltq]].
-        assert (qpos : 0 < q).
-        { apply (strictly_order_reflecting (cast Q F)).
-          rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-        apply tr; exists (r, mkQpos q qpos); unfold P.
-        assert (lt1 := lt_le_trans _ _ _ ltq (meet_lb_l _ _)).
-        assert (ltr := lt_le_trans _ _ _ lt1 (meet_lb_l _ _)).
-        assert (rlt := lt_le_trans _ _ _ lt1 (meet_lb_r _ _)).
-        assert (ltD := lt_le_trans _ _ _ ltq (meet_lb_r _ _)).
+    Section rational_apart.
+      Context {x y t : F} (lx : locator Q F x) (ly : locator Q F y) (lt : locator Q F t).
+
+      (** [f r - t] has a locator. *)
+      Local Definition locator_value_minus (r : Q) : locator Q F (f (' r) - t)
+        := locator_plus Q F Q_eq (lift _ (locator_left Q F r)) (locator_minus Q F lt).
+
+      (** For a rational [r] and a positive rational [n], we decide approximately whether [r] is [n]-far from [x] and [y], and whether [f r] is [n]-far from [t]. *)
+      Local Definition RationalFar (rn : Q * Qpos Q) : Type
+        := let (r, n) := rn in
+           (locates_left Q F (lx : locator' Q F x) (lt_minus_qpos r n)
+            * locates_right Q F _ (ly : locator' Q F y) _ _ (lt_plus_qpos r n)
+            * (locates_right Q F _ (locator_value_minus r : locator' Q F _) _ _ (qpos_half_lt n)
+               + locates_left Q F (locator_value_minus r : locator' Q F _)
+                   (snd (flip_lt_negate _ _) (qpos_half_lt n))))%type.
+
+      Local Instance decidable_rationalfar (rn : Q * Qpos Q) : Decidable (RationalFar rn).
+      Proof.
+        destruct rn as [r n]; exact _.
+      Defined.
+
+      (** A rational [r] which is [n]-far from [x], [y] and, in its value, from [t] satisfies [RationalFar]. *)
+      Local Lemma rationalfar_lt (r : Q) (n : Qpos Q)
+        (ltr : ' (' n) < ' r - x) (rlt : ' (' n) < y - ' r)
+        (ap : (' (' n) < f (' r) - t) + (' (' n) < t - f (' r)))
+        : RationalFar (r, n).
+      Proof.
         refine ((_, _), _).
         - apply ltxq_locates_left.
           rewrite (preserves_minus (f:=cast Q F)).
@@ -734,31 +750,66 @@ Section ivt.
         - apply ltrx_locates_right.
           rewrite (preserves_plus (f:=cast Q F)).
           rewrite plus_comm; apply flip_lt_minus_r; exact rlt.
-        - unfold D in ltD; destruct ap as [l|l].
+        - destruct ap as [ltD|ltD].
           + left; apply ltrx_locates_right; exact ltD.
           + right.
-            assert (lt' : f (' r) - t < ' (- q)).
+            assert (lt' : f (' r) - t < ' (- ' n)).
             { rewrite (preserves_negate (f:=cast Q F)).
               apply flip_lt_negate_r; rewrite <- (negate_swap_r t (f (' r))); exact ltD. }
-            exact (ltxq_locates_left Q F _ _ lt'). }
-      destruct (minimal_n_alt_type _ QQpos_eq P Pdec inh) as [[r n] [[pl pr] pt]].
-      exists r; split; [split|].
-      - exact (locates_right_false Q F _ lx _ _ _ pl).
-      - exact (locates_right_true Q F _ ly _ _ _ pr).
-      - apply (snd (apart_iff_total_lt _ _)).
-        destruct pt as [p|p].
-        + right.
-          assert (lt' := locates_right_true Q F _ (lu r) _ _ _ p).
-          apply (fst (flip_pos_minus _ _)).
-          exact (transitivity (pos_rationals_to_field_qpos Q _) lt').
-        + left.
-          assert (lt' := locates_right_false Q F _ (lu r) _ _ _ p).
-          apply (fst (flip_neg_minus _ _)).
-          assert (neg : (' (- ' (n / 2)) : F) < 0).
-          { rewrite (preserves_negate (f:=cast Q F)).
-            exact (fst (flip_pos_negate _) (pos_rationals_to_field_qpos Q _)). }
-          exact (transitivity lt' neg).
-    Defined.
+            exact (ltxq_locates_left Q F _ _ lt').
+      Qed.
+
+      Local Lemma merely_rationalfar (ltxy : x < y) : hexists RationalFar.
+      Proof.
+        assert (h := merely_rational_apart x y t ltxy); strip_truncations.
+        destruct h as [r [[xr ry] ap]].
+        set (D := match ap with inl _ => f (' r) - t | inr _ => t - f (' r) end).
+        assert (Dpos : 0 < D).
+        { unfold D; destruct ap as [l|l]; exact (snd (flip_pos_minus _ _) l). }
+        assert (lt0 : 0 < meet (meet (' r - x) (y - ' r)) D).
+        { apply meet_lt_l; [apply meet_lt_l|exact Dpos];
+            apply (snd (flip_pos_minus _ _)); assumption. }
+        refine (Trunc_functor (-1) _ (merely_qpos_lt Q _ lt0)); intros [n ltn].
+        exists (r, n).
+        assert (lt1 := lt_le_trans _ _ _ ltn (meet_lb_l _ _)).
+        assert (ltD := lt_le_trans _ _ _ ltn (meet_lb_r _ _)).
+        apply rationalfar_lt.
+        - exact (lt_le_trans _ _ _ lt1 (meet_lb_l _ _)).
+        - exact (lt_le_trans _ _ _ lt1 (meet_lb_r _ _)).
+        - unfold D in ltD; destruct ap; [left|right]; exact ltD.
+      Qed.
+
+      (** A rational satisfying [RationalFar] is as required. *)
+      Local Lemma rationalfar_spec (r : Q) (n : Qpos Q) (far : RationalFar (r, n))
+        : (x < ' r < y) * (f (' r) ≶ t).
+      Proof.
+        destruct far as [[pl pr] pt].
+        split; [split|].
+        - exact (locates_right_false Q F _ lx _ _ _ pl).
+        - exact (locates_right_true Q F _ ly _ _ _ pr).
+        - apply (snd (apart_iff_total_lt _ _)).
+          destruct pt as [p|p].
+          + right.
+            assert (lt' := locates_right_true Q F _ (locator_value_minus r) _ _ _ p).
+            apply (fst (flip_pos_minus _ _)).
+            exact (transitivity (pos_rationals_to_field_qpos Q _) lt').
+          + left.
+            assert (lt' := locates_right_false Q F _ (locator_value_minus r) _ _ _ p).
+            apply (fst (flip_neg_minus _ _)).
+            assert (neg : (' (- ' (n / 2)) : F) < 0).
+            { rewrite (preserves_negate (f:=cast Q F)).
+              exact (fst (flip_pos_negate _) (pos_rationals_to_field_qpos Q _)). }
+            exact (transitivity lt' neg).
+      Defined.
+
+      Definition locally_nonconstant_rational (ltxy : x < y)
+        : {r : Q & ((x < ' r < y) * (f (' r) ≶ t))%type}.
+      Proof.
+        destruct (minimal_n_alt_type _ QQpos_eq RationalFar _ (merely_rationalfar ltxy))
+          as [[r n] far].
+        exact (r; rationalfar_spec r n far).
+      Defined.
+    End rational_apart.
 
     (** *** Finding a root *)
 
@@ -807,6 +858,55 @@ Section ivt.
       rewrite (plus_mult_distr_l u 1 (- ' quarter)), (mult_1_r u), <- (negate_mult_distr_r u (' quarter)); reflexivity.
     Qed.
 
+    (** The points [u] and [v] a quarter of the way into an interval [[a, b]] satisfy [a < u < v < b], and [[a, v]] and [[u, b]] are shorter than [[a, b]] by the factor [shrink]. *)
+    Section quarters.
+      Context {a b : F} (ltab : a < b).
+
+      Local Notation u := (a + (b - a) * ' quarter).
+      Local Notation v := (b - (b - a) * ' quarter).
+
+      Local Lemma quarter_width_pos : 0 < (b - a) * ' quarter.
+      Proof.
+        exact (pos_mult _ _ (snd (flip_pos_minus _ _) ltab) (pos_rationals_to_field_qpos Q _)).
+      Qed.
+
+      Local Lemma lt_lower_quarter : a < u.
+      Proof.
+        exact (fst (pos_plus_lt_compat_r _ _) quarter_width_pos).
+      Qed.
+
+      Local Lemma upper_quarter_lt : v < b.
+      Proof.
+        exact (fst (pos_minus_lt_compat_r _ _) quarter_width_pos).
+      Qed.
+
+      Local Lemma lt_quarters : u < v.
+      Proof.
+        pose proof (snd (flip_pos_minus _ _) ltab).
+        set (D := b - a).
+        apply (snd (flip_lt_minus_r _ _ _)).
+        rewrite <- plus_assoc, quarter_double.
+        assert (p : a + D = b).
+        { unfold D; rewrite plus_comm, <- plus_assoc, (plus_negate_l a); apply plus_0_r. }
+        rewrite <- p.
+        apply (strictly_order_preserving (a +)).
+        refine (lt_le_trans _ (D * 1) _ _ (eq_le _ _ (mult_1_r _))).
+        apply (strictly_order_preserving (D *.)).
+        rewrite <- (preserves_1 (f:=cast Q F)).
+        exact (strictly_order_preserving _ _ _ half_lt_1).
+      Qed.
+
+      Local Lemma upper_minus_lower_quarter : b - u = (b - a) * ' shrink.
+      Proof.
+        rewrite negate_plus_distr, plus_assoc; apply minus_quarter.
+      Qed.
+
+      Local Lemma upper_quarter_minus_lower : v - a = (b - a) * ' shrink.
+      Proof.
+        rewrite <- plus_assoc, (plus_comm (- _)), plus_assoc; apply minus_quarter.
+      Qed.
+    End quarters.
+
     (** An interval with locators for its endpoints, at which [f] has opposite signs. *)
     Record SignInterval := {
       sign_lower : F;
@@ -824,45 +924,24 @@ Section ivt.
            (sign_upper J - sign_lower J ≤ (sign_upper I - sign_lower I) * ' shrink)}.
     Proof.
       destruct I as [a b la lb ltab fa fb]; cbn.
-      set (D := b - a).
-      assert (Dpos : 0 < D) by exact (snd (flip_pos_minus _ _) ltab).
-      assert (Dk : 0 < D * ' quarter) by exact (pos_mult _ _ Dpos (pos_rationals_to_field_qpos Q _)).
-      set (u := a + D * ' quarter).
-      set (v := b - D * ' quarter).
-      assert (lau : a < u) by exact (fst (pos_plus_lt_compat_r _ _) Dk).
-      assert (lvb : v < b) by exact (fst (pos_minus_lt_compat_r _ _) Dk).
-      assert (luv : u < v).
-      { apply (snd (flip_lt_minus_r _ _ _)); unfold u.
-        rewrite <- plus_assoc, quarter_double.
-        assert (p : a + D = b).
-        { unfold D; rewrite plus_comm, <- plus_assoc, (plus_negate_l a); apply plus_0_r. }
-        rewrite <- p.
-        apply (strictly_order_preserving (a +)).
-        refine (lt_le_trans _ (D * 1) _ _ (eq_le _ _ (mult_1_r D))).
-        apply (strictly_order_preserving (D *.)).
-        rewrite <- (preserves_1 (f:=cast Q F)).
-        exact (strictly_order_preserving _ _ _ half_lt_1). }
-      assert (lu : locator Q F u).
-      { exact (locator_plus Q F Q_eq la (locator_times Q F Q_eq
-                 (locator_plus Q F Q_eq lb (locator_minus Q F la)) (locator_left Q F _))). }
-      assert (lv : locator Q F v).
-      { exact (locator_plus Q F Q_eq lb (locator_minus Q F (locator_times Q F Q_eq
-                 (locator_plus Q F Q_eq lb (locator_minus Q F la)) (locator_left Q F _)))). }
-      assert (bu : b - u = D * ' shrink).
-      { unfold u; rewrite negate_plus_distr, plus_assoc; apply minus_quarter. }
-      assert (va : v - a = D * ' shrink).
-      { unfold v; rewrite <- plus_assoc, (plus_comm (- _)), plus_assoc; apply minus_quarter. }
-      destruct (locally_nonconstant_rational lu lv locator_0 luv) as [r [[ur rv] ap]].
+      (* A locator for a quarter of the width, and hence for the quarter points. *)
+      set (lD := locator_times Q F Q_eq (locator_plus Q F Q_eq lb (locator_minus Q F la))
+                   (locator_left Q F quarter)).
+      destruct (locally_nonconstant_rational (locator_plus Q F Q_eq la lD)
+                  (locator_plus Q F Q_eq lb (locator_minus Q F lD)) locator_0 (lt_quarters ltab))
+        as [r [[ur rv] ap]].
       destruct (fst (apart_iff_total_lt _ _) ap) as [neg|pos].
       - (* The root is to the right of [r]. *)
-        refine (Build_SignInterval (' r) b (locator_left Q F r) lb (transitivity rv lvb)
-                  (lt_le _ _ neg) fb; ((lt_le _ _ (transitivity lau ur), reflexivity _), _)).
-        cbn; rewrite <- bu.
+        refine (Build_SignInterval (' r) b (locator_left Q F r) lb
+                  (transitivity rv (upper_quarter_lt ltab)) (lt_le _ _ neg) fb;
+                ((lt_le _ _ (transitivity (lt_lower_quarter ltab) ur), reflexivity _), _)).
+        cbn; rewrite <- upper_minus_lower_quarter.
         apply lt_le, (strictly_order_preserving (b +)), (snd (flip_lt_negate _ _)), ur.
       - (* The root is to the left of [r]. *)
-        refine (Build_SignInterval a (' r) la (locator_left Q F r) (transitivity lau ur)
-                  fa (lt_le _ _ pos); ((reflexivity _, lt_le _ _ (transitivity rv lvb)), _)).
-        cbn; rewrite <- va.
+        refine (Build_SignInterval a (' r) la (locator_left Q F r)
+                  (transitivity (lt_lower_quarter ltab) ur) fa (lt_le _ _ pos);
+                ((reflexivity _, lt_le _ _ (transitivity rv (upper_quarter_lt ltab))), _)).
+        cbn; rewrite <- upper_quarter_minus_lower.
         apply lt_le, (strictly_order_preserving (+ - a)), rv.
     Defined.
 
@@ -879,16 +958,10 @@ Section ivt.
       Local Definition step_props n := (sign_interval_step (sign_intervals n)).2.
 
       Local Definition sign_width_bound
-        : {B : Qpos Q & sign_upper I0 - sign_lower I0 ≤ ' (' B)}.
-      Proof.
-        destruct (upper_bound Q F Q_eq (locator_plus Q F Q_eq (sign_upper_locator I0)
-                    (locator_minus Q F (sign_lower_locator I0)))) as [B ltB].
-        assert (Bpos : 0 < B).
-        { apply (strictly_order_reflecting (cast Q F)).
-          rewrite (preserves_0 (f:=cast Q F)).
-          exact (transitivity (snd (flip_pos_minus _ _) (sign_lt I0)) ltB). }
-        exact (mkQpos B Bpos; lt_le _ _ ltB).
-      Defined.
+        : {B : Qpos Q & sign_upper I0 - sign_lower I0 ≤ ' (' B)}
+        := qpos_upper_bound Q_eq (locator_plus Q F Q_eq (sign_upper_locator I0)
+                                    (locator_minus Q F (sign_lower_locator I0)))
+             (lt_le _ _ (snd (flip_pos_minus _ _) (sign_lt I0))).
 
       Local Notation B := sign_width_bound.1.
 
