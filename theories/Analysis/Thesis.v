@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -228,6 +228,19 @@ Check locator_join.
 
 (** Lemma 6.8.1. A limit of a sequence with modulus whose terms have locators has a locator. *)
 Check locator_limit.
+
+(** Definition 6.9.2. Signed-digit representations: an integer and a sequence of signed digits whose partial sums converge to the given real. Here in base [1 + d] with digits from [- d] to [d], for an arbitrary model [Z] of the integers; the thesis's decimal case is [d = 9]. *)
+Check digit_weight.
+Check digit_sum.
+Check SignedDigits.
+
+(** Lemma 6.9.4. A real with a locator lies within distance [1] of an integer, which we can find using an integer part of rationals. *)
+Check integer_floor.
+Check integer_bound.
+
+(** Theorem 6.9.5. Locators and signed-digit representations are interdefinable. *)
+Check locator_signed_digits.
+Check signed_digits_locator.
 
 (** ** Chapter 8: Metric spaces *)
 
