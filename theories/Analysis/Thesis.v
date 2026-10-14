@@ -7,7 +7,8 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
+From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -23,12 +24,14 @@ Check CoTransitive.
 Check PreOrder.
 Check PartialOrder.
 
-(** Definition 3.1.4. Inflationary endomaps; semidirected and directed subsets; joins; dcpos and subdcpos, at a universe level [i] given by universe polymorphism. *)
+(** Definition 3.1.4. Inflationary endomaps, which are monotone ([OrderPreserving]) and increasing (called [IsInflationary] here, following TypeTopology); semidirected and directed families, and subsets as families indexed by their total space; suprema; dcpos and subdcpos, at a universe level [v] of index types given by universe polymorphism. A partial order in which every directed subset has a supremum is a dcpo. *)
+Check OrderPreserving.
 Check IsInflationary.
 Check IsSemidirected.
 Check IsDirected.
-Check IsJoin.
+Check IsSup.
 Check IsDcpo.
+Check @isdcpo_from_subsets.
 Check IsSubdcpo.
 
 (** Lemma 3.1.5. The elements of a subdcpo form a dcpo under the restricted order. *)
@@ -38,11 +41,11 @@ Check @isdcpo_sig.
 Check @partialorder_pointwise.
 Check @isdcpo_pointwise.
 
-(** Lemma 3.1.7. Assuming propositional resizing, the subsets [A -> HProp@{i}] of a type [A] in universe [i] form a dcpo at level [i+1] under inclusion: propositions form such a dcpo under implication, and the subsets are its pointwise order. *)
+(** Lemma 3.1.7. Assuming propositional resizing, the subsets [A -> HProp@{i}] of a type [A] in universe [i] form a dcpo under inclusion, with index types in any universe, in particular at level [i+1]: propositions form such a dcpo under implication, and the subsets are its pointwise order. *)
 Check @isdcpo_hprop.
 Check @isdcpo_pointwise.
 
-(** Proposition 3.2.1. The inflationary endomaps of a dcpo form a subdcpo of the endomaps, which as a subset of itself is directed, so that it has a top element; its values are common fixed points of all inflationary endomaps. *)
+(** Proposition 3.2.1. The monotone inflationary endomaps of a dcpo whose carrier and order live in the universe of index types form a subdcpo of the endomaps, which as a family indexed by itself is directed, so that it has a top element; its values are common fixed points of all monotone inflationary endomaps. *)
 Check @issubdcpo_inflationary.
 Check @isdirected_inflationary.
 Check @top_inflationary.
