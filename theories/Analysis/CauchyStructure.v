@@ -247,6 +247,15 @@ Section cauchy_structure.
         + apply field_close_symmetric; exact (close n (le_nat_max_l _ _)).
     Qed.
 
+    (** In the other direction, [|field_lim x - x d| ≤ d]. *)
+    Local Lemma field_lim_minus_le (x : CauchyApproximation (field_close Q (F:=F))) (d : Qpos Q)
+      : - ' (' d) ≤ field_lim x - x d ≤ ' (' d).
+    Proof.
+      rewrite (negate_swap_r (field_lim x) (x d)).
+      exact (le_bound_negate _ _
+               (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d)).
+    Qed.
+
     #[export] Instance cauchycomplete_field : CauchyComplete (field_close Q (F:=F))
       := {| approximation_limit := field_lim;
             isapproximationlimit_approximation_limit := isapproximationlimit_field_lim |}.
@@ -262,17 +271,11 @@ Section cauchy_structure.
                  (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) d)).
       - intros x r e d c.
         rewrite (qpos_plus_comm e d).
-        refine (le_field_close_triangle e d _ (x d) _ _ c).
-        rewrite (negate_swap_r (field_lim x) (x d)).
-        exact (le_bound_negate _ _
-                 (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d)).
+        exact (le_field_close_triangle e d _ (x d) _ (field_lim_minus_le x d) c).
       - intros x y e d n c.
         rewrite (qpos_plus_comm e d).
         apply (field_close_le_triangle (d + e) n _ (y n)).
-        + refine (le_field_close_triangle e d _ (x d) _ _ c).
-          rewrite (negate_swap_r (field_lim x) (x d)).
-          exact (le_bound_negate _ _
-                   (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d)).
+        + exact (le_field_close_triangle e d _ (x d) _ (field_lim_minus_le x d) c).
         + exact (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) n).
     Defined.
 

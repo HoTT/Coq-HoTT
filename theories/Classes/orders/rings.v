@@ -284,6 +284,7 @@ End strict_ring_apart.
 Section full_pseudo_ring_order.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
 
+  (** An element strictly between [- y] and [y] shows that [y] is positive. *)
   Lemma pos_between_negate x y : - y < x < y -> 0 < y.
   Proof.
     intros [ltyx ltxy].
@@ -321,6 +322,7 @@ Section full_pseudo_ring_order.
     - apply upper; [split|]; assumption.
   Qed.
 
+  (** The difference of two products, for estimating it. *)
   Lemma mult_minus_mult x y u w
     : x * y - u * w = x * (y - w) + (x - u) * w.
   Proof.
@@ -359,6 +361,7 @@ Section full_pseudo_ring_order.
       + exact (fst (le_iff_not_lt_flip _ _) (snd (flip_nonneg_minus u b) leub) ltub'').
   Qed.
 
+  (** Hence a strict bound on [a * v] and [b * v] is a strict bound on [u * v]. *)
   Lemma lt_mult_endpoints_l q a b u v
     : a ≤ u -> u ≤ b -> q < a * v -> q < b * v -> q < u * v.
   Proof.
