@@ -323,50 +323,59 @@ Section banach.
   Definition iterates_modulus (C : Qpos Q) (e : Qpos Q) : nat
     := (rational_log c c0 c1 (e * Qpos_diff c 1 c1 / C)).1.
 
-  (** If [d (T x0) x0 ≤ C], then the iterates of [T] at [x0] form a sequence with a modulus of Cauchy convergence. *)
+  (** The defining property of the modulus: [c^M C < (1 - c) e]. *)
+  Local Lemma iterates_modulus_spec (C e : Qpos Q)
+    : nat_iter (iterates_modulus C e) (mult (' c)) 1 * ' (' C) < (1 - ' c) * ' (' e).
+  Proof.
+    set (b := Qpos_diff c 1 c1).
+    assert (Cpos : PropHolds (0 < (' (' C) : F)))
+      by exact (pos_rationals_to_field_qpos Q C).
+    assert (spec : nat_iter (iterates_modulus C e) (mult c) 1 < ' (e * b / C))
+      by exact (rational_log c c0 c1 (e * b / C)).2.
+    assert (spec' := strictly_order_preserving (cast Q F) _ _ spec).
+    rewrite (preserves_power (cast Q F)) in spec'.
+    refine (lt_eq_trans _ _ _ (strictly_order_preserving (.* ' (' C)) _ _ spec') _).
+    cbn beta; rewrite <- (preserves_mult (f:=cast Q F)).
+    rewrite (mult_comm (1 - ' c)), <- (preserves_1 (f:=cast Q F)).
+    rewrite <- (preserves_negate (f:=cast Q F)), <- (preserves_plus (f:=cast Q F)).
+    rewrite <- (preserves_mult (f:=cast Q F)).
+    apply (ap (cast Q F)).
+    (* The positive rational [b] is [1 - c] by definition. *)
+    change (' (e * b / C * C) = ' (e * b)); apply ap.
+    rewrite (commutativity _ C), (associativity C _ (/ C)).
+    apply pos_unconjugate.
+  Qed.
+
+  (** If [d (T x0) x0 ≤ C], then from the modulus for [e] on, the iterates of [T] at [x0] are [e]-close to the later ones. *)
+  Lemma iterate_dist_lt (C : Qpos Q) (x0 : X) (C0 : d (T x0) x0 ≤ ' (' C)) (e : Qpos Q)
+    (n k : nat) (leMn : (iterates_modulus C e <= n)%nat)
+    : d (nat_iter (k + n) T x0) (nat_iter n T x0) < ' (' e).
+  Proof.
+    set (M := iterates_modulus C e) in *.
+    rewrite nat_iter_add.
+    apply (strictly_order_reflecting ((1 - ' c) *.)).
+    refine (le_lt_trans _ _ _ (iterate_dist_le _ k) _).
+    refine (le_lt_trans _ _ _ (iterate_step_le x0 n) _).
+    pose proof (power_nonneg (' c : F) n c_nonneg).
+    assert (PropHolds (0 < (' (' C) : F))) by exact (pos_rationals_to_field_qpos Q C).
+    refine (le_lt_trans _ _ _ (order_preserving (_ *.) _ _ C0) _).
+    refine (le_lt_trans _ _ _ (order_preserving (.* ' (' C)) _ _
+              (power_antitone _ M n c_nonneg (lt_le _ _ c_lt_1) leMn)) _).
+    exact (iterates_modulus_spec C e).
+  Qed.
+
+  (** Hence the iterates of [T] at [x0] form a sequence with a modulus of Cauchy convergence. *)
   Lemma metriccauchymodulus_iterates (C : Qpos Q) (x0 : X) (C0 : d (T x0) x0 ≤ ' (' C))
     : MetricCauchyModulus Q (metric_close Q d) (fun n => nat_iter n T x0) (iterates_modulus C).
   Proof.
-    intro e.
-    set (M := iterates_modulus C e).
-    set (b := Qpos_diff c 1 c1).
-    (* The key estimate, from which the claim follows by symmetry. *)
-    assert (key : forall n k, (M <= n)%nat
-              -> d (nat_iter (k + n) T x0) (nat_iter n T x0) < ' (' e)).
-    { intros n k leMn.
-      rewrite nat_iter_add.
-      apply (strictly_order_reflecting ((1 - ' c) *.)).
-      refine (le_lt_trans _ _ _ (iterate_dist_le _ k) _).
-      refine (le_lt_trans _ _ _ (iterate_step_le x0 n) _).
-      pose proof (power_nonneg (' c : F) n c_nonneg).
-      pose proof (power_nonneg (' c : F) M c_nonneg).
-      assert (Cpos : PropHolds (0 < (' (' C) : F)))
-        by exact (pos_rationals_to_field_qpos Q C).
-      refine (le_lt_trans _ _ _ (order_preserving (_ *.) _ _ C0) _).
-      refine (le_lt_trans _ _ _ (order_preserving (.* ' (' C)) _ _
-                (power_antitone _ M n c_nonneg (lt_le _ _ c_lt_1) leMn)) _).
-      assert (spec : nat_iter M (mult c) 1 < ' (e * b / C))
-        by exact (rational_log c c0 c1 (e * b / C)).2.
-      assert (spec' := strictly_order_preserving (cast Q F) _ _ spec).
-      rewrite (preserves_power (cast Q F)) in spec'.
-      refine (lt_eq_trans _ _ _ (strictly_order_preserving (.* ' (' C)) _ _ spec') _).
-      cbn beta; rewrite <- (preserves_mult (f:=cast Q F)).
-      rewrite (mult_comm (1 - ' c)), <- (preserves_1 (f:=cast Q F)).
-      rewrite <- (preserves_negate (f:=cast Q F)), <- (preserves_plus (f:=cast Q F)).
-      rewrite <- (preserves_mult (f:=cast Q F)).
-      apply (ap (cast Q F)).
-      (* The positive rational [b] is [1 - c] by definition. *)
-      change (' (e * b / C * C) = ' (e * b)); apply ap.
-      rewrite (commutativity _ C), (associativity C _ (/ C)).
-      apply pos_unconjugate. }
-    intros m n lem len.
+    intros e m n lem len.
     destruct (leq_dichotomy n m) as [lenm|ltmn].
     - destruct (equiv_leq_add n m lenm) as [k p].
       unfold metric_close; rewrite <- p.
-      exact (key n k len).
+      exact (iterate_dist_lt C x0 C0 e n k len).
     - destruct (equiv_leq_add m n (leq_succ_l ltmn)) as [k p].
       unfold metric_close; rewrite (pseudometric_symmetric (d:=d)), <- p.
-      exact (key m k lem).
+      exact (iterate_dist_lt C x0 C0 e m k lem).
   Qed.
 
   Context {Farch : ArchimedeanProperty Q F} `{!MetricCauchyComplete Q (metric_close Q d)}.
