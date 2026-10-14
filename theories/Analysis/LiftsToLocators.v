@@ -39,6 +39,16 @@ Section lifts.
   (** A function is pointwise continuous if it is continuous at every point. *)
   Definition IsPointwiseContinuous (f : F -> F) := forall x : F, IsContinuousAt f x.
 
+  (** If [f] is continuous at [x], so is [- f]. *)
+  Lemma iscontinuousat_negate (f : F -> F) (x : F) (cont : IsContinuousAt f x)
+    : IsContinuousAt (fun y => - f y) x.
+  Proof.
+    intro e; refine (Trunc_functor (-1) _ (cont e)); intros [d close].
+    exists d; intros y cxy.
+    unfold field_close; rewrite <- negate_plus_distr.
+    exact (lt_bound_negate _ _ (close y cxy)).
+  Qed.
+
   (** A modulus of uniform continuity for [f] on the interval [[a, b]]: a modulus of uniform continuity, in the sense of [IsUniformModulus], for the restriction of [f] to the interval. This is structure. *)
   Definition UniformModulusOn (a b : F) (f : F -> F)
     := {w : Qpos Q -> Qpos Q &

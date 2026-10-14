@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits LiftsToLocators.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -261,6 +261,10 @@ Check locator_lifts_constant.
 Check step_function.
 Check lifts_step_function.
 Check not_iscontinuousat_step_function.
+
+(** Theorem 7.3.1. Approximate intermediate value theorem: a function which is pointwise continuous on [[a, b]] with [f a < 0 < f b] merely takes values arbitrarily close to [0]; if it lifts to locators and [a] and [b] have locators, we can find such a point with a locator. The thesis claims that the limit of Frank's interpolating bisection is such a point, which can fail; the proof shows that the limit or one of the midpoints is. *)
+Check approximate_ivt.
+Check approximate_ivt_locator.
 
 (** ** Chapter 8: Metric spaces *)
 
