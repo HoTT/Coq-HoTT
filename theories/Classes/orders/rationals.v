@@ -16,9 +16,60 @@ From HoTT.Classes Require Import
   orders.rings
   orders.naturals.
 
-Generalizable Variables F Q.
+Generalizable Variables F Q R Rle Rlt.
 
 (** For rationals [Q] and an ordered field [F], the map [rationals_to_field Q F] is the unique semiring morphism [Q -> F].  We show that it preserves the strict order and is injective, and that it reflects the strict order when [1] is apart from [0] in [Q] (for instance when the apartness of [Q] is trivial).  The key step is that every rational [q] satisfies [q * d + b = a] with [a], [b] and [d] images of natural numbers and [d] positive.  We obtain this by initiality of [Q]: the elements of [F] of this form make up a subfield of [F]. *)
+
+(** Compare two natural numbers by the difference between them. *)
+Local Definition nat_add_cases (a b : nat)
+  : {c : nat & (c + b)%nat = a} + {c : nat & (S c + a)%nat = b}.
+Proof.
+  destruct (leq_dichotomy b a) as [l|l].
+  - left; exact (equiv_leq_add b a l).
+  - right; destruct (equiv_leq_add (S a) b l) as [c p].
+    exact (c; (nat_add_succ_r c a)^ @ p).
+Defined.
+
+(** In an ordered ring, if [y * (m + 1) + b = a] for natural numbers [a], [b] and [m], then [y] is positive exactly when [a = c + 1 + b] for a natural number [c]. *)
+Section nat_quotient_sign.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
+    `{!PropHolds ((1 : R) ≶ 0)}.
+
+  Local Notation nR := (naturals_to_semiring nat R).
+
+  Context (y : R) (a b m : nat) (E : y * nR (S m) + nR b = nR a).
+
+  Local Lemma nat_quotient_pos_succ (ypos : 0 < y) : {c : nat & (S c + b)%nat = a}.
+  Proof.
+    destruct (nat_add_cases a b) as [[c p]|[c p]]; destruct p.
+    - assert (E' : y * nR (S m) = nR c).
+      { apply (right_cancellation (+) (nR b)).
+        rewrite E, (preserves_plus (f:=nR)); reflexivity. }
+      destruct c as [|c]; [|exact (c; idpath)].
+      destruct (irreflexivity (<) (0 : R)).
+      exact (transport (fun z => 0 < z) E'
+               (pos_mult_compat _ _ ypos (nat_to_semiring_succ_pos m))).
+    - destruct (irreflexivity (<) (0 : R)).
+      refine (transport (fun z => 0 < z) _
+                (pos_plus_compat _ _
+                   (pos_mult_compat _ _ ypos (nat_to_semiring_succ_pos m))
+                   (nat_to_semiring_succ_pos c))).
+      apply (right_cancellation (+) (nR a)).
+      rewrite plus_0_l, <- plus_assoc, <- (preserves_plus (f:=nR)).
+      exact E.
+  Qed.
+
+  Local Lemma nat_quotient_succ_pos (c : {c : nat & (S c + b)%nat = a}) : 0 < y.
+  Proof.
+    destruct c as [c p]; destruct p.
+    assert (E' : y * nR (S m) = nR (S c)).
+    { apply (right_cancellation (+) (nR b)).
+      rewrite E, (preserves_plus (f:=nR)); reflexivity. }
+    apply (pos_mult_rev_l _ (nR (S m))).
+    - rewrite E'; apply nat_to_semiring_succ_pos.
+    - apply nat_to_semiring_succ_pos.
+  Qed.
+End nat_quotient_sign.
 
 Section nat_quotients.
   Context `{OrderedField F}.
@@ -33,16 +84,6 @@ Section nat_quotients.
     := simple_distribute_r x y z.
   Let distr_l (x y z : F) : x * (y + z) = x * y + x * z
     := simple_distribute_l x y z.
-
-  (** Compare two natural numbers by the difference between them. *)
-  Local Definition nat_add_cases (a b : nat)
-    : {c : nat & (c + b)%nat = a} + {c : nat & (S c + a)%nat = b}.
-  Proof.
-    destruct (leq_dichotomy b a) as [l|l].
-    - left; exact (equiv_leq_add b a l).
-    - right; destruct (equiv_leq_add (S a) b l) as [c p].
-      exact (c; (nat_add_succ_r c a)^ @ p).
-  Defined.
 
   (** An element [y] of [F] is a quotient of natural numbers, up to sign, if [y * d + b = a] for natural numbers [a], [b] and positive [d]. *)
   Local Definition IsNatQuot (y : F) : Type
@@ -206,9 +247,6 @@ Section nat_quotients.
   Local Notation f := (rationals_to_field Q F).
   Local Notation nQ := (naturals_to_semiring nat Q).
 
-  Let nQ_plus (a b : nat) : nQ (a + b)%nat = nQ a + nQ b
-    := preserves_plus a b.
-
   Local Lemma rationals_to_field_nat (n : nat) : f (nQ n) = nF n.
   Proof.
     assert (IsSemiRingPreserving (f o nQ)) by rapply compose_sr_morphism.
@@ -252,41 +290,9 @@ Section nat_quotients.
     : 0 < q <-> 0 < f q.
   Proof.
     assert (Hq := isnatquot_rational q).
-    split; intros qpos; strip_truncations; destruct Hq as [a [b [m [EQ EF]]]];
-      destruct (nat_add_cases a b) as [[c p]|[c p]]; destruct p.
-    1,3: assert (EQ' : q * nQ (S m) = nQ c)
-      by (apply (right_cancellation (+) (nQ b)); rewrite EQ, nQ_plus; reflexivity);
-      assert (EF' : f q * nF (S m) = nF c)
-      by (apply (right_cancellation (+) (nF b)); rewrite EF, nF_plus; reflexivity);
-      destruct c as [|c].
-    - destruct (irreflexivity (<) (0 : Q)).
-      exact (transport (fun z => 0 < z) EQ'
-               (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))).
-    - apply (pos_mult_rev_l _ (nF (S m))).
-      + rewrite EF'; apply nat_to_semiring_succ_pos.
-      + apply nat_to_semiring_succ_pos.
-    - destruct (irreflexivity (<) (0 : F)).
-      exact (transport (fun z => 0 < z) EF'
-               (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))).
-    - apply (pos_mult_rev_l _ (nQ (S m))).
-      + rewrite EQ'; apply nat_to_semiring_succ_pos.
-      + apply nat_to_semiring_succ_pos.
-    - destruct (irreflexivity (<) (0 : Q)).
-      refine (transport (fun z => 0 < z) _
-                (pos_plus_compat _ _
-                   (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))
-                   (nat_to_semiring_succ_pos c))).
-      apply (right_cancellation (+) (nQ a)).
-      rewrite plus_0_l, <- plus_assoc, <- nQ_plus.
-      exact EQ.
-    - destruct (irreflexivity (<) (0 : F)).
-      refine (transport (fun z => 0 < z) _
-                (pos_plus_compat _ _
-                   (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))
-                   (nat_to_semiring_succ_pos c))).
-      apply (right_cancellation (+) (nF a)).
-      rewrite plus_0_l, <- plus_assoc, <- nF_plus.
-      exact EF.
+    split; intros qpos; strip_truncations; destruct Hq as [a [b [m [EQ EF]]]].
+    - exact (nat_quotient_succ_pos _ _ _ _ EF (nat_quotient_pos_succ _ _ _ _ EQ qpos)).
+    - exact (nat_quotient_succ_pos _ _ _ _ EQ (nat_quotient_pos_succ _ _ _ _ EF qpos)).
   Qed.
 
   #[export] Instance strictly_order_preserving_rationals_to_field
