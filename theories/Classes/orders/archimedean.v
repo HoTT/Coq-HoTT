@@ -189,6 +189,47 @@ Section strict_field_order.
                             | ((x , y) , (z , w)) => f x y z w
                             end).
 
+  (** If [max(x, -x, y, -y) < Z], then [x] and [y] lie strictly between [- Z] and [Z]. *)
+  Lemma between_join_negate (x y Z : F) (lt : join (join x (- x)) (join y (- y)) < Z)
+    : (- Z < x < Z) /\ (- Z < y < Z).
+  Proof.
+    assert (ltZ : forall v, v ≤ join (join x (- x)) (join y (- y)) -> v < Z)
+      by (intros v lev; exact (le_lt_trans _ _ _ lev lt)).
+    refine ((_, _), (_, _)).
+    - apply flip_lt_negate_l, ltZ.
+      exact (transitivity (join_ub_r x (- x)) (join_ub_l _ _)).
+    - apply ltZ; exact (transitivity (join_ub_l x (- x)) (join_ub_l _ _)).
+    - apply flip_lt_negate_l, ltZ.
+      exact (transitivity (join_ub_r y (- y)) (join_ub_r _ _)).
+    - apply ltZ; exact (transitivity (join_ub_l y (- y)) (join_ub_r _ _)).
+  Qed.
+
+  (** For [- Z < x < Z] and [0 < D], there are rationals [a < x < b] such that all [u] in [[a, b]] lie between [- Z] and [Z] and within [D] of [x]. *)
+  Lemma merely_rational_bounds_close (x D Z : F) (Dpos : 0 < D) (ltZx : - Z < x < Z)
+    : hexists (fun ab : Q * Q => (' (fst ab) < x < ' (snd ab))
+                 /\ forall u, ' (fst ab) ≤ u -> u ≤ ' (snd ab)
+                              -> (- Z < u < Z) /\ (- D < x - u < D)).
+  Proof.
+    destruct ltZx as [ltZx ltxZ].
+    assert (ha := archimedean_property Q F _ x
+                    (join_lt_r _ _ _ (fst (pos_minus_lt_compat_r x D) Dpos) ltZx)).
+    assert (hb := archimedean_property Q F x _
+                    (meet_lt_l _ _ _ (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
+    strip_truncations; destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]].
+    apply tr; exists (a, b); refine ((ltax, ltxb), _); intros u leau leub.
+    assert (ltu := fun v (lev : v ≤ join (x - D) (- Z)) =>
+                     lt_le_trans _ _ _ (le_lt_trans _ _ _ lev ltja) leau).
+    assert (ult := fun v (lev : meet (x + D) Z ≤ v) =>
+                     le_lt_trans _ _ _ leub (lt_le_trans _ _ _ ltbm lev)).
+    split; split.
+    - exact (ltu _ (join_ub_r _ _)).
+    - exact (ult _ (meet_lb_r _ _)).
+    - apply flip_lt_minus_r; rewrite (commutativity (- D)).
+      apply flip_lt_minus_l; exact (ult _ (meet_lb_l _ _)).
+    - apply flip_lt_minus_l; rewrite (commutativity D).
+      apply flip_lt_minus_l; exact (ltu _ (join_ub_l _ _)).
+  Qed.
+
   Section times.
     (* Reflecting strict inequalities from [F] to [Q] needs [1] to be apart from [0] in [Q]; this holds for instance when the apartness of [Q] is trivial. *)
     Context `{!PropHolds ((1 : Q) ≶ 0)}.
@@ -200,22 +241,12 @@ Section strict_field_order.
                     /\ forall u w, ' a ≤ u -> u ≤ ' b -> ' c ≤ w -> w ≤ ' d
                                    -> x * y - e < u * w < x * y + e).
     Proof.
-      set (J := join (join x (- x)) (join y (- y))).
-      set (Z := J + 1).
-      assert (ltZ : forall v, v ≤ J -> v < Z)
-        by (intros v lev; exact (le_lt_trans _ _ _ lev (fst (pos_plus_lt_compat_r J 1) lt_0_1))).
-      assert (ltxZ : x < Z)
-        by (apply ltZ; exact (transitivity (join_ub_l x (- x)) (join_ub_l _ _))).
-      assert (ltZx : - Z < x).
-      { apply flip_lt_negate_l, ltZ.
-        exact (transitivity (join_ub_r x (- x)) (join_ub_l _ _)). }
-      assert (ltyZ : y < Z)
-        by (apply ltZ; exact (transitivity (join_ub_l y (- y)) (join_ub_r _ _))).
-      assert (ltZy : - Z < y).
-      { apply flip_lt_negate_l, ltZ.
-        exact (transitivity (join_ub_r y (- y)) (join_ub_r _ _)). }
+      (* By [mult_minus_mult_lt_bound], it suffices that [u] and [w] are within [D = e / 2Z] of [x] and [y], for a bound [Z] on [x] and [y]. *)
+      set (Z := join (join x (- x)) (join y (- y)) + 1).
+      destruct (between_join_negate x y Z (fst (pos_plus_lt_compat_r _ 1) lt_0_1))
+        as [ltZx ltZy].
       assert (Zpos : 0 < Z + Z).
-      { assert (Zpos := pos_between_negate x Z (ltZx, ltxZ)).
+      { assert (Zpos := pos_between_negate x Z ltZx).
         apply pos_plus_compat; assumption. }
       set (D := e * recip' (Z + Z) (positive_apart_zero _ Zpos)).
       assert (Dpos : 0 < D) by exact (pos_mult _ _ epos (pos_recip_compat _ _)).
@@ -224,35 +255,13 @@ Section strict_field_order.
         unfold D, recip'.
         rewrite (commutativity e), (associativity (Z + Z)), recip_inverse', mult_1_l.
         reflexivity. }
-      assert (ha := archimedean_property Q F _ x (join_lt_r _ _ _ (fst (pos_minus_lt_compat_r x D) Dpos) ltZx)).
-      assert (hb := archimedean_property Q F x _ (meet_lt_l _ _ _ (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
-      assert (hc := archimedean_property Q F _ y (join_lt_r _ _ _ (fst (pos_minus_lt_compat_r y D) Dpos) ltZy)).
-      assert (hd := archimedean_property Q F y _ (meet_lt_l _ _ _ (fst (pos_plus_lt_compat_r y D) Dpos) ltyZ)).
-      strip_truncations.
-      destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]],
-        hc as [c [ltjc ltcy]], hd as [d [ltyd ltdm]].
-      apply tr; exists ((a, b), (c, d)).
-      refine ((ltax, ltxb), ((ltcy, ltyd), _)).
+      assert (hx := merely_rational_bounds_close x D Z Dpos ltZx).
+      assert (hy := merely_rational_bounds_close y D Z Dpos ltZy).
+      strip_truncations; destruct hx as [[a b] [ltaxb boxx]], hy as [[c d] [ltcyd boxy]].
+      apply tr; exists ((a, b), (c, d)); refine (ltaxb, (ltcyd, _)).
       intros u w leau leub lecw lewd.
-      (* For [v] in [[a', b']] with [v - D < a'] and [b' < v + D], we have [- D < v - u < D]. *)
-      assert (close : forall v a' b' u, join (v - D) (- Z) < a' -> b' < meet (v + D) Z
-                                        -> a' ≤ u -> u ≤ b' -> - D < v - u < D).
-      { clear - Dpos.
-        intros v a' b' u ltja' ltb'm lea'u leub'.
-        split.
-        - apply flip_lt_minus_r; rewrite (commutativity (- D)).
-          apply flip_lt_minus_l.
-          refine (le_lt_trans _ _ _ leub' (lt_le_trans _ _ _ ltb'm (meet_lb_l _ _))).
-        - apply flip_lt_minus_l; rewrite (commutativity D).
-          apply flip_lt_minus_l.
-          exact (lt_le_trans _ _ _ (le_lt_trans _ _ _ (join_ub_l _ _) ltja') lea'u). }
-      assert (ltZw : - Z < w)
-        by exact (lt_le_trans _ _ _ (le_lt_trans _ _ _ (join_ub_r _ _) ltjc) lecw).
-      assert (ltwZ : w < Z)
-        by exact (le_lt_trans _ _ _ lewd (lt_le_trans _ _ _ ltdm (meet_lb_r _ _))).
-      destruct (mult_minus_mult_lt_bound x y u w Z Z D (ltZx, ltxZ) (ltZw, ltwZ)
-                  (close x _ _ u ltja ltbm leau leub) (close y _ _ w ltjc ltdm lecw lewd))
-        as [lo hi].
+      destruct (boxx u leau leub) as [_ closeu], (boxy w lecw lewd) as [ltZw closew].
+      destruct (mult_minus_mult_lt_bound x y u w Z Z D ltZx ltZw closeu closew) as [lo hi].
       rewrite ZDDZ in lo, hi.
       split.
       - apply flip_lt_minus_l; rewrite (commutativity (u * w)).
@@ -293,26 +302,16 @@ Section strict_field_order.
         assert (leab := lt_le _ _ (transitivity ltax ltxb)).
         assert (lecd := lt_le _ _ (transitivity ltcy ltyd)).
         repeat apply meet_lt_l; apply corner; first [reflexivity | assumption].
-      - intros h; strip_truncations; destruct h as [[[a b] [c d]] [ltqm [[ltax ltxb] [ltcy ltyd]]]].
-        assert (corner : forall u w, meet (meet (a * c) (a * d)) (meet (b * c) (b * d)) ≤ u * w
-                                     -> ' q < ' u * ' w).
-        { intros u w lemuw.
-          rewrite <- preserves_mult.
-          apply (strictly_order_preserving qinc).
-          exact (lt_le_trans _ _ _ ltqm lemuw). }
-        assert (ltqxc : ' q < x * ' c).
-        { apply (lt_mult_endpoints_l _ (' a) (' b) x (' c) (lt_le _ _ ltax) (lt_le _ _ ltxb));
-            apply corner.
-          - exact (transitivity (meet_lb_l _ _) (meet_lb_l _ _)).
-          - exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)). }
-        assert (ltqxd : ' q < x * ' d).
-        { apply (lt_mult_endpoints_l _ (' a) (' b) x (' d) (lt_le _ _ ltax) (lt_le _ _ ltxb));
-            apply corner.
-          - exact (transitivity (meet_lb_l _ _) (meet_lb_r _ _)).
-          - exact (transitivity (meet_lb_r _ _) (meet_lb_r _ _)). }
-        rewrite (mult_comm x y).
-        apply (lt_mult_endpoints_l _ (' c) (' d) y x (lt_le _ _ ltcy) (lt_le _ _ ltyd));
-          rewrite (mult_comm _ x); assumption.
+      - intros h; strip_truncations.
+        destruct h as [[[a b] [c d]] [ltqm [[ltax ltxb] [ltcy ltyd]]]].
+        apply (lt_mult_corners_l _ (' a) (' b) (' c) (' d));
+          try (apply lt_le; assumption);
+          rewrite <- preserves_mult; apply (strictly_order_preserving qinc);
+          refine (lt_le_trans _ _ _ ltqm _).
+        + exact (transitivity (meet_lb_l _ _) (meet_lb_l _ _)).
+        + exact (transitivity (meet_lb_l _ _) (meet_lb_r _ _)).
+        + exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
+        + exact (transitivity (meet_lb_r _ _) (meet_lb_r _ _)).
     Qed.
 
     (** [x y < r] iff there are [a < x < b] and [c < y < d] with [max(ac, ad, bc, bd) < r]. *)
@@ -346,26 +345,16 @@ Section strict_field_order.
         assert (leab := lt_le _ _ (transitivity ltax ltxb)).
         assert (lecd := lt_le _ _ (transitivity ltcy ltyd)).
         repeat apply join_lt_r; apply corner; first [reflexivity | assumption].
-      - intros h; strip_truncations; destruct h as [[[a b] [c d]] [ltjr [[ltax ltxb] [ltcy ltyd]]]].
-        assert (corner : forall u w, u * w ≤ join (join (a * c) (a * d)) (join (b * c) (b * d))
-                                     -> ' u * ' w < ' r).
-        { intros u w leuwj.
-          rewrite <- preserves_mult.
-          apply (strictly_order_preserving qinc).
-          exact (le_lt_trans _ _ _ leuwj ltjr). }
-        assert (ltxcr : x * ' c < ' r).
-        { apply (mult_endpoints_lt_r _ (' a) (' b) x (' c) (lt_le _ _ ltax) (lt_le _ _ ltxb));
-            apply corner.
-          - exact (transitivity (join_ub_l _ _) (join_ub_l _ _)).
-          - exact (transitivity (join_ub_l _ _) (join_ub_r _ _)). }
-        assert (ltxdr : x * ' d < ' r).
-        { apply (mult_endpoints_lt_r _ (' a) (' b) x (' d) (lt_le _ _ ltax) (lt_le _ _ ltxb));
-            apply corner.
-          - exact (transitivity (join_ub_r _ _) (join_ub_l _ _)).
-          - exact (transitivity (join_ub_r _ _) (join_ub_r _ _)). }
-        rewrite (mult_comm x y).
-        apply (mult_endpoints_lt_r _ (' c) (' d) y x (lt_le _ _ ltcy) (lt_le _ _ ltyd));
-          rewrite (mult_comm _ x); assumption.
+      - intros h; strip_truncations.
+        destruct h as [[[a b] [c d]] [ltjr [[ltax ltxb] [ltcy ltyd]]]].
+        apply (mult_corners_lt_r _ (' a) (' b) (' c) (' d));
+          try (apply lt_le; assumption);
+          rewrite <- preserves_mult; apply (strictly_order_preserving qinc);
+          refine (le_lt_trans _ _ _ _ ltjr).
+        + exact (transitivity (join_ub_l _ _) (join_ub_l _ _)).
+        + exact (transitivity (join_ub_r _ _) (join_ub_l _ _)).
+        + exact (transitivity (join_ub_l _ _) (join_ub_r _ _)).
+        + exact (transitivity (join_ub_r _ _) (join_ub_r _ _)).
     Qed.
 
   End times.

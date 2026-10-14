@@ -382,6 +382,27 @@ Section full_pseudo_ring_order.
       rewrite <- 2!negate_mult_distr_r; apply (snd (flip_lt_negate _ _)); assumption.
   Qed.
 
+  (** Hence a bound on the four products of the endpoints of [[a, b]] and [[c, d]] is a bound on [u * w] for [u] in [[a, b]] and [w] in [[c, d]]. *)
+  Lemma lt_mult_corners_l q a b c d u w
+    : a ≤ u -> u ≤ b -> c ≤ w -> w ≤ d
+      -> q < a * c -> q < a * d -> q < b * c -> q < b * d -> q < u * w.
+  Proof.
+    intros leau leub lecw lewd ltac ltad ltbc ltbd.
+    rewrite (mult_comm u w).
+    apply (lt_mult_endpoints_l q c d w u lecw lewd); rewrite (mult_comm _ u);
+      apply (lt_mult_endpoints_l q a b u _ leau leub); assumption.
+  Qed.
+
+  Lemma mult_corners_lt_r r a b c d u w
+    : a ≤ u -> u ≤ b -> c ≤ w -> w ≤ d
+      -> a * c < r -> a * d < r -> b * c < r -> b * d < r -> u * w < r.
+  Proof.
+    intros leau leub lecw lewd ltac ltad ltbc ltbd.
+    rewrite (mult_comm u w).
+    apply (mult_endpoints_lt_r r c d w u lecw lewd); rewrite (mult_comm _ u);
+      apply (mult_endpoints_lt_r r a b u _ leau leub); assumption.
+  Qed.
+
 End full_pseudo_ring_order.
 
 (** ** Absolute values *)
