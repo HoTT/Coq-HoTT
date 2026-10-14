@@ -118,7 +118,7 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | Cor 4.4.6 | If a limit merely exists, we can compute it. | 4.4.5, 2.4.3 | `Analysis/CauchyCompleteness.v` | proved | `limit_merely`. |
 | Cor 4.4.7 | If a limit can be computed from a modulus, then the mere existence of a modulus suffices to compute it. | 4.4.4, 4.4.5 | `Analysis/CauchyCompleteness.v` | proved | `limit_merely_modulus`; `limit_complete` for `IsComplete Q F`. |
 | Ex 4.4.8 | *optional.* exp(x) = Σ x^k/k! in a Cauchy complete Archimedean field, via 4.4.7 and bounds on x. | 4.4.7, 4.3.6, U-3 | `Analysis/CauchyCompleteness.v` | todo | None. |
-| Def 4.4.9 | Cauchy reals R_C: rational sequences with modulus, quotiented by (∀ ε) \|x_{M(ε/4)} − y_{M(ε/4)}\| < ε. | 4.4.1, 2.7.2 | `Analysis/CauchyReals.v` | todo | None. `Quotient` (Colimits/Quotient.v). The unnumbered claim that R_C is an Archimedean ordered field is U-1. |
+| Def 4.4.9 | Cauchy reals R_C: rational sequences with modulus, quotiented by (∀ ε) \|x_{M(ε/4)} − y_{N(ε/4)}\| < ε. | 4.4.1, 2.7.2 | `Analysis/CauchyReals.v` | proved | `CauchySequence` (record: sequence, modulus, `MetricCauchyModulus` for `rational_close`), `cauchy_related`, `CauchyReals` (`Quotient cauchy_related`), `rationals_to_cauchy_reals`; `cauchy_reals_to_field` for a Cauchy complete Archimedean `F`, with `cauchy_reals_to_field_rationals`. The thesis prints y_{M(ε/4)}; we read it as y at its own modulus N. That the relation is an equivalence relation is not needed and not proved. The unnumbered claim that R_C is an Archimedean ordered field is U-1. |
 
 ### 4.5 HoTT book reals
 
@@ -201,8 +201,8 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | Ex 6.9.3 | *optional.* Three signed-decimal expansions of π. | 6.9.2 | none | todo | Nothing to formalize. |
 | Lem 6.9.4 | A real with a locator has k : Z with x ∈ (k − 1, k + 1). | 6.6.3, U-4 | `Analysis/LocatorDigits.v` | proved | `integer_bound`, from `tight_bound` and the integer part `integer_floor` (U-4). |
 | Thm 6.9.5 | Locators and signed-digit representations are interdefinable. | 6.9.2, 6.9.4, 6.8.1, 6.3.1 | `Analysis/LocatorDigits.v` (both directions) | proved | `locator_signed_digits` (via `locator_limit`, with the modulus `digit_sum_modulus` from `rational_log`) and `signed_digits_locator` (digits found by `digit_step`, a linear scan `locator_scan` over 2d + 1 grid points). Both assume d > 0. |
-| Def 6.9.6 | isCauchyReal(x): x is in the image of R_C → R. | 4.4.9, 4.4.4 | `Analysis/LocatorDigits.v` | todo | None. Use `hexists`/`hfiber`. |
-| Thm 6.9.7 | TFAE: ‖locator(x)‖; ∃ signed-digit representation; ∃ rational Cauchy sequence with limit x; isCauchyReal(x). | 6.9.5, 6.8.1, 6.9.6, 4.4.9 | `Analysis/LocatorDigits.v` | todo | None. |
+| Def 6.9.6 | isCauchyReal(x): x is in the image of R_C → R. | 4.4.9, 4.4.4 | `Analysis/CauchyReals.v` | proved | `IsCauchyReal` (`hexists` of the fiber of `cauchy_reals_to_field`); `iscauchyreal_iff_limit` gives the equivalent formulation as merely a limit of a rational sequence with modulus. Placed in `CauchyReals.v`, since it does not involve locators. |
+| Thm 6.9.7 | TFAE: ‖locator(x)‖; ∃ signed-digit representation; ∃ rational Cauchy sequence with limit x; isCauchyReal(x). | 6.9.5, 6.8.1, 6.9.6, 4.4.9 | `Analysis/LocatorDigits.v` | proved | `merely_locator_iff_signed_digits` (1⇔2), `merely_locator_iff_limit` (1⇔3), `iscauchyreal_iff_limit` (3⇔4, in `CauchyReals.v`); the untruncated steps `cauchy_sequence_signed_digits` and `locator_cauchy_sequence` are structure. Signed digits are in base 1 + d for any d > 0, as for 6.9.5. |
 | Cor 6.9.9 | Every Dedekind real merely has a signed-digit representation iff R_C and R_D coincide. | 6.9.7, 4.6.7 | `Analysis/LocatorDigits.v` | todo | None. |
 | Lem 6.10.1 | A choice Π x : R, locator(x) gives a strongly non-constant f : R → 2. | 6.1.1, 6.4.4, 6.3.1 | `Analysis/LocatorCuts.v` | todo | None. `Bool` (Types/Bool.v). |
 | Lem 6.10.2 | A strongly non-constant R → 2 implies WLPO. | 2.8.4, 4.4.4, 4.4.7 | `Analysis/LocatorCuts.v` | todo | None, and no `WLPO` in Coq-HoTT: define it next to this lemma (or in a `Misc/` file). |
@@ -279,7 +279,7 @@ Remarks are not numbered results, but these contain claims that later proofs use
 | Rem 5.3.7 | For bipointed convex bodies A, B, contractibility of the homomorphisms A → B means existence plus pointwise uniqueness. | 5.3.6 | `Analysis/IntervalObject.v` | proved | `contr_convexbodyhom_iff` (logical equivalence, `Funext`). |
 | Rem 6.7.5 | Strong cotransitivity: for x < y with locators and z with a locator, (x < z) + (z < y). | 6.7.4 | `Analysis/Locator.v` | todo | None. |
 | Rem 6.7.7 | \|x\| = max(x, −x) has a locator when x has one. | 6.7.6 | `Analysis/Locator.v` | todo | None (from `locator_join` and `locator_minus`). |
-| Rem 6.9.8 | ‖locator(x)‖ ⇒ (Π q r, ‖q < r → …‖) ⇔ locatedness. | 6.9.7 | `Analysis/LocatorDigits.v` | todo | None. |
+| Rem 6.9.8 | ‖locator(x)‖ ⇒ (Π q r, ‖q < r → …‖) ⇔ locatedness. | 6.9.7 | `Analysis/LocatorDigits.v` | proved | `merely_locator_pointwise`, `pointwise_locator_iff_located`, using the new `O_decidable_arrow` (Modalities/ReflectiveSubuniverse.v) for any reflective subuniverse; that (6.3) holds for every x is `cotransitive`. |
 | Rem 8.3.6 | Cor 8.3.5 only needs the mere existence of a Lipschitz constant. | 8.3.5 | `Analysis/BanachFixedPoint.v` | proved | `ishprop_fixed_point_merely` (needs `Funext`). |
 
 ## Unnumbered prerequisites

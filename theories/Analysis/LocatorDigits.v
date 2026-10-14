@@ -2,7 +2,7 @@
 
 (** A real number with a locator can be written as an integer plus an infinite sum of signed digits, and conversely a real number with such a representation has a locator. We work in an arbitrary base [1 + d] with digits from [- d] to [d]; decimal signed digits are the case [d = 9]. Integers are taken from an arbitrary model [Z] of the interface [Integers], mapped into the rationals with [integers_to_ring], in the same way as the rationals [Q] are an arbitrary model of [Rationals]. A digit is an element of [Z] between [- d] and [d], and the infinite sum is the limit, in the sense of [IsLimit], of its partial sums in [Q]. *)
 
-From HoTT Require Import Basics Truncations.Core.
+From HoTT Require Import Basics Truncations.Core Modalities.ReflectiveSubuniverse.
 From HoTT.Spaces Require Import Nat.Core.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
@@ -26,7 +26,7 @@ From HoTT.Classes Require Import
   orders.nat_int
   orders.integers
   orders.rationals.
-From HoTT.Analysis Require Import Locator BanachFixedPoint.
+From HoTT.Analysis Require Import Locator MetricSpace BanachFixedPoint CauchyReals.
 
 Generalizable Variables A Ale Alt Z.
 
@@ -142,14 +142,6 @@ Section digits.
 
   (** From now on we work in base [1 + d]. *)
   Context (d : nat).
-
-  (** Closeness in [Q] gives closeness in [F]. *)
-  Local Lemma close_qinc (e u v : Q) : - e < u - v < e -> - ' e < ' u - ' v < (' e : F).
-  Proof.
-    intros [lo hi].
-    rewrite <- (preserves_minus (f:=qinc Q F)), <- (preserves_negate (f:=qinc Q F)).
-    split; apply (strictly_order_preserving _); assumption.
-  Qed.
 
   Local Lemma close_weaken (e e' u : Q) : - e < u < e -> e < e' -> - e' < u < e'.
   Proof.
@@ -298,15 +290,17 @@ Section digits.
         apply pos_plus_lt_compat_r, digit_weight_pos.
     Qed.
 
-    #[export] Instance digit_sum_modulus : CauchyModulus Q F (fun n => ' s n) digit_modulus.
+    Lemma digit_sum_rational_modulus : MetricCauchyModulus Q (rational_close Q) s digit_modulus.
     Proof.
       intros e m n lem len.
-      apply close_qinc.
       destruct (leq_dichotomy n m) as [le|lt].
       - exact (close_weaken _ _ _ (digit_sum_close n m le) (digit_weight_modulus e n len)).
       - apply close_negate.
         exact (close_weaken _ _ _ (digit_sum_close m n (leq_lt lt)) (digit_weight_modulus e m lem)).
     Qed.
+
+    #[export] Instance digit_sum_modulus : CauchyModulus Q F (fun n => ' s n) digit_modulus
+      := fun e m n lem len => field_close_rationals Q F e _ _ (digit_sum_rational_modulus e m n lem len).
   End bounds.
 
   (** A real with a signed-digit representation has a locator. *)
@@ -429,4 +423,56 @@ Section digits.
           apply (strictly_order_preserving (' c +)), ltwe.
     Defined.
   End from_locator.
+
+  (** ** Cauchy reals *)
+
+  (** A signed-digit representation of [x] gives a rational sequence with a modulus converging to [x]. *)
+  Definition cauchy_sequence_signed_digits {x : F} (sd : SignedDigits x)
+    : {s : CauchySequence Q & IsLimit Q F (fun n => ' s n) x}
+    := ({| cauchy_seq := digit_sum (sd_integer _ sd) (sd_digit _ sd);
+           cauchy_modulus := digit_modulus;
+           cauchy_ismodulus := digit_sum_rational_modulus _ _ (sd_digit_bound _ sd) |};
+        sd_islimit _ sd).
+
+  (** The limit of a rational sequence with a modulus has a locator. *)
+  Definition locator_cauchy_sequence {x : F} (s : CauchySequence Q)
+    (islim : IsLimit Q F (fun n => ' s n) x)
+    : locator Q F x
+    := locator_limit Q F (M_ismod:=cauchymodulus_cauchy_sequence Q F s)
+         (fun n => locator_left Q F _) islim.
+
+  (** Merely having a locator, merely having a signed-digit representation and merely being the limit of a rational sequence with a modulus are equivalent; by [iscauchyreal_iff_limit], so is being a Cauchy real. *)
+  Lemma merely_locator_iff_signed_digits (x : F)
+    : merely (locator Q F x) <-> merely (SignedDigits x).
+  Proof.
+    split; apply Trunc_functor.
+    - exact signed_digits_locator.
+    - exact locator_signed_digits.
+  Qed.
+
+  Lemma merely_locator_iff_limit (x : F)
+    : merely (locator Q F x)
+      <-> hexists (fun s : CauchySequence Q => IsLimit Q F (fun n => ' s n) x).
+  Proof.
+    split; apply Trunc_functor.
+    - intro l; exact (cauchy_sequence_signed_digits (signed_digits_locator l)).
+    - intros [s islim]; exact (locator_cauchy_sequence s islim).
+  Qed.
+
+  (** A locator can be truncated as a whole, pointwise, or in its values. Merely having a locator implies the pointwise truncation. *)
+  Lemma merely_locator_pointwise (x : F) (l : merely (locator Q F x)) (q r : Q)
+    : merely (q < r -> (' q < x) + (x < ' r)).
+  Proof.
+    exact (Trunc_functor _ (fun l' => l' q r) l).
+  Qed.
+
+  (** Since the order on [Q] is decidable, the pointwise truncation is equivalent to the truncation of the values, which holds for every [x] by cotransitivity. *)
+  Lemma pointwise_locator_iff_located (x : F)
+    : (forall q r : Q, merely (q < r -> (' q < x) + (x < ' r)))
+      <-> (forall q r : Q, q < r -> hor (' q < x) (x < ' r)).
+  Proof.
+    split.
+    - intros h q r ltqr; exact (Trunc_functor _ (fun f => f ltqr) (h q r)).
+    - intros h q r; exact (O_decidable_arrow (Tr (-1)) _ _ (h q r)).
+  Qed.
 End digits.
