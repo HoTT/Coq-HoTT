@@ -266,6 +266,15 @@ Check not_iscontinuousat_step_function.
 Check approximate_ivt.
 Check approximate_ivt_locator.
 
+(** Definition 7.3.2. Locally nonconstant functions. *)
+Check IsLocallyNonconstant.
+
+(** Lemma 7.3.4. For a continuous, locally nonconstant function which lifts to locators, and [x < y] and [t] with locators, we can find a rational [r] with [x < r < y] and [f r] apart from [t]. *)
+Check locally_nonconstant_rational.
+
+(** Theorem 7.3.5. Exact intermediate value theorem: a continuous, locally nonconstant function which lifts to locators, with [f a ≤ 0 ≤ f b] for [a < b] with locators, has a root in [[a, b]] with a locator. *)
+Check exact_ivt.
+
 (** ** Chapter 8: Metric spaces *)
 
 (** Definition 8.1.1. Pseudometrics and metrics, with values in the nonnegative elements of an ordered field. *)
