@@ -142,6 +142,11 @@ Section digits.
     - apply flip_lt_negate_l; exact lo.
   Qed.
 
+  Local Lemma nZ_to_rationals : ' nZ d = nQ d.
+  Proof.
+    exact (to_semiring_twice _ _ _ d).
+  Qed.
+
   (** The weight [(1 + d)^(- n)] of the [n]th position. *)
   Definition digit_weight (n : nat) : Q := nat_iter n (mult (/ (1 + nQ d))) 1.
 
@@ -219,8 +224,7 @@ Section digits.
 
     Local Lemma abound_Q (n : nat) : - nQ d ≤ ' a n ≤ nQ d.
     Proof.
-      assert (p : ' nZ d = nQ d) by exact (to_semiring_twice _ _ _ d).
-      rewrite <- p, <- (preserves_negate (f:=integers_to_ring Z Q)).
+      rewrite <- nZ_to_rationals, <- (preserves_negate (f:=integers_to_ring Z Q)).
       split; apply (order_preserving _), abound.
     Qed.
 
@@ -322,6 +326,54 @@ Section digits.
 
   Local Notation w := digit_weight.
 
+  (** The grid [c + j w (S n)] for integers [j], on which we choose the next digit. *)
+  Section grid.
+    Context (n : nat) (c : Q).
+
+    Local Definition digit_grid (j : Z) : Q := c + ' j * w (S n).
+
+    Local Lemma digit_grid_succ (j : Z) : digit_grid (j + 1) = digit_grid j + w (S n).
+    Proof.
+      unfold digit_grid.
+      rewrite (preserves_plus (f:=cast Z Q)), preserves_1.
+      rewrite plus_mult_distr_r, mult_1_l, plus_assoc; reflexivity.
+    Qed.
+
+    Local Lemma digit_grid_pred (j : Z) : digit_grid (j - 1) = digit_grid j - w (S n).
+    Proof.
+      unfold digit_grid.
+      rewrite (preserves_minus (f:=cast Z Q)), preserves_1.
+      rewrite plus_mult_distr_r, <- negate_mult_distr_l, mult_1_l, plus_assoc; reflexivity.
+    Qed.
+
+    (** This is used as an argument of a locator, so we keep it transparent. *)
+    Local Definition digit_grid_lt (j : Z) : digit_grid j < digit_grid (j + 1).
+    Proof.
+      rewrite digit_grid_succ; apply pos_plus_lt_compat_r, digit_weight_pos.
+    Defined.
+
+    Local Lemma nZ_double : - nZ d + nZ (d + d) = nZ d.
+    Proof.
+      rewrite (preserves_plus (f:=nZ)), plus_assoc, plus_negate_l, plus_0_l; reflexivity.
+    Qed.
+
+    (** The grid points [- d - 1] and [d + 1] are [c - w n] and [c + w n]. *)
+    Local Lemma digit_grid_lower : digit_grid (- nZ d - 1) = c - w n.
+    Proof.
+      rewrite digit_grid_pred; unfold digit_grid.
+      rewrite (preserves_negate (f:=cast Z Q)), nZ_to_rationals, (digit_weight_succ n).
+      rewrite <- negate_mult_distr_l, <- plus_assoc, <- negate_plus_distr.
+      rewrite (plus_comm (nQ d * w (S n))); reflexivity.
+    Qed.
+
+    Local Lemma digit_grid_upper : digit_grid (- nZ d + nZ (d + d) + 1) = c + w n.
+    Proof.
+      rewrite nZ_double, digit_grid_succ; unfold digit_grid.
+      rewrite nZ_to_rationals, (digit_weight_succ n), (plus_comm (w (S n))), plus_assoc.
+      reflexivity.
+    Qed.
+  End grid.
+
   Section from_locator.
     Context {x : F} (l : locator Q F x).
 
@@ -330,36 +382,15 @@ Section digits.
       : {b : Z & prod (- nZ d ≤ b ≤ nZ d)
                    (' (c + ' b * w (S n) - w (S n)) < x < ' (c + ' b * w (S n) + w (S n)))}.
     Proof.
-      set (G j := c + ' j * w (S n)).
-      assert (Gp : forall j, G (j + 1) = G j + w (S n)).
-      { intro j; unfold G.
-        rewrite (preserves_plus (f:=cast Z Q)), preserves_1.
-        rewrite plus_mult_distr_r, mult_1_l, plus_assoc; reflexivity. }
-      assert (Gm : forall j, G (j - 1) = G j - w (S n)).
-      { intro j; unfold G.
-        rewrite (preserves_minus (f:=cast Z Q)), preserves_1.
-        rewrite plus_mult_distr_r, <- negate_mult_distr_l, mult_1_l, plus_assoc; reflexivity. }
-      assert (Ginc : forall j, G j < G (j + 1)).
-      { intro j; rewrite Gp; apply pos_plus_lt_compat_r, digit_weight_pos. }
-      assert (pd : ' nZ d = nQ d) by exact (to_semiring_twice _ _ _ d).
-      assert (lo : G (- nZ d - 1) = c - w n).
-      { rewrite Gm; unfold G.
-        rewrite (preserves_negate (f:=cast Z Q)), pd, (digit_weight_succ n).
-        rewrite <- negate_mult_distr_l, <- plus_assoc, <- negate_plus_distr.
-        rewrite (plus_comm (nQ d * w (S n))); reflexivity. }
-      assert (pdd : - nZ d + nZ (d + d) = nZ d).
-      { rewrite (preserves_plus (f:=nZ)), plus_assoc, plus_negate_l, plus_0_l; reflexivity. }
-      assert (hi : G (- nZ d + nZ (d + d) + 1) = c + w n).
-      { rewrite pdd, Gp; unfold G.
-        rewrite pd, (digit_weight_succ n), (plus_comm (w (S n))), plus_assoc; reflexivity. }
       destruct h as [ltcx ltxc].
-      rewrite <- lo in ltcx; rewrite <- hi in ltxc.
-      destruct (locator_scan l G Ginc (d + d) (- nZ d) ltcx ltxc) as [b [[lb ub] [ltb ltb']]].
+      rewrite <- digit_grid_lower in ltcx; rewrite <- digit_grid_upper in ltxc.
+      destruct (locator_scan l (digit_grid n c) (digit_grid_lt n c) (d + d) (- nZ d) ltcx ltxc)
+        as [b [[lb ub] [ltb ltb']]].
       exists b; split; [split|split].
       - exact lb.
-      - rewrite <- pdd; exact ub.
-      - rewrite Gm in ltb; exact ltb.
-      - rewrite Gp in ltb'; exact ltb'.
+      - rewrite <- nZ_double; exact ub.
+      - rewrite digit_grid_pred in ltb; exact ltb.
+      - rewrite digit_grid_succ in ltb'; exact ltb'.
     Defined.
 
     (** Successive rational approximations of [x], the [n]th within [w n] of [x]. *)
