@@ -27,27 +27,24 @@ Section cauchy_reals.
     {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
     {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
 
-  (** Two rationals [u] and [v] are [e]-close when [|u - v| < e]. We state this without the absolute value, as for [field_close]. *)
-  Definition rational_close (e : Qpos Q) (u v : Q) := - ' e < u - v < ' e.
-
   (** ** The Cauchy reals *)
 
   (** A rational sequence equipped with a modulus of Cauchy convergence. *)
   Record CauchySequence := {
     cauchy_seq :> nat -> Q;
     cauchy_modulus : Qpos Q -> nat;
-    cauchy_ismodulus : MetricCauchyModulus Q rational_close cauchy_seq cauchy_modulus
+    cauchy_ismodulus : MetricCauchyModulus Q (rational_close Q) cauchy_seq cauchy_modulus
   }.
 
   (** Two sequences are related when, for every [e], their terms at the moduli for [e / 4] are [e]-close. *)
   Definition cauchy_related (x y : CauchySequence) :=
     forall e : Qpos Q,
-      rational_close e (x (cauchy_modulus x (e / 4))) (y (cauchy_modulus y (e / 4))).
+      rational_close Q e (x (cauchy_modulus x (e / 4))) (y (cauchy_modulus y (e / 4))).
 
   (** The Cauchy reals. *)
   Definition CauchyReals := Quotient cauchy_related.
 
-  Lemma rational_close_refl (e : Qpos Q) (q : Q) : rational_close e q q.
+  Lemma rational_close_refl (e : Qpos Q) (q : Q) : rational_close Q e q q.
   Proof.
     unfold rational_close; rewrite plus_negate_r; split.
     - apply flip_pos_negate, is_pos.
@@ -82,18 +79,9 @@ Section cauchy_reals.
     Let qinc : Cast Q F := rationals_to_field Q F.
     Existing Instance qinc.
 
-    (** The inclusion of the rationals preserves closeness. *)
-    Lemma field_close_rationals (e : Qpos Q) (u v : Q)
-      : rational_close e u v -> field_close Q e (' u) (' v).
-    Proof.
-      intros [lo hi]; unfold field_close.
-      rewrite <- (preserves_minus (f:=cast Q F)), <- (preserves_negate (f:=cast Q F)).
-      split; apply (strictly_order_preserving _); assumption.
-    Qed.
-
     #[export] Instance cauchymodulus_cauchy_sequence (x : CauchySequence)
       : CauchyModulus Q F (fun n => ' x n) (cauchy_modulus x)
-      := fun e m n lem len => field_close_rationals e _ _ (cauchy_ismodulus x e m n lem len).
+      := fun e m n lem len => field_close_rationals Q e _ _ (cauchy_ismodulus x e m n lem len).
 
     (** The limit of a rational sequence with a modulus. *)
     Definition cauchy_limit (x : CauchySequence) : F
@@ -127,7 +115,7 @@ Section cauchy_reals.
       apply (field_close_triangle Q _ _ _ (' y (cauchy_modulus y (e / 2 / 4)))).
       1: apply (field_close_triangle Q _ _ _ (' x (cauchy_modulus x (e / 2 / 4)))).
       - apply cauchy_limit_close.
-      - apply field_close_rationals, r.
+      - apply (field_close_rationals Q), r.
       - apply field_close_symmetric, cauchy_limit_close.
     Qed.
 

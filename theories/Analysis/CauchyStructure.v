@@ -256,10 +256,7 @@ Section cauchy_structure.
     Proof.
       refine (Build_CauchyStructure F (field_close Q) _ (cast Q F) field_lim _ _ _ _ _).
       - exact (field_close_eq Q).
-      - intros q r e c; unfold field_close.
-        rewrite <- (preserves_negate (f:=cast Q F)), <- (preserves_negate (f:=cast Q F)).
-        rewrite <- (preserves_plus (f:=cast Q F)).
-        split; apply (strictly_order_preserving (cast Q F)); [exact (fst c) | exact (snd c)].
+      - intros q r e; exact (field_close_rationals Q e q r).
       - intros q y e d c.
         exact (field_close_le_triangle e d _ _ _ c
                  (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) d)).

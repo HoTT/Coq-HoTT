@@ -27,7 +27,7 @@ From HoTT.Classes Require Import
   orders.naturals
   orders.integers
   orders.rationals.
-From HoTT.Analysis Require Import Locator MetricSpace BanachFixedPoint CauchyReals.
+From HoTT.Analysis Require Import Locator MetricSpace CauchyCompleteness BanachFixedPoint CauchyReals.
 
 Generalizable Variables A Ale Alt Z.
 
@@ -288,7 +288,7 @@ Section digits.
     Qed.
 
     #[export] Instance digit_sum_modulus : CauchyModulus Q F (fun n => ' s n) digit_modulus
-      := fun e m n lem len => field_close_rationals Q F e _ _ (digit_sum_rational_modulus e m n lem len).
+      := fun e m n lem len => field_close_rationals Q e _ _ (digit_sum_rational_modulus e m n lem len).
   End bounds.
 
   (** A real with a signed-digit representation has a locator. *)

@@ -33,6 +33,18 @@ Section completeness.
   (** Two elements [u] and [v] of [F] are [e]-close when [|u - v| < e]. We state this without the absolute value, as in [CauchyModulus] and [IsLimit]. *)
   Definition field_close (e : Qpos Q) (u v : F) := - ' (' e) < u - v < ' (' e).
 
+  (** Two rationals [u] and [v] are [e]-close when [|u - v| < e]. *)
+  Definition rational_close (e : Qpos Q) (u v : Q) := - ' e < u - v < ' e.
+
+  (** The inclusion of the rationals preserves closeness. *)
+  Lemma field_close_rationals (e : Qpos Q) (u v : Q)
+    : rational_close e u v -> field_close e (' u) (' v).
+  Proof.
+    intros [lo hi]; unfold field_close.
+    rewrite <- (preserves_minus (f:=cast Q F)), <- (preserves_negate (f:=cast Q F)).
+    split; apply (strictly_order_preserving _); assumption.
+  Qed.
+
   (** Bounds add up. *)
   Lemma lt_bound_plus (a b p q : F) (ap : - p < a < p) (bq : - q < b < q)
     : - (p + q) < a + b < p + q.
