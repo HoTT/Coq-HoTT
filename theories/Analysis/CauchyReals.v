@@ -149,6 +149,24 @@ Section cauchy_reals.
         + apply flip_pos_negate, epos.
         + exact epos.
     Qed.
+
+    (** ** Cauchy reals in a Cauchy complete field *)
+
+    (** An element of [F] is a Cauchy real when it is merely in the image of the Cauchy reals. *)
+    Definition IsCauchyReal (x : F) := hexists (fun r => cauchy_reals_to_field r = x).
+
+    (** Equivalently, it is merely the limit of a rational sequence with a modulus. *)
+    Lemma iscauchyreal_iff_limit `{Funext} (x : F)
+      : IsCauchyReal x <-> hexists (fun s : CauchySequence => IsLimit Q F (fun n => ' s n) x).
+    Proof.
+      split.
+      - apply Trunc_rec; intros [r p]; revert r p.
+        srapply (Quotient_ind_hprop cauchy_related); intros s p; apply tr.
+        exists s; exact (transport _ p (islimit_cauchy_limit s)).
+      - apply Trunc_functor; intros [s islim].
+        exists (class_of _ s).
+        exact (limit_unique Q _ _ _ (islimit_cauchy_limit s) islim).
+    Qed.
   End limit.
 
 End cauchy_reals.

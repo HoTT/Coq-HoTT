@@ -5,6 +5,7 @@
 From HoTT Require Import Basics.Overture Basics.Classes.
 From HoTT.Classes.interfaces Require Import canonical_names orders rationals archimedean cauchy.
 From HoTT.Cubical Require Import DPath.
+From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
@@ -246,6 +247,26 @@ Check integer_bound.
 (** Theorem 6.9.5. Locators and signed-digit representations are interdefinable. *)
 Check locator_signed_digits.
 Check signed_digits_locator.
+
+(** Definition 6.9.6. An element of a Cauchy complete Archimedean ordered field is a Cauchy real when it is merely in the image of the canonical map from the Cauchy reals, which sends a sequence to its limit and commutes with the inclusions of the rationals; equivalently, when it is merely the limit of a rational sequence with a modulus. *)
+Check cauchy_reals_to_field.
+Check rationals_to_cauchy_reals.
+Check cauchy_reals_to_field_rationals.
+Check IsCauchyReal.
+Check iscauchyreal_iff_limit.
+
+(** Theorem 6.9.7. Merely having a locator, merely having a signed-digit representation, merely being the limit of a rational sequence with a modulus, and being a Cauchy real are equivalent. Constructively, a signed-digit representation gives such a sequence, and such a sequence gives a locator for its limit. *)
+Check merely_locator_iff_signed_digits.
+Check merely_locator_iff_limit.
+Check iscauchyreal_iff_limit.
+Check cauchy_sequence_signed_digits.
+Check locator_cauchy_sequence.
+
+(** Remark 6.9.8. A locator can be truncated as a whole, pointwise, or in its values: the first implies the second, which is equivalent to the third because the order on the rationals is decidable, using that a function from a decidable type into a truncation can be brought inside it. The third holds for every element by cotransitivity of the order. *)
+Check merely_locator_pointwise.
+Check pointwise_locator_iff_located.
+Check @O_decidable_arrow.
+Check cotransitive.
 
 (** ** Chapter 7: Some constructive analysis with locators *)
 
