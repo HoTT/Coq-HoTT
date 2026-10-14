@@ -48,3 +48,4 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - A scratch file must `Require Import` every module whose `#[export]` instances and hints it relies on; a missing import looks like a missing instance.
 - `rewrite ... at n` fails with "Setoid library not loaded"; use `lhs`/`rhs`, `ap`, or a local `assert` instead.
 - Inside `mc_scope`, `*` is multiplication even in a type; write `(A * B)%type` for a product type, for example inside a Σ-type.
+- Keep proofs short and readable: split a long proof into lemmas that each state one step of the argument. When two statements are symmetric (lower and upper bounds, left and right, `<` and `>`), prove one and derive the other, for example by negation or by the order dual, rather than repeating the proof.
