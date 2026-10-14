@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits LiftsToLocators.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -241,6 +241,26 @@ Check integer_bound.
 (** Theorem 6.9.5. Locators and signed-digit representations are interdefinable. *)
 Check locator_signed_digits.
 Check signed_digits_locator.
+
+(** ** Chapter 7: Some constructive analysis with locators *)
+
+(** Definition 7.1.1. A function lifts to locators if it is equipped with a map from locators for [x] to locators for [f x]. *)
+Check LiftsToLocators.
+
+(** Definition 7.1.4. Continuity at a point, and pointwise continuity. *)
+Check IsContinuousAt.
+Check IsPointwiseContinuous.
+
+(** Definition 7.1.5. A modulus of uniform continuity on an interval [[a, b]]: a modulus of uniform continuity for the restriction to the interval. *)
+Check UniformModulusOn.
+
+(** Lemma 7.1.7. If all constant functions lift to locators, then every element has a locator. *)
+Check locator_lifts_constant.
+
+(** Lemma 7.1.8. Assuming excluded middle, a function which is not continuous lifts to locators. *)
+Check step_function.
+Check lifts_step_function.
+Check not_iscontinuousat_step_function.
 
 (** ** Chapter 8: Metric spaces *)
 

@@ -213,13 +213,13 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 
 | ID | Statement | Depends on | Target | Status | Coq-HoTT has |
 |---|---|---|---|---|---|
-| Def 7.1.1 | f : R → R lifts to locators: Π x, locator(x) → locator(f x) (structure). | 6.1.1 | `Analysis/LiftsToLocators.v` | todo | None. |
+| Def 7.1.1 | f : R → R lifts to locators: Π x, locator(x) → locator(f x) (structure). | 6.1.1 | `Analysis/LiftsToLocators.v` | proved | `LiftsToLocators f`, a Π-type of maps `locator Q F x -> locator Q F (f x)`. |
 | Ex 7.1.3 | *optional.* exp lifts to locators. | 4.4.8, 6.8.3, 7.1.1 | `Analysis/LiftsToLocators.v` | todo | None. |
-| Def 7.1.4 | f is continuous at x (∀ ε ∃ δ …) and pointwise continuous. | 4.1.10 | `Analysis/LiftsToLocators.v` | todo | `Continuous` (Classes/theory/premetric.v) is the same shape for premetric spaces, but F has no `Closeness` instance yet. |
-| Def 7.1.5 | Modulus of uniform continuity ω : Q+ → Q+ for f on [a, b]. | 4.1.10 | `Analysis/LiftsToLocators.v` | todo | `Uniform` and `Interval` (Classes/theory/premetric.v), for premetric spaces. |
+| Def 7.1.4 | f is continuous at x (∀ ε ∃ δ …) and pointwise continuous. | 4.1.10 | `Analysis/LiftsToLocators.v` | proved | `IsContinuousAt`, `IsPointwiseContinuous`, with `hexists` for ∃δ and `field_close` (Analysis/CauchyCompleteness.v) for \|x − y\| < δ. |
+| Def 7.1.5 | Modulus of uniform continuity ω : Q+ → Q+ for f on [a, b]. | 4.1.10 | `Analysis/LiftsToLocators.v` | proved | `UniformModulusOn a b f`: Σ w, `IsUniformModulus` (Analysis/MetricSpace.v) for the restriction of f to `{z & a ≤ z ≤ b}`, with `field_close` as closeness. |
 | Ex 7.1.6 | *optional.* exp has a modulus of uniform continuity on [a, b], computable when a, b have locators. | 4.4.8, 7.1.5, 6.7.3 | `Analysis/LiftsToLocators.v` | todo | None. |
-| Lem 7.1.7 | If all constant functions lift to locators, every x has a locator. | 7.1.1, 6.3.1 | `Analysis/LiftsToLocators.v` | todo | None. |
-| Lem 7.1.8 | Assuming PEM, some discontinuous f : R → R lifts to locators. | 6.1.3, 7.1.1, 7.1.4, 2.8.2 | `Analysis/LiftsToLocators.v` | todo | `ExcludedMiddle`, `LEM` (ExcludedMiddle.v). |
+| Lem 7.1.7 | If all constant functions lift to locators, every x has a locator. | 7.1.1, 6.3.1 | `Analysis/LiftsToLocators.v` | proved | `locator_lifts_constant`. |
+| Lem 7.1.8 | Assuming PEM, some discontinuous f : R → R lifts to locators. | 6.1.3, 7.1.1, 7.1.4, 2.8.2 | `Analysis/LiftsToLocators.v` | proved | `step_function` (1 on positive elements, 0 elsewhere, defined with `LEM`), `lifts_step_function` (via `all_reals_locators`), `not_iscontinuousat_step_function` (not continuous at 0). |
 | Thm 7.2.1 | If f has a modulus of uniform continuity on [a, b], a and b have locators and f lifts to locators, then ∫_a^b f has a locator. | 7.1.1, 7.1.5, 6.3.1, 6.7.6, 6.6.1, 6.8.1, 4.4.4, U-5 | `Analysis/Integral.v` | todo | None. |
 | Ex 7.2.3 | *optional.* ∫_0^8 sin(x + exp x) dx has a locator. | 7.2.1, 7.1.3 | `Analysis/Integral.v` | todo | None; needs sin. |
 | Thm 7.3.1 | Approximate IVT: f pointwise continuous on [a, b], f(a) < 0 < f(b) ⇒ for each ε we can find x with \|f(x)\| < ε; with a locator if f lifts and a, b have locators. | 7.1.1, 7.1.4, 6.7.6, 6.6.1, 6.8.1, 4.4.4 | `Analysis/IntermediateValue.v` | todo | None. |
