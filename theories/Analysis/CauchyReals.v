@@ -142,9 +142,7 @@ Section cauchy_reals.
       apply (limit_unique Q (fun _ => ' q)).
       - exact (islimit_cauchy_limit (const_cauchy_sequence q)).
       - intro e; apply tr; exists 0%nat; intros n _.
-        assert (epos : @lt F _ 0 (' (' e))).
-        { rewrite <- (preserves_0 (f:=cast Q F)).
-          exact (strictly_order_preserving (cast Q F) _ _ (is_pos e)). }
+        assert (epos := pos_rationals_to_field_qpos Q (F:=F) e).
         unfold field_close; rewrite plus_negate_r; split.
         + apply flip_pos_negate, epos.
         + exact epos.

@@ -157,6 +157,13 @@ Section convergence.
   Let qinc : Cast Q F := rationals_to_field Q F.
   Existing Instance qinc.
 
+  (** The image of a positive rational is positive. *)
+  Lemma pos_rationals_to_field_qpos (e : Qpos Q) : (0 : F) < ' (' e).
+  Proof.
+    rewrite <- (preserves_0 (f:=cast Q F)).
+    exact (strictly_order_preserving _ _ _ (pos_is_pos e)).
+  Qed.
+
   (** A distance function induces a premetric: [x] and [y] are [e]-close when their distance is less than [e]. *)
   Definition metric_close {X : Type} (d : X -> X -> F) (e : Qpos Q) (x y : X)
     := d x y < ' (' e).
@@ -173,16 +180,24 @@ Section convergence.
     Context {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
     Context {Farch : ArchimedeanProperty Q F}.
 
-    (** An element of [F] below every positive rational is nonpositive. *)
-    Lemma nonpos_lt_qpos (a : F) : (forall e : Qpos Q, a < ' (' e)) -> a ≤ 0.
+    (** Below a positive element of [F] lies a positive rational. *)
+    Lemma merely_qpos_lt (a : F) (lt0a : 0 < a)
+      : hexists (fun e : Qpos Q => ' (' e) < a).
     Proof.
-      intros lt; apply not_lt_le_flip; intro lt0a.
       assert (c := archimedean_property Q F 0 a lt0a); strip_truncations.
       destruct c as [q [lt0q ltqa]].
       assert (qpos : 0 < q).
       { apply (strictly_order_reflecting (cast Q F)).
         rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-      exact (lt_antisym _ _ (lt (mkQpos q qpos), ltqa)).
+      exact (tr (mkQpos q qpos; ltqa)).
+    Qed.
+
+    (** An element of [F] below every positive rational is nonpositive. *)
+    Lemma nonpos_lt_qpos (a : F) : (forall e : Qpos Q, a < ' (' e)) -> a ≤ 0.
+    Proof.
+      intros lt; apply not_lt_le_flip; intro lt0a.
+      assert (c := merely_qpos_lt a lt0a); strip_truncations; destruct c as [e ltea].
+      exact (lt_antisym _ _ (lt e, ltea)).
     Qed.
 
     Context {X : Type} (d : X -> X -> F).

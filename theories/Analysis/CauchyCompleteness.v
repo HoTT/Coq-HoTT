@@ -71,6 +71,15 @@ Section completeness.
     - rewrite <- (negate_involutive p); apply (flip_le_negate (- p) a); exact (fst ap).
   Qed.
 
+  (** If [l] is a limit of [x], then [- l] is a limit of [- x]. *)
+  Lemma islimit_negate (x : nat -> F) (l : F) (islim : IsLimit Q F x l)
+    : IsLimit Q F (fun n => - x n) (- l).
+  Proof.
+    intro e; refine (Trunc_functor (-1) _ (islim e)); intros [N close].
+    exists N; intros n len.
+    rewrite <- negate_plus_distr; exact (lt_bound_negate _ _ (close n len)).
+  Qed.
+
   Lemma minus_plus_minus (u v w : F) : (u - v) + (v - w) = u - w.
   Proof.
     rewrite <- (plus_assoc u (- v) (v - w)), (plus_assoc (- v) v (- w)).

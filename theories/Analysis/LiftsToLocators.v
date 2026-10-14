@@ -7,6 +7,7 @@ From HoTT.Classes Require Import
   interfaces.abstract_algebra
   interfaces.orders
   interfaces.rationals
+  interfaces.archimedean
   theory.rings
   theory.rationals
   orders.orders
@@ -49,6 +50,23 @@ Section lifts.
     exact (lt_bound_negate _ _ (close y cxy)).
   Qed.
 
+  (** If [f] is continuous at [x] and [t < f x], then [t < f y] for all [y] close enough to [x]. *)
+  Lemma iscontinuousat_lt {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
+    {Farch : ArchimedeanProperty Q F} (f : F -> F) (x : F) (cont : IsContinuousAt f x)
+    (t : F) (lt : t < f x)
+    : hexists (fun d : Qpos Q => forall y : F, field_close Q d x y -> t < f y).
+  Proof.
+    assert (e := merely_qpos_lt Q (f x - t) (snd (flip_pos_minus _ _) lt)).
+    strip_truncations; destruct e as [e lte].
+    refine (Trunc_functor (-1) _ (cont e)); intros [d close].
+    exists d; intros y cxy.
+    assert (lt' := snd (close y cxy)); change (f x - f y < ' (' e)) in lt'.
+    apply (fst (flip_lt_minus_r _ _ _)) in lte.
+    apply (fst (flip_lt_minus_l _ _ _)) in lt'.
+    apply (strictly_order_reflecting (' (' e) +)).
+    exact (transitivity lte lt').
+  Qed.
+
   (** A modulus of uniform continuity for [f] on the interval [[a, b]]: a modulus of uniform continuity, in the sense of [IsUniformModulus], for the restriction of [f] to the interval. This is structure. *)
   Definition UniformModulusOn (a b : F) (f : F -> F)
     := {w : Qpos Q -> Qpos Q &
@@ -82,12 +100,8 @@ Section lifts.
       assert (c := cont 1); strip_truncations; destruct c as [d close].
       (* The element [d / 2] is [d]-close to [0], but the values there are [1] apart. *)
       set (y := ' (' (d / 2)) : F).
-      assert (ypos : 0 < y).
-      { unfold y; rewrite <- (preserves_0 (f:=cast Q F)).
-        exact (strictly_order_preserving _ _ _ (pos_is_pos (d / 2))). }
-      assert (dpos : (0 : F) < ' (' d)).
-      { rewrite <- (preserves_0 (f:=cast Q F)).
-        exact (strictly_order_preserving _ _ _ (pos_is_pos d)). }
+      assert (ypos : 0 < y) by exact (pos_rationals_to_field_qpos Q (d / 2)).
+      assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
       assert (ltyd : y < ' (' d)).
       { apply (strictly_order_preserving _).
         rewrite (ap (cast (Qpos Q) Q) (pos_split2 d)).

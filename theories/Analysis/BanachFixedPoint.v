@@ -214,9 +214,7 @@ Section lipschitz_uniform.
       apply (ap (cast Q F)); change (' (c * (e / c)) = ' e); apply ap.
       rewrite (associativity c e (/ c)); apply pos_unconjugate. }
     rewrite <- p.
-    assert (PropHolds (0 < (' (' c) : F))).
-    { rewrite <- (preserves_0 (f:=cast Q F)).
-      apply (strictly_order_preserving _), pos_is_pos. }
+    assert (PropHolds (0 < (' (' c) : F))) by exact (pos_rationals_to_field_qpos Q c).
     exact (strictly_order_preserving _ _ _ close).
   Qed.
 
@@ -342,9 +340,8 @@ Section banach.
       refine (le_lt_trans _ _ _ (iterate_step_le x0 n) _).
       pose proof (power_nonneg (' c : F) n c_nonneg).
       pose proof (power_nonneg (' c : F) M c_nonneg).
-      assert (Cpos : PropHolds (0 < (' (' C) : F))).
-      { rewrite <- (preserves_0 (f:=cast Q F)).
-        apply (strictly_order_preserving _), pos_is_pos. }
+      assert (Cpos : PropHolds (0 < (' (' C) : F)))
+        by exact (pos_rationals_to_field_qpos Q C).
       refine (le_lt_trans _ _ _ (order_preserving (_ *.) _ _ C0) _).
       refine (le_lt_trans _ _ _ (order_preserving (.* ' (' C)) _ _
                 (power_antitone _ M n c_nonneg (lt_le _ _ c_lt_1) leMn)) _).

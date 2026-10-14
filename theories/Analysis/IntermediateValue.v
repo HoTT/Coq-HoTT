@@ -22,7 +22,7 @@ From HoTT.Classes Require Import
   orders.rings
   orders.lattices
   orders.rationals.
-From HoTT.Analysis Require Import Locator CauchyCompleteness BanachFixedPoint LiftsToLocators.
+From HoTT.Analysis Require Import Locator MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators.
 
 Section ivt.
   Universe UQ.
@@ -64,43 +64,25 @@ Section ivt.
     : c ≤ l.
   Proof.
     apply not_lt_le_flip; intro ltlc.
-    assert (q := archimedean_property Q F 0 (c - l) (snd (flip_pos_minus _ _) ltlc)).
-    strip_truncations; destruct q as [q [lt0q ltqc]].
-    assert (qpos : 0 < q).
-    { apply (strictly_order_reflecting (cast Q F)).
-      rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-    assert (c' := islim (mkQpos q qpos)); strip_truncations; destruct c' as [M close].
+    assert (e := merely_qpos_lt Q (c - l) (snd (flip_pos_minus _ _) ltlc)).
+    strip_truncations; destruct e as [e ltec].
+    assert (c' := islim e); strip_truncations; destruct c' as [M close].
     set (n := Nat.Core.nat_max N M).
     assert (lt := fst (close n (le_nat_max_r N M))).
-    change (- ' q < l - y n) in lt.
     apply (irreflexivity (<) c).
     refine (le_lt_trans _ _ _ (le n (le_nat_max_l N M)) _).
-    apply (fst (flip_lt_minus_r _ _ _)) in lt, ltqc.
-    rewrite plus_comm in lt, ltqc.
-    exact (transitivity (fst (flip_lt_minus_l _ _ _) lt) ltqc).
+    apply (fst (flip_lt_minus_r _ _ _)) in lt, ltec.
+    rewrite plus_comm in lt, ltec.
+    exact (transitivity (fst (flip_lt_minus_l _ _ _) lt) ltec).
   Qed.
 
   Lemma limit_le (y : nat -> F) (l c : F) (N : nat) (islim : IsLimit Q F y l)
     (le : forall n, (N <= n)%nat -> y n ≤ c)
     : l ≤ c.
   Proof.
-    apply not_lt_le_flip; intro ltcl.
-    assert (q := archimedean_property Q F 0 (l - c) (snd (flip_pos_minus _ _) ltcl)).
-    strip_truncations; destruct q as [q [lt0q ltqc]].
-    assert (qpos : 0 < q).
-    { apply (strictly_order_reflecting (cast Q F)).
-      rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-    assert (c' := islim (mkQpos q qpos)); strip_truncations; destruct c' as [M close].
-    set (n := Nat.Core.nat_max N M).
-    assert (lt := snd (close n (le_nat_max_r N M))).
-    change (l - y n < ' q) in lt.
-    apply (irreflexivity (<) c).
-    refine (lt_le_trans _ _ _ _ (le n (le_nat_max_l N M))).
-    apply flip_lt_minus_l in lt.
-    apply flip_lt_minus_r in ltqc.
-    rewrite (plus_comm (' q)) in lt.
-    apply (strictly_order_reflecting (+ ' q)).
-    rewrite (plus_comm c); exact (transitivity ltqc lt).
+    apply flip_le_negate.
+    refine (le_limit _ _ _ N (islimit_negate Q _ _ islim) _).
+    intros n len; exact (snd (flip_le_negate _ _) (le n len)).
   Qed.
 
   (** Nested intervals [[z n, w n]] whose widths are bounded by [B r^n] for rationals [B > 0] and [0 < r < 1]. Every sequence in the intervals has a modulus of Cauchy convergence, and converges to every point which lies in all the intervals. *)
@@ -176,13 +158,6 @@ Section ivt.
 
   (** ** The approximate intermediate value theorem *)
 
-  (** The image of a positive rational is positive. *)
-  Lemma qpos_pos_F (e : Qpos Q) : (0 : F) < ' (' e).
-  Proof.
-    rewrite <- (preserves_0 (f:=cast Q F)).
-    exact (strictly_order_preserving _ _ _ (pos_is_pos e)).
-  Qed.
-
   (** The heart of the proof. Suppose that [p] and [c] converge to [x], that [g] is continuous at [x], that [g] is negative at [p 0], and that [p] stays put after a step at which [g (c n)] is above [t], and jumps to [c n] after a step at which [g (c n)] is below [- t]. If [g x] is above [t], then [g] is less than [e] in absolute value at some [c n]. *)
   Section endpoint.
     Context (g : F -> F) (p c : nat -> F) (x : F) (t e : Qpos Q) (ltte : ' t < ' e)
@@ -194,7 +169,7 @@ Section ivt.
     Local Lemma endpoint_back (k : nat) (lt : ' (' t) < g (p k))
       : hexists (fun n => - ' (' e) < g (c n) < ' (' e)).
     Proof.
-      assert (tpos := qpos_pos_F t).
+      assert (tpos := pos_rationals_to_field_qpos Q (F:=F) t).
       revert lt; induction k as [|k IH]; intro lt.
       - destruct (lt_antisym _ _ (p0, transitivity tpos lt)).
       - assert (ltte' : (' (' t) : F) < ' (' e))
@@ -215,19 +190,8 @@ Section ivt.
       : hexists (fun n => - ' (' e) < g (c n) < ' (' e)).
     Proof.
       (* Points close to [x] have values above [t]. *)
-      assert (q := archimedean_property Q F 0 (g x - ' (' t)) (snd (flip_pos_minus _ _) lt)).
-      strip_truncations; destruct q as [q [lt0q ltq]].
-      assert (qpos : 0 < q).
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-      assert (d := gcont (mkQpos q qpos)); strip_truncations; destruct d as [d close].
-      assert (above : forall y, field_close Q d x y -> ' (' t) < g y).
-      { intros y cxy.
-        assert (lt' := snd (close y cxy)); change (g x - g y < ' q) in lt'.
-        apply (fst (flip_lt_minus_r _ _ _)) in ltq.
-        apply (fst (flip_lt_minus_l _ _ _)) in lt'.
-        apply (strictly_order_reflecting (' q +)).
-        exact (transitivity ltq lt'). }
+      assert (d := iscontinuousat_lt Q F g x gcont _ lt).
+      strip_truncations; destruct d as [d above].
       (* Eventually [c n] is close to [x], so [p] is eventually constant, with value [x]. *)
       assert (N := clim d); strip_truncations; destruct N as [N cN].
       assert (const : forall n, (N <= n)%nat -> p n = p N).
@@ -273,7 +237,7 @@ Section ivt.
 
   Lemma half_pos : (0 : F) < ' half.
   Proof.
-    exact (qpos_pos_F (1 / 2)).
+    exact (pos_rationals_to_field_qpos Q (1 / 2)).
   Qed.
 
   Lemma half_double (u v : F) : u + (v - u) * ' half + (v - u) * ' half = v.
@@ -455,7 +419,7 @@ Section ivt.
     Lemma bisect_weight_1 (y : F) (lt : ' (' t) < f y) : bisect_weight f t y = 1.
     Proof.
       apply clamp_1.
-      pose proof (lt_le _ _ (qpos_pos_F (/ (t + t)))).
+      pose proof (lt_le _ _ (pos_rationals_to_field_qpos Q (/ (t + t)))).
       rewrite <- weight_factor.
       apply (order_preserving (.* _)).
       change (' (' t + ' t) ≤ f y + ' (' t)).
@@ -466,7 +430,7 @@ Section ivt.
     Lemma bisect_weight_0 (y : F) (lt : f y < - ' (' t)) : bisect_weight f t y = 0.
     Proof.
       apply clamp_0.
-      pose proof (lt_le _ _ (qpos_pos_F (/ (t + t)))).
+      pose proof (lt_le _ _ (pos_rationals_to_field_qpos Q (/ (t + t)))).
       rewrite <- (mult_0_l (' (' (/ (t + t))))).
       apply (order_preserving (.* _)).
       rewrite <- (plus_negate_l (' (' t))).
@@ -677,7 +641,7 @@ Section ivt.
   Local Lemma rational_between_close (x y z : F) (d : Qpos Q) (xzy : x < z < y)
     : hexists (fun r : Q => ((x < ' r < y) * field_close Q d z (' r))%type).
   Proof.
-    assert (dpos := qpos_pos_F d).
+    assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
     assert (lt : join x (z - ' (' d)) < meet y (z + ' (' d))).
     { assert (lt1 : z - ' (' d) < z) by exact (fst (pos_minus_lt_compat_r _ _) dpos).
       assert (lt2 : z < z + ' (' d)) by exact (fst (pos_plus_lt_compat_r _ _) dpos).
@@ -716,32 +680,17 @@ Section ivt.
     Proof.
       assert (h := lnc x y t ltxy); strip_truncations; destruct h as [z [xzy ap]].
       destruct (fst (apart_iff_total_lt _ _) ap) as [ltzt|lttz].
-      - assert (q := archimedean_property Q F 0 (t - f z) (snd (flip_pos_minus _ _) ltzt)).
-        strip_truncations; destruct q as [q [lt0q ltq]].
-        assert (qpos : 0 < q).
-        { apply (strictly_order_reflecting (cast Q F)).
-          rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-        assert (d := cont z (mkQpos q qpos)); strip_truncations; destruct d as [d close].
+      - assert (d := iscontinuousat_lt Q F (fun u => - f u) z
+                       (iscontinuousat_negate Q F f z (cont z)) _ (snd (flip_lt_negate _ _) ltzt)).
+        strip_truncations; destruct d as [d below].
         refine (Trunc_functor (-1) _ (rational_between_close x y z d xzy)).
         intros [r [xry c]]; exists r; split; [exact xry|right].
-        assert (lt' := fst (close _ c)); change (- ' q < f z - f (' r)) in lt'.
-        apply (fst (flip_lt_minus_r _ _ _)) in lt'; rewrite plus_comm in lt'.
-        apply (fst (flip_lt_minus_l _ _ _)) in lt'; rewrite plus_comm in lt'.
-        apply (fst (flip_lt_minus_r _ _ _)) in ltq.
-        exact (transitivity lt' ltq).
-      - assert (q := archimedean_property Q F 0 (f z - t) (snd (flip_pos_minus _ _) lttz)).
-        strip_truncations; destruct q as [q [lt0q ltq]].
-        assert (qpos : 0 < q).
-        { apply (strictly_order_reflecting (cast Q F)).
-          rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-        assert (d := cont z (mkQpos q qpos)); strip_truncations; destruct d as [d close].
+        exact (fst (flip_lt_negate _ _) (below _ c)).
+      - assert (d := iscontinuousat_lt Q F f z (cont z) _ lttz).
+        strip_truncations; destruct d as [d above].
         refine (Trunc_functor (-1) _ (rational_between_close x y z d xzy)).
         intros [r [xry c]]; exists r; split; [exact xry|left].
-        assert (lt' := snd (close _ c)); change (f z - f (' r) < ' q) in lt'.
-        apply (fst (flip_lt_minus_l _ _ _)) in lt'.
-        apply (fst (flip_lt_minus_r _ _ _)) in ltq.
-        apply (strictly_order_reflecting (' q +)).
-        exact (transitivity ltq lt').
+        exact (above _ c).
     Qed.
 
     (** Using locators, we can find such a rational. This turns the property of being locally nonconstant into structure. *)
@@ -801,13 +750,13 @@ Section ivt.
         + right.
           assert (lt' := locates_right_true Q F _ (lu r) _ _ _ p).
           apply (fst (flip_pos_minus _ _)).
-          exact (transitivity (qpos_pos_F _) lt').
+          exact (transitivity (pos_rationals_to_field_qpos Q _) lt').
         + left.
           assert (lt' := locates_right_false Q F _ (lu r) _ _ _ p).
           apply (fst (flip_neg_minus _ _)).
           assert (neg : (' (- ' (n / 2)) : F) < 0).
           { rewrite (preserves_negate (f:=cast Q F)).
-            exact (fst (flip_pos_negate _) (qpos_pos_F _)). }
+            exact (fst (flip_pos_negate _) (pos_rationals_to_field_qpos Q _)). }
           exact (transitivity lt' neg).
     Defined.
 
@@ -818,18 +767,10 @@ Section ivt.
       (s : nat -> F) (islim : IsLimit Q F s x) (pos : 0 < g x)
       : hexists (fun n => 0 < g (s n)).
     Proof.
-      assert (q := archimedean_property Q F 0 (g x) pos).
-      strip_truncations; destruct q as [q [lt0q ltq]].
-      assert (qpos : 0 < q).
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
-      assert (d := gcont (mkQpos q qpos)); strip_truncations; destruct d as [d close].
+      assert (d := iscontinuousat_lt Q F g x gcont 0 pos).
+      strip_truncations; destruct d as [d above].
       refine (Trunc_functor (-1) _ (islim d)); intros [N sN]; exists N.
-      assert (lt := snd (close _ (sN N (Nat.Core.leq_refl N)))).
-      change (g x - g (s N) < ' q) in lt.
-      apply (fst (flip_lt_minus_l _ _ _)) in lt.
-      apply (strictly_order_reflecting (' q +)).
-      rewrite plus_0_r; exact (transitivity ltq lt).
+      exact (above _ (sN N (Nat.Core.leq_refl N))).
     Qed.
 
     Local Notation quarter := (' (1 / 2 / 2 : Qpos Q) : Q).
@@ -885,7 +826,7 @@ Section ivt.
       destruct I as [a b la lb ltab fa fb]; cbn.
       set (D := b - a).
       assert (Dpos : 0 < D) by exact (snd (flip_pos_minus _ _) ltab).
-      assert (Dk : 0 < D * ' quarter) by exact (pos_mult _ _ Dpos (qpos_pos_F _)).
+      assert (Dk : 0 < D * ' quarter) by exact (pos_mult _ _ Dpos (pos_rationals_to_field_qpos Q _)).
       set (u := a + D * ' quarter).
       set (v := b - D * ' quarter).
       assert (lau : a < u) by exact (fst (pos_plus_lt_compat_r _ _) Dk).
