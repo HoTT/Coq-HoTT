@@ -22,7 +22,8 @@ From HoTT.Classes Require Import
   orders.rings
   orders.lattices
   orders.rationals.
-From HoTT.Analysis Require Import Locator MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators.
+From HoTT.Analysis Require Import
+  Locator MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators.
 
 Section ivt.
   Universe UQ.
@@ -215,7 +216,8 @@ Section ivt.
     := transport (locator Q F) (preserves_1 (f:=cast Q F)) (locator_left Q F 1).
 
   (** A nonnegative element with a locator has a positive rational upper bound. *)
-  Local Definition qpos_upper_bound `{Funext} (Q_eq : nat <~> Q) {u : F} (lu : locator Q F u) (u0 : 0 ≤ u)
+  Local Definition qpos_upper_bound `{Funext} (Q_eq : nat <~> Q) {u : F} (lu : locator Q F u)
+    (u0 : 0 ≤ u)
     : {B : Qpos Q & u ≤ ' (' B)}.
   Proof.
     destruct (upper_bound Q F Q_eq lu) as [B ltB].
@@ -539,7 +541,8 @@ Section ivt.
     Local Lemma approximate_ivt_below (lt : f approximate_root < - ' (' (e / 2)))
       : hexists (fun n => - ' (' e) < f (c n) < ' (' e)).
     Proof.
-      refine (Trunc_functor (-1) (fun nc : {n : nat & - ' (' e) < - f (c n) < ' (' e)} => (nc.1; _)) _).
+      refine (Trunc_functor (-1)
+                (fun nc : {n : nat & - ' (' e) < - f (c n) < ' (' e)} => (nc.1; _)) _).
       { assert (bd := lt_bound_negate _ _ nc.2); cbn in bd.
         rewrite negate_involutive in bd; exact bd. }
       refine (endpoint_close (fun y => - f y) w c _ (e / 2) e (qpos_half_lt e)
