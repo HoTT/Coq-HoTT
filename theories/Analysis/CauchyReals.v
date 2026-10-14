@@ -1,0 +1,154 @@
+(** * Cauchy reals *)
+
+(** The Cauchy reals are the rational sequences equipped with a modulus of Cauchy convergence, quotiented by the relation identifying two such sequences when their terms at the moduli are close. In a Cauchy complete Archimedean ordered field, sending a sequence to its limit gives a canonical map from the Cauchy reals. *)
+
+From HoTT Require Import Basics Truncations.Core.
+From HoTT.Spaces Require Import Nat.Core.
+From HoTT.Colimits Require Import Quotient.
+From HoTT.Classes Require Import
+  interfaces.abstract_algebra
+  interfaces.orders
+  interfaces.rationals
+  interfaces.archimedean
+  interfaces.cauchy
+  implementations.peano_naturals
+  theory.rings
+  theory.dec_fields
+  theory.rationals
+  orders.orders
+  orders.rings
+  orders.rationals.
+From HoTT.Analysis Require Import MetricSpace CauchyCompleteness.
+
+Section cauchy_reals.
+  Universe UQ.
+  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
+    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
+    {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
+
+  (** Two rationals [u] and [v] are [e]-close when [|u - v| < e]. We state this without the absolute value, as for [field_close]. *)
+  Definition rational_close (e : Qpos Q) (u v : Q) := - ' e < u - v < ' e.
+
+  (** ** The Cauchy reals *)
+
+  (** A rational sequence equipped with a modulus of Cauchy convergence. *)
+  Record CauchySequence := {
+    cauchy_seq :> nat -> Q;
+    cauchy_modulus : Qpos Q -> nat;
+    cauchy_ismodulus : MetricCauchyModulus Q rational_close cauchy_seq cauchy_modulus
+  }.
+
+  (** Two sequences are related when, for every [e], their terms at the moduli for [e / 4] are [e]-close. *)
+  Definition cauchy_related (x y : CauchySequence) :=
+    forall e : Qpos Q,
+      rational_close e (x (cauchy_modulus x (e / 4))) (y (cauchy_modulus y (e / 4))).
+
+  (** The Cauchy reals. *)
+  Definition CauchyReals := Quotient cauchy_related.
+
+  Lemma rational_close_refl (e : Qpos Q) (q : Q) : rational_close e q q.
+  Proof.
+    unfold rational_close; rewrite plus_negate_r; split.
+    - apply flip_pos_negate, is_pos.
+    - apply is_pos.
+  Qed.
+
+  (** The inclusion of the rationals, as constant sequences. *)
+  Definition const_cauchy_sequence (q : Q) : CauchySequence
+    := {| cauchy_seq := fun _ => q; cauchy_modulus := fun _ => 0%nat;
+          cauchy_ismodulus := fun e _ _ _ _ => rational_close_refl e q |}.
+
+  Definition rationals_to_cauchy_reals (q : Q) : CauchyReals
+    := class_of _ (const_cauchy_sequence q).
+
+  (** ** The canonical map to a Cauchy complete field *)
+
+  (** Two quarters make a half. *)
+  Lemma qpos_quarter (e : Qpos Q) : e / 4 + e / 4 = e / 2.
+  Proof.
+    assert (p : e / 4 = e / 2 / 2).
+    { apply pos_eq.
+      change (' e * / (1 + (1 + (1 + 1))) = ' e * / (1 + 1) * / (1 + 1)).
+      rewrite <- mult_assoc, <- dec_recip_distr.
+      apply ap, ap.
+      rewrite plus_mult_distr_l, mult_1_r, plus_assoc; reflexivity. }
+    rewrite p; exact (pos_split2 (e / 2))^.
+  Qed.
+
+  Section limit.
+    Context (F : Type) `{OrderedField F} {Farch : ArchimedeanProperty Q F}
+      {Fcomplete : IsComplete Q F}.
+    Let qinc : Cast Q F := rationals_to_field Q F.
+    Existing Instance qinc.
+
+    (** The inclusion of the rationals preserves closeness. *)
+    Lemma field_close_rationals (e : Qpos Q) (u v : Q)
+      : rational_close e u v -> field_close Q e (' u) (' v).
+    Proof.
+      intros [lo hi]; unfold field_close.
+      rewrite <- (preserves_minus (f:=cast Q F)), <- (preserves_negate (f:=cast Q F)).
+      split; apply (strictly_order_preserving _); assumption.
+    Qed.
+
+    #[export] Instance cauchymodulus_cauchy_sequence (x : CauchySequence)
+      : CauchyModulus Q F (fun n => ' x n) (cauchy_modulus x)
+      := fun e m n lem len => field_close_rationals e _ _ (cauchy_ismodulus x e m n lem len).
+
+    (** The limit of a rational sequence with a modulus. *)
+    Definition cauchy_limit (x : CauchySequence) : F
+      := (is_complete Q F _ _ (cauchymodulus_cauchy_sequence x)).1.
+
+    Definition islimit_cauchy_limit (x : CauchySequence)
+      : IsLimit Q F (fun n => ' x n) (cauchy_limit x)
+      := (is_complete Q F _ _ (cauchymodulus_cauchy_sequence x)).2.
+
+    (** The limit is [d + d]-close to the term at the modulus for [d]. *)
+    Lemma cauchy_limit_close (x : CauchySequence) (d : Qpos Q)
+      : field_close Q (d + d) (cauchy_limit x) (' x (cauchy_modulus x d)).
+    Proof.
+      assert (c := islimit_cauchy_limit x d); strip_truncations.
+      destruct c as [N close].
+      set (n := Nat.Core.nat_max N (cauchy_modulus x d)).
+      apply (field_close_triangle Q _ _ _ (' x n)).
+      - exact (close n (le_nat_max_l _ _)).
+      - exact (cauchymodulus_cauchy_sequence x d n _ (le_nat_max_r _ _) (Nat.Core.leq_refl _)).
+    Qed.
+
+    (** Related sequences have the same limit. *)
+    Lemma cauchy_limit_related (x y : CauchySequence) (r : cauchy_related x y)
+      : cauchy_limit x = cauchy_limit y.
+    Proof.
+      apply (field_close_eq Q); intro e.
+      assert (p : e = e / 2 / 4 + e / 2 / 4 + e / 2 + (e / 2 / 4 + e / 2 / 4)).
+      { rewrite qpos_quarter, (qpos_plus_comm (e / 2 / 2) (e / 2)), <- Qpos_plus_assoc.
+        rewrite <- (pos_split2 (e / 2)); exact (pos_split2 e). }
+      rewrite p.
+      apply (field_close_triangle Q _ _ _ (' y (cauchy_modulus y (e / 2 / 4)))).
+      1: apply (field_close_triangle Q _ _ _ (' x (cauchy_modulus x (e / 2 / 4)))).
+      - apply cauchy_limit_close.
+      - apply field_close_rationals, r.
+      - apply field_close_symmetric, cauchy_limit_close.
+    Qed.
+
+    (** Hence sending a sequence to its limit gives a map from the Cauchy reals. *)
+    Definition cauchy_reals_to_field : CauchyReals -> F
+      := Quotient_rec cauchy_related F cauchy_limit cauchy_limit_related.
+
+    (** It commutes with the inclusions of the rationals. *)
+    Lemma cauchy_reals_to_field_rationals (q : Q)
+      : cauchy_reals_to_field (rationals_to_cauchy_reals q) = ' q.
+    Proof.
+      apply (limit_unique Q (fun _ => ' q)).
+      - exact (islimit_cauchy_limit (const_cauchy_sequence q)).
+      - intro e; apply tr; exists 0%nat; intros n _.
+        assert (epos : @lt F _ 0 (' (' e))).
+        { rewrite <- (preserves_0 (f:=cast Q F)).
+          exact (strictly_order_preserving (cast Q F) _ _ (is_pos e)). }
+        unfold field_close; rewrite plus_negate_r; split.
+        + apply flip_pos_negate, epos.
+        + exact epos.
+    Qed.
+  End limit.
+
+End cauchy_reals.

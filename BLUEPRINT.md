@@ -118,7 +118,7 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | Cor 4.4.6 | If a limit merely exists, we can compute it. | 4.4.5, 2.4.3 | `Analysis/CauchyCompleteness.v` | proved | `limit_merely`. |
 | Cor 4.4.7 | If a limit can be computed from a modulus, then the mere existence of a modulus suffices to compute it. | 4.4.4, 4.4.5 | `Analysis/CauchyCompleteness.v` | proved | `limit_merely_modulus`; `limit_complete` for `IsComplete Q F`. |
 | Ex 4.4.8 | *optional.* exp(x) = Σ x^k/k! in a Cauchy complete Archimedean field, via 4.4.7 and bounds on x. | 4.4.7, 4.3.6, U-3 | `Analysis/CauchyCompleteness.v` | todo | None. |
-| Def 4.4.9 | Cauchy reals R_C: rational sequences with modulus, quotiented by (∀ ε) \|x_{M(ε/4)} − y_{M(ε/4)}\| < ε. | 4.4.1, 2.7.2 | `Analysis/CauchyReals.v` | todo | None. `Quotient` (Colimits/Quotient.v). The unnumbered claim that R_C is an Archimedean ordered field is U-1. |
+| Def 4.4.9 | Cauchy reals R_C: rational sequences with modulus, quotiented by (∀ ε) \|x_{M(ε/4)} − y_{N(ε/4)}\| < ε. | 4.4.1, 2.7.2 | `Analysis/CauchyReals.v` | proved | `CauchySequence` (record: sequence, modulus, `MetricCauchyModulus` for `rational_close`), `cauchy_related`, `CauchyReals` (`Quotient cauchy_related`), `rationals_to_cauchy_reals`; `cauchy_reals_to_field` for a Cauchy complete Archimedean `F`, with `cauchy_reals_to_field_rationals`. The thesis prints y_{M(ε/4)}; we read it as y at its own modulus N. That the relation is an equivalence relation is not needed and not proved. The unnumbered claim that R_C is an Archimedean ordered field is U-1. |
 
 ### 4.5 HoTT book reals
 

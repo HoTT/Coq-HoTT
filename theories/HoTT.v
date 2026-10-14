@@ -159,6 +159,7 @@ Require Export HoTT.Analysis.IntervalObject.
 Require Export HoTT.Analysis.MetricSpace.
 Require Export HoTT.Analysis.BanachFixedPoint.
 Require Export HoTT.Analysis.CauchyCompleteness.
+Require Export HoTT.Analysis.CauchyReals.
 Require Export HoTT.Analysis.CauchyStructure.
 Require Export HoTT.Analysis.LocatorDigits.
 Require Export HoTT.Analysis.LiftsToLocators.

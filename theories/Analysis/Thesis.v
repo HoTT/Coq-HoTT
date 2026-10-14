@@ -7,7 +7,7 @@ From HoTT.Classes.interfaces Require Import canonical_names orders rationals arc
 From HoTT.Cubical Require Import DPath.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
-From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
+From HoTT.Analysis Require Import Dcpo IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -96,6 +96,11 @@ Check limit_merely.
 (** Corollary 4.4.7. If a limit can be computed from a modulus of Cauchy convergence, it can be computed from the mere existence of a modulus; in particular in a Cauchy complete Archimedean ordered field. *)
 Check limit_merely_modulus.
 Check limit_complete.
+
+(** Definition 4.4.9. The Cauchy reals: rational sequences with a modulus of Cauchy convergence, quotiented by the relation identifying [x] and [y] when [|x (M (e / 4)) - y (N (e / 4))| < e] for all [e], where [M] and [N] are their moduli. *)
+Check CauchySequence.
+Check cauchy_related.
+Check CauchyReals.
 
 (** Definition 4.5.2. Premetrics: families of relations indexed by the positive rationals, valued in propositions. *)
 Check IsPremetric.
