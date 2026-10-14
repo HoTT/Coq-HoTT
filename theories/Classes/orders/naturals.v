@@ -1,5 +1,6 @@
 Require Import
-  HoTT.Types.Sigma.
+  HoTT.Types.Sigma
+  HoTT.Spaces.Nat.Core.
 Require Import
   HoTT.Classes.theory.naturals.
 Require Import
@@ -90,3 +91,48 @@ End naturals_order.
 
 #[export]
 Hint Extern 20 (PropHolds (_ ≤ _)) => eapply @nat_nonneg : typeclass_instances.
+
+(** ** The map from [nat] into an ordered semiring *)
+
+(** Unlike [to_semiring_nonneg], the following facts about [naturals_to_semiring nat] do not need univalence. *)
+Section nat_to_semiring.
+  Context `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}.
+
+  Local Notation nR := (naturals_to_semiring nat R).
+
+  Lemma nat_to_semiring_succ (n : nat) : nR (S n) = 1 + nR n.
+  Proof.
+    exact (preserves_plus (f:=nR) 1%nat n).
+  Qed.
+
+  Lemma nat_to_semiring_nonneg (n : nat) : 0 ≤ nR n.
+  Proof.
+    induction n as [|n IH].
+    - reflexivity.
+    - rewrite nat_to_semiring_succ; exact (nonneg_plus_compat _ _ le_0_1 IH).
+  Qed.
+
+  Lemma nat_to_semiring_le (m n : nat) : (m <= n)%nat -> nR m ≤ nR n.
+  Proof.
+    intro lemn; induction lemn as [|n lemn IH].
+    - reflexivity.
+    - refine (transitivity IH _).
+      rewrite nat_to_semiring_succ.
+      exact (fst (nonneg_plus_le_compat_l _ _) le_0_1).
+  Qed.
+
+  Context `{!PropHolds ((1 : R) ≶ 0)}.
+
+  Lemma nat_to_semiring_succ_pos (n : nat) : 0 < nR (S n).
+  Proof.
+    rewrite nat_to_semiring_succ.
+    exact (pos_plus_le_lt_compat_l _ _ _ lt_0_1 (nat_to_semiring_nonneg n)).
+  Qed.
+
+  Lemma nat_to_semiring_pos (n : nat) : (0 < n)%nat -> 0 < nR n.
+  Proof.
+    destruct n as [|n]; intro lt.
+    - destruct (not_lt_zero_r _ lt).
+    - apply nat_to_semiring_succ_pos.
+  Qed.
+End nat_to_semiring.

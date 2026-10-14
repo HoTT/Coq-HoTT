@@ -13,23 +13,12 @@ From HoTT.Classes Require Import
   theory.fields
   theory.dec_fields
   orders.semirings
-  orders.rings.
+  orders.rings
+  orders.naturals.
 
-Generalizable Variables F Q R.
+Generalizable Variables F Q.
 
 (** For rationals [Q] and an ordered field [F], the map [rationals_to_field Q F] is the unique semiring morphism [Q -> F].  We show that it preserves the strict order and is injective, and that it reflects the strict order when [1] is apart from [0] in [Q] (for instance when the apartness of [Q] is trivial).  The key step is that every rational [q] satisfies [q * d + b = a] with [a], [b] and [d] images of natural numbers and [d] positive.  We obtain this by initiality of [Q]: the elements of [F] of this form make up a subfield of [F]. *)
-
-Section nat_succ_pos.
-  Context `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R} `{!PropHolds ((1 : R) ≶ 0)}.
-
-  Local Lemma to_semiring_succ_pos (m : nat)
-    : 0 < naturals_to_semiring nat R (S m).
-  Proof.
-    induction m as [|m IH].
-    - exact lt_0_1.
-    - exact (pos_plus_compat _ _ lt_0_1 IH).
-  Qed.
-End nat_succ_pos.
 
 Section nat_quotients.
   Context `{OrderedField F}.
@@ -124,7 +113,7 @@ Section nat_quotients.
     intros qx; strip_truncations.
     destruct qx as [a [b [m E]]].
     apply tr.
-    pose proof (to_semiring_succ_pos m) as dpos.
+    pose proof (nat_to_semiring_succ_pos m) as dpos.
     set (d := nF (S m)) in *.
     destruct (nat_add_cases a b) as [[c q]|[c q]]; destruct q.
     - assert (Exd : x * d = nF c).
@@ -272,29 +261,29 @@ Section nat_quotients.
       destruct c as [|c].
     - destruct (irreflexivity (<) (0 : Q)).
       exact (transport (fun z => 0 < z) EQ'
-               (pos_mult_compat _ _ qpos (to_semiring_succ_pos m))).
+               (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))).
     - apply (pos_mult_rev_l _ (nF (S m))).
-      + rewrite EF'; apply to_semiring_succ_pos.
-      + apply to_semiring_succ_pos.
+      + rewrite EF'; apply nat_to_semiring_succ_pos.
+      + apply nat_to_semiring_succ_pos.
     - destruct (irreflexivity (<) (0 : F)).
       exact (transport (fun z => 0 < z) EF'
-               (pos_mult_compat _ _ qpos (to_semiring_succ_pos m))).
+               (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))).
     - apply (pos_mult_rev_l _ (nQ (S m))).
-      + rewrite EQ'; apply to_semiring_succ_pos.
-      + apply to_semiring_succ_pos.
+      + rewrite EQ'; apply nat_to_semiring_succ_pos.
+      + apply nat_to_semiring_succ_pos.
     - destruct (irreflexivity (<) (0 : Q)).
       refine (transport (fun z => 0 < z) _
                 (pos_plus_compat _ _
-                   (pos_mult_compat _ _ qpos (to_semiring_succ_pos m))
-                   (to_semiring_succ_pos c))).
+                   (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))
+                   (nat_to_semiring_succ_pos c))).
       apply (right_cancellation (+) (nQ a)).
       rewrite plus_0_l, <- plus_assoc, <- nQ_plus.
       exact EQ.
     - destruct (irreflexivity (<) (0 : F)).
       refine (transport (fun z => 0 < z) _
                 (pos_plus_compat _ _
-                   (pos_mult_compat _ _ qpos (to_semiring_succ_pos m))
-                   (to_semiring_succ_pos c))).
+                   (pos_mult_compat _ _ qpos (nat_to_semiring_succ_pos m))
+                   (nat_to_semiring_succ_pos c))).
       apply (right_cancellation (+) (nF a)).
       rewrite plus_0_l, <- plus_assoc, <- nF_plus.
       exact EF.

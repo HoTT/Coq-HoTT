@@ -18,6 +18,7 @@ From HoTT.Classes Require Import
   orders.rings
   orders.semirings
   orders.dec_fields
+  orders.naturals
   orders.rationals.
 From HoTT.Analysis Require Import MetricSpace CauchyCompleteness.
 
@@ -197,18 +198,6 @@ Section cauchy_structure.
     (** An index beyond which [1 / (n + 1) < e]. *)
     Local Definition recip_succ_index (e : Qpos Q) : nat := (round_up_strict Q (/ ' e)).1.
 
-    Local Lemma nQ_le (m n : nat) (lemn : (m <= n)%nat) : nQ m ≤ nQ n.
-    Proof.
-      induction lemn as [|n lemn IH].
-      - reflexivity.
-      - refine (transitivity IH _).
-        change (nQ n ≤ nQ (1 + n)%nat).
-        assert (p : nQ (1 + n)%nat = nQ 1%nat + nQ n) by apply preserves_plus.
-        assert (p1 : nQ 1%nat = 1) by apply preserves_1.
-        rewrite p, p1.
-        apply nonneg_plus_le_compat_l, le_0_1.
-    Qed.
-
     Local Lemma recip_succ_lt (e : Qpos Q) (n : nat) (len : (recip_succ_index e <= n)%nat)
       : ' (recip_succ n) < ' e.
     Proof.
@@ -217,7 +206,7 @@ Section cauchy_structure.
       apply flip_lt_dec_recip.
       - apply pos_dec_recip_compat, pos_is_pos.
       - refine (lt_le_trans _ _ _ (round_up_strict Q (/ ' e)).2 _).
-        exact (nQ_le _ _ (leq_succ_r len)).
+        exact (nat_to_semiring_le _ _ (leq_succ_r len)).
     Qed.
 
     (** A Cauchy approximation gives a sequence with a modulus of Cauchy convergence. *)

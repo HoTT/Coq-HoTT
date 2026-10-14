@@ -17,6 +17,7 @@ From HoTT.Classes Require Import
   orders.orders
   orders.semirings
   orders.rings
+  orders.naturals
   orders.rationals.
 From HoTT.Analysis Require Import MetricSpace.
 
@@ -50,19 +51,6 @@ Section powers.
       cbn; rewrite mult_1_l; reflexivity.
   Qed.
 
-  Local Lemma nR_succ (n : nat) : nR (S n) = 1 + nR n.
-  Proof.
-    exact (preserves_plus (f:=nR) 1%nat n).
-  Qed.
-
-  (** Unlike [to_semiring_nonneg], this does not need univalence. *)
-  Lemma nat_to_semiring_nonneg (n : nat) : 0 ≤ nR n.
-  Proof.
-    induction n as [|n IH].
-    - reflexivity.
-    - rewrite nR_succ; exact (nonneg_plus_compat _ _ le_0_1 IH).
-  Qed.
-
   (** A form of Bernoulli's inequality: [c^n (1 + n (1 - c)) ≤ 1] for [c] in [[0, 1]]. *)
   Lemma power_bernoulli (c : R) (n : nat) : 0 ≤ c -> c ≤ 1
     -> nat_iter n (mult c) 1 * (1 + nR n * (1 - c)) ≤ 1.
@@ -74,7 +62,7 @@ Section powers.
       exact (mult_1_l _ @ ap (plus one) (mult_0_l _) @ plus_0_r one).
     - refine (transitivity _ IH).
       change (nat_iter (S n) (mult c) 1) with (c * nat_iter n (mult c) 1).
-      rewrite nR_succ.
+      rewrite nat_to_semiring_succ.
       rewrite (plus_mult_distr_r 1 (nR n) (1 - c)), (mult_1_l (1 - c)).
       set (P := nat_iter n (mult c) 1); set (X := 1 - c + nR n * (1 - c)).
       rewrite (mult_comm c P), <- (mult_assoc P c).

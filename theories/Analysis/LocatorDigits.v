@@ -24,6 +24,7 @@ From HoTT.Classes Require Import
   orders.rings
   orders.dec_fields
   orders.nat_int
+  orders.naturals
   orders.integers
   orders.rationals.
 From HoTT.Analysis Require Import Locator MetricSpace BanachFixedPoint CauchyReals.
@@ -40,11 +41,6 @@ Section floor.
 
   Local Notation nA := (naturals_to_semiring nat A).
 
-  Local Lemma nA_succ (n : nat) : nA (S n) = nA n + 1.
-  Proof.
-    exact (preserves_plus (f:=nA) 1%nat n @ plus_comm _ _).
-  Qed.
-
   (** A nonnegative element below a natural number [n] lies between consecutive natural numbers. *)
   Local Definition nat_floor (n : nat) (a : A) (a0 : 0 ≤ a) (ltan : a < nA n)
     : {j : nat & nA j ≤ a < nA j + 1}.
@@ -56,7 +52,7 @@ Section floor.
       + exact (IH ltn).
       + exists n; split.
         * exact (not_lt_le_flip _ _ nltn).
-        * rewrite <- nA_succ; exact ltan.
+        * rewrite plus_comm, <- nat_to_semiring_succ; exact ltan.
   Defined.
 
   Context `{Integers Z}.
@@ -129,17 +125,6 @@ Section digits.
       apply (strictly_order_preserving _), (strictly_order_preserving (+ 1)), ltuj.
   Defined.
 
-  Local Lemma nat_to_rationals_pos (n : nat) : (0 < n)%nat -> 0 < nQ n.
-  Proof.
-    destruct n as [|n]; intro lt.
-    - destruct (not_lt_zero_r _ lt).
-    - assert (p : nQ (S n) = 1 + nQ n)
-        by exact (preserves_plus (f:=nQ) 1%nat n @ ap (+ nQ n) preserves_1).
-      rewrite p.
-      apply (lt_le_trans _ 1); [exact lt_0_1|].
-      apply nonneg_plus_le_compat_r, nat_to_semiring_nonneg.
-  Qed.
-
   (** From now on we work in base [1 + d]. *)
   Context (d : nat).
 
@@ -162,8 +147,7 @@ Section digits.
 
   Local Lemma base_pos : 0 < 1 + nQ d.
   Proof.
-    apply (lt_le_trans _ 1); [exact lt_0_1|].
-    apply nonneg_plus_le_compat_r, nat_to_semiring_nonneg.
+    rewrite <- nat_to_semiring_succ; apply nat_to_semiring_succ_pos.
   Qed.
 
   Lemma digit_weight_pos (n : nat) : 0 < digit_weight n.
@@ -212,7 +196,7 @@ Section digits.
     apply (strictly_order_reflecting ((1 + nQ d) *.)).
     rewrite dec_recip_inverse, mult_1_r; [|apply lt_ne_flip, base_pos].
     apply pos_plus_lt_compat_r.
-    exact (nat_to_rationals_pos d dpos).
+    exact (nat_to_semiring_pos d dpos).
   Qed.
 
   (** The weights become arbitrarily small, which gives a modulus of Cauchy convergence for the partial sums. *)
