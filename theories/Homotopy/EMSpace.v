@@ -438,14 +438,20 @@ End EilenbergMacLane.
 
 (** ** Delooping maps between Eilenberg-Mac Lane spaces *)
 
-(** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)], via [fmap loops] conjugated by the loop identifications.  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7. *)
-Definition equiv_loops_em_pmap `{Univalence} (B A : AbGroup@{u}) (n : nat)
-  : (K(B, n.+3) ->** K(A, n.+4)) <~>* (K(B, n.+2) ->** K(A, n.+3)).
+(** Pointed maps [K(B,n.+1) ->* K(A,m.+1)] are equivalent to pointed maps [K(B,n) ->* K(A,m)] when [m.+1 <= 2n], via [fmap loops] conjugated by the loop identifications.  This is an instance of the stabilization theorem, Buchholtz-van Doorn-Rijke, Theorem 6.7. *)
+Definition equiv_loops_em_pmap `{Univalence} (B A : AbGroup@{u}) (n m : nat)
+  {mlt2n : (m.+1 <= n + n)%nat}
+  : (K(B, n.+1) ->** K(A, m.+1)) <~>* (K(B, n) ->** K(A, m)).
 Proof.
-  nrefine (pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
-             o*E pequiv_pequiv_precompose (pequiv_loops_em_em B n.+2)
-               o*E pequiv_fmap_loops_pmap (n:=n.+1) _ _).
-  - exact (isconnected_em n.+2).
-  - exact (istrunc_leq (m:=n.+4) (n:=n.+1 +2+ n.+1)
-             (trunc_index_leq_add_nat n.+1 n)).
+  refine (pequiv_pequiv_postcompose (pequiv_loops_em_em A m)^-1*
+             o*E pequiv_pequiv_precompose (pequiv_loops_em_em B n)
+               o*E pequiv_fmap_loops_pmap (n:=n.-1) _ _).
+  destruct n as [|k].
+  1: exact (Empty_rec (not_lt_zero_r m mlt2n)).
+  rapply (istrunc_leq (m:=m.+1)).
+  change (m.+1 <= k +2+ k)%trunc.
+  (* The universe annotations avoid two spurious universe variables. *)
+  apply (transport@{Set Set} (fun x => (m.+1 <= x)%trunc)
+           (trunc_index_add_nat_add))^-1.
+  exact (trunc_index_leq_nat mlt2n).
 Defined.

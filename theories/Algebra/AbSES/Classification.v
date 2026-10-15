@@ -320,7 +320,7 @@ Section PfiberDeloop.
   (** The classifying map of the extracted sequence is [equiv_loops_em_pmap] applied to [psi], twisted by [pequiv_neg_em]. *)
   Local Definition abses_classifying_pfiber_loop
     : abses_classifying_map (abses_pfiber psi)
-      ==* equiv_loops_em_pmap B A 0 psi o* pequiv_neg_em.
+      ==* equiv_loops_em_pmap B A 2 3 psi o* pequiv_neg_em.
   Proof.
     rhs' napply (pmap_compose_assoc _ _ _
                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
@@ -345,14 +345,14 @@ Section Classification.
   (** A section of the classifying map. *)
   Local Definition abses_classifying_section (f : K(B, 2) ->* K(A, 3))
     : abses_classifying_map
-        (abses_pfiber ((equiv_loops_em_pmap B A 0)^-1
+        (abses_pfiber ((equiv_loops_em_pmap B A 2 3)^-1
            (f o* pequiv_neg_em^-1*)))
       = f.
   Proof.
     apply path_pforall.
     lhs' napply abses_classifying_pfiber_loop.
     lhs' napply (pmap_prewhisker _
-      (phomotopy_path (eisretr (equiv_loops_em_pmap B A 0) _))).
+      (phomotopy_path (eisretr (equiv_loops_em_pmap B A 2 3) _))).
     lhs' napply pmap_compose_assoc.
     lhs' napply (pmap_postwhisker _ (peissect pequiv_neg_em)).
     apply pmap_precompose_idmap.
