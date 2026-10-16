@@ -317,6 +317,9 @@ Check archimedean_structure.
 (** Corollary 6.7.4. For reals [x < y] with locators and a rational [s], we can choose [x < s] or [s < y]. *)
 Check locator_cotransitive_rational.
 
+(** Remark 6.7.5. Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose [x < z] or [z < y]. *)
+Check locator_cotransitive.
+
 (** Theorem 6.7.6. If [x] and [y] have locators, then so do [-x], [x + y], [x y], [x⁻¹] (for [x # 0]), [min(x, y)] and [max(x, y)]. *)
 Check locator_minus.
 Check locator_plus.
