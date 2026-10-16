@@ -2,7 +2,7 @@
 
 (** We prove an approximate intermediate value theorem for pointwise continuous functions, following M. Frank, _Interpolating between choices for the approximate intermediate value theorem_ (LMCS 2020): instead of choosing the left or the right half of the interval at each step of the bisection, the next interval interpolates continuously between the two, so that no choice is needed to define the bisection. A function which takes a negative and a positive value merely takes values arbitrarily close to [0], and if it lifts to locators and the endpoints have locators, then we can find such a point, with a locator.
 
-Note that the point is not always the limit of the bisection: interpolation can move an endpoint to a point where [f] was never evaluated. The proof shows that either the limit or one of the midpoints works.
+As Frank points out, the point is not always the limit of the bisection: interpolation can move an endpoint to a point where [f] was never evaluated. Following his proof, an invariant of the bisection shows that either the limit or one of the midpoints works.
 
 We then prove an exact intermediate value theorem for functions which are locally nonconstant, continuous and lift to locators, without any choice principles: locators let us find a rational point at which the function is apart from [0], which we use to shrink an interval around a root. *)
 
@@ -158,56 +158,6 @@ Section ivt.
   End nested.
 
   (** ** The approximate intermediate value theorem *)
-
-  (** The heart of the proof. Suppose that [p] and [c] converge to [x], that [g] is continuous at [x], that [g] is negative at [p 0], and that [p] stays put after a step at which [g (c n)] is above [t], and jumps to [c n] after a step at which [g (c n)] is below [- t]. If [g x] is above [t], then [g] is less than [e] in absolute value at some [c n]. *)
-  Section endpoint.
-    Context (g : F -> F) (p c : nat -> F) (x : F) (t e : Qpos Q) (ltte : ' t < ' e)
-      (p0 : g (p 0) < 0)
-      (stay : forall n, ' (' t) < g (c n) -> p (S n) = p n)
-      (jump : forall n, g (c n) < - ' (' t) -> p (S n) = c n)
-      (plim : IsLimit Q F p x) (clim : IsLimit Q F c x) (gcont : IsContinuousAt Q F g x).
-
-    Local Lemma endpoint_back (k : nat) (lt : ' (' t) < g (p k))
-      : hexists (fun n => - ' (' e) < g (c n) < ' (' e)).
-    Proof.
-      assert (tpos := pos_rationals_to_field_qpos Q (F:=F) t).
-      revert lt; induction k as [|k IH]; intro lt.
-      - destruct (lt_antisym _ _ (p0, transitivity tpos lt)).
-      - assert (ltte' : (' (' t) : F) < ' (' e))
-          by exact (strictly_order_preserving _ _ _ ltte).
-        assert (h := cotransitive ltte' (g (c k))); strip_truncations.
-        destruct h as [ltt|lte].
-        + apply IH; rewrite <- (stay k ltt); exact lt.
-        + assert (ltte'' := snd (flip_lt_negate _ _) ltte').
-          assert (h := cotransitive ltte'' (g (c k))); strip_truncations.
-          destruct h as [lte'|ltt].
-          * exact (tr (k; (lte', lte))).
-          * rewrite (jump k ltt) in lt.
-            destruct (lt_antisym _ _ (lt, transitivity ltt
-                        (transitivity (fst (flip_pos_negate _) tpos) tpos))).
-    Qed.
-
-    Lemma endpoint_close (lt : ' (' t) < g x)
-      : hexists (fun n => - ' (' e) < g (c n) < ' (' e)).
-    Proof.
-      (* Points close to [x] have values above [t]. *)
-      assert (d := iscontinuousat_lt Q F g x gcont _ lt).
-      strip_truncations; destruct d as [d above].
-      (* Eventually [c n] is close to [x], so [p] is eventually constant, with value [x]. *)
-      assert (N := clim d); strip_truncations; destruct N as [N cN].
-      assert (const : forall n, (N <= n)%nat -> p n = p N).
-      { intros n len; induction len as [|n len IH].
-        - reflexivity.
-        - exact (stay n (above (c n) (cN n len)) @ IH). }
-      assert (px : x = p N).
-      { apply (field_close_eq Q); intro e'.
-        assert (M := plim e'); strip_truncations; destruct M as [M pM].
-        rewrite <- (const (Nat.Core.nat_max N M) (le_nat_max_l N M)).
-        exact (pM _ (le_nat_max_r N M)). }
-      rewrite px in lt.
-      exact (endpoint_back N lt).
-    Qed.
-  End endpoint.
 
   Local Definition locator_0 : locator Q F 0
     := transport (locator Q F) (preserves_0 (f:=cast Q F)) (locator_left Q F 0).
@@ -523,53 +473,56 @@ Section ivt.
                approximate_root_between).
     Qed.
 
+    (** The invariant of the bisection: at every stage, either [f] is close to [0] at one of the midpoints so far, or [f] is still negative at the lower endpoint and positive at the upper endpoint. *)
+    Lemma bisect_invariant (m : nat)
+      : hor {j : nat & prod (j < m)%nat (- ' (' e) < f (c j) < ' (' e))}
+          (prod (f (z m) < 0) (0 < f (w m))).
+    Proof.
+      assert (halfpos := pos_rationals_to_field_qpos Q (F:=F) (e / 2)).
+      induction m as [|m IH].
+      1: exact (tr (inr (fa, fb))).
+      strip_truncations; destruct IH as [[j [ltj close]]|[neg pos]].
+      1: exact (tr (inl (j; (leq_succ_r ltj, close)))).
+      (* Compare [f (c m)] with [e / 2] and [e], and with [- e] and [- e / 2]. *)
+      assert (ltte : (' (' (e / 2)) : F) < ' (' e))
+        by exact (strictly_order_preserving _ _ _ (qpos_half_lt e)).
+      assert (h := cotransitive ltte (f (c m))); strip_truncations.
+      destruct h as [lt|lte].
+      - (* The next interval is the left half, whose upper endpoint is [c m]. *)
+        apply tr, inr.
+        assert (d1 := bisect_weight_1 f _ _ lt).
+        rewrite (bisect_lower_1 dec a b m d1), (bisect_upper_1 dec a b m d1).
+        exact (neg, transitivity halfpos lt).
+      - assert (h := cotransitive (snd (flip_lt_negate _ _) ltte) (f (c m))).
+        strip_truncations; destruct h as [lte'|lt].
+        + exact (tr (inl (m; (leq_refl _, (lte', lte))))).
+        + (* The next interval is the right half, whose lower endpoint is [c m]. *)
+          apply tr, inr.
+          assert (d0 := bisect_weight_0 f _ _ lt).
+          rewrite (bisect_lower_0 dec a b m d0), (bisect_upper_0 dec a b m d0).
+          exact (transitivity lt (fst (flip_pos_negate _) halfpos), pos).
+    Qed.
+
     Context (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y).
 
     Local Definition cont_root := cont approximate_root (approximate_root_between 0).
 
-    (** If [f] is above [e / 2] at the limit, the lower endpoints eventually stop moving, so [f] is close to [0] at a midpoint. *)
-    Local Lemma approximate_ivt_above (lt : ' (' (e / 2)) < f approximate_root)
-      : hexists (fun n => - ' (' e) < f (c n) < ' (' e)).
-    Proof.
-      refine (endpoint_close f z c _ (e / 2) e (qpos_half_lt e) fa _ _
-                approximate_root_islimit.2 islimit_bisect_mid cont_root lt).
-      - intros n lt'; exact (bisect_lower_1 dec a b n (bisect_weight_1 f _ _ lt')).
-      - intros n lt'; exact (bisect_lower_0 dec a b n (bisect_weight_0 f _ _ lt')).
-    Qed.
-
-    (** Dually, if [f] is below [- e / 2] at the limit, the upper endpoints eventually stop moving. *)
-    Local Lemma approximate_ivt_below (lt : f approximate_root < - ' (' (e / 2)))
-      : hexists (fun n => - ' (' e) < f (c n) < ' (' e)).
-    Proof.
-      refine (Trunc_functor (-1)
-                (fun nc : {n : nat & - ' (' e) < - f (c n) < ' (' e)} => (nc.1; _)) _).
-      { assert (bd := lt_bound_negate _ _ nc.2); cbn in bd.
-        rewrite negate_involutive in bd; exact bd. }
-      refine (endpoint_close (fun y => - f y) w c _ (e / 2) e (qpos_half_lt e)
-                (fst (flip_pos_negate _) fb) _ _ islimit_bisect_upper islimit_bisect_mid
-                (iscontinuousat_negate Q F f _ cont_root) (flip_lt_negate_r _ _ lt)).
-      - intros n lt'.
-        exact (bisect_upper_0 dec a b n (bisect_weight_0 f _ _ (flip_lt_negate_r _ _ lt'))).
-      - intros n lt'.
-        apply (snd (flip_lt_negate _ _)) in lt'; rewrite 2!negate_involutive in lt'.
-        exact (bisect_upper_1 dec a b n (bisect_weight_1 f _ _ lt')).
-    Qed.
-
-    (** The approximate intermediate value theorem: [f] is less than [e] in absolute value at one of the candidates. *)
+    (** The approximate intermediate value theorem: [f] is less than [e] in absolute value at one of the candidates. Take [m] so large that [z m] and [w m] are close to the limit [x]. If [f] is close to [0] at some [c j], we are done. Otherwise [f (z m) < 0 < f (w m)], and [f x] is within [e] of both, so [f x] is close to [0]. *)
     Lemma approximate_ivt_candidates
       : hexists (fun n => - ' (' e) < f (approximate_candidate n) < ' (' e)).
     Proof.
-      pose (S' (nc : {n : nat & - ' (' e) < f (c n) < ' (' e)})
-        := (S nc.1; nc.2) : {n : nat & - ' (' e) < f (approximate_candidate n) < ' (' e)}).
-      assert (ltte : (' (' (e / 2)) : F) < ' (' e))
-        by exact (strictly_order_preserving _ _ _ (qpos_half_lt e)).
-      assert (h := cotransitive ltte (f approximate_root)); strip_truncations.
-      destruct h as [ltt|lte].
-      1: exact (Trunc_functor (-1) S' (approximate_ivt_above ltt)).
-      assert (h := cotransitive (snd (flip_lt_negate _ _) ltte) (f approximate_root)).
-      strip_truncations; destruct h as [lte'|ltt].
-      - exact (tr (0%nat; (lte', lte))).
-      - exact (Trunc_functor (-1) S' (approximate_ivt_below ltt)).
+      assert (d := cont_root e); strip_truncations; destruct d as [d close].
+      assert (N := approximate_root_islimit.2 d); assert (M := islimit_bisect_upper d).
+      strip_truncations; destruct N as [N zN], M as [M wM].
+      set (m := Nat.Core.nat_max N M).
+      assert (inv := bisect_invariant m); strip_truncations.
+      destruct inv as [[j [_ cj]]|[neg pos]].
+      1: exact (tr (S j; cj)).
+      apply tr; exists 0%nat; split.
+      - refine (transitivity (fst (close (w m) (wM m (le_nat_max_r N M)))) _).
+        exact (fst (pos_minus_lt_compat_r _ _) pos).
+      - refine (transitivity _ (snd (close (z m) (zN m (le_nat_max_l N M))))).
+        exact (fst (pos_plus_lt_compat_r _ _) (fst (flip_neg_negate _) neg)).
     Qed.
 
     (** Hence [f] merely takes values arbitrarily close to [0]. *)
