@@ -1,6 +1,6 @@
 (** * Cauchy approximations and Cauchy structures *)
 
-From HoTT Require Import Basics Truncations.Core.
+From HoTT Require Import Basics Types.Sigma Types.Forall Truncations.Core.
 From HoTT.Spaces Require Import Nat.Core.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
@@ -56,6 +56,17 @@ Section cauchy_structure.
         : forall x : CauchyApproximation, IsApproximationLimit x (approximation_limit x)
     }.
 
+    Definition issig_cauchyapproximation : _ <~> CauchyApproximation := ltac:(issig).
+
+    (** Over a premetric, Cauchy approximations with the same values are equal. *)
+    Lemma path_cauchyapproximation `{Funext} `{!IsPremetric Q close}
+      (x y : CauchyApproximation) (p : forall e, x e = y e)
+      : x = y.
+    Proof.
+      apply (equiv_ap' issig_cauchyapproximation^-1 _ _).
+      apply path_sigma_hprop; funext e; exact (p e).
+    Defined.
+
   End approximation.
 
   (** A map which preserves closeness acts on Cauchy approximations. *)
@@ -106,6 +117,32 @@ Section cauchy_structure.
   Arguments cshom_lim {R S} f x : rename.
   Arguments cshom_eq {R S} f u v p : rename.
 
+  Section path_cshom.
+    Context (R S : CauchyStructure) `{!IsHSet S}.
+
+    Definition issig_cauchystructurehom : _ <~> CauchyStructureHom R S := ltac:(issig).
+
+    (** Into a set, a morphism is determined by its underlying map, since the other components are propositions. *)
+    Lemma path_cauchystructurehom `{Funext} (f g : CauchyStructureHom R S) (p : f == g)
+      : f = g.
+    Proof.
+      apply (equiv_ap' issig_cauchystructurehom^-1 _ _).
+      apply path_sigma_hprop; funext u; exact (p u).
+    Defined.
+
+    (** Hence the type of morphisms into a set is contractible exactly when there is a morphism and any two morphisms are pointwise equal. *)
+    Definition contr_cauchystructurehom_iff `{Funext}
+      : Contr (CauchyStructureHom R S)
+        <-> CauchyStructureHom R S * (forall f g : CauchyStructureHom R S, f == g).
+    Proof.
+      split.
+      - intros c; split; [exact (center _)|].
+        intros f g; exact (ap10 (ap (cshom_fun R S) (path_contr f g))).
+      - intros [f h]; apply (Build_Contr _ f); intro g.
+        exact (path_cauchystructurehom f g (h f g)).
+    Defined.
+  End path_cshom.
+
   Definition cshom_idmap (R : CauchyStructure) : CauchyStructureHom R R.
   Proof.
     snapply Build_CauchyStructureHom.
@@ -130,6 +167,40 @@ Section cauchy_structure.
       exact (ap (ap g) (cshom_eq f u v p) @ cshom_eq g _ _ _).
   Defined.
 
+  (** ** Comparing limits *)
+
+  Section compare_limits.
+    Context {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q} (S : CauchyStructure).
+
+
+    Local Lemma qpos_split4 (e0 d : Qpos Q)
+      : e0 + d = d / 2 / 2 + (e0 + d / 2 / 2) + d / 2 / 2 + d / 2 / 2.
+    Proof.
+      set (h := d / 2 / 2).
+      rewrite (qpos_plus_comm h (e0 + h)), <- (Qpos_plus_assoc e0 h h).
+      rewrite <- 2 (Qpos_plus_assoc e0).
+      apply ap; rewrite <- (Qpos_plus_assoc (h + h) h h); unfold h.
+      rewrite <- (pos_split2 (d / 2)); exact (pos_split2 d).
+    Qed.
+
+    (** Two Cauchy approximations whose terms are close up to [e0] and their indices have limits which are close up to [e0] and any positive rational. *)
+    Lemma cs_close_lim_lim_split (a b : CauchyApproximation (cs_close S)) (e0 : Qpos Q)
+      (c : forall d n, cs_close S (d + (e0 + n)) (a d) (b n)) (d : Qpos Q)
+      : cs_close S (e0 + d) (cs_lim S a) (cs_lim S b).
+    Proof.
+      rewrite (qpos_split4 e0 d); apply cs_close_lim_lim, c.
+    Qed.
+
+    (** Hence two Cauchy approximations whose terms are close up to any positive rational and their indices have the same limit. *)
+    Lemma cs_lim_path (a b : CauchyApproximation (cs_close S))
+      (c : forall e d n, cs_close S (d + (e + n)) (a d) (b n))
+      : cs_lim S a = cs_lim S b.
+    Proof.
+      apply cs_eq; intro e; rewrite (pos_split2 e).
+      apply cs_close_lim_lim_split, c.
+    Qed.
+  End compare_limits.
+
   (** ** The Cauchy structure of a Cauchy complete Archimedean ordered field *)
 
   Section field.
@@ -142,6 +213,14 @@ Section cauchy_structure.
     Proof.
       intros e u v; unfold field_close; exact _.
     Defined.
+
+    (** Closeness is reflexive. *)
+    Lemma field_close_refl (e : Qpos Q) (u : F) : field_close Q e u u.
+    Proof.
+      unfold field_close; rewrite plus_negate_r; split.
+      - apply flip_pos_negate, (pos_rationals_to_field_qpos Q).
+      - apply (pos_rationals_to_field_qpos Q).
+    Qed.
 
     (** An element of [F] below [b + e] for every positive rational [e] is at most [b]. *)
     Lemma le_lt_plus_qpos (a b : F) (lt : forall e : Qpos Q, a < b + ' (' e)) : a ≤ b.
@@ -278,6 +357,30 @@ Section cauchy_structure.
         + exact (le_field_close_triangle e d _ (x d) _ (field_lim_minus_le x d) c).
         + exact (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) n).
     Defined.
+
+
+    (** The constant Cauchy approximation, whose limit is its value. *)
+    Definition const_approximation (y : F) : CauchyApproximation (field_close Q (F:=F))
+      := Build_CauchyApproximation _ (fun _ => y) (fun d e => field_close_refl _ y).
+
+    Lemma field_lim_const (y : F) : field_lim (const_approximation y) = y.
+    Proof.
+      apply (field_close_eq Q); intro e; rewrite (pos_split2 e).
+      exact (field_close_symmetric Q _ _ _
+               (isapproximationlimit_field_lim (const_approximation y) (e / 2) (e / 2))).
+    Qed.
+
+    (** Terms of Cauchy approximations whose limits are [e]-close are close up to [e] and their indices. *)
+    Lemma field_close_lim_lim (x y : CauchyApproximation (field_close Q (F:=F))) (e : Qpos Q)
+      (c : field_close Q e (field_lim x) (field_lim y)) (d n : Qpos Q)
+      : field_close Q (d + (e + n)) (x d) (y n).
+    Proof.
+      apply (le_field_close_triangle (e + n) d _ (field_lim x)).
+      1: exact (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d).
+      apply (field_close_le_triangle e n _ (field_lim y)); [exact c|].
+      rewrite (negate_swap_r (field_lim y) (y n)).
+      exact (le_bound_negate _ _ (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) n)).
+    Qed.
 
   End field.
 

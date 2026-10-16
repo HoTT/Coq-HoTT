@@ -7,10 +7,10 @@ From HoTT.Classes.interfaces Require Import canonical_names abstract_algebra ord
 From HoTT.Classes.theory Require Import apartness rings fields.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Modalities Require Import ReflectiveSubuniverse.
-From HoTT.Misc Require Import BoundedSearch.
+From HoTT.Misc Require Import BoundedSearch CompactTypes.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions FunctionSpace Integral PicardLindelof.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions FunctionSpace Integral PicardLindelof LocatorCuts EuclideanReals.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -230,6 +230,51 @@ Check @isembedding_cauchy_reals_to_hottbookreals_dedekind.
 
 (** ** Chapter 5: Universal properties of real numbers *)
 
+(** Proposition 5.1.1. A Cauchy complete subset of a Cauchy complete Archimedean ordered field, such as the Dedekind reals, containing the rationals inherits a Cauchy structure. *)
+Check ContainsRationals.
+Check IsCauchyCompleteSubset.
+Check subset_close.
+Check subset_cauchy_structure.
+
+(** Corollary 5.1.2. The inclusion of such a subset is a morphism of Cauchy structures. *)
+Check cshom_subset_pr1.
+
+(** Proposition 5.1.3. The HoTT book reals are contained in every such subset, compatibly with their canonical embedding. *)
+Check hottbookreals_to_subset.
+Check hottbookreals_to_subset_pr1.
+Check hottbookreals_to_field_subset.
+
+(** Corollary 5.1.4. The Cauchy reals are a Cauchy complete subset if and only if they coincide with the HoTT book reals as subsets. The HoTT book reals always form a Cauchy complete subset. *)
+Check subset_cauchy_reals.
+Check subset_hottbookreals.
+Check iscauchycompletesubset_hottbookreals.
+Check iscauchycompletesubset_cauchy_reals_iff.
+
+(** Definition 5.1.5. Assuming propositional resizing, the Euclidean reals: the meet of the Cauchy complete subsets containing the rationals, here of any Cauchy complete Archimedean ordered field. *)
+Check CompleteSubset.
+Check euclidean_reals.
+Check containsrationals_euclidean_reals.
+Check iscauchycompletesubset_euclidean_reals.
+Check euclidean_reals_least.
+Check euclidean_reals_cauchy_structure.
+
+(** Theorem 5.1.7. Assuming propositional resizing, the Euclidean reals coincide with the HoTT book reals as subsets. *)
+Check euclidean_reals_iff_hottbookreals.
+
+(** Theorem 5.2.1. Assuming propositional resizing, the Euclidean reals are homotopy-initial among Cauchy structures on sets. The proof uses restricted morphisms on subsets, the subdcpo of subsets containing the rationals and contained in the Euclidean reals with a unique restricted morphism, which contains the rationals and is closed under adding limits, and the fixed point theorem for subdcpos. *)
+Check SubHom.
+Check unique_subhom_subset.
+Check unique_subhom_rationals.
+Check limits_subset.
+Check unique_subhom_limits.
+Check unique_subhom_sup.
+Check contr_subhom_euclidean_reals.
+Check contr_cshom_euclidean_reals.
+
+(** Remark 5.2.2. For a Cauchy structure [S] on a set, contractibility of the type of morphisms into [S] means existence of a morphism and pointwise uniqueness. *)
+Check @contr_cauchystructurehom_iff.
+Check @path_cauchystructurehom.
+
 (** Definition 5.3.1. Cancellative midpoint algebras: sets with an idempotent, commutative, medial and cancellative binary operation. *)
 Check Midpoint.
 Check Medial.
@@ -317,6 +362,9 @@ Check archimedean_structure.
 (** Corollary 6.7.4. For reals [x < y] with locators and a rational [s], we can choose [x < s] or [s < y]. *)
 Check locator_cotransitive_rational.
 
+(** Remark 6.7.5. Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose [x < z] or [z < y]. *)
+Check locator_cotransitive.
+
 (** Theorem 6.7.6. If [x] and [y] have locators, then so do [-x], [x + y], [x y], [x⁻¹] (for [x # 0]), [min(x, y)] and [max(x, y)]. *)
 Check locator_minus.
 Check locator_plus.
@@ -364,6 +412,55 @@ Check merely_locator_pointwise.
 Check pointwise_locator_iff_located.
 Check @O_decidable_arrow.
 Check @cotransitive.
+
+(** Corollary 6.9.9. Every Dedekind real merely has a signed-digit representation if and only if the Cauchy reals and the Dedekind reals coincide, that is, the canonical map between them is an equivalence; since it is an embedding, this means that every Dedekind real is a Cauchy real. *)
+Check signed_digits_iff_isequiv_cauchy_reals_to_dedekind.
+Check isequiv_cauchy_reals_to_dedekind_iff.
+
+(** Lemma 6.10.1. A choice of locators for all reals gives a strongly nonconstant map to [Bool], by deciding [0 < x] or [x < 1]. *)
+Check IsStronglyNonconstant.
+Check locator_choice_bool.
+Check isstronglynonconstant_locator_choice_bool.
+
+(** Lemma 6.10.2. A strongly nonconstant map from a Cauchy complete Archimedean ordered field to [Bool] implies the weak limited principle of omniscience (Definition 2.8.4). The bisection is carried out on the rationals, on the line through two points with different values. *)
+Check WLPO.
+Check iff_wlpo_ispicompact_nat.
+Check wlpo_bisection.
+Check wlpo_nonconstant.
+Check wlpo_isstronglynonconstant.
+Check wlpo_locator_choice.
+
+(** Theorem 6.10.3. The properties [IsCut] and the structure [CutStructure] of a pair of predicates on the rationals, each with eight components: the structure gives the property, so does its truncation; the property together with a locator gives the structure; the property with the mere existence of a locator gives a Cauchy real, and so does the mere existence of the structure. *)
+Check BoundedLower.
+Check BoundedUpper.
+Check ClosedLower.
+Check ClosedUpper.
+Check OpenLower.
+Check OpenUpper.
+Check CutTransitive.
+Check CutLocated.
+Check LowerBound.
+Check UpperBound.
+Check LowerRounding.
+Check UpperRounding.
+Check CutLocator.
+Check IsCut.
+Check CutStructure.
+Check iscut_iff_isdedekindcut.
+Check iscut_cutstructure.
+Check iscut_merely_cutstructure.
+Check cut_locator_iff_locator.
+Check lower_bound_cut_locator.
+Check upper_bound_cut_locator.
+Check lower_rounding_cut_locator.
+Check upper_rounding_cut_locator.
+Check cutstructure_iscut_locator.
+Check iscauchyreal_iscut_merely_locator.
+Check iscauchyreal_merely_cutstructure.
+
+(** Theorem 6.10.5. It is not provable that every cut merely has the structure of a cut. The non-provability rests on a model in which the Cauchy and Dedekind reals differ, which is not formalized; we formalize the internal statement that if every cut merely has the structure, then every Dedekind real is a Cauchy real, so that the Cauchy and Dedekind reals coincide. *)
+Check iscauchyreal_all_merely_cutstructure.
+Check isequiv_cauchy_reals_to_dedekind_iff.
 
 (** ** Chapter 7: Some constructive analysis with locators *)
 

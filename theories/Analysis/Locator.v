@@ -539,6 +539,18 @@ Section locator.
       apply (strictly_order_preserving _); assumption.
   Defined.
 
+  (** Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose between [x < z] and [z < y]. *)
+  Definition locator_cotransitive {x y z : F} (l : locator x) (m : locator y) (n : locator z)
+    : x < y -> (x < z) + (z < y).
+  Proof.
+    intros ltxy.
+    destruct (archimedean_structure l m ltxy) as [q [ltxq ltqy]].
+    destruct (archimedean_structure (locator_left q) m ltqy) as [r [ltqr ltry]].
+    destruct (n q r (strictly_order_reflecting _ _ _ ltqr)) as [ltqz|ltzr].
+    - exact (inl (transitivity ltxq ltqz)).
+    - exact (inr (transitivity ltzr ltry)).
+  Defined.
+
   Section unary_ops.
 
     Context {x : F}

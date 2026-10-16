@@ -55,6 +55,26 @@ Proof.
     exact (fun u => r (a; u)).
 Defined.
 
+(** The weak limited principle of omniscience: for every decidable family over [nat], we can decide whether it is nowhere inhabited. *)
+Definition WLPO
+  := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
+
+Instance ishprop_wlpo `{Funext} : IsHProp WLPO := _.
+
+(** It says exactly that [nat] is Π-compact. *)
+Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat.
+Proof.
+  split.
+  - intros w P dP.
+    destruct (w (not o P) _) as [l|r].
+    + left; intro n; exact (stable_decidable (P n) (fun u => l (n; u))).
+    + right; intro f; exact (r (fun u => u.2 (f u.1))).
+  - intros c P dP.
+    destruct (c (not o P) _) as [l|r].
+    + left; intro u; exact (l u.1 u.2).
+    + right; intro nu; exact (r (fun n p => nu (n; p))).
+Defined.
+
 (** Compact types are closed under retracts. *)
 Definition issigmacompact_retract {A R : Type} {f : A -> R} {g : R -> A}
   (s : f o g == idmap) (c : IsSigmaCompact A)
