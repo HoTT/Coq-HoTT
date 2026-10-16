@@ -13,7 +13,8 @@ Require Import
   HoTT.Classes.orders.lattices
   HoTT.Classes.theory.additional_operations
   HoTT.Classes.tactics.ring_quote
-  HoTT.Classes.tactics.ring_tac.
+  HoTT.Classes.tactics.ring_tac
+  HoTT.Spaces.Nat.Enumeration.
 
 Import Quoting.Instances.
 Import NatPair.Instances.
@@ -611,6 +612,21 @@ Proof.
 Qed.
 
 End enumerable.
+
+#[export] Instance decidablepaths_qpos : DecidablePaths Q+.
+Proof.
+  intros a b; destruct (dec (' a = ' b)) as [p|np].
+  - exact (inl (pos_eq a b p)).
+  - exact (inr (fun p => np (ap (cast Q+ Q) p))).
+Defined.
+
+(** An enumeration of the rationals gives an enumeration of pairs of a rational and a positive rational. *)
+Definition equiv_nat_rationals_qpos (e : nat <~> Q) : nat <~> Q * Q+.
+Proof.
+  pose (enum := Build_Enumerable Q e (BuildIsSurjection e (fun q => tr (e^-1 q; eisretr e q)))).
+  apply (equiv_nat_prod_enumeration e (Qpos_enumerator (H1:=enum))).
+  intros y; exact (@center _ (Qpos_is_enumerator (H1:=enum) y)).
+Defined.
 
 End contents.
 

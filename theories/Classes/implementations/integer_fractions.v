@@ -1,8 +1,9 @@
 (** * The rationals as the field of fractions of the integers *)
 
-(** For a model [Z] of the integers, the field of fractions [FracField.F Z] is a model of the rationals: we order it by the sign of [num * den], and show that it is initial among fields of characteristic [0].  We also show that every fraction lies below a natural number. *)
+(** For a model [Z] of the integers, the field of fractions [FracField.F Z] is a model of the rationals: we order it by the sign of [num * den], and show that it is initial among fields of characteristic [0].  We also show that every fraction lies below a natural number, and that the field of fractions is equivalent to the natural numbers. *)
 
-From HoTT Require Import Basics Types.Bool Spaces.Nat.Core Misc.BoundedSearch.
+From HoTT Require Import Basics Types.Bool Truncations.Core Spaces.Nat.Core Spaces.Nat.Enumeration
+  Misc.BoundedSearch.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
   interfaces.orders
@@ -18,6 +19,7 @@ From HoTT.Classes Require Import
   theory.dec_fields
   theory.fields
   orders.rings
+  orders.naturals
   orders.integers
   orders.nat_int.
 
@@ -424,3 +426,83 @@ Section contents.
     exact (tr (frac_round_up x)).
   Qed.
 End contents.
+
+(** ** Enumeration *)
+
+(** The fractions [(a - b) / (c + 1)] of natural numbers cover the field of fractions, which is therefore equivalent to the natural numbers. *)
+Section enumeration.
+  Context `{Funext} `{Univalence}.
+  Context (Z : Type) `{Integers Z} `{!TrivialApart Z}.
+
+  Local Existing Instance Frac.den_ne_0.
+  Local Notation Frac := (Frac.Frac Z).
+  Local Notation Q := (FracField.F Z).
+  Local Notation nZ := (naturals_to_semiring nat Z).
+  Local Notation nQ := (naturals_to_semiring nat Q).
+
+  Local Lemma int_succ_ne_0 (c : nat) : nZ (S c) <> 0.
+  Proof.
+    intros p; apply (irreflexivity (<) (0 : Z)).
+    exact (transport (fun z => 0 < z) p (nat_to_semiring_succ_pos c)).
+  Qed.
+
+  (** The fraction with numerator [a - b] and denominator [c + 1]. *)
+  Local Definition frac_of_nats (a b c : nat) : Frac
+    := Frac.frac (nZ a - nZ b) (nZ (S c)) (int_succ_ne_0 c).
+
+  Definition fracfield_enumerator (n : nat) : Q
+    := match nat_unpair n with
+       | (a, m) => match nat_unpair m with
+                  | (b, c) => ' (frac_of_nats a b c)
+                  end
+       end.
+
+  Local Lemma int_difference (z : Z) : {a : nat & {b : nat & nZ a - nZ b = z}}.
+  Proof.
+    destruct (int_abs_sig Z nat z) as [[a p]|[a p]].
+    - exists a, 0%nat; change (nZ 0%nat) with (0 : Z); rewrite negate_0, plus_0_r; exact p.
+    - exists 0%nat, a; change (nZ 0%nat) with (0 : Z); rewrite plus_0_l, p; apply negate_involutive.
+  Qed.
+
+  Local Lemma int_pos_succ (z : Z) : 0 < z -> {c : nat & nZ (S c) = z}.
+  Proof.
+    intros zpos.
+    destruct (int_abs_sig Z nat z) as [[[|c] p]|[k p]].
+    - change (nZ 0%nat) with (0 : Z) in p; destruct p; destruct (irreflexivity (<) _ zpos).
+    - exact (c; p).
+    - apply Empty_rec, (irreflexivity (<) (0 : Z)).
+      apply (lt_le_trans _ z _ zpos).
+      apply (snd (flip_nonpos_negate z)); rewrite <- p; apply nat_to_semiring_nonneg.
+  Qed.
+
+  Lemma fracfield_enumerator_hit (x : Frac) : {n : nat & fracfield_enumerator n = ' x}.
+  Proof.
+    destruct (int_difference (Frac.num x * Frac.den x)) as [a [b p]].
+    destruct (int_pos_succ (Frac.den x * Frac.den x)) as [c q].
+    { apply square_pos, trivial_apart, Frac.den_ne_0. }
+    destruct (nat_unpair_hit b c) as [m r].
+    destruct (nat_unpair_hit a m) as [n s].
+    exists n; unfold fracfield_enumerator; rewrite s, r.
+    apply FracField.path; unfold Frac.equiv, frac_of_nats; cbn [Frac.num Frac.den].
+    rewrite p, q; symmetry; apply mult_assoc.
+  Qed.
+
+  (** Finitely many fractions lie below the image of a natural number. *)
+  Local Lemma fracfield_avoid (g : nat -> Q) (n : nat) : {x : Q & forall m, (m <= n)%nat -> g m <> x}.
+  Proof.
+    destruct (nat_bound (fun m => (round_up_strict Q (g m)).1) n) as [k l].
+    exists (nQ k); intros m lm p.
+    apply (irreflexivity (<) (g m)).
+    apply (lt_le_trans _ (nQ (round_up_strict Q (g m)).1)).
+    - exact (round_up_strict Q (g m)).2.
+    - refine (transport (fun w => _ <= w) p^ _).
+      apply nat_to_semiring_le, leq_lt, l, lm.
+  Qed.
+
+  Definition equiv_nat_fracfield : nat <~> Q.
+  Proof.
+    apply (equiv_nat_enumeration fracfield_enumerator).
+    - srapply FracField.F_ind; intros x; exact (tr (fracfield_enumerator_hit x)).
+    - exact (fracfield_avoid fracfield_enumerator).
+  Defined.
+End enumeration.
