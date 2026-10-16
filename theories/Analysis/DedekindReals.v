@@ -1,6 +1,6 @@
 (** * Dedekind reals *)
 
-(** The Dedekind reals over a model [Q] of the rationals: pairs of a lower and an upper cut, predicates on [Q] that are inhabited, rounded, transitive and located.  We show that they form a set, and construct their order, lattice and field structure. *)
+(** The Dedekind reals over a model [Q] of the rationals: pairs of a lower and an upper cut, predicates on [Q] that are inhabited, rounded, transitive and located.  We show that they form a set and an Archimedean ordered field, and that they are Cauchy complete, with the limit given by an explicit cut. *)
 
 From HoTT Require Import Basics Spaces.Nat.Core Types.Sigma Types.Forall Types.Sum Types.Universe
   Truncations.Core Universes.HProp Universes.TruncType.
@@ -19,7 +19,8 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.dec_fields
-  interfaces.archimedean.
+  interfaces.archimedean
+  interfaces.cauchy.
 
 Section dedekind.
   Context `{Funext} `{Univalence}.
@@ -1510,6 +1511,13 @@ Section dedekind.
 
 End dedekind.
 
+Arguments cut_lower_inhabited {Q _ lower upper} _.
+Arguments cut_upper_inhabited {Q _ lower upper} _.
+Arguments cut_lower_rounded {Q _ lower upper} _ _.
+Arguments cut_upper_rounded {Q _ lower upper} _ _.
+Arguments cut_transitive {Q _ lower upper} _ _ _ _ _.
+Arguments cut_located {Q _ lower upper} _ _ _ _.
+
 (** ** The Archimedean property and Cauchy completeness *)
 
 (** We use a new section, so that the inclusion of the rationals into fields is not restricted to the universes used above: the Dedekind reals live in a universe above that of [Q]. *)
@@ -1520,7 +1528,7 @@ Section complete.
     {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
     {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
     {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
-    {Qroundup : RoundUpStrict Q}.
+    {Qroundup : RoundUpStrict@{_ UQ _ UQ} Q}.
 
   Local Notation R := (DedekindReals Q).
   Local Notation "[ q ]" := (rational_dedekind Q q).
@@ -1536,5 +1544,236 @@ Section complete.
     intros x y l; generalize (dedekindreals_archimedean Q x y l); apply Trunc_functor.
     intros [q lq]; exists q.
     exact (transport (fun z => prod (x < z) (z < y)) (rationals_initial (h:=rational_dedekind Q) q)^ lq).
+  Qed.
+
+  (** ** Cauchy completeness *)
+
+  Section limit.
+    Context (x : nat -> R) (M : Qpos Q -> nat) `{!CauchyModulus Q R x M}.
+
+    (** Two terms beyond [M e] are [e]-close, so their cuts are too. *)
+    Local Lemma modulus_cut_lt (e : Qpos Q) (m n : nat) (a b : Q)
+      : (M e <= m)%nat -> (M e <= n)%nat -> lower_cut Q (x m) a -> upper_cut Q (x n) b -> a < b + ' e.
+    Proof.
+      intros lm ln la ub.
+      assert (c := snd (cauchy_convergence Q R x e m n lm ln)).
+      apply flip_lt_minus_l in c; unfold cast in c.
+      rewrite (rationals_initial (h:=rational_dedekind Q)) in c.
+      apply (snd (rational_dedekind_lt Q _ _)); rewrite plus_comm, (rational_dedekind_plus Q (Qroundup:=Qroundup)).
+      refine (transitivity (snd (lt_rational_dedekind_l Q a (x m)) la) _).
+      refine (transitivity c _).
+      exact (strictly_order_preserving ([' e] +) _ _ (snd (lt_rational_dedekind_r Q b (x n)) ub)).
+    Qed.
+
+    (** The limit: [q < l] when [q + e + d < x (M e)] for some [e] and [d], and dually. *)
+    Local Definition limit_lower (q : Q) : HProp
+      := Build_HProp (hexists (fun e : Qpos Q => hexists (fun d : Qpos Q =>
+                       lower_cut Q (x (M e)) (q + ' e + ' d)))).
+    Local Definition limit_upper (r : Q) : HProp
+      := Build_HProp (hexists (fun e : Qpos Q => hexists (fun d : Qpos Q =>
+                       upper_cut Q (x (M e)) (r - ' e - ' d)))).
+
+    Local Lemma plus_minus_pos (q : Q) (e d : Qpos Q) : q - ' e - ' d + ' e + ' d = q.
+    Proof.
+      rewrite <- !plus_assoc, (plus_comm (' e) (' d)), (plus_assoc (- ' d)), plus_negate_l, plus_0_l.
+      rewrite plus_negate_l; apply plus_0_r.
+    Qed.
+
+    Local Lemma plus_plus_minus (q : Q) (e d : Qpos Q) : q + ' e + ' d - ' e - ' d = q.
+    Proof.
+      rewrite <- !plus_assoc, (plus_assoc (' d) (- ' e)), (plus_comm (' d) (- ' e)).
+      rewrite <- (plus_assoc (- ' e)), !plus_negate_r, plus_0_r, plus_negate_r; apply plus_0_r.
+    Qed.
+
+    Local Lemma plus_half_shift (q : Q) (e d : Qpos Q)
+      : q + ' (d / 2) + ' e + ' (d / 2) = q + ' e + ' d.
+    Proof.
+      refine (_ @ (ap (fun z => q + ' e + ' z) (pos_split2 d))^).
+      change (q + ' (d / 2) + ' e + ' (d / 2) = q + ' e + (' (d / 2) + ' (d / 2))).
+      rewrite <- (plus_assoc q (' (d / 2)) (' e)), (plus_comm (' (d / 2)) (' e)), plus_assoc.
+      apply (plus_assoc _ (' (d / 2)) (' (d / 2)))^.
+    Qed.
+
+    Local Lemma minus_half_shift (r : Q) (e d : Qpos Q)
+      : r - ' (d / 2) - ' e - ' (d / 2) = r - ' e - ' d.
+    Proof.
+      refine (_ @ (ap (fun z => r - ' e - ' z) (pos_split2 d))^).
+      change (r - ' (d / 2) - ' e - ' (d / 2) = r - ' e - (' (d / 2) + ' (d / 2))).
+      rewrite negate_plus_distr.
+      rewrite <- (plus_assoc r (- ' (d / 2)) (- ' e)), (plus_comm (- ' (d / 2)) (- ' e)), plus_assoc.
+      apply (plus_assoc _ (- ' (d / 2)) (- ' (d / 2)))^.
+    Qed.
+
+    Local Lemma lt_plus_pos (q : Q) (e : Qpos Q) : q < q + ' e.
+    Proof.
+      exact (fst (pos_plus_lt_compat_r q (' e)) (is_pos e)).
+    Qed.
+
+    Local Lemma minus_pos_lt (q : Q) (e : Qpos Q) : q - ' e < q.
+    Proof.
+      exact (fst (pos_minus_lt_compat_r q (' e)) (is_pos e)).
+    Qed.
+
+    (** Two consequences of [modulus_cut_lt] that give transitivity of the limit cut. *)
+    Local Lemma limit_transitive_aux (q s : Q) (e d : Qpos Q) : q + ' e + ' d < s + ' e -> q < s.
+    Proof.
+      intros l.
+      rewrite <- (plus_assoc q), (plus_comm (' e)), plus_assoc in l.
+      apply (strictly_order_reflecting (+ ' e)) in l.
+      exact (transitivity (lt_plus_pos q d) l).
+    Qed.
+
+    Local Lemma limit_transitive_aux' (q r : Q) (e d e' d' : Qpos Q)
+      : q + ' e + ' d < r - ' e' - ' d' + ' e' -> q < r.
+    Proof.
+      intros l.
+      rewrite <- (plus_assoc (r - ' e')), (plus_comm (- ' d')), plus_assoc in l.
+      rewrite <- (plus_assoc r), plus_negate_l, plus_0_r in l.
+      refine (transitivity (transitivity (lt_plus_pos q e) (lt_plus_pos _ d)) _).
+      exact (transitivity l (minus_pos_lt r d')).
+    Qed.
+
+    Local Lemma limit_located_aux (q r : Q) (e : Qpos Q)
+      : ' e + ' e + ' e + ' e < r - q -> q + ' e + ' e < r - ' e - ' e.
+    Proof.
+      intros l.
+      apply (snd (flip_lt_minus_r _ _ _)), (snd (flip_lt_minus_r _ _ _)).
+      apply flip_lt_minus_r in l; rewrite plus_comm, !plus_assoc in l; exact l.
+    Qed.
+
+    Lemma isdedekindcut_limit : IsDedekindCut Q limit_lower limit_upper.
+    Proof.
+      split.
+      - assert (a := cut_lower_inhabited (isdedekindcut Q (x (M 1)))); strip_truncations.
+        destruct a as [a la]; apply tr; exists (a - ' 1 - ' 1); apply tr; exists 1; apply tr; exists 1.
+        rewrite plus_minus_pos; exact la.
+      - assert (b := cut_upper_inhabited (isdedekindcut Q (x (M 1)))); strip_truncations.
+        destruct b as [b ub]; apply tr; exists (b + ' 1 + ' 1); apply tr; exists 1; apply tr; exists 1.
+        rewrite plus_plus_minus; exact ub.
+      - intros q; split.
+        + intros p; strip_truncations; destruct p as [e p]; strip_truncations; destruct p as [d p].
+          apply tr; exists (q + ' (d / 2)); split; [apply lt_plus_pos|].
+          apply tr; exists e; apply tr; exists (d / 2).
+          rewrite plus_half_shift; exact p.
+        + intros p; strip_truncations; destruct p as [q' [l p]]; strip_truncations.
+          destruct p as [e p]; strip_truncations; destruct p as [d p].
+          apply tr; exists e; apply tr; exists d.
+          refine (lower_cut_lt Q _ _ _ _ p).
+          apply (strictly_order_preserving (+ ' d)), (strictly_order_preserving (+ ' e)), l.
+      - intros r; split.
+        + intros p; strip_truncations; destruct p as [e p]; strip_truncations; destruct p as [d p].
+          apply tr; exists (r - ' (d / 2)); split; [apply minus_pos_lt|].
+          apply tr; exists e; apply tr; exists (d / 2).
+          rewrite minus_half_shift; exact p.
+        + intros p; strip_truncations; destruct p as [r' [l p]]; strip_truncations.
+          destruct p as [e p]; strip_truncations; destruct p as [d p].
+          apply tr; exists e; apply tr; exists d.
+          refine (upper_cut_lt Q _ _ _ _ p).
+          apply (strictly_order_preserving (+ - ' d)), (strictly_order_preserving (+ - ' e)), l.
+      - intros q r p p'; strip_truncations.
+        destruct p as [e p], p' as [e' p']; strip_truncations.
+        destruct p as [d p], p' as [d' p'].
+        destruct (leq_dichotomy (M e) (M e')) as [lM|lM].
+        + refine (transitivity _ (transitivity (minus_pos_lt _ d') (minus_pos_lt r e'))).
+          exact (limit_transitive_aux q _ e d (modulus_cut_lt e _ _ _ _ (leq_refl _) lM p p')).
+        + exact (limit_transitive_aux' q r e d e' d'
+                   (modulus_cut_lt e' _ _ _ _ (leq_lt lM) (leq_refl _) p p')).
+      - intros q r l.
+        pose (k := Qpos_diff q r l); pose (e := k / 2 / 2 / 2).
+        assert (le : ' e + ' e + ' e + ' e < r - q).
+        { assert (h1 : ' e + ' e = ' (k / 2 / 2))
+            by exact (ap (cast (Qpos Q) Q) (pos_split2 (k / 2 / 2)))^.
+          assert (h2 : ' (k / 2 / 2) + ' (k / 2 / 2) = ' (k / 2))
+            by exact (ap (cast (Qpos Q) Q) (pos_split2 (k / 2)))^.
+          rewrite <- (plus_assoc (' e + ' e)), h1, h2.
+          change (' (k / 2) < ' k).
+          apply (transport (fun z => ' (k / 2) < ' z) (pos_split2 k)^), lt_plus_pos. }
+        assert (c := cut_located (isdedekindcut Q (x (M e))) _ _ (limit_located_aux q r e le)).
+        strip_truncations; destruct c as [c|c]; apply tr; [left|right];
+          apply tr; exists e; apply tr; exists e; exact c.
+    Qed.
+
+    Definition limit_dedekind : R := Build_DedekindReals Q limit_lower limit_upper isdedekindcut_limit.
+
+    Local Lemma rational_dedekind_minus (r h : Q) : [r - h] = [r] - [h].
+    Proof.
+      rewrite (rational_dedekind_plus Q (Qroundup:=Qroundup)); apply ap.
+      exact (preserves_negate (f:=rational_dedekind Q) h).
+    Qed.
+
+    Local Lemma not_lt_flip_dedekind (a b : Q) : b < a -> ~ (a < b).
+    Proof.
+      intros l l'; exact (irreflexivity (<) a (transitivity l' l)).
+    Qed.
+
+    (** Beyond [M (e / 2)], the terms are at most [e / 2] above the limit. *)
+    Local Lemma limit_minus_le (e : Qpos Q) (n : nat) : leq (M (e / 2)) n
+      -> limit_dedekind - x n <= [' (e / 2)].
+    Proof.
+      intros ln; apply le_iff_not_lt_flip; intros l.
+      apply flip_lt_minus_r in l.
+      apply (Trunc_rec (n:=-1) (A:={r : Q & prod ([' (e / 2)] + x n < [r]) ([r] < limit_dedekind)}));
+        [|exact (dedekindreals_archimedean Q _ _ l)].
+      intros [r [lr lr']].
+      apply (fst (lt_rational_dedekind_l Q r _)) in lr'.
+      rewrite plus_comm in lr; apply flip_lt_minus_r in lr.
+      rewrite <- rational_dedekind_minus in lr; apply (fst (lt_rational_dedekind_r Q _ _)) in lr.
+      revert lr'; apply (Trunc_rec (n:=-1)); intros [e' p]; revert p.
+      apply (Trunc_rec (n:=-1)); intros [d' p].
+      destruct (leq_dichotomy (M (e / 2)) (M e')) as [lM|lM].
+      - refine (not_lt_flip_dedekind _ _ _ (modulus_cut_lt (e / 2) _ _ _ _ lM ln p lr)).
+        rewrite <- plus_assoc, plus_negate_l, plus_0_r.
+        exact (transitivity (lt_plus_pos r e') (lt_plus_pos _ d')).
+      - refine (not_lt_flip_dedekind _ _ _
+                  (modulus_cut_lt e' _ _ _ _ (leq_refl _) (leq_trans (leq_lt lM) ln) p lr)).
+        refine (transitivity _ (lt_plus_pos _ d')).
+        apply (strictly_order_preserving (+ ' e')), minus_pos_lt.
+    Qed.
+
+    (** Beyond [M (e / 2)], the terms are at most [e / 2] below the limit. *)
+    Local Lemma minus_limit_le (e : Qpos Q) (n : nat) : leq (M (e / 2)) n
+      -> x n - limit_dedekind <= [' (e / 2)].
+    Proof.
+      intros ln; apply le_iff_not_lt_flip; intros l.
+      apply flip_lt_minus_r in l.
+      apply (Trunc_rec (n:=-1) (A:={r : Q & prod ([' (e / 2)] + limit_dedekind < [r]) ([r] < x n)}));
+        [|exact (dedekindreals_archimedean Q _ _ l)].
+      intros [r [lr lr']].
+      apply (fst (lt_rational_dedekind_l Q r _)) in lr'.
+      rewrite plus_comm in lr; apply flip_lt_minus_r in lr.
+      rewrite <- rational_dedekind_minus in lr; apply (fst (lt_rational_dedekind_r Q _ _)) in lr.
+      revert lr; apply (Trunc_rec (n:=-1)); intros [e' p]; revert p.
+      apply (Trunc_rec (n:=-1)); intros [d' p].
+      destruct (leq_dichotomy (M (e / 2)) (M e')) as [lM|lM].
+      - refine (not_lt_flip_dedekind _ _ _ (modulus_cut_lt (e / 2) _ _ _ _ ln lM lr' p)).
+        apply (lt_le_trans _ (r - ' (e / 2) + ' (e / 2))).
+        + apply (strictly_order_preserving (+ ' (e / 2))).
+          exact (transitivity (minus_pos_lt _ d') (minus_pos_lt _ e')).
+        + rewrite <- plus_assoc, plus_negate_l, plus_0_r; apply reflexivity.
+      - refine (not_lt_flip_dedekind _ _ _
+                  (modulus_cut_lt e' _ _ _ _ (leq_trans (leq_lt lM) ln) (leq_refl _) lr' p)).
+        apply (lt_le_trans _ (r - ' (e / 2) - ' e' + ' e')).
+        + apply (strictly_order_preserving (+ ' e')), minus_pos_lt.
+        + rewrite <- plus_assoc, plus_negate_l, plus_0_r; apply lt_le, minus_pos_lt.
+    Qed.
+
+    Lemma islimit_limit_dedekind : IsLimit Q R x limit_dedekind.
+    Proof.
+      intros e; apply tr; exists (M (e / 2)); intros n ln; unfold cast.
+      rewrite (rationals_initial (h:=rational_dedekind Q)).
+      assert (half : [' (e / 2)] < [' e]).
+      { apply rational_dedekind_lt.
+        apply (transport (fun z => ' (e / 2) < ' z) (pos_split2 e)^), lt_plus_pos. }
+      split.
+      - rewrite negate_swap_r; apply (snd (flip_lt_negate _ _)).
+        exact (le_lt_trans _ _ _ (minus_limit_le e n ln) half).
+      - exact (le_lt_trans _ _ _ (limit_minus_le e n ln) half).
+    Qed.
+  End limit.
+
+  (** The Dedekind reals are Cauchy complete, with the limit given by [limit_dedekind]. *)
+  #[export] Instance iscomplete_dedekindreals : IsComplete Q R.
+  Proof.
+    intros x M H'; exists (limit_dedekind x M); exact (islimit_limit_dedekind x M).
   Qed.
 End complete.
