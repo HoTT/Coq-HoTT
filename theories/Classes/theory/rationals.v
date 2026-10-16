@@ -20,16 +20,29 @@ Import Quoting.Instances.
 Import NatPair.Instances.
 Local Set Universe Minimization ToSet.
 
+(** The positive rationals depend only on [Q], its zero and its order. *)
+Section qpos.
+Universe UQ.
+Context {Q : Type@{UQ} } {Qzero : Zero Q} {Qlt : Lt@{UQ UQ} Q}.
+
+Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
+
+#[export] Instance Qpos_Q@{} : Cast Qpos Q := pos.
+Arguments Qpos_Q /.
+End qpos.
+
+Arguments Qpos Q {_ _}.
+
 Section contents.
 Context `{Funext} `{Univalence}.
-(** The fields that [Q] maps into live in a universe [UF], which may be larger than [UQ]. *)
-Universe UQ UF.
+(** The fields that [Q] maps into live in a universe [UF], which may be larger than [UQ], and their apartness relations take values in a universe [UA]. *)
+Universe UQ UF UA.
 Context {Q : Type@{UQ} } {Qap : Apart@{UQ UQ} Q}
   {Qplus : Plus Q} {Qmult : Mult Q}
   {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
   {Qle : Le@{UQ UQ} Q} {Qlt : Lt@{UQ UQ} Q}
-  {QtoField : RationalsToField@{UQ UF UF UF} Q}
-  {Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UF UQ UF UF} Q}
+  {QtoField : RationalsToField@{UQ UF UA UF} Q}
+  {Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UF UQ UF UA} Q}
   {Qtrivialapart : TrivialApart Q} {Qdec : DecidablePaths Q}
   {Qmeet : Meet Q} {Qjoin : Join Q} {Qlattice : LatticeOrder Qle}
   {Qle_total : TotalRelation (@le Q _)}
@@ -40,19 +53,15 @@ Proof.
 red. apply trivial_apart. solve_propholds.
 Qed.
 
-Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
-Notation "Q+" := Qpos.
+Notation "Q+" := (Qpos Q).
 
-#[export] Instance Qpos_Q@{} : Cast Qpos Q := pos.
-Arguments Qpos_Q /.
-
-Lemma Qpos_plus_pr@{} : forall a b : Qpos, 0 < 'a + 'b.
+Lemma Qpos_plus_pr@{} : forall a b : Q+, 0 < 'a + 'b.
 Proof.
 intros.
 apply semirings.pos_plus_compat;apply is_pos.
 Qed.
 
-#[export] Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
+#[export] Instance Qpos_plus@{} : Plus Q+ := fun a b => mkQpos _ (Qpos_plus_pr a b).
 
 #[export] Instance pos_is_pos@{} : forall q : Q+, PropHolds (0 < ' q)
   := is_pos.
@@ -630,5 +639,3 @@ Proof.
 Defined.
 
 End contents.
-
-Arguments Qpos Q {_ _}.
