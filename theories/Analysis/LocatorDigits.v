@@ -14,6 +14,7 @@ From HoTT.Classes Require Import
   interfaces.cauchy
   interfaces.round
   implementations.peano_naturals
+  implementations.natpair_integers
   theory.rings
   theory.naturals
   theory.integers
@@ -29,6 +30,8 @@ From HoTT.Classes Require Import
   orders.rationals.
 From HoTT.Analysis Require Import
   Locator MetricSpace CauchyCompleteness BanachFixedPoint CauchyReals.
+
+Import NatPair.Instances.
 
 Generalizable Variables A Ale Alt Z.
 
@@ -451,13 +454,6 @@ Section digits.
            cauchy_ismodulus := digit_sum_rational_modulus _ _ (sd_digit_bound _ sd) |};
         sd_islimit _ sd).
 
-  (** The limit of a rational sequence with a modulus has a locator. *)
-  Definition locator_cauchy_sequence {x : F} (s : CauchySequence Q)
-    (islim : IsLimit Q F (fun n => ' s n) x)
-    : locator Q F x
-    := locator_limit Q F (M_ismod:=cauchymodulus_cauchy_sequence Q F s)
-         (fun n => locator_left Q F _) islim.
-
   (** Merely having a locator, merely having a signed-digit representation and merely being the limit of a rational sequence with a modulus are equivalent; by [iscauchyreal_iff_limit], so is being a Cauchy real. *)
   Lemma merely_locator_iff_signed_digits (x : F)
     : merely (locator Q F x) <-> merely (SignedDigits x).
@@ -467,12 +463,36 @@ Section digits.
     - exact locator_signed_digits.
   Qed.
 
+End digits.
+
+Section limits.
+  Universe UQ.
+  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
+    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
+    {Qrats : Rationals Q} {Qdec_paths : DecidablePaths Q} {Qtriv : TrivialApart Q}.
+  Context (F : Type) `{Forderedfield : OrderedField F}.
+  Context {Farchimedean : ArchimedeanProperty Q F} {Qroundup : RoundUpStrict Q}.
+  Context `{Funext} `{Univalence} (Q_eq : nat <~> Q).
+
+  Local Existing Instance qinc.
+
+  (** The limit of a rational sequence with a modulus has a locator. *)
+  Definition locator_cauchy_sequence {x : F} (s : CauchySequence Q)
+    (islim : IsLimit Q F (fun n => ' s n) x)
+    : locator Q F x
+    := locator_limit Q F (M_ismod:=cauchymodulus_cauchy_sequence Q F s)
+         (fun n => locator_left Q F _) islim.
+
   Lemma merely_locator_iff_limit (x : F)
     : merely (locator Q F x)
       <-> hexists (fun s : CauchySequence Q => IsLimit Q F (fun n => ' s n) x).
   Proof.
     split; apply Trunc_functor.
-    - intro l; exact (cauchy_sequence_signed_digits (signed_digits_locator l)).
+    - intro l.
+      (* Go through signed digits in base [2], with the integers implemented as pairs of naturals. *)
+      exact (cauchy_sequence_signed_digits Q F (NatPair.Z nat) 1 _
+               (signed_digits_locator Q F Q_eq (NatPair.Z nat) 1 _ l)).
     - intros [s islim]; exact (locator_cauchy_sequence s islim).
   Qed.
 
@@ -492,4 +512,4 @@ Section digits.
     - intros h q r ltqr; exact (Trunc_functor _ (fun f => f ltqr) (h q r)).
     - intros h q r; exact (O_decidable_arrow (Tr (-1)) _ _ (h q r)).
   Qed.
-End digits.
+End limits.
