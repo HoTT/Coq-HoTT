@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch CompactTypes.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions LocatorCuts.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions LocatorCuts EuclideanReals.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -249,6 +249,27 @@ Check subset_cauchy_reals.
 Check subset_hottbookreals.
 Check iscauchycompletesubset_hottbookreals.
 Check iscauchycompletesubset_cauchy_reals_iff.
+
+(** Definition 5.1.5. Assuming propositional resizing, the Euclidean reals: the meet of the Cauchy complete subsets containing the rationals, here of any Cauchy complete Archimedean ordered field. *)
+Check CompleteSubset.
+Check euclidean_reals.
+Check containsrationals_euclidean_reals.
+Check iscauchycompletesubset_euclidean_reals.
+Check euclidean_reals_least.
+Check euclidean_reals_cauchy_structure.
+
+(** Theorem 5.1.7. Assuming propositional resizing, the Euclidean reals coincide with the HoTT book reals as subsets. *)
+Check euclidean_reals_iff_hottbookreals.
+
+(** Theorem 5.2.1. Assuming propositional resizing, the Euclidean reals are homotopy-initial among Cauchy structures on sets. The proof uses restricted morphisms on subsets, the subdcpo of subsets containing the rationals and contained in the Euclidean reals with a unique restricted morphism, which contains the rationals and is closed under adding limits, and the fixed point theorem for subdcpos. *)
+Check SubHom.
+Check unique_subhom_subset.
+Check unique_subhom_rationals.
+Check limits_subset.
+Check unique_subhom_limits.
+Check unique_subhom_sup.
+Check contr_subhom_euclidean_reals.
+Check contr_cshom_euclidean_reals.
 
 (** Remark 5.2.2. For a Cauchy structure [S] on a set, contractibility of the type of morphisms into [S] means existence of a morphism and pointwise uniqueness. *)
 Check @contr_cauchystructurehom_iff.
