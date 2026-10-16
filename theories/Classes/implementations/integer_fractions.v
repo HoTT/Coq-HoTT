@@ -44,7 +44,7 @@ End ring_identities.
 
 Section contents.
   Context `{Funext} `{Univalence}.
-  Context (Z : Type) `{Integers Z} `{!TrivialApart Z}.
+  Context (Z : Type) `{Integers Z} `{!TrivialApart Z} {Zset : IsHSet Z}.
 
   Local Existing Instance Frac.den_ne_0.
 
@@ -432,7 +432,7 @@ End contents.
 (** The fractions [(a - b) / (c + 1)] of natural numbers cover the field of fractions, which is therefore equivalent to the natural numbers. *)
 Section enumeration.
   Context `{Funext} `{Univalence}.
-  Context (Z : Type) `{Integers Z} `{!TrivialApart Z}.
+  Context (Z : Type) `{Integers Z} `{!TrivialApart Z} {Zset : IsHSet Z}.
 
   Local Existing Instance Frac.den_ne_0.
   Local Notation Frac := (Frac.Frac Z).
