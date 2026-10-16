@@ -18,11 +18,17 @@ From HoTT.Classes Require Import
   orders.naturals
   orders.orders
   orders.rings
-  orders.dec_fields.
+  orders.dec_fields
+  interfaces.archimedean.
 
 Section dedekind.
   Context `{Funext} `{Univalence}.
-  Context (Q : Type) `{Rationals Q} `{!TrivialApart Q} `{DecidablePaths Q} `{!RoundUpStrict Q}.
+  Universe UQ.
+  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
+    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
+    {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
+    {Qroundup : RoundUpStrict Q}.
 
   Local Notation nQ := (naturals_to_semiring nat Q).
 
@@ -162,15 +168,15 @@ Section dedekind.
 
   (** A Dedekind cut has a lower and an upper bound arbitrarily close to each other: walk up from a lower bound in steps of [e / 4], using locatedness at each step. *)
   Lemma cut_approximate (x : R) (e : Qpos Q)
-    : hexists (fun a => hexists (fun b => prod (prod (lower_cut x a) (upper_cut x b)) (b - a < ' e))).
+    : merely {a : Q & {b : Q & prod (prod (lower_cut x a) (upper_cut x b)) (b - a < ' e)}}.
   Proof.
     assert (a0 := cut_lower_inhabited (isdedekindcut x)).
     assert (b0 := cut_upper_inhabited (isdedekindcut x)).
     strip_truncations; destruct a0 as [a0 la0], b0 as [b0 ub0].
     set (d := e / 2 / 2).
     set (p k := a0 + nQ k * ' d).
-    assert (step : forall k, hor (hexists (fun a => hexists (fun b =>
-                      prod (prod (lower_cut x a) (upper_cut x b)) (b - a < ' e))))
+    assert (step : forall k, hor (merely {a : Q & {b : Q &
+                      prod (prod (lower_cut x a) (upper_cut x b)) (b - a < ' e)}})
                       (lower_cut x (p k))).
     { induction k as [|k IH].
       - apply tr, inr; unfold p; change (nQ 0%nat) with (0 : Q).
@@ -184,7 +190,7 @@ Section dedekind.
           { unfold p; rewrite nat_to_semiring_succ, plus_mult_distr_r, mult_1_l.
             rewrite (plus_comm (' d)), plus_assoc; reflexivity. }
           rewrite pS; exact l.
-        + apply tr, inl, tr; exists (p k); apply tr; exists (p k + ' d + ' d).
+        + apply tr, inl, tr; exists (p k); exists (p k + ' d + ' d).
           refine ((lp, u), _).
           rewrite <- (plus_assoc (p k) (' d) (' d)), plus_minus_cancel_l.
           exact (pos_quarter_double e). }
@@ -345,7 +351,7 @@ Section dedekind.
         + exact (cut_transitive (isdedekindcut y) _ _ lt ut').
       - intros q r l.
         assert (c := cut_approximate x (Qpos_diff q r l)); strip_truncations.
-        destruct c as [a c]; strip_truncations; destruct c as [b [[la ub] lab]].
+        destruct c as [a [b [[la ub] lab]]].
         assert (l' : q - a < r - b) by exact (lt_minus_swap q r a b lab).
         assert (c := cut_located (isdedekindcut y) _ _ l'); strip_truncations.
         destruct c as [c|c]; apply tr; [left|right]; apply tr.
@@ -896,8 +902,7 @@ Section dedekind.
       assert (epos := snd (flip_pos_minus q r) l).
       destruct (small_factor (r - q) (X + W) epos (pos_plus_compat _ _ Xpos Wpos)) as [D lD].
       assert (ax := cut_approximate x D); assert (ay := cut_approximate y D); strip_truncations.
-      destruct ax as [a ax], ay as [c ay]; strip_truncations.
-      destruct ax as [b [[la ub] lab]], ay as [d [[lc ud] lcd]].
+      destruct ax as [a [b [[la ub] lab]]], ay as [c [d [[lc ud] lcd]]].
       destruct (cutbounds_intersect (Build_CutBounds x a b la ub) I0) as [I HI].
       destruct (cutbounds_intersect (Build_CutBounds y c d lc ud) J0) as [J HJ].
       assert (close : forall s t s' t', in_bounds I s -> in_bounds J t -> in_bounds I s'
@@ -1160,4 +1165,376 @@ Section dedekind.
     - exact mult_dedekindreals_comm.
     - exact mult_dedekindreals_plus_distr_l.
   Qed.
+
+  (** ** The order and the ring structure *)
+
+  Lemma lt_dedekindreals_iff_lower_minus (x y : R) : x < y <-> lower_cut (y - x) 0.
+  Proof.
+    assert (e : forall q : Q, - (0 - q) = q).
+    { intros q; rewrite plus_0_l; apply negate_involutive. }
+    split.
+    - intros l; strip_truncations; destruct l as [q [u p]].
+      apply tr; exists q; split; [exact p|].
+      exact (transport (fun w => upper_cut x w) (e q)^ u).
+    - intros p; strip_truncations; destruct p as [q [p u]].
+      exact (tr (q; (transport (fun w => upper_cut x w) (e q) u, p))).
+  Qed.
+
+  Local Lemma plus_minus_plus_dedekind (x y z : R) : (z + y) - (z + x) = y - x.
+  Proof.
+    rewrite negate_plus_distr, (plus_comm z y), <- plus_assoc, (plus_assoc z).
+    rewrite plus_negate_r, plus_0_l; reflexivity.
+  Qed.
+
+  #[export] Instance strictlyorderpreserving_plus_dedekindreals (z : R)
+    : StrictlyOrderPreserving (z +).
+  Proof.
+    intros x y l; apply lt_dedekindreals_iff_lower_minus.
+    rewrite plus_minus_plus_dedekind; exact (fst (lt_dedekindreals_iff_lower_minus x y) l).
+  Qed.
+
+  Local Lemma lt_dedekindreals_minus_zero (a b : R) : a < b -> a - b < 0.
+  Proof.
+    intros l; rewrite <- (plus_negate_r b), (plus_comm a), (plus_comm b).
+    exact (strictly_order_preserving (- b +) _ _ l).
+  Qed.
+
+  Local Lemma lt_dedekindreals_zero_minus (a b : R) : b < a -> 0 < a - b.
+  Proof.
+    intros l; rewrite <- (plus_negate_r b), (plus_comm a), (plus_comm b).
+    exact (strictly_order_preserving (- b +) _ _ l).
+  Qed.
+
+  Local Lemma lt_dedekindreals_from_minus (a b c : R) : a - b < c - b -> a < c.
+  Proof.
+    intros l; assert (l' := strictly_order_preserving (b +) _ _ l).
+    rewrite !(plus_comm b), <- !plus_assoc, !plus_negate_l, !plus_0_r in l'; exact l'.
+  Qed.
+
+  Lemma pos_mult_dedekindreals (x y : R) : 0 < x -> 0 < y -> 0 < x * y.
+  Proof.
+    intros lx ly.
+    apply (fst (lt_rational_dedekind_l 0 x)), (lower_cut_rounded x) in lx.
+    apply (fst (lt_rational_dedekind_l 0 y)), (lower_cut_rounded y) in ly.
+    assert (b := cut_upper_inhabited (isdedekindcut x)).
+    assert (d := cut_upper_inhabited (isdedekindcut y)); strip_truncations.
+    destruct lx as [s [ls lx]], ly as [t [lt ly]], b as [b ub], d as [d ud].
+    apply (snd (lt_rational_dedekind_l 0 _)), tr.
+    exists (Build_CutBounds x s b lx ub); apply tr; exists (Build_CutBounds y t d ly ud).
+    intros u v [lu _] [lv _]; cbn in lu, lv.
+    exact (pos_mult _ _ (lt_le_trans _ _ _ ls lu) (lt_le_trans _ _ _ lt lv)).
+  Qed.
+
+  (** If [x * z] is apart from zero, then so is [z]: bounds of [z] cannot contain zero. *)
+  Lemma mult_dedekindreals_apart_zero_r (x z : R) : x * z ≶ 0 -> z ≶ 0.
+  Proof.
+    assert (sign : forall (I : CutBounds x) (J : CutBounds z),
+               ~ (prod (bound_lo J <= 0) (0 <= bound_hi J)) -> z ≶ 0).
+    { intros I J n; destruct (le_or_lt (bound_lo J) 0) as [l|l].
+      - destruct (le_or_lt 0 (bound_hi J)) as [l'|l']; [destruct (n (l, l'))|].
+        apply tr, inl, (snd (lt_rational_dedekind_r 0 z)).
+        exact (upper_cut_lt z _ _ l' (bound_hi_upper J)).
+      - apply tr, inr, (snd (lt_rational_dedekind_l 0 z)).
+        exact (lower_cut_lt z _ _ l (bound_lo_lower J)). }
+    intros a; strip_truncations; destruct a as [a|a].
+    - apply (fst (lt_rational_dedekind_r 0 _)) in a; strip_truncations.
+      destruct a as [I a]; strip_truncations; destruct a as [J a].
+      apply (sign I J); intros i0.
+      apply (irreflexivity (<) (0 : Q)).
+      exact (transport (fun w => w < 0) (mult_0_r _) (a _ _ (in_bounds_lo I) i0)).
+    - apply (fst (lt_rational_dedekind_l 0 _)) in a; strip_truncations.
+      destruct a as [I a]; strip_truncations; destruct a as [J a].
+      apply (sign I J); intros i0.
+      apply (irreflexivity (<) (0 : Q)).
+      exact (transport (fun w => 0 < w) (mult_0_r _) (a _ _ (in_bounds_lo I) i0)).
+  Qed.
+
+  Local Lemma apart_dedekindreals_iff_minus_zero (a b : R) : a ≶ b <-> a - b ≶ 0.
+  Proof.
+    split; intros p; strip_truncations; apply tr; destruct p as [l|l].
+    - left; exact (lt_dedekindreals_minus_zero a b l).
+    - right; exact (lt_dedekindreals_zero_minus a b l).
+    - left; apply (lt_dedekindreals_from_minus a b b); rewrite plus_negate_r; exact l.
+    - right; apply (lt_dedekindreals_from_minus b b a); rewrite plus_negate_r; exact l.
+  Qed.
+
+  #[export] Instance strongbinaryextensionality_mult_dedekindreals
+    : StrongBinaryExtensionality (A:=R) (.*.).
+  Proof.
+    intros x1 y1 x2 y2 a.
+    assert (c := cotransitive a (x1 * y2)); strip_truncations; apply tr; destruct c as [c|c].
+    - right; apply apart_dedekindreals_iff_minus_zero.
+      apply (mult_dedekindreals_apart_zero_r x1).
+      rewrite plus_mult_distr_l, <- negate_mult_distr_r.
+      exact (fst (apart_dedekindreals_iff_minus_zero _ _) c).
+    - left; apply apart_dedekindreals_iff_minus_zero.
+      apply (mult_dedekindreals_apart_zero_r y2).
+      rewrite plus_mult_distr_l, <- negate_mult_distr_r, !(mult_comm y2).
+      exact (fst (apart_dedekindreals_iff_minus_zero _ _) c).
+  Qed.
+
+  #[export] Instance fullpseudosemiringorder_dedekindreals
+    : FullPseudoSemiRingOrder (_ : Le R) (_ : Lt R).
+  Proof.
+    apply from_full_pseudo_ring_order.
+    - exact _.
+    - exact _.
+    - exact pos_mult_dedekindreals.
+  Qed.
+
+  (** ** The rationals as Dedekind reals *)
+
+  Local Notation "[ q ]" := (rational_dedekind q).
+
+  Lemma rational_dedekind_plus (q r : Q) : [q + r] = [q] + [r].
+  Proof.
+    symmetry; apply path_dedekindreals.
+    - intros s p; strip_truncations; destruct p as [t [l l']]; cbn in l, l' |- *.
+      rewrite (plus_conjugate_alt s t); exact (plus_lt_compat _ _ _ _ l l').
+    - intros s p; strip_truncations; destruct p as [t [l l']]; cbn in l, l' |- *.
+      rewrite (plus_conjugate_alt s t); exact (plus_lt_compat _ _ _ _ l l').
+  Qed.
+
+  Lemma rational_dedekind_mult (q r : Q) : [q * r] = [q] * [r].
+  Proof.
+    symmetry; apply path_dedekindreals.
+    - intros s p; strip_truncations; destruct p as [I p]; strip_truncations; destruct p as [J p].
+      exact (p q r (in_bounds_rational q I) (in_bounds_rational r J)).
+    - intros s p; strip_truncations; destruct p as [I p]; strip_truncations; destruct p as [J p].
+      exact (p q r (in_bounds_rational q I) (in_bounds_rational r J)).
+  Qed.
+
+  Lemma rational_dedekind_lt (q r : Q) : q < r <-> [q] < [r].
+  Proof.
+    symmetry; exact (lt_rational_dedekind_l q [r]).
+  Qed.
+
+  #[export] Instance issemiringpreserving_rational_dedekind : IsSemiRingPreserving rational_dedekind.
+  Proof.
+    repeat split.
+    - exact rational_dedekind_plus.
+    - exact rational_dedekind_mult.
+  Qed.
+
+  (** Between two Dedekind reals lies a rational. *)
+  Lemma dedekindreals_archimedean (x y : R) : x < y -> hexists (fun q => prod (x < [q]) ([q] < y)).
+  Proof.
+    intros l; strip_truncations; destruct l as [q [u p]]; apply tr; exists q; split.
+    - exact (snd (lt_rational_dedekind_r q x) u).
+    - exact (snd (lt_rational_dedekind_l q y) p).
+  Qed.
+
+  #[export] Instance lt_0_1_dedekindreals : PropHolds (0 < (1 : R)).
+  Proof.
+    exact (fst (rational_dedekind_lt 0 1) lt_0_1).
+  Qed.
+
+  #[export] Instance apart_1_0_dedekindreals : PropHolds ((1 : R) ≶ 0).
+  Proof.
+    exact (tr (inr lt_0_1_dedekindreals)).
+  Qed.
+
+  (** ** Reciprocals *)
+
+  Local Lemma recip_mult_cancel (u b : Q) : 0 < b -> u / b * b = u.
+  Proof.
+    intros bpos; rewrite <- mult_assoc, (mult_comm (/ b)), dec_recip_inverse.
+    - apply mult_1_r.
+    - apply lt_ne_flip, bpos.
+  Qed.
+
+  Local Lemma pos_quotient (u b : Q) : 0 < u -> 0 < b -> 0 < u / b.
+  Proof.
+    intros upos bpos; apply pos_mult; [exact upos|apply pos_dec_recip_compat, bpos].
+  Qed.
+
+  (** A positive real has a positive rational upper bound. *)
+  Local Lemma merely_pos_upper (x : R) : 0 < x -> merely {b : Q & prod (0 < b) (x < [b])}.
+  Proof.
+    intros xpos; generalize (cut_upper_inhabited (isdedekindcut x)).
+    apply Trunc_functor; intros [b ub]; exists b.
+    assert (lb := snd (lt_rational_dedekind_r b x) ub); split; [|exact lb].
+    exact (snd (rational_dedekind_lt 0 b) (lt_dedekindreals_trans _ _ _ xpos lb)).
+  Qed.
+
+  (** For a positive real [x], we have [q < 1 / x] when [q * x < 1] and [1 / x < r] when [1 < r * x]. *)
+  Section pos_recip.
+    Context (x : R) `{xpos : !PropHolds (0 < x)}.
+
+    Local Definition pos_recip_lower (q : Q) : HProp := Build_HProp ([q] * x < 1).
+    Local Definition pos_recip_upper (r : Q) : HProp := Build_HProp (1 < [r] * x).
+
+    Lemma isdedekindcut_pos_recip : IsDedekindCut pos_recip_lower pos_recip_upper.
+    Proof.
+      split.
+      - apply tr; exists 0; change (0 * x < 1); rewrite mult_0_l; exact lt_0_1_dedekindreals.
+      - apply (fst (lt_rational_dedekind_l 0 x)), (lower_cut_rounded x) in xpos.
+        strip_truncations; destruct xpos as [s [spos ls]].
+        apply tr; exists (1 / s); change (1 < [1 / s] * x).
+        assert (PropHolds (0 < [1 / s]))
+          by exact (fst (rational_dedekind_lt 0 _) (pos_quotient 1 s lt_0_1 spos)).
+        refine (transport (fun w => w < _) _
+                  (strictly_order_preserving ([1 / s] *.) [s] x (snd (lt_rational_dedekind_l s x) ls))).
+        rewrite <- rational_dedekind_mult, recip_mult_cancel; [reflexivity|exact spos].
+      - intros q; split.
+        + intros l; change ([q] * x < 1) in l.
+          assert (t := dedekindreals_archimedean _ _ l).
+          assert (b := merely_pos_upper x xpos); strip_truncations.
+          destruct t as [t [lt lt']], b as [b [bpos lb]].
+          apply (rational_dedekind_lt t 1) in lt'.
+          pose (d := (1 - t) / b).
+          assert (dpos : 0 < d) by exact (pos_quotient _ _ (snd (flip_pos_minus _ _) lt') bpos).
+          assert (PropHolds (0 < [d])) by exact (fst (rational_dedekind_lt 0 d) dpos).
+          apply tr; exists (q + d); split.
+          * exact (fst (pos_plus_lt_compat_r q d) dpos).
+          * change ([q + d] * x < 1).
+            rewrite rational_dedekind_plus, plus_mult_distr_r.
+            apply (lt_le_trans _ ([t] + [d] * [b])).
+            -- apply plus_lt_compat; [exact lt|].
+               exact (strictly_order_preserving ([d] *.) x [b] lb).
+            -- rewrite <- rational_dedekind_mult, <- rational_dedekind_plus.
+               unfold d; rewrite recip_mult_cancel, <- plus_conjugate_alt; [reflexivity|exact bpos].
+        + intros l; revert l; apply Trunc_rec; intros [q' [l p]]; change ([q'] * x < 1) in p.
+          change ([q] * x < 1).
+          refine (transitivity _ p).
+          exact (strictly_order_preserving (.* x) _ _ (fst (rational_dedekind_lt q q') l)).
+      - intros r; split.
+        + intros l; change (1 < [r] * x) in l.
+          assert (t := dedekindreals_archimedean _ _ l).
+          assert (b := merely_pos_upper x xpos); strip_truncations.
+          destruct t as [t [lt lt']], b as [b [bpos lb]].
+          apply (rational_dedekind_lt 1 t) in lt.
+          pose (d := (t - 1) / b).
+          assert (dpos : 0 < d) by exact (pos_quotient _ _ (snd (flip_pos_minus _ _) lt) bpos).
+          assert (PropHolds (0 < [d])) by exact (fst (rational_dedekind_lt 0 d) dpos).
+          apply tr; exists (r - d); split.
+          * exact (fst (pos_minus_lt_compat_r r d) dpos).
+          * change (1 < [r - d] * x).
+            rewrite rational_dedekind_plus, preserves_negate, plus_mult_distr_r.
+            apply (le_lt_trans _ ([t] - [d] * [b])).
+            -- rewrite <- rational_dedekind_mult, <- preserves_negate, <- rational_dedekind_plus.
+               unfold d; rewrite recip_mult_cancel, minus_minus_cancel; [reflexivity|exact bpos].
+            -- apply plus_lt_compat; [exact lt'|].
+               rewrite <- negate_mult_distr_l.
+               apply (snd (flip_lt_negate _ _)).
+               exact (strictly_order_preserving ([d] *.) x [b] lb).
+        + intros l; revert l; apply Trunc_rec; intros [r' [l p]]; change (1 < [r'] * x) in p.
+          change (1 < [r] * x).
+          refine (transitivity p _).
+          exact (strictly_order_preserving (.* x) _ _ (fst (rational_dedekind_lt r' r) l)).
+      - intros q r l l'.
+        apply (rational_dedekind_lt q r).
+        apply (strictly_order_reflecting (.* x)).
+        exact (transitivity l l').
+      - intros q r l.
+        exact (cotransitive (strictly_order_preserving (.* x) _ _ (fst (rational_dedekind_lt q r) l)) 1).
+    Qed.
+
+    Definition pos_recip_dedekind : R := Build_DedekindReals _ _ isdedekindcut_pos_recip.
+
+    Local Notation y := pos_recip_dedekind.
+
+    (** We show [x * y = 1] by approximating [y] closely enough. *)
+    Lemma pos_recip_dedekind_inverse : x * y = 1.
+    Proof.
+      apply (fst (tight_apart _ _)); intros a.
+      assert (b := merely_pos_upper x xpos); revert a; apply (Trunc_rec (n:=-1)); intros a.
+      revert b; apply (Trunc_rec (n:=-1)); intros [b [bpos lb]]; destruct a as [l|l].
+      - apply (Trunc_rec (n:=-1) (A:={t : Q & prod (x * y < [t]) ([t] < 1)})); [|exact (dedekindreals_archimedean _ _ l)].
+        intros [t [lt lt']]; apply (rational_dedekind_lt t 1) in lt'.
+        pose (e := mkQpos ((1 - t) / b) (pos_quotient _ _ (snd (flip_pos_minus _ _) lt') bpos)).
+        assert (PropHolds (0 < [' e])) by exact (fst (rational_dedekind_lt 0 _) (is_pos e)).
+        apply (Trunc_rec (n:=-1) (A:={q : Q & {r : Q & prod (prod (lower_cut y q) (upper_cut y r)) (r - q < ' e)}}));
+          [|exact (cut_approximate y e)].
+        intros [q [r [[lq ur] lqr]]]; change (1 < [r] * x) in ur.
+        apply (irreflexivity (<) (1 : R)), (transitivity ur).
+        rewrite (mult_comm [r]).
+        apply (lt_le_trans _ (x * (y + [' e]))).
+        + apply (strictly_order_preserving (x *.)).
+          apply (lt_le_trans _ [q + ' e]).
+          * apply rational_dedekind_lt; rewrite (plus_comm q).
+            exact (fst (flip_lt_minus_l q r (' e)) lqr).
+          * rewrite rational_dedekind_plus; apply lt_le.
+            exact (strictly_order_preserving (+ [' e]) _ _ (snd (lt_rational_dedekind_l q y) lq)).
+        + rewrite plus_mult_distr_l; apply lt_le.
+          apply (lt_le_trans _ ([t] + [b] * [' e])).
+          * apply plus_lt_compat; [exact lt|exact (strictly_order_preserving (.* [' e]) _ _ lb)].
+          * rewrite <- rational_dedekind_mult, <- rational_dedekind_plus; cbn.
+            rewrite mult_comm, recip_mult_cancel, <- plus_conjugate_alt; [reflexivity|exact bpos].
+      - apply (Trunc_rec (n:=-1) (A:={t : Q & prod (1 < [t]) ([t] < x * y)})); [|exact (dedekindreals_archimedean _ _ l)].
+        intros [t [lt lt']]; apply (rational_dedekind_lt 1 t) in lt.
+        pose (e := mkQpos ((t - 1) / b) (pos_quotient _ _ (snd (flip_pos_minus _ _) lt) bpos)).
+        assert (PropHolds (0 < [' e])) by exact (fst (rational_dedekind_lt 0 _) (is_pos e)).
+        apply (Trunc_rec (n:=-1) (A:={q : Q & {r : Q & prod (prod (lower_cut y q) (upper_cut y r)) (r - q < ' e)}}));
+          [|exact (cut_approximate y e)].
+        intros [q [r [[lq ur] lqr]]]; change ([q] * x < 1) in lq.
+        apply (irreflexivity (<) (1 : R)); refine (transitivity _ lq).
+        rewrite (mult_comm [q]).
+        apply (le_lt_trans _ (x * (y - [' e]))).
+        + rewrite plus_mult_distr_l, <- negate_mult_distr_r; apply lt_le.
+          apply (le_lt_trans _ ([t] - [b] * [' e])).
+          * rewrite <- rational_dedekind_mult, <- preserves_negate, <- rational_dedekind_plus; cbn.
+            rewrite mult_comm, recip_mult_cancel, minus_minus_cancel; [reflexivity|exact bpos].
+          * apply plus_lt_compat; [exact lt'|].
+            apply (snd (flip_lt_negate _ _)).
+            exact (strictly_order_preserving (.* [' e]) _ _ lb).
+        + apply (strictly_order_preserving (x *.)), flip_lt_minus_l.
+          apply (transitivity (snd (lt_rational_dedekind_r r y) ur)).
+          rewrite <- rational_dedekind_plus; apply rational_dedekind_lt; rewrite (plus_comm q).
+          exact (fst (flip_lt_minus_l q r (' e)) lqr).
+    Qed.
+  End pos_recip.
+
+  Arguments pos_recip_dedekind x {xpos}.
+
+  (** A real apart from zero has a positive square, so we can take [1 / x = x * (1 / (x * x))]. *)
+  #[export] Instance recip_dedekindreals : Recip R
+    := fun x => x.1 * @pos_recip_dedekind (x.1 * x.1) (square_pos x.1 x.2).
+
+  #[export] Instance isfield_dedekindreals : IsField R.
+  Proof.
+    split.
+    - exact _.
+    - exact _.
+    - exact _.
+    - exact _.
+    - exact _.
+    - intros [x a]; cbn; unfold recip, recip_dedekindreals; cbn.
+      rewrite mult_assoc; apply pos_recip_dedekind_inverse.
+  Qed.
+
+  #[export] Instance orderedfield_dedekindreals : OrderedField R.
+  Proof.
+    split; exact _.
+  Qed.
+
 End dedekind.
+
+(** ** The Archimedean property and Cauchy completeness *)
+
+(** We use a new section, so that the inclusion of the rationals into fields is not restricted to the universes used above: the Dedekind reals live in a universe above that of [Q]. *)
+Section complete.
+  Context `{Funext} `{Univalence}.
+  Universe UQ.
+  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
+    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
+    {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
+    {Qroundup : RoundUpStrict Q}.
+
+  Local Notation R := (DedekindReals Q).
+  Local Notation "[ q ]" := (rational_dedekind Q q).
+
+  (** The inclusion of the rationals into an ordered field is the unique semiring morphism, so on the Dedekind reals it is [rational_dedekind]. *)
+  Lemma rationals_to_field_dedekindreals (q : Q) : rationals_to_field Q R q = [q].
+  Proof.
+    exact (rationals_initial (h:=rational_dedekind Q) q).
+  Qed.
+
+  #[export] Instance archimedean_dedekindreals : ArchimedeanProperty Q R.
+  Proof.
+    intros x y l; generalize (dedekindreals_archimedean Q x y l); apply Trunc_functor.
+    intros [q lq]; exists q.
+    exact (transport (fun z => prod (x < z) (z < y)) (rationals_initial (h:=rational_dedekind Q) q)^ lq).
+  Qed.
+End complete.
