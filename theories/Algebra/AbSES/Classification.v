@@ -137,15 +137,10 @@ Section ClassifyingRoundTrip.
           o* pequiv_loops_em_em B n.+2
     := pmap_postcompose_idmap _.
 
-  (** The fiber of the classifying map is [loops K(E,n.+3)]: it is the fiber of the connecting map, which [pfib_connecting_map] identifies with the loop space of the total space. *)
+  (** The fiber of the classifying map is [loops K(E,n.+3)].  Precomposing with the loop identification of [K(B,n.+2)] does not change the fiber, so it is the fiber of the connecting map, which [pequiv_pfiber_connecting_map] identifies with [loops K(E,n.+3)]. *)
   Local Definition pequiv_pfiber_classifying_map
     : pfiber (abses_classifying_map n E) <~>* loops K(E, n.+3)
-    := (loops_inv _
-        o*E (pfiber2_loops (fmap (K' n.+3) (inclusion E))
-        o*E pequiv_pfiber_connecting_map (fmap (K' n.+3) (inclusion E))
-              (fmap (K' n.+3) (projection E))))
-       o*E pequiv_pfiber (pequiv_loops_em_em B n.+2) pequiv_pmap_idmap
-             square_classifying_map.
+    := pequiv_pfiber_connecting_map _ _ o*E pequiv_pfiber _ _ square_classifying_map.
 
   (** Through this identification, the fiber inclusion of the classifying map is [loops] of the projection. *)
   Local Definition square_pfib_classifying_map

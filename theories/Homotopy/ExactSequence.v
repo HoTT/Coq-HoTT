@@ -647,50 +647,41 @@ Proof.
   napply pmap_postcompose_idmap.
 Defined.
 
-(** The fiber of the connecting map is the double fiber of [i], since the connecting map is [pfib i] composed with the identification of [loops Y] with [pfiber i]. *)
+(** The fiber of the connecting map is identified with [loops X].  Since the connecting map is [pfib i] composed with the identification of [loops Y] with [pfiber i], its fiber is the double fiber of [i], which [pfiber2_loops] identifies with [loops X].  We include loop inversion because this is what is needed for the next two results. *)
 Definition pequiv_pfiber_connecting_map {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
-  : pfiber (connecting_map i f) <~>* pfiber (pfib i)
-  := pequiv_pfiber ((connect_fiberseq i f).2) pequiv_pmap_idmap
-       (pmap_postcompose_idmap _).
+  : pfiber (connecting_map i f) <~>* loops X
+  := loops_inv X o*E pfiber2_loops i
+     o*E pequiv_pfiber ((connect_fiberseq i f).2) pequiv_pmap_idmap
+           (pmap_postcompose_idmap _).
 
-(** Its defining square. *)
-Definition square_pfiber_connecting_map {F X Y : pType}
-  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
-  : (connect_fiberseq i f).2 o* pfib (connecting_map i f)
-    ==* pfib (pfib i) o* pequiv_pfiber_connecting_map i f
-  := square_pequiv_pfiber _ _ _.
-
-(** Through that identification, the fiber inclusion of the connecting map is [loops] of [f], twisted by loop inversion. *)
+(** Through that identification, the fiber inclusion of the connecting map is [loops] of [f]. *)
 Definition pfib_connecting_map {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : pfib (connecting_map i f)
-    ==* fmap loops f
-        o* (loops_inv X o* (pfiber2_loops i
-              o* pequiv_pfiber_connecting_map i f)).
+    ==* fmap loops f o* pequiv_pfiber_connecting_map i f.
 Proof.
   lhs_V' napply pmap_postcompose_idmap.
   lhs_V' rapply (pmap_prewhisker _ (peisretr (pequiv_pfiber_loops i f))).
   lhs' napply pmap_compose_assoc.
-  lhs' napply (pmap_postwhisker _ (square_pfiber_connecting_map i f)).
+  lhs' napply (pmap_postwhisker _ (square_pequiv_pfiber
+                 (connect_fiberseq i f).2 pequiv_pmap_idmap
+                 (pmap_postcompose_idmap _))).
   lhs_V' napply pmap_compose_assoc.
   lhs' napply (pmap_prewhisker _ (pfiber2_loops_pfib2 i f)).
-  lhs' napply pmap_compose_assoc.
-  napply pmap_postwhisker.
-  apply pmap_compose_assoc.
+  napply pmap_compose_assoc.
 Defined.
 
 (** Through the same identification, the connecting map of the fiber sequence of the connecting map is [loops] of [i]. *)
 Definition connecting_map_pfib_connecting_map {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
-  : (loops_inv X o* (pfiber2_loops i o* pequiv_pfiber_connecting_map i f))
+  : pequiv_pfiber_connecting_map i f
     o* connecting_map (pfib (connecting_map i f)) (connecting_map i f)
     ==* fmap loops i.
 Proof.
   lhs' napply pmap_compose_assoc.
-  lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
-  lhs' napply (pmap_postwhisker _ (pmap_postwhisker _
-                 (connecting_map_natural_idmap _))).
+  lhs' napply (pmap_postwhisker _ (connecting_map_natural_idmap _)).
+  lhs' napply pmap_compose_assoc.
   lhs' napply (pmap_postwhisker _ (connecting_map_pfib2 i)).
   lhs' exact (pmap_postwhisker _
                 (isnat_tr (F:=loops) (G:=loops) loops_inv i : _ ==* _ o* _)).
