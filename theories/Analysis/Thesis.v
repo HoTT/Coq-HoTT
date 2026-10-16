@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue FunctionSpace.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue FunctionSpace Integral.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -344,6 +344,15 @@ Check step_function.
 Check lifts_step_function.
 Check not_iscontinuousat_step_function.
 
+(** Theorem 7.2.1. The integral over [[a, b]] of a function with a modulus of uniform continuity on [[a, b]] that lifts to locators has a locator, if [a] and [b] do. The integral is any integration operator: an oriented integral of uniformly continuous functions on closed intervals, additive over intervals and in the integrand, integrating constants to their value times the length and monotone; these properties determine it. As in the thesis, the integral is the limit of Riemann sums, with an explicit modulus of Cauchy convergence. *)
+Check Integration.
+Check @integral_unique.
+Check @riemann_sum.
+Check @cauchymodulus_riemann_sum.
+Check @islimit_riemann_sum.
+Check @locator_integral_lifts.
+Check @locator_integral.
+
 (** Theorem 7.3.1. Approximate intermediate value theorem: a function which is pointwise continuous on [[a, b]] with [f a < 0 < f b] merely takes values arbitrarily close to [0]; if it lifts to locators and [a] and [b] have locators, we can find such a point with a locator. The thesis claims that the limit of Frank's interpolating bisection is such a point, which can fail, as Frank himself points out; following Frank's proof, the limit or one of the midpoints is. *)
 Check approximate_ivt.
 Check approximate_ivt_locator.
@@ -397,7 +406,7 @@ Check UniformMap.
 
 (** Lemma 8.2.2. The supremum of a uniformly continuous [f : [a, b] -> F] is the limit of the maxima of [f] at [n + 2] equidistant points; for a rational bound [B] on [b - a] these have the modulus of Cauchy convergence [B / w e]. Since such a bound merely exists and limits are unique, the supremum exists for every [a ≤ b]. *)
 Check @sample_max.
-Check @sample_max_modulus.
+Check @grid_modulus.
 Check @cauchymodulus_sample_max.
 Check @issupremum_limit_sample_max.
 Check @supremum.

@@ -103,6 +103,26 @@ Section function_space.
       + exact (order_preserving (s *.) _ _ (snd av)).
   Qed.
 
+  (** Half of a positive rational is smaller. *)
+  Lemma qpos_half_lt (e : Qpos Q) : ' (' (e / 2)) < (' (' e) : F).
+  Proof.
+    apply (strictly_order_preserving (cast Q F)).
+    rewrite (ap (cast (Qpos Q) Q) (pos_split2 e)).
+    apply pos_plus_lt_compat_r, pos_is_pos.
+  Qed.
+
+  Local Lemma recip_mult_lt (B W N : Q) (W0 : 0 < W) (N0 : 0 < N) (lt : B / W < N)
+    : / N * B < W.
+  Proof.
+    assert (PropHolds (0 < W)) by exact W0.
+    assert (PropHolds (0 < N)) by exact N0.
+    apply (strictly_order_reflecting (N *.)).
+    rewrite mult_assoc, (dec_recip_inverse N (lt_ne_flip _ _ N0)), mult_1_l.
+    rewrite <- (mult_1_r B), <- (dec_recip_inverse W (lt_ne_flip _ _ W0)).
+    rewrite (mult_comm W), mult_assoc.
+    exact (strictly_order_preserving (.* W) _ _ lt).
+  Qed.
+
   Section convex.
     Context {a b : F} (x y : ClosedInterval a b).
 
@@ -149,6 +169,13 @@ Section function_space.
     (** The distance between consecutive points, which may be negative. *)
     Definition grid_step (n : nat) : F := ' (/ nQ (S n)) * (y.1 - x.1).
 
+    Lemma grid_step_nonneg (n : nat) (lexy : x.1 ≤ y.1) : 0 ≤ grid_step n.
+    Proof.
+      apply nonneg_mult_compat.
+      - apply qinc_nonneg, lt_le, pos_dec_recip_compat, nQ_succ_pos.
+      - exact (snd (flip_nonneg_minus _ _) lexy).
+    Qed.
+
     Lemma grid_point_succ (n k : nat) (lekn : (k <= n)%nat)
       : (grid_point n (S k)).1 = (grid_point n k).1 + grid_step n.
     Proof.
@@ -178,26 +205,27 @@ Section function_space.
       rewrite plus_comm, <- plus_assoc, plus_negate_l; apply plus_0_r.
     Qed.
 
+    (** For a rational bound [B] on the distance from [x] to [y] and a modulus [w], an [n] with [B / w e < n], so that from [n] on the points are closer together than [w e]. *)
+    Definition grid_modulus (B : Q) (w : Qpos Q -> Qpos Q) (e : Qpos Q) : nat
+      := (round_up_strict Q (B / ' (w e))).1.
+
+    Lemma grid_step_lt_modulus (B : Q) (leB : y.1 - x.1 ≤ ' B) (w : Qpos Q -> Qpos Q)
+      (e : Qpos Q) (n : nat) (len : (grid_modulus B w e <= n)%nat)
+      : grid_step n < ' (' (w e)).
+    Proof.
+      assert (lt : B / ' (w e) < nQ (S n)).
+      { refine (lt_le_trans _ _ _ (round_up_strict Q (B / ' (w e))).2 _).
+        exact (nat_to_semiring_le _ _ (leq_succ_r len)). }
+      apply (recip_mult_lt _ _ _ (pos_is_pos (w e)) (nQ_succ_pos n)) in lt.
+      unfold grid_step.
+      assert (PropHolds (0 ≤ (' (/ nQ (S n)) : F))).
+      { apply qinc_nonneg, lt_le, pos_dec_recip_compat, nQ_succ_pos. }
+      refine (le_lt_trans _ _ _ (order_preserving (' (/ nQ (S n)) *.) _ _ leB) _).
+      rewrite <- (preserves_mult (f:=cast Q F)).
+      exact (strictly_order_preserving _ _ _ lt).
+    Qed.
+
   End convex.
-
-  Local Lemma qpos_half_lt (e : Qpos Q) : ' (' (e / 2)) < (' (' e) : F).
-  Proof.
-    apply (strictly_order_preserving (cast Q F)).
-    rewrite (ap (cast (Qpos Q) Q) (pos_split2 e)).
-    apply pos_plus_lt_compat_r, pos_is_pos.
-  Qed.
-
-  Local Lemma recip_mult_lt (B W N : Q) (W0 : 0 < W) (N0 : 0 < N) (lt : B / W < N)
-    : / N * B < W.
-  Proof.
-    assert (PropHolds (0 < W)) by exact W0.
-    assert (PropHolds (0 < N)) by exact N0.
-    apply (strictly_order_reflecting (N *.)).
-    rewrite mult_assoc, (dec_recip_inverse N (lt_ne_flip _ _ N0)), mult_1_l.
-    rewrite <- (mult_1_r B), <- (dec_recip_inverse W (lt_ne_flip _ _ W0)).
-    rewrite (mult_comm W), mult_assoc.
-    exact (strictly_order_preserving (.* W) _ _ lt).
-  Qed.
 
   (** ** Finding a nearby point *)
 
@@ -310,36 +338,16 @@ Section function_space.
       exact (le_max_upto (fun k => f (p k)) (S n) k lekn).
     Qed.
 
-    (** For a rational bound [B] on [b - a], the modulus of Cauchy convergence of the maxima: an [n] with [B / w e < n]. *)
-    Definition sample_max_modulus (B : Q) (w : Qpos Q -> Qpos Q) (e : Qpos Q) : nat
-      := (round_up_strict Q (B / ' (w e))).1.
-
-    Lemma grid_step_lt_modulus (B : Q) (leB : b - a ≤ ' B) (w : Qpos Q -> Qpos Q)
-      (e : Qpos Q) (n : nat) (len : (sample_max_modulus B w e <= n)%nat)
-      : grid_step (interval_left leab) (interval_right leab) n < ' (' (w e)).
-    Proof.
-      assert (lt : B / ' (w e) < nQ (S n)).
-      { refine (lt_le_trans _ _ _ (round_up_strict Q (B / ' (w e))).2 _).
-        exact (nat_to_semiring_le _ _ (leq_succ_r len)). }
-      apply (recip_mult_lt _ _ _ (pos_is_pos (w e)) (nQ_succ_pos n)) in lt.
-      unfold grid_step; cbn.
-      assert (PropHolds (0 ≤ (' (/ nQ (S n)) : F))).
-      { apply qinc_nonneg, lt_le, pos_dec_recip_compat, nQ_succ_pos. }
-      refine (le_lt_trans _ _ _ (order_preserving (' (/ nQ (S n)) *.) _ _ leB) _).
-      rewrite <- (preserves_mult (f:=cast Q F)).
-      exact (strictly_order_preserving _ _ _ lt).
-    Qed.
-
     (** The maxima form a sequence with a modulus of Cauchy convergence. *)
     Lemma cauchymodulus_sample_max (B : Q) (leB : b - a ≤ ' B) (w : Qpos Q -> Qpos Q)
       (fw : IsUniformModulus Q closeI closeF f w)
-      : CauchyModulus Q F sample_max (sample_max_modulus B w).
+      : CauchyModulus Q F sample_max (grid_modulus B w).
     Proof.
       intros e m n lem len.
-      assert (lt : forall m' n', (sample_max_modulus B w e <= n')%nat
+      assert (lt : forall m' n', (grid_modulus B w e <= n')%nat
                      -> sample_max m' < sample_max n' + ' (' e)).
       { intros m' n' len'; apply max_upto_lt; intros k _.
-        exact (lt_sample_max w fw e n' (grid_step_lt_modulus B leB w e n' len') _). }
+        exact (lt_sample_max w fw e n' (grid_step_lt_modulus (interval_left leab) (interval_right leab) B leB w e n' len') _). }
       split.
       - apply flip_lt_minus_r; rewrite plus_comm.
         apply flip_lt_minus_l; exact (lt n m lem).
@@ -365,12 +373,12 @@ Section function_space.
         assert (c := merely_rational_bound).
         strip_truncations; destruct fu as [w fw], c as [B leB].
         assert (le : f z - ' (' (e / 2)) ≤ l).
-        { apply (le_limit Q F sample_max l _ (sample_max_modulus B w (e / 2)) islim).
+        { apply (le_limit Q F sample_max l _ (grid_modulus B w (e / 2)) islim).
           intros n len; apply lt_le, flip_lt_minus_l.
-          exact (lt_sample_max w fw (e / 2) n (grid_step_lt_modulus B leB w _ n len) z). }
+          exact (lt_sample_max w fw (e / 2) n (grid_step_lt_modulus (interval_left leab) (interval_right leab) B leB w _ n len) z). }
         apply (fst (flip_le_minus_l _ _ _)) in le.
         rewrite plus_comm in le; apply (snd (flip_le_minus_l _ _ _)) in le.
-        exact (le_lt_trans _ _ _ le (qpos_half_lt e)).
+        refine (le_lt_trans _ _ _ le _); exact (qpos_half_lt e).
       - intros u ub.
         apply (limit_le Q F sample_max l u 0 islim); intros n _.
         apply max_upto_le; intros k _; apply ub.
@@ -595,7 +603,8 @@ Section function_space.
       Proof.
         intro e; apply tr; exists (M (e / 2)); intros n len.
         unfold metric_close, ulmap_dist.
-        refine (le_lt_trans _ _ _ (uniform_dist_le _ _ (' (' (e / 2))) _) (qpos_half_lt e)).
+        refine (le_lt_trans _ _ _ (uniform_dist_le _ _ (' (' (e / 2))) _) _);
+          [|exact (qpos_half_lt e)].
         intro x; unfold interval_dist.
         change (abs ((fs n x).1 - (limit_value x).1) ≤ ' (' (e / 2))).
         rewrite abs_minus_swap; exact (limit_value_close x _ n len).
