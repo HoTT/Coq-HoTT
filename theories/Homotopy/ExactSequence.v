@@ -451,13 +451,19 @@ Proof.
   symmetry; apply pfib_cxfib.
 Defined.
 
+(** For a fiber sequence given by [i : F ->* X] and [f : X ->* Y], the fiber of [i] is identified with [loops Y], since [F] is identified with the fiber of [f]. *)
+Definition pequiv_pfiber_loops {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : pfiber i <~>* loops Y
+  := pfiber2_loops f o*E pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f).
+
 (** The connecting maps for the long exact sequence of loop spaces, defined as an extension to a fiber sequence. *)
 Definition connect_fiberseq {F X Y}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : FiberSeq (loops Y) F X.
 Proof.
   exists i.
-  exact (((pfiber2_loops f) o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))^-1*).
+  exact (pequiv_pfiber_loops i f)^-1*.
 Defined.
 
 Definition connecting_map {F X Y}
@@ -474,13 +480,13 @@ Proof.
           (((loops_inv X) o*E
             (pfiber2_loops (pfib f)) o*E
            (pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))^-1*)
-          (((pfiber2_loops f) o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))^-1*)
+          (pequiv_pfiber_loops i f)^-1*
           _ (pfib i)).
   refine (vinverse 
             ((loops_inv X) o*E
              (pfiber2_loops (pfib f)) o*E
              (pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))))
-            ((pfiber2_loops f) o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))) _).
+            (pequiv_pfiber_loops i f) _).
   refine (vconcat (f03 := loops_inv X o* pfiber2_loops (pfib f))
                   (f01 := pequiv_pfiber _ _ (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))
                   (f23 := pfiber2_loops f)
@@ -620,9 +626,7 @@ Defined.
 (** Through [pfiber2_loops], the double fiber projection of an exact sequence is loop inversion followed by [loops] of the projection. *)
 Definition pfiber2_loops_pfib2 {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
-  : pfiber2_loops f
-    o* pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)
-    o* pfib (pfib i)
+  : pequiv_pfiber_loops i f o* pfib (pfib i)
     ==* fmap loops f o* (loops_inv X o* pfiber2_loops i).
 Proof.
   lhs' napply pmap_compose_assoc.
@@ -666,9 +670,7 @@ Definition pfib_connecting_map {F X Y : pType}
               o* pequiv_pfiber_connecting_map i f)).
 Proof.
   lhs_V' napply pmap_postcompose_idmap.
-  lhs_V' rapply (pmap_prewhisker _
-                   (peisretr (pfiber2_loops f
-                                o*E pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)))).
+  lhs_V' rapply (pmap_prewhisker _ (peisretr (pequiv_pfiber_loops i f))).
   lhs' napply pmap_compose_assoc.
   lhs' napply (pmap_postwhisker _ (square_pfiber_connecting_map i f)).
   lhs_V' napply pmap_compose_assoc.
