@@ -9,7 +9,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure LocatorDigits LiftsToLocators IntermediateValue.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -142,6 +142,21 @@ Check @cauchy_structure_field.
 
 (** Definition 4.5.17. Dependent identifications. *)
 Check DPath.
+
+(** Definition 4.6.1. Two-sided Dedekind cuts and the Dedekind reals. *)
+Check IsDedekindCut.
+Check DedekindReals.
+
+(** Lemma 4.6.3. The Dedekind reals form a set. *)
+Check @ishset_dedekindreals.
+
+(** Definition 4.6.5. The strict order and apartness of the Dedekind reals. *)
+Check @lt_dedekindreals.
+Check @apart_dedekindreals.
+
+(** Lemma 4.6.6. The Dedekind reals are Cauchy complete, with the limit cut given explicitly. *)
+Check @limit_dedekind.
+Check @iscomplete_dedekindreals.
 
 (** ** Chapter 5: Universal properties of real numbers *)
 
