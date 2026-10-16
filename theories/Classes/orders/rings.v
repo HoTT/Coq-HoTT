@@ -490,6 +490,20 @@ Section abs.
       rewrite negate_involutive; exact leyx.
   Qed.
 
+  (** Strict bounds are not stable under double negation, so we use cotransitivity instead. *)
+  Lemma abs_lt (x y : R) : - y < x -> x < y -> abs x < y.
+  Proof.
+    intros ltyx ltxy.
+    assert (c := cotransitive ltxy (abs x)); strip_truncations.
+    destruct c as [lt|lt]; [|exact lt].
+    assert (nonpos : x ≤ 0).
+    { apply not_lt_le_flip; intro pos.
+      rewrite (abs_of_nonneg x (lt_le _ _ pos)) in lt.
+      exact (irreflexivity _ _ lt). }
+    rewrite (abs_of_nonpos x nonpos).
+    apply flip_lt_negate; rewrite negate_involutive; exact ltyx.
+  Qed.
+
   Lemma abs_triangle (x y : R) : abs (x + y) ≤ abs x + abs y.
   Proof.
     apply abs_le.

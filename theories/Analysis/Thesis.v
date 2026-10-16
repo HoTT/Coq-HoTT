@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue FunctionSpace.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -390,6 +390,42 @@ Check PreservesMetricLimits.
 (** Lemma 8.1.10. Uniformly continuous maps preserve limits. *)
 Check @preservesmetriclimits_uniform.
 
+(** Definition 8.2.1. The type [U[a,b][c,d]] of maps [[a, b] -> [c, d]] with a modulus of uniform continuity, where closed intervals carry the distance [|x - y|]. *)
+Check ClosedInterval.
+Check interval_dist.
+Check UniformMap.
+
+(** Lemma 8.2.2. The supremum of a uniformly continuous [f : [a, b] -> F] is the limit of the maxima of [f] at [n + 2] equidistant points; for a rational bound [B] on [b - a] these have the modulus of Cauchy convergence [B / w e]. Since such a bound merely exists and limits are unique, the supremum exists for every [a ≤ b]. *)
+Check @sample_max.
+Check @sample_max_modulus.
+Check @cauchymodulus_sample_max.
+Check @issupremum_limit_sample_max.
+Check @supremum.
+Check @issupremum_supremum.
+
+(** Lemma 8.2.3. [U[a,b][c,d]] is a pseudometric space with the supremum distance. *)
+Check @uniform_dist.
+Check @ispseudometric_uniform_dist.
+
+(** Definition 8.2.4. Maps on a closed interval that lift to locators. *)
+Check @IntervalLiftsToLocators.
+
+(** Lemma 8.2.6. A map into a pseudometric space induces a pseudometric on its domain. *)
+Check @ispseudometric_pullback.
+
+(** Definition 8.2.7. The type [UL[a,b][c,d]] of uniformly continuous maps that lift to locators. *)
+Check UniformLocatorMap.
+
+(** Corollary 8.2.8. [UL[a,b][c,d]] is a pseudometric space with the distance of [U[a,b][c,d]]. *)
+Check @ulmap_dist.
+Check @ispseudometric_ulmap_dist.
+
+(** Lemma 8.2.9. Elements at distance zero have equal underlying maps. It is stated for [U[a,b][c,d]], and applies to [UL[a,b][c,d]] since that has the same distance. *)
+Check @path_uniform_dist_zero.
+
+(** Lemma 8.2.10. [UL[a,b][c,d]] is Cauchy complete. *)
+Check @metriccauchycomplete_ulmap_dist.
+
 (** Definition 8.3.1. Lipschitz constants. *)
 Check IsLipschitz.
 
@@ -417,3 +453,22 @@ Check @metriccauchymodulus_iterates.
 
 (** Theorem 8.3.11. Banach's fixed point theorem: in a Cauchy complete pseudometric space, a map with a rational Lipschitz constant [0 < c < 1] has a pseudo-fixed point, unique up to distance zero. *)
 Check @banach_fixed_point.
+
+
+(** Definition 8.4.1. Products of pseudometric spaces, with the sum of the distances; a product of metrics is a metric. Binary products only. *)
+Check @prod_dist.
+Check @ispseudometric_prod.
+Check @ismetric_prod.
+
+(** Lemma 8.4.3. A product of uniformly continuous maps has the minimum of the moduli at [e / 2] as modulus. Binary products only. *)
+Check @qpos_min.
+Check @isuniformmodulus_prod.
+
+(** Lemma 8.4.4. The diagonal [X -> X * X] has modulus [e / 2]. *)
+Check @isuniformmodulus_diagonal.
+
+(** Corollary 8.4.5. If [f] has modulus [w] and [g] on [X * Y] has modulus [v], then [fun x => g (x, f x)] has modulus [min (v e / 2) (w (v e / 2)) / 2]. *)
+Check @isuniformmodulus_graph.
+
+(** Definition 8.4.6. Maps on a product of closed intervals that lift to locators. *)
+Check @ProductLiftsToLocators.

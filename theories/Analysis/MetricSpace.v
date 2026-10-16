@@ -1,6 +1,6 @@
 (** * Pseudometric and metric spaces *)
 
-From HoTT Require Import Basics Truncations.Core.
+From HoTT Require Import Basics Types.Prod Truncations.Core.
 From HoTT.Universes Require Import HSet.
 From HoTT.Spaces Require Import Nat.Core.
 From HoTT.Classes Require Import
@@ -114,6 +114,11 @@ Section convergence.
     := uniform_modulus : forall (e : Qpos Q) (x y : X),
          closeX (w e) x y -> closeY e (f x) (f y).
 
+  (** A map is uniformly continuous if it merely has a modulus of uniform continuity. *)
+  Definition IsUniformlyContinuous {X Y : Type} (closeX : Qpos Q -> X -> X -> Type)
+    (closeY : Qpos Q -> Y -> Y -> Type) (f : X -> Y)
+    := hexists (IsUniformModulus closeX closeY f).
+
   Section uniform.
     Context {X Y Z : Type} (closeX : Qpos Q -> X -> X -> Type)
       (closeY : Qpos Q -> Y -> Y -> Type) (closeZ : Qpos Q -> Z -> Z -> Type).
@@ -152,6 +157,31 @@ Section convergence.
     Defined.
 
   End uniform.
+
+  Section qpos_min.
+    Context {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
+
+    (** The minimum of two positive rationals. *)
+    Definition qpos_min (e d : Qpos Q) : Qpos Q
+      := match dec (' e < ' d) with
+         | inl _ => e
+         | inr _ => d
+         end.
+
+    Lemma qpos_min_le_l (e d : Qpos Q) : ' (qpos_min e d) ≤ ' e.
+    Proof.
+      unfold qpos_min; destruct (dec (' e < ' d)) as [lt|nlt].
+      - reflexivity.
+      - exact (not_lt_le_flip _ _ nlt).
+    Qed.
+
+    Lemma qpos_min_le_r (e d : Qpos Q) : ' (qpos_min e d) ≤ ' d.
+    Proof.
+      unfold qpos_min; destruct (dec (' e < ' d)) as [lt|nlt].
+      - exact (lt_le _ _ lt).
+      - reflexivity.
+    Qed.
+  End qpos_min.
 
   Context {F : Type} `{OrderedField F}.
   Let qinc : Cast Q F := rationals_to_field Q F.
@@ -232,5 +262,130 @@ Section convergence.
     Qed.
 
   End uniqueness.
+
+  (** ** Pullbacks and products of pseudometrics *)
+
+  (** A map into a space with a pseudometric induces a pseudometric on its domain. *)
+  Definition ispseudometric_pullback {X Y : Type} (p : Y -> X) (d : X -> X -> F)
+    `{!IsPseudoMetric d}
+    : IsPseudoMetric (fun y z => d (p y) (p z)).
+  Proof.
+    snapply Build_IsPseudoMetric.
+    - intros y z; exact (pseudometric_nonneg (d:=d) _ _).
+    - intro y; exact (pseudometric_diag (d:=d) _).
+    - intros y z; exact (pseudometric_symmetric (d:=d) _ _).
+    - intros x y z; exact (pseudometric_triangle (d:=d) _ _ _).
+  Defined.
+
+  Section products.
+    Context {X Y : Type} (dX : X -> X -> F) (dY : Y -> Y -> F).
+
+    (** The product of two spaces with distances has the sum of the distances as distance. *)
+    Definition prod_dist (p q : X * Y) : F := dX (fst p) (fst q) + dY (snd p) (snd q).
+
+    #[export] Instance ispseudometric_prod `{!IsPseudoMetric dX} `{!IsPseudoMetric dY}
+      : IsPseudoMetric prod_dist.
+    Proof.
+      snapply Build_IsPseudoMetric; unfold prod_dist.
+      - intros p q; apply nonneg_plus_compat; apply pseudometric_nonneg.
+      - intro p; rewrite 2 pseudometric_diag; apply plus_0_l.
+      - intros p q; rewrite (pseudometric_symmetric (fst p)), (pseudometric_symmetric (snd p)).
+        reflexivity.
+      - intros p q r.
+        refine (transitivity (plus_le_compat _ _ _ _ (pseudometric_triangle _ (fst q) _)
+                  (pseudometric_triangle _ (snd q) _)) _).
+        apply eq_le.
+        rewrite <- 2 plus_assoc; apply ap.
+        rewrite 2 plus_assoc; apply (ap (+ _)), plus_comm.
+    Defined.
+
+    (** If a sum of two nonnegative elements is zero, then so is the first summand. *)
+    Local Lemma nonneg_plus_eq_0_l (u v : F) : 0 ≤ u -> 0 ≤ v -> u + v = 0 -> u = 0.
+    Proof.
+      intros u0 v0 p; apply (antisymmetry (≤)); [|exact u0].
+      rewrite <- p; exact (fst (nonneg_plus_le_compat_r u v) v0).
+    Qed.
+
+    #[export] Instance ismetric_prod `{!IsMetric dX} `{!IsMetric dY} : IsMetric prod_dist.
+    Proof.
+      snapply Build_IsMetric; [exact _|].
+      intros [x y] [x' y'] p; unfold prod_dist in p; cbn in p.
+      assert (nx := pseudometric_nonneg (d:=dX) x x').
+      assert (ny := pseudometric_nonneg (d:=dY) y y').
+      apply path_prod; cbn; apply metric_separated.
+      - exact (nonneg_plus_eq_0_l _ _ nx ny p).
+      - rewrite plus_comm in p; exact (nonneg_plus_eq_0_l _ _ ny nx p).
+    Defined.
+
+  End products.
+
+  Context {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}.
+
+  Local Instance orderpreserving_qinc' : OrderPreserving (cast Q F)
+    := full_pseudo_order_preserving.
+
+  (** Halves add up in [F]. *)
+  Local Lemma qinc_split2 (e : Qpos Q) : ' (' e) = ' (' (e / 2)) + ' (' (e / 2)) :> F.
+  Proof.
+    rewrite <- (preserves_plus (f:=cast Q F)).
+    exact (ap (fun d : Qpos Q => ' (' d)) (pos_split2 e)).
+  Qed.
+
+  Section product_maps.
+    Context {X Y X' Y' : Type} (dX : X -> X -> F) (dY : Y -> Y -> F)
+      (dX' : X' -> X' -> F) (dY' : Y' -> Y' -> F)
+      `{!IsPseudoMetric dX} `{!IsPseudoMetric dY}.
+
+    (** A product of uniformly continuous maps is uniformly continuous, with the minimum of the moduli at [e / 2] as modulus. *)
+    Lemma isuniformmodulus_prod (f : X -> X') (g : Y -> Y') (wf wg : Qpos Q -> Qpos Q)
+      (fw : IsUniformModulus (metric_close dX) (metric_close dX') f wf)
+      (gw : IsUniformModulus (metric_close dY) (metric_close dY') g wg)
+      : IsUniformModulus (metric_close (prod_dist dX dY))
+          (metric_close (prod_dist dX' dY')) (functor_prod f g)
+          (fun e => qpos_min (wf (e / 2)) (wg (e / 2))).
+    Proof.
+      intros e [x y] [x' y'] c; unfold metric_close, prod_dist in *; cbn in *.
+      assert (nx := pseudometric_nonneg (d:=dX) x x').
+      assert (ny := pseudometric_nonneg (d:=dY) y y').
+      rewrite (qinc_split2 e).
+      apply plus_lt_compat.
+      - apply fw; unfold metric_close.
+        refine (le_lt_trans _ _ _ (fst (nonneg_plus_le_compat_r _ _) ny) _).
+        refine (lt_le_trans _ _ _ c _).
+        apply (order_preserving (cast Q F)), qpos_min_le_l.
+      - apply gw; unfold metric_close.
+        refine (le_lt_trans _ _ _ (fst (nonneg_plus_le_compat_l _ _) nx) _).
+        refine (lt_le_trans _ _ _ c _).
+        apply (order_preserving (cast Q F)), qpos_min_le_r.
+    Qed.
+  End product_maps.
+
+  (** The diagonal map has modulus [e / 2]. *)
+  Lemma isuniformmodulus_diagonal {X : Type} (d : X -> X -> F)
+    : IsUniformModulus (metric_close d) (metric_close (prod_dist d d))
+        (fun x => (x, x)) (fun e => e / 2).
+  Proof.
+    intros e x y c; unfold metric_close, prod_dist in *; cbn.
+    rewrite (qinc_split2 e); exact (plus_lt_compat _ _ _ _ c c).
+  Qed.
+
+  (** If [f] has modulus [w] and [g] on the product has modulus [v], then [fun x => g (x, f x)] is uniformly continuous with the modulus below. *)
+  Lemma isuniformmodulus_graph {X Y Z : Type} (dX : X -> X -> F) (dY : Y -> Y -> F)
+    (dZ : Z -> Z -> F) `{!IsPseudoMetric dX} `{!IsPseudoMetric dY}
+    (f : X -> Y) (g : X * Y -> Z) (w v : Qpos Q -> Qpos Q)
+    (fw : IsUniformModulus (metric_close dX) (metric_close dY) f w)
+    (gv : IsUniformModulus (metric_close (prod_dist dX dY)) (metric_close dZ) g v)
+    : IsUniformModulus (metric_close dX) (metric_close dZ) (fun x => g (x, f x))
+        (fun e => qpos_min (v e / 2) (w (v e / 2)) / 2).
+  Proof.
+    refine (isuniformmodulus_compose _ (metric_close (prod_dist dX dY)) _
+              (functor_prod idmap f o (fun x => (x, x))) g
+              (fun e => qpos_min (e / 2) (w (e / 2)) / 2) v _ gv).
+    exact (isuniformmodulus_compose _ (metric_close (prod_dist dX dX)) _ _ _ _ _
+             (isuniformmodulus_diagonal dX)
+             (isuniformmodulus_prod dX dX dX dY idmap f idmap w
+                (isuniformmodulus_idmap _) fw)).
+  Qed.
+
 
 End convergence.

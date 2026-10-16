@@ -167,6 +167,7 @@ Require Export HoTT.Analysis.CauchyStructure.
 Require Export HoTT.Analysis.LocatorDigits.
 Require Export HoTT.Analysis.LiftsToLocators.
 Require Export HoTT.Analysis.IntermediateValue.
+Require Export HoTT.Analysis.FunctionSpace.
 Require Export HoTT.Analysis.DedekindReals.
 
 Require Export HoTT.Homotopy.HomotopyGroup.

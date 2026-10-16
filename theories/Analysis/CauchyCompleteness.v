@@ -126,6 +126,18 @@ Section completeness.
     - exact (transitivity (snd c) lt).
   Qed.
 
+  (** Closeness is a bound on the absolute value of the difference. *)
+  Lemma field_close_iff_abs `{!Abs F} (e : Qpos Q) (u v : F)
+    : field_close e u v <-> abs (u - v) < ' (' e).
+  Proof.
+    split.
+    - intros [lo hi]; exact (abs_lt _ _ lo hi).
+    - intro lt; split.
+      + apply flip_lt_negate_l.
+        exact (le_lt_trans _ _ _ (negate_le_abs (u - v)) lt).
+      + exact (le_lt_trans _ _ _ (le_abs (u - v)) lt).
+  Qed.
+
   Context {Farch : ArchimedeanProperty Q F}.
 
   (** In an Archimedean ordered field, elements which are [e]-close for every [e] are equal. *)
