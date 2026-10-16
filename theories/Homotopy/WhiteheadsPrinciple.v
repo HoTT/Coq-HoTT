@@ -126,9 +126,11 @@ Proof.
   snapply (whiteheads_principle n).
   1, 2: assumption.
   1: apply isequiv_contr_contr.
+  (* We eliminate into [IsEquiv] for each [k] separately.  Eliminating into [forall k : nat, IsEquiv _] would use [istrunc_forall] with [nat] in an unconstrained universe, adding two universe variables to this result and to everything that uses it. *)
+  intros x k; revert x.
   rapply conn_point_elim.
   pointed_reduce_pmap f.
-  exact ii.
+  exact (ii k).
 Defined.
 
 (** A pointed map between [n-1]-connected, [n]-truncated pointed types which induces an equivalence on [Pi n] is an equivalence.  Only the top homotopy group of such a type is non-trivial, so this is the only condition Whitehead's principle leaves to check. *)
