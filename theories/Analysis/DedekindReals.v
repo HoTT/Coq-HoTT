@@ -235,13 +235,13 @@ Section dedekind.
   (** ** Order *)
 
   (** [x < y] when a rational lies between them, and [x <= y] when the lower cut of [x] is contained in that of [y]. *)
-  #[export] Instance lt_dedekindreals : Lt R
+  #[local] Instance lt_dedekindreals : Lt R
     := fun x y => hexists (fun q => prod (upper_cut x q) (lower_cut y q)).
 
-  #[export] Instance le_dedekindreals : Le R
+  #[local] Instance le_dedekindreals : Le R
     := fun x y => forall q, lower_cut x q -> lower_cut y q.
 
-  #[export] Instance apart_dedekindreals : Apart R
+  #[local] Instance apart_dedekindreals : Apart R
     := fun x y => hor (x < y) (y < x).
 
   #[export] Instance ishprop_lt_dedekindreals : is_mere_relation R lt := _.
@@ -361,7 +361,7 @@ Section dedekind.
     Qed.
   End plus.
 
-  #[export] Instance plus_dedekindreals : Plus R
+  #[local] Instance plus_dedekindreals : Plus R
     := fun x y => Build_DedekindReals _ _ (isdedekindcut_plus x y).
 
   (** ** Negation *)
@@ -399,11 +399,11 @@ Section dedekind.
     Qed.
   End negate.
 
-  #[export] Instance negate_dedekindreals : Negate R
+  #[local] Instance negate_dedekindreals : Negate R
     := fun x => Build_DedekindReals _ _ (isdedekindcut_negate x).
 
-  #[export] Instance zero_dedekindreals : Zero R := rational_dedekind 0.
-  #[export] Instance one_dedekindreals : One R := rational_dedekind 1.
+  #[local] Instance zero_dedekindreals : Zero R := rational_dedekind 0.
+  #[local] Instance one_dedekindreals : One R := rational_dedekind 1.
 
   (** ** The additive group *)
 
@@ -644,9 +644,9 @@ Section dedekind.
     Qed.
   End join.
 
-  #[export] Instance join_dedekindreals : Join R
+  #[local] Instance join_dedekindreals : Join R
     := fun x y => Build_DedekindReals _ _ (isdedekindcut_join x y).
-  #[export] Instance meet_dedekindreals : Meet R
+  #[local] Instance meet_dedekindreals : Meet R
     := fun x y => Build_DedekindReals _ _ (isdedekindcut_meet x y).
 
   #[export] Instance partialorder_dedekindreals : PartialOrder (_ : Le R).
@@ -981,7 +981,7 @@ Section dedekind.
     Qed.
   End mult.
 
-  #[export] Instance mult_dedekindreals : Mult R
+  #[local] Instance mult_dedekindreals : Mult R
     := fun x y => Build_DedekindReals _ _ (isdedekindcut_mult x y).
 
   (** ** The multiplicative monoid and distributivity *)
@@ -1489,7 +1489,7 @@ Section dedekind.
   Arguments pos_recip_dedekind x {xpos}.
 
   (** A real apart from zero has a positive square, so we can take [1 / x = x * (1 / (x * x))]. *)
-  #[export] Instance recip_dedekindreals : Recip R
+  #[local] Instance recip_dedekindreals : Recip R
     := fun x => x.1 * @pos_recip_dedekind (x.1 * x.1) (square_pos x.1 x.2).
 
   #[export] Instance isfield_dedekindreals : IsField R.
@@ -1518,6 +1518,19 @@ Arguments cut_upper_rounded {Q _ lower upper} _ _.
 Arguments cut_transitive {Q _ lower upper} _ _ _ _ _.
 Arguments cut_located {Q _ lower upper} _ _ _ _.
 
+(** The operations on [DedekindReals Q] use the same operations on [Q], so as instances they would make the search for, say, [Lt ?A] loop by taking [?A] to be [DedekindReals ?A'] over and over.  We therefore only use them when the type is known to be the Dedekind reals. *)
+#[export] Hint Extern 1 (Lt (DedekindReals _)) => exact (lt_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Le (DedekindReals _)) => exact (le_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Apart (DedekindReals _)) => exact (apart_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Plus (DedekindReals _)) => exact (plus_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Negate (DedekindReals _)) => exact (negate_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Zero (DedekindReals _)) => exact (zero_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (One (DedekindReals _)) => exact (one_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Join (DedekindReals _)) => exact (join_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Meet (DedekindReals _)) => exact (meet_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Mult (DedekindReals _)) => exact (mult_dedekindreals _) : typeclass_instances.
+#[export] Hint Extern 1 (Recip (DedekindReals _)) => exact (recip_dedekindreals _) : typeclass_instances.
+
 (** ** The Archimedean property and Cauchy completeness *)
 
 (** We use a new section, so that the inclusion of the rationals into fields is not restricted to the universes used above: the Dedekind reals live in a universe above that of [Q]. *)
@@ -1530,7 +1543,7 @@ Section complete.
     {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
     {Qroundup : RoundUpStrict@{_ UQ _ UQ} Q}.
 
-  Local Notation R := (DedekindReals Q).
+  Local Notation R := (DedekindReals Q (Qlt:=Qlt)).
   Local Notation "[ q ]" := (rational_dedekind Q q).
 
   (** The inclusion of the rationals into an ordered field is the unique semiring morphism, so on the Dedekind reals it is [rational_dedekind]. *)
