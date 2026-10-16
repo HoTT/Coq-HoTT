@@ -169,6 +169,7 @@ Require Export HoTT.Analysis.LiftsToLocators.
 Require Export HoTT.Analysis.IntermediateValue.
 Require Export HoTT.Analysis.DedekindReals.
 Require Export HoTT.Analysis.HoTTBookReals.
+Require Export HoTT.Analysis.RealsInclusions.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.PiSpheres.

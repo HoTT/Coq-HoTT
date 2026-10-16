@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -178,6 +178,7 @@ Check @hottbookreals_rec_unique.
 Check @hottbookreals_to_field_reflects_close.
 Check @isapproximationlimit_hottbookreals.
 Check @cauchycomplete_hottbookreals.
+Check @cauchycomplete_hottbookreals_dedekind.
 
 (** Definition 4.5.14. A family [A] over a premetric space with a premetric [B] over closeness, valued in propositions, gives a premetric on the total space. *)
 Check @sig_close.
@@ -215,6 +216,17 @@ Check @apart_dedekindreals.
 (** Lemma 4.6.6. The Dedekind reals are Cauchy complete, with the limit cut given explicitly. *)
 Check @limit_dedekind.
 Check @iscomplete_dedekindreals.
+
+(** Proposition 4.6.7. Canonical inclusions of the Cauchy reals into the HoTT book reals and of the HoTT book reals into the Dedekind reals. The first sends a sequence to the limit of its rational terms; it is an embedding because the Cauchy reals embed into any Cauchy complete Archimedean ordered field, compatibly with the second inclusion. The second is the canonical morphism into any Cauchy complete Archimedean ordered field, which reflects closeness and hence is an embedding. *)
+Check @cauchy_reals_to_hottbookreals.
+Check @hottbookreals_to_field_cauchy_reals.
+Check @isinj_cauchy_reals_to_field.
+Check @isembedding_cauchy_reals_to_hottbookreals.
+Check @hottbookreals_to_field.
+Check @isembedding_hottbookreals_to_field.
+Check @hottbookreals_to_dedekind.
+Check @isembedding_hottbookreals_to_dedekind.
+Check @isembedding_cauchy_reals_to_hottbookreals_dedekind.
 
 (** ** Chapter 5: Universal properties of real numbers *)
 

@@ -25,7 +25,7 @@ From HoTT.Analysis Require Import MetricSpace CauchyCompleteness CauchyStructure
 
     - [CauchyStructure] is not cumulative, so [IsHoTTBookReals R] quantifies over Cauchy structures at the same universe levels as [R]. This suffices for the uses below: the total space of a family [A : R -> Type] of types in the universe of the carrier of [R], and any Cauchy complete Archimedean ordered field in that universe, such as the Dedekind reals, if the carrier of [R] is large enough. A higher inductive-inductive type would be initial with respect to every universe; the hypothesis states this for one universe at a time.
 
-    - We do not assume that [R] is a set. The premetric [B] over closeness in the induction principle is valued in propositions, so that the total space is again a premetric space.
+    - We do not assume that [R] is a set: it follows from initiality, since closeness is reflexive. The premetric [B] over closeness in the induction principle is valued in propositions, so that the total space is again a premetric space.
 
     - What the HoTT book proves with the full higher inductive-inductive type, namely Cauchy completeness and the fact that [R] embeds into every Cauchy complete Archimedean ordered field (HoTT book, Section 11.3.2 and Theorem 11.3.50), follows here from initiality alone, given one Cauchy complete Archimedean ordered field [F] in the universe of the carrier of [R]: by induction, the canonical morphism [R -> F] reflects closeness. Everything else then follows from properties of [F]. *)
 
@@ -311,6 +311,32 @@ Section hottbook_reals.
       all: intros; exact tt.
     Defined.
 
+    (** Closeness is reflexive, so [R] is a set. *)
+    Lemma hottbookreals_close_refl `{Funext} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
+      (e : Qpos Q) (u : R)
+      : close e u u.
+    Proof.
+      revert u e.
+      snapply (hottbookreals_ind_hprop (fun u => forall e, close e u u)).
+      1: exact _.
+      - intros q e; exact (cs_close_rat_rat Q R q q e (rational_close_refl Q e q)).
+      - intros x _ e.
+        assert (p : e = e / 2 / 2 + e / 2 / 2 + e / 2 / 2 + e / 2 / 2).
+        { rewrite <- (pos_split2 (e / 2)), <- Qpos_plus_assoc, <- (pos_split2 (e / 2)).
+          exact (pos_split2 e). }
+        rewrite p; apply cs_close_lim_lim, iscauchyapproximation_approximation.
+    Qed.
+
+    #[export] Instance ishset_hottbookreals `{Funext} {Qdec : DecidablePaths Q}
+      {Qtriv : TrivialApart Q}
+      : IsHSet R.
+    Proof.
+      snapply (ishset_hrel_subpaths (R:=fun u v => forall e, close e u v)).
+      - intros u e; apply hottbookreals_close_refl.
+      - exact _.
+      - exact (cs_eq Q R).
+    Defined.
+
   End initiality.
 
   (** ** Closeness in an Archimedean ordered field *)
@@ -408,12 +434,7 @@ Section hottbook_reals.
         1,2: exact _.
         + intros r e c.
           rewrite 2 (cshom_rat Q _ _ i) in c.
-          apply cs_close_rat_rat.
-          destruct c as [lo hi].
-          rewrite <- (preserves_minus (f:=cast Q F)) in lo, hi.
-          rewrite <- (preserves_negate (f:=cast Q F)) in lo.
-          exact (strictly_order_reflecting (cast Q F) _ _ lo,
-                 strictly_order_reflecting (cast Q F) _ _ hi).
+          exact (cs_close_rat_rat Q R q r e (rational_close_field_close Q e q r c)).
         + intros y IHy e c.
           rewrite (cshom_lim Q _ _ i) in c.
           assert (s := field_lim_close_split _ _ e (field_close_symmetric Q _ _ _ c)).
@@ -440,29 +461,12 @@ Section hottbook_reals.
           apply cs_close_lim_lim, IHx, field_close_symmetric, c''.
     Qed.
 
-    (** Hence closeness in [R] is reflexive, [R] is a set, and the canonical map is an embedding. *)
-    Lemma hottbookreals_close_refl `{Funext} (e : Qpos Q) (u : R) : close e u u.
-    Proof.
-      apply hottbookreals_to_field_reflects_close.
-      unfold field_close; rewrite plus_negate_r; split.
-      - apply flip_pos_negate, (pos_rationals_to_field_qpos Q e).
-      - exact (pos_rationals_to_field_qpos Q e).
-    Qed.
-
-    (** This is not an instance, since [F] cannot be found by instance search. *)
-    Definition ishset_hottbookreals `{Funext} : IsHSet R.
-    Proof.
-      snapply (ishset_hrel_subpaths (R:=fun u v => forall e, close e u v)).
-      - intros u e; apply hottbookreals_close_refl.
-      - exact _.
-      - exact (cs_eq Q R).
-    Defined.
-
+    (** Hence the canonical map is an embedding. *)
     #[export] Instance isinj_hottbookreals_to_field `{Funext} : IsInjective i.
     Proof.
       intros u v p; apply (cs_eq Q R); intro e.
       apply hottbookreals_to_field_reflects_close.
-      rewrite p; exact (cshom_close Q _ _ i e v v (hottbookreals_close_refl e v)).
+      rewrite p; exact (cshom_close Q _ _ i e v v (hottbookreals_close_refl R e v)).
     Qed.
 
     #[export] Instance isembedding_hottbookreals_to_field `{Funext} : IsEmbedding i

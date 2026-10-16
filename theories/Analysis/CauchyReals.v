@@ -44,17 +44,10 @@ Section cauchy_reals.
   (** The Cauchy reals. *)
   Definition CauchyReals := Quotient cauchy_related.
 
-  Lemma rational_close_refl (e : Qpos Q) (q : Q) : rational_close Q e q q.
-  Proof.
-    unfold rational_close; rewrite plus_negate_r; split.
-    - apply flip_pos_negate, is_pos.
-    - apply is_pos.
-  Qed.
-
   (** The inclusion of the rationals, as constant sequences. *)
   Definition const_cauchy_sequence (q : Q) : CauchySequence
     := {| cauchy_seq := fun _ => q; cauchy_modulus := fun _ => 0%nat;
-          cauchy_ismodulus := fun e _ _ _ _ => rational_close_refl e q |}.
+          cauchy_ismodulus := fun e _ _ _ _ => rational_close_refl Q e q |}.
 
   Definition rationals_to_cauchy_reals (q : Q) : CauchyReals
     := class_of _ (const_cauchy_sequence q).

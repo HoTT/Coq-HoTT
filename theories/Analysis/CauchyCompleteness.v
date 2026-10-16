@@ -36,6 +36,13 @@ Section completeness.
   (** Two rationals [u] and [v] are [e]-close when [|u - v| < e]. *)
   Definition rational_close (e : Qpos Q) (u v : Q) := - ' e < u - v < ' e.
 
+  Lemma rational_close_refl (e : Qpos Q) (q : Q) : rational_close e q q.
+  Proof.
+    unfold rational_close; rewrite plus_negate_r; split.
+    - apply flip_pos_negate, is_pos.
+    - apply is_pos.
+  Qed.
+
   (** The inclusion of the rationals preserves closeness. *)
   Lemma field_close_rationals (e : Qpos Q) (u v : Q)
     : rational_close e u v -> field_close e (' u) (' v).
@@ -43,6 +50,28 @@ Section completeness.
     intros [lo hi]; unfold field_close.
     rewrite <- (preserves_minus (f:=cast Q F)), <- (preserves_negate (f:=cast Q F)).
     split; apply (strictly_order_preserving _); assumption.
+  Qed.
+
+  (** It also reflects closeness. *)
+  Lemma rational_close_field_close (e : Qpos Q) (u v : Q)
+    : field_close e (' u) (' v) -> rational_close e u v.
+  Proof.
+    intros [lo hi]; unfold rational_close.
+    rewrite <- (preserves_minus (f:=cast Q F)) in lo, hi.
+    rewrite <- (preserves_negate (f:=cast Q F)) in lo.
+    exact (strictly_order_reflecting _ _ _ lo, strictly_order_reflecting _ _ _ hi).
+  Qed.
+
+  (** Closeness of rationals satisfies the triangle inequality. *)
+  Lemma rational_close_triangle (d e : Qpos Q) (a b c : Q)
+    : rational_close d a b -> rational_close e b c -> rational_close (d + e) a c.
+  Proof.
+    intros [lo hi] [lo' hi']; unfold rational_close.
+    assert (p : a - c = (a - b) + (b - c)).
+    { rewrite <- (plus_assoc a (- b) (b - c)), (plus_assoc (- b) b (- c)).
+      rewrite plus_negate_l, plus_0_l; reflexivity. }
+    change (' (d + e)) with (' d + ' e).
+    rewrite p, negate_plus_distr; split; apply plus_lt_compat; assumption.
   Qed.
 
   (** Bounds add up. *)
