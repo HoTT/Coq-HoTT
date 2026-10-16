@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -169,8 +169,37 @@ Check @isapproximationlimit_le.
 Check @cauchycomplete_field.
 Check @cauchy_structure_field.
 
+(** Definition 4.5.12. The HoTT book reals: a Cauchy structure with a contractible type of morphisms to every Cauchy structure (at the same universe levels). This is a hypothesis that results take, not an axiom. *)
+Check IsHoTTBookReals.
+Check @hottbookreals_rec.
+Check @hottbookreals_rec_unique.
+
+(** Theorem 4.5.13. The HoTT book reals are Cauchy complete, with [lim x] a limit of [x]. The proof uses some Cauchy complete Archimedean ordered field in the universe of the carrier, such as the Dedekind reals: the canonical morphism into it reflects closeness. *)
+Check @hottbookreals_to_field_reflects_close.
+Check @isapproximationlimit_hottbookreals.
+Check @cauchycomplete_hottbookreals.
+
+(** Definition 4.5.14. A family [A] over a premetric space with a premetric [B] over closeness, valued in propositions, gives a premetric on the total space. *)
+Check @sig_close.
+Check @ispremetric_sig_close.
+
+(** Definition 4.5.15. Dependent Cauchy approximations. *)
+Check @IsDependentCauchyApproximation.
+Check @DependentCauchyApproximation.
+
+(** Lemma 4.5.16. Pairing a Cauchy approximation [x] with [a] gives a Cauchy approximation in the total space iff [a] is a dependent Cauchy approximation over [x]. *)
+Check @iscauchyapproximation_sig_iff.
+
 (** Definition 4.5.17. Dependent identifications. *)
 Check DPath.
+
+(** Theorem 4.5.18. The induction principle of the HoTT book reals, derived from initiality via the Cauchy structure on the total space, with its computation rules for [rat] and [lim]; the latter uses [Funext]. For families of propositions only the cases for [rat] and [lim] are needed. *)
+Check @sig_cauchy_structure.
+Check @hottbookreals_ind.
+Check @hottbookreals_ind_close.
+Check @hottbookreals_ind_beta_rat.
+Check @hottbookreals_ind_beta_lim.
+Check @hottbookreals_ind_hprop.
 
 (** Definition 4.6.1. Two-sided Dedekind cuts and the Dedekind reals. *)
 Check IsDedekindCut.
