@@ -3,7 +3,8 @@
 (** This file lists, in thesis order, the numbered items of Chapters 3–8 of A. B. Booij, _Analysis in Univalent Type Theory_ (PhD thesis, University of Birmingham, 2020) that have been formalized, each as a [Check] of the results that formalize it. It defines nothing; it fails to build if a listed result is renamed or removed. See [BLUEPRINT.md] for the plan and for the items that are not formalized yet. *)
 
 From HoTT Require Import Basics.Overture Basics.Classes.
-From HoTT.Classes.interfaces Require Import canonical_names orders rationals archimedean cauchy.
+From HoTT.Classes.interfaces Require Import canonical_names abstract_algebra orders rationals archimedean cauchy.
+From HoTT.Classes.theory Require Import apartness rings fields.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
@@ -61,11 +62,39 @@ Check @least_fixed_point.
 
 (** ** Chapter 4: Real numbers *)
 
+(** Definition 4.1.2. Classical fields: commutative rings in which every element different from [0] has a multiplicative inverse. Here the inverse is a total operation [DecRecip] with the convention [/0 = 0], which is equivalent to giving inverses of the nonzero elements since inverses are unique; unlike the thesis, [IsDecField] also asks [1 <> 0]. *)
+Check IsDecField.
+
+(** Definition 4.1.4. Apartness relations: irreflexive, symmetric and cotransitive. [IsApart] also asks that the carrier be a set, that the relation be propositional and that it be tight, as the constructive fields of the thesis require; irreflexivity follows. Strict partial orders: a [StrictOrder] (propositional, irreflexive and transitive) that is [CoTransitive]. *)
+Check IsApart.
+Check @apart_irrefl.
+Check StrictOrder.
+Check CoTransitive.
+
+(** Definition 4.1.5. Constructive fields: commutative rings with a tight apartness for which addition is extensional and the elements apart from [0] are the invertible ones. [IsField] gives the inverse as an operation on the elements apart from [0], equivalent since inverses are unique, and takes [1 ≶ 0] and the extensionality of multiplication as axioms; an invertible element is apart from [0] by [mult_apart_zero_l]. *)
+Check IsField.
+Check @mult_apart_zero_l.
+
+(** Lemma 4.1.6. In a constructive field, [1 ≶ 0], addition is compatible with the apartness, and multiplication is extensional for it. The first and last are axioms of [IsField]; compatibility of addition is [strongrightcancellation_plus_field], with the converse given by the extensionality of addition. *)
+Check field_nontrivial.
+Check @strongrightcancellation_plus_field.
+Check @strong_setoid_morphism_unary_2.
+Check field_mult_ext.
+
 (** Definition 4.1.8. Lattices. *)
 Check LatticeOrder.
 
+(** Definition 4.1.10. Ordered fields, following HoTT book Definition 11.2.7 as the thesis does: a constructive field with a lattice order and a [FullPseudoSemiRingOrder]. Here [≤] and [≶] are part of the data, related to [<] by [le_iff_not_lt_flip] and [apart_iff_total_lt], and the order axioms are laws like those listed in Lemma 4.1.11 rather than the two laws of the thesis; the equivalence of the two axiomatizations is not formalized. *)
+Check OrderedField.
+Check FullPseudoSemiRingOrder.
+
 (** Lemma 4.1.12. An ordered field is a constructive field. *)
 Check @ordered_field_field.
+
+(** Definition 4.3.1. Morphisms of ordered fields: ring morphisms ([IsSemiRingPreserving], which preserve negation by [preserves_negate]) that reflect the strict order. *)
+Check IsSemiRingPreserving.
+Check @preserves_negate.
+Check StrictlyOrderReflecting.
 
 (** Lemma 4.3.3. There is a unique morphism of ordered fields from the rationals to an ordered field, and it preserves and reflects the strict order. *)
 Check rationals_to_field.
@@ -196,6 +225,11 @@ Check locator.
 (** Lemma 6.1.3. Assuming excluded middle, every real has a locator. *)
 Check all_reals_locators.
 
+(** Lemma 6.3.1. A rational [' s] has a locator, in two different ways. For a real that merely is a rational, the fiber of the inclusion over it is a proposition since the inclusion is an embedding, so we may assume such an [s]. *)
+Check locator_left.
+Check locator_second.
+Check isembedding_rationals_to_field.
+
 (** Lemma 6.4.2. A locator is equivalently a decidable [locatesRight] with its two properties. *)
 Check @equiv_locator_locator'.
 
@@ -250,6 +284,10 @@ Check locator_recip.
 Check locator_meet.
 Check locator_join.
 
+(** Remark 6.7.7. The absolute value [max(x, -x)] of a real with a locator has a locator. *)
+Check locator_join.
+Check locator_minus.
+
 (** Lemma 6.8.1. A limit of a sequence with modulus whose terms have locators has a locator. *)
 Check locator_limit.
 
@@ -284,7 +322,7 @@ Check locator_cauchy_sequence.
 Check merely_locator_pointwise.
 Check pointwise_locator_iff_located.
 Check @O_decidable_arrow.
-Check cotransitive.
+Check @cotransitive.
 
 (** ** Chapter 7: Some constructive analysis with locators *)
 
