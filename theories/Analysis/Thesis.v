@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions FunctionSpace Integral PicardLindelof.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -385,6 +385,15 @@ Check step_function.
 Check lifts_step_function.
 Check not_iscontinuousat_step_function.
 
+(** Theorem 7.2.1. The integral over [[a, b]] of a function with a modulus of uniform continuity on [[a, b]] that lifts to locators has a locator, if [a] and [b] do. The integral is any integration operator: an oriented integral of uniformly continuous functions on closed intervals, additive over intervals and in the integrand, integrating constants to their value times the length and monotone; these properties determine it. As in the thesis, the integral is the limit of Riemann sums, with an explicit modulus of Cauchy convergence. *)
+Check Integration.
+Check @integral_unique.
+Check @riemann_sum.
+Check @cauchymodulus_riemann_sum.
+Check @islimit_riemann_sum.
+Check @locator_integral_lifts.
+Check @locator_integral.
+
 (** Theorem 7.3.1. Approximate intermediate value theorem: a function which is pointwise continuous on [[a, b]] with [f a < 0 < f b] merely takes values arbitrarily close to [0]; if it lifts to locators and [a] and [b] have locators, we can find such a point with a locator. The thesis claims that the limit of Frank's interpolating bisection is such a point, which can fail, as Frank himself points out; following Frank's proof, the limit or one of the midpoints is. *)
 Check approximate_ivt.
 Check approximate_ivt_locator.
@@ -431,6 +440,42 @@ Check PreservesMetricLimits.
 (** Lemma 8.1.10. Uniformly continuous maps preserve limits. *)
 Check @preservesmetriclimits_uniform.
 
+(** Definition 8.2.1. The type [U[a,b][c,d]] of maps [[a, b] -> [c, d]] with a modulus of uniform continuity, where closed intervals carry the distance [|x - y|]. *)
+Check ClosedInterval.
+Check interval_dist.
+Check UniformMap.
+
+(** Lemma 8.2.2. The supremum of a uniformly continuous [f : [a, b] -> F] is the limit of the maxima of [f] at [n + 2] equidistant points; for a rational bound [B] on [b - a] these have the modulus of Cauchy convergence [B / w e]. Since such a bound merely exists and limits are unique, the supremum exists for every [a ≤ b]. *)
+Check @sample_max.
+Check @grid_modulus.
+Check @cauchymodulus_sample_max.
+Check @issupremum_limit_sample_max.
+Check @supremum.
+Check @issupremum_supremum.
+
+(** Lemma 8.2.3. [U[a,b][c,d]] is a pseudometric space with the supremum distance. *)
+Check @uniform_dist.
+Check @ispseudometric_uniform_dist.
+
+(** Definition 8.2.4. Maps on a closed interval that lift to locators. *)
+Check @IntervalLiftsToLocators.
+
+(** Lemma 8.2.6. A map into a pseudometric space induces a pseudometric on its domain. *)
+Check @ispseudometric_pullback.
+
+(** Definition 8.2.7. The type [UL[a,b][c,d]] of uniformly continuous maps that lift to locators. *)
+Check UniformLocatorMap.
+
+(** Corollary 8.2.8. [UL[a,b][c,d]] is a pseudometric space with the distance of [U[a,b][c,d]]. *)
+Check @ulmap_dist.
+Check @ispseudometric_ulmap_dist.
+
+(** Lemma 8.2.9. Elements at distance zero have equal underlying maps. It is stated for [U[a,b][c,d]], and applies to [UL[a,b][c,d]] since that has the same distance. *)
+Check @path_uniform_dist_zero.
+
+(** Lemma 8.2.10. [UL[a,b][c,d]] is Cauchy complete. *)
+Check @metriccauchycomplete_ulmap_dist.
+
 (** Definition 8.3.1. Lipschitz constants. *)
 Check IsLipschitz.
 
@@ -458,3 +503,27 @@ Check @metriccauchymodulus_iterates.
 
 (** Theorem 8.3.11. Banach's fixed point theorem: in a Cauchy complete pseudometric space, a map with a rational Lipschitz constant [0 < c < 1] has a pseudo-fixed point, unique up to distance zero. *)
 Check @banach_fixed_point.
+
+
+(** Definition 8.4.1. Products of pseudometric spaces, with the sum of the distances; a product of metrics is a metric. Binary products only. *)
+Check @prod_dist.
+Check @ispseudometric_prod.
+Check @ismetric_prod.
+
+(** Lemma 8.4.3. A product of uniformly continuous maps has the minimum of the moduli at [e / 2] as modulus. Binary products only. *)
+Check @qpos_min.
+Check @isuniformmodulus_prod.
+
+(** Lemma 8.4.4. The diagonal [X -> X * X] has modulus [e / 2]. *)
+Check @isuniformmodulus_diagonal.
+
+(** Corollary 8.4.5. If [f] has modulus [w] and [g] on [X * Y] has modulus [v], then [fun x => g (x, f x)] has modulus [min (v e / 2) (w (v e / 2)) / 2]. *)
+Check @isuniformmodulus_graph.
+
+(** Definition 8.4.6. Maps on a product of closed intervals that lift to locators. *)
+Check @ProductLiftsToLocators.
+
+(** Theorem 8.4.7. Picard–Lindelöf: for [x0], [y0], [a > 0], [b > 0] and [L > 0] with locators, and [g] on [[x0 - a, x0 + a] * [y0 - b, y0 + b]] with a modulus of uniform continuity, lifting to locators and with [|g (x, y) - g (x, y')| ≤ L |y - y'|], we compute [l] with a locator and [0 < l ≤ a], and [f] in [UL[x0 - l, x0 + l][y0 - b, y0 + b]] with [f x = y0 + ∫_{x0}^x g (t, f t) dt], for any integration operator. The solution is the fixed point of the Picard iteration, which has Lipschitz constant [1/2]. *)
+Check @picard_lindelof.
+Check @picard_map.
+Check @islipschitz_picard_map.
