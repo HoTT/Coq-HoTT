@@ -230,6 +230,30 @@ Check @isembedding_cauchy_reals_to_hottbookreals_dedekind.
 
 (** ** Chapter 5: Universal properties of real numbers *)
 
+(** Proposition 5.1.1. A Cauchy complete subset of a Cauchy complete Archimedean ordered field, such as the Dedekind reals, containing the rationals inherits a Cauchy structure. *)
+Check ContainsRationals.
+Check IsCauchyCompleteSubset.
+Check subset_close.
+Check subset_cauchy_structure.
+
+(** Corollary 5.1.2. The inclusion of such a subset is a morphism of Cauchy structures. *)
+Check cshom_subset_pr1.
+
+(** Proposition 5.1.3. The HoTT book reals are contained in every such subset, compatibly with their canonical embedding. *)
+Check hottbookreals_to_subset.
+Check hottbookreals_to_subset_pr1.
+Check hottbookreals_to_field_subset.
+
+(** Corollary 5.1.4. The Cauchy reals are a Cauchy complete subset if and only if they coincide with the HoTT book reals as subsets. The HoTT book reals always form a Cauchy complete subset. *)
+Check subset_cauchy_reals.
+Check subset_hottbookreals.
+Check iscauchycompletesubset_hottbookreals.
+Check iscauchycompletesubset_cauchy_reals_iff.
+
+(** Remark 5.2.2. For a Cauchy structure [S] on a set, contractibility of the type of morphisms into [S] means existence of a morphism and pointwise uniqueness. *)
+Check @contr_cauchystructurehom_iff.
+Check @path_cauchystructurehom.
+
 (** Definition 5.3.1. Cancellative midpoint algebras: sets with an idempotent, commutative, medial and cancellative binary operation. *)
 Check Midpoint.
 Check Medial.

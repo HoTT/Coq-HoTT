@@ -1,6 +1,6 @@
 (** * Cauchy approximations and Cauchy structures *)
 
-From HoTT Require Import Basics Truncations.Core.
+From HoTT Require Import Basics Types.Sigma Types.Forall Truncations.Core.
 From HoTT.Spaces Require Import Nat.Core.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
@@ -56,6 +56,17 @@ Section cauchy_structure.
         : forall x : CauchyApproximation, IsApproximationLimit x (approximation_limit x)
     }.
 
+    Definition issig_cauchyapproximation : _ <~> CauchyApproximation := ltac:(issig).
+
+    (** Over a premetric, Cauchy approximations with the same values are equal. *)
+    Lemma path_cauchyapproximation `{Funext} `{!IsPremetric Q close}
+      (x y : CauchyApproximation) (p : forall e, x e = y e)
+      : x = y.
+    Proof.
+      apply (equiv_ap' issig_cauchyapproximation^-1 _ _).
+      apply path_sigma_hprop; funext e; exact (p e).
+    Defined.
+
   End approximation.
 
   (** A map which preserves closeness acts on Cauchy approximations. *)
@@ -105,6 +116,32 @@ Section cauchy_structure.
   Arguments cshom_rat {R S} f q : rename.
   Arguments cshom_lim {R S} f x : rename.
   Arguments cshom_eq {R S} f u v p : rename.
+
+  Section path_cshom.
+    Context (R S : CauchyStructure) `{!IsHSet S}.
+
+    Definition issig_cauchystructurehom : _ <~> CauchyStructureHom R S := ltac:(issig).
+
+    (** Into a set, a morphism is determined by its underlying map, since the other components are propositions. *)
+    Lemma path_cauchystructurehom `{Funext} (f g : CauchyStructureHom R S) (p : f == g)
+      : f = g.
+    Proof.
+      apply (equiv_ap' issig_cauchystructurehom^-1 _ _).
+      apply path_sigma_hprop; funext u; exact (p u).
+    Defined.
+
+    (** Hence the type of morphisms into a set is contractible exactly when there is a morphism and any two morphisms are pointwise equal. *)
+    Definition contr_cauchystructurehom_iff `{Funext}
+      : Contr (CauchyStructureHom R S)
+        <-> CauchyStructureHom R S * (forall f g : CauchyStructureHom R S, f == g).
+    Proof.
+      split.
+      - intros c; split; [exact (center _)|].
+        intros f g; exact (ap10 (ap (cshom_fun R S) (path_contr f g))).
+      - intros [f h]; apply (Build_Contr _ f); intro g.
+        exact (path_cauchystructurehom f g (h f g)).
+    Defined.
+  End path_cshom.
 
   Definition cshom_idmap (R : CauchyStructure) : CauchyStructureHom R R.
   Proof.
