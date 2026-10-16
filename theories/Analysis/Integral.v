@@ -322,7 +322,7 @@ Section integration.
         : abs (integral f fu x y - riemann_sum f x y n) < ' (' (e / 2)).
       Proof.
         refine (le_lt_trans _ _ _ (integral_riemann_sum (e / 2 / B) n
-                  (grid_step_lt_modulus Q F x y (' B) (lt_le _ _ ltB) w _ n len)) _).
+                  (lt_grid_modulus Q F _ (' B) (lt_le _ _ ltB) w _ n len)) _).
         assert (p : ' (' (e / 2)) = ' (' (e / 2 / B)) * (' (' B) : F)).
         { rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
           change (' (e / 2) = ' (e / 2) * ' (/ B) * ' B).
@@ -484,7 +484,7 @@ Section integration.
                     (fst (pos_plus_lt_compat_r _ _) lt_0_1)).
       apply Trunc_rec; intros [B [ltB _]].
       set (n := grid_modulus Q B w (e / 2)).
-      assert (lt := grid_step_lt_modulus Q F x y B (lt_le _ _ ltB) w (e / 2) n (leq_refl _)).
+      assert (lt := lt_grid_modulus Q F _ B (lt_le _ _ ltB) w (e / 2) n (leq_refl _)).
       refine (transitivity (pseudometric_triangle (d:=dF) _ (riemann_sum f x y n) _) _).
       cbn beta; rewrite (abs_minus_swap (riemann_sum f x y n)).
       rewrite (pos_split2 e), (preserves_plus (f:=cast Q F)), plus_mult_distr_r.

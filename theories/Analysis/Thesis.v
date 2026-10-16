@@ -10,7 +10,7 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue FunctionSpace Integral.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue FunctionSpace Integral PicardLindelof.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -481,3 +481,8 @@ Check @isuniformmodulus_graph.
 
 (** Definition 8.4.6. Maps on a product of closed intervals that lift to locators. *)
 Check @ProductLiftsToLocators.
+
+(** Theorem 8.4.7. Picard–Lindelöf: for [x0], [y0], [a > 0], [b > 0] and [L > 0] with locators, and [g] on [[x0 - a, x0 + a] * [y0 - b, y0 + b]] with a modulus of uniform continuity, lifting to locators and with [|g (x, y) - g (x, y')| ≤ L |y - y'|], we compute [l] with a locator and [0 < l ≤ a], and [f] in [UL[x0 - l, x0 + l][y0 - b, y0 + b]] with [f x = y0 + ∫_{x0}^x g (t, f t) dt], for any integration operator. The solution is the fixed point of the Picard iteration, which has Lipschitz constant [1/2]. *)
+Check @picard_lindelof.
+Check @picard_map.
+Check @islipschitz_picard_map.
