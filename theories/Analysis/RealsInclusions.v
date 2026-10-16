@@ -173,4 +173,3 @@ Section dedekind.
          (Farch:=archimedean_property_change_char Q RD _ _ (archimedean_dedekindreals Q)).
 
 End dedekind.
-
