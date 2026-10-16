@@ -15,12 +15,11 @@ From HoTT.Classes Require Import
   implementations.field_of_fractions
   theory.apartness
   theory.rings
-  theory.integers
   theory.dec_fields
   theory.fields
   orders.rings
+  orders.orders
   orders.naturals
-  orders.integers
   orders.nat_int.
 
 Import (hints) Frac FracField.
@@ -40,16 +39,52 @@ Section ring_identities.
     rewrite plus_mult_distr_r, !mult_assoc, <- (mult_assoc b), (mult_comm c d), mult_assoc.
     reflexivity.
   Qed.
+
+  Local Lemma minus_plus_minus (p q r s : R) : (p - q) + (r - s) = (p + r) - (q + s).
+  Proof.
+    rewrite negate_plus_distr, <- !plus_assoc.
+    rewrite (plus_assoc (- q) r (- s)), (plus_comm (- q) r), <- (plus_assoc r (- q) (- s)).
+    reflexivity.
+  Qed.
+
+  Local Lemma minus_mult_minus (p q r s : R) : (p - q) * (r - s) = (p * r + q * s) - (p * s + q * r).
+  Proof.
+    rewrite plus_mult_distr_r, !plus_mult_distr_l, negate_mult_negate.
+    rewrite <- negate_mult_distr_r, <- negate_mult_distr_l, (plus_comm (- (q * r))).
+    apply minus_plus_minus.
+  Qed.
 End ring_identities.
 
 Section contents.
   Context `{Funext} `{Univalence}.
-  Context (Z : Type) `{Integers Z} `{!TrivialApart Z} {Zset : IsHSet Z}.
+  Universe UZ.
+  Context (Z : Type@{UZ}) `{Integers Z} `{!TrivialApart Z} {Zset : IsHSet Z}
+    {Zdec : DecidablePaths Z} {Zdom : IsIntegralDomain Z} {Zprod : ZeroProduct Z}
+    {Zabs : IntAbs Z nat}.
 
   Local Existing Instance Frac.den_ne_0.
 
   Local Notation Frac := (Frac.Frac Z).
   Local Notation Q := (FracField.F Z).
+
+  Local Instance decidable_lt_int (x y : Z) : Decidable (x < y).
+  Proof.
+    destruct (trichotomy (<) x y) as [l|[e|l]].
+    - exact (inl l).
+    - right; intros l'; rewrite e in l'; exact (irreflexivity (<) y l').
+    - right; intros l'; exact (irreflexivity (<) x (transitivity l' l)).
+  Defined.
+
+  Local Lemma int_pos_ge_1 (z : Z) : 0 < z -> 1 <= z.
+  Proof.
+    intros zpos; destruct (int_abs_sig Z nat z) as [[[|c] p]|[k p]].
+    - destruct p; destruct (irreflexivity (<) _ zpos).
+    - rewrite <- p, nat_to_semiring_succ.
+      apply nonneg_plus_le_compat_r, nat_to_semiring_nonneg.
+    - apply Empty_rec, (irreflexivity (<) (0 : Z)).
+      apply (lt_le_trans _ z _ zpos).
+      apply (snd (flip_nonpos_negate z)); rewrite <- p; apply nat_to_semiring_nonneg.
+  Qed.
 
 
   Local Lemma den_square_pos (x : Frac) : 0 < Frac.den x * Frac.den x.
@@ -171,9 +206,9 @@ Section contents.
   Qed.
 
   (** The order, and the trivial apartness, on the field of fractions. *)
-  #[export] Instance fracfield_lt : Lt Q := fun x y => fracfield_pos (y - x) = true.
-  #[export] Instance fracfield_le : Le Q := fun x y => fracfield_pos (x - y) = false.
-  #[export] Instance fracfield_apart : Apart Q := fun x y => x <> y.
+  #[export] Instance fracfield_lt : Lt@{UZ UZ} Q := fun x y => fracfield_pos (y - x) = true.
+  #[export] Instance fracfield_le : Le@{UZ UZ} Q := fun x y => fracfield_pos (x - y) = false.
+  #[export] Instance fracfield_apart : Apart@{UZ UZ} Q := fun x y => x <> y.
 
   #[export] Instance trivialapart_fracfield : TrivialApart Q.
   Proof.
@@ -246,12 +281,36 @@ Section contents.
   (** ** Initiality *)
 
   (** The fraction [n / d] goes to [n / d] in any field of characteristic [0]: the integer [d] is apart from [0] there. *)
+  Local Notation nZ := (naturals_to_semiring nat Z).
+
+  Local Lemma nat_to_int_lt (n c : nat) : nZ n < nZ (S c + n).
+  Proof.
+    rewrite (preserves_plus (f:=nZ)).
+    exact (pos_plus_lt_compat_l _ _ (nat_to_semiring_succ_pos c)).
+  Qed.
+
+  Local Lemma nat_to_int_injective (n m : nat) : nZ n = nZ m -> n = m.
+  Proof.
+    intros p; destruct (nat_trichotomy n m) as [l|[e|l]]; [|exact e|].
+    - destruct (equiv_leq_add (S n) m l) as [k q]; destruct q.
+      rewrite nat_add_succ_r in p.
+      destruct (irreflexivity (<) (nZ n) (transport (fun z => nZ n < z) p^ (nat_to_int_lt n k))).
+    - destruct (equiv_leq_add (S m) n l) as [k q]; destruct q.
+      rewrite nat_add_succ_r in p.
+      destruct (irreflexivity (<) (nZ m) (transport (fun z => nZ m < z) p (nat_to_int_lt m k))).
+  Qed.
+
+  Local Lemma int_difference (z : Z) : {a : nat & {b : nat & nZ a - nZ b = z}}.
+  Proof.
+    destruct (int_abs_sig Z nat z) as [[a p]|[a p]].
+    - exists a, 0%nat; change (nZ 0%nat) with (0 : Z); rewrite negate_0, plus_0_r; exact p.
+    - exists 0%nat, a; change (nZ 0%nat) with (0 : Z); rewrite plus_0_l, p; apply negate_involutive.
+  Qed.
+
   Section to_field.
     Context {B : Type} `{IsField B} `{!FieldCharacteristic B 0}.
 
-    Local Notation iZ := (integers_to_ring Z B).
     Local Notation nB := (naturals_to_semiring nat B).
-    Local Notation nZ := (naturals_to_semiring nat Z).
 
     Local Lemma nat_to_field_iter (n : nat) : nB n = nat_iter n (1 +) 0.
     Proof.
@@ -269,10 +328,62 @@ Section contents.
       intros m p; exact (neq_nat_zero_succ n p^).
     Qed.
 
+    (** We map the integers into [B] through the natural numbers, using absolute values. *)
+    Definition int_to_field (z : Z) : B
+      := match int_abs_sig Z nat z with
+         | inl (n; _) => nB n
+         | inr (n; _) => - nB n
+         end.
+
+    Local Notation iZ := int_to_field.
+
+    Local Lemma int_to_field_nat_minus (a b : nat) : iZ (nZ a - nZ b) = nB a - nB b.
+    Proof.
+      unfold int_to_field; destruct (int_abs_sig Z nat (nZ a - nZ b)) as [[k p]|[k p]].
+      - assert (e : (k + b)%nat = a).
+        { apply nat_to_int_injective; rewrite (preserves_plus (f:=nZ)), p.
+          rewrite <- plus_assoc, plus_negate_l; apply plus_0_r. }
+        rewrite <- e, (preserves_plus (f:=nB)), <- plus_assoc, plus_negate_r; symmetry; apply plus_0_r.
+      - assert (e : (k + a)%nat = b).
+        { apply nat_to_int_injective; rewrite (preserves_plus (f:=nZ)), p.
+          rewrite <- negate_swap_l, (plus_comm (- nZ a)), <- plus_assoc, plus_negate_l; apply plus_0_r. }
+        rewrite <- e, (preserves_plus (f:=nB)), negate_plus_distr, (plus_comm (- nB k)), plus_assoc.
+        rewrite plus_negate_r, plus_0_l; reflexivity.
+    Qed.
+
     Local Lemma int_to_field_nat (n : nat) : iZ (nZ n) = nB n.
     Proof.
-      assert (IsSemiRingPreserving (iZ o nZ)) by rapply compose_sr_morphism.
-      symmetry; exact (toR_unique (iZ o nZ) n).
+      refine (ap iZ _ @ int_to_field_nat_minus n 0 @ _).
+      - change (nZ n = nZ n - 0); rewrite negate_0; symmetry; apply plus_0_r.
+      - change (nB n - 0 = nB n); rewrite negate_0; apply plus_0_r.
+    Qed.
+
+    #[export] Instance issemiringpreserving_int_to_field : IsSemiRingPreserving iZ.
+    Proof.
+      repeat split.
+      - intros x y; change (iZ (x + y) = iZ x + iZ y).
+        destruct (int_difference x) as [a [b []]], (int_difference y) as [c [d []]].
+        rewrite minus_plus_minus, <- !(preserves_plus (f:=nZ)), !int_to_field_nat_minus.
+        rewrite !(preserves_plus (f:=nB)); symmetry; apply minus_plus_minus.
+      - exact (int_to_field_nat 0).
+      - intros x y; change (iZ (x * y) = iZ x * iZ y).
+        destruct (int_difference x) as [a [b []]], (int_difference y) as [c [d []]].
+        rewrite minus_mult_minus, <- !(preserves_mult (f:=nZ)), <- !(preserves_plus (f:=nZ)).
+        rewrite !int_to_field_nat_minus.
+        rewrite (preserves_plus (f:=nB) (a * c)), (preserves_plus (f:=nB) (a * d)).
+        rewrite (preserves_mult (f:=nB) a c), (preserves_mult (f:=nB) b d).
+        rewrite (preserves_mult (f:=nB) a d), (preserves_mult (f:=nB) b c).
+        symmetry; apply minus_mult_minus.
+      - exact (int_to_field_nat 1).
+    Qed.
+
+    (** Every semiring morphism from the integers agrees with [int_to_field]. *)
+    Lemma int_to_field_unique (g : Z -> B) `{!IsSemiRingPreserving g} (z : Z) : g z = iZ z.
+    Proof.
+      destruct (int_difference z) as [a [b []]].
+      assert (IsSemiRingPreserving (g o nZ)) by rapply compose_sr_morphism.
+      rewrite int_to_field_nat_minus, (preserves_minus (f:=g)).
+      rewrite <- (toR_unique (g o nZ) a), <- (toR_unique (g o nZ) b); reflexivity.
     Qed.
 
     Lemma int_to_field_apart_zero (d : Z) : d <> 0 -> iZ d ≶ 0.
@@ -282,7 +393,7 @@ Section contents.
       { intros n p q; rewrite q in p; apply ne.
         destruct p as [p|p].
         - rewrite <- p; exact preserves_0.
-        - rewrite (preserves_0 (f:=nZ)) in p.
+        - change (nZ 0%nat) with (0 : Z) in p.
           exact (fst (flip_negate_0 d) p^). }
       destruct (int_abs_sig Z nat d) as [[n p]|[n p]].
       - rewrite <- p, int_to_field_nat.
@@ -361,7 +472,7 @@ Section contents.
     Proof.
       revert q; srapply FracField.F_ind; intros x; apply frac_to_field_unique.
       assert (IsSemiRingPreserving (h o cast Z Q)) by rapply compose_sr_morphism.
-      rewrite 2!(integers_initial (h:=h o cast Z Q)); unfold Compose.
+      rewrite <- 2!(int_to_field_unique (h o cast Z Q)); unfold Compose.
       rewrite <- (preserves_mult (f:=h)); apply ap.
       apply FracField.path; unfold Frac.equiv; cbn.
       rewrite !mult_1_r; reflexivity.
@@ -382,7 +493,6 @@ Section contents.
 
   (** ** Rounding up *)
 
-  Local Notation nZ := (naturals_to_semiring nat Z).
   Local Notation nQ := (naturals_to_semiring nat Q).
 
   Local Lemma nat_to_rationals_int (n : nat) : nQ n = ' (nZ n).
@@ -416,7 +526,7 @@ Section contents.
     apply (snd (flip_pos_minus _ _)).
     apply (lt_le_trans _ (nZ m)); [exact l|].
     apply ge_1_mult_le_compat_r; [|apply to_semiring_nonneg|reflexivity].
-    apply pos_ge_1, den_square_pos.
+    apply int_pos_ge_1, den_square_pos.
   Qed.
 
   #[export] Instance roundupstrict_fracfield : RoundUpStrict Q.
@@ -432,7 +542,10 @@ End contents.
 (** The fractions [(a - b) / (c + 1)] of natural numbers cover the field of fractions, which is therefore equivalent to the natural numbers. *)
 Section enumeration.
   Context `{Funext} `{Univalence}.
-  Context (Z : Type) `{Integers Z} `{!TrivialApart Z} {Zset : IsHSet Z}.
+  Universe UZ.
+  Context (Z : Type@{UZ}) `{Integers Z} `{!TrivialApart Z} {Zset : IsHSet Z}
+    {Zdec : DecidablePaths Z} {Zdom : IsIntegralDomain Z} {Zprod : ZeroProduct Z}
+    {Zabs : IntAbs Z nat}.
 
   Local Existing Instance Frac.den_ne_0.
   Local Notation Frac := (Frac.Frac Z).
@@ -457,13 +570,6 @@ Section enumeration.
                   end
        end.
 
-  Local Lemma int_difference (z : Z) : {a : nat & {b : nat & nZ a - nZ b = z}}.
-  Proof.
-    destruct (int_abs_sig Z nat z) as [[a p]|[a p]].
-    - exists a, 0%nat; change (nZ 0%nat) with (0 : Z); rewrite negate_0, plus_0_r; exact p.
-    - exists 0%nat, a; change (nZ 0%nat) with (0 : Z); rewrite plus_0_l, p; apply negate_involutive.
-  Qed.
-
   Local Lemma int_pos_succ (z : Z) : 0 < z -> {c : nat & nZ (S c) = z}.
   Proof.
     intros zpos.
@@ -477,7 +583,7 @@ Section enumeration.
 
   Lemma fracfield_enumerator_hit (x : Frac) : {n : nat & fracfield_enumerator n = ' x}.
   Proof.
-    destruct (int_difference (Frac.num x * Frac.den x)) as [a [b p]].
+    destruct (int_difference Z (Frac.num x * Frac.den x)) as [a [b p]].
     destruct (int_pos_succ (Frac.den x * Frac.den x)) as [c q].
     { apply square_pos, trivial_apart, Frac.den_ne_0. }
     destruct (nat_unpair_hit b c) as [m r].
