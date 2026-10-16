@@ -342,6 +342,8 @@ End PfiberDeloop.
 (** [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
 
 Section Classification.
+  (** We declare [u] so that it refers to the same universe in the [Context] and in [equiv_ext_classifying]. *)
+  Universe u.
   Context `{Univalence} (n : nat) {B A : AbGroup@{u}}.
 
   (** A section of the classifying map. *)
@@ -374,19 +376,21 @@ Section Classification.
     : AbSES B A <~> (K(B, n.+2) ->* K(A, n.+3))
     := Build_Equiv _ _ (abses_classifying_map n) _.
 
-  (** Consequently [Ext B A] is the set of path components of the classifying mapping type. *)
+  (** Consequently [Ext B A] is the set of path components of the classifying mapping type.  Since [Trunc] is cumulative, we can take the truncation in the universe [u] of [B] and [A], rather than in the larger universe of [Ext B A]. *)
   Definition equiv_ext_classifying
-    : Ext B A <~> Tr 0 (K(B, n.+2) ->* K(A, n.+3))
+    : Ext B A <~> Tr@{u} 0 (K(B, n.+2) ->* K(A, n.+3))
     := Trunc_functor_equiv 0 equiv_abses_classifying_map.
 
 End Classification.
 
 (** ** Smallness *)
 
+(** [AbSES B A] is essentially small, and so is [Ext B A].  We use the case [n = 0] of the classification. *)
+
 Section Smallness.
+  Universe u.
   Context `{Univalence} {B A : AbGroup@{u}}.
 
-  (** [AbSES B A] is essentially small, and so is [Ext B A].  We use the case [n = 0] of the classification. *)
   #[export] Instance issmall_abses : IsSmall@{u _} (AbSES B A)
     := Build_IsSmall _ _ (equiv_abses_classifying_map 0)^-1%equiv.
 
