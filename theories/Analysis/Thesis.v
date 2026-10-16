@@ -7,10 +7,10 @@ From HoTT.Classes.interfaces Require Import canonical_names abstract_algebra ord
 From HoTT.Classes.theory Require Import apartness rings fields.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Modalities Require Import ReflectiveSubuniverse.
-From HoTT.Misc Require Import BoundedSearch.
+From HoTT.Misc Require Import BoundedSearch CompactTypes.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions.
+From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions LocatorCuts.
 
 (** ** Chapter 3: Fixpoints in dcpos *)
 
@@ -367,6 +367,55 @@ Check merely_locator_pointwise.
 Check pointwise_locator_iff_located.
 Check @O_decidable_arrow.
 Check @cotransitive.
+
+(** Corollary 6.9.9. Every Dedekind real merely has a signed-digit representation if and only if the Cauchy reals and the Dedekind reals coincide, that is, the canonical map between them is an equivalence; since it is an embedding, this means that every Dedekind real is a Cauchy real. *)
+Check signed_digits_iff_isequiv_cauchy_reals_to_dedekind.
+Check isequiv_cauchy_reals_to_dedekind_iff.
+
+(** Lemma 6.10.1. A choice of locators for all reals gives a strongly nonconstant map to [Bool], by deciding [0 < x] or [x < 1]. *)
+Check IsStronglyNonconstant.
+Check locator_choice_bool.
+Check isstronglynonconstant_locator_choice_bool.
+
+(** Lemma 6.10.2. A strongly nonconstant map from a Cauchy complete Archimedean ordered field to [Bool] implies the weak limited principle of omniscience (Definition 2.8.4). The bisection is carried out on the rationals, on the line through two points with different values. *)
+Check WLPO.
+Check iff_wlpo_ispicompact_nat.
+Check wlpo_bisection.
+Check wlpo_nonconstant.
+Check wlpo_isstronglynonconstant.
+Check wlpo_locator_choice.
+
+(** Theorem 6.10.3. The properties [IsCut] and the structure [CutStructure] of a pair of predicates on the rationals, each with eight components: the structure gives the property, so does its truncation; the property together with a locator gives the structure; the property with the mere existence of a locator gives a Cauchy real, and so does the mere existence of the structure. *)
+Check BoundedLower.
+Check BoundedUpper.
+Check ClosedLower.
+Check ClosedUpper.
+Check OpenLower.
+Check OpenUpper.
+Check CutTransitive.
+Check CutLocated.
+Check LowerBound.
+Check UpperBound.
+Check LowerRounding.
+Check UpperRounding.
+Check CutLocator.
+Check IsCut.
+Check CutStructure.
+Check iscut_iff_isdedekindcut.
+Check iscut_cutstructure.
+Check iscut_merely_cutstructure.
+Check cut_locator_iff_locator.
+Check lower_bound_cut_locator.
+Check upper_bound_cut_locator.
+Check lower_rounding_cut_locator.
+Check upper_rounding_cut_locator.
+Check cutstructure_iscut_locator.
+Check iscauchyreal_iscut_merely_locator.
+Check iscauchyreal_merely_cutstructure.
+
+(** Theorem 6.10.5. It is not provable that every cut merely has the structure of a cut. The non-provability rests on a model in which the Cauchy and Dedekind reals differ, which is not formalized; we formalize the internal statement that if every cut merely has the structure, then every Dedekind real is a Cauchy real, so that the Cauchy and Dedekind reals coincide. *)
+Check iscauchyreal_all_merely_cutstructure.
+Check isequiv_cauchy_reals_to_dedekind_iff.
 
 (** ** Chapter 7: Some constructive analysis with locators *)
 
