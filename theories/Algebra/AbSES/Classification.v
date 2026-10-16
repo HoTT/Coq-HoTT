@@ -129,7 +129,7 @@ End AbSESPfiber.
 Section ClassifyingRoundTrip.
   Context `{Univalence} (n : nat) {B A : AbGroup@{u}} (E : AbSES B A).
 
-  (** The classifying map equals the connecting map after the loop identification, as a square. *)
+  (** This square arises three times below, so we state it as a local result.  The RHS is just the definition [abses_classifying_map], so the only difference is the postcomposition of the pointed identity map. *)
   Local Definition square_classifying_map
     : pequiv_pmap_idmap o* abses_classifying_map n E
       ==* connecting_map (fmap (K' n.+3) (inclusion E))
@@ -185,8 +185,7 @@ Section ClassifyingRoundTrip.
   Proof.
     apply moveR_equiv_V.
     lhs_V exact (fmap_comp (Pi n.+2)
-      (connecting_map (pfib (abses_classifying_map n E))
-        (abses_classifying_map n E))
+      (connecting_map (pfib (abses_classifying_map n E)) _)
       pequiv_pfiber_classifying_map (equiv_g_pi_n_loops_em A n.+1 a)).
     lhs tapply (fmap2 (Pi n.+2) connecting_map_classifying_map).
     napply pi_loops_em_fmap.
