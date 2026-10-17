@@ -125,7 +125,7 @@ Section digits.
     split.
     - refine (le_lt_trans _ _ _ _ ltux).
       exact (order_preserving _ _ _ leju).
-    - refine (transitivity ltxu _).
+    - lhs' exact ltxu.
       apply (strictly_order_preserving _), (strictly_order_preserving (+ 1)), ltuj.
   Defined.
 
@@ -321,7 +321,7 @@ Section digits.
           * rewrite <- plus_assoc, plus_negate_r, plus_0_r; exact ltGa.
           * rewrite <- pS; exact ltx.
           * exists b; refine (_, bounds); split.
-            -- refine (transitivity _ le1).
+            -- rhs_V' exact le1.
                apply nonneg_plus_le_compat_r, le_0_1.
             -- rewrite pS; exact le2.
         + exists a; refine (_, (lta, ltxG)); split; [reflexivity|].
@@ -436,10 +436,10 @@ Section digits.
         rewrite (preserves_plus (f:=cast Q F)) in ltxc.
         split.
         + apply flip_lt_minus_r; rewrite plus_comm.
-          refine (transitivity _ ltcx).
+          rhs_V' exact ltcx.
           apply (strictly_order_preserving (' c +)), (snd (flip_lt_negate _ _) ltwe).
         + apply flip_lt_minus_l; rewrite plus_comm.
-          refine (transitivity ltxc _).
+          lhs' exact ltxc.
           apply (strictly_order_preserving (' c +)), ltwe.
     Defined.
   End from_locator.
