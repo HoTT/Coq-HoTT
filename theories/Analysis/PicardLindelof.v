@@ -56,7 +56,7 @@ Section picard_lindelof.
     induction N as [|N IH].
     - rewrite plus_negate_r, abs_0, (preserves_0 (f:=nQ)), (preserves_0 (f:=cast Q F)).
       reflexivity.
-    - refine (transitivity (pseudometric_triangle (d:=dF) _ (h (z N)) _) _); cbn beta.
+    - lhs' exact (pseudometric_triangle (d:=dF) _ (h (z N)) _); cbn beta.
       rewrite nat_to_semiring_succ, (preserves_plus (f:=cast Q F)).
       apply plus_le_compat.
       + apply lt_le; exact (hw 1 _ _ (close N (leq_refl _))).
@@ -117,9 +117,9 @@ Section picard_lindelof.
         - rewrite abs_minus_swap; exact (interval_dist_le (snd z) (snd p)). }
       assert (ch := abs_chain_le _ g v gv q (S N) close).
       rewrite q0, qN in ch.
-      refine (transitivity _ (plus_le_compat _ _ _ _ (reflexivity (abs (g z))) ch)).
+      rhs_V' exact (plus_le_compat _ _ _ _ (reflexivity (abs (g z))) ch).
       rewrite plus_comm.
-      refine (transitivity _ (abs_triangle _ _)).
+      rhs_V' exact (abs_triangle _ _).
       apply eq_le; apply ap.
       rewrite <- plus_assoc, plus_negate_l; symmetry; apply plus_0_r.
     Qed.
@@ -143,9 +143,9 @@ Section picard_lindelof.
   Definition interval_incl (u l r : F) (lr : l ≤ r) (t : I (u - l) (u + l)) : I (u - r) (u + r).
   Proof.
     exists t.1; split.
-    - refine (transitivity _ (fst t.2)).
+    - rhs_V' exact (fst t.2).
       apply (order_preserving (u +)), (snd (flip_le_negate _ _)), lr.
-    - refine (transitivity (snd t.2) _).
+    - lhs' exact (snd t.2).
       apply (order_preserving (u +)), lr.
   Defined.
 
@@ -198,8 +198,8 @@ Section picard_lindelof.
       : abs (picard_value f x - y0) ≤ b.
     Proof.
       unfold picard_value; rewrite (plus_comm y0), <- plus_assoc, plus_negate_r, plus_0_r.
-      refine (transitivity (integral_abs_le Q F _ _ c x _ (fun t => gK _)) _).
-      refine (transitivity _ lKb).
+      lhs' exact (integral_abs_le Q F _ _ c x _ (fun t => gK _)).
+      rhs_V' exact lKb.
       apply (order_preserving (_ *.)), abs_center_le.
     Qed.
 
@@ -269,12 +269,12 @@ Section picard_lindelof.
         rewrite negate_plus_distr, (plus_comm y0), <- plus_assoc, (plus_assoc y0 (- y0)).
         rewrite plus_negate_r, plus_0_l; reflexivity. }
       rewrite p.
-      refine (transitivity (integral_abs_le Q F _ _ c x (L * dUL f f') _) _).
-      - intro t; refine (transitivity (gL _ _ _) _).
+      lhs' refine (integral_abs_le Q F _ _ c x (L * dUL f f') _).
+      - intro t; lhs' exact (gL _ _ _).
         assert (PropHolds (0 ≤ L)) by exact (lt_le _ _ L0).
         apply (order_preserving (L *.)), (le_uniform_dist Q F _ _ _ _ leab).
       - assert (LD0 : PropHolds (0 ≤ L * dUL f f')) by exact (nonneg_mult_compat _ _ (lt_le _ _ L0) D0).
-        refine (transitivity (order_preserving (_ *.) _ _ (abs_center_le x)) _).
+        lhs' exact (order_preserving (_ *.) _ _ (abs_center_le x)).
         rewrite (mult_comm L), <- mult_assoc, (mult_comm (dUL f f')).
         exact (order_preserving (.* dUL f f') _ _ lLc).
     Qed.
@@ -394,7 +394,7 @@ Section picard_lindelof.
     assert (lLc : L * l ≤ ' (/ 2 : Q)).
     { assert (PropHolds (0 ≤ L)) by exact (lt_le _ _ L0).
       assert (PropHolds (0 ≤ w)) by exact (lt_le _ _ w0).
-      refine (transitivity (order_preserving (L *.) _ _ lw) _).
+      lhs' exact (order_preserving (L *.) _ _ lw).
       exact (transitivity (order_preserving (.* w) _ _ (lt_le _ _ ltL)) (eq_le _ _ rLw)). }
     destruct (upper_bound Q F Q_eq (locator_width y0 b ly0 lb)) as [C ltC].
     assert (C0 : 0 < C).
