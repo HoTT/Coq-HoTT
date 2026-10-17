@@ -158,7 +158,7 @@ Proof.
     rewrite (path_zero_leq_zero_r m l); exact _.
   - exists (k + S (g (S n))); intros m l.
     destruct (leq_succ_dichotomy l) as [p|l'].
-    + rewrite p; exact (leq_add_l _ _).
+    + rewrite p; napply leq_add_l.
     + exact (leq_trans (IH m l') (leq_add_r _ _)).
 Defined.
 
