@@ -393,7 +393,7 @@ Section locator.
         rewrite (associativity ('n) ('epsilon) (/3)).
         transitivity ('r).
         - exact ltxr.
-        - apply (strictly_order_preserving _); exact ltn3eps.
+        - rapply strictly_order_preserving; exact ltn3eps.
       }
       destruct (sperners_lemma_1d P left_true right_false) as [u [Pltux Pltxueps]].
       exists (grid (fin_incl (fin_incl u))).
@@ -532,11 +532,11 @@ Section locator.
     intros ltxy.
     destruct (archimedean_structure l m ltxy) as [q [ltxq ltqy]].
     destruct (trichotomy _ q s) as [ltqs|[eqqs|ltsq]].
-    - apply inl; refine (transitivity ltxq _).
-      apply (strictly_order_preserving _); assumption.
+    - apply inl; lhs' exact ltxq.
+      rapply strictly_order_preserving; assumption.
     - apply inl; rewrite <- eqqs; assumption.
-    - apply inr; refine (transitivity _ ltqy).
-      apply (strictly_order_preserving _); assumption.
+    - apply inr; rhs_V' exact ltqy.
+      rapply strictly_order_preserving; assumption.
   Defined.
 
   (** Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose between [x < z] and [z < y]. *)
@@ -759,12 +759,12 @@ Section locator.
       rewrite p, <- plus_assoc, plus_negate_l, plus_0_r; reflexivity. }
     destruct (approx e) as [p [ltpz ltzp]].
     destruct (trichotomy _ (q + ' e) p) as [ltqep|[eqqep|ltpqe]].
-    - apply inl. refine (transitivity _ ltpz).
+    - apply inl. rhs_V' exact ltpz.
       apply (strictly_order_preserving _), flip_lt_minus_r; assumption.
     - apply inl. rewrite <- eqqep, <- plus_assoc, plus_negate_r, plus_0_r in ltpz.
       exact ltpz.
-    - apply inr. refine (transitivity ltzp _).
-      apply (strictly_order_preserving _).
+    - apply inr. lhs' exact ltzp.
+      rapply strictly_order_preserving.
       rewrite <- qeer.
       apply (strictly_order_preserving (+ ' e)); assumption.
   Defined.
@@ -800,7 +800,7 @@ Section locator.
       : - d < v - u < d.
     Proof.
       split.
-      - refine (transitivity _ (snd (flip_pos_minus _ _) ltuv)).
+      - rhs_V' exact (snd (flip_pos_minus _ _) ltuv).
         apply flip_pos_negate, dpos.
       - apply flip_lt_minus_l; rewrite (commutativity d); assumption.
     Qed.
@@ -812,7 +812,7 @@ Section locator.
     Proof.
       split.
       - rewrite negate_plus_distr.
-        refine (transitivity _ (snd (flip_lt_minus_l _ _ _) ltvu)).
+        rhs_V' exact (snd (flip_lt_minus_l _ _ _) ltvu).
         apply plus_lt_compat; [apply ltZv|].
         apply (snd (flip_lt_negate _ _)); assumption.
       - refine (transitivity ltuv (transitivity (snd ltZv) _)).
