@@ -182,7 +182,7 @@ Section Pointwise.
   Proof.
     split.
     - exact _.
-    - intros f a; exact (bottom_least _).
+    - intros f a; rapply bottom_least.
   Defined.
 
 End Pointwise.
