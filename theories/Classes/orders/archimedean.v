@@ -69,7 +69,7 @@ Section strict_field_order.
       apply flip_lt_minus_r; assumption.
     - intros ht; strip_truncations; destruct ht as [t [ltxt ltyrt]].
       rewrite preserves_minus in ltyrt.
-      refine (transitivity _ (fst (flip_lt_minus_r _ _ _) ltyrt)).
+      rhs_V' exact (fst (flip_lt_minus_r _ _ _) ltyrt).
       rewrite (commutativity y).
       apply (strictly_order_preserving (+ y)); assumption.
   Qed.
