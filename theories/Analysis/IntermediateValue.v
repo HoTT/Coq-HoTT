@@ -109,8 +109,8 @@ Section ivt.
       : w n - z n < ' (' e).
     Proof.
       refine (le_lt_trans _ _ _ (width n) _).
-      apply (strictly_order_preserving _).
-      refine (le_lt_trans _ (' B * power r (nested_modulus e)) _ _ _).
+      rapply strictly_order_preserving.
+      rapply (le_lt_trans _ (' B * power r (nested_modulus e))).
       - apply (order_preserving (' B *.)).
         exact (power_antitone r _ _ (lt_le _ _ r0) (lt_le _ _ r1) len).
       - assert (p : ' B * ' (e / B) = ' e).
@@ -253,7 +253,7 @@ Section ivt.
     { assert (le1 : 1 - dd ≤ 1).
       { apply (snd (flip_le_minus_l _ _ _)).
         exact (fst (nonneg_plus_le_compat_r _ _) (fst dd01)). }
-      refine (transitivity (order_preserving (.* h) _ _ le1) _).
+      lhs' exact (order_preserving (.* h) _ _ le1).
       rewrite mult_1_l; reflexivity. }
     refine (_, (_, (_, _))).
     - exact (fst (nonneg_plus_le_compat_r _ _) D0).
@@ -519,9 +519,9 @@ Section ivt.
       destruct inv as [[j [_ cj]]|[neg pos]].
       1: exact (tr (S j; cj)).
       apply tr; exists 0%nat; split.
-      - refine (transitivity (fst (close (w m) (wM m (le_nat_max_r N M)))) _).
+      - lhs' exact (fst (close (w m) (wM m (le_nat_max_r N M)))).
         exact (fst (pos_minus_lt_compat_r _ _) pos).
-      - refine (transitivity _ (snd (close (z m) (zN m (le_nat_max_l N M))))).
+      - rhs_V' exact (snd (close (z m) (zN m (le_nat_max_l N M)))).
         exact (fst (pos_plus_lt_compat_r _ _) (fst (flip_neg_negate _) neg)).
     Qed.
 
@@ -926,11 +926,11 @@ Section ivt.
       Proof.
         induction n as [|n IH].
         - rewrite mult_1_r; exact sign_width_bound.2.
-        - refine (transitivity (snd (step_props n)) _).
+        - lhs' exact (snd (step_props n)).
           assert (r0 : (0 : F) ≤ ' shrink).
           { rewrite <- (preserves_0 (f:=cast Q F)).
             exact (order_preserving _ _ _ (lt_le _ _ shrink_pos)). }
-          refine (transitivity (order_preserving (.* ' shrink) _ _ IH) _).
+          lhs' exact (order_preserving (.* ' shrink) _ _ IH).
           apply eq_le.
           rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
           change (nat_iter (S n) (mult shrink) 1) with (shrink * nat_iter n (mult shrink) 1).
