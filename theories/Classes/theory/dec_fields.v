@@ -184,7 +184,7 @@ Hint Extern 7 (PropHolds (/ _ <> 0)) =>
 Lemma decfield_nontrivial_apart `{IsDecField F} `{Apart F} `{!TrivialApart F}
   : PropHolds (1 ≶ 0).
 Proof.
-  apply ne_apart; exact (decfield_nontrivial _).
+  apply ne_apart; rapply decfield_nontrivial.
 Qed.
 
 (* Due to bug #2528 *)
