@@ -203,7 +203,7 @@ Section dedekind.
       - apply lt_ne_flip, is_pos. }
     specialize (step N); strip_truncations; destruct step as [close|lp]; [exact close|].
     apply Empty_rec, (irreflexivity (<) (b0 - a0)).
-    refine (transitivity lN' _).
+    lhs' exact lN'.
     apply flip_lt_minus_r; rewrite plus_comm.
     exact (cut_transitive (isdedekindcut x) _ _ lp ub0).
   Qed.
@@ -1125,11 +1125,11 @@ Section dedekind.
         assert (sT : prod (- T < s) (s < T))
           by exact (lt_le_trans _ _ _ lT (fst ins), le_lt_trans _ _ _ (snd ins) lT').
         assert (sD : s * ' D < q' - q).
-        { refine (transitivity _ (transport (fun w => w < _) (mult_comm _ _) lD)).
+        { rhs_V' exact (transport (fun w => w < _) (mult_comm _ _) lD).
           exact (pos_mult_lt_r (' D) (is_pos D) _ _ (snd sT)). }
         assert (sD' : - (q' - q) < s * ' D).
         { apply flip_lt_negate_l; rewrite negate_mult_distr_l.
-          refine (transitivity _ (transport (fun w => w < _) (mult_comm _ _) lD)).
+          rhs_V' exact (transport (fun w => w < _) (mult_comm _ _) lD).
           exact (pos_mult_lt_r (' D) (is_pos D) _ _ (flip_lt_negate_l _ _ (fst sT))). }
         rewrite <- (minus_minus_cancel q' q), plus_mult_distr_l, plus_mult_distr_l.
         rewrite <- negate_mult_distr_r; split.
@@ -1397,7 +1397,7 @@ Section dedekind.
                unfold d; rewrite recip_mult_cancel, <- plus_conjugate_alt; [reflexivity|exact bpos].
         + intros l; revert l; apply Trunc_rec; intros [q' [l p]]; change ([q'] * x < 1) in p.
           change ([q] * x < 1).
-          refine (transitivity _ p).
+          rhs_V' exact p.
           exact (strictly_order_preserving (.* x) _ _ (fst (rational_dedekind_lt q q') l)).
       - intros r; split.
         + intros l; change (1 < [r] * x) in l.
@@ -1421,7 +1421,7 @@ Section dedekind.
                exact (strictly_order_preserving ([d] *.) x [b] lb).
         + intros l; revert l; apply Trunc_rec; intros [r' [l p]]; change (1 < [r'] * x) in p.
           change (1 < [r] * x).
-          refine (transitivity p _).
+          lhs' exact p.
           exact (strictly_order_preserving (.* x) _ _ (fst (rational_dedekind_lt r' r) l)).
       - intros q r l l'.
         apply (rational_dedekind_lt q r).
@@ -1469,7 +1469,7 @@ Section dedekind.
         apply (Trunc_rec (n:=-1) (A:={q : Q & {r : Q & prod (prod (lower_cut y q) (upper_cut y r)) (r - q < ' e)}}));
           [|exact (cut_approximate y e)].
         intros [q [r [[lq ur] lqr]]]; change ([q] * x < 1) in lq.
-        apply (irreflexivity (<) (1 : R)); refine (transitivity _ lq).
+        apply (irreflexivity (<) (1 : R)); rhs_V' exact lq.
         rewrite (mult_comm [q]).
         apply (le_lt_trans _ (x * (y - [' e]))).
         + rewrite plus_mult_distr_l, <- negate_mult_distr_r; apply lt_le.
@@ -1573,8 +1573,8 @@ Section complete.
       apply flip_lt_minus_l in c; unfold cast in c.
       rewrite (rationals_initial (h:=rational_dedekind Q)) in c.
       apply (snd (rational_dedekind_lt Q _ _)); rewrite plus_comm, (rational_dedekind_plus Q (Qroundup:=Qroundup)).
-      refine (transitivity (snd (lt_rational_dedekind_l Q a (x m)) la) _).
-      refine (transitivity c _).
+      lhs' exact (snd (lt_rational_dedekind_l Q a (x m)) la).
+      lhs' exact c.
       exact (strictly_order_preserving ([' e] +) _ _ (snd (lt_rational_dedekind_r Q b (x n)) ub)).
     Qed.
 
@@ -1601,7 +1601,7 @@ Section complete.
     Local Lemma plus_half_shift (q : Q) (e d : Qpos Q)
       : q + ' (d / 2) + ' e + ' (d / 2) = q + ' e + ' d.
     Proof.
-      refine (_ @ (ap (fun z => q + ' e + ' z) (pos_split2 d))^).
+      rhs exact (ap (fun z => q + ' e + ' z) (pos_split2 d)).
       change (q + ' (d / 2) + ' e + ' (d / 2) = q + ' e + (' (d / 2) + ' (d / 2))).
       rewrite <- (plus_assoc q (' (d / 2)) (' e)), (plus_comm (' (d / 2)) (' e)), plus_assoc.
       apply (plus_assoc _ (' (d / 2)) (' (d / 2)))^.
@@ -1610,7 +1610,7 @@ Section complete.
     Local Lemma minus_half_shift (r : Q) (e d : Qpos Q)
       : r - ' (d / 2) - ' e - ' (d / 2) = r - ' e - ' d.
     Proof.
-      refine (_ @ (ap (fun z => r - ' e - ' z) (pos_split2 d))^).
+      rhs exact (ap (fun z => r - ' e - ' z) (pos_split2 d)).
       change (r - ' (d / 2) - ' e - ' (d / 2) = r - ' e - (' (d / 2) + ' (d / 2))).
       rewrite negate_plus_distr.
       rewrite <- (plus_assoc r (- ' (d / 2)) (- ' e)), (plus_comm (- ' (d / 2)) (- ' e)), plus_assoc.
@@ -1642,8 +1642,10 @@ Section complete.
       intros l.
       rewrite <- (plus_assoc (r - ' e')), (plus_comm (- ' d')), plus_assoc in l.
       rewrite <- (plus_assoc r), plus_negate_l, plus_0_r in l.
-      refine (transitivity (transitivity (lt_plus_pos q e) (lt_plus_pos _ d)) _).
-      exact (transitivity l (minus_pos_lt r d')).
+      lhs' exact (lt_plus_pos q e).
+      lhs' exact (lt_plus_pos _ d).
+      lhs' exact l.
+      exact (minus_pos_lt r d').
     Qed.
 
     Local Lemma limit_located_aux (q r : Q) (e : Qpos Q)
@@ -1687,7 +1689,8 @@ Section complete.
         destruct p as [e p], p' as [e' p']; strip_truncations.
         destruct p as [d p], p' as [d' p'].
         destruct (leq_dichotomy (M e) (M e')) as [lM|lM].
-        + refine (transitivity _ (transitivity (minus_pos_lt _ d') (minus_pos_lt r e'))).
+        + rhs_V' exact (minus_pos_lt r e').
+          rhs_V' exact (minus_pos_lt _ d').
           exact (limit_transitive_aux q _ e d (modulus_cut_lt e _ _ _ _ (leq_refl _) lM p p')).
         + exact (limit_transitive_aux' q r e d e' d'
                    (modulus_cut_lt e' _ _ _ _ (leq_lt lM) (leq_refl _) p p')).
@@ -1739,7 +1742,7 @@ Section complete.
         exact (transitivity (lt_plus_pos r e') (lt_plus_pos _ d')).
       - refine (not_lt_flip_dedekind _ _ _
                   (modulus_cut_lt e' _ _ _ _ (leq_refl _) (leq_trans (leq_lt lM) ln) p lr)).
-        refine (transitivity _ (lt_plus_pos _ d')).
+        rhs_V' exact (lt_plus_pos _ d').
         apply (strictly_order_preserving (+ ' e')), minus_pos_lt.
     Qed.
 
