@@ -342,7 +342,7 @@ Section cauchy_structure.
     (** A Cauchy complete Archimedean ordered field has a canonical Cauchy structure. *)
     Definition cauchy_structure_field : CauchyStructure.
     Proof.
-      refine (Build_CauchyStructure F (field_close Q) _ (cast Q F) field_lim _ _ _ _ _).
+      rapply (Build_CauchyStructure F (field_close Q) _ (cast Q F) field_lim).
       - exact (field_close_eq Q).
       - intros q r e; exact (field_close_rationals Q e q r).
       - intros q y e d c.
