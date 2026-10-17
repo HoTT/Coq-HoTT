@@ -49,7 +49,7 @@ Section completeness.
   Proof.
     intros [lo hi]; unfold field_close.
     rewrite <- (preserves_minus (f:=cast Q F)), <- (preserves_negate (f:=cast Q F)).
-    split; apply (strictly_order_preserving _); assumption.
+    split; rapply strictly_order_preserving; assumption.
   Qed.
 
   (** It also reflects closeness. *)
