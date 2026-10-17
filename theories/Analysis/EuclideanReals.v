@@ -158,8 +158,8 @@ Section euclidean.
     Lemma subhom_const {X : F -> HProp} (a : SubHom X) (y : F) (h : X y)
       : a (exist X y h) = cs_lim Q S (subhom_approximation a (const_approximation Q y) (fun _ => h)).
     Proof.
-      refine (_ @ subhom_lim a (const_approximation Q y) (fun _ => h)
-                    (transport X (field_lim_const Q y)^ h)).
+      rhs_V exact (subhom_lim a (const_approximation Q y) (fun _ => h)
+                     (transport X (field_lim_const Q y)^ h)).
       apply ap; exact (path_sigma_hprop (y; h) (_; _) (field_lim_const Q y)^).
     Qed.
 
@@ -304,7 +304,7 @@ Section euclidean.
         destruct u as [y h]; pose proof h as h0; revert h.
         strip_truncations; destruct h0 as [x [hx p]]; intro h.
         rewrite (limits_fun_beta x hx y p); destruct p.
-        refine (subhom_lim a x (fun e => limits_subset_incl X _ (hx e)) h @ _).
+        lhs exact (subhom_lim a x (fun e => limits_subset_incl X _ (hx e)) h).
         exact (ap (fun b => cs_lim Q S (subhom_approximation b x hx))
                  (@path_contr _ (snd hX) (subhom_restrict (limits_subset_incl X) a) fX)).
       Qed.
@@ -410,7 +410,7 @@ Section euclidean.
         destruct u as [y h].
         assert (w := sup_out _ h); strip_truncations; destruct w as [k hk].
         rewrite (sup_fun_beta k _ hk).
-        refine (ap a (path_sigma_hprop (y; h) (y; sup_in k y hk) idpath) @ _).
+        lhs exact (ap a (path_sigma_hprop (y; h) (y; sup_in k y hk) idpath)).
         exact (ap10 (ap (subhom_fun (Y:=D k))
                        (@path_contr _ (snd (hD k)) (subhom_restrict (sup_in k) a) (fk k))) (y; hk)).
       Qed.
@@ -478,7 +478,7 @@ Section euclidean.
       - exact f.
       - exact (cshom_close Q _ _ f).
       - intros q h.
-        refine (_ @ cshom_rat Q _ _ f q).
+        rhs_V exact (cshom_rat Q _ _ f q).
         exact (ap f (path_sigma_hprop (exist euclidean_reals (' q) h)
                        (cs_rat Q euclidean_reals_cauchy_structure q) idpath)).
       - intros x hx h.
