@@ -23,7 +23,7 @@ Section Kleene.
     : kleene_iterate n ≤ kleene_iterate n.+1%nat.
   Proof.
     induction n as [|n IHn].
-    - exact (bottom_least _).
+    - rapply bottom_least.
     - exact (order_preserving f _ _ IHn).
   Defined.
 
@@ -39,7 +39,7 @@ Section Kleene.
     : kleene_iterate n ≤ y.
   Proof.
     induction n as [|n IHn].
-    - exact (bottom_least _).
+    - rapply bottom_least.
     - exact (transitivity (order_preserving f _ _ IHn) fy).
   Defined.
 
@@ -56,7 +56,7 @@ Section Kleene.
       exact (dcpo_sup_upper kleene_iterate _ n.+1%nat).
     - apply dcpo_sup_least.
       intros [|n].
-      + exact (bottom_least _).
+      + rapply bottom_least.
       + exact (order_preserving f _ _ (dcpo_sup_upper kleene_iterate _ n)).
   Defined.
 
@@ -220,16 +220,16 @@ Section LeastFixedPoint.
   Proof.
     refine (_, _, _).
     - intros I x d Bx.
-      refine (hprop_meet_in _ _).
+      napply hprop_meet_in.
       intros [B [[sB botB] fB]].
       apply sB.
       intro i.
       exact (least_admissible_subset B (sB, botB, fB) (x i) (Bx i)).
-    - refine (hprop_meet_in _ _).
+    - napply hprop_meet_in.
       intros [B [[sB botB] fB]].
       exact botB.
     - intros x Bx.
-      refine (hprop_meet_in _ _).
+      napply hprop_meet_in.
       intros [B aB].
       apply (snd aB).
       exact (least_admissible_subset B aB x Bx).
@@ -255,10 +255,9 @@ Section LeastFixedPoint.
     - intros I x d Bx.
       apply dcpo_sup_least.
       intro i.
-      transitivity (f (x i)).
-      + exact (Bx i).
-      + apply (order_preserving f).
-        exact (dcpo_sup_upper x d i).
+      lhs' exact (Bx i).
+      apply (order_preserving f).
+      exact (dcpo_sup_upper x d i).
     - exact (bottom_least (f ⊥)).
     - intros x xfx.
       exact (order_preserving f _ _ xfx).
