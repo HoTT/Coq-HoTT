@@ -103,7 +103,7 @@ Section lifts.
       assert (ypos : 0 < y) by exact (pos_rationals_to_field_qpos Q (d / 2)).
       assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
       assert (ltyd : y < ' (' d)).
-      { apply (strictly_order_preserving _).
+      { rapply strictly_order_preserving.
         rewrite (ap (cast (Qpos Q) Q) (pos_split2 d)).
         apply pos_plus_lt_compat_r, pos_is_pos. }
       assert (c : field_close Q d 0 y).
