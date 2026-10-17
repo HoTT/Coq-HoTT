@@ -145,7 +145,7 @@ Section nat_quotients.
       (distr_l c1 u2 c2).
     rewrite <- (plus_assoc (u1 * u2) (u1 * c2)), <- (plus_assoc (u1 * u2)); apply ap.
     rewrite <- (plus_assoc (u1 * c2) (c1 * c2)), <- (plus_assoc (u1 * c2)); apply ap.
-    exact (plus_comm _ _).
+    rapply plus_comm.
   Qed.
 
   Local Lemma isnatquot_recip (x : F) (p : x ≶ 0)
