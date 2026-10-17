@@ -422,8 +422,8 @@ Section integration.
                    (locator_integral_le (interval_min x y) y (locator_meet Q F lx ly) ly f fu w fw lf _)
                    (locator_minus Q F
                       (locator_integral_le (interval_min x y) x (locator_meet Q F lx ly) lx f fu w fw lf _)))).
-      - exact (meet_lb_r _ _).
-      - exact (meet_lb_l _ _).
+      - rapply meet_lb_r.
+      - rapply meet_lb_l.
     Defined.
 
     (** The integral over [[a, b]] of a function [F -> F] with a modulus of uniform continuity on [[a, b]] that lifts to locators has a locator, if [a] and [b] do. *)
@@ -485,7 +485,7 @@ Section integration.
       apply Trunc_rec; intros [B [ltB _]].
       set (n := grid_modulus Q B w (e / 2)).
       assert (lt := lt_grid_modulus Q F _ B (lt_le _ _ ltB) w (e / 2) n (leq_refl _)).
-      refine (transitivity (pseudometric_triangle (d:=dF) _ (riemann_sum f x y n) _) _).
+      lhs' exact (pseudometric_triangle (d:=dF) _ (riemann_sum f x y n) _).
       cbn beta; rewrite (abs_minus_swap (riemann_sum f x y n)).
       rewrite (pos_split2 e), (preserves_plus (f:=cast Q F)), plus_mult_distr_r.
       exact (plus_le_compat _ _ _ _ (integral_riemann_sum (H:=I1) f fu w fw x y lexy _ n lt)
@@ -498,8 +498,8 @@ Section integration.
     Proof.
       rewrite <- (integral_interval_min (H:=I1)), <- (integral_interval_min (H:=I2)).
       rewrite 2 integral_unique_le; try reflexivity.
-      - exact (meet_lb_l _ _).
-      - exact (meet_lb_r _ _).
+      - rapply meet_lb_l.
+      - rapply meet_lb_r.
     Qed.
 
   End uniqueness.
