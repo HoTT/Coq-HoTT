@@ -116,7 +116,7 @@ Section nat_to_semiring.
   Proof.
     intro lemn; induction lemn as [|n lemn IH].
     - reflexivity.
-    - refine (transitivity IH _).
+    - lhs' exact IH.
       rewrite nat_to_semiring_succ.
       exact (fst (nonneg_plus_le_compat_l _ _) le_0_1).
   Qed.
