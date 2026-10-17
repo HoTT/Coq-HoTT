@@ -220,16 +220,16 @@ Section LeastFixedPoint.
   Proof.
     refine (_, _, _).
     - intros I x d Bx.
-      apply hprop_meet_in.
+      refine (hprop_meet_in _ _).
       intros [B [[sB botB] fB]].
       apply sB.
       intro i.
       exact (least_admissible_subset B (sB, botB, fB) (x i) (Bx i)).
-    - apply hprop_meet_in.
+    - refine (hprop_meet_in _ _).
       intros [B [[sB botB] fB]].
       exact botB.
     - intros x Bx.
-      apply hprop_meet_in.
+      refine (hprop_meet_in _ _).
       intros [B aB].
       apply (snd aB).
       exact (least_admissible_subset B aB x Bx).

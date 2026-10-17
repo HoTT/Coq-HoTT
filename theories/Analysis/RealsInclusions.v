@@ -140,39 +140,41 @@ Proof.
   destruct p; exact idmap.
 Defined.
 
-Section dedekind.
-  Context `{Funext} `{Univalence}.
-  Universe UQ.
-  Context (Q : Type@{UQ}) {Qap : Apart Q} {Qplus : Plus Q} {Qmult : Mult Q}
-    {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
-    {Qle : Le Q} {Qlt : Lt@{UQ UQ} Q} {QtoField : RationalsToField Q}
-    {Qrats : Rationals Q} {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q}
-    {Qroundup : RoundUpStrict@{_ UQ _ UQ} Q}.
-  Local Notation RD := (DedekindReals Q (Qlt:=Qlt)).
+(** The following are stated outside a section, with all assumptions as arguments: applying them to the Dedekind reals constrains the universes of the rationals, and constraints on section universes cannot be added by later definitions. *)
+Definition hottbookreals_to_dedekind `{Funext} `{Univalence} (Q : Type) {Qap : Apart Q} {Qplus : Plus Q}
+  {Qmult : Mult Q} {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+  {Qle : Le Q} {Qlt : Lt Q} {QtoField : RationalsToField Q} {Qrats : Rationals Q}
+  {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q} {Qroundup : RoundUpStrict Q}
+  (R : CauchyStructure Q) `{!IsHoTTBookReals Q R}
+  := hottbookreals_to_field Q R (F:=DedekindReals Q (Qlt:=Qlt))
+       (Farch:=archimedean_property_change_char Q _ _ _ (archimedean_dedekindreals Q)).
 
-  Definition hottbookreals_to_dedekind (R : CauchyStructure Q) `{!IsHoTTBookReals Q R}
-    := hottbookreals_to_field Q R (F:=RD)
-         (Farch:=archimedean_property_change_char Q RD _ _ (archimedean_dedekindreals Q)).
+#[export] Instance isembedding_hottbookreals_to_dedekind `{Funext} `{Univalence} (Q : Type) {Qap : Apart Q} {Qplus : Plus Q}
+  {Qmult : Mult Q} {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+  {Qle : Le Q} {Qlt : Lt Q} {QtoField : RationalsToField Q} {Qrats : Rationals Q}
+  {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q} {Qroundup : RoundUpStrict Q}
+  (R : CauchyStructure Q) `{!IsHoTTBookReals Q R}
+  : IsEmbedding (hottbookreals_to_dedekind Q R)
+  := isembedding_hottbookreals_to_field Q R (F:=DedekindReals Q (Qlt:=Qlt))
+       (Farch:=archimedean_property_change_char Q _ _ _ (archimedean_dedekindreals Q)).
 
-  #[export] Instance isembedding_hottbookreals_to_dedekind (R : CauchyStructure Q)
-    `{!IsHoTTBookReals Q R}
-    : IsEmbedding (hottbookreals_to_dedekind R)
-    := isembedding_hottbookreals_to_field Q R (F:=RD)
-         (Farch:=archimedean_property_change_char Q RD _ _ (archimedean_dedekindreals Q)).
+Definition cauchycomplete_hottbookreals_dedekind `{Funext} `{Univalence} (Q : Type) {Qap : Apart Q} {Qplus : Plus Q}
+  {Qmult : Mult Q} {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+  {Qle : Le Q} {Qlt : Lt Q} {QtoField : RationalsToField Q} {Qrats : Rationals Q}
+  {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q} {Qroundup : RoundUpStrict Q}
+  (R : CauchyStructure Q) `{!IsHoTTBookReals Q R}
+  : CauchyComplete Q (cs_close Q R)
+  := cauchycomplete_hottbookreals Q R (F:=DedekindReals Q (Qlt:=Qlt))
+       (Farch:=archimedean_property_change_char Q _ _ _ (archimedean_dedekindreals Q)).
 
-  Definition cauchycomplete_hottbookreals_dedekind (R : CauchyStructure Q)
-    `{!IsHoTTBookReals Q R}
-    : CauchyComplete Q (cs_close Q R)
-    := cauchycomplete_hottbookreals Q R (F:=RD)
-         (Farch:=archimedean_property_change_char Q RD _ _ (archimedean_dedekindreals Q)).
-
-  Definition isembedding_cauchy_reals_to_hottbookreals_dedekind (R : CauchyStructure Q)
-    `{!IsHoTTBookReals Q R}
-    : IsEmbedding (cauchy_reals_to_hottbookreals Q R)
-    := isembedding_cauchy_reals_to_hottbookreals Q R (F:=RD)
-         (Farch:=archimedean_property_change_char Q RD _ _ (archimedean_dedekindreals Q)).
-
-End dedekind.
+Definition isembedding_cauchy_reals_to_hottbookreals_dedekind `{Funext} `{Univalence} (Q : Type) {Qap : Apart Q} {Qplus : Plus Q}
+  {Qmult : Mult Q} {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
+  {Qle : Le Q} {Qlt : Lt Q} {QtoField : RationalsToField Q} {Qrats : Rationals Q}
+  {Qdec : DecidablePaths Q} {Qtriv : TrivialApart Q} {Qroundup : RoundUpStrict Q}
+  (R : CauchyStructure Q) `{!IsHoTTBookReals Q R}
+  : IsEmbedding (cauchy_reals_to_hottbookreals Q R)
+  := isembedding_cauchy_reals_to_hottbookreals Q R (F:=DedekindReals Q (Qlt:=Qlt))
+       (Farch:=archimedean_property_change_char Q _ _ _ (archimedean_dedekindreals Q)).
 
 (** ** Cauchy complete subsets of a Cauchy complete Archimedean ordered field *)
 

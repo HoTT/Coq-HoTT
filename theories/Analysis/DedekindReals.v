@@ -908,8 +908,8 @@ Section dedekind.
       destruct (cutbounds_intersect (Build_CutBounds y c d lc ud) J0) as [J HJ].
       assert (close : forall s t s' t', in_bounds I s -> in_bounds J t -> in_bounds I s'
                         -> in_bounds J t' -> s * t - s' * t' < r - q).
-      { intros s t s' t' is it is' it'.
-        destruct (HI s is) as [[l1 l2] [l3 l4]], (HI s' is') as [[l1' l2'] _].
+      { intros s t s' t' ins it ins' it'.
+        destruct (HI s ins) as [[l1 l2] [l3 l4]], (HI s' ins') as [[l1' l2'] _].
         destruct (HJ t it) as [[m1 m2] _], (HJ t' it') as [[m1' m2'] [m3' m4']].
         cbn in l1, l2, l1', l2', m1, m2, m1', m2'.
         refine (lt_le_trans _ _ _ (snd (mult_minus_mult_lt_bound s t s' t' X W (' D)
@@ -920,9 +920,9 @@ Section dedekind.
         rewrite (mult_comm X), <- plus_mult_distr_l; exact (lt_le _ _ lD). }
       assert (upper_of : forall s0 t0, in_bounds I s0 -> in_bounds J t0 -> s0 * t0 <= q
                            -> mult_upper r).
-      { intros s0 t0 i0 j0 le0; apply tr; exists I; apply tr; exists J; intros s t is it.
+      { intros s0 t0 i0 j0 le0; apply tr; exists I; apply tr; exists J; intros s t ins it.
         apply (lt_le_trans _ (r - q + s0 * t0)).
-        - exact (fst (flip_lt_minus_l _ _ _) (close s t s0 t0 is it i0 j0)).
+        - exact (fst (flip_lt_minus_l _ _ _) (close s t s0 t0 ins it i0 j0)).
         - apply (transitivity (y := r - q + q)).
           + apply (order_preserving (r - q +)); exact le0.
           + rewrite <- plus_assoc, plus_negate_l, plus_0_r; reflexivity. }
@@ -963,13 +963,13 @@ Section dedekind.
       - intros q; split; [apply mult_lower_rounded|].
         intros p; strip_truncations; destruct p as [q' [l p]]; strip_truncations.
         destruct p as [I p]; strip_truncations; destruct p as [J p].
-        apply tr; exists I; apply tr; exists J; intros s t is it.
-        exact (transitivity l (p s t is it)).
+        apply tr; exists I; apply tr; exists J; intros s t ins it.
+        exact (transitivity l (p s t ins it)).
       - intros r; split; [apply mult_upper_rounded|].
         intros p; strip_truncations; destruct p as [r' [l p]]; strip_truncations.
         destruct p as [I p]; strip_truncations; destruct p as [J p].
-        apply tr; exists I; apply tr; exists J; intros s t is it.
-        exact (transitivity (p s t is it) l).
+        apply tr; exists I; apply tr; exists J; intros s t ins it.
+        exact (transitivity (p s t ins it) l).
       - intros q r p p'; strip_truncations.
         destruct p as [I p], p' as [I' p']; strip_truncations.
         destruct p as [J p], p' as [J' p'].
@@ -990,11 +990,11 @@ Section dedekind.
   Proof.
     apply path_dedekindreals.
     - intros q p; strip_truncations; destruct p as [I p]; strip_truncations; destruct p as [J p].
-      apply tr; exists J; apply tr; exists I; intros s t is it.
-      rewrite mult_comm; exact (p t s it is).
+      apply tr; exists J; apply tr; exists I; intros s t ins it.
+      rewrite mult_comm; exact (p t s it ins).
     - intros r p; strip_truncations; destruct p as [I p]; strip_truncations; destruct p as [J p].
-      apply tr; exists J; apply tr; exists I; intros s t is it.
-      rewrite mult_comm; exact (p t s it is).
+      apply tr; exists J; apply tr; exists I; intros s t ins it.
+      rewrite mult_comm; exact (p t s it ins).
   Qed.
 
   Lemma in_bounds_rational (q : Q) (I : CutBounds (rational_dedekind q)) : in_bounds I q.
@@ -1082,7 +1082,7 @@ Section dedekind.
     destruct lE as [J1 lE], uE as [J2 uE].
     destruct (cutbounds_intersect I1 I2) as [I HI], (cutbounds_intersect J1 J2) as [J HJ].
     assert (key : forall s t w, in_bounds I s -> in_bounds J t -> in_bounds G w -> q' < s * (t * w)).
-    { intros s t w is it iw; destruct (HI s is) as [i1 i2], (HJ t it) as [j1 j2].
+    { intros s t w ins it iw; destruct (HI s ins) as [i1 i2], (HJ t it) as [j1 j2].
       rewrite mult_assoc; apply pE; [|exact iw].
       exact (lt_le _ _ (lE s t i1 j1), lt_le _ _ (uE s t i2 j2)). }
     destruct (rational_bound (bound_lo I) (bound_hi I)) as [T [lT lT']].
@@ -1090,7 +1090,7 @@ Section dedekind.
     destruct (small_factor (q' - q) T (snd (flip_pos_minus q q') lq) Tpos) as [D lD].
     pose (P k := forall s, in_bounds I s -> q' < s * k).
     assert (corner : forall t w, in_bounds J t -> in_bounds G w -> P (t * w))
-      by (intros t w it iw s is; exact (key s t w is it iw)).
+      by (intros t w it iw s ins; exact (key s t w ins it iw)).
     destruct (rational_min2 (bound_lo J * bound_lo G) (bound_lo J * bound_hi G))
       as [m1 [[lm1 lm1'] Pm1]].
     destruct (rational_min2 (bound_hi J * bound_lo G) (bound_hi J * bound_hi G))
@@ -1121,9 +1121,9 @@ Section dedekind.
       + exact (le_lt_trans _ _ _ (transitivity lM2 lM') lMD).
       + exact (le_lt_trans _ _ _ (transitivity lM2' lM') lMD).
     - assert (c : forall s, in_bounds I s -> prod (q < s * (m - ' D)) (q < s * (M + ' D))).
-      { intros s is.
+      { intros s ins.
         assert (sT : prod (- T < s) (s < T))
-          by exact (lt_le_trans _ _ _ lT (fst is), le_lt_trans _ _ _ (snd is) lT').
+          by exact (lt_le_trans _ _ _ lT (fst ins), le_lt_trans _ _ _ (snd ins) lT').
         assert (sD : s * ' D < q' - q).
         { refine (transitivity _ (transport (fun w => w < _) (mult_comm _ _) lD)).
           exact (pos_mult_lt_r (' D) (is_pos D) _ _ (snd sT)). }
@@ -1133,8 +1133,8 @@ Section dedekind.
           exact (pos_mult_lt_r (' D) (is_pos D) _ _ (flip_lt_negate_l _ _ (fst sT))). }
         rewrite <- (minus_minus_cancel q' q), plus_mult_distr_l, plus_mult_distr_l.
         rewrite <- negate_mult_distr_r; split.
-        - exact (lt_minus_lt _ _ _ _ (Pm' s is) sD).
-        - exact (plus_lt_compat _ _ _ _ (PM' s is) sD'). }
+        - exact (lt_minus_lt _ _ _ _ (Pm' s ins) sD).
+        - exact (plus_lt_compat _ _ _ _ (PM' s ins) sD'). }
       apply belowproducts_corners; cbn.
       + exact (fst (c _ (in_bounds_lo I))).
       + exact (snd (c _ (in_bounds_lo I))).
