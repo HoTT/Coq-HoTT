@@ -425,7 +425,7 @@ Section function_space.
     (* Each distance is at most the other plus the two distances between the points. *)
     assert (le : forall u v u' v', dY u v ≤ dY u u' + dY u' v' + dY v' v).
     { intros u v u' v'.
-      refine (transitivity (pseudometric_triangle (d:=dY) u u' v) _).
+      lhs' exact (pseudometric_triangle (d:=dY) u u' v).
       rewrite <- plus_assoc; apply (order_preserving (_ +)).
       apply (pseudometric_triangle (d:=dY)). }
     assert (lt : forall u v u' v', dY u u' < ' (' (e / 2)) -> dY v v' < ' (' (e / 2))
@@ -502,7 +502,7 @@ Section function_space.
       - intros f g; apply (antisymmetry (≤)); apply uniform_dist_le; intro x;
           rewrite (pseudometric_symmetric (d:=interval_dist)); apply le_uniform_dist.
       - intros f g h; apply uniform_dist_le; intro x.
-        refine (transitivity (pseudometric_triangle (d:=interval_dist) _ (g x) _) _).
+        lhs' exact (pseudometric_triangle (d:=interval_dist) _ (g x) _).
         apply plus_le_compat; apply le_uniform_dist.
     Defined.
 
