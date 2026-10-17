@@ -440,7 +440,7 @@ Section contents.
     Lemma rationals_to_field_frac_plus (x y : Q) : f (x + y) = f x + f y.
     Proof.
       revert x y; srapply FracField.F_ind2; intros x y.
-      refine (frac_to_field_unique (Frac.pl _ x y) _ _).
+      napply (frac_to_field_unique (Frac.pl _ x y)).
       cbn [Frac.num Frac.den Frac.pl].
       rewrite (preserves_plus (f:=iZ) (Frac.num x * Frac.den y)), !(preserves_mult (f:=iZ)).
       rewrite plus_mult_product.
@@ -450,7 +450,7 @@ Section contents.
     Lemma rationals_to_field_frac_mult (x y : Q) : f (x * y) = f x * f y.
     Proof.
       revert x y; srapply FracField.F_ind2; intros x y.
-      refine (frac_to_field_unique (Frac.ml _ x y) _ _).
+      napply (frac_to_field_unique (Frac.ml _ x y)).
       cbn [Frac.num Frac.den Frac.ml].
       rewrite !(preserves_mult (f:=iZ)), mult_swap_middle.
       rewrite !frac_to_field_mult_den; reflexivity.
