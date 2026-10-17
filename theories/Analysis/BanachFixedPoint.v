@@ -45,9 +45,9 @@ Section powers.
   Proof.
     intros c0 c1 lekn; induction lekn as [|n lekn IH].
     - reflexivity.
-    - refine (transitivity _ IH); cbn.
+    - rhs_V' exact IH; cbn.
       pose proof (power_nonneg c n c0).
-      refine (transitivity (order_preserving (.* nat_iter n (mult c) 1) c 1 c1) _).
+      lhs' exact (order_preserving (.* nat_iter n (mult c) 1) c 1 c1).
       cbn; rewrite mult_1_l; reflexivity.
   Qed.
 
@@ -60,7 +60,7 @@ Section powers.
     induction n as [|n IH].
     - apply eq_le.
       exact (mult_1_l _ @ ap (plus one) (mult_0_l _) @ plus_0_r one).
-    - refine (transitivity _ IH).
+    - rhs_V' exact IH.
       change (nat_iter (S n) (mult c) 1) with (c * nat_iter n (mult c) 1).
       rewrite nat_to_semiring_succ.
       rewrite (plus_mult_distr_r 1 (nR n) (1 - c)), (mult_1_l (1 - c)).
@@ -115,7 +115,7 @@ Section rational_log.
     exists n.
     set (B := 1 + nQ n * b).
     assert (B0 : PropHolds (0 < B)).
-    { refine (lt_le_trans 0 1 B _ _); [exact lt01|].
+    { refine (lt_le_trans 0 1 B lt01 _).
       apply (fst (nonneg_plus_le_compat_r 1 _)), nonneg_mult_compat.
       - apply nat_to_semiring_nonneg.
       - exact (lt_le _ _ b0). }
@@ -126,7 +126,7 @@ Section rational_log.
     assert (L : (' q * b) / (' q * b) < (' q * b) * nQ n)
       by exact (strictly_order_preserving _ _ _ ltn).
     rewrite E, <- (mult_assoc (' q) b), (mult_comm b) in L.
-    refine (transitivity L _).
+    lhs' exact L.
     pose proof (pos_is_pos q).
     apply (strictly_order_preserving (' q *.)).
     apply pos_plus_lt_compat_l, lt01.
@@ -152,10 +152,10 @@ Section lipschitz.
     apply (antisymmetry (≤)); [|apply pseudometric_nonneg].
     apply not_lt_le_flip; intro dpos.
     apply (irreflexivity (<) (d x y)).
-    refine (le_lt_trans _ (c * d x y) _ _ _).
-    - refine (transitivity (pseudometric_triangle x (T x) y) _).
+    rapply (le_lt_trans _ (c * d x y)).
+    - lhs' exact (pseudometric_triangle x (T x) y).
       rewrite (pseudometric_symmetric x (T x)), px, plus_0_l.
-      refine (transitivity (pseudometric_triangle (T x) (T y) y) _).
+      lhs' exact (pseudometric_triangle (T x) (T y) y).
       rewrite py, plus_0_r.
       apply Tc.
     - pose proof dpos.
@@ -233,7 +233,7 @@ Section lipschitz_uniform.
       rewrite (preserves_0 (f:=cast Q F)); exact (transitivity c0 ltcr). }
     apply tr; exists (fun e => e / mkQpos r r0).
     apply isuniformmodulus_lipschitz.
-    intros x y; refine (transitivity (fc x y) _).
+    intros x y; lhs' exact (fc x y).
     pose proof (pseudometric_nonneg (d:=dX) x y).
     exact (order_preserving (.* dX x y) _ _ (lt_le _ _ ltcr)).
   Qed.
@@ -277,7 +277,7 @@ Section banach.
   Proof.
     induction j as [|j IH].
     - apply eq_le; symmetry; apply mult_1_l.
-    - refine (transitivity (Tc _ _) _).
+    - lhs' exact (Tc _ _).
       change (nat_iter (S j) (mult (' c)) 1) with (' c * nat_iter j (mult (' c)) 1).
       rewrite <- mult_assoc.
       exact (order_preserving (' c *.) _ _ IH).
@@ -311,9 +311,9 @@ Section banach.
   Lemma iterate_dist_le (y : X) (j : nat)
     : (1 - ' c) * d (nat_iter j T y) y ≤ d (T y) y.
   Proof.
-    refine (transitivity (iterate_dist_le_power y j) _).
+    lhs' exact (iterate_dist_le_power y j).
     pose proof (pseudometric_nonneg (d:=d) (T y) y).
-    refine (transitivity (order_preserving (.* d (T y) y) _ 1 _) _).
+    lhs' refine (order_preserving (.* d (T y) y) _ 1 _).
     - apply nonneg_minus_compat; [|reflexivity].
       exact (power_nonneg _ j c_nonneg).
     - apply eq_le, mult_1_l.
