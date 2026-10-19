@@ -230,6 +230,19 @@ Section strict_ring_order.
   split; apply flip_lt_minus_r.
   Qed.
 
+  (** The subtracted element and the bound can be exchanged. *)
+  Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_l _ _ _)); rewrite plus_comm.
+    exact (fst (flip_lt_minus_l _ _ _) E).
+  Qed.
+
+  Lemma flip_lt_minus_swap_r (x y z : R) : z < y - x -> x < y - z.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_r _ _ _)); rewrite plus_comm.
+    exact (fst (flip_lt_minus_r _ _ _) E).
+  Qed.
+
   Lemma flip_pos_minus (x y : R) : 0 < y - x <-> x < y.
   Proof.
   pattern x at 2;apply (transport _ (plus_0_l x)).
@@ -274,6 +287,24 @@ Section strict_ring_order.
   intros E.
   transitivity 0; trivial.
   apply flip_pos_negate. trivial.
+  Qed.
+
+  (** [v] lies within [e] of [u] iff [u - e < v < u + e]. *)
+  Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
+  Proof.
+    split; intros [lo hi]; split.
+    - apply (snd (flip_lt_minus_r _ _ _)); rewrite plus_comm; exact lo.
+    - apply (snd (flip_lt_minus_l _ _ _)); rewrite plus_comm; exact hi.
+    - rewrite plus_comm; exact (fst (flip_lt_minus_r _ _ _) lo).
+    - rewrite plus_comm; exact (fst (flip_lt_minus_l _ _ _) hi).
+  Qed.
+
+  (** Being within [e] is symmetric. *)
+  Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
+  Proof.
+    intros [lo hi]; rewrite (negate_swap_r u v); split.
+    - exact (snd (flip_lt_negate _ _) hi).
+    - exact (flip_lt_negate_l _ _ lo).
   Qed.
 
   (** A bound [- x < z < x] can be weakened to a larger [y]. *)
