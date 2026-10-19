@@ -47,6 +47,7 @@ Section Kleene.
     : kleene_fixed_point ≤ y
     := dcpo_sup_least _ _ y (kleene_iterate_le_prefixed_point y fy).
 
+  (** By Scott continuity, [f] of the supremum of the iterates is the supremum of the shifted iterates [f (kleene_iterate n) = kleene_iterate (n + 1)], which is the same supremum. *)
   Definition kleene_fixed_point_isfixed
     : f kleene_fixed_point = kleene_fixed_point.
   Proof.
@@ -54,7 +55,8 @@ Section Kleene.
     - apply (issup_least (scott_continuous f nat _ isdirected_kleene_iterate)).
       intro n.
       exact (dcpo_sup_upper kleene_iterate _ n.+1%nat).
-    - apply dcpo_sup_least.
+    - (* The iterate [0] is [⊥], and the iterate [n + 1] is [f] of the iterate [n]. *)
+      apply dcpo_sup_least.
       intros [|n].
       + rapply bottom_least.
       + exact (order_preserving f _ _ (dcpo_sup_upper kleene_iterate _ n)).
@@ -157,7 +159,7 @@ Section InflationaryFixedPoint.
     := dcpo_sup_upper (idmap : Infl -> Infl) isdirected_inflationary
          (f; (_, _)).
 
-  (** Every value of [top_inflationary] is a fixed point of every monotone inflationary endomap. *)
+  (** Every value of [top_inflationary] is a fixed point of every monotone inflationary endomap [f]: [f o top_inflationary] is monotone and inflationary, so it lies below [top_inflationary], and [f] is inflationary. *)
   Definition top_inflationary_fixed_point (f : A -> A)
     `{!OrderPreserving f} `{!IsInflationary f} (x : A)
     : f (top_inflationary x) = top_inflationary x.
@@ -176,7 +178,7 @@ Section SubdcpoFixedPoint.
 
   Local Existing Instance le_sig.
 
-  (** If a subdcpo [B] is closed under a monotone map [f], and [f] is inflationary on [B], then any element of [B] gives a fixed point of [f] in [B]. This needs no propositional resizing. *)
+  (** If a subdcpo [B] is closed under a monotone map [f], and [f] is inflationary on [B], then any element of [B] gives a fixed point of [f] in [B]: the restriction [g] of [f] to [B] is a monotone inflationary endomap of the dcpo [B], so [top_inflationary] gives a fixed point of [g]. This needs no propositional resizing. *)
   Definition fixed_point_subdcpo (f : A -> A) `{!OrderPreserving f}
     (B : A -> HProp) `{!IsSubdcpo Ale B}
     (closed : forall x, B x -> B (f x)) (infl : forall x, B x -> x ≤ f x)
@@ -263,7 +265,7 @@ Section LeastFixedPoint.
       exact (order_preserving f _ _ xfx).
   Defined.
 
-  (** Assuming propositional resizing, a monotone endomap of a pointed dcpo has a least prefixed point, which is also its least fixed point. *)
+  (** Assuming propositional resizing, a monotone endomap of a pointed dcpo has a least prefixed point, which is also its least fixed point. On the least admissible subset [f] is inflationary, since the increasing elements form an admissible subset; so [fixed_point_subdcpo] gives a fixed point [a] in it. It lies below every prefixed point [y], since the elements below [y] form an admissible subset. *)
   Definition least_fixed_point
     : {a : A & (f a = a) * (forall y, f y ≤ y -> a ≤ y)}.
   Proof.

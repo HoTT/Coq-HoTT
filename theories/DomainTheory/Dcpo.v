@@ -233,7 +233,7 @@ Section ScottContinuous.
     unfold IsScottContinuous; exact _.
   Defined.
 
-  (** Scott continuous maps are monotone. *)
+  (** Scott continuous maps are monotone: for [x ≤ y], [y] is the supremum of the directed family with values [x] and [y], so [f y] is the supremum of [f x] and [f y]. *)
   #[export] Instance orderpreserving_isscottcontinuous (f : A -> B)
     `{!IsScottContinuous@{v u t s u' t' s'} f}
     : OrderPreserving f.

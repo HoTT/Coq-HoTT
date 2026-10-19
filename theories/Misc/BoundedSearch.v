@@ -107,6 +107,7 @@ Section bounded_search_alt_type.
   (** Bounded search works for every type with a surjection from the naturals, for instance a type equivalent to them: we search for an index whose image satisfies [P]. *)
   Definition minimal_n_alt_type : {x : X & P x}.
   Proof.
+    (* An [x] with [P x] merely has a preimage [n], and then [P (e n)]. *)
     assert (P'_inhab : hexists (P o e)).
     { strip_truncations; destruct P_inhab as [x p].
       refine (Trunc_functor (-1) _ (@center _ (e_surj x))).
