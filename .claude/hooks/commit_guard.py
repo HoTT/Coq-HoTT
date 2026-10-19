@@ -6,7 +6,9 @@ from the shell. This hook closes the gap at commit time: for every .v file that
 differs from HEAD (staged or not), it applies the same rule as forbid_axioms.py
 (no added Axiom/Parameter/Conjecture/Admitted/admit/give_up outside stubs) and
 typechecks the file with bin/build. It also rejects added thesis references
-outside Booij2020Thesis.v, as forbid_axioms.py does. Any failure blocks the commit (exit 2) and
+outside Booij2020Thesis.v, as forbid_axioms.py does, and added applications padded with
+underscores such as `refine (f _ _ _ h)`, which should use the napply family (see
+CLAUDE.md, "Proof tips"). Any failure blocks the commit (exit 2) and
 the reason is fed back to Claude.
 """
 
@@ -21,6 +23,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 spec = importlib.util.spec_from_file_location("forbid_axioms", os.path.join(HERE, "forbid_axioms.py"))
 forbid = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(forbid)
+
+
+# `refine (f _ _ ...)`, `apply (f _ _)`, `exact (@f _ _ ...)`: two or more underscores right after the head.
+PADDED = re.compile(r"\b(?:refine|apply|exact|eapply|simple refine)\s*\(\s*@?[\w.']+(?:\s+_){2,}(?![\w'])")
+
+
+def padded_count(text):
+    return len(PADDED.findall(text))
 
 
 def git(*args, check=True):
@@ -47,6 +57,8 @@ def main():
             refs = forbid.added_thesis_refs([(old, new)])
             if refs:
                 problems.append(f"{f} adds thesis references ({', '.join(refs)}); they belong only in Booij2020Thesis.v.")
+        if padded_count(new) > padded_count(old):
+            problems.append(f"{f} adds applications padded with underscores (e.g. `refine (f _ _ _ h)`); use napply, rapply or tapply instead, or lhs'/rhs_V' for transitivity steps (see CLAUDE.md, \"Proof tips\").")
         # As in forbid_axioms.py, an existing file must already have been a stub.
         stub = forbid.is_stub(old) if old else forbid.is_stub(new)
         if stub:
