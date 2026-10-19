@@ -6,7 +6,7 @@ from the shell. This hook closes the gap at commit time: for every .v file that
 differs from HEAD (staged or not), it applies the same rule as forbid_axioms.py
 (no added Axiom/Parameter/Conjecture/Admitted/admit/give_up outside stubs) and
 typechecks the file with bin/build. It also rejects added thesis references
-outside Thesis.v, as forbid_axioms.py does. Any failure blocks the commit (exit 2) and
+outside Booij2020Thesis.v, as forbid_axioms.py does. Any failure blocks the commit (exit 2) and
 the reason is fed back to Claude.
 """
 
@@ -43,10 +43,10 @@ def main():
     for f in files:
         old = subprocess.run(["git", "show", f"HEAD:{f}"], capture_output=True, text=True).stdout
         new = open(f, encoding="utf-8").read()
-        if os.path.basename(f) != "Thesis.v":
+        if os.path.basename(f) != "Booij2020Thesis.v":
             refs = forbid.added_thesis_refs([(old, new)])
             if refs:
-                problems.append(f"{f} adds thesis references ({', '.join(refs)}); they belong only in Thesis.v and BLUEPRINT.md.")
+                problems.append(f"{f} adds thesis references ({', '.join(refs)}); they belong only in Booij2020Thesis.v and BLUEPRINT.md.")
         # As in forbid_axioms.py, an existing file must already have been a stub.
         stub = forbid.is_stub(old) if old else forbid.is_stub(new)
         if stub:

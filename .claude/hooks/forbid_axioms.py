@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """PreToolUse hook: block edits to .v files that add Axiom, Admitted or admit,
-or that add references to Booij's thesis outside theories/Analysis/Thesis.v.
+or that add references to Booij's thesis outside contrib/Booij2020Thesis.v.
 
 Files marked as stubs are exempt. A file is a stub when one of its first ten
 lines is exactly the comment
@@ -16,7 +16,7 @@ merely moves or keeps existing admits is allowed. Parameter and Conjecture are
 treated like Axiom, since they declare axioms too, and give_up like admit.
 
 Thesis references ("Lemma 6.7.1", "Booij", "thesis", ...) belong only in
-Thesis.v and BLUEPRINT.md (see CLAUDE.md); this applies to stubs too. Lines
+Booij2020Thesis.v and BLUEPRINT.md (see CLAUDE.md); this applies to stubs too. Lines
 mentioning the HoTT book are exempt, since its numbering looks the same.
 """
 
@@ -128,12 +128,12 @@ def main():
     else:
         return 0
 
-    refs = [] if os.path.basename(path) == "Thesis.v" else added_thesis_refs(pairs)
+    refs = [] if os.path.basename(path) == "Booij2020Thesis.v" else added_thesis_refs(pairs)
     if refs:
         deny(
             f"Blocked: this edit adds thesis references ({', '.join(refs)}) to {os.path.relpath(path)}. "
-            "Thesis numbers belong only in theories/Analysis/Thesis.v and BLUEPRINT.md (see CLAUDE.md); "
-            "describe the mathematics instead, and register the result in Thesis.v once it is proved."
+            "Thesis numbers belong only in contrib/Booij2020Thesis.v and BLUEPRINT.md (see CLAUDE.md); "
+            "describe the mathematics instead, and register the result in contrib/Booij2020Thesis.v once it is proved."
         )
         return 0
 

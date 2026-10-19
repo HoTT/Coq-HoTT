@@ -12,11 +12,11 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 - Use the truncated `∃` (`hexists`, `merely`, `hor`, i.e. `Tr (-1)`) for properties. Where the thesis writes `∃` or `∨`, the formal statement uses `hexists`/`hor`; where it writes `Σ` or `+`, it uses `sig`/`sum`.
 - Never weaken a structure to a property or strengthen a property to a structure silently. When the thesis turns property into structure (bounded search, Lemma 6.7.3, Theorem 6.10.3), make that the content of an explicit lemma.
 
-## Naming and `Thesis.v`
+## Naming and `Booij2020Thesis.v`
 
 - Give results ordinary descriptive names in the style of the surrounding code (see `doc/STYLE.md`); do not encode thesis numbers in names. Reuse existing Coq-HoTT names rather than adding aliases (see `AGENTS.md`).
-- Register every numbered item of the thesis that has been formalized in `theories/Analysis/Thesis.v`, under a comment with its thesis number and statement in words, as a `Check` of the result(s) that formalize it, e.g. `(** Lemma 6.6.1. A real with a locator has rational bounds. *)` followed by `Check lower_bound.` and `Check upper_bound.` Keep the file in thesis order, and add an entry only once the item is proved.
-- Thesis numbers appear only in `Thesis.v` and `BLUEPRINT.md`. The hook also rejects the words "thesis" and "Booij" in `.v` files outside `Thesis.v`; refer to the mathematics or to published sources (e.g. "HoTT book, Theorem 11.3.50") instead. Do not mention them anywhere else: not in names, doc comments, proof comments or TODOs in `.v` files; hooks block edits and commits that add them. Describe the mathematics instead (e.g. "TODO: prove that the inclusion of [Q] preserves the order", not "TODO: Lemma 4.3.3").
+- Register every numbered item of the thesis that has been formalized in `contrib/Booij2020Thesis.v`, the index in the style of `contrib/HoTTBook.v`: an entry with a marker line and a heading such as `(** Lemma 6.6.1 *)`, defining aliases `Definition Thesis_6_6_1_item_i := @lower_bound.` and `Definition Thesis_6_6_1_item_ii := @upper_bound.` for the result(s) that formalize it (see the notes at the top of that file). Keep the file in thesis order, and add an entry only once the item is proved.
+- Thesis numbers appear only in `contrib/Booij2020Thesis.v` and `BLUEPRINT.md`. The hook also rejects the words "thesis" and "Booij" in `.v` files outside `Booij2020Thesis.v`; refer to the mathematics or to published sources (e.g. "HoTT book, Theorem 11.3.50") instead. Do not mention them anywhere else: not in names, doc comments, proof comments or TODOs in `.v` files; hooks block edits and commits that add them. Describe the mathematics instead (e.g. "TODO: prove that the inclusion of [Q] preserves the order", not "TODO: Lemma 4.3.3").
 
 ## Search first
 

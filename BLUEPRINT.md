@@ -6,7 +6,7 @@ This file plans the formalization of Chapters 3–8 of A. B. Booij, *Analysis in
 
 - **ID** is the thesis number. Every numbered definition, lemma, theorem, proposition, corollary and conjecture in Chapters 3–8 has a row. Numbered examples are listed too and marked *optional*, since some carry constructions (e.g. the exponential) that later results mention. Remarks with formal content are collected at the end.
 - **Depends on** lists the thesis items used in the statement or the proof. Items from Chapter 2 are mapped to Coq-HoTT in the first table. *U-n* refers to the unnumbered prerequisites at the end, which the thesis assumes without stating them as numbered results.
-- **Target** is the file below `theories/` where the result goes; choose a descriptive name there (see `CLAUDE.md`). When Coq-HoTT already has the result in the right form, the target says "existing name" and no new definition should be added. Once an item is proved, register it in `theories/Analysis/Thesis.v`.
+- **Target** is the file below `theories/` where the result goes; choose a descriptive name there (see `CLAUDE.md`). When Coq-HoTT already has the result in the right form, the target says "existing name" and no new definition should be added. Once an item is proved, register it in `contrib/Booij2020Thesis.v`.
 - **Status** is `todo` for every entry at the time of writing. Use `stated` once the statement typechecks (in a file marked `(* STUB *)`), and `proved` once it is proved without `Admitted`.
 - **Coq-HoTT has** says what existed when this blueprint was written, with file (below `theories/`) and name, and how it differs from the thesis. Check the names before relying on them (see `CLAUDE.md`).
 
@@ -43,7 +43,7 @@ These are used throughout and already exist.
 
 ## Target files
 
-All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` once they contain no `(* STUB *)` marker; `Analysis/Thesis.v` is an index of `Check`s and is not added.
+All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` once they contain no `(* STUB *)` marker; the index of formalized items is `contrib/Booij2020Thesis.v`.
 
 | File | Contents |
 |---|---|
@@ -57,7 +57,7 @@ All new files live in `theories/Analysis/` and get added to `theories/HoTT.v` on
 | `Analysis/RealsInclusions.v` | Proposition 4.6.7, §5.1.1 |
 | `Analysis/EuclideanReals.v` | §5.1.2, §5.2 |
 | `Analysis/IntervalObject.v` | §5.3, §5.4 |
-| `Analysis/Thesis.v` | Index: one `Check` per formalized numbered item, in thesis order |
+| `contrib/Booij2020Thesis.v` | Index: aliases for each formalized numbered item, in thesis order, in the style of `contrib/HoTTBook.v` |
 | `Analysis/Locator.v` (existing) | §6.1–§6.8 |
 | `Analysis/LocatorDigits.v` | §6.9 |
 | `Analysis/LocatorCuts.v` | §6.10, Corollary 6.9.9 |
