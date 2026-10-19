@@ -158,14 +158,14 @@ Section locator.
            locator_locator'_locator.
 
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r)
-      : ~ (' q < x) -> ~ locates_right l' ltqr.
+      : ~ (' q < x) -> locates_left l' ltqr.
     Proof.
       assert (f := locates_right_true l' ltqr).
       exact (not_contrapositive f).
     Qed.
 
     Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r)
-      : x < ' q -> ~ locates_right l' ltqr.
+      : x < ' q -> locates_left l' ltqr.
     Proof.
       intros ltxq. apply nltqx_locates_left.
       apply lt_flip; assumption.
@@ -320,7 +320,7 @@ Section locator.
       }
       assert (right_false : ~ P fin_last).
       {
-        apply ltxq_locates_left.
+        intros Pl; refine (lt_flip _ _ _ (locates_right_true l _ Pl)).
         unfold grid.
         change (' fin_incl fin_last) with (fin_to_nat (@fin_incl (S (S n)) fin_last)).
         rewrite path_nat_fin_incl, path_nat_fin_last.
