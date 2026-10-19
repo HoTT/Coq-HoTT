@@ -11,6 +11,7 @@ From HoTT Require Import
   Classes.implementations.peano_naturals
   Classes.orders.archimedean
   Classes.orders.dec_fields
+  Classes.orders.naturals
   Classes.orders.lattices
   Classes.theory.apartness
   Classes.theory.rationals
@@ -191,190 +192,131 @@ Section locator.
 
   Local Open Scope mc_scope.
 
+  (** To compare [- x] with [q < r], we compare [x] with [- r < - q]. *)
   Definition locator_minus {x : F} (l : locator x) : locator (-x).
   Proof.
     intros q r ltqr.
-    assert (ltnrnq := snd (flip_lt_negate q r) ltqr : -r < -q).
-    destruct (l _ _ ltnrnq) as [ltnrx|ltxnq].
-    - apply inr. apply char_minus_left. rewrite <- preserves_negate. assumption.
-    - apply inl. apply char_minus_right. rewrite <- preserves_negate. assumption.
+    destruct (l (- r) (- q) (snd (flip_lt_negate q r) ltqr)) as [ltrx|ltxq].
+    - right; apply char_minus_left; rewrite <- preserves_negate; exact ltrx.
+    - left; apply char_minus_right; rewrite <- preserves_negate; exact ltxq.
   Qed.
 
-  (** Given a real with a locator, we can find integer bounds: we search for the least [n : nat] for which the locator places [x] above [- n - 1] when comparing it with [- n - 1 < - n]. *)
-  Definition lower_bound {x : F} (l : locator x) : {q : Q | ' q < x}.
-  Proof.
-    pose (P n := locates_right l
-                   (fst (pos_minus_lt_compat_r (- naturals_to_semiring nat Q n) 1) lt_0_1)).
-    assert (inhab : hexists P).
-    { assert (h := archimedean_property Q F (x - 1) x (fst (pos_minus_lt_compat_r x 1) lt_0_1)).
-      strip_truncations; destruct h as [q [_ ltqx]], (round_up_strict Q (- q)) as [n ltqn].
-      apply tr; exists n; apply ltrx_locates_right; rhs_V' exact ltqx.
-      apply (strictly_order_preserving _), flip_lt_negate_l, ltqn. }
-    destruct (minimal_n P _ inhab) as [n Pn].
-    eexists; exact (locates_right_true l _ Pn).
-  Qed.
+  (** ** Rational bounds *)
 
+  Section bounds.
+    Context {x : F} (l : locator x).
+
+    Local Notation nQ := (naturals_to_semiring nat Q).
+
+    (** To find a rational below [x], we ask the locator to compare [x] with [- n - 1 < - n] for [n = 0, 1, 2, ...], until it places [x] above [- n - 1]. *)
+    Local Definition lt_negate_nat (n : nat) : - nQ n - 1 < - nQ n
+      := fst (pos_minus_lt_compat_r _ 1) lt_0_1.
+
+    Local Definition locates_above_negate_nat (n : nat) : DHProp
+      := locates_right l (lt_negate_nat n).
+
+    (** This happens for some [n]: [x] lies above some rational [q], which lies above some [- n], so the locator cannot place [x] below [- n]. *)
+    Local Lemma merely_locates_above_negate_nat : hexists locates_above_negate_nat.
+    Proof.
+      assert (h := archimedean_property Q F (x - 1) x (fst (pos_minus_lt_compat_r x 1) lt_0_1)).
+      strip_truncations; destruct h as [q [_ ltqx]].
+      destruct (round_up_strict Q (- q)) as [n ltqn].
+      apply tr; exists n; apply ltrx_locates_right.
+      rhs_V' exact ltqx.
+      apply (strictly_order_preserving _), flip_lt_negate_l, ltqn.
+    Qed.
+
+    (** Searching for the least such [n] gives a rational below [x]. *)
+    Definition lower_bound : {q : Q | ' q < x}.
+    Proof.
+      destruct (minimal_n _ _ merely_locates_above_negate_nat) as [n above].
+      exact (- nQ n - 1; locates_right_true l _ above).
+    Qed.
+
+  End bounds.
+
+  (** A rational below [- x] gives a rational above [x]. *)
   Definition upper_bound {x : F} (l : locator x) : {r : Q | x < ' r}.
   Proof.
     destruct (lower_bound (locator_minus l)) as [q ltqx].
     exists (- q).
     rewrite (preserves_negate (f:=cast Q F)).
-    apply flip_lt_negate_r, ltqx.
+    exact (flip_lt_negate_r _ _ ltqx).
   Qed.
 
-  Section bounds.
-    Context {x : F}
-            (l : locator x).
+  (** ** Tight bounds *)
 
-    Instance inc_N_Q : Cast nat Q := naturals_to_semiring nat Q.
+  Section tight_bound.
+    Context {x : F} (l : locator x) (e : Qpos Q).
 
-    Instance inc_fin_N {n} : Cast (Fin n) nat := fin_to_nat.
+    Local Notation nQ := (naturals_to_semiring nat Q).
 
-    Lemma tight_bound (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
+    (** We step through the rationals in steps of [d = e / 3], starting at [q - d] for a rational [q < x]. *)
+    Local Definition d : Q := ' (e / 3).
+
+    Local Definition start : Q := (lower_bound l).1 - d.
+
+    Local Definition grid (k : nat) : Q := start + nQ k * d.
+
+    Local Lemma grid_succ (k : nat) : grid (S k) = grid k + d.
     Proof.
-      destruct
-        (lower_bound l) as [q ltqx]
-      , (upper_bound l) as [r ltxr]
-      , (round_up_strict Q ((3/'epsilon)*(r-q))) as [n lt3rqn].
-      assert (lt0 : 0 < 'epsilon / 3).
-      {
-        apply pos_mult.
-        - apply epsilon.
-        - apply pos_dec_recip_compat, lt_0_3.
-      }
-      assert (lt0' : 0 < 3 / ' epsilon).
-      {
-        apply pos_mult.
-        - exact lt_0_3.
-        - apply pos_dec_recip_compat, epsilon.
-      }
-      assert (ap30 : (3 : Q) <> 0)
-        by apply lt_ne_flip, lt_0_3.
-      clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths.
-      assert (ltn3eps : r < q + ' n * ' epsilon / 3).
-      {
-        rewrite (commutativity q (' n * ' epsilon / 3)).
-        apply flip_lt_minus_l.
-        apply (pos_mult_reflect_r (3 / ' epsilon) lt0').
-        rewrite (commutativity (r-q) (3 / ' epsilon)).
-        rewrite <- (associativity ('n) ('epsilon) (/3)).
-        rewrite <- (associativity ('n) (' epsilon / 3) (3 / ' epsilon)).
-        rewrite <- (associativity ('epsilon) (/3) (3/'epsilon)).
-        rewrite (associativity (/3) 3 (/'epsilon)).
-        rewrite (commutativity (/3) 3).
-        rewrite (dec_recip_inverse 3 ap30).
-        rewrite mult_1_l.
-        assert (apepsilon0 : 'epsilon <> 0)
-          by apply lt_ne_flip, epsilon.
-        rewrite (dec_recip_inverse ('epsilon) apepsilon0).
-        rewrite mult_1_r.
-        assumption.
-      }
-      set (grid (k : Fin n.+3) := q + (' (' k) - 1)*('epsilon/3) : Q).
-      assert (lt_grid : forall k : Fin _, grid (fin_incl k) < grid (fsucc k)).
-      {
-        intros k. unfold grid.
-        change (' fin_incl k) with (fin_to_nat (fin_incl k));
-          rewrite path_nat_fin_incl.
-        change (' fsucc k) with (fin_to_nat (fsucc k));
-          rewrite path_nat_fsucc.
-        assert (' (S (' k)) = (' (' k) + 1)) as ->.
-        {
-          rewrite S_nat_plus_1.
-          rewrite (preserves_plus (' k) 1).
-          rewrite preserves_1.
-          reflexivity.
-        }
-        assert (' (' k) + 1 - 1 = ' (' k) - 1 + 1) as ->.
-        {
-          rewrite <- (associativity _ 1 (-1)).
-          rewrite (commutativity 1 (-1)).
-          rewrite (associativity _ (-1) 1).
-          reflexivity.
-        }
-        assert (lt1 : ' (' k) - 1 < ' (' k) - 1 + 1)
-          by apply pos_plus_lt_compat_r, lt_0_1.
-        assert (lt2 : (' (' k) - 1) * (' epsilon / 3) < (' (' k) - 1 + 1) * (' epsilon / 3)).
-        {
-          nrefine (pos_mult_lt_r ('epsilon/3) _ (' (' k) - 1) (' (' k) - 1 + 1) _); try exact _.
-          exact lt1.
-        }
-        apply pseudo_srorder_plus.
-        exact lt2.
-      }
-      set (P k := locates_right l (lt_grid k)).
-      assert (left_true : P fin_zero).
-      {
-        apply ltrx_locates_right.
-        unfold grid.
-        change (' fsucc fin_zero) with (fin_to_nat (@fsucc (S n) fin_zero)).
-        rewrite path_nat_fsucc, path_nat_fin_zero.
-        rewrite (@preserves_1 nat Q _ _ _ _ _ _ _ _ _ _).
-        rewrite plus_negate_r.
-        rewrite mult_0_l.
-        rewrite plus_0_r.
-        assumption.
-      }
-      assert (right_false : ~ P fin_last).
-      {
-        intros Pl; refine (lt_flip _ _ _ (locates_right_true l _ Pl)).
-        unfold grid.
-        change (' fin_incl fin_last) with (fin_to_nat (@fin_incl (S (S n)) fin_last)).
-        rewrite path_nat_fin_incl, path_nat_fin_last.
-        rewrite S_nat_plus_1.
-        rewrite (preserves_plus n 1).
-        rewrite (@preserves_1 nat Q _ _ _ _ _ _ _ _ _ _).
-        rewrite <- (associativity (' n) 1 (-1)).
-        rewrite plus_negate_r.
-        rewrite plus_0_r.
-        rewrite (associativity ('n) ('epsilon) (/3)).
-        transitivity ('r).
-        - exact ltxr.
-        - rapply strictly_order_preserving; exact ltn3eps.
-      }
-      destruct (sperners_lemma_1d P left_true right_false) as [u [Pltux Pltxueps]].
-      exists (grid (fin_incl (fin_incl u))).
-      unfold P in Pltux, Pltxueps.
-      split.
-      - exact (locates_right_true l (lt_grid (fin_incl u)) Pltux).
-      - clear - Pltxueps Qtriv Qdec_paths ap30.
-        set (ltxbla := locates_right_false l (lt_grid (fsucc u)) Pltxueps).
-        unfold grid in *.
-        change (' fin_incl (fin_incl u)) with (fin_to_nat (fin_incl (fin_incl u))).
-        rewrite path_nat_fin_incl, path_nat_fin_incl.
-        change (' fsucc (fsucc u)) with (fin_to_nat (fsucc (fsucc u))) in ltxbla.
-        rewrite path_nat_fsucc, path_nat_fsucc in ltxbla.
-        rewrite S_nat_plus_1, S_nat_plus_1 in ltxbla.
-        rewrite (preserves_plus (fin_to_nat u + 1) 1) in ltxbla.
-        rewrite (preserves_plus (fin_to_nat u) 1) in ltxbla.
-        rewrite preserves_1 in ltxbla.
-        rewrite <- (associativity (' fin_to_nat u) 1 1) in ltxbla.
-        rewrite <- (associativity (' fin_to_nat u) 2 (-1)) in ltxbla.
-        rewrite (commutativity 2 (-1)) in ltxbla.
-        rewrite (associativity (' fin_to_nat u) (-1) 2) in ltxbla.
-        rewrite plus_mult_distr_r in ltxbla.
-        rewrite (associativity q ((' fin_to_nat u - 1) * (' epsilon / 3)) (2 * (' epsilon / 3))) in ltxbla.
-        refine (transitivity ltxbla _).
-        apply strictly_order_preserving; try apply _.
-        apply pseudo_srorder_plus.
-        rewrite (associativity 2 ('epsilon) (/3)).
-        rewrite (commutativity 2 ('epsilon)).
-        rewrite <- (mult_1_r ('epsilon)).
-        rewrite <- (associativity ('epsilon) 1 2).
-        rewrite (mult_1_l 2).
-        rewrite <- (associativity ('epsilon) 2 (/3)).
-        apply pos_mult_lt_l.
-        + apply epsilon.
-        + nrefine (pos_mult_reflect_r (3 : Q) lt_0_3 _ _ _); try exact _.
-          rewrite <- (associativity 2 (/3) 3).
-          rewrite (commutativity (/3) 3).
-          rewrite (dec_recip_inverse (3 : Q) ap30).
-          rewrite (mult_1_r 2).
-          rewrite (mult_1_l 3).
-          exact lt_2_3.
+      unfold grid; rewrite nat_to_semiring_succ, (plus_comm 1), plus_mult_distr_r, mult_1_l.
+      apply plus_assoc.
     Qed.
 
-  End bounds.
+    Local Definition lt_grid_succ (k : nat) : grid k < grid (S k).
+    Proof.
+      rewrite grid_succ; exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
+    Defined.
+
+    (** The locator decides, for each [k], whether [x] lies above [grid k] or below [grid (k + 1)]. *)
+    Local Definition locates_above_grid (k : nat) : DHProp := locates_right l (lt_grid_succ k).
+
+    Local Lemma grid_1 : grid 1 = (lower_bound l).1.
+    Proof.
+      unfold grid, start; change (nQ 1) with 1; rewrite mult_1_l.
+      apply minus_plus_cancel.
+    Qed.
+
+    (** The grid passes every rational [r]. *)
+    Local Lemma lt_grid (r : Q) : {n : nat & r < grid n}.
+    Proof.
+      destruct (round_up_strict Q ((r - start) / d)) as [n ltn].
+      exists n; unfold grid; rewrite plus_comm.
+      apply flip_lt_minus_l, (flip_lt_mult_dec_recip_l _ _ _ (pos_is_pos _)), ltn.
+    Defined.
+
+    (** At [k = 0] the locator places [x] above [grid 0], since [x] lies above [grid 1 = q]. *)
+    Local Lemma locates_above_grid_0 : locates_above_grid 0.
+    Proof.
+      apply ltrx_locates_right; rewrite grid_1; exact (lower_bound l).2.
+    Qed.
+
+    (** Once the grid has passed a rational [r > x], the locator cannot place [x] above [grid k]. *)
+    Local Lemma not_locates_above_grid : {n : nat & ~ locates_above_grid n}.
+    Proof.
+      destruct (upper_bound l) as [r ltxr], (lt_grid r) as [n ltrn].
+      exists n; intros above.
+      apply (lt_flip _ _ (locates_right_true l _ above)).
+      lhs' exact ltxr; exact (strictly_order_preserving _ _ _ ltrn).
+    Qed.
+
+    (** Where the answer changes, [x] lies above [grid k] and below [grid (k + 2) = grid k + 2 d], which is less than [grid k + e]. *)
+    Lemma tight_bound : {u : Q | ' u < x < ' (u + ' e)}.
+    Proof.
+      destruct (sperners_lemma_1d_nat locates_above_grid locates_above_grid_0
+                  _ not_locates_above_grid.2) as [k [above below]].
+      exists (grid k); split.
+      - exact (locates_right_true l _ above).
+      - lhs' exact (locates_right_false l _ below).
+        apply (strictly_order_preserving _).
+        rewrite 2!grid_succ, <- plus_assoc.
+        exact (strictly_order_preserving (grid k +) _ _ (qpos_two_thirds_lt e)).
+    Qed.
+
+  End tight_bound.
+
+  (** ** The Archimedean structure *)
 
   Section arch_struct.
 
@@ -383,6 +325,8 @@ Section locator.
             (m : locator y)
             (ltxy : x < y).
 
+    Local Notation nQ := (naturals_to_semiring nat Q).
+
     (** The precision [1 / (n + 1)], which drops below every positive rational. *)
     Local Definition precision (n : nat) : Qpos Q := / ' (S n).
 
@@ -390,62 +334,46 @@ Section locator.
     Proof.
       destruct (round_up_strict Q (/ d)) as [n ltn].
       exists n; apply flip_lt_dec_recip_l; [exact dpos|].
-      change (/ d < naturals_to_semiring nat Q (S n)).
-      rewrite S_nat_plus_1, (preserves_plus n 1), preserves_1.
-      lhs' exact ltn.
-      apply pos_plus_lt_compat_r, lt_0_1.
+      (* [/ d < n < n + 1] *)
+      change (/ d < nQ (S n)); rewrite nat_to_semiring_succ.
+      lhs' exact ltn; exact (pos_plus_lt_compat_l _ _ lt_0_1).
     Qed.
 
-    (** For each [n], [tight_bound] gives a rational [u n] with [u n < x < u n + e / 2], where [e] is the [n]-th precision. *)
-    Local Definition u (n : nat) : Q := (tight_bound l (precision n / 2)).1.
+    (** For each [n], [tight_bound] gives a rational [approx n] with [approx n < x < approx n + e / 2], where [e] is the [n]-th precision. *)
+    Local Definition approx (n : nat) : Q := (tight_bound l (precision n / 2)).1.
 
-    (** We test whether [y] lies above [u n + e / 2], by comparing it with [u n + e / 2 < u n + e]. *)
-    Local Definition P (n : nat) : DHProp
-      := locates_right m (strictly_order_preserving (u n +) _ _ (qpos_half_lt (precision n))).
+    (** We test whether [y] lies above [approx n + e / 2], by comparing it with [approx n + e / 2 < approx n + e]. *)
+    Local Definition locates_above_approx (n : nat) : DHProp
+      := locates_right m (strictly_order_preserving (approx n +) _ _ (qpos_half_lt (precision n))).
 
-    (** The test succeeds as soon as [e < y - x], since then [u n + e < x + e < y]. *)
-    Local Lemma P_inhab : hexists P.
+    (** The test succeeds as soon as [e] is less than a rational [d < y - x], since then [approx n + e < x + d < y]. *)
+    Local Lemma merely_locates_above_approx : hexists locates_above_approx.
     Proof.
-      refine (Trunc_functor _ _ (archimedean_property Q F 0 (y - x)
-                                   (snd (flip_pos_minus _ _) ltxy))).
-      intros [d [ltd ltdyx]].
-      destruct (precision_lt d) as [n ltn].
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)); exact ltd. }
-      exists n; apply ltrx_locates_right.
+      assert (h := archimedean_property Q F 0 (y - x) (snd (flip_pos_minus _ _) ltxy)).
+      strip_truncations; destruct h as [d [ltd ltdyx]].
+      destruct (precision_lt d (snd (rationals_to_field_pos_iff d) ltd)) as [n ltn].
+      apply tr; exists n; apply ltrx_locates_right.
       rhs_V' exact (fst (flip_lt_minus_r _ _ _) ltdyx).
-      rewrite (preserves_plus (f:=cast Q F)), (plus_comm (' u n)).
+      rewrite (preserves_plus (f:=cast Q F)), (plus_comm (' approx n)).
       apply plus_lt_compat.
-      - apply (strictly_order_preserving _), ltn.
+      - exact (strictly_order_preserving _ _ _ ltn).
       - exact (fst (tight_bound l _).2).
     Qed.
 
-    (** Searching for the least [n] for which the test succeeds gives a rational between [x] and [y]. *)
+    (** Searching for the least [n] for which the test succeeds gives a rational [approx n + e / 2] between [x] and [y]. *)
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
-      destruct (minimal_n P _ P_inhab) as [n Pn].
-      exists (u n + ' (precision n / 2)); split.
+      destruct (minimal_n _ _ merely_locates_above_approx) as [n above].
+      exists (approx n + ' (precision n / 2)); split.
       - exact (snd (tight_bound l _).2).
-      - exact (locates_right_true m _ Pn).
+      - exact (locates_right_true m _ above).
     Qed.
 
   End arch_struct.
 
-  (** For reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. *)
-  Definition locator_cotransitive_rational {x y : F} (l : locator x) (m : locator y) (s : Q)
-    : x < y -> (x < ' s) + (' s < y).
-  Proof.
-    intros ltxy.
-    destruct (archimedean_structure l m ltxy) as [q [ltxq ltqy]].
-    destruct (trichotomy _ q s) as [ltqs|[eqqs|ltsq]].
-    - apply inl; lhs' exact ltxq.
-      rapply strictly_order_preserving; assumption.
-    - apply inl; rewrite <- eqqs; assumption.
-    - apply inr; rhs_V' exact ltqy.
-      rapply strictly_order_preserving; assumption.
-  Defined.
+  (** ** Cotransitivity *)
 
-  (** Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose between [x < z] and [z < y]. *)
+  (** Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose between [x < z] and [z < y]. We find rationals [x < q < r < y], and ask the locator for [z] to compare [z] with [q < r]. *)
   Definition locator_cotransitive {x y z : F} (l : locator x) (m : locator y) (n : locator z)
     : x < y -> (x < z) + (z < y).
   Proof.
@@ -457,112 +385,69 @@ Section locator.
     - exact (inr (transitivity ltzr ltry)).
   Defined.
 
-  Section unary_ops.
+  (** In particular, for reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. *)
+  Definition locator_cotransitive_rational {x y : F} (l : locator x) (m : locator y) (s : Q)
+    : x < y -> (x < ' s) + (' s < y)
+    := locator_cotransitive l m (locator_left s).
 
-    Context {x : F}
-            (l : locator x).
+  (** ** Reciprocals *)
 
-    Section recip_pos.
-      Context (xpos : 0 < x).
+  (** For a positive rational [r], the image of [1 / r] is the inverse of the image of [r]. *)
+  Local Lemma mult_dec_recip_cast (r : Q) (rpos : 0 < r) : ' r * ' (/ r) = 1.
+  Proof.
+    rewrite <- (preserves_mult (f:=cast Q F)), dec_recip_inverse.
+    - exact (preserves_1 (f:=cast Q F)).
+    - exact (lt_ne_flip _ _ rpos).
+  Qed.
 
-      Local Definition recip_nu := positive_apart_zero x xpos.
+  Section recip_pos.
+    Context {x : F} (l : locator x) (xpos : 0 < x).
 
-      Definition locator_recip_pos : locator (// (x ; recip_nu)).
-      Proof.
-        assert (recippos : 0 < // (x ; recip_nu))
-          by apply pos_recip_compat.
-        intros q r ltqr. destruct (trichotomy _ q 0) as [qneg|[qzero|qpos]].
-        + apply inl. refine (transitivity _ _).
-          * apply (strictly_order_preserving _). exact qneg.
-          * rewrite preserves_0; assumption.
-        + apply inl. rewrite qzero, preserves_0; assumption.
-        + assert (qap0 : q ≶ 0)
-            by exact (pseudo_order_lt_apart_flip _ _ qpos).
-          assert (rap0 : r ≶ 0).
-          {
-            refine (pseudo_order_lt_apart_flip _ _ _).
-            exact (transitivity qpos ltqr).
-          }
-          assert (ltrrrq : / r < / q)
-            by (apply flip_lt_dec_recip; assumption).
-          destruct (l (/r) (/q) ltrrrq) as [ltrrx|ltxrq].
-          * apply inr.
-            assert (rpos : 0 < r)
-              by (transitivity q; assumption).
-            assert (rpos' : 0 < ' r).
-            {
-              rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
-              apply strictly_order_preserving; try exact _; assumption.
-            }
-            rewrite (dec_recip_to_recip r (positive_apart_zero ('r) rpos')) in ltrrx.
-            assert (ltxrr := flip_lt_recip_l x ('r) rpos' ltrrx).
-            cbn in ltxrr.
-            rewrite
-              (recip_irrelevant
-                 x
-                 (positive_apart_zero
-                    x
-                    (transitivity (pos_recip_compat (' r) rpos') ltrrx)) recip_nu) in ltxrr.
-            exact ltxrr.
-          * apply inl.
-            assert (qpos' : 0 < ' q).
-            {
-              rewrite <- (@preserves_0 Q F _ _ _ _ _ _ _ _ _ _).
-              apply strictly_order_preserving; try exact _; assumption.
-            }
-            rewrite (dec_recip_to_recip q (positive_apart_zero ('q) qpos')) in ltxrq.
-            assert (ltrqx := flip_lt_recip_r ('q) x qpos' xpos ltxrq).
-            rewrite (recip_irrelevant x (positive_apart_zero x xpos) recip_nu) in ltrqx.
-            exact ltrqx.
-      Qed.
-    End recip_pos.
+    Local Definition recip_nu := positive_apart_zero x xpos.
 
-  End unary_ops.
+    (** For [q < r]: if [q ≤ 0], then [q] lies below the positive [1 / x]. If [0 < q], we compare [x] with [1 / r < 1 / q]: if [1 / r < x], then [1 < r x], so [1 / x < r]; if [x < 1 / q], then [q x < 1], so [q < 1 / x]. *)
+    Definition locator_recip_pos : locator (// (x ; recip_nu)).
+    Proof.
+      intros q r ltqr.
+      assert (recip_pos : 0 < // (x ; recip_nu)) by apply pos_recip_compat.
+      destruct (trichotomy _ q 0) as [qneg|[qzero|qpos]].
+      - left; refine (transitivity _ recip_pos).
+        rewrite <- (preserves_0 (f:=cast Q F)); exact (strictly_order_preserving _ _ _ qneg).
+      - left; rewrite qzero, (preserves_0 (f:=cast Q F)); exact recip_pos.
+      - assert (rpos := transitivity qpos ltqr).
+        destruct (l (/ r) (/ q) (flip_lt_dec_recip _ _ qpos ltqr)) as [ltrx|ltxq].
+        + right; apply char_recip_pos_right.
+          rewrite <- (mult_dec_recip_cast r rpos).
+          apply (strictly_order_preserving (' r *.)), ltrx.
+        + left; apply char_recip_pos_left.
+          rewrite <- (mult_dec_recip_cast q qpos).
+          apply (strictly_order_preserving (' q *.)), ltxq.
+    Qed.
+  End recip_pos.
 
   Section recip_neg.
-    Context {x : F}
-            (l : locator x)
-            (xneg : x < 0).
+    Context {x : F} (l : locator x) (xneg : x < 0).
 
     Local Definition recip_neg_nu := negative_apart_zero x xneg.
 
+    (** For negative [x], we have [1 / x = - (1 / (- x))] with [- x] positive. *)
     Definition locator_recip_neg : locator (// (x ; recip_neg_nu)).
     Proof.
-      assert (negxpos : 0 < (-x))
-        by (apply flip_neg_negate; assumption).
-      assert (l' := locator_minus (locator_recip_pos (locator_minus l) negxpos)).
-      rewrite (recip_negate (-x)) in l'.
-      unfold negate_apart in l'.
-      rewrite
-        (recip_proper_alt
-           (- - x)
-           x
-           (apart_negate (- x) (positive_apart_zero (- x) negxpos)) recip_neg_nu)
-        in l'.
-      - assumption.
-      - apply negate_involutive.
+      assert (negxpos : 0 < - x) by exact (fst (flip_neg_negate x) xneg).
+      refine (transport locator _ (locator_minus (locator_recip_pos (locator_minus l) negxpos))).
+      rewrite recip_negate; apply recip_proper_alt, negate_involutive.
     Qed.
-
   End recip_neg.
 
-  Section unary_ops2.
+  (** A real apart from [0] is negative or positive. *)
+  Definition locator_recip {x : F} (l : locator x) (nu : x ≶ 0) : locator (// (x ; nu)).
+  Proof.
+    destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
+    - exact (transport locator (recip_irrelevant x _ nu) (locator_recip_neg l xneg)).
+    - exact (transport locator (recip_irrelevant x _ nu) (locator_recip_pos l xpos)).
+  Qed.
 
-    Context {x : F}
-            (l : locator x)
-            (nu : x ≶ 0).
-
-    Definition locator_recip : locator (// (x ; nu)).
-    Proof.
-      destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
-      - set (l' := locator_recip_neg l xneg).
-        rewrite (recip_proper_alt x x (negative_apart_zero x xneg) nu) in l';
-          try reflexivity; exact l'.
-      - set (l' := locator_recip_pos l xpos).
-        rewrite (recip_proper_alt x x (positive_apart_zero x xpos) nu) in l';
-          try reflexivity; exact l'.
-    Qed.
-
-  End unary_ops2.
+  (** ** Binary operations *)
 
   Section binary_ops.
 
@@ -570,55 +455,23 @@ Section locator.
             (l : locator x)
             (m : locator y).
 
+    (** For [q < r], let [e = (r - q) / 2] and take a rational [u < y < u + e]. We compare [x] with [q - u < q - u + e]: if [q - u < x], then [q = (q - u) + u < x + y]; if [x < q - u + e], then [x + y < (q - u + e) + (u + e) = r]. *)
     Definition locator_plus : locator (x + y).
     Proof.
       intros q r ltqr.
-      set (epsilon := (Qpos_diff q r ltqr) / 2).
-      assert (q+'epsilon=r-'epsilon)
-        by (rewrite path_avg_split_diff_l, path_avg_split_diff_r; reflexivity).
-      destruct (tight_bound m epsilon) as [u [ltuy ltyuepsilon]].
-      set (s := q-u).
-      assert (qsltx : 'q-'s<y).
-      {
-        unfold s.
-        rewrite (preserves_plus q (-u)).
-        rewrite negate_plus_distr.
-        rewrite (associativity ('q) (-'q) (-'(-u))).
-        rewrite plus_negate_r.
-        rewrite plus_0_l.
-        rewrite (preserves_negate u).
-        rewrite negate_involutive.
-        assumption.
-      }
-      assert (sltseps : s<s+' epsilon)
-        by apply pos_plus_lt_compat_r, pos_is_pos.
-      destruct (l s (s+' epsilon) sltseps) as [ltsx|ltxseps].
-      - apply inl. apply char_plus_left. apply tr; exists s; split; try assumption.
-        rewrite preserves_minus; assumption.
-      - apply inr. apply char_plus_right. apply tr.
-        set (t := s + ' epsilon); exists t.
-        split; try assumption.
-        assert (r-(q-u+(r-q)/2)=u+'epsilon) as ->.
-        {
-          change ((r - q) / 2) with ('epsilon).
-          rewrite negate_plus_distr.
-          rewrite <- negate_swap_l.
-          rewrite (plus_comm (-q) u).
-          rewrite (plus_assoc r (u-q) (-'epsilon)).
-          rewrite (plus_assoc r u (-q)).
-          rewrite (plus_comm r u).
-          rewrite <- (plus_assoc u r (-q)).
-          rewrite <- (plus_assoc u (r-q) (-'epsilon)).
-          rewrite (plus_comm r (-q)).
-          rewrite <- (plus_assoc (-q) r (-'epsilon)).
-          rewrite path_avg_split_diff_r.
-          rewrite <- path_avg_split_diff_l.
-          rewrite (plus_assoc (-q) q ((r-q)/2)).
-          rewrite (plus_negate_l q).
-          rewrite (plus_0_l _).
-          reflexivity.
-        }
-        assumption.
+      set (e := Qpos_diff q r ltqr / 2).
+      destruct (tight_bound m e) as [u [ltuy ltyu]].
+      destruct (l (q - u) (q - u + ' e) (fst (pos_plus_lt_compat_r _ _) (pos_is_pos e)))
+        as [ltx|ltx].
+      - left; rewrite <- (minus_plus_cancel q u), (preserves_plus (f:=cast Q F)).
+        exact (plus_lt_compat _ _ _ _ ltx ltuy).
+      - right.
+        assert (p : q - u + ' e + (u + ' e) = r).
+        { rewrite plus_swap_middle, minus_plus_cancel.
+          rhs rapply (plus_conjugate_alt r q); apply (ap (q +)).
+          exact (ap (cast (Qpos Q) Q) (pos_split2 _))^. }
+        rewrite <- p, (preserves_plus (f:=cast Q F)).
+        exact (plus_lt_compat _ _ _ _ ltx ltyu).
     Qed.
 
     Lemma locator_meet : locator (meet x y).
@@ -643,28 +496,31 @@ Section locator.
 
   End binary_ops.
 
-  (** A real with a locator lies below a positive rational. *)
+  (** ** Approximations *)
+
+  (** A real with a locator lies below a positive rational: a rational upper bound of [max(x, 0)]. *)
   Definition qpos_upper_bound {x : F} (l : locator x) : {B : Qpos Q & x < ' (' B)}.
   Proof.
     destruct (upper_bound (locator_join l (locator_left 0))) as [r ltr].
-    assert (r0 : 0 < r).
-    { apply (strictly_order_reflecting (cast Q F)).
-      exact (le_lt_trans _ _ _ (join_ub_r _ _) ltr). }
-    exact (mkQpos r r0; le_lt_trans _ _ _ (join_ub_l _ _) ltr).
+    destruct (fst (char_join_right r x (' 0)) ltr) as [ltxr lt0r].
+    exact (mkQpos r (strictly_order_reflecting _ _ _ lt0r); ltxr).
   Defined.
 
-  (** Splitting an interval in three. *)
+  (** Splitting an interval in three: if [r = q + 3 e], then [q + e < r - e]. *)
+  Local Lemma lt_trisect_by (q r : Q) (e : Qpos Q) (p : q + (' e + ' e + ' e) = r)
+    : q + ' e < r - ' e.
+  Proof.
+    apply (snd (flip_lt_minus_r _ _ _)).
+    rewrite <- p, !plus_assoc.
+    exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos e)).
+  Qed.
+
+  (** This applies to [e = (r - q) / 3]. *)
   Local Lemma lt_trisect (q r : Q) (ltqr : q < r)
     : q + ' (Qpos_diff q r ltqr / 3) < r - ' (Qpos_diff q r ltqr / 3).
   Proof.
-    set (d := Qpos_diff q r ltqr); set (e := d / 3).
-    assert (p : r - ' e = q + ' e + ' e).
-    { rewrite (plus_conjugate_alt r q); change (q + ' d - ' e = q + ' e + ' e).
-      rewrite (ap (cast (Qpos Q) Q) (pos_split3 d)).
-      change (q + (' e + ' e + ' e) - ' e = q + ' e + ' e).
-      rewrite <- plus_assoc, <- (plus_assoc (' e + ' e)), plus_negate_r, plus_0_r, plus_assoc.
-      reflexivity. }
-    rewrite p; apply pos_plus_lt_compat_r, pos_is_pos.
+    apply lt_trisect_by.
+    exact (Qpos_diff_pr q r ltqr @ ap (q +) (ap (cast (Qpos Q) Q) (pos_split3 _)))^.
   Qed.
 
   (** A pair of predicates [L] and [U] on [Q] is located in a reflective subuniverse [O] if [O (L q + U r)] whenever [q < r]. For the identity modality and the predicates [' q < x] and [x < ' r] this is a locator for [x], and for the propositional truncation it is the locatedness of a Dedekind cut. Such a pair is located if it has located approximations [La e] and [Ua e] of every precision [e], in the sense that [La e (q + e)] implies [L q] and [Ua e (r - e)] implies [U r]: for [q < r], we use the approximation of precision [(r - q) / 3]. *)
@@ -675,7 +531,7 @@ Section locator.
     : O (L q + U r)
     := O_functor O (functor_sum (lower _ q) (upper _ r)) (loc _ _ _ (lt_trisect q r ltqr)).
 
-  (** A real number which is arbitrarily close to real numbers with locators has a locator. *)
+  (** A real number which is arbitrarily close to real numbers with locators has a locator: if [z] is within [e] of [y] and [q + e < y], then [q < y - e < z], and if [y < r - e], then [z < y + e < r]. *)
   Definition locator_close {z : F}
     (approx : forall e : Qpos Q, {y : F & prod (locator y) (y - ' (' e) < z < y + ' (' e))})
     : locator z.
@@ -693,7 +549,7 @@ Section locator.
       exact (fst (flip_lt_minus_r _ _ _) lt).
   Defined.
 
-  (** A real number that has rational approximations of any precision has a locator. *)
+  (** A real number that has rational approximations of any precision has a locator, since rationals have locators. *)
   Definition locator_from_approx {z : F}
     (approx : forall e : Qpos Q, {p : Q | ' (p - ' e) < z < ' (p + ' e)})
     : locator z.
@@ -705,9 +561,11 @@ Section locator.
     exact (lo, hi).
   Defined.
 
+  (** ** Multiplication *)
+
   Section times.
 
-    (** For positive rationals [Z] and [e], a rational [0 < d < 1] with [d (2 Z + 1) < e]: we take [d = e / (e + 2 Z + 1)]. *)
+    (** For positive rationals [Z] and [e], a rational [0 < d < 1] with [d (2 Z + 1) < e]: we take [d = e / K] with [K = e + (2 Z + 1)], so that [d K = e]. Then [d < 1] since [e < K], and [d (2 Z + 1) < d e + d (2 Z + 1) = e]. *)
     Local Definition mult_precision (Z : Q) (Zpos : 0 < Z) (e : Qpos Q)
       : {d : Q & prod (prod (0 < d) (d < 1)) (d * (Z + Z + 1) < ' e)}.
     Proof.
@@ -716,19 +574,15 @@ Section locator.
       set (K := ' e + (Z + Z + 1)).
       assert (Kpos : 0 < K) by (apply pos_plus_compat; [apply e|exact Z1pos]).
       set (d := ' e / K).
-      assert (dpos : 0 < d)
-        by (apply pos_mult; [apply e|apply pos_dec_recip_compat, Kpos]).
-      assert (dK : d * K = ' e).
-      { unfold d. rewrite <- (associativity (' e)), (commutativity (/ K)).
-        rewrite dec_recip_inverse; [apply mult_1_r|].
-        apply lt_ne_flip, Kpos. }
+      assert (dpos : 0 < d) by (apply pos_mult; [apply e|apply pos_dec_recip_compat, Kpos]).
+      assert (dK : d * K = ' e) by exact (dec_recip_mult_cancel_r _ _ (lt_ne_flip _ _ Kpos)).
       exists d; refine ((dpos, _), _).
       - apply (strictly_order_reflecting (.* K)).
         rewrite dK, mult_1_l.
         exact (fst (pos_plus_lt_compat_r _ _) Z1pos).
-      - rewrite <- dK. unfold K.
+      - rewrite <- dK; unfold K.
         rewrite (plus_mult_distr_l d (' e) (Z + Z + 1)), (commutativity (d * ' e)).
-        apply (fst (pos_plus_lt_compat_r _ _)), pos_mult; [assumption|apply e].
+        exact (fst (pos_plus_lt_compat_r _ _) (pos_mult _ _ dpos (pos_is_pos e))).
     Defined.
 
     (** If [u < v < u + d], then [v] is within [d] of [u]. *)
@@ -755,50 +609,56 @@ Section locator.
         apply (fst (pos_plus_lt_compat_r _ _)), lt_0_1.
     Qed.
 
+    (** Hence if [x] and [y] lie between [- Z] and [Z], and [a < x < a + d] and [c < y < c + d] for [0 < d < 1], then [x y] is within [Z d + d (Z + 1) = d (2 Z + 1)] of [a c]. *)
+    Local Lemma mult_tight_bound {x y a c d Z : F} (ltZx : - Z < x < Z) (ltZy : - Z < y < Z)
+      (dpos : 0 < d) (d1 : d < 1) (ltxa : a < x < a + d) (ltyc : c < y < c + d)
+      : - (d * (Z + Z + 1)) < x * y - a * c < d * (Z + Z + 1).
+    Proof.
+      assert (p : Z * d + d * (Z + 1) = d * (Z + Z + 1)).
+      { rewrite (mult_comm Z d), <- plus_mult_distr_l, plus_assoc; reflexivity. }
+      rewrite <- p.
+      apply (mult_minus_mult_lt_bound _ _ _ _ _ _ _ ltZx).
+      - exact (lt_bound_tight_succ d1 (fst ltyc) (snd ltyc) ltZy).
+      - exact (lt_bound_tight dpos (fst ltxa) (snd ltxa)).
+      - exact (lt_bound_tight dpos (fst ltyc) (snd ltyc)).
+    Qed.
+
+    (** If [v] is within [e] of [u], then [u - e < v < u + e]. *)
+    Local Lemma between_of_lt_bound {u v e : F} : - e < v - u < e -> u - e < v < u + e.
+    Proof.
+      intros [lo hi]; split.
+      - rewrite (plus_comm u); exact (fst (flip_lt_minus_r _ _ _) lo).
+      - rewrite (plus_comm u); exact (fst (flip_lt_minus_l _ _ _) hi).
+    Qed.
+
     Context {x y : F}
             (l : locator x)
             (m : locator y).
 
-    (** If [x] and [y] have locators, then so does [x * y]. *)
+    (** If [x] and [y] have locators, then so does [x * y]. We bound [x] and [y] by a positive rational [Z], using locators for their absolute values. For a precision [e], we choose [d] as in [mult_precision] and rationals [a < x < a + d] and [c < y < c + d]; then [x y] is within [d (2 Z + 1) < e] of [a c]. *)
     Definition locator_times : locator (x * y).
     Proof.
-      (* The absolute values of [x] and [y], and hence their maximum, have locators. This gives a rational bound [Z]. *)
       destruct (qpos_upper_bound (locator_join (locator_join l (locator_minus l))
                                                (locator_join m (locator_minus m))))
         as [[Z Zpos] ltJZ].
       destruct (between_join_negate x y (' Z) ltJZ) as [ltZx ltZy].
       apply locator_from_approx; intros e.
-      (* We approximate [x] and [y] up to [d], so that [x y] is approximated up to [Z d + d (Z + 1) < e]. *)
       destruct (mult_precision Z Zpos e) as [d [[dpos ltd1] ltdZe]].
-      destruct (tight_bound l (mkQpos d dpos)) as [a [ltax ltxa]].
-      destruct (tight_bound m (mkQpos d dpos)) as [c [ltcy ltyc]].
+      destruct (tight_bound l (mkQpos d dpos)) as [a ltxa].
+      destruct (tight_bound m (mkQpos d dpos)) as [c ltyc].
       exists (a * c).
       rewrite (preserves_plus (f:=cast Q F)) in ltxa, ltyc.
       change (' (mkQpos d dpos)) with d in ltxa, ltyc.
-      assert (dpos' : (0 : F) < ' d).
-      { rewrite <- (preserves_0 (f:=cast Q F)); apply (strictly_order_preserving _), dpos. }
-      assert (ltd1' : ' d < (1 : F)).
-      { rewrite <- (preserves_1 (f:=cast Q F)); apply (strictly_order_preserving _), ltd1. }
-      destruct (mult_minus_mult_lt_bound x y (' a) (' c) (' Z) (' Z + 1) (' d)
-                  ltZx (lt_bound_tight_succ ltd1' ltcy ltyc ltZy)
-                  (lt_bound_tight dpos' ltax ltxa) (lt_bound_tight dpos' ltcy ltyc))
-        as [lo hi].
-      assert (ltbound : ' Z * ' d + ' d * (' Z + 1) < ' (' e)).
-      { assert (p : ' Z * ' d + ' d * (' Z + 1) = ' (d * (Z + Z + 1))).
-        { rewrite (preserves_mult (f:=cast Q F)), 2!(preserves_plus (f:=cast Q F)),
-            (preserves_1 (f:=cast Q F)).
-          rewrite (commutativity (' Z) (' d)), <- plus_mult_distr_l, plus_assoc.
-          reflexivity. }
-        rewrite p; apply (strictly_order_preserving _), ltdZe. }
+      assert (dpos' : 0 < ' d) by exact (fst (rationals_to_field_pos_iff d) dpos).
+      assert (ltd1' : ' d < 1).
+      { rewrite <- (preserves_1 (f:=cast Q F)); exact (strictly_order_preserving _ _ _ ltd1). }
+      assert (lte : ' d * (' Z + ' Z + 1) < ' (' e)).
+      { refine (transport (fun w => w < _) _ (strictly_order_preserving _ _ _ ltdZe)).
+        rewrite (preserves_mult (f:=cast Q F)), 2!(preserves_plus (f:=cast Q F)).
+        apply (ap (fun w => ' d * (' Z + ' Z + w))), preserves_1. }
       rewrite (preserves_minus (f:=cast Q F) (a * c) (' e)),
         (preserves_plus (f:=cast Q F) (a * c) (' e)), (preserves_mult (f:=cast Q F) a c).
-      split.
-      - rewrite (commutativity (' a * ' c)).
-        apply flip_lt_minus_r.
-        exact (transitivity (snd (flip_lt_negate _ _) ltbound) lo).
-      - rewrite (commutativity (' a * ' c)).
-        apply flip_lt_minus_l.
-        exact (transitivity hi ltbound).
+      apply between_of_lt_bound, (between_weaken _ _ _ (mult_tight_bound ltZx ltZy dpos' ltd1' ltxa ltyc) lte).
     Defined.
 
   End times.
