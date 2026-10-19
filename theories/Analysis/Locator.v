@@ -589,10 +589,8 @@ Section locator.
     Local Lemma lt_bound_tight {u v d : F} (dpos : 0 < d) (ltuv : u < v) (ltvu : v < u + d)
       : - d < v - u < d.
     Proof.
-      split.
-      - rhs_V' exact (snd (flip_pos_minus _ _) ltuv).
-        apply flip_pos_negate, dpos.
-      - apply flip_lt_minus_l; rewrite (commutativity d); assumption.
+      apply between_iff_lt_minus; split; [|exact ltvu].
+      exact (transitivity (fst (pos_minus_lt_compat_r u d) dpos) ltuv).
     Qed.
 
     (** If moreover [- Z < v < Z] and [d < 1], then [- (Z + 1) < u < Z + 1]. *)
@@ -623,14 +621,6 @@ Section locator.
       - exact (lt_bound_tight dpos (fst ltyc) (snd ltyc)).
     Qed.
 
-    (** If [v] is within [e] of [u], then [u - e < v < u + e]. *)
-    Local Lemma between_of_lt_bound {u v e : F} : - e < v - u < e -> u - e < v < u + e.
-    Proof.
-      intros [lo hi]; split.
-      - rewrite (plus_comm u); exact (fst (flip_lt_minus_r _ _ _) lo).
-      - rewrite (plus_comm u); exact (fst (flip_lt_minus_l _ _ _) hi).
-    Qed.
-
     Context {x y : F}
             (l : locator x)
             (m : locator y).
@@ -658,7 +648,8 @@ Section locator.
         apply (ap (fun w => ' d * (' Z + ' Z + w))), preserves_1. }
       rewrite (preserves_minus (f:=cast Q F) (a * c) (' e)),
         (preserves_plus (f:=cast Q F) (a * c) (' e)), (preserves_mult (f:=cast Q F) a c).
-      apply between_of_lt_bound, (between_weaken _ _ _ (mult_tight_bound ltZx ltZy dpos' ltd1' ltxa ltyc) lte).
+      apply between_iff_lt_minus.
+      exact (between_weaken _ _ _ (mult_tight_bound ltZx ltZy dpos' ltd1' ltxa ltyc) lte).
     Defined.
 
   End times.

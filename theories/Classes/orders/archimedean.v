@@ -29,18 +29,18 @@ Section strict_field_order.
   (** [-x < r] iff [-r < x]. *)
   Lemma char_minus_left x y : - x < y -> - y < x.
   Proof.
-    intros ltnxy. rewrite <- (negate_involutive x). apply (snd (flip_lt_negate _ _)). assumption.
+    exact (flip_lt_negate_l x y).
   Qed.
 
   (** [q < -x] iff [x < -q]. *)
   Lemma char_minus_right x y : x < - y -> y < - x.
   Proof.
-    intros ltnxy. rewrite <- (negate_involutive y). apply (snd (flip_lt_negate _ _)). assumption.
+    exact (flip_lt_negate_r y x).
   Qed.
 
   (** ** Addition *)
 
-  (** [q < x + y] iff there is [s : Q] with [s < x] and [q - s < y]. *)
+  (** [q < x + y] iff there is [s : Q] with [s < x] and [q - s < y]. If [q < x + y], a rational [s] with [q - y < s < x] has [q - s < y]. Conversely, [q = s + (q - s) < x + y]. *)
   Lemma char_plus_left : forall (q : Q) (x y : F),
       ' q < x + y <-> hexists (fun s : Q => (' s < x) /\ (' (q - s) < y)).
   Proof.
@@ -49,17 +49,13 @@ Section strict_field_order.
       assert (hs := archimedean_property Q F (' q - y) x (snd (flip_lt_minus_l _ _ _) ltqxy)).
       strip_truncations; destruct hs as [s [ltqys ltsx]].
       apply tr; exists s; split; [exact ltsx|].
-      rewrite preserves_minus.
-      apply flip_lt_minus_l; rewrite (commutativity y).
-      apply flip_lt_minus_l; assumption.
+      rewrite preserves_minus; exact (flip_lt_minus_swap_l _ _ _ ltqys).
     - intros hs; strip_truncations; destruct hs as [s [ltsx ltqsy]].
-      rewrite preserves_minus in ltqsy.
-      apply (transitivity (fst (flip_lt_minus_l _ _ _) ltqsy)).
-      rewrite (commutativity x).
-      apply (strictly_order_preserving (y +)); assumption.
+      rewrite (plus_conjugate_alt q s), (preserves_plus s (q - s)).
+      exact (plus_lt_compat _ _ _ _ ltsx ltqsy).
   Qed.
 
-  (** [x + y < r] iff there is [t : Q] with [x < t] and [y < r - t]. *)
+  (** [x + y < r] iff there is [t : Q] with [x < t] and [y < r - t]. If [x + y < r], a rational [t] with [x < t < r - y] has [y < r - t]. Conversely, [x + y < t + (r - t) = r]. *)
   Lemma char_plus_right : forall (r : Q) (x y : F),
       x + y < ' r <-> hexists (fun t : Q => (x < ' t) /\ (y < ' (r - t))).
   Proof.
@@ -68,14 +64,10 @@ Section strict_field_order.
       assert (ht := archimedean_property Q F x (' r - y) (snd (flip_lt_minus_r _ _ _) ltxyr)).
       strip_truncations; destruct ht as [t [ltxt lttry]].
       apply tr; exists t; split; [exact ltxt|].
-      rewrite preserves_minus.
-      apply flip_lt_minus_r; rewrite (commutativity y).
-      apply flip_lt_minus_r; assumption.
+      rewrite preserves_minus; exact (flip_lt_minus_swap_r _ _ _ lttry).
     - intros ht; strip_truncations; destruct ht as [t [ltxt ltyrt]].
-      rewrite preserves_minus in ltyrt.
-      rhs_V' exact (fst (flip_lt_minus_r _ _ _) ltyrt).
-      rewrite (commutativity y).
-      apply (strictly_order_preserving (+ y)); assumption.
+      rewrite (plus_conjugate_alt r t), (preserves_plus t (r - t)).
+      exact (plus_lt_compat _ _ _ _ ltxt ltyrt).
   Qed.
 
   (** ** Multiplication *)
@@ -101,7 +93,7 @@ Section strict_field_order.
     - apply ltZ; exact (transitivity (join_ub_l y (- y)) (join_ub_r _ _)).
   Qed.
 
-  (** For [- Z < x < Z] and [0 < D], there are rationals [a < x < b] such that all [u] in [[a, b]] lie between [- Z] and [Z] and within [D] of [x]. *)
+  (** For [- Z < x < Z] and [0 < D], there are rationals [a < x < b] such that all [u] in [[a, b]] lie between [- Z] and [Z] and within [D] of [x]: we take [max(x - D, - Z) < a < x < b < min(x + D, Z)]. *)
   Lemma merely_rational_bounds_close (x D Z : F) (Dpos : 0 < D) (ltZx : - Z < x < Z)
     : hexists (fun ab : Q * Q => (' (fst ab) < x < ' (snd ab))
                  /\ forall u, ' (fst ab) ≤ u -> u ≤ ' (snd ab)
@@ -114,31 +106,28 @@ Section strict_field_order.
                     (meet_lt_l _ _ _ (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
     strip_truncations; destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]].
     apply tr; exists (a, b); refine ((ltax, ltxb), _); intros u leau leub.
-    assert (ltu := fun v (lev : v ≤ join (x - D) (- Z)) =>
-                     lt_le_trans _ _ _ (le_lt_trans _ _ _ lev ltja) leau).
-    assert (ult := fun v (lev : meet (x + D) Z ≤ v) =>
-                     le_lt_trans _ _ _ leub (lt_le_trans _ _ _ ltbm lev)).
-    split; split.
-    - exact (ltu _ (join_ub_r _ _)).
-    - exact (ult _ (meet_lb_r _ _)).
-    - apply flip_lt_minus_r; rewrite (commutativity (- D)).
-      apply flip_lt_minus_l; exact (ult _ (meet_lb_l _ _)).
-    - apply flip_lt_minus_l; rewrite (commutativity D).
-      apply flip_lt_minus_l; exact (ltu _ (join_ub_l _ _)).
+    (* Then [max(x - D, - Z) < u < min(x + D, Z)]. *)
+    assert (ltju := lt_le_trans _ _ _ ltja leau).
+    assert (ltum := le_lt_trans _ _ _ leub ltbm).
+    split; [split|].
+    - exact (le_lt_trans _ _ _ (join_ub_r _ _) ltju).
+    - exact (lt_le_trans _ _ _ ltum (meet_lb_r _ _)).
+    - apply between_minus_swap, between_iff_lt_minus; split.
+      + exact (le_lt_trans _ _ _ (join_ub_l _ _) ltju).
+      + exact (lt_le_trans _ _ _ ltum (meet_lb_l _ _)).
   Qed.
 
   Section times.
     (* Reflecting strict inequalities from [F] to [Q] needs [1] to be apart from [0] in [Q]; this holds for instance when the apartness of [Q] is trivial. *)
     Context `{!PropHolds ((1 : Q) ≶ 0)}.
 
-    (** Rational bounds [a < x < b] and [c < y < d] such that [u * w] is within [e] of [x * y] for all [u] in [[a, b]] and [w] in [[c, d]]. *)
+    (** Rational bounds [a < x < b] and [c < y < d] such that [u * w] is within [e] of [x * y] for all [u] in [[a, b]] and [w] in [[c, d]]. By [mult_minus_mult_lt_bound], it suffices that [u] and [w] lie between [- Z] and [Z] and within [D = e / 2 Z] of [x] and [y], for a bound [Z] on [x] and [y]; [merely_rational_bounds_close] gives such bounds. *)
     Lemma archimedean_mult_approx (x y e : F) (epos : 0 < e)
       : hexists4 (fun a b c d : Q =>
                     (' a < x < ' b) /\ (' c < y < ' d)
                     /\ forall u w, ' a ≤ u -> u ≤ ' b -> ' c ≤ w -> w ≤ ' d
                                    -> - e < x * y - u * w < e).
     Proof.
-      (* By [mult_minus_mult_lt_bound], it suffices that [u] and [w] are within [D = e / 2Z] of [x] and [y], for a bound [Z] on [x] and [y]. *)
       set (Z := join (join x (- x)) (join y (- y)) + 1).
       destruct (between_join_negate x y Z (fst (pos_plus_lt_compat_r _ 1) lt_0_1))
         as [ltZx ltZy].
@@ -166,12 +155,44 @@ Section strict_field_order.
     Local Lemma box_corners (P : F -> Type) (a b c d : Q) (x y : F)
       (ltaxb : ' a < x < ' b) (ltcyd : ' c < y < ' d)
       (box : forall u w, ' a ≤ u -> u ≤ ' b -> ' c ≤ w -> w ≤ ' d -> P (u * w))
-      : prod (prod (prod (P (' (a * c))) (P (' (a * d)))) (P (' (b * c)))) (P (' (b * d))).
+      : P (' a * ' c) * P (' a * ' d) * P (' b * ' c) * P (' b * ' d).
     Proof.
       destruct ltaxb as [ltax ltxb], ltcyd as [ltcy ltyd].
       assert (leab := lt_le _ _ (transitivity ltax ltxb)).
       assert (lecd := lt_le _ _ (transitivity ltcy ltyd)).
-      repeat split; rewrite preserves_mult; apply box; first [reflexivity | assumption].
+      repeat split; apply box; first [reflexivity | assumption].
+    Qed.
+
+    (** A rational lies below the minimum of the four products [a c], [a d], [b c] and [b d] iff its image lies below the image of each. *)
+    Local Lemma lt_meet_corners (q a b c d : Q)
+      : q < meet (meet (a * c) (a * d)) (meet (b * c) (b * d))
+        <-> (' q < ' a * ' c) * (' q < ' a * ' d) * (' q < ' b * ' c) * (' q < ' b * ' d).
+    Proof.
+      rewrite <- 4!(preserves_mult (f:=qinc)); split.
+      - intros lt; repeat split; apply (strictly_order_preserving qinc);
+          refine (lt_le_trans _ _ _ lt _).
+        + exact (transitivity (meet_lb_l _ _) (meet_lb_l _ _)).
+        + exact (transitivity (meet_lb_l _ _) (meet_lb_r _ _)).
+        + exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
+        + exact (transitivity (meet_lb_r _ _) (meet_lb_r _ _)).
+      - intros [[[ac ad] bc] bd].
+        repeat apply meet_lt_l; apply (strictly_order_reflecting qinc); assumption.
+    Qed.
+
+    (** Dually, a rational lies above the maximum of the four products iff its image lies above the image of each. *)
+    Local Lemma join_corners_lt (r a b c d : Q)
+      : join (join (a * c) (a * d)) (join (b * c) (b * d)) < r
+        <-> (' a * ' c < ' r) * (' a * ' d < ' r) * (' b * ' c < ' r) * (' b * ' d < ' r).
+    Proof.
+      rewrite <- 4!(preserves_mult (f:=qinc)); split.
+      - intros lt; repeat split; apply (strictly_order_preserving qinc);
+          refine (le_lt_trans _ _ _ _ lt).
+        + exact (transitivity (join_ub_l _ _) (join_ub_l _ _)).
+        + exact (transitivity (join_ub_r _ _) (join_ub_l _ _)).
+        + exact (transitivity (join_ub_l _ _) (join_ub_r _ _)).
+        + exact (transitivity (join_ub_r _ _) (join_ub_r _ _)).
+      - intros [[[ac ad] bc] bd].
+        repeat apply join_lt_r; apply (strictly_order_reflecting qinc); assumption.
     Qed.
 
     (** If [x * y - u * w < x * y - s], then [s < u * w]. *)
@@ -180,7 +201,7 @@ Section strict_field_order.
       intro lt; exact (fst (flip_lt_negate _ _) (strictly_order_reflecting (x +) _ _ lt)).
     Qed.
 
-    (** [q < x y] iff there are [a < x < b] and [c < y < d] with [q < min(ac, ad, bc, bd)]. *)
+    (** [q < x y] iff there are [a < x < b] and [c < y < d] with [q < min(ac, ad, bc, bd)]. If [q < x y], take boxes around [x] and [y] in which all products are within [x y - q] of [x y], hence above [q]; in particular the corners are. Conversely, [x y] lies above the minimum of the products of the corners. *)
     Lemma char_times_left : forall (q : Q) (x y : F),
             ' q < x * y
         <-> hexists4 (fun a b c d : Q =>
@@ -198,23 +219,17 @@ Section strict_field_order.
                        (snd (flip_pos_minus _ _) ltqxy)).
         strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
         apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
-        destruct (box_corners (fun z => ' q < z) a b c d x y ltaxb ltcyd) as [[[ac ad] bc] bd].
-        { intros u w leau leub lecw lewd.
-          exact (lt_of_minus_lt_minus _ _ _ (snd (approx u w leau leub lecw lewd))). }
-        repeat apply meet_lt_l; apply (strictly_order_reflecting qinc); assumption.
+        apply lt_meet_corners, (box_corners (fun z => ' q < z) a b c d x y ltaxb ltcyd).
+        intros u w leau leub lecw lewd.
+        exact (lt_of_minus_lt_minus _ _ _ (snd (approx u w leau leub lecw lewd))).
       - intros h; strip_truncations.
         destruct h as [[[a b] [c d]] [ltqm [[ltax ltxb] [ltcy ltyd]]]].
-        apply (lt_mult_corners_l _ (' a) (' b) (' c) (' d));
-          try (apply lt_le; assumption);
-          rewrite <- preserves_mult; apply (strictly_order_preserving qinc);
-          refine (lt_le_trans _ _ _ ltqm _).
-        + exact (transitivity (meet_lb_l _ _) (meet_lb_l _ _)).
-        + exact (transitivity (meet_lb_l _ _) (meet_lb_r _ _)).
-        + exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
-        + exact (transitivity (meet_lb_r _ _) (meet_lb_r _ _)).
+        destruct (fst (lt_meet_corners q a b c d) ltqm) as [[[ac ad] bc] bd].
+        exact (lt_mult_corners_l _ _ _ _ _ _ _ (lt_le _ _ ltax) (lt_le _ _ ltxb)
+                 (lt_le _ _ ltcy) (lt_le _ _ ltyd) ac ad bc bd).
     Qed.
 
-    (** [x y < r] iff there are [a < x < b] and [c < y < d] with [max(ac, ad, bc, bd) < r]. *)
+    (** [x y < r] iff there are [a < x < b] and [c < y < d] with [max(ac, ad, bc, bd) < r]. The argument is dual to that for [char_times_left]. *)
     Lemma char_times_right : forall (r : Q) (x y : F),
             x * y < ' r
         <-> hexists4 (fun a b c d : Q =>
@@ -232,21 +247,15 @@ Section strict_field_order.
                        (snd (flip_pos_minus _ _) ltxyr)).
         strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
         apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
-        destruct (box_corners (fun z => z < ' r) a b c d x y ltaxb ltcyd) as [[[ac ad] bc] bd].
-        { intros u w leau leub lecw lewd.
-          apply (lt_of_minus_lt_minus (x * y)); rewrite (negate_swap_r (x * y)).
-          exact (fst (approx u w leau leub lecw lewd)). }
-        repeat apply join_lt_r; apply (strictly_order_reflecting qinc); assumption.
+        apply join_corners_lt, (box_corners (fun z => z < ' r) a b c d x y ltaxb ltcyd).
+        intros u w leau leub lecw lewd.
+        apply (lt_of_minus_lt_minus (x * y)); rewrite (negate_swap_r (x * y)).
+        exact (fst (approx u w leau leub lecw lewd)).
       - intros h; strip_truncations.
         destruct h as [[[a b] [c d]] [ltjr [[ltax ltxb] [ltcy ltyd]]]].
-        apply (mult_corners_lt_r _ (' a) (' b) (' c) (' d));
-          try (apply lt_le; assumption);
-          rewrite <- preserves_mult; apply (strictly_order_preserving qinc);
-          refine (le_lt_trans _ _ _ _ ltjr).
-        + exact (transitivity (join_ub_l _ _) (join_ub_l _ _)).
-        + exact (transitivity (join_ub_r _ _) (join_ub_l _ _)).
-        + exact (transitivity (join_ub_l _ _) (join_ub_r _ _)).
-        + exact (transitivity (join_ub_r _ _) (join_ub_r _ _)).
+        destruct (fst (join_corners_lt r a b c d) ltjr) as [[[ac ad] bc] bd].
+        exact (mult_corners_lt_r _ _ _ _ _ _ _ (lt_le _ _ ltax) (lt_le _ _ ltxb)
+                 (lt_le _ _ ltcy) (lt_le _ _ ltyd) ac ad bc bd).
     Qed.
 
   End times.
@@ -267,7 +276,7 @@ Section strict_field_order.
     rewrite <- 2!negate_mult_distr_r; apply flip_lt_negate.
   Qed.
 
-  (** For [0 < z], [q < z⁻¹] iff [q z < 1]. *)
+  (** For [0 < z], [q < z⁻¹] iff [q z < 1]: multiply by [z]. *)
   Lemma char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
     'q < recip' z (positive_apart_zero z nu) <-> ' q * z < 1.
   Proof.
@@ -285,7 +294,7 @@ Section strict_field_order.
     apply lt_iff_mult_pos_r, nu.
   Qed.
 
-  (** For [w < 0], [q < w⁻¹] iff [1 < q w]. *)
+  (** For [w < 0], [q < w⁻¹] iff [1 < q w]: multiply by [w]. *)
   Lemma char_recip_neg_left : forall (q : Q) (w : F) (nu : w < 0),
     'q < recip' w (negative_apart_zero w nu) <-> 1 < ' q * w.
   Proof.
@@ -316,7 +325,7 @@ Section strict_field_order.
     - intros [ltqx ltqy]; apply meet_lt_l; assumption.
   Qed.
 
-  (** [min(x, y) < r] iff [x < r] or [y < r]. *)
+  (** [min(x, y) < r] iff [x < r] or [y < r]. If [min(x, y) < r], compare [x] and [y] with [min(x, y) < r]: if both lie above [min(x, y)], so does [min(x, y)]. *)
   Lemma char_meet_right : forall (r : Q) (x y : F),
       meet x y < 'r <-> hor (x < 'r) (y < 'r).
   Proof.
@@ -333,7 +342,7 @@ Section strict_field_order.
       + apply meet_lt_r_r; assumption.
   Qed.
 
-  (** [q < max(x, y)] iff [q < x] or [q < y]. *)
+  (** [q < max(x, y)] iff [q < x] or [q < y]. If [q < max(x, y)], compare [x] and [y] with [q < max(x, y)]: if both lie below [max(x, y)], so does [max(x, y)]. *)
   Lemma char_join_left : forall (q : Q) (x y : F),
       ' q < join x y <-> hor ('q < x) ('q < y).
   Proof.
