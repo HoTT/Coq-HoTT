@@ -2,6 +2,12 @@
 
 (** The results of [Analysis/] are stated for an abstract model [Q] of the rationals and an abstract Archimedean, Cauchy complete ordered field [F].  We build their hypotheses for the integers as pairs of natural numbers, the rationals as fractions of these integers and the Dedekind reals over these rationals, and check that besides [Funext] and [Univalence] only the postulates of the library's higher inductive types (truncations and quotients) are assumed.  We pass the instances explicitly, since instance search is slow on these concrete types. *)
 
+(** The main results cannot yet be applied to these models, because their universes are pinned; we only check the hypotheses.  Options for the future:
+    - make the global universe [Ularge] of [natpair_integers.v] polymorphic, so that the order on [NatPair.Z] no longer forces [UN < Ularge] for a global [Ularge];
+    - give the section of [Classes/theory/integers.v] separate universes for the integers and the target ring, so that [int_dec] and [slow_int_abs] apply to rings in other universes;
+    - derive the characteristic in [ArchimedeanProperty] from [OrderedField] instead of taking it as an argument, which also removes [archimedean_property_change_char];
+    - declare [RationalsToField] and [Rationals] cumulative, so that one concrete [Rationals] instance can be used at several universe levels (untested). *)
+
 From HoTT Require Import Basics Spaces.Nat.Core.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra

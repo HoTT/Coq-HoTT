@@ -17,6 +17,8 @@ From HoTT.Classes Require Import
 
 (** We work with distances valued in an arbitrary ordered field [F], with the closeness relation [d x y < e] for positive rationals [e] in some rationals [Q]. *)
 
+(** This is one of several notions of closeness in the library: [Closeness] in [Classes/theory/premetric.v] (over the axiomatized rationals), [field_close] and [rational_close] in [CauchyCompleteness.v], and likewise [IsLimit], [IsMetricLimit] and [IsApproximationLimit] (in [CauchyStructure.v]) for limits.  They should eventually be unified, for instance by generalizing [premetric.v] to arbitrary rationals and deriving the others from it. *)
+
 (** ** Pseudometrics and metrics *)
 
 Section metric.
