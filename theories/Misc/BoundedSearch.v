@@ -110,8 +110,8 @@ Section bounded_search_alt_type.
     (* An [x] with [P x] merely has a preimage [n], and then [P (e n)]. *)
     assert (P'_inhab : hexists (P o e)).
     { strip_truncations; destruct P_inhab as [x p].
-      refine (Trunc_functor (-1) _ (@center _ (e_surj x))).
-      intros [n q]; exact (n; transport P q^ p). }
+      pose proof (@center (merely (hfiber e x)) (e_surj x)) as h; strip_truncations.
+      destruct h as [n q]; exact (tr (n; transport P q^ p)). }
     destruct (minimal_n (P o e) (fun n => P_dec (e n)) P'_inhab) as [n p].
     exact (e n; p).
   Defined.

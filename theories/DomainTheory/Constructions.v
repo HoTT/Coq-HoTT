@@ -26,7 +26,7 @@ Proof.
     + intros a b c; unfold le, le_sig; apply transitivity.
   - intros a b p q.
     apply path_sigma_hprop.
-    exact (antisymmetry Ale _ _ p q).
+    apply (antisymmetry Ale); [exact p|exact q].
 Defined.
 
 Section Subdcpo.
@@ -43,11 +43,11 @@ Section Subdcpo.
     1: exact _.
     intros I x d.
     pose (d' := isdirected_compose pr1 x d).
-    exists (dcpo_sup _ d'; issubdcpo B I _ d' (fun i => (x i).2)).
+    exists (dcpo_sup (pr1 o x) d'; issubdcpo B I (pr1 o x) d' (fun i => (x i).2)).
     split.
-    - exact (dcpo_sup_upper _ d').
+    - exact (dcpo_sup_upper (pr1 o x) d').
     - intros b ub.
-      exact (dcpo_sup_least _ d' b.1 ub).
+      exact (dcpo_sup_least (pr1 o x) d' b.1 ub).
   Defined.
 
 End Subdcpo.
@@ -66,11 +66,11 @@ Section Pointwise.
     - exact _.
     - intros f g; unfold relation_pointwise; exact _.
     - split.
-      + intros f a; exact (reflexivity (R:=Ble) _).
+      + intros f a; exact (reflexivity (R:=Ble) (f a)).
       + intros f g h p q a; exact (transitivity (R:=Ble) (p a) (q a)).
     - intros f g p q.
       apply path_forall; intro a.
-      exact (antisymmetry Ble _ _ (p a) (q a)).
+      apply (antisymmetry Ble); [exact (p a)|exact (q a)].
   Defined.
 
   (** Evaluation at a point is monotone. *)
@@ -85,18 +85,18 @@ Section Pointwise.
     1: exact _.
     intros I x d.
     pose (da := fun a => isdirected_compose (fun f : A -> B => f a) x d).
-    exists (fun a => dcpo_sup _ (da a)).
+    exists (fun a => dcpo_sup (fun i => x i a) (da a)).
     split.
     - intros i a.
-      exact (dcpo_sup_upper _ (da a) i).
+      exact (dcpo_sup_upper (fun i => x i a) (da a) i).
     - intros g ub a.
-      exact (dcpo_sup_least _ (da a) _ (fun i => ub i a)).
+      exact (dcpo_sup_least (fun i => x i a) (da a) (g a) (fun i => ub i a)).
   Defined.
 
   Definition dcpo_sup_pointwise `{!IsDcpo Ble} {I : Type} (x : I -> A -> B)
     (d : IsDirected (Ale:=le_pointwise) x) (a : A)
     : IsSup (fun i => x i a) (dcpo_sup x d a)
-    := (dcpo_hassup _ _ (isdirected_compose (fun f : A -> B => f a) x d)).2.
+    := (dcpo_hassup I (fun i => x i a) (isdirected_compose (fun f : A -> B => f a) x d)).2.
 
 End Pointwise.
 

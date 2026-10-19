@@ -73,7 +73,7 @@ Section SupTheory.
   Definition path_issup {I : Type} (x : I -> A) {a b : A}
     (p : IsSup x a) (q : IsSup x b)
     : a = b
-    := antisymmetry Ale _ _ (issup_least p b (fst q)) (issup_least q a (fst p)).
+    := antisymmetry Ale a b (issup_least p b (fst q)) (issup_least q a (fst p)).
 
   #[export] Instance ishprop_hassup {I : Type} (x : I -> A)
     : IsHProp {a : A & IsSup x a}.
@@ -140,7 +140,7 @@ Section Directed.
     - intros i j.
       specialize (snd d i j); apply Trunc_functor.
       intros [k [p q]].
-      exact (k; (order_preserving f _ _ p, order_preserving f _ _ q)).
+      exists k; split; apply (order_preserving f); assumption.
   Defined.
 
   (** A family [Bool -> A] with values [x ≤ y] is directed, and [y] is its supremum. *)
@@ -175,7 +175,7 @@ Section Directed.
   Proof.
     induction m as [|m IHm].
     - reflexivity.
-    - exact (transitivity IHm (c _)).
+    - exact (transitivity IHm (c (m + n)%nat)).
   Defined.
 
   Definition isdirected_increasing_sequence (x : nat -> A)
@@ -211,7 +211,7 @@ Defined.
 #[export] Instance orderpreserving_compose {A B C : Type} {Ale : Le A} {Ble : Le B}
   {Cle : Le C} (g : B -> C) (f : A -> B) `{!OrderPreserving f} `{!OrderPreserving g}
   : OrderPreserving (g o f)
-  := fun x y p => order_preserving g _ _ (order_preserving f x y p).
+  := fun x y p => order_preserving g (f x) (f y) (order_preserving f x y p).
 
 (** A map out of a [v]-dcpo is Scott continuous if it preserves suprema of directed families indexed by types in [Type@{v}]. *)
 Class IsScottContinuous@{v u t s u' t' s'} {A : Type@{u}} {B : Type@{u'}}
@@ -240,8 +240,8 @@ Section ScottContinuous.
   Proof.
     intros x y p.
     pose (d := isdirected_bool_family x y p).
-    rewrite <- (path_dcpo_sup _ d (issup_bool_family x y p)).
-    exact (issup_upper (scott_continuous f Bool _ d) false).
+    rewrite <- (path_dcpo_sup (bool_family x y) d (issup_bool_family x y p)).
+    exact (issup_upper (scott_continuous f Bool (bool_family x y) d) false).
   Defined.
 
 End ScottContinuous.

@@ -38,7 +38,7 @@ Proof.
 Defined.
 
 Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
-  := nat_unpair_hit_diagonal a b _ (nat_unpair_hit_axis (a + b)).2.
+  := nat_unpair_hit_diagonal a b (nat_unpair_hit_axis (a + b)).1 (nat_unpair_hit_axis (a + b)).2.
 
 (** Surjections from the natural numbers onto [X] and onto [Y] give a surjection onto [X * Y]. *)
 Definition nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y) (n : nat) : X * Y
@@ -49,7 +49,8 @@ Definition issurj_nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y)
   : IsSurjection (nat_prod_enumerator s t).
 Proof.
   apply BuildIsSurjection; intros [x y].
-  pose proof (@center _ (s_surj x)) as a; pose proof (@center _ (t_surj y)) as b.
+  pose proof (@center (merely (hfiber s x)) (s_surj x)) as a.
+  pose proof (@center (merely (hfiber t y)) (t_surj y)) as b.
   strip_truncations; destruct a as [a p], b as [b q].
   destruct (nat_unpair_hit a b) as [n r].
   apply tr; exists n; unfold nat_prod_enumerator; rewrite r; exact (path_prod' p q).

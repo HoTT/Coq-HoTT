@@ -108,7 +108,7 @@ Section nat_to_semiring.
   Proof.
     induction n as [|n IH].
     - reflexivity.
-    - rewrite nat_to_semiring_succ; exact (nonneg_plus_compat _ _ le_0_1 IH).
+    - rewrite nat_to_semiring_succ; apply nonneg_plus_compat; [exact le_0_1|exact IH].
   Qed.
 
   Lemma nat_to_semiring_le (m n : nat) : (m <= n)%nat -> nR m ≤ nR n.
@@ -117,7 +117,7 @@ Section nat_to_semiring.
     - reflexivity.
     - lhs' exact IH.
       rewrite nat_to_semiring_succ.
-      exact (fst (nonneg_plus_le_compat_l _ _) le_0_1).
+      apply nonneg_plus_le_compat_l, le_0_1.
   Qed.
 
   Context `{!PropHolds ((1 : R) ≶ 0)}.
@@ -125,13 +125,13 @@ Section nat_to_semiring.
   Lemma nat_to_semiring_succ_pos (n : nat) : 0 < nR (S n).
   Proof.
     rewrite nat_to_semiring_succ.
-    exact (pos_plus_le_lt_compat_l _ _ _ lt_0_1 (nat_to_semiring_nonneg n)).
+    apply pos_plus_le_lt_compat_l; [exact lt_0_1|apply nat_to_semiring_nonneg].
   Qed.
 
   Lemma nat_to_semiring_pos (n : nat) : (0 < n)%nat -> 0 < nR n.
   Proof.
     destruct n as [|n]; intro lt.
-    - destruct (not_lt_zero_r _ lt).
+    - destruct (not_lt_zero_r 0 lt).
     - apply nat_to_semiring_succ_pos.
   Qed.
 End nat_to_semiring.

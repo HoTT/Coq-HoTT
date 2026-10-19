@@ -24,11 +24,11 @@ Section Kleene.
   Proof.
     induction n as [|n IHn].
     - rapply bottom_least.
-    - exact (order_preserving f _ _ IHn).
+    - apply (order_preserving f), IHn.
   Defined.
 
   Definition isdirected_kleene_iterate : IsDirected kleene_iterate
-    := isdirected_increasing_sequence _ kleene_iterate_succ.
+    := isdirected_increasing_sequence kleene_iterate kleene_iterate_succ.
 
   (** The least fixed point of [f]. *)
   Definition kleene_fixed_point : A
@@ -40,26 +40,28 @@ Section Kleene.
   Proof.
     induction n as [|n IHn].
     - rapply bottom_least.
-    - exact (transitivity (order_preserving f _ _ IHn) fy).
+    - lhs' apply (order_preserving f), IHn.
+      exact fy.
   Defined.
 
   Definition kleene_fixed_point_least (y : A) (fy : f y ≤ y)
     : kleene_fixed_point ≤ y
-    := dcpo_sup_least _ _ y (kleene_iterate_le_prefixed_point y fy).
+    := dcpo_sup_least kleene_iterate isdirected_kleene_iterate y
+         (kleene_iterate_le_prefixed_point y fy).
 
   (** By Scott continuity, [f] of the supremum of the iterates is the supremum of the shifted iterates [f (kleene_iterate n) = kleene_iterate (n + 1)], which is the same supremum. *)
   Definition kleene_fixed_point_isfixed
     : f kleene_fixed_point = kleene_fixed_point.
   Proof.
     apply (antisymmetry Ale).
-    - apply (issup_least (scott_continuous f nat _ isdirected_kleene_iterate)).
+    - apply (issup_least (scott_continuous f nat kleene_iterate isdirected_kleene_iterate)).
       intro n.
-      exact (dcpo_sup_upper kleene_iterate _ n.+1%nat).
+      exact (dcpo_sup_upper kleene_iterate isdirected_kleene_iterate n.+1%nat).
     - (* The iterate [0] is [⊥], and the iterate [n + 1] is [f] of the iterate [n]. *)
       apply dcpo_sup_least.
       intros [|n].
       + rapply bottom_least.
-      + exact (order_preserving f _ _ (dcpo_sup_upper kleene_iterate _ n)).
+      + apply (order_preserving f), (dcpo_sup_upper kleene_iterate isdirected_kleene_iterate n).
   Defined.
 
 End Kleene.
@@ -136,7 +138,7 @@ Section InflationaryFixedPoint.
     - intros [f [mf If]] [g [mg Ig]].
       refine (tr ((f o g; (_, _)); (_, _))).
       + intro x.
-        exact (mf _ _ (Ig x)).
+        apply mf, Ig.
       + intro x.
         exact (If (g x)).
   Defined.
@@ -166,7 +168,7 @@ Section InflationaryFixedPoint.
   Proof.
     apply (antisymmetry Ale).
     - exact (top_inflationary_greatest (f o top_inflationary) x).
-    - exact (inflationary f _).
+    - exact (inflationary f (top_inflationary x)).
   Defined.
 
 End InflationaryFixedPoint.
@@ -187,7 +189,7 @@ Section SubdcpoFixedPoint.
   Proof.
     pose (g := fun u : sig B => (f u.1; closed u.1 u.2) : sig B).
     assert (mg : OrderPreserving g).
-    { intros u v p; exact (order_preserving f _ _ p). }
+    { intros u v p; apply (order_preserving f), p. }
     assert (Ig : IsInflationary g).
     { intro u; exact (infl u.1 u.2). }
     pose (t := top_inflationary (b; Bb)).
@@ -216,7 +218,7 @@ Section LeastFixedPoint.
   Local Definition least_admissible_subset (B : A -> HProp) (aB : IsAdmissible B)
     (x : A)
     : least_admissible x -> B x
-    := hprop_meet_out _ (B; aB).
+    := hprop_meet_out (fun B : {B : A -> HProp & IsAdmissible B} => B.1 x) (B; aB).
 
   Local Definition isadmissible_least_admissible : IsAdmissible least_admissible.
   Proof.
@@ -246,7 +248,7 @@ Section LeastFixedPoint.
       exact (dcpo_sup_least x d y Bx).
     - exact (bottom_least y).
     - intros x xy.
-      exact (transitivity (order_preserving f _ _ xy) fy).
+      exact (transitivity (order_preserving f x y xy) fy).
   Defined.
 
   (** The elements below their image under [f] form an admissible subset. *)
@@ -262,7 +264,7 @@ Section LeastFixedPoint.
       exact (dcpo_sup_upper x d i).
     - exact (bottom_least (f ⊥)).
     - intros x xfx.
-      exact (order_preserving f _ _ xfx).
+      apply (order_preserving f), xfx.
   Defined.
 
   (** Assuming propositional resizing, a monotone endomap of a pointed dcpo has a least prefixed point, which is also its least fixed point. On the least admissible subset [f] is inflationary, since the increasing elements form an admissible subset; so [fixed_point_subdcpo] gives a fixed point [a] in it. It lies below every prefixed point [y], since the elements below [y] form an admissible subset. *)
@@ -271,13 +273,15 @@ Section LeastFixedPoint.
   Proof.
     destruct isadmissible_least_admissible as [[sB botB] fB].
     destruct (fixed_point_subdcpo f least_admissible fB
-                (least_admissible_subset _ isadmissible_increasing) ⊥ botB)
+                (least_admissible_subset (fun x => Build_HProp (x ≤ f x)) isadmissible_increasing)
+                ⊥ botB)
       as [a [Ba p]].
     exists a.
     split.
     - exact p.
     - intros y fy.
-      exact (least_admissible_subset _ (isadmissible_below y fy) a Ba).
+      exact (least_admissible_subset (fun x => Build_HProp (x ≤ y))
+               (isadmissible_below y fy) a Ba).
   Defined.
 
 End LeastFixedPoint.

@@ -155,7 +155,7 @@ Qed.
 Lemma qpos_half_lt@{} (e : Q+) : ' (e / 2) < ' e.
 Proof.
 rewrite (ap (cast Q+ Q) (pos_split2 e)).
-exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
+apply pos_plus_lt_compat_r, pos_is_pos.
 Qed.
 
 Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
@@ -170,7 +170,7 @@ Qed.
 Lemma qpos_two_thirds_lt@{} (e : Q+) : ' (e / 3) + ' (e / 3) < ' e.
 Proof.
 rewrite (ap (cast Q+ Q) (pos_split3 e)).
-exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
+apply pos_plus_lt_compat_r, pos_is_pos.
 Qed.
 
 #[export] Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
@@ -440,13 +440,13 @@ Proof.
 intros q r E.
 assert (pos : 0 < (r - q) / 2).
 { apply pos_mult_compat;[|exact _].
-  red. apply (snd (flip_pos_minus _ _)). trivial. }
+  red. apply (snd (flip_pos_minus q r)). trivial. }
 rewrite (plus_comm q r).
 split.
 - rewrite <- path_avg_split_diff_l.
-  exact (fst (pos_plus_lt_compat_r _ _) pos).
+  apply pos_plus_lt_compat_r, pos.
 - rewrite <- path_avg_split_diff_r.
-  exact (fst (pos_minus_lt_compat_r _ _) pos).
+  apply pos_minus_lt_compat_r, pos.
 Qed.
 
 Lemma pos_gt_both : forall a b : Q, forall e, a < ' e -> b < ' e ->

@@ -59,20 +59,20 @@ Section nat_quotient_sign.
   Local Lemma nat_quotient_pos_succ (ypos : 0 < y) : {c : nat & (S c + b)%nat = a}.
   Proof.
     assert (dpos : 0 < y * nR (S m))
-      by exact (pos_mult_compat _ _ ypos (nat_to_semiring_succ_pos m)).
+      by (apply pos_mult_compat; [exact ypos|apply nat_to_semiring_succ_pos]).
     destruct (nat_add_cases a b) as [[c p]|[c p]].
     - destruct c as [|c]; [|exact (c; p)].
       rewrite (nat_quotient_eq_l 0 p) in dpos.
       destruct (irreflexivity (<) _ dpos).
     - rewrite (nat_quotient_eq_r c p) in dpos.
       destruct (irreflexivity (<) 0).
-      exact (transitivity dpos (fst (flip_pos_negate _) (nat_to_semiring_succ_pos c))).
+      lhs' exact dpos; apply flip_pos_negate, nat_to_semiring_succ_pos.
   Qed.
 
   Local Lemma nat_quotient_succ_pos (c : {c : nat & (S c + b)%nat = a}) : 0 < y.
   Proof.
     destruct c as [c p].
-    apply (pos_mult_rev_l _ (nR (S m))).
+    apply (pos_mult_rev_l y (nR (S m))).
     - rewrite (nat_quotient_eq_l (S c) p); apply nat_to_semiring_succ_pos.
     - apply nat_to_semiring_succ_pos.
   Qed.
@@ -184,20 +184,21 @@ Section nat_quotients.
     intros qx; strip_truncations.
     destruct qx as [a [b [m E]]].
     assert (recip_mult : forall c, x * nF (S m) = c -> // (x; p) * c = nF (S m)).
-    { intros c Ec; rewrite <- Ec, mult_assoc, (mult_comm _ x), reciperse_alt.
+    { intros c Ec; rewrite <- Ec, mult_assoc, (mult_comm (// (x; p)) x), reciperse_alt.
       apply mult_1_l. }
     apply tr.
     destruct (nat_add_cases a b) as [[c q]|[c q]].
     - assert (Exd := nat_quotient_eq_l x a b m E c q).
       destruct c as [|c].
       + destruct (irreflexivity (≶) (0 : F)).
-        exact (transport (fun z => z ≶ 0) Exd
-                 (mult_apart_zero _ _ p (positive_apart_zero _ (nat_to_semiring_succ_pos m)))).
+        change (nF 0%nat ≶ 0); rewrite <- Exd.
+        apply mult_apart_zero; [exact p|].
+        apply positive_apart_zero, nat_to_semiring_succ_pos.
       + exists (S m), 0%nat, c.
-        rewrite plus_0_r; exact (recip_mult _ Exd).
+        rewrite plus_0_r; exact (recip_mult (nF (S c)) Exd).
     - exists 0%nat, (S m), c.
       rewrite <- (negate_involutive (nF (S c))), <- negate_mult_distr_r,
-        (recip_mult _ (nat_quotient_eq_r x a b m E c q)).
+        (recip_mult (- nF (S c)) (nat_quotient_eq_r x a b m E c q)).
       apply plus_negate_l.
   Qed.
 
@@ -207,18 +208,18 @@ Section nat_quotients.
   Local Instance natquot_zero : Zero NatQuot := (0; isnatquot_zero).
   Local Instance natquot_one : One NatQuot := (1; isnatquot_one).
   Local Instance natquot_plus : Plus NatQuot
-    := fun x y => (x.1 + y.1; isnatquot_plus _ _ x.2 y.2).
+    := fun x y => (x.1 + y.1; isnatquot_plus x.1 y.1 x.2 y.2).
   Local Instance natquot_mult : Mult NatQuot
-    := fun x y => (x.1 * y.1; isnatquot_mult _ _ x.2 y.2).
+    := fun x y => (x.1 * y.1; isnatquot_mult x.1 y.1 x.2 y.2).
   Local Instance natquot_negate : Negate NatQuot
-    := fun x => (- x.1; isnatquot_negate _ x.2).
+    := fun x => (- x.1; isnatquot_negate x.1 x.2).
   Local Instance natquot_apart : Apart NatQuot := fun x y => x.1 ≶ y.1.
   Local Instance natquot_recip : Recip NatQuot
-    := fun x => (// (x.1.1; x.2); isnatquot_recip _ x.2 x.1.2).
+    := fun x => (// (x.1.1; x.2); isnatquot_recip x.1.1 x.2 x.1.2).
 
   Local Instance isinjective_natquot_pr1 : IsInjective (pr1 : NatQuot -> F).
   Proof.
-    intros x y p; exact (path_sigma_hprop _ _ p).
+    intros x y p; apply path_sigma_hprop, p.
   Qed.
 
   Local Instance isfield_natquot : IsField NatQuot.
@@ -285,12 +286,12 @@ Section nat_quotients.
     pose proof (ap f (dec_recip_inverse (x - y) ne)) as E'.
     rewrite preserves_mult, preserves_minus, E, plus_negate_r, mult_0_l,
       (preserves_1 (f:=f)) in E'.
-    exact (apart_ne _ _ (_ : PropHolds ((1 : F) ≶ 0)) E'^).
+    apply (apart_ne (1 : F) 0); [exact _|exact E'^].
   Qed.
 
   #[export] Instance isembedding_rationals_to_field
     : IsEmbedding (rationals_to_field Q F)
-    := isembedding_isinj_hset _ _.
+    := isembedding_isinj_hset (rationals_to_field Q F) _.
 
   Local Lemma isnatquot_rational (q : Q)
     : merely {a : nat & {b : nat & {m : nat &
@@ -302,7 +303,7 @@ Section nat_quotients.
       rewrite (rationals_initial (h := pr1 o rationals_to_field Q NatQuot) q).
       exact (rationals_to_field Q NatQuot q).2. }
     strip_truncations; destruct Hq as [a [b [m E]]].
-    apply tr; exists a, b, m; refine (_, E).
+    apply tr; exists a, b, m; split; [|exact E].
     apply (injective f).
     rewrite (preserves_plus (f:=f)), (preserves_mult (f:=f)), !rationals_to_field_nat.
     exact E.
@@ -314,8 +315,8 @@ Section nat_quotients.
   Proof.
     assert (Hq := isnatquot_rational q).
     split; intros qpos; strip_truncations; destruct Hq as [a [b [m [EQ EF]]]].
-    - exact (nat_quotient_succ_pos _ _ _ _ EF (nat_quotient_pos_succ _ _ _ _ EQ qpos)).
-    - exact (nat_quotient_succ_pos _ _ _ _ EQ (nat_quotient_pos_succ _ _ _ _ EF qpos)).
+    - exact (nat_quotient_succ_pos (f q) a b m EF (nat_quotient_pos_succ q a b m EQ qpos)).
+    - exact (nat_quotient_succ_pos q a b m EQ (nat_quotient_pos_succ (f q) a b m EF qpos)).
   Qed.
 
   (** A positive rational shows that [1] is apart from [0] in [Q]. *)
@@ -324,10 +325,10 @@ Section nat_quotients.
     intros qpos.
     assert (E1 : q * 1 ≶ q * 0).
     { rewrite mult_1_r, mult_0_r.
-      exact (snd (apart_iff_total_lt _ 0) (inr qpos)). }
-    pose proof (strong_binary_extensionality (.*.) _ 1 _ 0 E1) as h.
+      exact (snd (apart_iff_total_lt q 0) (inr qpos)). }
+    pose proof (strong_binary_extensionality (.*.) q 1 q 0 E1) as h.
     unfold PropHolds; strip_truncations; destruct h as [h|h].
-    - destruct (irreflexivity _ _ h).
+    - destruct (irreflexivity (≶) q h).
     - exact h.
   Qed.
 
@@ -338,8 +339,8 @@ Section nat_quotients.
     intros x y E.
     apply flip_pos_minus in E; apply flip_pos_minus.
     rewrite <- preserves_minus.
-    assert (PropHolds ((1 : Q) ≶ 0)) by exact (pos_apart_1_0 _ E).
-    exact (fst (rationals_to_field_pos_iff _) E).
+    assert (PropHolds ((1 : Q) ≶ 0)) by exact (pos_apart_1_0 (y - x) E).
+    exact (fst (rationals_to_field_pos_iff (y - x)) E).
   Qed.
 
   #[export] Instance strictly_order_reflecting_rationals_to_field
@@ -349,7 +350,7 @@ Section nat_quotients.
     intros x y E.
     apply flip_pos_minus in E; apply flip_pos_minus.
     rewrite <- preserves_minus in E.
-    exact (snd (rationals_to_field_pos_iff _) E).
+    exact (snd (rationals_to_field_pos_iff (y - x)) E).
   Qed.
 
   #[export] Instance issemiringstrongpreserving_rationals_to_field
