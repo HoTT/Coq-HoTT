@@ -194,24 +194,14 @@ Section locator.
 
   End logic2.
 
-  Local Definition ltQnegQ (q : Q) (eps : Qpos Q) : q - 'eps < q.
-  Proof.
-    apply (pos_minus_lt_compat_r q ('eps)), eps.
-  Qed.
-  
   Local Open Scope mc_scope.
-
-  Local Definition ltQposQ (q : Q) (eps : Qpos Q) : q < q + 'eps.
-  Proof.
-    apply (pos_plus_lt_compat_r q ('eps)), eps.
-  Qed.
 
   Section bounds.
     (* Given a real with a locator, we can find (integer) bounds. *)
     Context {x : F}
             (l : locator x).
 
-    Local Definition ltN1 (q : Q) : q - 1 < q := ltQnegQ q 1.
+    Local Definition ltN1 (q : Q) : q - 1 < q := fst (pos_minus_lt_compat_r q 1) lt_0_1.
 
     Local Definition P_lower (q : Q) : Type := locates_right l (ltN1 q).
 
@@ -249,7 +239,7 @@ Section locator.
       exact (un_inl _ Pq).
     Qed.
 
-    Local Definition lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
+    Local Definition lt1N (r : Q) : r < r + 1 := fst (pos_plus_lt_compat_r r 1) lt_0_1.
 
     Local Definition P_upper (r : Q) : DHProp := locates_left l (lt1N r).
 
@@ -450,8 +440,8 @@ Section locator.
       match qeps' with
       | (q' , eps') =>
         (prod
-           (locates_left l (ltQnegQ q' eps'))
-           (locates_right m (ltQposQ q' eps')))
+           (locates_left l (fst (pos_minus_lt_compat_r q' (' eps')) (pos_is_pos eps')))
+           (locates_right m (fst (pos_plus_lt_compat_r q' (' eps')) (pos_is_pos eps'))))
       end.
 
     Local Definition P_isHProp qeps' : IsHProp (P qeps').
@@ -694,7 +684,7 @@ Section locator.
         assumption.
       }
       assert (sltseps : s<s+' epsilon)
-        by apply ltQposQ.
+        by apply pos_plus_lt_compat_r, pos_is_pos.
       destruct (l s (s+' epsilon) sltseps) as [ltsx|ltxseps].
       - apply inl. apply char_plus_left. apply tr; exists s; split; try assumption.
         rewrite preserves_minus; assumption.

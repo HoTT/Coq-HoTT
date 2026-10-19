@@ -641,12 +641,6 @@ Section ivt.
       exact (le_lt_trans _ _ _ (join_ub_r _ _) ltr).
   Qed.
 
-  Local Definition lt_minus_qpos (q : Q) (e : Qpos Q) : q - ' e < q
-    := fst (pos_minus_lt_compat_r q (' e)) (pos_is_pos e).
-
-  Local Definition lt_plus_qpos (q : Q) (e : Qpos Q) : q < q + ' e
-    := fst (pos_plus_lt_compat_r q (' e)) (pos_is_pos e).
-
   (** Locators let us turn local nonconstancy into structure, and find roots. *)
   Section search.
     Context `{Funext} (Q_eq : nat <~> Q) (QQpos_eq : nat <~> Q * Qpos Q).
@@ -683,8 +677,10 @@ Section ivt.
       (** For a rational [r] and a positive rational [n], we decide approximately whether [r] is [n]-far from [x] and [y], and whether [f r] is [n]-far from [t]. *)
       Local Definition RationalFar (rn : Q * Qpos Q) : Type
         := let (r, n) := rn in
-           (locates_left Q F (lx : locator' Q F x) (lt_minus_qpos r n)
-            * locates_right Q F _ (ly : locator' Q F y) _ _ (lt_plus_qpos r n)
+           (locates_left Q F (lx : locator' Q F x)
+              (fst (pos_minus_lt_compat_r r (' n)) (pos_is_pos n))
+            * locates_right Q F _ (ly : locator' Q F y) _ _
+                (fst (pos_plus_lt_compat_r r (' n)) (pos_is_pos n))
             * (locates_right Q F _ (locator_value_minus r : locator' Q F _) _ _ (qpos_half_lt n)
                + locates_left Q F (locator_value_minus r : locator' Q F _)
                    (snd (flip_lt_negate _ _) (qpos_half_lt n))))%type.
