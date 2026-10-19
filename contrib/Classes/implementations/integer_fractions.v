@@ -28,12 +28,6 @@ Generalizable Variables R.
 Section ring_identities.
   Context `{IsCRing R}.
 
-  Local Lemma mult_swap_middle (a b c d : R) : (a * b) * (c * d) = (a * c) * (b * d).
-  Proof.
-    rewrite <- !mult_assoc; apply ap.
-    rewrite !mult_assoc; apply (ap (.* d)), mult_comm.
-  Qed.
-
   Local Lemma plus_mult_product (a b c d : R) : (a + b) * (c * d) = (a * c) * d + (b * d) * c.
   Proof.
     rewrite plus_mult_distr_r, !mult_assoc, <- (mult_assoc b), (mult_comm c d), mult_assoc.
@@ -42,9 +36,7 @@ Section ring_identities.
 
   Local Lemma minus_plus_minus (p q r s : R) : (p - q) + (r - s) = (p + r) - (q + s).
   Proof.
-    rewrite negate_plus_distr, <- !plus_assoc.
-    rewrite (plus_assoc (- q) r (- s)), (plus_comm (- q) r), <- (plus_assoc r (- q) (- s)).
-    reflexivity.
+    rewrite plus_swap_middle, negate_plus_distr; reflexivity.
   Qed.
 
   Local Lemma minus_mult_minus (p q r s : R) : (p - q) * (r - s) = (p * r + q * s) - (p * s + q * r).
@@ -217,12 +209,6 @@ Section contents.
 
   Local Instance isapart_fracfield : IsApart Q := dec_strong_setoid.
 
-  Local Lemma minus_minus_swap (x y z : Q) : (y - x) + (x - z) = y - z.
-  Proof.
-    rewrite <- plus_assoc, (plus_assoc (- x)), plus_negate_l, plus_0_l.
-    reflexivity.
-  Qed.
-
   Local Lemma plus_minus_plus (x y z : Q) : (z + y) - (z + x) = y - x.
   Proof.
     rewrite negate_plus_distr, (plus_comm z y), plus_assoc.
@@ -246,7 +232,7 @@ Section contents.
     - intros x y ltxy z; apply tr; unfold lt, fracfield_lt in *.
       destruct (bool_true_or_false (fracfield_pos (z - x))) as [pzx|pzx]; [left; exact pzx|right].
       destruct (bool_true_or_false (fracfield_pos (x - z))) as [pxz|pxz].
-      + rewrite <- (minus_minus_swap x y z); exact (is_pos_plus _ _ ltxy pxz).
+      + rewrite <- (plus_minus_telescope y x z); exact (is_pos_plus _ _ ltxy pxz).
       + rewrite negate_swap_r in pxz.
         rewrite (fst (equal_by_zero_sum z x) (is_pos_zero_cases _ pzx pxz)).
         exact ltxy.

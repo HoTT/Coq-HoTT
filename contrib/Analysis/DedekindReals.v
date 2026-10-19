@@ -287,16 +287,10 @@ Section dedekind.
     rewrite negate_plus_distr, negate_involutive, plus_assoc, plus_negate_r; apply plus_0_l.
   Qed.
 
-  Local Lemma plus_minus_telescope (x y z : Q) : (y - x) + (x - z) = y - z.
-  Proof.
-    rewrite <- plus_assoc, (plus_assoc (- x)), plus_negate_l, plus_0_l.
-    reflexivity.
-  Qed.
-
   Local Lemma lt_minus_swap (q r a b : Q) : b - a < r - q -> q - a < r - b.
   Proof.
     intros l.
-    rewrite <- (plus_minus_telescope b q a), <- (plus_minus_telescope q r b).
+    rewrite <- (plus_minus_telescope q b a), <- (plus_minus_telescope r q b).
     rewrite (plus_comm (q - b)).
     exact (strictly_order_preserving (+ (q - b)) _ _ l).
   Qed.

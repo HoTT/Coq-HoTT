@@ -121,12 +121,6 @@ Section completeness.
     rewrite <- negate_plus_distr; exact (lt_bound_negate _ _ (close n len)).
   Qed.
 
-  Lemma minus_plus_minus (u v w : F) : (u - v) + (v - w) = u - w.
-  Proof.
-    rewrite <- (plus_assoc u (- v) (v - w)), (plus_assoc (- v) v (- w)).
-    rewrite plus_negate_l, plus_0_l; reflexivity.
-  Qed.
-
   Lemma field_close_symmetric (e : Qpos Q) (u v : F)
     : field_close e u v -> field_close e v u.
   Proof.
@@ -139,7 +133,7 @@ Section completeness.
   Proof.
     intros c c'; unfold field_close.
     change (' (' (e + d))) with (' (' e + ' d) : F).
-    rewrite (preserves_plus (f:=cast Q F)), <- (minus_plus_minus u v w).
+    rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
     exact (lt_bound_plus _ _ _ _ c c').
   Qed.
 

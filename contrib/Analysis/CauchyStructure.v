@@ -253,7 +253,7 @@ Section cauchy_structure.
     Proof.
       unfold field_close.
       change (' (' (e + d))) with (' (' e + ' d) : F).
-      rewrite (preserves_plus (f:=cast Q F)), <- (minus_plus_minus u v w).
+      rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
       exact (lt_le_bound_plus _ _ _ _ c c').
     Qed.
 
@@ -263,7 +263,7 @@ Section cauchy_structure.
     Proof.
       unfold field_close.
       change (' (' (d + e))) with (' (' d + ' e) : F).
-      rewrite (preserves_plus (f:=cast Q F)), <- (minus_plus_minus u v w).
+      rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
       exact (le_lt_bound_plus _ _ _ _ c c').
     Qed.
 
