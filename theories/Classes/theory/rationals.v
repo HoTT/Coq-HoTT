@@ -616,19 +616,12 @@ Qed.
 
 End enumerable.
 
-#[export] Instance decidablepaths_qpos : DecidablePaths Q+.
-Proof.
-  intros a b; destruct (dec (' a = ' b)) as [p|np].
-  - exact (inl (pos_eq a b p)).
-  - exact (inr (fun p => np (ap (cast Q+ Q) p))).
-Defined.
+(** A surjection from [nat] onto the rationals gives one onto pairs of a rational and a positive rational. *)
+Definition rationals_qpos_enumerator (e : nat -> Q) `{!IsSurjection e} : nat -> Q * Q+
+  := nat_prod_enumerator e (Qpos_enumerator (H1:=Build_Enumerable Q e _)).
 
-(** An enumeration of the rationals gives an enumeration of pairs of a rational and a positive rational. *)
-Definition equiv_nat_rationals_qpos (e : nat <~> Q) : nat <~> Q * Q+.
-Proof.
-  pose (enum := Build_Enumerable Q e (BuildIsSurjection e (fun q => tr (e^-1 q; eisretr e q)))).
-  apply (equiv_nat_prod_enumeration e (Qpos_enumerator (H1:=enum))).
-  intros y; exact (@center _ (Qpos_is_enumerator (H1:=enum) y)).
-Defined.
+Definition issurj_rationals_qpos_enumerator (e : nat -> Q) `{!IsSurjection e}
+  : IsSurjection (rationals_qpos_enumerator e)
+  := issurj_nat_prod_enumerator _ _ (t_surj:=Qpos_is_enumerator (H1:=Build_Enumerable Q e _)).
 
 End contents.

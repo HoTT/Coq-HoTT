@@ -610,7 +610,7 @@ Section ivt.
 
   (** Locators let us turn local nonconstancy into structure, and find roots. *)
   Section search.
-    Context `{Funext} (QQpos_eq : nat <~> Q * Qpos Q).
+    Context `{Funext} (QQpos_enum : nat -> Q * Qpos Q) `{!IsSurjection QQpos_enum}.
     Context (f : F -> F) (cont : IsPointwiseContinuous Q F f) (lnc : IsLocallyNonconstant f)
       (lift : LiftsToLocators Q F f).
 
@@ -725,7 +725,7 @@ Section ivt.
       Definition locally_nonconstant_rational (ltxy : x < y)
         : {r : Q & ((x < ' r < y) * (f (' r) ≶ t))%type}.
       Proof.
-        destruct (minimal_n_alt_type _ QQpos_eq RationalFar _ (merely_rationalfar ltxy))
+        destruct (minimal_n_alt_type _ QQpos_enum RationalFar _ (merely_rationalfar ltxy))
           as [[r n] far].
         exact (r; rationalfar_spec r n far).
       Defined.

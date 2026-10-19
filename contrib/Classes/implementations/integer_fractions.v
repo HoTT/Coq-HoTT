@@ -1,6 +1,6 @@
 (** * The rationals as the field of fractions of the integers *)
 
-(** For a model [Z] of the integers, the field of fractions [FracField.F Z] is a model of the rationals: we order it by the sign of [num * den], and show that it is initial among fields of characteristic [0].  We also show that every fraction lies below a natural number, and that the field of fractions is equivalent to the natural numbers. *)
+(** For a model [Z] of the integers, the field of fractions [FracField.F Z] is a model of the rationals: we order it by the sign of [num * den], and show that it is initial among fields of characteristic [0].  We also show that every fraction lies below a natural number, and that the natural numbers surject onto the field of fractions. *)
 
 From HoTT Require Import Basics Types.Bool Truncations.Core Spaces.Nat.Core Spaces.Nat.Enumeration
   Misc.BoundedSearch.
@@ -525,7 +525,7 @@ End contents.
 
 (** ** Enumeration *)
 
-(** The fractions [(a - b) / (c + 1)] of natural numbers cover the field of fractions, which is therefore equivalent to the natural numbers. *)
+(** The fractions [(a - b) / (c + 1)] of natural numbers cover the field of fractions. *)
 Section enumeration.
   Context `{Funext} `{Univalence}.
   Universe UZ.
@@ -579,22 +579,9 @@ Section enumeration.
     rewrite p, q; symmetry; apply mult_assoc.
   Qed.
 
-  (** Finitely many fractions lie below the image of a natural number. *)
-  Local Lemma fracfield_avoid (g : nat -> Q) (n : nat) : {x : Q & forall m, (m <= n)%nat -> g m <> x}.
+  Definition issurj_fracfield_enumerator : IsSurjection fracfield_enumerator.
   Proof.
-    destruct (nat_bound (fun m => (round_up_strict Q (g m)).1) n) as [k l].
-    exists (nQ k); intros m lm p.
-    apply (irreflexivity (<) (g m)).
-    apply (lt_le_trans _ (nQ (round_up_strict Q (g m)).1)).
-    - exact (round_up_strict Q (g m)).2.
-    - refine (transport (fun w => _ <= w) p^ _).
-      apply nat_to_semiring_le, leq_lt, l, lm.
-  Qed.
-
-  Definition equiv_nat_fracfield : nat <~> Q.
-  Proof.
-    apply (equiv_nat_enumeration fracfield_enumerator).
-    - srapply FracField.F_ind; intros x; exact (tr (fracfield_enumerator_hit x)).
-    - exact (fracfield_avoid fracfield_enumerator).
+    apply BuildIsSurjection.
+    srapply FracField.F_ind; intros x; exact (tr (fracfield_enumerator_hit x)).
   Defined.
 End enumeration.

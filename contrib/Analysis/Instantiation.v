@@ -49,11 +49,16 @@ Section models.
     := lt_trichotomy (H:=pseudoorder_fracfield Zm (Zdom:=NatPair.Z_integral_domain nat))
          (TrivialApart0:=trivialapart_Qm) (H0:=decidablepaths_Qm).
 
-  (** The enumerations of the rationals and of pairs of a rational and a positive rational. *)
-  Definition equiv_nat_Qm := equiv_nat_fracfield Zm (Zdom:=NatPair.Z_integral_domain nat).
-  Definition equiv_nat_Qm_qpos
-    := equiv_nat_rationals_qpos (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
-         (Qtrivialapart:=trivialapart_Qm) equiv_nat_Qm.
+  (** The surjections from [nat] onto the rationals and onto pairs of a rational and a positive rational. *)
+  Definition enum_Qm := fracfield_enumerator Zm.
+  Definition issurj_enum_Qm : IsSurjection enum_Qm
+    := issurj_fracfield_enumerator Zm (Zdom:=NatPair.Z_integral_domain nat).
+  Definition enum_Qm_qpos
+    := rationals_qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
+         (Qtrivialapart:=trivialapart_Qm) enum_Qm (IsSurjection0:=issurj_enum_Qm).
+  Definition issurj_enum_Qm_qpos : IsSurjection enum_Qm_qpos
+    := issurj_rationals_qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
+         (Qtrivialapart:=trivialapart_Qm) enum_Qm (IsSurjection0:=issurj_enum_Qm).
 
   (** The Dedekind reals are an Archimedean, Cauchy complete ordered field. *)
   Definition orderedfield_Rm
@@ -74,12 +79,12 @@ Check rationals_Qm.
 Check trivialapart_Qm.
 Check decidablepaths_Qm.
 Check roundupstrict_Qm.
-Check equiv_nat_Qm.
-Check equiv_nat_Qm_qpos.
+Check issurj_enum_Qm.
+Check issurj_enum_Qm_qpos.
 Check orderedfield_Rm.
 Check archimedean_Rm.
 Check iscomplete_Rm.
-Print Assumptions equiv_nat_Qm_qpos.
+Print Assumptions issurj_enum_Qm_qpos.
 Print Assumptions archimedean_Rm.
 Print Assumptions iscomplete_Rm.
 
