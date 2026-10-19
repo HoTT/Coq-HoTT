@@ -1524,12 +1524,6 @@ Section complete.
   Local Notation R := (DedekindReals Q (Qlt:=Qlt)).
   Local Notation "[ q ]" := (rational_dedekind Q q).
 
-  (** The inclusion of the rationals into an ordered field is the unique semiring morphism, so on the Dedekind reals it is [rational_dedekind]. *)
-  Lemma rationals_to_field_dedekindreals (q : Q) : rationals_to_field Q R q = [q].
-  Proof.
-    exact (rationals_initial (h:=rational_dedekind Q) q).
-  Qed.
-
   #[export] Instance archimedean_dedekindreals : ArchimedeanProperty Q R.
   Proof.
     intros x y l; generalize (dedekindreals_archimedean Q x y l); apply Trunc_functor.

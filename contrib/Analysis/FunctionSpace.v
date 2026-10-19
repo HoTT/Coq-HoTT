@@ -291,12 +291,6 @@ Section function_space.
   Definition IsSupremum {X : Type} (g : X -> F) (s : F)
     := ((forall x, g x ≤ s) * (forall u, (forall x, g x ≤ u) -> s ≤ u))%type.
 
-  (** Suprema are monotone. *)
-  Definition supremum_le {X : Type} (g h : X -> F) (s t : F) (gs : IsSupremum g s)
-    (ht : IsSupremum h t) (le : forall x, g x ≤ h x)
-    : s ≤ t
-    := snd gs t (fun x => transitivity (le x) (fst ht x)).
-
   Section supremum.
     Context {a b : F} (leab : a ≤ b) (f : ClosedInterval a b -> F).
 

@@ -17,12 +17,6 @@ Class Midpoint A := midpoint : A -> A -> A.
 Class Medial {A} (f : A -> A -> A)
   := medial : forall x y z w, f (f x y) (f z w) = f (f x z) (f y w).
 
-Instance istrunc_medial `{Funext} {n A} (f : A -> A -> A) `{IsTrunc n.+1 A}
-  : IsTrunc n (Medial f).
-Proof.
-  unfold Medial; exact _.
-Defined.
-
 Class IsCancellativeMidpointAlgebra (A : Type) {Am : Midpoint A} :=
   { midpoint_set :: IsHSet A
   ; midpoint_idempotent :: BinaryIdempotent midpoint

@@ -196,15 +196,9 @@ Section convergence.
     exact (strictly_order_preserving _ _ _ (pos_is_pos e)).
   Qed.
 
-  (** A distance function induces a premetric: [x] and [y] are [e]-close when their distance is less than [e]. *)
+  (** A distance function induces a closeness relation: [x] and [y] are [e]-close when their distance is less than [e]. *)
   Definition metric_close {X : Type} (d : X -> X -> F) (e : Qpos Q) (x y : X)
     := d x y < ' (' e).
-
-  #[export] Instance ispremetric_metric_close {X : Type} (d : X -> X -> F)
-    : IsPremetric (metric_close d).
-  Proof.
-    intros e x y; unfold metric_close; exact _.
-  Defined.
 
   (** ** Uniqueness of limits *)
 

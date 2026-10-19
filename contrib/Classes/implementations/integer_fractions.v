@@ -537,7 +537,6 @@ Section enumeration.
   Local Notation Frac := (Frac.Frac Z).
   Local Notation Q := (FracField.F Z).
   Local Notation nZ := (naturals_to_semiring nat Z).
-  Local Notation nQ := (naturals_to_semiring nat Q).
 
   Local Lemma int_succ_ne_0 (c : nat) : nZ (S c) <> 0.
   Proof.
