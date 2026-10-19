@@ -94,7 +94,6 @@ Hint Extern 20 (PropHolds (_ ≤ _)) => eapply @nat_nonneg : typeclass_instances
 
 (** ** The map from [nat] into an ordered semiring *)
 
-(** Unlike [to_semiring_nonneg], the following facts about [naturals_to_semiring nat] do not need univalence. *)
 Section nat_to_semiring.
   Context `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}.
 
