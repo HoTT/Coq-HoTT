@@ -1,5 +1,5 @@
 From HoTT Require Import Basics.
-From HoTT.Analysis Require Import IntervalObject.
+From HoTT_Contrib.Analysis Require Import IntervalObject.
 
 (** Being a convex body, having an iteration operator and being an interval object are propositions, and typeclass search finds this. *)
 Section Props.

@@ -158,7 +158,6 @@ Require Export HoTT.DomainTheory.Constructions.
 Require Export HoTT.DomainTheory.FixedPoints.
 
 Require Export HoTT.Analysis.Locator.
-Require Export HoTT.Analysis.IntervalObject.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.PiSpheres.

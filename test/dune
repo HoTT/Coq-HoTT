@@ -1,6 +1,6 @@
 (rocq.theory
  (name HoTT_Tests)
- (theories HoTT Ltac2))
+ (theories HoTT HoTT_Contrib Ltac2))
 
 (include_subdirs qualified)
 
