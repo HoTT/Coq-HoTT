@@ -235,6 +235,12 @@ Definition Booij2020Thesis_4_4_9_item_i := @CauchySequence.
 Definition Booij2020Thesis_4_4_9_item_ii := @cauchy_related.
 Definition Booij2020Thesis_4_4_9_item_iii := @CauchyReals.
 
+(* ================================================== 4.5.1 *)
+(** Remark 4.5.1 *)
+
+(** On the name "HoTT book reals" for the Cauchy reals of the HoTT book. *)
+(* Not formalized: a remark on terminology. *)
+
 (* ================================================== 4.5.2 *)
 (** Definition 4.5.2 *)
 
@@ -260,6 +266,12 @@ Definition Booij2020Thesis_4_5_4 := @IsMetricLimit.
 Definition Booij2020Thesis_4_5_5_item_i := @IsCauchyApproximation.
 Definition Booij2020Thesis_4_5_5_item_ii := @CauchyApproximation.
 
+(* ================================================== 4.5.6 *)
+(** Remark 4.5.6 *)
+
+(** Cauchy approximations carry their rate of convergence in the data, whereas sequences with a modulus specify it separately. *)
+(* Not formalized: a remark comparing two definitions, without formal content. *)
+
 (* ================================================== 4.5.7 *)
 (** Definition 4.5.7 *)
 
@@ -281,6 +293,7 @@ Definition Booij2020Thesis_4_5_8_item_ii := @CauchyStructureHom.
 Definition Booij2020Thesis_4_5_9_item_i := @map_cauchy_approximation.
 Definition Booij2020Thesis_4_5_9_item_ii := @cshom_idmap.
 Definition Booij2020Thesis_4_5_9_item_iii := @cshom_compose.
+(* The first part holds by construction: [CauchyStructureHom] does not contain the distance laws, which are propositions. Not formalized: the example of a Cauchy structure on a two-element type that is not Cauchy complete. *)
 
 (* ================================================== 4.5.10 *)
 (** Lemma 4.5.10 *)
@@ -357,11 +370,23 @@ Definition Booij2020Thesis_4_5_18_item_vi := @hottbookreals_ind_hprop.
 Definition Booij2020Thesis_4_6_1_item_i := @IsDedekindCut.
 Definition Booij2020Thesis_4_6_1_item_ii := @DedekindReals.
 
+(* ================================================== 4.6.2 *)
+(** Remark 4.6.2 *)
+
+(** Given the other cut axioms, transitivity of a cut is equivalent to disjointness: no [q] has [x < q] and [q < x]. *)
+(* Not formalized: only the direction from transitivity to disjointness is proved, as [cut_disjoint]; the converse needs roundedness and trichotomy of [Q]. *)
+
 (* ================================================== 4.6.3 *)
 (** Lemma 4.6.3 *)
 
 (** The Dedekind reals form a set. *)
 Definition Booij2020Thesis_4_6_3 := @ishset_dedekindreals.
+
+(* ================================================== 4.6.4 *)
+(** Discussion 4.6.4 *)
+
+(** For rationals in a universe [U_i], being a Dedekind cut is a proposition in [U_i], and the Dedekind reals live in [U_(i+1)]. *)
+(* Not formalized: a discussion of universe levels. [IsDedekindCut] is a proposition ([ishprop_isdedekindcut]) and [DedekindReals] is universe polymorphic. *)
 
 (* ================================================== 4.6.5 *)
 (** Definition 4.6.5 *)
@@ -375,7 +400,8 @@ Definition Booij2020Thesis_4_6_5_item_ii := @apart_dedekindreals.
 
 (** The Dedekind reals are Cauchy complete, with the limit cut given explicitly. *)
 Definition Booij2020Thesis_4_6_6_item_i := @limit_dedekind.
-Definition Booij2020Thesis_4_6_6_item_ii := @iscomplete_dedekindreals.
+Definition Booij2020Thesis_4_6_6_item_ii := @islimit_limit_dedekind.
+Definition Booij2020Thesis_4_6_6_item_iii := @iscomplete_dedekindreals.
 
 (* ================================================== 4.6.7 *)
 (** Proposition 4.6.7 *)
@@ -434,11 +460,29 @@ Definition Booij2020Thesis_5_1_5_item_iv := @iscauchycompletesubset_euclidean_re
 Definition Booij2020Thesis_5_1_5_item_v := @euclidean_reals_least.
 Definition Booij2020Thesis_5_1_5_item_vi := @euclidean_reals_cauchy_structure.
 
+(* ================================================== 5.1.6 *)
+(** Discussion 5.1.6 *)
+
+(** Without propositional resizing, the meet defining the Euclidean reals lands one universe higher than the subsets it is the meet of. *)
+(* Not formalized: a discussion of universe levels; the formalization uses propositional resizing to define the Euclidean reals as a subset in the same universe ([euclidean_reals]). *)
+
 (* ================================================== 5.1.7 *)
 (** Theorem 5.1.7 *)
 
 (** Assuming propositional resizing, the Euclidean reals coincide with the HoTT book reals as subsets. *)
 Definition Booij2020Thesis_5_1_7 := @euclidean_reals_iff_hottbookreals.
+
+(* ================================================== 5.1.8 *)
+(** Theorem 5.1.8 *)
+
+(** Assuming propositional resizing, the unit interval in the Euclidean reals is an interval object. *)
+(* Not formalized: needs the interval in the Euclidean reals as a bipointed convex body and a translation of Escardó and Simpson's proof of its initiality. *)
+
+(* ================================================== 5.1.9 *)
+(** Corollary 5.1.9 *)
+
+(** Assuming propositional resizing and the HoTT book reals, the unit interval in the HoTT book reals is an interval object. *)
+(* Not formalized: follows from Theorem 5.1.8, which is not formalized, and [euclidean_reals_iff_hottbookreals]. *)
 
 (* ================================================== 5.2.1 *)
 (** Theorem 5.2.1 *)
@@ -452,6 +496,10 @@ Definition Booij2020Thesis_5_2_1_item_v := @unique_subhom_limits.
 Definition Booij2020Thesis_5_2_1_item_vi := @unique_subhom_sup.
 Definition Booij2020Thesis_5_2_1_item_vii := @contr_subhom_euclidean_reals.
 Definition Booij2020Thesis_5_2_1_item_viii := @contr_cshom_euclidean_reals.
+Definition Booij2020Thesis_5_2_1_item_ix := @limits_subset_incl.
+Definition Booij2020Thesis_5_2_1_item_x := @orderpreserving_limits_subset.
+Definition Booij2020Thesis_5_2_1_item_xi := @cshom_subhom_euclidean_reals.
+Definition Booij2020Thesis_5_2_1_item_xii := @subhom_cshom_euclidean_reals.
 
 (* ================================================== 5.2.2 *)
 (** Remark 5.2.2 *)
@@ -459,6 +507,12 @@ Definition Booij2020Thesis_5_2_1_item_viii := @contr_cshom_euclidean_reals.
 (** For a Cauchy structure [S] on a set, contractibility of the type of morphisms into [S] means existence of a morphism and pointwise uniqueness. *)
 Definition Booij2020Thesis_5_2_2_item_i := @contr_cauchystructurehom_iff.
 Definition Booij2020Thesis_5_2_2_item_ii := @path_cauchystructurehom.
+
+(* ================================================== 5.2.3 *)
+(** Discussion 5.2.3 *)
+
+(** Without propositional resizing, it is open whether a given least Cauchy complete subset containing the rationals is homotopy-initial, since the subsets no longer form a dcpo. *)
+(* Not formalized: a discussion of an open question. *)
 
 (* ================================================== 5.3.1 *)
 (** Definition 5.3.1 *)
@@ -508,6 +562,18 @@ Definition Booij2020Thesis_5_3_6 := @IsIntervalObject.
 
 (** Contractibility of the type of homomorphisms of bipointed convex bodies means existence of a homomorphism and pointwise uniqueness. *)
 Definition Booij2020Thesis_5_3_7 := @contr_convexbodyhom_iff.
+
+(* ================================================== 5.4.1 *)
+(** Conjecture 5.4.1 *)
+
+(** The interval [[-1, 1]] in the HoTT book reals, with the midpoint operation and the endpoints, is an interval object. *)
+(* Conjecture. *)
+
+(* ================================================== 5.4.2 *)
+(** Conjecture 5.4.2 *)
+
+(** From an interval object [I], the quotient of [Z * I] identifying overlapping unit intervals carries a Cauchy structure that is homotopy-initial among Cauchy structures on sets. *)
+(* Conjecture. *)
 
 (* ================================================== 6.1.1 *)
 (** Definition 6.1.1 *)
