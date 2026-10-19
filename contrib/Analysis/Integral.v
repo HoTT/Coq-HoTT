@@ -363,7 +363,7 @@ Section integration.
   (** ** Locators for integrals *)
 
   Section locators.
-    Context `{Integration} `{Funext} (Q_eq : nat <~> Q) {Qtrich : Trichotomy (<)}
+    Context `{Integration} `{Funext} {Qtrich : Trichotomy (<)}
       {Farch : ArchimedeanProperty Q F} {Qroundup : RoundUpStrict Q} {a b : F}.
 
     Local Definition locator_sum_upto (g : nat -> F) (lg : forall k, locator Q F (g k))
@@ -371,26 +371,26 @@ Section integration.
     Proof.
       intro n; induction n as [|n IH].
       - exact (locator_0 Q F).
-      - exact (locator_plus Q F Q_eq IH (lg n)).
+      - exact (locator_plus Q F IH (lg n)).
     Defined.
 
     Section points.
       Context (x y : I a b) (lx : locator Q F x.1) (ly : locator Q F y.1).
 
       Local Definition locator_diff : locator Q F (y.1 - x.1)
-        := locator_plus Q F Q_eq ly (locator_minus Q F lx).
+        := locator_plus Q F ly (locator_minus Q F lx).
 
       Local Definition locator_grid_step (n : nat) : locator Q F (grid_step Q F x y n)
-        := locator_times Q F Q_eq (locator_left Q F _) locator_diff.
+        := locator_times Q F (locator_left Q F _) locator_diff.
 
       Local Definition locator_grid_point (n k : nat) : locator Q F (grid_point Q F x y n k).1
-        := locator_plus Q F Q_eq lx (locator_times Q F Q_eq (locator_left Q F _) locator_diff).
+        := locator_plus Q F lx (locator_times Q F (locator_left Q F _) locator_diff).
 
       (** If [f] lifts to locators, then its Riemann sums have locators. *)
       Definition locator_riemann_sum (f : I a b -> F) (lf : IntervalLiftsToLocators Q F f)
         (n : nat)
         : locator Q F (riemann_sum f x y n)
-        := locator_sum_upto _ (fun k => locator_times Q F Q_eq (locator_grid_step n)
+        := locator_sum_upto _ (fun k => locator_times Q F (locator_grid_step n)
                                           (lf _ (locator_grid_point n k))) (S n).
 
       (** For [x ≤ y] with locators, the integral of a function with a modulus of uniform continuity that lifts to locators has a locator, as the limit of the Riemann sums. *)
@@ -399,7 +399,7 @@ Section integration.
         (lexy : x.1 ≤ y.1)
         : locator Q F (integral f fu x y).
       Proof.
-        destruct (upper_bound Q F Q_eq locator_diff) as [r ltr].
+        destruct (upper_bound Q F locator_diff) as [r ltr].
         assert (r0 : 0 < r).
         { apply (strictly_order_reflecting (cast Q F)).
           rewrite (preserves_0 (f:=cast Q F)).
@@ -417,7 +417,7 @@ Section integration.
       : locator Q F (integral f fu x y).
     Proof.
       refine (transport (locator Q F) (integral_interval_min f fu x y)
-                (locator_plus Q F Q_eq
+                (locator_plus Q F
                    (locator_integral_le (interval_min x y) y (locator_meet Q F lx ly) ly f fu w fw lf _)
                    (locator_minus Q F
                       (locator_integral_le (interval_min x y) x (locator_meet Q F lx ly) lx f fu w fw lf _)))).

@@ -440,7 +440,6 @@ Section cuts.
 
   Section dedekind.
     Context `{Funext} `{Univalence}.
-    Context (Q_eq : nat <~> Q) (QQpos_eq : nat <~> Q * Qpos Q).
     Local Notation RD := (DedekindReals Q (Qlt:=Qlt)).
     Local Instance archimedean_RD {c : FieldCharacteristic RD 0}
       : ArchimedeanProperty Q RD (Achar:=c)
@@ -475,7 +474,7 @@ Section cuts.
       : merely (locator Q RD x) -> IsCauchyReal Q RD x.
     Proof.
       intros l; apply (snd (iscauchyreal_iff_limit Q RD x)).
-      exact (fst (merely_locator_iff_limit Q RD Q_eq x) l).
+      exact (fst (merely_locator_iff_limit Q RD x) l).
     Qed.
 
     (** The Cauchy reals coincide with the Dedekind reals exactly when every Dedekind real is a Cauchy real, since the canonical map is an embedding. *)
@@ -500,20 +499,20 @@ Section cuts.
 
     Definition lower_bound_cut_locator : LowerBound L.
     Proof.
-      destruct (lower_bound Q RD Q_eq l') as [q ltqx].
+      destruct (lower_bound Q RD l') as [q ltqx].
       exact (q; fst (lt_rationals_dedekind_l q cut_dedekind) ltqx).
     Defined.
 
     Definition upper_bound_cut_locator : UpperBound U.
     Proof.
-      destruct (upper_bound Q RD Q_eq l') as [r ltxr].
+      destruct (upper_bound Q RD l') as [r ltxr].
       exact (r; fst (lt_rationals_dedekind_r r cut_dedekind) ltxr).
     Defined.
 
     Definition lower_rounding_cut_locator : LowerRounding L.
     Proof.
       intros q lq.
-      destruct (archimedean_structure Q RD QQpos_eq (locator_left Q RD q) l'
+      destruct (archimedean_structure Q RD (locator_left Q RD q) l'
                   (snd (lt_rationals_dedekind_l q cut_dedekind) lq)) as [q' [ltqq' ltq'x]].
       exact (q'; (strictly_order_reflecting _ _ _ ltqq', fst (lt_rationals_dedekind_l q' cut_dedekind) ltq'x)).
     Defined.
@@ -521,7 +520,7 @@ Section cuts.
     Definition upper_rounding_cut_locator : UpperRounding U.
     Proof.
       intros r ur.
-      destruct (archimedean_structure Q RD QQpos_eq l' (locator_left Q RD r)
+      destruct (archimedean_structure Q RD l' (locator_left Q RD r)
                   (snd (lt_rationals_dedekind_r r cut_dedekind) ur)) as [r' [ltxr' ltr'r]].
       exact (r'; (strictly_order_reflecting _ _ _ ltr'r, fst (lt_rationals_dedekind_r r' cut_dedekind) ltxr')).
     Defined.
@@ -546,7 +545,6 @@ Section cuts.
 
   Section dedekind2.
     Context `{Funext} `{Univalence}.
-    Context (Q_eq : nat <~> Q).
     Local Notation RD := (DedekindReals Q (Qlt:=Qlt)).
     Local Existing Instance archimedean_RD.
 
@@ -554,7 +552,7 @@ Section cuts.
     Lemma iscauchyreal_merely_cutstructure {L U : Q -> HProp} (s : merely (CutStructure L U))
       : IsCauchyReal Q RD (cut_dedekind (iscut_merely_cutstructure L U s)).
     Proof.
-      exact (iscauchyreal_iscut_merely_locator Q_eq _ (Trunc_functor _ (cutstructure_locator L U) s)).
+      exact (iscauchyreal_iscut_merely_locator _ (Trunc_functor _ (cutstructure_locator L U) s)).
     Qed.
 
     (** If every cut merely had the structure of a cut, every Dedekind real would be a Cauchy real, so that by [isequiv_cauchy_reals_to_dedekind_iff] the Cauchy reals and the Dedekind reals would coincide. This is not provable, since they differ in some models (Lubarsky, "On the Cauchy completeness of the constructive Cauchy reals"); here we only formalize the implication, not the model. *)
@@ -562,7 +560,7 @@ Section cuts.
       (h : forall L U : Q -> HProp, IsCut L U -> merely (CutStructure L U)) (x : RD)
       : IsCauchyReal Q RD x.
     Proof.
-      apply (iscauchyreal_merely_locator Q_eq).
+      apply (iscauchyreal_merely_locator).
       refine (Trunc_functor _ _ (h _ _ (snd (iscut_iff_isdedekindcut _ _) (isdedekindcut Q x)))).
       intro s; exact (fst (cut_locator_iff_locator x) (cutstructure_locator _ _ s)).
     Qed.
@@ -578,10 +576,10 @@ Section cuts.
     Proof.
       refine (iff_compose _ isequiv_cauchy_reals_to_dedekind_iff).
       split; intros h x.
-      - apply (iscauchyreal_merely_locator Q_eq).
-        exact (snd (merely_locator_iff_signed_digits Q RD Q_eq Z d dpos x) (h x)).
-      - apply (fst (merely_locator_iff_signed_digits Q RD Q_eq Z d dpos x)).
-        apply (snd (merely_locator_iff_limit Q RD Q_eq x)).
+      - apply (iscauchyreal_merely_locator).
+        exact (snd (merely_locator_iff_signed_digits Q RD Z d dpos x) (h x)).
+      - apply (fst (merely_locator_iff_signed_digits Q RD Z d dpos x)).
+        apply (snd (merely_locator_iff_limit Q RD x)).
         exact (fst (iscauchyreal_iff_limit Q RD x) (h x)).
     Qed.
   End dedekind2.

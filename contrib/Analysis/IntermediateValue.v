@@ -157,11 +157,11 @@ Section ivt.
   Qed.
 
   (** A nonnegative element with a locator has a positive rational upper bound. *)
-  Local Definition qpos_upper_bound `{Funext} (Q_eq : nat <~> Q) {u : F} (lu : locator Q F u)
+  Local Definition qpos_upper_bound {u : F} (lu : locator Q F u)
     (u0 : 0 ≤ u)
     : {B : Qpos Q & u ≤ ' (' B)}.
   Proof.
-    destruct (upper_bound Q F Q_eq lu) as [B ltB].
+    destruct (upper_bound Q F lu) as [B ltB].
     exact (mkQpos B (qpos_of_upper_bound u B u0 ltB); lt_le _ _ ltB).
   Defined.
 
@@ -512,11 +512,11 @@ Section ivt.
 
     (** *** Locators *)
 
-    Context (Q_eq : nat <~> Q) (lift : LiftsToLocators Q F f)
+    Context (lift : LiftsToLocators Q F f)
       (la : locator Q F a) (lb : locator Q F b).
 
-    Local Notation plus := (locator_plus Q F Q_eq).
-    Local Notation times := (locator_times Q F Q_eq).
+    Local Notation plus := (locator_plus Q F).
+    Local Notation times := (locator_times Q F).
     Local Notation minus := (locator_minus Q F).
     Local Notation rat := (locator_left Q F).
 
@@ -543,7 +543,7 @@ Section ivt.
     (** The limit of the bisection has a locator, as a limit of midpoints with locators. *)
     Definition approximate_root_locator : locator Q F approximate_root.
     Proof.
-      destruct (qpos_upper_bound Q_eq (plus lb (minus la)) (snd (flip_nonneg_minus _ _) leab))
+      destruct (qpos_upper_bound (plus lb (minus la)) (snd (flip_nonneg_minus _ _) leab))
         as [B leB].
       refine (locator_limit Q F (xs:=c) (M:=nested_modulus B half (pos_is_pos _) half_lt_1)
                 bisect_mid_locator islimit_bisect_mid).
@@ -565,11 +565,11 @@ Section ivt.
   Definition approximate_ivt_locator `{Funext} {Fcomplete : IsComplete Q F}
     (f : F -> F) (a b : F) (leab : a ≤ b) (fa : f a < 0) (fb : 0 < f b) (e : Qpos Q)
     (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y)
-    (Q_eq : nat <~> Q) (lift : LiftsToLocators Q F f) (la : locator Q F a) (lb : locator Q F b)
+    (lift : LiftsToLocators Q F f) (la : locator Q F a) (lb : locator Q F b)
     : {y : F & (locator Q F y * (- ' (' e) < f y < ' (' e)))%type}.
   Proof.
     set (y := approximate_candidate f a b leab (e / 2)).
-    set (ly := approximate_candidate_locator f a b leab (e / 2) Q_eq lift la lb).
+    set (ly := approximate_candidate_locator f a b leab (e / 2) lift la lb).
     set (l n := lift (y n) (ly n)).
     assert (lt1 : - ' e < - ' (e / 2)) by exact (snd (flip_lt_negate _ _) (qpos_half_lt e)).
     set (P n := (locates_right Q F _ (l n) _ _ lt1 * locates_left Q F (l n) (qpos_half_lt e))%type).
@@ -620,7 +620,7 @@ Section ivt.
 
   (** Locators let us turn local nonconstancy into structure, and find roots. *)
   Section search.
-    Context `{Funext} (Q_eq : nat <~> Q) (QQpos_eq : nat <~> Q * Qpos Q).
+    Context `{Funext} (QQpos_eq : nat <~> Q * Qpos Q).
     Context (f : F -> F) (cont : IsPointwiseContinuous Q F f) (lnc : IsLocallyNonconstant f)
       (lift : LiftsToLocators Q F f).
 
@@ -649,7 +649,7 @@ Section ivt.
 
       (** [f r - t] has a locator. *)
       Local Definition locator_value_minus (r : Q) : locator Q F (f (' r) - t)
-        := locator_plus Q F Q_eq (lift _ (locator_left Q F r)) (locator_minus Q F lt).
+        := locator_plus Q F (lift _ (locator_left Q F r)) (locator_minus Q F lt).
 
       (** For a rational [r] and a positive rational [n], we decide approximately whether [r] is [n]-far from [x] and [y], and whether [f r] is [n]-far from [t]. *)
       Local Definition RationalFar (rn : Q * Qpos Q) : Type
@@ -855,10 +855,10 @@ Section ivt.
     Proof.
       destruct I as [a b la lb ltab fa fb]; cbn.
       (* A locator for a quarter of the width, and hence for the quarter points. *)
-      set (lD := locator_times Q F Q_eq (locator_plus Q F Q_eq lb (locator_minus Q F la))
+      set (lD := locator_times Q F (locator_plus Q F lb (locator_minus Q F la))
                    (locator_left Q F quarter)).
-      destruct (locally_nonconstant_rational (locator_plus Q F Q_eq la lD)
-                  (locator_plus Q F Q_eq lb (locator_minus Q F lD)) locator_0 (lt_quarters ltab))
+      destruct (locally_nonconstant_rational (locator_plus Q F la lD)
+                  (locator_plus Q F lb (locator_minus Q F lD)) locator_0 (lt_quarters ltab))
         as [r [[ur rv] ap]].
       destruct (fst (apart_iff_total_lt _ _) ap) as [neg|pos].
       - (* The root is to the right of [r]. *)
@@ -889,7 +889,7 @@ Section ivt.
 
       Local Definition sign_width_bound
         : {B : Qpos Q & sign_upper I0 - sign_lower I0 ≤ ' (' B)}
-        := qpos_upper_bound Q_eq (locator_plus Q F Q_eq (sign_upper_locator I0)
+        := qpos_upper_bound (locator_plus Q F (sign_upper_locator I0)
                                     (locator_minus Q F (sign_lower_locator I0)))
              (lt_le _ _ (snd (flip_pos_minus _ _) (sign_lt I0))).
 

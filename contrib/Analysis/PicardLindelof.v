@@ -149,7 +149,7 @@ Section picard_lindelof.
       apply (order_preserving (u +)), lr.
   Defined.
 
-  Context `{Funext} {Fcomplete : IsComplete Q F} (Q_eq : nat <~> Q) {Qtrich : Trichotomy (<)}
+  Context `{Funext} {Fcomplete : IsComplete Q F} {Qtrich : Trichotomy (<)}
     `{!Integration Q F}.
 
   Context (x0 y0 a b : F) (a0 : 0 < a) (b0 : 0 < b)
@@ -240,8 +240,8 @@ Section picard_lindelof.
     Definition picard_map (f : UL) : UL
       := {| ulmap := {| umap := picard_point f;
                         isuniformmodulus_umap := isuniformmodulus_picard_point f |};
-            ulmap_lifts := fun x lx => locator_plus Q F Q_eq ly0
-                             (locator_integral Q F Q_eq (picard_integrand f) _ _
+            ulmap_lifts := fun x lx => locator_plus Q F ly0
+                             (locator_integral Q F (picard_integrand f) _ _
                                 (picard_integrand_modulus f)
                                 (fun t lt => lg (incl t) (f t) lt (ulmap_lifts Q F _ _ _ _ f t lt))
                                 c x lx0 lx) |}.
@@ -324,8 +324,8 @@ Section picard_lindelof.
 
   Local Definition locator_width (u r : F) (lu : locator Q F u) (lr : locator Q F r)
     : locator Q F (u + r - (u - r))
-    := locator_plus Q F Q_eq (locator_plus Q F Q_eq lu lr)
-         (locator_minus Q F (locator_plus Q F Q_eq lu (locator_minus Q F lr))).
+    := locator_plus Q F (locator_plus Q F lu lr)
+         (locator_minus Q F (locator_plus Q F lu (locator_minus Q F lr))).
 
   Local Lemma qinc_pos (r : Q) (r0 : 0 < r) : 0 < (' r : F).
   Proof.
@@ -336,10 +336,10 @@ Section picard_lindelof.
   Local Definition picard_bound : {K : Qpos Q & forall p, abs (g p) ≤ ' (' K)}.
   Proof.
     set (z := (interval_center x0 a (lt_le _ _ a0), interval_center y0 b (lt_le _ _ b0))).
-    destruct (upper_bound Q F Q_eq (locator_plus Q F Q_eq (locator_width x0 a lx0 la)
+    destruct (upper_bound Q F (locator_plus Q F (locator_width x0 a lx0 la)
                                       (locator_width y0 b ly0 lb))) as [B ltB].
     set (lgz := lg (fst z) (snd z) lx0 ly0).
-    destruct (upper_bound Q F Q_eq (locator_join Q F lgz (locator_minus Q F lgz))) as [r ltr].
+    destruct (upper_bound Q F (locator_join Q F lgz (locator_minus Q F lgz))) as [r ltr].
     set (N := nQ (S (grid_modulus Q B v 1))).
     assert (absz : abs (g z) ≤ join (g z) (- g z)).
     { apply abs_le; [|apply join_ub_l].
@@ -362,7 +362,7 @@ Section picard_lindelof.
                                   (interval_center x0 l (lt_le _ _ (fst bounds))) x}}}}.
   Proof.
     destruct picard_bound as [K gK].
-    destruct (upper_bound Q F Q_eq lL) as [rL ltL].
+    destruct (upper_bound Q F lL) as [rL ltL].
     assert (rL0 : 0 < rL) by exact (qpos_of_upper_bound Q F _ _ (lt_le _ _ L0) ltL).
     assert (K0 := pos_is_pos K).
     set (u := b * ' (/ ' K)); set (w := ' (/ rL / 2) : F).
@@ -372,7 +372,7 @@ Section picard_lindelof.
     { apply qinc_pos, pos_mult_compat; [apply pos_dec_recip_compat, rL0|exact half_pos]. }
     set (l := meet a (meet u w)).
     exists l.
-    exists (locator_meet Q F la (locator_meet Q F (locator_times Q F Q_eq lb (locator_left Q F _))
+    exists (locator_meet Q F la (locator_meet Q F (locator_times Q F lb (locator_left Q F _))
                                    (locator_left Q F _))).
     exists (meet_lt_l _ _ _ a0 (meet_lt_l _ _ _ u0 w0), meet_lb_l _ _).
     assert (lu : l ≤ u) by exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
@@ -391,7 +391,7 @@ Section picard_lindelof.
       assert (PropHolds (0 ≤ w)) by exact (lt_le _ _ w0).
       lhs' exact (order_preserving (L *.) _ _ lw).
       exact (transitivity (order_preserving (.* w) _ _ (lt_le _ _ ltL)) (eq_le _ _ rLw)). }
-    destruct (upper_bound Q F Q_eq (locator_width y0 b ly0 lb)) as [C ltC].
+    destruct (upper_bound Q F (locator_width y0 b ly0 lb)) as [C ltC].
     assert (C0 : 0 < C).
     { refine (qpos_of_upper_bound Q F _ _ _ ltC).
       apply (snd (flip_nonneg_minus _ _)).

@@ -33,12 +33,6 @@ Section locator.
   Context {Fcomplete : IsComplete Q F}.
   Context {Qroundup : RoundUpStrict Q}.
 
-  Context `{Funext} `{Univalence}.
-
-  (* Assume we have enumerations of the rationals, and of pairs of ordered rationals. *)
-  Context (Q_eq : nat <~> Q).
-  Context (QQpos_eq : nat <~> Q * Qpos Q).
-
   Instance qinc : Cast Q F := rationals_to_field Q F.
 
   (* Definition of a locator for a fixed real number. *)
@@ -55,7 +49,7 @@ Section locator.
   Arguments locates_right_true  [x] _ [q] [r] _.
   Arguments locates_right_false [x] _ [q] [r] _.
 
-  Definition locates_left {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
+  Definition locates_left `{Funext} {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
     fun nu => Build_DHProp (Build_HProp (~ (locates_right l nu))) _.
 
   Section classical.
@@ -124,7 +118,7 @@ Section locator.
 
   Section logic2.
 
-    Context {x : F}.
+    Context `{Funext} `{Univalence} {x : F}.
 
     Coercion locator_locator' : locator >-> locator'.
 
@@ -163,14 +157,14 @@ Section locator.
            locator_locator'_locator.
 
     Lemma nltqx_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r)
-      : ~ (' q < x) -> locates_left l' ltqr.
+      : ~ (' q < x) -> ~ locates_right l' ltqr.
     Proof.
       assert (f := locates_right_true l' ltqr).
       exact (not_contrapositive f).
     Qed.
 
     Lemma ltxq_locates_left {q r : Q} (l' : locator' x) (ltqr : q < r)
-      : x < ' q -> locates_left l' ltqr.
+      : x < ' q -> ~ locates_right l' ltqr.
     Proof.
       intros ltxq. apply nltqx_locates_left.
       apply lt_flip; assumption.
@@ -196,88 +190,43 @@ Section locator.
 
   Local Open Scope mc_scope.
 
+  Definition locator_minus {x : F} (l : locator x) : locator (-x).
+  Proof.
+    intros q r ltqr.
+    assert (ltnrnq := snd (flip_lt_negate q r) ltqr : -r < -q).
+    destruct (l _ _ ltnrnq) as [ltnrx|ltxnq].
+    - apply inr. apply char_minus_left. rewrite <- preserves_negate. assumption.
+    - apply inl. apply char_minus_right. rewrite <- preserves_negate. assumption.
+  Qed.
+
+  (** Given a real with a locator, we can find integer bounds: we search for the least [n : nat] for which the locator places [x] above [- n - 1] when comparing it with [- n - 1 < - n]. *)
+  Definition lower_bound {x : F} (l : locator x) : {q : Q | ' q < x}.
+  Proof.
+    pose (P n := locates_right l
+                   (fst (pos_minus_lt_compat_r (- naturals_to_semiring nat Q n) 1) lt_0_1)).
+    assert (inhab : hexists P).
+    { refine (Trunc_functor _ _ (archimedean_property Q F (x - 1) x
+                                   (fst (pos_minus_lt_compat_r x 1) lt_0_1))).
+      intros [q [_ ltqx]].
+      destruct (round_up_strict Q (- q)) as [n ltqn].
+      exists n; apply ltrx_locates_right.
+      rhs_V' exact ltqx.
+      apply (strictly_order_preserving _), flip_lt_negate_l, ltqn. }
+    destruct (minimal_n P _ inhab) as [n Pn].
+    eexists; exact (locates_right_true l _ Pn).
+  Qed.
+
+  Definition upper_bound {x : F} (l : locator x) : {r : Q | x < ' r}.
+  Proof.
+    destruct (lower_bound (locator_minus l)) as [q ltqx].
+    exists (- q).
+    rewrite (preserves_negate (f:=cast Q F)).
+    apply flip_lt_negate_r, ltqx.
+  Qed.
+
   Section bounds.
-    (* Given a real with a locator, we can find (integer) bounds. *)
     Context {x : F}
             (l : locator x).
-
-    Local Definition ltN1 (q : Q) : q - 1 < q := fst (pos_minus_lt_compat_r q 1) lt_0_1.
-
-    Local Definition P_lower (q : Q) : Type := locates_right l (ltN1 q).
-
-    Definition P_lower_prop {k} : IsHProp (P_lower k).
-    Proof.
-      apply _.
-    Qed.
-
-    Local Definition ltxN1 : x - 1 < x := (fst (pos_minus_lt_compat_r x 1) lt_0_1).
-
-    Local Definition P_lower_inhab : hexists (fun q => P_lower q).
-    Proof.
-      assert (hqlt : hexists (fun q => ' q < x)).
-      {
-        assert (hex := archimedean_property Q F (x-1) x ltxN1).
-        refine (Trunc_rec _ hex); intros hex'.
-        apply tr.
-        destruct hex' as [q [ltx1q ltqx]]; exists q; assumption.
-      }
-      refine (Trunc_rec _ hqlt); intros hqlt'.
-      induction hqlt' as [q lt].
-      apply tr.
-      exists q.
-      unfold P_lower.
-      apply ltrx_locates_right; assumption.
-    Qed.
-
-    Definition lower_bound : {q : Q | ' q < x}.
-    Proof.
-      assert (qP_lower : {q : Q | P_lower q})
-        by exact (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
-      destruct qP_lower as [q Pq].
-      exists (q - 1).
-      unfold P_lower in Pq. simpl in *.
-      exact (un_inl _ Pq).
-    Qed.
-
-    Local Definition lt1N (r : Q) : r < r + 1 := fst (pos_plus_lt_compat_r r 1) lt_0_1.
-
-    Local Definition P_upper (r : Q) : DHProp := locates_left l (lt1N r).
-
-    Definition P_upper_prop {k} : IsHProp (P_upper k).
-    Proof.
-      apply _.
-    Qed.
-
-    Local Definition ltx1N : x < x + 1 := (fst (pos_plus_lt_compat_r x 1) lt_0_1).
-
-    Local Definition P_upper_inhab : hexists (fun r => P_upper r).
-    Proof.
-      assert (hqlt : hexists (fun r => x < ' r)).
-      {
-        assert (hex := archimedean_property Q F x (x+1) ltx1N).
-        refine (Trunc_rec _ hex); intros hex'.
-        apply tr.
-        destruct hex' as [r [ltxr ltrx1]]; exists r; assumption.
-      }
-      refine (Trunc_rec _ hqlt); intros hqlt'.
-      induction hqlt' as [r lt].
-      apply tr.
-      exists r.
-      unfold P_upper.
-      apply ltxq_locates_left; assumption.
-    Qed.
-
-    Definition upper_bound : {r : Q | x < ' r}.
-    Proof.
-      assert (rP_upper : {r : Q | P_upper r})
-        by exact (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
-      destruct rP_upper as [r Pr].
-      exists (r + 1).
-      unfold P_upper in Pr. simpl in *.
-      destruct (l r (r + 1) (lt1N r)).
-      - simpl in Pr. destruct (Pr tt).
-      - assumption.
-    Qed.
 
     Instance inc_N_Q : Cast nat Q := naturals_to_semiring nat Q.
 
@@ -286,8 +235,8 @@ Section locator.
     Lemma tight_bound (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
     Proof.
       destruct
-        lower_bound as [q ltqx]
-      , upper_bound as [r ltxr]
+        (lower_bound l) as [q ltqx]
+      , (upper_bound l) as [r ltxr]
       , (round_up_strict Q ((3/'epsilon)*(r-q))) as [n lt3rqn].
       assert (lt0 : 0 < 'epsilon / 3).
       {
@@ -303,7 +252,7 @@ Section locator.
       }
       assert (ap30 : (3 : Q) <> 0)
         by apply lt_ne_flip, lt_0_3.
-      clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths H.
+      clear - l q ltqx r ltxr n lt3rqn lt0' ap30 Qtriv Qdec_paths.
       assert (ltn3eps : r < q + ' n * ' epsilon / 3).
       {
         rewrite (commutativity q (' n * ' epsilon / 3)).
@@ -436,81 +385,47 @@ Section locator.
             (m : locator y)
             (ltxy : x < y).
 
-    Local Definition P (qeps' : Q * Qpos Q) : Type :=
-      match qeps' with
-      | (q' , eps') =>
-        (prod
-           (locates_left l (fst (pos_minus_lt_compat_r q' (' eps')) (pos_is_pos eps')))
-           (locates_right m (fst (pos_plus_lt_compat_r q' (' eps')) (pos_is_pos eps'))))
-      end.
+    (** The precision [1 / (n + 1)], which drops below every positive rational. *)
+    Local Definition precision (n : nat) : Qpos Q := / ' (S n).
 
-    Local Definition P_isHProp qeps' : IsHProp (P qeps').
+    Local Lemma precision_lt (d : Q) (dpos : 0 < d) : {n : nat & ' (precision n) < d}.
     Proof.
-      destruct qeps' as [q eps'].
-      exact istrunc_prod.
+      destruct (round_up_strict Q (/ d)) as [n ltn].
+      exists n; apply flip_lt_dec_recip_l; [exact dpos|].
+      change (/ d < naturals_to_semiring nat Q (S n)).
+      rewrite S_nat_plus_1, (preserves_plus n 1), preserves_1.
+      lhs' exact ltn.
+      apply pos_plus_lt_compat_r, lt_0_1.
     Qed.
 
-    Local Definition P_dec qeps' : Decidable (P qeps').
-    Proof.
-      destruct qeps' as [q eps'].
-      unfold P.
-      exact _.
-    Qed.
-
-    Local Definition P_inhab : hexists P.
-    Proof.
-      assert (hs := (archimedean_property Q F x y ltxy)).
-      refine (Trunc_ind _ _ hs); intros [s [ltxs ltsy]].
-      assert (ht := (archimedean_property Q F ('s) y ltsy)).
-      refine (Trunc_ind _ _ ht); intros [t [ltst' ltty]].
-      set (q := (t + s) / 2).
-      assert (ltst : s < t).
-      {
-        Existing Instance full_pseudo_order_reflecting.
-        exact (strictly_order_reflecting _ _ _ ltst').
-      }
-      set (epsilon := (Qpos_diff s t ltst) / 2).
-      apply tr.
-      exists (q, epsilon).
-      unfold P; split.
-      - apply ltxq_locates_left.
-        assert (q - ' epsilon = s) as ->.
-        {
-          unfold q; cbn.
-          rewrite <- path_avg_split_diff_l.
-          rewrite <- (plus_assoc s ((t-s)/2) (-((t-s)/2))).
-          rewrite plus_negate_r.
-          rewrite plus_0_r.
-          reflexivity.
-        }
-        assumption.
-      - apply ltrx_locates_right.
-        assert (q + ' epsilon = t) as ->.
-        {
-          unfold q; cbn.
-          rewrite <- path_avg_split_diff_r.
-          rewrite <- (plus_assoc t (-((t-s)/2)) ((t-s)/2)).
-          rewrite plus_negate_l.
-          rewrite plus_0_r.
-          reflexivity.
-        }
-        assumption.
-    Qed.
-
+    (** We search for the least [n] such that, for [e] the [n]-th precision and [u < x < u + e / 2], the locator of [y] places [y] above [u + e / 2] when comparing it with [u + e / 2 < u + e]. *)
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
-      assert (R : sig P).
-      {
-        apply minimal_n_alt_type.
-        - exact QQpos_eq.
-        - exact P_dec.
-        - exact P_inhab.
-      }
-      unfold P in R.
-      destruct R as [[q eps] [lleft mright]].
-      exists q; split.
-      - exact (locates_right_false l _ lleft).
-      - exact (locates_right_true  m _ mright).
+      pose (u n := (tight_bound l (precision n / 2)).1).
+      pose (P n := locates_right m
+                     (fst (pos_plus_lt_compat_r (u n + ' (precision n / 2)) (' (precision n / 2)))
+                        (pos_is_pos _))).
+      assert (inhab : hexists P).
+      { refine (Trunc_functor _ _ (archimedean_property Q F 0 (y - x)
+                                     (snd (flip_pos_minus _ _) ltxy))).
+        intros [d [ltd ltdyx]].
+        destruct (precision_lt d) as [n ltn].
+        { apply (strictly_order_reflecting (cast Q F)).
+          rewrite (preserves_0 (f:=cast Q F)); exact ltd. }
+        exists n; apply ltrx_locates_right.
+        rewrite <- plus_assoc.
+        change (' (precision n / 2) + ' (precision n / 2))
+          with (' (precision n / 2 + precision n / 2) : Q).
+        rewrite <- pos_split2.
+        rewrite (preserves_plus (f:=cast Q F)), (plus_comm (' u n)).
+        rhs_V' exact (fst (flip_lt_minus_r _ _ _) ltdyx).
+        apply plus_lt_compat.
+        - apply (strictly_order_preserving _), ltn.
+        - exact (fst (tight_bound l _).2). }
+      destruct (minimal_n P _ inhab) as [n Pn].
+      exists (u n + ' (precision n / 2)); split.
+      - exact (snd (tight_bound l _).2).
+      - exact (locates_right_true m _ Pn).
     Qed.
 
   End arch_struct.
@@ -545,15 +460,6 @@ Section locator.
 
     Context {x : F}
             (l : locator x).
-
-    Definition locator_minus : locator (-x).
-    Proof.
-      intros q r ltqr.
-      assert (ltnrnq := snd (flip_lt_negate q r) ltqr : -r < -q).
-      destruct (l _ _ ltnrnq) as [ltnrx|ltxnq].
-      - apply inr. apply char_minus_left. rewrite <- preserves_negate. assumption.
-      - apply inl. apply char_minus_right. rewrite <- preserves_negate. assumption.
-    Qed.
 
     Section recip_pos.
       Context (xpos : 0 < x).
