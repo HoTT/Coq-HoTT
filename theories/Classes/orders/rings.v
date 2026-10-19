@@ -296,7 +296,10 @@ Section strict_ring_apart.
 
 End strict_ring_apart.
 
-Section full_pseudo_ring_order.
+(** ** Symmetric bounds *)
+
+(** We bound [x] by [- y < x < y]: this says that the absolute value of [x] is less than [y], without needing absolute values. *)
+Section symmetric_bounds.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
 
   (** An element strictly between [- y] and [y] shows that [y] is positive. *)
@@ -309,53 +312,39 @@ Section full_pseudo_ring_order.
     - assumption.
   Qed.
 
-  (** Two elements of an interval of width less than [d] are less than [d] apart. *)
-  Lemma interval_minus_lt (a b s t d : R)
-    : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
+  (** If [- S < s < S] and [- T < t < T], then [s * t < S * T]: either [s * t] is below the positive [S * T], or [s] and [t] have the same sign. *)
+  Local Lemma mult_lt_bound_r s t S T : - S < s < S -> - T < t < T -> s * t < S * T.
   Proof.
-    intros sab tab lt; split.
-    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
-      exact (le_lt_trans _ _ _ (interval_minus_le a b t s tab sab) lt).
-    - exact (le_lt_trans _ _ _ (interval_minus_le a b s t sab tab) lt).
+    intros [ltSs ltsS] [ltTt lttT].
+    assert (STpos := pos_mult S T (pos_between_negate s S (ltSs, ltsS))
+                       (pos_between_negate t T (ltTt, lttT))).
+    assert (c := cotransitive STpos (s * t)).
+    strip_truncations; destruct c as [ltst|]; [|assumption].
+    destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
+    - apply mult_lt_compat; assumption.
+    - rewrite <- negate_mult_negate.
+      apply mult_lt_compat; first [apply flip_neg_negate | apply flip_lt_negate_l]; assumption.
   Qed.
 
-  (** If [|s| < S] and [|t| < T], then [|s * t| < S * T]. *)
+  (** Applying this to [- s] gives the lower bound. *)
   Lemma mult_lt_bound s t S T
     : - S < s < S -> - T < t < T -> - (S * T) < s * t < S * T.
   Proof.
-    assert (upper : forall s t, - S < s < S -> - T < t < T -> s * t < S * T).
-    { clear s t.
-      intros s t [ltSs ltsS] [ltTt lttT].
-      assert (Spos := pos_between_negate s S (ltSs, ltsS)).
-      assert (Tpos := pos_between_negate t T (ltTt, lttT)).
-      assert (c := cotransitive (pos_mult S T Spos Tpos) (s * t)).
-      strip_truncations; destruct c as [ltst|]; [|assumption].
-      destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
-      - apply mult_lt_compat; assumption.
-      - rewrite <- negate_mult_negate.
-        apply mult_lt_compat.
-        + apply flip_neg_negate; assumption.
-        + apply flip_neg_negate; assumption.
-        + exact (flip_lt_negate_l S s ltSs).
-        + exact (flip_lt_negate_l T t ltTt). }
-    intros [ltSs ltsS] ltTtT; split.
-    - apply flip_lt_negate_l.
-      rewrite negate_mult_distr_l.
-      apply upper; [split|exact ltTtT].
+    intros [ltSs ltsS] ltt; split.
+    - apply flip_lt_negate_l; rewrite negate_mult_distr_l.
+      apply mult_lt_bound_r; [split|exact ltt].
       + exact (snd (flip_lt_negate s S) ltsS).
       + exact (flip_lt_negate_l S s ltSs).
-    - apply upper; [split|]; assumption.
+    - exact (mult_lt_bound_r s t S T (ltSs, ltsS) ltt).
   Qed.
 
   (** The difference of two products, for estimating it. *)
   Lemma mult_minus_mult x y u w
     : x * y - u * w = x * (y - w) + (x - u) * w.
   Proof.
-    rewrite plus_mult_distr_l, plus_mult_distr_r.
-    rewrite <- negate_mult_distr_r, <- negate_mult_distr_l.
-    rewrite <- (plus_assoc (x * y) (- (x * w)) (x * w + - (u * w))).
-    rewrite (plus_assoc (- (x * w)) (x * w) (- (u * w))).
-    rewrite plus_negate_l, plus_0_l.
+    rewrite <- (plus_minus_telescope (x * y) (x * w) (u * w)).
+    rewrite negate_mult_distr_r, <- plus_mult_distr_l.
+    rewrite negate_mult_distr_l, <- plus_mult_distr_r.
     reflexivity.
   Qed.
 
@@ -369,6 +358,23 @@ Section full_pseudo_ring_order.
     destruct (mult_lt_bound (x - u) w D W ltxu ltw) as [lt2 lt2'].
     rewrite mult_minus_mult, negate_plus_distr.
     split; apply plus_lt_compat; assumption.
+  Qed.
+
+End symmetric_bounds.
+
+(** ** Intervals *)
+
+Section intervals.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
+
+  (** Two elements of an interval of width less than [d] are less than [d] apart. *)
+  Lemma interval_minus_lt (a b s t d : R)
+    : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
+  Proof.
+    intros sab tab lt; split.
+    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
+      exact (le_lt_trans _ _ _ (interval_minus_le a b t s tab sab) lt).
+    - exact (le_lt_trans _ _ _ (interval_minus_le a b s t sab tab) lt).
   Qed.
 
   (** Multiplication by [v] is monotone on [[a, b]], so [u * v] cannot lie strictly below both [a * v] and [b * v]. *)
@@ -386,7 +392,7 @@ Section full_pseudo_ring_order.
       + exact (fst (le_iff_not_lt_flip _ _) (snd (flip_nonneg_minus u b) leub) ltub'').
   Qed.
 
-  (** Hence a strict bound on [a * v] and [b * v] is a strict bound on [u * v]. *)
+  (** Hence a strict lower bound on [a * v] and [b * v] is a strict lower bound on [u * v]. *)
   Lemma lt_mult_endpoints_l q a b u v
     : a ≤ u -> u ≤ b -> q < a * v -> q < b * v -> q < u * v.
   Proof.
@@ -398,16 +404,14 @@ Section full_pseudo_ring_order.
     destruct (not_lt_mult_endpoints a b u v leau leub ltua ltub).
   Qed.
 
+  (** Applying this to [- v] gives the upper bound. *)
   Lemma mult_endpoints_lt_r r a b u v
     : a ≤ u -> u ≤ b -> a * v < r -> b * v < r -> u * v < r.
   Proof.
     intros leau leub ltar ltbr.
-    assert (c := cotransitive ltar (u * v)).
-    strip_truncations; destruct c as [ltau|]; [|assumption].
-    assert (c := cotransitive ltbr (u * v)).
-    strip_truncations; destruct c as [ltbu|]; [|assumption].
-    destruct (not_lt_mult_endpoints a b u (- v) leau leub);
-      rewrite <- 2!negate_mult_distr_r; apply (snd (flip_lt_negate _ _)); assumption.
+    apply (fst (flip_lt_negate _ _)); rewrite negate_mult_distr_r.
+    apply (lt_mult_endpoints_l _ a b u _ leau leub);
+      rewrite <- negate_mult_distr_r; apply (snd (flip_lt_negate _ _)); assumption.
   Qed.
 
   (** Hence a bound on the four products of the endpoints of [[a, b]] and [[c, d]] is a bound on [u * w] for [u] in [[a, b]] and [w] in [[c, d]]. *)
@@ -431,7 +435,7 @@ Section full_pseudo_ring_order.
       apply (mult_endpoints_lt_r r a b u _ leau leub); assumption.
   Qed.
 
-End full_pseudo_ring_order.
+End intervals.
 
 (** ** Absolute values *)
 
