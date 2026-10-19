@@ -396,31 +396,34 @@ Section locator.
       apply pos_plus_lt_compat_r, lt_0_1.
     Qed.
 
-    (** We search for the least [n] such that, for [e] the [n]-th precision and [u < x < u + e / 2], the locator of [y] places [y] above [u + e / 2] when comparing it with [u + e / 2 < u + e]. *)
+    (** For each [n], [tight_bound] gives a rational [u n] with [u n < x < u n + e / 2], where [e] is the [n]-th precision. *)
+    Local Definition u (n : nat) : Q := (tight_bound l (precision n / 2)).1.
+
+    (** We test whether [y] lies above [u n + e / 2], by comparing it with [u n + e / 2 < u n + e]. *)
+    Local Definition P (n : nat) : DHProp
+      := locates_right m (strictly_order_preserving (u n +) _ _ (qpos_half_lt (precision n))).
+
+    (** The test succeeds as soon as [e < y - x], since then [u n + e < x + e < y]. *)
+    Local Lemma P_inhab : hexists P.
+    Proof.
+      refine (Trunc_functor _ _ (archimedean_property Q F 0 (y - x)
+                                   (snd (flip_pos_minus _ _) ltxy))).
+      intros [d [ltd ltdyx]].
+      destruct (precision_lt d) as [n ltn].
+      { apply (strictly_order_reflecting (cast Q F)).
+        rewrite (preserves_0 (f:=cast Q F)); exact ltd. }
+      exists n; apply ltrx_locates_right.
+      rhs_V' exact (fst (flip_lt_minus_r _ _ _) ltdyx).
+      rewrite (preserves_plus (f:=cast Q F)), (plus_comm (' u n)).
+      apply plus_lt_compat.
+      - apply (strictly_order_preserving _), ltn.
+      - exact (fst (tight_bound l _).2).
+    Qed.
+
+    (** Searching for the least [n] for which the test succeeds gives a rational between [x] and [y]. *)
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
-      pose (u n := (tight_bound l (precision n / 2)).1).
-      pose (P n := locates_right m
-                     (fst (pos_plus_lt_compat_r (u n + ' (precision n / 2)) (' (precision n / 2)))
-                        (pos_is_pos _))).
-      assert (inhab : hexists P).
-      { refine (Trunc_functor _ _ (archimedean_property Q F 0 (y - x)
-                                     (snd (flip_pos_minus _ _) ltxy))).
-        intros [d [ltd ltdyx]].
-        destruct (precision_lt d) as [n ltn].
-        { apply (strictly_order_reflecting (cast Q F)).
-          rewrite (preserves_0 (f:=cast Q F)); exact ltd. }
-        exists n; apply ltrx_locates_right.
-        rewrite <- plus_assoc.
-        change (' (precision n / 2) + ' (precision n / 2))
-          with (' (precision n / 2 + precision n / 2) : Q).
-        rewrite <- pos_split2.
-        rewrite (preserves_plus (f:=cast Q F)), (plus_comm (' u n)).
-        rhs_V' exact (fst (flip_lt_minus_r _ _ _) ltdyx).
-        apply plus_lt_compat.
-        - apply (strictly_order_preserving _), ltn.
-        - exact (fst (tight_bound l _).2). }
-      destruct (minimal_n P _ inhab) as [n Pn].
+      destruct (minimal_n P _ P_inhab) as [n Pn].
       exists (u n + ' (precision n / 2)); split.
       - exact (snd (tight_bound l _).2).
       - exact (locates_right_true m _ Pn).
