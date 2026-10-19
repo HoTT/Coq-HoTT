@@ -15,7 +15,7 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.rationals.
-From HoTT.Analysis Require Import MetricSpace CauchyCompleteness CauchyStructure.
+From HoTT_Contrib.Analysis Require Import MetricSpace CauchyCompleteness CauchyStructure.
 
 (** The Cauchy reals of the HoTT book (Section 11.3) are a higher inductive-inductive type, which cannot be defined in Rocq. We characterize them instead by a universal property: they are a homotopy-initial Cauchy structure, that is, a Cauchy structure [R] with a contractible type of morphisms [R -> S] to every Cauchy structure [S]. A development that wants to use the HoTT book reals takes a Cauchy structure [R] together with an instance of [IsHoTTBookReals R] as a hypothesis; nothing is postulated globally.
 

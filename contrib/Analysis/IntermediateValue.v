@@ -22,8 +22,9 @@ From HoTT.Classes Require Import
   orders.rings
   orders.lattices
   orders.rationals.
-From HoTT.Analysis Require Import
-  Locator MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators.
+From HoTT.Analysis Require Import Locator.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators.
 
 Section ivt.
   Universe UQ.

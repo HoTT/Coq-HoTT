@@ -17,7 +17,8 @@ From HoTT.Classes Require Import
   orders.rings
   orders.rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import MetricSpace CauchyCompleteness CauchyStructure HoTTBookReals RealsInclusions.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness CauchyStructure HoTTBookReals RealsInclusions.
 
 Section euclidean.
   Universe UQ.
@@ -503,4 +504,3 @@ Section euclidean.
     Qed.
   End subhom.
 End euclidean.
-Set Printing Universes. About euclidean_reals. About IsEuclideanReal.

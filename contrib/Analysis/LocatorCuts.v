@@ -22,8 +22,9 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.rationals.
-From HoTT.Analysis Require Import
-  Locator MetricSpace CauchyCompleteness CauchyReals DedekindReals RealsInclusions LocatorDigits.
+From HoTT.Analysis Require Import Locator DedekindReals.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness CauchyReals RealsInclusions LocatorDigits.
 
 (** A map to [Bool] is strongly nonconstant when it merely takes two different values. *)
 Definition IsStronglyNonconstant {A : Type} (f : A -> Bool)

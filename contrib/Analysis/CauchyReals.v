@@ -18,7 +18,7 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.rationals.
-From HoTT.Analysis Require Import MetricSpace CauchyCompleteness.
+From HoTT_Contrib.Analysis Require Import MetricSpace CauchyCompleteness.
 
 Section cauchy_reals.
   Universe UQ.

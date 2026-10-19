@@ -22,8 +22,9 @@ From HoTT.Classes Require Import
   orders.lattices
   orders.dec_fields
   orders.rationals.
-From HoTT.Analysis Require Import
-  Locator MetricSpace CauchyCompleteness LiftsToLocators IntermediateValue FunctionSpace.
+From HoTT.Analysis Require Import Locator.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness LiftsToLocators IntermediateValue FunctionSpace.
 
 Section integration.
   Universe UQ.

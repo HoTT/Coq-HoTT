@@ -159,22 +159,7 @@ Require Export HoTT.DomainTheory.FixedPoints.
 
 Require Export HoTT.Analysis.Locator.
 Require Export HoTT.Analysis.IntervalObject.
-Require Export HoTT.Analysis.MetricSpace.
-Require Export HoTT.Analysis.BanachFixedPoint.
-Require Export HoTT.Analysis.CauchyCompleteness.
-Require Export HoTT.Analysis.CauchyReals.
-Require Export HoTT.Analysis.CauchyStructure.
-Require Export HoTT.Analysis.LocatorDigits.
-Require Export HoTT.Analysis.LiftsToLocators.
-Require Export HoTT.Analysis.IntermediateValue.
-Require Export HoTT.Analysis.FunctionSpace.
-Require Export HoTT.Analysis.Integral.
-Require Export HoTT.Analysis.PicardLindelof.
 Require Export HoTT.Analysis.DedekindReals.
-Require Export HoTT.Analysis.HoTTBookReals.
-Require Export HoTT.Analysis.RealsInclusions.
-Require Export HoTT.Analysis.LocatorCuts.
-Require Export HoTT.Analysis.EuclideanReals.
 
 Require Export HoTT.Homotopy.HomotopyGroup.
 Require Export HoTT.Homotopy.PiSpheres.

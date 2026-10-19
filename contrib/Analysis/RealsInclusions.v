@@ -17,8 +17,9 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.rationals.
-From HoTT.Analysis Require Import
-  MetricSpace CauchyCompleteness CauchyStructure CauchyReals DedekindReals HoTTBookReals.
+From HoTT.Analysis Require Import DedekindReals.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness CauchyStructure CauchyReals HoTTBookReals.
 
 (** The Cauchy reals embed into the HoTT book reals, which embed into every Cauchy complete Archimedean ordered field, in particular into the Dedekind reals. *)
 

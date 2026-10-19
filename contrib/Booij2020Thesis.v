@@ -25,7 +25,11 @@ From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch CompactTypes.
 From HoTT.Classes.orders Require Import archimedean rationals.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
-From HoTT.Analysis Require Import IntervalObject Locator MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure DedekindReals LocatorDigits LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions FunctionSpace Integral PicardLindelof LocatorCuts EuclideanReals.
+From HoTT.Analysis Require Import IntervalObject Locator DedekindReals.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace BanachFixedPoint CauchyCompleteness CauchyReals CauchyStructure LocatorDigits
+  LiftsToLocators IntermediateValue HoTTBookReals RealsInclusions FunctionSpace Integral
+  PicardLindelof LocatorCuts EuclideanReals.
 
 
 (* END OF PREAMBLE *)

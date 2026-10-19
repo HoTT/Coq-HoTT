@@ -19,7 +19,7 @@ From HoTT.Classes Require Import
   orders.rings
   orders.naturals
   orders.rationals.
-From HoTT.Analysis Require Import MetricSpace.
+From HoTT_Contrib.Analysis Require Import MetricSpace.
 
 Generalizable Variables A B Q R Rle Rlt.
 

@@ -28,8 +28,9 @@ From HoTT.Classes Require Import
   orders.naturals
   orders.integers
   orders.rationals.
-From HoTT.Analysis Require Import
-  Locator MetricSpace CauchyCompleteness BanachFixedPoint CauchyReals.
+From HoTT.Analysis Require Import Locator.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness BanachFixedPoint CauchyReals.
 
 Import NatPair.Instances.
 

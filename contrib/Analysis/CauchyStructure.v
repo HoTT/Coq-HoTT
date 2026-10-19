@@ -20,7 +20,7 @@ From HoTT.Classes Require Import
   orders.dec_fields
   orders.naturals
   orders.rationals.
-From HoTT.Analysis Require Import MetricSpace CauchyCompleteness.
+From HoTT_Contrib.Analysis Require Import MetricSpace CauchyCompleteness.
 
 (** Premetrics, moduli of Cauchy convergence and limits of sequences are in [MetricSpace]. *)
 

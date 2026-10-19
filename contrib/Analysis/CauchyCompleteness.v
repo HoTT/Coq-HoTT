@@ -14,7 +14,7 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.rationals.
-From HoTT.Analysis Require Import MetricSpace.
+From HoTT_Contrib.Analysis Require Import MetricSpace.
 
 (** In an Archimedean ordered field, limits of sequences are unique, so the type of limits of a sequence is a proposition. Hence a limit that merely exists can be computed, and so can a limit of a sequence that merely has a modulus of Cauchy convergence, if the field is Cauchy complete. *)
 

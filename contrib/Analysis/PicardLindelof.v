@@ -22,9 +22,9 @@ From HoTT.Classes Require Import
   orders.lattices
   orders.dec_fields
   orders.rationals.
-From HoTT.Analysis Require Import
-  Locator MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators FunctionSpace
-  Integral.
+From HoTT.Analysis Require Import Locator.
+From HoTT_Contrib.Analysis Require Import
+  MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators FunctionSpace Integral.
 
 Section picard_lindelof.
   Universe UQ.

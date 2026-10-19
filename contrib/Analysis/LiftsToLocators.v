@@ -13,7 +13,8 @@ From HoTT.Classes Require Import
   orders.orders
   orders.rings
   orders.rationals.
-From HoTT.Analysis Require Import Locator MetricSpace CauchyCompleteness.
+From HoTT.Analysis Require Import Locator.
+From HoTT_Contrib.Analysis Require Import MetricSpace CauchyCompleteness.
 
 Section lifts.
   Universe UQ.
