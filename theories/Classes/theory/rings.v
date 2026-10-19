@@ -461,6 +461,12 @@ Section ring_props.
     rewrite (simple_associativity (f := (+))).
     apply plus_conjugate.
   Qed.
+
+  Lemma minus_plus_cancel x y : x - y + y = x.
+  Proof.
+    rewrite <- (simple_associativity (f := (+)) x (- y) y), left_inverse.
+    apply right_identity.
+  Qed.
 End ring_props.
 
 Section integral_domain_props.

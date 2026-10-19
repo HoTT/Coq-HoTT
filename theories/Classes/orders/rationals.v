@@ -288,7 +288,7 @@ Section nat_quotients.
   Qed.
 
   (** Provided [1] is apart from [0] in [Q], a rational [q] is positive if and only if [f q] is. *)
-  Local Lemma rationals_to_field_pos_iff `{!PropHolds ((1 : Q) ≶ 0)} (q : Q)
+  Lemma rationals_to_field_pos_iff `{!PropHolds ((1 : Q) ≶ 0)} (q : Q)
     : 0 < q <-> 0 < f q.
   Proof.
     assert (Hq := isnatquot_rational q).

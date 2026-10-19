@@ -167,6 +167,12 @@ path_via (e * (3 / 3)).
   ring_tac.ring_with_nat.
 Qed.
 
+Lemma qpos_two_thirds_lt@{} (e : Q+) : ' (e / 3) + ' (e / 3) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split3 e)).
+exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
+Qed.
+
 #[export] Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
 Proof.
 hnf.
