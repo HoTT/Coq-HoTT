@@ -2,7 +2,9 @@
 
 (** This file links the numbered results of Chapters 3–8 of A. B. Booij, _Analysis in Univalent Type Theory_ (PhD thesis, University of Birmingham, 2020) with their formalizations in the HoTT library and in [HoTT_Contrib]. You can look up definitions and theorems by their number in the thesis: the formalization of Lemma 6.6.1 is [Booij2020Thesis_6_6_1], and an item formalized by several results has one definition per result, [Booij2020Thesis_6_6_1_item_i], [Booij2020Thesis_6_6_1_item_ii], and so on. Use [Print] or [About] on these names to find the results they stand for.
 
-Every numbered item of these chapters has an entry. An item that has not been formalized (an example, a remark without formal content, a conjecture, or a result that has not been done yet) has an entry with a comment saying so instead of definitions. [BLUEPRINT.md] in the root of the repository lists every numbered item of these chapters, with its status, its dependencies, and how the formalization differs from the thesis. *)
+Every numbered item of these chapters has an entry. An item that has not been formalized (an example, a remark without formal content, a conjecture, or a result that has not been done yet) has an entry with a comment saying so instead of definitions. Comments in the entries record where the formalization differs from the thesis.
+
+Chapters 6–8 work with an arbitrary Cauchy complete Archimedean ordered field. Here this is the [Context] of [Analysis/Locator.v]: an abstract model [Q] of the rationals ([Rationals Q], with decidable equality and trivial apartness) and a field [F] with [OrderedField F], [ArchimedeanProperty Q F] and [IsComplete Q F]. Where the thesis searches through enumerations of [Q] and [Q × Q+], the formalization searches over [nat] (with [minimal_n]), or along a surjection from [nat] ([minimal_n_alt_type]), which is all a bounded search needs. *)
 
 (*  NOTES FOR THE DEVELOPERS:
 
@@ -16,7 +18,7 @@ Every numbered item of these chapters has an entry. An item that has not been fo
 
     4. Make entries independent of each other, and import everything before the first entry.
 
-    5. Thesis numbers appear only here and in [BLUEPRINT.md]: the formalizations themselves describe the mathematics.
+    5. Thesis numbers appear only here: the formalizations themselves describe the mathematics.
 *)
 
 From HoTT Require Import Basics.Overture Basics.Classes.
@@ -292,7 +294,7 @@ Definition Booij2020Thesis_4_4_7_item_ii := @limit_complete.
 (* ================================================== 4.4.9 *)
 (** Definition 4.4.9 *)
 
-(** The Cauchy reals: rational sequences with a modulus of Cauchy convergence, quotiented by the relation identifying [x] and [y] when [|x (M (e / 4)) - y (N (e / 4))| < e] for all [e], where [M] and [N] are their moduli. *)
+(** The Cauchy reals: rational sequences with a modulus of Cauchy convergence, quotiented by the relation identifying [x] and [y] when [|x (M (e / 4)) - y (N (e / 4))| < e] for all [e], where [M] and [N] are their moduli (the thesis prints [y (M (e / 4))], a typo). That the Cauchy reals form an Archimedean ordered field is claimed but not shown in the thesis, and is not formalized. *)
 Definition Booij2020Thesis_4_4_9_item_i := @CauchySequence.
 Definition Booij2020Thesis_4_4_9_item_ii := @cauchy_related.
 Definition Booij2020Thesis_4_4_9_item_iii := @CauchyReals.
@@ -1069,7 +1071,7 @@ Definition Booij2020Thesis_7_2_1_item_vii := @locator_integral.
 (* ================================================== 7.3.1 *)
 (** Theorem 7.3.1 *)
 
-(** Approximate intermediate value theorem. The plain version merely gives some [x] with [|f x| < e]: the limit of the bisection need not work, contrary to the statement in the thesis. *)
+(** Approximate intermediate value theorem. The plain version merely gives some [x] with [|f x| < e]: the limit of the bisection need not work, contrary to the statement in the thesis. For example, take [a = -1/4], [b = 7/4], [e = 2], and [f] with [f (3/4) = 1/2] and [f t = 3] for [-1/8 <= t <= 1/2]: the limit is [x = 0], with [f 0 = 3]. Frank's Theorem 1.1, which the thesis follows, only claims that some [x] works. *)
 Definition Booij2020Thesis_7_3_1_item_i := @approximate_ivt.
 Definition Booij2020Thesis_7_3_1_item_ii := @approximate_ivt_locator.
 

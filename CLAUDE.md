@@ -2,7 +2,7 @@
 
 # Formalizing Booij's thesis (branch `abooij/claude-locators`)
 
-The goal on this branch is to formalize Chapters 3–8 of A. B. Booij, *Analysis in Univalent Type Theory* (PhD thesis, Birmingham, 2020), `Booij2020PhD.pdf` in the repository root, next to `theories/Analysis/Locator.v`. Most of the formalization lives in `contrib/` (logical name `HoTT_Contrib`, e.g. `From HoTT_Contrib.Analysis Require Import MetricSpace.`); put new thesis material in `contrib/Analysis/`, and only general lemmas that meet the bar described in `BLUEPRINT.md` ("`theories/` versus `contrib/`") in `theories/`. Nothing in `theories/` may depend on `contrib/`; tests of `contrib/` material go in `test/` as usual (its `dune` file depends on `HoTT_Contrib`). `BLUEPRINT.md` lists every numbered result with its dependencies, target file, status and what Coq-HoTT already provides; keep it up to date as you work (status: `todo` → `stated` → `proved`). Page numbers in this file and in task briefs are the thesis's own printed page numbers; the PDF's page numbers are 11 higher (thesis page 130 is PDF page 141).
+The goal on this branch is to formalize Chapters 3–8 of A. B. Booij, *Analysis in Univalent Type Theory* (PhD thesis, Birmingham, 2020), `Booij2020PhD.pdf` in the repository root, next to `theories/Analysis/Locator.v`. Most of the formalization lives in `contrib/` (logical name `HoTT_Contrib`, e.g. `From HoTT_Contrib.Analysis Require Import MetricSpace.`); put new thesis material in `contrib/Analysis/`, and in `theories/` only general lemmas that meet the bar of the library: organized efficiently, stated in the right generality, with proofs a human can step through, and cheap to build. Nothing in `theories/` may depend on `contrib/`; tests of `contrib/` material go in `test/` as usual (its `dune` file depends on `HoTT_Contrib`). `contrib/Booij2020Thesis.v` has an entry for every numbered item, saying what formalizes it or why it is not formalized; keep it up to date as you work. Page numbers in this file and in task briefs are the thesis's own printed page numbers; the PDF's page numbers are 11 higher (thesis page 130 is PDF page 141).
 
 The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 
@@ -16,12 +16,12 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 
 - Give results ordinary descriptive names in the style of the surrounding code (see `doc/STYLE.md`); do not encode thesis numbers in names. Reuse existing Coq-HoTT names rather than adding aliases (see `AGENTS.md`).
 - Register every numbered item of the thesis that has been formalized in `contrib/Booij2020Thesis.v`, the index in the style of `contrib/HoTTBook.v`: an entry with a marker line and a heading such as `(** Lemma 6.6.1 *)`, defining aliases `Definition Booij2020Thesis_6_6_1_item_i := @lower_bound.` and `Definition Booij2020Thesis_6_6_1_item_ii := @upper_bound.` for the result(s) that formalize it (see the notes at the top of that file). Keep the file in thesis order. Every numbered item has an entry: a proved item gets aliases, and an item that is not (yet) formalized gets a comment-only entry saying "Not formalized" and briefly why; replace the comment by aliases once it is proved.
-- Thesis numbers appear only in `contrib/Booij2020Thesis.v` and `BLUEPRINT.md`. The hook also rejects the words "thesis" and "Booij" in `.v` files outside `Booij2020Thesis.v`; refer to the mathematics or to published sources (e.g. "HoTT book, Theorem 11.3.50") instead. Do not mention them anywhere else: not in names, doc comments, proof comments or TODOs in `.v` files; hooks block edits and commits that add them. Describe the mathematics instead (e.g. "TODO: prove that the inclusion of [Q] preserves the order", not "TODO: Lemma 4.3.3").
+- Thesis numbers appear only in `contrib/Booij2020Thesis.v`. The hook also rejects the words "thesis" and "Booij" in `.v` files outside `Booij2020Thesis.v`; refer to the mathematics or to published sources (e.g. "HoTT book, Theorem 11.3.50") instead. Do not mention them anywhere else: not in names, doc comments, proof comments or TODOs in `.v` files; hooks block edits and commits that add them. Describe the mathematics instead (e.g. "TODO: prove that the inclusion of [Q] preserves the order", not "TODO: Lemma 4.3.3").
 
 ## Search first
 
 - Before assuming a lemma exists, and before stating a new one, search for it: `Search`, `SearchPattern`, `Locate` and `About` (through the Rocq MCP server if available, or in a scratch file checked with `bin/build scratch FILE.v`), and `grep` over `theories/`.
-- Never cite a lemma name from memory or from `BLUEPRINT.md` without checking that it exists with the expected statement; the blueprint records what existed when it was written.
+- Never cite a lemma name from memory or from a task brief without checking that it exists with the expected statement.
 
 ## Axioms and stubs
 
@@ -39,14 +39,14 @@ The rules below come on top of `AGENTS.md` and `doc/STYLE.md`.
 ## Working on a track
 
 - Re-read this file before each commit: the rules may have changed since you started, and changes are announced only by updating it.
-- Edit only your own rows of `BLUEPRINT.md`.
+- Edit only your own entries of `contrib/Booij2020Thesis.v`.
 - A clean build of the library takes about 1.5 minutes on 4 cores; `bin/build check` takes about 30 seconds more.
 
 ## Proof tips
 
 - Do not use the `ring` tactics from `Classes/tactics/` (`ring_with_nat`, `ring_with_integers`): they need extra assumptions such as `Univalence` and can run for minutes even on small identities. Prove ring identities by hand with rewriting lemmas.
 - Universe levels: constants such as `Le` and `relation_pointwise` are not cumulative, so an instance stated at other levels is silently not found. Inspect levels with `Set Printing Universes` and `About`, and state levels explicitly where instances must match. Rocq cannot use `max(u, v)` as a universe instance, so a statement about several universes may need one extra universe above them all; that is fine. Avoid unnecessary universe parameters on main definitions, but an extra parameter that would take many `@{...}` annotations to remove is acceptable; readability wins.
-- Concrete models (`NatPair.Z`, the fractions in `Classes/implementations/integer_fractions.v`, the Dedekind reals) have pinned universes, because some upstream sections tie the universe of a target to that of a source (see "Known problems" in `BLUEPRINT.md`). Applying a general result to them can fail on a universe constraint, or take minutes to elaborate; do not build new results on the concrete models unless the task asks for it.
+- Concrete models (`NatPair.Z`, the fractions in `Classes/implementations/integer_fractions.v`, the Dedekind reals) have pinned universes, because some upstream sections tie the universe of a target to that of a source (see the comments at the top of `contrib/Analysis/Instantiation.v`). Applying a general result to them can fail on a universe constraint, or take minutes to elaborate; do not build new results on the concrete models unless the task asks for it.
 - `archimedean_dedekindreals` carries a different characteristic-0 proof than `orderedfield_dedekindreals`, so instance search for field results applied to the Dedekind reals fails with an error listing every argument; use `archimedean_property_change_char` (in `contrib/Analysis/RealsInclusions.v`) to transport the Archimedean property.
 - Definitions that quantify over `Qpos Q` should take `{Qlt : Lt@{UQ UQ} Q}` (as `Classes/theory/rationals.v` does); otherwise instantiating them with a closeness relation can leave an unsolvable `Lt` evar.
 - A scratch file must `Require Import` every module whose `#[export]` instances and hints it relies on; a missing import looks like a missing instance.

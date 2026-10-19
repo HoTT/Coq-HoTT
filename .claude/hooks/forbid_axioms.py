@@ -16,7 +16,7 @@ merely moves or keeps existing admits is allowed. Parameter and Conjecture are
 treated like Axiom, since they declare axioms too, and give_up like admit.
 
 Thesis references ("Lemma 6.7.1", "Booij", "thesis", ...) belong only in
-Booij2020Thesis.v and BLUEPRINT.md (see CLAUDE.md); this applies to stubs too. Lines
+Booij2020Thesis.v (see CLAUDE.md); this applies to stubs too. Lines
 mentioning the HoTT book are exempt, since its numbering looks the same.
 """
 
@@ -132,7 +132,7 @@ def main():
     if refs:
         deny(
             f"Blocked: this edit adds thesis references ({', '.join(refs)}) to {os.path.relpath(path)}. "
-            "Thesis numbers belong only in contrib/Booij2020Thesis.v and BLUEPRINT.md (see CLAUDE.md); "
+            "Thesis numbers belong only in contrib/Booij2020Thesis.v (see CLAUDE.md); "
             "describe the mathematics instead, and register the result in contrib/Booij2020Thesis.v once it is proved."
         )
         return 0

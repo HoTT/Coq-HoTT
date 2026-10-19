@@ -46,7 +46,7 @@ def main():
         if os.path.basename(f) != "Booij2020Thesis.v":
             refs = forbid.added_thesis_refs([(old, new)])
             if refs:
-                problems.append(f"{f} adds thesis references ({', '.join(refs)}); they belong only in Booij2020Thesis.v and BLUEPRINT.md.")
+                problems.append(f"{f} adds thesis references ({', '.join(refs)}); they belong only in Booij2020Thesis.v.")
         # As in forbid_axioms.py, an existing file must already have been a stub.
         stub = forbid.is_stub(old) if old else forbid.is_stub(new)
         if stub:
