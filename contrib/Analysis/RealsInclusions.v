@@ -131,7 +131,7 @@ End cauchy_reals.
 (** ** The HoTT book reals in the Dedekind reals *)
 
 (** The Archimedean property depends on a proof that the field has characteristic [0], which is a proposition. The instance for the Dedekind reals uses a different proof than the one derived from their ordered field structure, so we transport it. *)
-Definition archimedean_property_change_char `{Funext} (Q : Type) `{Rationals Q}
+Definition archimedean_property_change_char `{Funext} (Q : Type) `{RationalsToField Q}
   (F : Type) `{OrderedField F} (c c' : FieldCharacteristic F 0)
   : ArchimedeanProperty Q F (Achar:=c) -> ArchimedeanProperty Q F (Achar:=c').
 Proof.
