@@ -14,12 +14,13 @@ From HoTT.Classes Require Import
   implementations.peano_naturals
   implementations.natpair_integers
   implementations.field_of_fractions
-  implementations.integer_fractions
   theory.nat_distance
   theory.rationals
   orders.orders.
 From HoTT.Analysis Require Import
   DedekindReals.
+From HoTT_Contrib.Classes Require Import
+  implementations.integer_fractions.
 
 Import NatPair.Instances.
 Import (hints) Frac FracField.
