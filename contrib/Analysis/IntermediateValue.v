@@ -44,22 +44,6 @@ Section ivt.
 
   (** ** Nested intervals *)
 
-  (** Two elements of an interval of width less than [e] are [e]-close. *)
-  Lemma field_close_interval (e : Qpos Q) (a b u v : F) (au : a ≤ u ≤ b) (av : a ≤ v ≤ b)
-    (lt : b - a < ' (' e))
-    : field_close Q e u v.
-  Proof.
-    split.
-    - apply flip_lt_negate_l.
-      rewrite <- negate_swap_r.
-      refine (le_lt_trans _ _ _ _ lt).
-      apply plus_le_compat; [exact (snd av)|].
-      exact (snd (flip_le_negate _ _) (fst au)).
-    - refine (le_lt_trans _ _ _ _ lt).
-      apply plus_le_compat; [exact (snd au)|].
-      exact (snd (flip_le_negate _ _) (fst av)).
-  Qed.
-
   (** Bounds on the tail of a sequence are bounds on its limit. *)
   Lemma le_limit (y : nat -> F) (l c : F) (N : nat) (islim : IsLimit Q F y l)
     (le : forall n, (N <= n)%nat -> c ≤ y n)
@@ -130,7 +114,7 @@ Section ivt.
       intros e m n lem len.
       set (M := nested_modulus e) in *.
       destruct (nested_le M m lem) as [zm wm], (nested_le M n len) as [zn wn].
-      apply (field_close_interval e (z M) (w M)).
+      apply (interval_minus_lt (z M) (w M)).
       - exact (transitivity zm (fst (zyw m)), transitivity (snd (zyw m)) wm).
       - exact (transitivity zn (fst (zyw n)), transitivity (snd (zyw n)) wn).
       - exact (nested_width_lt e M (leq_refl M)).
@@ -152,8 +136,7 @@ Section ivt.
       : IsLimit Q F y l.
     Proof.
       intro e; apply tr; exists (nested_modulus e); intros n len.
-      exact (field_close_interval e (z n) (w n) l (y n) (zlw n) (zyw n)
-               (nested_width_lt e n len)).
+      exact (interval_minus_lt (z n) (w n) l (y n) _ (zlw n) (zyw n) (nested_width_lt e n len)).
     Qed.
 
   End nested.

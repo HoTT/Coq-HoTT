@@ -135,19 +135,8 @@ Section wlpo.
     Local Lemma rational_close_interval (c d u v : Q) (e : Qpos Q)
       : c ≤ u ≤ c + d -> c ≤ v ≤ c + d -> d < ' e -> rational_close Q e u v.
     Proof.
-      intros [lu uu] [lv uv] lde.
-      assert (p : c + d - c = d).
-      { rewrite (plus_comm c d), <- plus_assoc, plus_negate_r, plus_0_r; reflexivity. }
-      assert (p' : c - (c + d) = - d).
-      { rewrite negate_plus_distr, plus_assoc, plus_negate_r, plus_0_l; reflexivity. }
-      split.
-      - apply (lt_le_trans _ (- d)).
-        + exact (snd (flip_lt_negate _ _) lde).
-        + rewrite <- p'; apply plus_le_compat; [exact lu|].
-          exact (snd (flip_le_negate _ _) uv).
-      - apply (le_lt_trans _ d); [|exact lde].
-        rewrite <- p; apply plus_le_compat; [exact uu|].
-        exact (snd (flip_le_negate _ _) lv).
+      intros lu lv lde; apply (interval_minus_lt c (c + d) u v _ lu lv).
+      rewrite (plus_comm c d), <- plus_assoc, plus_negate_r, plus_0_r; exact lde.
     Qed.
 
     Local Lemma bisect_in_interval (m n : nat) (le : (m <= n)%nat) (t : Q)

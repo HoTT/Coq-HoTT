@@ -133,13 +133,6 @@ Section digits.
   (** From now on we work in base [1 + d]. *)
   Context (d : nat).
 
-  Local Lemma close_weaken (e e' u : Q) : - e < u < e -> e < e' -> - e' < u < e'.
-  Proof.
-    intros [lo hi] lt; split.
-    - exact (transitivity (snd (flip_lt_negate _ _) lt) lo).
-    - exact (transitivity hi lt).
-  Qed.
-
   Local Lemma close_negate (e u v : Q) : - e < u - v < e -> - e < v - u < e.
   Proof.
     intros [lo hi]; rewrite (negate_swap_r v u); split.
@@ -287,9 +280,9 @@ Section digits.
     Proof.
       intros e m n lem len.
       destruct (leq_dichotomy n m) as [le|lt].
-      - exact (close_weaken _ _ _ (digit_sum_close n m le) (digit_weight_modulus e n len)).
+      - exact (between_weaken _ _ _ (digit_sum_close n m le) (digit_weight_modulus e n len)).
       - apply close_negate.
-        exact (close_weaken _ _ _ (digit_sum_close m n (leq_lt lt)) (digit_weight_modulus e m lem)).
+        exact (between_weaken _ _ _ (digit_sum_close m n (leq_lt lt)) (digit_weight_modulus e m lem)).
     Qed.
 
     #[export] Instance digit_sum_modulus : CauchyModulus Q F (fun n => ' s n) digit_modulus

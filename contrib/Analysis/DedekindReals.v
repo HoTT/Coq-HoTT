@@ -796,18 +796,6 @@ Section dedekind.
       apply nonneg_plus_le_compat_r, nat_to_semiring_nonneg.
   Qed.
 
-  (** Two points of an interval of width less than [D] are less than [D] apart. *)
-  Local Lemma interval_close (a b s s' D : Q) : a <= s -> s <= b -> a <= s' -> s' <= b -> b - a < D
-    -> prod (- D < s - s') (s - s' < D).
-  Proof.
-    intros l1 l2 l3 l4 lD; split.
-    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
-      apply (le_lt_trans _ (b - a)); [|exact lD].
-      apply plus_le_compat; [exact l4|exact (snd (flip_le_negate _ _) l1)].
-    - apply (le_lt_trans _ (b - a)); [|exact lD].
-      apply plus_le_compat; [exact l2|exact (snd (flip_le_negate _ _) l3)].
-  Qed.
-
   (** A positive rational whose product with [S] is less than [e]. *)
   Local Lemma small_factor (e S : Q) : 0 < e -> 0 < S -> {D : Qpos Q & ' D * S < e}.
   Proof.
@@ -912,8 +900,8 @@ Section dedekind.
         refine (lt_le_trans _ _ _ (snd (mult_minus_mult_lt_bound s t s' t' X W (' D)
                   (lt_le_trans _ _ _ lX l3, le_lt_trans _ _ _ l4 lX')
                   (lt_le_trans _ _ _ lW m3', le_lt_trans _ _ _ m4' lW')
-                  (interval_close a b s s' (' D) l1 l2 l1' l2' lab)
-                  (interval_close c d t t' (' D) m1 m2 m1' m2' lcd))) _).
+                  (interval_minus_lt a b s s' (' D) (l1, l2) (l1', l2') lab)
+                  (interval_minus_lt c d t t' (' D) (m1, m2) (m1', m2') lcd))) _).
         rewrite (mult_comm X), <- plus_mult_distr_l; exact (lt_le _ _ lD). }
       assert (upper_of : forall s0 t0, in_bounds I s0 -> in_bounds J t0 -> s0 * t0 <= q
                            -> mult_upper r).

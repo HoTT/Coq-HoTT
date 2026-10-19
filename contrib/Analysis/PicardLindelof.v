@@ -67,10 +67,9 @@ Section picard_lindelof.
   Lemma interval_dist_le {a b : F} (s t : I a b) : dI s t ≤ b - a.
   Proof.
     apply abs_le.
-    - rewrite <- negate_swap_r; apply plus_le_compat; [exact (fst s.2)|].
-      exact (snd (flip_le_negate _ _) (snd t.2)).
-    - apply plus_le_compat; [exact (snd s.2)|].
-      exact (snd (flip_le_negate _ _) (fst t.2)).
+    - rewrite (negate_swap_r s.1 t.1).
+      exact (snd (flip_le_negate _ _) (interval_minus_le a b _ _ t.2 s.2)).
+    - exact (interval_minus_le a b _ _ s.2 t.2).
   Qed.
 
   Local Lemma abs_mult_nonneg_le (s u : F) (s0 : 0 ≤ s) : abs (s * u) ≤ s * abs u.

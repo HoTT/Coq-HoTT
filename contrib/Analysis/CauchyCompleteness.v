@@ -147,12 +147,7 @@ Section completeness.
   Lemma field_close_weaken (e d : Qpos Q) (u v : F) (ltde : ' e < ' d)
     : field_close e u v -> field_close d u v.
   Proof.
-    intro c.
-    assert (lt : @lt F _ (' (' e)) (' (' d))).
-    { exact (strictly_order_preserving (cast Q F) _ _ ltde). }
-    split.
-    - exact (transitivity (snd (flip_lt_negate _ _) lt) (fst c)).
-    - exact (transitivity (snd c) lt).
+    intro c; exact (between_weaken _ _ _ c (strictly_order_preserving (cast Q F) _ _ ltde)).
   Qed.
 
   (** Closeness is a bound on the absolute value of the difference. *)

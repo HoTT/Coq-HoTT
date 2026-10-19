@@ -167,6 +167,13 @@ Section ring_order.
   transitivity 0; trivial.
   apply flip_nonneg_negate. trivial.
   Qed.
+
+  (** Two elements of an interval [[a, b]] differ by at most [b - a]. *)
+  Lemma interval_minus_le (a b s t : R) : a ≤ s ≤ b -> a ≤ t ≤ b -> s - t ≤ b - a.
+  Proof.
+    intros [_ lesb] [leat _].
+    apply plus_le_compat; [exact lesb|exact (snd (flip_le_negate _ _) leat)].
+  Qed.
 End ring_order.
 
 Section strict_ring_order.
@@ -269,6 +276,14 @@ Section strict_ring_order.
   apply flip_pos_negate. trivial.
   Qed.
 
+  (** A bound [- x < z < x] can be weakened to a larger [y]. *)
+  Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
+  Proof.
+    intros [ltxz ltzx] ltxy; split.
+    - exact (transitivity (snd (flip_lt_negate _ _) ltxy) ltxz).
+    - exact (transitivity ltzx ltxy).
+  Qed.
+
 End strict_ring_order.
 
 Section strict_ring_apart.
@@ -292,6 +307,16 @@ Section full_pseudo_ring_order.
     strip_truncations; destruct c as [ltny0|lt0y].
     - apply flip_pos_negate; assumption.
     - assumption.
+  Qed.
+
+  (** Two elements of an interval of width less than [d] are less than [d] apart. *)
+  Lemma interval_minus_lt (a b s t d : R)
+    : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
+  Proof.
+    intros sab tab lt; split.
+    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
+      exact (le_lt_trans _ _ _ (interval_minus_le a b t s tab sab) lt).
+    - exact (le_lt_trans _ _ _ (interval_minus_le a b s t sab tab) lt).
   Qed.
 
   (** If [|s| < S] and [|t| < T], then [|s * t| < S * T]. *)
