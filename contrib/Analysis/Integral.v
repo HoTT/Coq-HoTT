@@ -366,14 +366,11 @@ Section integration.
     Context `{Integration} `{Funext} (Q_eq : nat <~> Q) {Qtrich : Trichotomy (<)}
       {Farch : ArchimedeanProperty Q F} {Qroundup : RoundUpStrict Q} {a b : F}.
 
-    Local Definition locator_0 : locator Q F 0
-      := transport (locator Q F) (preserves_0 (f:=cast Q F)) (locator_left Q F 0).
-
     Local Definition locator_sum_upto (g : nat -> F) (lg : forall k, locator Q F (g k))
       : forall n, locator Q F (sum_upto g n).
     Proof.
       intro n; induction n as [|n IH].
-      - exact locator_0.
+      - exact (locator_0 Q F).
       - exact (locator_plus Q F Q_eq IH (lg n)).
     Defined.
 

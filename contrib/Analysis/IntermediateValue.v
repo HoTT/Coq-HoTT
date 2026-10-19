@@ -143,11 +143,18 @@ Section ivt.
 
   (** ** The approximate intermediate value theorem *)
 
-  Local Definition locator_0 : locator Q F 0
+  Definition locator_0 : locator Q F 0
     := transport (locator Q F) (preserves_0 (f:=cast Q F)) (locator_left Q F 0).
 
   Local Definition locator_1 : locator Q F 1
     := transport (locator Q F) (preserves_1 (f:=cast Q F)) (locator_left Q F 1).
+
+  (** A rational strict upper bound of a nonnegative element is positive. *)
+  Lemma qpos_of_upper_bound (u : F) (r : Q) (u0 : 0 ≤ u) (ltr : u < ' r) : 0 < r.
+  Proof.
+    apply (strictly_order_reflecting (cast Q F)).
+    rewrite (preserves_0 (f:=cast Q F)); exact (le_lt_trans _ _ _ u0 ltr).
+  Qed.
 
   (** A nonnegative element with a locator has a positive rational upper bound. *)
   Local Definition qpos_upper_bound `{Funext} (Q_eq : nat <~> Q) {u : F} (lu : locator Q F u)
@@ -155,11 +162,7 @@ Section ivt.
     : {B : Qpos Q & u ≤ ' (' B)}.
   Proof.
     destruct (upper_bound Q F Q_eq lu) as [B ltB].
-    assert (Bpos : 0 < B).
-    { apply (strictly_order_reflecting (cast Q F)).
-      rewrite (preserves_0 (f:=cast Q F)).
-      exact (le_lt_trans _ _ _ u0 ltB). }
-    exact (mkQpos B Bpos; lt_le _ _ ltB).
+    exact (mkQpos B (qpos_of_upper_bound u B u0 ltB); lt_le _ _ ltB).
   Defined.
 
   (** *** Interpolating bisection *)
@@ -394,10 +397,7 @@ Section ivt.
       assert (lt := fst (pos_plus_lt_compat_r (b - a) 1) lt_0_1).
       assert (q := archimedean_property Q F _ _ lt); strip_truncations.
       destruct q as [q [ltq _]].
-      assert (qpos : 0 < q).
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)).
-        exact (le_lt_trans _ _ _ (snd (flip_nonneg_minus _ _) leab) ltq). }
+      assert (qpos := qpos_of_upper_bound _ q (snd (flip_nonneg_minus _ _) leab) ltq).
       exact (tr (mkQpos q qpos; lt_le _ _ ltq)).
     Qed.
 

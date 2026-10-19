@@ -347,6 +347,7 @@ Section function_space.
       - apply flip_lt_minus_l; rewrite plus_comm; exact (lt m n len).
     Qed.
 
+    (* [merely_bound] in IntermediateValue.v is a variant of this lemma that uses [a ≤ b] to give a positive bound; sharing it would mean stating it outside its section there and passing [' B] for [B] below. *)
     Local Lemma merely_rational_bound : merely {B : Q & b - a ≤ ' B}.
     Proof.
       assert (c := archimedean_property Q F (b - a) (b - a + 1)
