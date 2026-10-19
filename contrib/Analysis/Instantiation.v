@@ -17,8 +17,7 @@ From HoTT.Classes Require Import
   theory.nat_distance
   theory.rationals
   orders.orders.
-From HoTT.Analysis Require Import
-  DedekindReals.
+From HoTT_Contrib.Analysis Require Import DedekindReals.
 From HoTT_Contrib.Classes Require Import
   implementations.integer_fractions.
 
