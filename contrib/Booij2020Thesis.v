@@ -25,7 +25,7 @@ From HoTT.Classes.theory Require Import apartness rings fields.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Modalities Require Import ReflectiveSubuniverse.
 From HoTT.Misc Require Import BoundedSearch CompactTypes.
-From HoTT.Classes.orders Require Import archimedean rationals.
+From HoTT.Classes.orders Require Import archimedean rationals maps.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
 From HoTT.Analysis Require Import Locator.
 From HoTT_Contrib.Analysis Require Import
@@ -45,6 +45,12 @@ Definition Booij2020Thesis_3_1_1_item_iii := @Symmetric.
 Definition Booij2020Thesis_3_1_1_item_iv := @AntiSymmetric.
 Definition Booij2020Thesis_3_1_1_item_v := @Transitive.
 Definition Booij2020Thesis_3_1_1_item_vi := @CoTransitive.
+
+(* ================================================== 3.1.2 *)
+(** Remark 3.1.2 *)
+
+(** Cotransitivity is also known as weak linearity or the approximate splitting principle. *)
+(* Not formalized: a remark on terminology. *)
 
 (* ================================================== 3.1.3 *)
 (** Definition 3.1.3 *)
@@ -108,16 +114,28 @@ Definition Booij2020Thesis_3_2_2 := @fixed_point_subdcpo.
 (** Pataraia's theorem: assuming propositional resizing, a monotone endomap of a dcpo with a bottom element has a least fixed point. *)
 Definition Booij2020Thesis_3_2_3 := @least_fixed_point.
 
+(* ================================================== 4.1.1 *)
+(** Remark 4.1.1 *)
+
+(** In a commutative ring that is a set, multiplicative inverses are unique, so the mere existence of inverses of nonzero elements is equivalent to their structured existence. *)
+(* Not formalized: uniqueness of multiplicative inverses is not stated as a lemma. *)
+
 (* ================================================== 4.1.2 *)
 (** Definition 4.1.2 *)
 
-(** Classical fields: commutative rings in which every element different from [0] has a multiplicative inverse. *)
+(** Classical fields: commutative rings in which every element different from [0] has a multiplicative inverse. [IsDecField] is stronger: it asks for a total reciprocal with [/0 = 0], which needs decidability of [x = 0], and for [1 <> 0]. *)
 Definition Booij2020Thesis_4_1_2 := @IsDecField.
+
+(* ================================================== 4.1.3 *)
+(** Remark 4.1.3 *)
+
+(** Uniqueness of additive and multiplicative inverses gives the negation and division operations. *)
+(* Not formalized: a remark; in the library negation and reciprocal are primitive operations. *)
 
 (* ================================================== 4.1.4 *)
 (** Definition 4.1.4 *)
 
-(** Apartness relations: irreflexive, symmetric and cotransitive. *)
+(** Apartness relations: irreflexive, symmetric and cotransitive; strict partial orders: irreflexive, transitive and cotransitive. [IsApart] is stronger: a tight apartness on a set, valued in propositions; the plain notion is the combination of [Irreflexive], [Symmetric] and [CoTransitive]. *)
 Definition Booij2020Thesis_4_1_4_item_i := @IsApart.
 Definition Booij2020Thesis_4_1_4_item_ii := @apart_irrefl.
 Definition Booij2020Thesis_4_1_4_item_iii := @StrictOrder.
@@ -139,11 +157,23 @@ Definition Booij2020Thesis_4_1_6_item_ii := @strongrightcancellation_plus_field.
 Definition Booij2020Thesis_4_1_6_item_iii := @strong_setoid_morphism_unary_2.
 Definition Booij2020Thesis_4_1_6_item_iv := @field_mult_ext.
 
+(* ================================================== 4.1.7 *)
+(** Lemma 4.1.7 *)
+
+(** A strict partial order induces an apartness [x < y ∨ y < x] and a preorder [¬(y < x)]. *)
+(* Not formalized: the order classes of the library ([FullPseudoOrder]) take the apartness and [≤] as separate data related to [<]. *)
+
 (* ================================================== 4.1.8 *)
 (** Definition 4.1.8 *)
 
 (** Lattices. *)
 Definition Booij2020Thesis_4_1_8 := @LatticeOrder.
+
+(* ================================================== 4.1.9 *)
+(** Remark 4.1.9 *)
+
+(** In a lattice, [max x y] need not be [x] or [y]; since binary meets and joins in a partial order are unique, giving [min] and [max] is equivalent to their existence. *)
+(* Not formalized: a remark; the characterization of [min] and [max] in terms of [<] is Lemma 6.7.1. *)
 
 (* ================================================== 4.1.10 *)
 (** Definition 4.1.10 *)
@@ -151,6 +181,12 @@ Definition Booij2020Thesis_4_1_8 := @LatticeOrder.
 (** Ordered fields, following HoTT book Definition 11.2.7 as the thesis does: a constructive field with a lattice order and a [FullPseudoSemiRingOrder]. *)
 Definition Booij2020Thesis_4_1_10_item_i := @OrderedField.
 Definition Booij2020Thesis_4_1_10_item_ii := @FullPseudoSemiRingOrder.
+
+(* ================================================== 4.1.11 *)
+(** Lemma 4.1.11 *)
+
+(** Given the first five axioms of ordered fields, the compatibility laws of addition and multiplication with [<] are equivalent to ten familiar order laws. *)
+(* Not formalized: the individual laws hold for [OrderedField], but the equivalence is not stated. *)
 
 (* ================================================== 4.1.12 *)
 (** Lemma 4.1.12 *)
@@ -166,6 +202,12 @@ Definition Booij2020Thesis_4_3_1_item_i := @IsSemiRingPreserving.
 Definition Booij2020Thesis_4_3_1_item_ii := @preserves_negate.
 Definition Booij2020Thesis_4_3_1_item_iii := @StrictlyOrderReflecting.
 
+(* ================================================== 4.3.2 *)
+(** Remark 4.3.2 *)
+
+(** A map that reflects [<] preserves [≤]. *)
+Definition Booij2020Thesis_4_3_2 := @full_pseudo_order_preserving.
+
 (* ================================================== 4.3.3 *)
 (** Lemma 4.3.3 *)
 
@@ -175,6 +217,7 @@ Definition Booij2020Thesis_4_3_3_item_ii := @rationals_initial.
 Definition Booij2020Thesis_4_3_3_item_iii := @strictly_order_preserving_rationals_to_field.
 Definition Booij2020Thesis_4_3_3_item_iv := @strictly_order_reflecting_rationals_to_field.
 Definition Booij2020Thesis_4_3_3_item_v := @issemiringstrongpreserving_rationals_to_field.
+Definition Booij2020Thesis_4_3_3_item_vi := @rationals_to_field_mor.
 
 (* ================================================== 4.3.4 *)
 (** Remark 4.3.4 *)
@@ -189,6 +232,12 @@ Definition Booij2020Thesis_4_3_4_item_ii := @isembedding_rationals_to_field.
 (** Archimedean ordered fields. *)
 Definition Booij2020Thesis_4_3_5 := @ArchimedeanProperty.
 
+(* ================================================== 4.3.6 *)
+(** Example 4.3.6 *)
+
+(** In an Archimedean ordered field every element merely has rational bounds [q < x < r]. *)
+(* Not formalized: an example. *)
+
 (* ================================================== 4.4.1 *)
 (** Definition 4.4.1 *)
 
@@ -200,6 +249,12 @@ Definition Booij2020Thesis_4_4_1 := @CauchyModulus.
 
 (** Limit of a sequence. *)
 Definition Booij2020Thesis_4_4_2 := @IsLimit.
+
+(* ================================================== 4.4.3 *)
+(** Remark 4.4.3 *)
+
+(** From a modulus of Cauchy convergence [M] of a sequence with limit [l], [fun e => M (e / 2)] is a modulus of convergence to [l]. *)
+(* Not formalized: a remark; [modulus_close_limit] only bounds the distance from [x (M (e / 2))] to the limit. *)
 
 (* ================================================== 4.4.4 *)
 (** Definition 4.4.4 *)
@@ -226,6 +281,12 @@ Definition Booij2020Thesis_4_4_6 := @limit_merely.
 (** If a limit can be computed from a modulus of Cauchy convergence, it can be computed from the mere existence of a modulus; in particular in a Cauchy complete Archimedean ordered field. *)
 Definition Booij2020Thesis_4_4_7_item_i := @limit_merely_modulus.
 Definition Booij2020Thesis_4_4_7_item_ii := @limit_complete.
+
+(* ================================================== 4.4.8 *)
+(** Example 4.4.8 *)
+
+(** The exponential function in a Cauchy complete Archimedean ordered field. *)
+(* Not formalized: an example; needs finite sums, powers and factorials in an ordered field. *)
 
 (* ================================================== 4.4.9 *)
 (** Definition 4.4.9 *)
