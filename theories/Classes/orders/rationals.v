@@ -78,6 +78,33 @@ Section nat_quotient_sign.
   Qed.
 End nat_quotient_sign.
 
+(** ** Two ring identities *)
+
+(** These are the identities behind the closure of quotients of natural numbers under addition and multiplication below: with [u1 = x d1] and [u2 = y d2], they hold whenever [u1 + c1 = a1] and [u2 + c2 = a2]. *)
+Section quotient_identities.
+  Context `{IsCRing R}.
+
+  Local Lemma plus_quotient_identity (x y d1 d2 c1 c2 : R)
+    : (x + y) * (d1 * d2) + (c1 * d2 + c2 * d1) = (x * d1 + c1) * d2 + (y * d2 + c2) * d1.
+  Proof.
+    rewrite (plus_mult_distr_r x y), plus_swap_middle.
+    rewrite (plus_mult_distr_r (x * d1)), (plus_mult_distr_r (y * d2)).
+    rewrite (mult_assoc x d1 d2), (mult_comm d1 d2), (mult_assoc y d2 d1).
+    reflexivity.
+  Qed.
+
+  Local Lemma mult_quotient_identity (u1 u2 c1 c2 : R)
+    : u1 * u2 + ((u1 + c1) * c2 + c1 * (u2 + c2)) = (u1 + c1) * (u2 + c2) + c1 * c2.
+  Proof.
+    rewrite (plus_mult_distr_r u1 c1 c2), (plus_mult_distr_l c1 u2 c2).
+    rewrite (plus_mult_distr_r u1 c1), (plus_mult_distr_l u1 u2 c2), (plus_mult_distr_l c1 u2 c2).
+    (* Both sides are [u1 u2 + u1 c2 + c1 u2 + c1 c2 + c1 c2], up to association and order. *)
+    rewrite <- (plus_assoc (u1 * u2 + u1 * c2)), <- (plus_assoc (u1 * u2)).
+    apply ap; rewrite <- !plus_assoc; apply ap.
+    rewrite plus_comm, <- plus_assoc; apply ap, plus_comm.
+  Qed.
+End quotient_identities.
+
 (** ** The map from the rationals into an ordered field *)
 
 Section nat_quotients.
@@ -115,6 +142,7 @@ Section nat_quotients.
     rewrite mult_1_l; apply plus_0_r.
   Qed.
 
+  (** If [x d1 + b1 = a1] and [y d2 + b2 = a2], then [(x + y) d1 d2 + (b1 d2 + b2 d1) = a1 d2 + a2 d1]. *)
   Local Lemma isnatquot_plus (x y : F)
     : IsNatQuot x -> IsNatQuot y -> IsNatQuot (x + y).
   Proof.
@@ -123,14 +151,10 @@ Section nat_quotients.
     apply tr; exists (a1 * S m2 + a2 * S m1)%nat,
       (b1 * S m2 + b2 * S m1)%nat, (m2 + m1 * S m2)%nat.
     rewrite nF_mult_succ, !nF_plus, !nF_mult, <- E1, <- E2.
-    set (d1 := nF (S m1)); set (d2 := nF (S m2)).
-    rewrite 3!distr_r, (mult_assoc x d1 d2),
-      (mult_comm d1 d2), (mult_assoc y d2 d1).
-    rewrite <- 2!(plus_assoc (x * d1 * d2)); apply ap.
-    rewrite 2!(plus_assoc _ _ (nF b2 * d1)), (plus_comm (y * d2 * d1)).
-    reflexivity.
+    apply plus_quotient_identity.
   Qed.
 
+  (** If [x d + b = a], then [- x d + a = b]. *)
   Local Lemma isnatquot_negate (x : F) : IsNatQuot x -> IsNatQuot (- x).
   Proof.
     intros qx; strip_truncations.
@@ -140,6 +164,7 @@ Section nat_quotients.
     apply plus_0_l.
   Qed.
 
+  (** If [x d1 + b1 = a1] and [y d2 + b2 = a2], then [x y d1 d2 + (a1 b2 + b1 a2) = a1 a2 + b1 b2]. *)
   Local Lemma isnatquot_mult (x y : F)
     : IsNatQuot x -> IsNatQuot y -> IsNatQuot (x * y).
   Proof.
@@ -147,23 +172,20 @@ Section nat_quotients.
     destruct qx as [a1 [b1 [m1 E1]]], qy as [a2 [b2 [m2 E2]]].
     apply tr; exists (a1 * a2 + b1 * b2)%nat,
       (a1 * b2 + b1 * a2)%nat, (m2 + m1 * S m2)%nat.
-    rewrite nF_mult_succ, !nF_plus, !nF_mult.
-    rewrite <- (mult_assoc x), (mult_assoc y), (mult_comm y), <- (mult_assoc _ y),
-      (mult_assoc x), <- E1, <- E2.
-    set (u1 := x * nF (S m1)); set (u2 := y * nF (S m2)).
-    set (c1 := nF b1); set (c2 := nF b2).
-    rewrite (distr_r u1 c1 c2), (distr_r u1 c1 (u2 + c2)), (distr_l u1 u2 c2),
-      (distr_l c1 u2 c2).
-    rewrite <- (plus_assoc (u1 * u2) (u1 * c2)), <- (plus_assoc (u1 * u2)); apply ap.
-    rewrite <- (plus_assoc (u1 * c2) (c1 * c2)), <- (plus_assoc (u1 * c2)); apply ap.
-    rapply plus_comm.
+    rewrite nF_mult_succ, !nF_plus, !nF_mult, <- E1, <- E2.
+    rewrite mult_swap_middle.
+    apply mult_quotient_identity.
   Qed.
 
+  (** If [x d + b = a] with [x] apart from [0], compare [a] and [b]. If [a = c + b], then [x d = c], so [c] is positive and [(1 / x) c + 0 = d]. If [b = c + 1 + a], then [x d = - (c + 1)], so [(1 / x) (c + 1) + d = 0]. *)
   Local Lemma isnatquot_recip (x : F) (p : x ≶ 0)
     : IsNatQuot x -> IsNatQuot (// (x; p)).
   Proof.
     intros qx; strip_truncations.
     destruct qx as [a [b [m E]]].
+    assert (recip_mult : forall c, x * nF (S m) = c -> // (x; p) * c = nF (S m)).
+    { intros c Ec; rewrite <- Ec, mult_assoc, (mult_comm _ x), reciperse_alt.
+      apply mult_1_l. }
     apply tr.
     destruct (nat_add_cases a b) as [[c q]|[c q]].
     - assert (Exd := nat_quotient_eq_l x a b m E c q).
@@ -172,12 +194,10 @@ Section nat_quotients.
         exact (transport (fun z => z ≶ 0) Exd
                  (mult_apart_zero _ _ p (positive_apart_zero _ (nat_to_semiring_succ_pos m)))).
       + exists (S m), 0%nat, c.
-        rewrite plus_0_r, <- Exd, mult_assoc, (mult_comm _ x), reciperse_alt.
-        apply mult_1_l.
-    - assert (Exd := nat_quotient_eq_r x a b m E c q).
-      exists 0%nat, (S m), c.
-      rewrite <- (negate_involutive (nF (S c))), <- Exd, <- negate_mult_distr_r,
-        mult_assoc, (mult_comm _ x), reciperse_alt, mult_1_l.
+        rewrite plus_0_r; exact (recip_mult _ Exd).
+    - exists 0%nat, (S m), c.
+      rewrite <- (negate_involutive (nF (S c))), <- negate_mult_distr_r,
+        (recip_mult _ (nat_quotient_eq_r x a b m E c q)).
       apply plus_negate_l.
   Qed.
 
@@ -255,6 +275,7 @@ Section nat_quotients.
     exact (toR_unique (f o nQ) n)^.
   Qed.
 
+  (** If [f x = f y] and [x] were apart from [y], then [1 = f ((x - y) / (x - y)) = (f x - f y) f (1 / (x - y)) = 0]. *)
   #[export] Instance isinjective_rationals_to_field
     : IsInjective (rationals_to_field Q F).
   Proof.
@@ -310,6 +331,7 @@ Section nat_quotients.
     - exact h.
   Qed.
 
+  (** [x < y] iff [0 < y - x], and [f] preserves positivity. *)
   #[export] Instance strictly_order_preserving_rationals_to_field
     : StrictlyOrderPreserving (rationals_to_field Q F).
   Proof.
