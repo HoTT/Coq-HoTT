@@ -21,6 +21,7 @@ From HoTT.Classes Require Import
   orders.dec_fields
   interfaces.archimedean
   interfaces.cauchy.
+From HoTT.Analysis Require Import Locator.
 
 Section dedekind.
   Context `{Funext} `{Univalence}.
@@ -1615,14 +1616,6 @@ Section complete.
       exact (fst (pos_minus_lt_compat_r r (' d')) (is_pos d')).
     Qed.
 
-    Local Lemma limit_located_aux (q r : Q) (e : Qpos Q)
-      : ' e + ' e + ' e + ' e < r - q -> q + ' e + ' e < r - ' e - ' e.
-    Proof.
-      intros l.
-      apply (snd (flip_lt_minus_r _ _ _)), (snd (flip_lt_minus_r _ _ _)).
-      apply flip_lt_minus_r in l; rewrite plus_comm, !plus_assoc in l; exact l.
-    Qed.
-
     Lemma isdedekindcut_limit : IsDedekindCut Q limit_lower limit_upper.
     Proof.
       split.
@@ -1661,18 +1654,16 @@ Section complete.
           exact (limit_transitive_aux q _ e d (modulus_cut_lt e _ _ _ _ (leq_refl _) lM p p')).
         + exact (limit_transitive_aux' q r e d e' d'
                    (modulus_cut_lt e' _ _ _ _ (leq_lt lM) (leq_refl _) p p')).
-      - intros q r l.
-        pose (k := Qpos_diff q r l); pose (e := k / 2 / 2 / 2).
-        assert (le : ' e + ' e + ' e + ' e < r - q).
-        { assert (h1 : ' e + ' e = ' (k / 2 / 2))
-            by exact (ap (cast (Qpos Q) Q) (pos_split2 (k / 2 / 2)))^.
-          assert (h2 : ' (k / 2 / 2) + ' (k / 2 / 2) = ' (k / 2))
-            by exact (ap (cast (Qpos Q) Q) (pos_split2 (k / 2)))^.
-          rewrite <- (plus_assoc (' e + ' e)), h1, h2.
-          exact (qpos_half_lt k). }
-        assert (c := cut_located (isdedekindcut Q (x (M e))) _ _ (limit_located_aux q r e le)).
-        strip_truncations; destruct c as [c|c]; apply tr; [left|right];
-          apply tr; exists e; apply tr; exists e; exact c.
+      - (* The cut of [x (M (e / 2))] approximates the limit cut up to [e]. *)
+        rapply (located_from_approximations Q (Tr (-1))
+                  (fun e => lower_cut Q (x (M (e / 2)))) (fun e => upper_cut Q (x (M (e / 2))))).
+        + exact (fun e => cut_located (isdedekindcut Q (x (M (e / 2))))).
+        + intros e q c; apply tr; exists (e / 2); apply tr; exists (e / 2).
+          rewrite <- plus_assoc.
+          exact (transport (fun z => lower_cut Q (x (M (e / 2))) (q + ' z)) (pos_split2 e) c).
+        + intros e r c; apply tr; exists (e / 2); apply tr; exists (e / 2).
+          rewrite <- plus_assoc, <- negate_plus_distr.
+          exact (transport (fun z => upper_cut Q (x (M (e / 2))) (r - ' z)) (pos_split2 e) c).
     Qed.
 
     Definition limit_dedekind : R := Build_DedekindReals Q limit_lower limit_upper isdedekindcut_limit.

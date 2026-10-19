@@ -1,5 +1,6 @@
 From HoTT Require Import
   Basics DProp Misc.BoundedSearch Spaces.Finite.Fin ExcludedMiddle
+  Modalities.ReflectiveSubuniverse Modalities.Identity
   Classes.interfaces.abstract_algebra
   Classes.interfaces.orders
   Classes.interfaces.rationals
@@ -652,27 +653,56 @@ Section locator.
     exact (mkQpos r r0; le_lt_trans _ _ _ (join_ub_l _ _) ltr).
   Defined.
 
+  (** Splitting an interval in three. *)
+  Local Lemma lt_trisect (q r : Q) (ltqr : q < r)
+    : q + ' (Qpos_diff q r ltqr / 3) < r - ' (Qpos_diff q r ltqr / 3).
+  Proof.
+    set (d := Qpos_diff q r ltqr); set (e := d / 3).
+    assert (p : r - ' e = q + ' e + ' e).
+    { rewrite (plus_conjugate_alt r q); change (q + ' d - ' e = q + ' e + ' e).
+      rewrite (ap (cast (Qpos Q) Q) (pos_split3 d)).
+      change (q + (' e + ' e + ' e) - ' e = q + ' e + ' e).
+      rewrite <- plus_assoc, <- (plus_assoc (' e + ' e)), plus_negate_r, plus_0_r, plus_assoc.
+      reflexivity. }
+    rewrite p; apply pos_plus_lt_compat_r, pos_is_pos.
+  Qed.
+
+  (** A pair of predicates [L] and [U] on [Q] is located in a reflective subuniverse [O] if [O (L q + U r)] whenever [q < r]. For the identity modality and the predicates [' q < x] and [x < ' r] this is a locator for [x], and for the propositional truncation it is the locatedness of a Dedekind cut. Such a pair is located if it has located approximations [La e] and [Ua e] of every precision [e], in the sense that [La e (q + e)] implies [L q] and [Ua e (r - e)] implies [U r]: for [q < r], we use the approximation of precision [(r - q) / 3]. *)
+  Definition located_from_approximations (O : ReflectiveSubuniverse) {L U : Q -> Type}
+    (La Ua : Qpos Q -> Q -> Type) (loc : forall e q r, q < r -> O (La e q + Ua e r))
+    (lower : forall e q, La e (q + ' e) -> L q) (upper : forall e r, Ua e (r - ' e) -> U r)
+    (q r : Q) (ltqr : q < r)
+    : O (L q + U r)
+    := O_functor O (functor_sum (lower _ q) (upper _ r)) (loc _ _ _ (lt_trisect q r ltqr)).
+
+  (** A real number which is arbitrarily close to real numbers with locators has a locator. *)
+  Definition locator_close {z : F}
+    (approx : forall e : Qpos Q, {y : F & prod (locator y) (y - ' (' e) < z < y + ' (' e))})
+    : locator z.
+  Proof.
+    srapply (located_from_approximations purely (fun e q => ' q < (approx e).1)
+               (fun e r => (approx e).1 < ' r)).
+    - exact (fun e => fst (approx e).2).
+    - intros e q lt; cbv beta in lt |- *.
+      rewrite (preserves_plus (f:=cast Q F)) in lt.
+      rhs_V' exact (fst (snd (approx e).2)).
+      exact (snd (flip_lt_minus_r _ _ _) lt).
+    - intros e r lt; cbv beta in lt |- *.
+      rewrite (preserves_minus (f:=cast Q F)) in lt.
+      lhs' exact (snd (snd (approx e).2)).
+      exact (fst (flip_lt_minus_r _ _ _) lt).
+  Defined.
+
   (** A real number that has rational approximations of any precision has a locator. *)
   Definition locator_from_approx {z : F}
     (approx : forall e : Qpos Q, {p : Q | ' (p - ' e) < z < ' (p + ' e)})
     : locator z.
   Proof.
-    intros q r ltqr.
-    set (e := (Qpos_diff q r ltqr) / 2).
-    assert (qeer : q + ' e + ' e = r).
-    { assert (p : q + ' e = r - ' e)
-        by (rewrite path_avg_split_diff_l, path_avg_split_diff_r; reflexivity).
-      rewrite p, <- plus_assoc, plus_negate_l, plus_0_r; reflexivity. }
-    destruct (approx e) as [p [ltpz ltzp]].
-    destruct (trichotomy _ (q + ' e) p) as [ltqep|[eqqep|ltpqe]].
-    - apply inl. rhs_V' exact ltpz.
-      apply (strictly_order_preserving _), flip_lt_minus_r; assumption.
-    - apply inl. rewrite <- eqqep, <- plus_assoc, plus_negate_r, plus_0_r in ltpz.
-      exact ltpz.
-    - apply inr. lhs' exact ltzp.
-      rapply strictly_order_preserving.
-      rewrite <- qeer.
-      apply (strictly_order_preserving (+ ' e)); assumption.
+    apply locator_close; intros e.
+    destruct (approx e) as [p [lo hi]].
+    exists (' p); split; [apply locator_left|].
+    rewrite <- (preserves_minus (f:=cast Q F)), <- (preserves_plus (f:=cast Q F)).
+    exact (lo, hi).
   Defined.
 
   Section times.
@@ -781,50 +811,8 @@ Section locator.
 
     Lemma locator_limit {l} : IsLimit _ _ xs l -> locator l.
     Proof.
-      intros islim.
-      intros q r ltqr.
-      set (epsilon := (Qpos_diff q r ltqr) / 3).
-      (* TODO we are doing trisection so we have the inequality: *)
-      assert (ltqepsreps : q + ' epsilon < r - ' epsilon).
-      {
-        apply (strictly_order_reflecting (+'epsilon)).
-        rewrite <- (plus_assoc r (-'epsilon) ('epsilon)).
-        rewrite plus_negate_l.
-        rewrite plus_0_r.
-        rewrite <- (plus_assoc q ('epsilon) ('epsilon)).
-        apply (strictly_order_reflecting ((-q)+)).
-        rewrite (plus_assoc (-q) q _).
-        rewrite plus_negate_l, plus_0_l.
-        rewrite (plus_comm (-q) r).
-        rewrite <- (mult_1_r ('epsilon)).
-        rewrite <- plus_mult_distr_l.
-        unfold epsilon, cast, Qpos_diff; cbn.
-        rewrite <- (mult_assoc (r-q) (/3) 2).
-        pattern (r-q) at 2.
-        rewrite <- (mult_1_r (r-q)).
-        assert (rqpos : 0 < r-q) by apply (Qpos_diff q r ltqr).
-        apply (strictly_order_preserving ((r-q)*.)).
-        apply (strictly_order_reflecting (3*.)).
-        rewrite (mult_assoc 3 (/3) 2).
-        rewrite (dec_recip_inverse 3).
-        - rewrite mult_1_r, mult_1_l. exact lt_2_3.
-        - apply apart_ne, positive_apart_zero, lt_0_3.
-      }
-      destruct (ls (M (epsilon / 2)) (q + ' epsilon) (r - ' epsilon) ltqepsreps)
-        as [ltqepsxs|ltxsreps].
-      + apply inl.
-        rewrite preserves_plus in ltqepsxs.
-        assert (ltqxseps : ' q < xs (M (epsilon / 2)) - ' (' epsilon))
-          by (apply flip_lt_minus_r; assumption).
-        refine (transitivity ltqxseps _).
-        apply (modulus_close_limit _ _ _ _ _).
-      + apply inr.
-        rewrite (preserves_plus r (-'epsilon)) in ltxsreps.
-        rewrite (preserves_negate ('epsilon)) in ltxsreps.
-        assert (ltxsepsr : xs (M (epsilon / 2)) + ' (' epsilon) < ' r)
-          by (apply flip_lt_minus_r; assumption).
-        refine (transitivity _ ltxsepsr).
-        apply (modulus_close_limit _ _ _ _ _).
+      intros islim; apply locator_close; intros e.
+      exact (_; (ls _, modulus_close_limit _ _ _ islim e)).
     Qed.
 
   End limit.
