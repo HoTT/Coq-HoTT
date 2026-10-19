@@ -206,12 +206,9 @@ Section locator.
     pose (P n := locates_right l
                    (fst (pos_minus_lt_compat_r (- naturals_to_semiring nat Q n) 1) lt_0_1)).
     assert (inhab : hexists P).
-    { refine (Trunc_functor _ _ (archimedean_property Q F (x - 1) x
-                                   (fst (pos_minus_lt_compat_r x 1) lt_0_1))).
-      intros [q [_ ltqx]].
-      destruct (round_up_strict Q (- q)) as [n ltqn].
-      exists n; apply ltrx_locates_right.
-      rhs_V' exact ltqx.
+    { assert (h := archimedean_property Q F (x - 1) x (fst (pos_minus_lt_compat_r x 1) lt_0_1)).
+      strip_truncations; destruct h as [q [_ ltqx]], (round_up_strict Q (- q)) as [n ltqn].
+      apply tr; exists n; apply ltrx_locates_right; rhs_V' exact ltqx.
       apply (strictly_order_preserving _), flip_lt_negate_l, ltqn. }
     destruct (minimal_n P _ inhab) as [n Pn].
     eexists; exact (locates_right_true l _ Pn).
