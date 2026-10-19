@@ -158,8 +158,7 @@ Section dedekind.
   Local Lemma pos_quarter_double (e : Qpos Q) : ' (e / 2 / 2) + ' (e / 2 / 2) < ' e.
   Proof.
     change (' (e / 2 / 2 + e / 2 / 2) < ' e); rewrite <- pos_split2.
-    apply (transport (fun z => ' (e / 2) < ' z) (pos_split2 e)^).
-    apply pos_plus_lt_compat_r, is_pos.
+    apply qpos_half_lt.
   Qed.
 
   Local Lemma plus_minus_cancel_l (a b : Q) : (a + b) - a = b.
@@ -818,9 +817,7 @@ Section dedekind.
     exists (e' / S' / 2); cbn.
     rewrite <- (mult_assoc e), (mult_comm (/ S)), <- !mult_assoc.
     rewrite (mult_comm (/ S)), dec_recip_inverse, mult_1_r; [|apply lt_ne_flip, Spos].
-    change (' (e' / 2) < ' e').
-    apply (transport (fun z => ' (e' / 2) < ' z) (pos_split2 e')^).
-    apply pos_plus_lt_compat_r, is_pos.
+    exact (qpos_half_lt e').
   Qed.
 
   (** [q < x * y] when [q] is below all products of points of some bounds of [x] and of [y], and dually. *)
@@ -1692,8 +1689,7 @@ Section complete.
           assert (h2 : ' (k / 2 / 2) + ' (k / 2 / 2) = ' (k / 2))
             by exact (ap (cast (Qpos Q) Q) (pos_split2 (k / 2)))^.
           rewrite <- (plus_assoc (' e + ' e)), h1, h2.
-          change (' (k / 2) < ' k).
-          apply (transport (fun z => ' (k / 2) < ' z) (pos_split2 k)^), pos_plus_lt_compat_r, is_pos. }
+          exact (qpos_half_lt k). }
         assert (c := cut_located (isdedekindcut Q (x (M e))) _ _ (limit_located_aux q r e le)).
         strip_truncations; destruct c as [c|c]; apply tr; [left|right];
           apply tr; exists e; apply tr; exists e; exact c.
@@ -1771,8 +1767,7 @@ Section complete.
       intros e; apply tr; exists (M (e / 2)); intros n ln; unfold cast.
       rewrite (rationals_initial (h:=rational_dedekind Q)).
       assert (half : [' (e / 2)] < [' e]).
-      { apply rational_dedekind_lt.
-        apply (transport (fun z => ' (e / 2) < ' z) (pos_split2 e)^), pos_plus_lt_compat_r, is_pos. }
+      { apply rational_dedekind_lt, qpos_half_lt. }
       split.
       - rewrite negate_swap_r; apply (snd (flip_lt_negate _ _)).
         exact (le_lt_trans _ _ _ (minus_limit_le e n ln) half).

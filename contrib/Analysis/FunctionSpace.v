@@ -104,14 +104,6 @@ Section function_space.
       + exact (order_preserving (s *.) _ _ (snd av)).
   Qed.
 
-  (** Half of a positive rational is smaller. *)
-  Lemma qpos_half_lt (e : Qpos Q) : ' (' (e / 2)) < (' (' e) : F).
-  Proof.
-    apply (strictly_order_preserving (cast Q F)).
-    rewrite (ap (cast (Qpos Q) Q) (pos_split2 e)).
-    apply pos_plus_lt_compat_r, pos_is_pos.
-  Qed.
-
   Local Lemma recip_mult_lt (B W N : Q) (W0 : 0 < W) (N0 : 0 < N) (lt : B / W < N)
     : / N * B < W.
   Proof.
@@ -379,7 +371,8 @@ Section function_space.
           exact (lt_sample_max w fw (e / 2) n (lt_grid_modulus _ B leB w _ n len) z). }
         apply (fst (flip_le_minus_l _ _ _)) in le.
         rewrite plus_comm in le; apply (snd (flip_le_minus_l _ _ _)) in le.
-        refine (le_lt_trans _ _ _ le _); exact (qpos_half_lt e).
+        refine (le_lt_trans _ _ _ le _).
+        exact (strictly_order_preserving (cast Q F) _ _ (qpos_half_lt e)).
       - intros u ub.
         apply (limit_le Q F sample_max l u 0 islim); intros n _.
         apply max_upto_le; intros k _; apply ub.
@@ -605,7 +598,7 @@ Section function_space.
         intro e; apply tr; exists (M (e / 2)); intros n len.
         unfold metric_close, ulmap_dist.
         refine (le_lt_trans _ _ _ (uniform_dist_le _ _ (' (' (e / 2))) _) _);
-          [|exact (qpos_half_lt e)].
+          [|exact (strictly_order_preserving (cast Q F) _ _ (qpos_half_lt e))].
         intro x; unfold interval_dist.
         change (abs ((fs n x).1 - (limit_value x).1) ≤ ' (' (e / 2))).
         rewrite abs_minus_swap; exact (limit_value_close x _ n len).

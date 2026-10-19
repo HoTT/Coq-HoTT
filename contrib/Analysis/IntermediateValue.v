@@ -192,12 +192,6 @@ Section ivt.
     rewrite (preserves_1 (f:=cast Q F)); apply mult_1_r.
   Qed.
 
-  Lemma qpos_half_lt (e : Qpos Q) : ' (e / 2) < ' e.
-  Proof.
-    rewrite (ap (cast (Qpos Q) Q) (pos_split2 e)).
-    exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
-  Qed.
-
   Definition half_lt_1 : half < 1 := qpos_half_lt 1.
 
   Lemma half_pos : (0 : F) < ' half.

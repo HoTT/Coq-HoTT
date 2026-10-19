@@ -152,6 +152,12 @@ path_via (e * (2 / 2)).
   ring_tac.ring_with_nat.
 Qed.
 
+Lemma qpos_half_lt@{} (e : Q+) : ' (e / 2) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split2 e)).
+exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
+Qed.
+
 Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
 Proof.
 intros.

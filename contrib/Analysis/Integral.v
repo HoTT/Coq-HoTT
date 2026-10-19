@@ -352,7 +352,8 @@ Section integration.
       Proof.
         intro e; apply tr; exists (riemann_modulus e); intros n len.
         apply (field_close_iff_abs Q).
-        exact (transitivity (integral_riemann_sum_lt e n len) (qpos_half_lt Q F e)).
+        exact (transitivity (integral_riemann_sum_lt e n len)
+                 (strictly_order_preserving (cast Q F) _ _ (qpos_half_lt e))).
       Qed.
 
     End riemann.
