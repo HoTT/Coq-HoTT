@@ -639,6 +639,7 @@ Section locator.
       exists (a * c).
       rewrite (preserves_plus (f:=cast Q F)) in ltxa, ltyc.
       change (' (mkQpos d dpos)) with d in ltxa, ltyc.
+      (* Transfer [0 < d < 1] and [d (2 Z + 1) < e] to [F]. *)
       assert (dpos' : 0 < ' d) by exact (fst (rationals_to_field_pos_iff d) dpos).
       assert (ltd1' : ' d < 1).
       { rewrite <- (preserves_1 (f:=cast Q F)); exact (strictly_order_preserving _ _ _ ltd1). }
