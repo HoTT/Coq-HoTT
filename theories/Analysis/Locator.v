@@ -218,10 +218,15 @@ Section locator.
     (** This happens for some [n]: [x] lies above some rational [q], which lies above some [- n], so the locator cannot place [x] below [- n]. *)
     Local Lemma merely_locates_above_negate_nat : hexists locates_above_negate_nat.
     Proof.
+      (* A rational [q] below [x]. *)
       assert (h := archimedean_property Q F (x - 1) x (fst (pos_minus_lt_compat_r x 1) lt_0_1)).
-      strip_truncations; destruct h as [q [_ ltqx]].
+      strip_truncations.
+      destruct h as [q [_ ltqx]].
+      (* An [n] with [- n < q]. *)
       destruct (round_up_strict Q (- q)) as [n ltqn].
-      apply tr; exists n; apply ltrx_locates_right.
+      (* Then [x] lies above [- n], so the locator cannot place it below [- n]. *)
+      apply tr; exists n.
+      apply ltrx_locates_right.
       rhs_V' exact ltqx.
       apply (strictly_order_preserving (cast Q F)), flip_lt_negate_l, ltqn.
     Qed.
