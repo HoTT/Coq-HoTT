@@ -181,17 +181,6 @@ End contents.
 Hint Extern 7 (PropHolds (/ _ <> 0)) =>
   eapply @dec_recip_ne_0 : typeclass_instances.
 
-Lemma decfield_nontrivial_apart `{IsDecField F} `{Apart F} `{!TrivialApart F}
-  : PropHolds (1 ≶ 0).
-Proof.
-  apply ne_apart; rapply decfield_nontrivial.
-Qed.
-
-(* Due to bug #2528 *)
-#[export]
-Hint Extern 5 (PropHolds (1 ≶ 0)) =>
-  eapply @decfield_nontrivial_apart : typeclass_instances.
-
 (* Given a decidable field we can easily construct a constructive field. *)
 Section is_field.
   Context `{IsDecField F} `{Apart F} `{!TrivialApart F}
