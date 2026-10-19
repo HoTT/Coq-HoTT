@@ -24,6 +24,7 @@ From HoTT.Classes.interfaces Require Import canonical_names abstract_algebra ord
 From HoTT.Classes.theory Require Import apartness rings fields.
 From HoTT.Cubical Require Import DPath.
 From HoTT.Modalities Require Import ReflectiveSubuniverse.
+From HoTT.Truncations Require Import Constant.
 From HoTT.Misc Require Import BoundedSearch CompactTypes.
 From HoTT.Classes.orders Require Import archimedean rationals maps.
 From HoTT.DomainTheory Require Import Dcpo Constructions FixedPoints.
@@ -642,25 +643,49 @@ Definition Booij2020Thesis_5_3_7 := @contr_convexbodyhom_iff.
 (** Locators. *)
 Definition Booij2020Thesis_6_1_1 := @locator.
 
+(* ================================================== 6.1.2 *)
+(** Remark 6.1.2 *)
+
+(** The rationals could be replaced by the dyadic rationals or another suitable dense subset of the reals. *)
+(* Not formalized: a remark on possible variations, without formal content. *)
+
 (* ================================================== 6.1.3 *)
 (** Lemma 6.1.3 *)
 
 (** Assuming excluded middle, every real has a locator. *)
 Definition Booij2020Thesis_6_1_3 := @all_reals_locators.
 
+(* ================================================== 6.1.4 *)
+(** Remark 6.1.4 *)
+
+(** The word "proof" is also used for constructions of types that are not propositions. *)
+(* Not formalized: a remark on terminology. *)
+
 (* ================================================== 6.3.1 *)
 (** Lemma 6.3.1 *)
 
-(** A rational [' s] has a locator, in two different ways. *)
+(** A rational [' s] has a locator, in two different ways. The thesis assumes that [x] merely is a rational; that form follows since [cast Q F] is an embedding, but it is not stated as a lemma. *)
 Definition Booij2020Thesis_6_3_1_item_i := @locator_left.
 Definition Booij2020Thesis_6_3_1_item_ii := @locator_second.
 Definition Booij2020Thesis_6_3_1_item_iii := @isembedding_rationals_to_field.
+
+(* ================================================== 6.4.1 *)
+(** Lemma 6.4.1 *)
+
+(** A sum [A + B] is equivalent to a decidable proposition [P] with maps [P -> A] and [~ P -> B]. *)
+(* Not formalized: the equivalence of locators with their decidable-proposition form, [equiv_locator_locator'], is proved directly instead. *)
 
 (* ================================================== 6.4.2 *)
 (** Lemma 6.4.2 *)
 
 (** A locator is equivalently a decidable [locatesRight] with its two properties. *)
 Definition Booij2020Thesis_6_4_2 := @equiv_locator_locator'.
+
+(* ================================================== 6.4.3 *)
+(** Remark 6.4.3 *)
+
+(** [locates_right] of a locator holds when the locator takes the left summand. *)
+Definition Booij2020Thesis_6_4_3 := @locator_locator'.
 
 (* ================================================== 6.4.4 *)
 (** Definition 6.4.4 *)
@@ -669,6 +694,12 @@ Definition Booij2020Thesis_6_4_2 := @equiv_locator_locator'.
 Definition Booij2020Thesis_6_4_4_item_i := @locates_right.
 Definition Booij2020Thesis_6_4_4_item_ii := @locates_left.
 
+(* ================================================== 6.4.5 *)
+(** Remark 6.4.5 *)
+
+(** For [q' < q < r], locating [q < x] when comparing [q < r] does not imply locating [q' < x] when comparing [q' < r]. *)
+(* Not formalized: a negative remark, which would need a counterexample locator. *)
+
 (* ================================================== 6.4.6 *)
 (** Lemma 6.4.6 *)
 
@@ -676,11 +707,31 @@ Definition Booij2020Thesis_6_4_4_item_ii := @locates_left.
 Definition Booij2020Thesis_6_4_6_item_i := @nltqx_locates_left.
 Definition Booij2020Thesis_6_4_6_item_ii := @nltxr_locates_right.
 
+(* ================================================== 6.4.7 *)
+(** Example 6.4.7 *)
+
+(** If [q < r < x], the locator must locate [q < x]; hence a lower bound can be searched for. *)
+Definition Booij2020Thesis_6_4_7 := @ltrx_locates_right.
+(* The decidable predicate used to search for a lower bound, and its mere inhabitation, are inline in [lower_bound], with [-n - 1] in place of [q - 1]. *)
+
 (* ================================================== 6.5.1 *)
 (** Theorem 6.5.1 *)
 
 (** Bounded search: from [exists n, P n] with [P] decidable we get [{n & P n}]. *)
 Definition Booij2020Thesis_6_5_1 := @minimal_n.
+
+(* ================================================== 6.5.2 *)
+(** Remark 6.5.2 *)
+
+(** Other searches also turn [exists n, P n] into [{n & P n}], with outputs that need not be minimal. *)
+(* Not formalized: a remark without formal content. *)
+
+(* ================================================== 6.5.3 *)
+(** Remark 6.5.3 *)
+
+(** A type with a weakly constant endomap has split support [merely X -> X]. *)
+Definition Booij2020Thesis_6_5_3 := @splitsupp_collapsible.
+(* The claim that split support for all types implies excluded middle is not formalized. *)
 
 (* ================================================== 6.5.4 *)
 (** Corollary 6.5.4 *)
@@ -695,11 +746,23 @@ Definition Booij2020Thesis_6_5_4 := @minimal_n_alt_type.
 Definition Booij2020Thesis_6_6_1_item_i := @lower_bound.
 Definition Booij2020Thesis_6_6_1_item_ii := @upper_bound.
 
+(* ================================================== 6.6.2 *)
+(** Remark 6.6.2 *)
+
+(** The search for bounds can be made more efficient, or bounds can be stored alongside locators. *)
+(* Not formalized: a remark on efficiency. *)
+
 (* ================================================== 6.6.3 *)
 (** Lemma 6.6.3 *)
 
-(** A real with a locator has arbitrarily tight rational bounds. *)
+(** A real with a locator has arbitrarily tight rational bounds. [tight_bound] gives bounds [u < x < u + e], at distance exactly [e]; bounds at distance less than [e] follow by applying it to [e / 2]. *)
 Definition Booij2020Thesis_6_6_3 := @tight_bound.
+
+(* ================================================== 6.6.4 *)
+(** Remark 6.6.4 *)
+
+(** An algorithm for arbitrarily precise bounds may be stored alongside a locator. *)
+(* Not formalized: a remark on efficiency. *)
 
 (* ================================================== 6.7.1 *)
 (** Lemma 6.7.1 *)
@@ -720,6 +783,12 @@ Definition Booij2020Thesis_6_7_1_item_xii := @char_meet_right.
 Definition Booij2020Thesis_6_7_1_item_xiii := @char_join_left.
 Definition Booij2020Thesis_6_7_1_item_xiv := @char_join_right.
 
+(* ================================================== 6.7.2 *)
+(** Lemma 6.7.2 *)
+
+(** For reals [x < y] there merely are [q : Q] and [e : Qpos Q] with [x < q - e < q + e < y]. *)
+(* Not formalized: not needed, since [archimedean_structure] uses the Archimedean property directly. *)
+
 (* ================================================== 6.7.3 *)
 (** Lemma 6.7.3 *)
 
@@ -737,6 +806,7 @@ Definition Booij2020Thesis_6_7_4 := @locator_cotransitive_rational.
 
 (** Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose [x < z] or [z < y]. *)
 Definition Booij2020Thesis_6_7_5 := @locator_cotransitive.
+(* Not formalized: the structural characterization of the algebraic operations sketched in the second paragraph. *)
 
 (* ================================================== 6.7.6 *)
 (** Theorem 6.7.6 *)
@@ -756,11 +826,42 @@ Definition Booij2020Thesis_6_7_6_item_vi := @locator_join.
 Definition Booij2020Thesis_6_7_7_item_i := @locator_join.
 Definition Booij2020Thesis_6_7_7_item_ii := @locator_minus.
 
+(* ================================================== 6.7.8 *)
+(** Remark 6.7.8 *)
+
+(** Locators for reciprocals of positive and of negative reals by an elementary construction. *)
+Definition Booij2020Thesis_6_7_8_item_i := @locator_recip_pos.
+Definition Booij2020Thesis_6_7_8_item_ii := @locator_recip_neg.
+
 (* ================================================== 6.8.1 *)
 (** Lemma 6.8.1 *)
 
 (** A limit of a sequence with modulus whose terms have locators has a locator. *)
 Definition Booij2020Thesis_6_8_1 := @locator_limit.
+
+(* ================================================== 6.8.2 *)
+(** Remark 6.8.2 *)
+
+(** Locators for limits need a modulus of Cauchy convergence, whereas the limit itself only needs its existence. *)
+(* Not formalized: a remark without formal content. *)
+
+(* ================================================== 6.8.3 *)
+(** Example 6.8.3 *)
+
+(** The exponential of a real with a locator has a locator. *)
+(* Not formalized: an example; needs the exponential function. *)
+
+(* ================================================== 6.8.4 *)
+(** Example 6.8.4 *)
+
+(** Constants such as pi and e have locators. *)
+(* Not formalized: an example; needs constructions of these constants. *)
+
+(* ================================================== 6.9.1 *)
+(** Example 6.9.1 *)
+
+(** A digit expansion gives rational bounds. *)
+(* Not formalized: an example. *)
 
 (* ================================================== 6.9.2 *)
 (** Definition 6.9.2 *)
@@ -769,6 +870,12 @@ Definition Booij2020Thesis_6_8_1 := @locator_limit.
 Definition Booij2020Thesis_6_9_2_item_i := @digit_weight.
 Definition Booij2020Thesis_6_9_2_item_ii := @digit_sum.
 Definition Booij2020Thesis_6_9_2_item_iii := @SignedDigits.
+
+(* ================================================== 6.9.3 *)
+(** Example 6.9.3 *)
+
+(** Several signed-digit expansions of pi. *)
+(* Not formalized: an example. *)
 
 (* ================================================== 6.9.4 *)
 (** Lemma 6.9.4 *)
@@ -870,12 +977,19 @@ Definition Booij2020Thesis_6_10_3_item_xxiv := @cutstructure_iscut_locator.
 Definition Booij2020Thesis_6_10_3_item_xxv := @iscauchyreal_iscut_merely_locator.
 Definition Booij2020Thesis_6_10_3_item_xxvi := @iscauchyreal_merely_cutstructure.
 
+(* ================================================== 6.10.4 *)
+(** Remark 6.10.4 *)
+
+(** One may equip reals with the full structure of a cut instead of only a locator. *)
+(* Not formalized: a remark on design, without formal content. *)
+
 (* ================================================== 6.10.5 *)
 (** Theorem 6.10.5 *)
 
-(** It is not provable that every cut merely has the structure of a cut. *)
+(** It is not provable that every cut merely has the structure of a cut: if it were, every Dedekind real would be a Cauchy real, so the Cauchy reals and the Dedekind reals would coincide. *)
 Definition Booij2020Thesis_6_10_5_item_i := @iscauchyreal_all_merely_cutstructure.
 Definition Booij2020Thesis_6_10_5_item_ii := @isequiv_cauchy_reals_to_dedekind_iff.
+(* Not formalized: the non-provability itself, which needs a model in which the Cauchy reals and the Dedekind reals differ. *)
 
 (* ================================================== 7.1.1 *)
 (** Definition 7.1.1 *)
