@@ -60,9 +60,9 @@ Ltac strip_truncations :=
       => (* Checking that [T] is a truncation first is much cheaper than failing to apply [Trunc_ind] to every other hypothesis. *)
         lazymatch eval hnf in A with Trunc _ _ => idtac end;
         revert_opaque T;
-        (* When the goal does not depend on [T], [Trunc_rec] suffices, and its typeclass search is cheaper than that of [Trunc_ind].  In each case, ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated. *)
-        first [ refine (@Trunc_rec _ _ _ _ _); []
-              | refine (@Trunc_ind _ _ _ _ _); [] ];
+        refine (@Trunc_ind _ _ _ _ _);
+        (* Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated: *)
+        [];
         intro T
     end.
 
