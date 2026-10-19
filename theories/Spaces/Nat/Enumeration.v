@@ -18,19 +18,27 @@ Fixpoint nat_unpair (n : nat) : nat * nat
              end
      end.
 
-Lemma nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}.
+(** [nat_unpair] moves along a diagonal from [(a + 1, b)] to [(a, b + 1)], so if [(a + b, 0)] is hit, then so is [(a, b)]. *)
+Local Definition nat_unpair_hit_diagonal (a b n : nat) (p : nat_unpair n = (a + b, 0))
+  : {m : nat & nat_unpair m = (a, b)}.
 Proof.
-  (** By induction on the diagonal [a + b], and then on [b]. *)
-  pose (d := a + b); assert (e : a + b = d) by reflexivity; clearbody d.
-  revert a b e; induction d as [|d IH]; intros a b; revert a.
-  - intros a e; exists 0.
-    destruct a; [|discriminate e]; destruct b; [|discriminate e]; reflexivity.
-  - induction b as [|b IHb]; intros a e.
-    + destruct (IH 0 d idpath) as [n p]; exists (S n); cbn; rewrite p.
-      rewrite <- e, nat_add_zero_r; reflexivity.
-    + destruct (IHb (S a) (nat_add_succ_l a b @ (nat_add_succ_r a b)^ @ e)) as [n p].
-      exists (S n); cbn; rewrite p; reflexivity.
+  revert a p; induction b as [|b IH]; intros a p.
+  - exists n; rewrite p, nat_add_zero_r; reflexivity.
+  - destruct (IH (S a) (p @ ap (fun k => (k, 0)) (nat_add_succ_r a b))) as [m q].
+    exists (S m); cbn; rewrite q; reflexivity.
 Defined.
+
+(** At the end of a diagonal it moves from [(0, d)] to [(d + 1, 0)], so every [(d, 0)] is hit. *)
+Local Definition nat_unpair_hit_axis (d : nat) : {n : nat & nat_unpair n = (d, 0)}.
+Proof.
+  induction d as [|d IH].
+  - exact (0; idpath).
+  - destruct (nat_unpair_hit_diagonal 0 d _ IH.2) as [n p].
+    exists (S n); cbn; rewrite p; reflexivity.
+Defined.
+
+Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
+  := nat_unpair_hit_diagonal a b _ (nat_unpair_hit_axis (a + b)).2.
 
 (** Surjections from the natural numbers onto [X] and onto [Y] give a surjection onto [X * Y]. *)
 Definition nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y) (n : nat) : X * Y
