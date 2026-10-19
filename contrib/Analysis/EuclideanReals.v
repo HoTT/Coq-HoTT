@@ -2,7 +2,8 @@
 
 (** Assuming propositional resizing, the Euclidean reals of Escardó and Simpson ("A universal characterization of the closed Euclidean interval", LICS 2001) are the least Cauchy complete subset containing the rationals of a Cauchy complete Archimedean ordered field [F], such as the Dedekind reals: the meet of all such subsets. They coincide with the HoTT book reals when those exist, and they are homotopy-initial among Cauchy structures on sets. The proof of initiality follows the strategy of Escardó and Simpson: the subsets [Y] containing the rationals and contained in the Euclidean reals, with a unique morphism restricted to [Y], form a subdcpo of the subsets of [F] which is closed under adding limits, so that a fixed point of adding limits in it, which exists by the fixed point theorem for subdcpos, is Cauchy complete and hence the Euclidean reals. *)
 
-From HoTT Require Import Basics Types.Sigma Types.Forall Types.Universe Truncations.Core.
+From HoTT Require Import Basics Types.Sigma Types.Forall Types.Universe Truncations.Core
+  Truncations.Constant.
 From HoTT.Universes Require Import HSet HProp TruncType.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
@@ -232,32 +233,21 @@ Section euclidean.
       Local Notation fX := (@center (SubHom X) (snd hX)).
       Local Notation PX := (limits_subset X).
 
-      (** The values of the restricted morphism on the limits: the limit in [S] of the images of an approximation in [X], which does not depend on the approximation. *)
-      Local Definition limits_value (y : F) : Type
-        := {s : S & hexists (fun w : {x : FC & forall e, X (x e)} =>
-                       prod (field_lim Q w.1 = y) (s = cs_lim Q S (subhom_approximation fX w.1 w.2)))}.
-
-      Local Instance ishprop_limits_value (y : F) : IsHProp (limits_value y).
+      (** The value of the restricted morphism at the limit of an approximation in [X] is the limit in [S] of its images. It does not depend on the approximation, so it factors through the truncation in [PX]. *)
+      Local Definition limits_fun (u : sig PX) : S.
       Proof.
-        apply hprop_allpath; intros [s t] [s' t'].
-        apply path_sigma_hprop; cbn.
-        strip_truncations; destruct t as [[x hx] [p q]], t' as [[x' hx'] [p' q']].
-        rewrite q, q'; apply subhom_lim_path; exact (p @ p'^).
-      Qed.
-
-      Local Definition limits_value_center (y : F) (h : PX y) : limits_value y.
-      Proof.
-        strip_truncations; destruct h as [x [hx p]].
-        exact (_; tr ((x; hx); (p, idpath))).
+        srapply (merely_rec_hset (fun w : {x : FC & prod (forall e, X (x e)) (field_lim Q x = u.1)}
+                                  => cs_lim Q S (subhom_approximation fX w.1 (fst w.2))) u.2).
+        intros [x [hx p]] [x' [hx' p']]; exact (subhom_lim_path fX x x' hx hx' (p @ p'^)).
       Defined.
 
-      Local Definition limits_fun (u : sig PX) : S := (limits_value_center u.1 u.2).1.
+      Arguments limits_fun : simpl never.
 
       Local Lemma limits_fun_beta (x : FC) (hx : forall e, X (x e)) (y : F)
         (p : field_lim Q x = y) (h : PX y)
         : limits_fun (y; h) = cs_lim Q S (subhom_approximation fX x hx).
       Proof.
-        exact (ap pr1 (path_ishprop (limits_value_center y h) (_; tr ((x; hx); (p, idpath))))).
+        exact (ap (limits_fun o exist PX y) (path_ishprop h (tr (x; (hx, p))))).
       Qed.
 
       Local Lemma limits_fun_incl (y : F) (h : X y)
@@ -349,31 +339,22 @@ Section euclidean.
                        (@path_contr _ (snd (hD k)) (fk k) (subhom_restrict le_km (fk m)))) u).
       Qed.
 
-      Local Definition sup_value (y : F) : Type
-        := {s : S & hexists (fun w : {k : I & D k y} => fk w.1 (y; w.2) = s)}.
-
-      Local Instance ishprop_sup_value (y : F) : IsHProp (sup_value y).
+      (** The value at [y] is that of the morphism on any [D k] containing [y]. It does not depend on [k], since the family is directed, so it factors through the truncation. *)
+      Local Definition sup_fun (u : sig Y) : S.
       Proof.
-        apply hprop_allpath; intros [s t] [s' t'].
-        apply path_sigma_hprop; cbn.
-        strip_truncations; destruct t as [[k hk] p], t' as [[k' hk'] p'].
+        srapply (merely_rec_hset (fun w : {k : I & D k u.1} => fk w.1 (u.1; w.2)) (sup_out _ u.2)).
+        intros [k hk] [k' hk'].
         assert (m := snd d k k'); strip_truncations; destruct m as [m [lk lk']].
-        rewrite <- p, <- p', (sup_compat k m lk), (sup_compat k' m lk').
+        rewrite (sup_compat k m lk), (sup_compat k' m lk').
         apply ap, path_sigma_hprop; reflexivity.
-      Qed.
-
-      Local Definition sup_value_center (y : F) (h : Y y) : sup_value y.
-      Proof.
-        assert (w := sup_out y h); strip_truncations; destruct w as [k hk].
-        exact (_; tr ((k; hk); idpath)).
       Defined.
 
-      Local Definition sup_fun (u : sig Y) : S := (sup_value_center u.1 u.2).1.
+      Arguments sup_fun : simpl never.
 
       Local Lemma sup_fun_beta (k : I) (y : F) (hk : D k y) (h : Y y)
         : sup_fun (y; h) = fk k (y; hk).
       Proof.
-        exact (ap pr1 (path_ishprop (sup_value_center y h) (_; tr ((k; hk); idpath)))).
+        exact (ap (merely_rec_hset _) (path_ishprop (sup_out y h) (tr (k; hk)))).
       Qed.
 
       Local Lemma sup_fun_close (e : Qpos Q) (u v : sig Y) (c : field_close Q e u.1 v.1)
