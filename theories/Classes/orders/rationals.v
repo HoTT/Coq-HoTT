@@ -20,6 +20,8 @@ Generalizable Variables F Q R Rle Rlt.
 
 (** For rationals [Q] and an ordered field [F], the map [rationals_to_field Q F] is the unique semiring morphism [Q -> F].  We show that it preserves the strict order and is injective, and that it reflects the strict order when [1] is apart from [0] in [Q] (for instance when the apartness of [Q] is trivial).  The key step is that every rational [q] satisfies [q * d + b = a] with [a], [b] and [d] images of natural numbers and [d] positive.  We obtain this by initiality of [Q]: the elements of [F] of this form make up a subfield of [F]. *)
 
+(** ** Signs of quotients of natural numbers *)
+
 (** Compare two natural numbers by the difference between them. *)
 Local Definition nat_add_cases (a b : nat)
   : {c : nat & (c + b)%nat = a} + {c : nat & (S c + a)%nat = b}.
@@ -30,46 +32,53 @@ Proof.
     exact (c; (nat_add_succ_r c a)^ @ p).
 Defined.
 
-(** In an ordered ring, if [y * (m + 1) + b = a] for natural numbers [a], [b] and [m], then [y] is positive exactly when [a = c + 1 + b] for a natural number [c]. *)
+(** In an ordered ring, let [y * (m + 1) + b = a] for natural numbers [a], [b] and [m]. Comparing [a] and [b] determines [y * (m + 1)] as a natural number up to sign, and [y] is positive exactly when [a = c + 1 + b] for a natural number [c]. *)
 Section nat_quotient_sign.
-  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
-    `{!PropHolds ((1 : R) ≶ 0)}.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}.
 
   Local Notation nR := (naturals_to_semiring nat R).
 
   Context (y : R) (a b m : nat) (E : y * nR (S m) + nR b = nR a).
 
+  Local Lemma nat_quotient_eq_l (c : nat) (p : (c + b)%nat = a) : y * nR (S m) = nR c.
+  Proof.
+    apply (right_cancellation (+) (nR b)).
+    rewrite E, <- p, (preserves_plus (f:=nR)); reflexivity.
+  Qed.
+
+  Local Lemma nat_quotient_eq_r (c : nat) (p : (S c + a)%nat = b)
+    : y * nR (S m) = - nR (S c).
+  Proof.
+    destruct p; apply (right_cancellation (+) (nR (S c) + nR a)).
+    rewrite (plus_assoc (- _)), plus_negate_l, plus_0_l.
+    rewrite <- (preserves_plus (f:=nR)); exact E.
+  Qed.
+
+  Context `{!PropHolds ((1 : R) ≶ 0)}.
+
   Local Lemma nat_quotient_pos_succ (ypos : 0 < y) : {c : nat & (S c + b)%nat = a}.
   Proof.
-    destruct (nat_add_cases a b) as [[c p]|[c p]]; destruct p.
-    - assert (E' : y * nR (S m) = nR c).
-      { apply (right_cancellation (+) (nR b)).
-        rewrite E, (preserves_plus (f:=nR)); reflexivity. }
-      destruct c as [|c]; [|exact (c; idpath)].
-      destruct (irreflexivity (<) (0 : R)).
-      exact (transport (fun z => 0 < z) E'
-               (pos_mult_compat _ _ ypos (nat_to_semiring_succ_pos m))).
-    - destruct (irreflexivity (<) (0 : R)).
-      refine (transport (fun z => 0 < z) _
-                (pos_plus_compat _ _
-                   (pos_mult_compat _ _ ypos (nat_to_semiring_succ_pos m))
-                   (nat_to_semiring_succ_pos c))).
-      apply (right_cancellation (+) (nR a)).
-      rewrite plus_0_l, <- plus_assoc, <- (preserves_plus (f:=nR)).
-      exact E.
+    assert (dpos : 0 < y * nR (S m))
+      by exact (pos_mult_compat _ _ ypos (nat_to_semiring_succ_pos m)).
+    destruct (nat_add_cases a b) as [[c p]|[c p]].
+    - destruct c as [|c]; [|exact (c; p)].
+      rewrite (nat_quotient_eq_l 0 p) in dpos.
+      destruct (irreflexivity (<) _ dpos).
+    - rewrite (nat_quotient_eq_r c p) in dpos.
+      destruct (irreflexivity (<) 0).
+      exact (transitivity dpos (fst (flip_pos_negate _) (nat_to_semiring_succ_pos c))).
   Qed.
 
   Local Lemma nat_quotient_succ_pos (c : {c : nat & (S c + b)%nat = a}) : 0 < y.
   Proof.
-    destruct c as [c p]; destruct p.
-    assert (E' : y * nR (S m) = nR (S c)).
-    { apply (right_cancellation (+) (nR b)).
-      rewrite E, (preserves_plus (f:=nR)); reflexivity. }
+    destruct c as [c p].
     apply (pos_mult_rev_l _ (nR (S m))).
-    - rewrite E'; apply nat_to_semiring_succ_pos.
+    - rewrite (nat_quotient_eq_l (S c) p); apply nat_to_semiring_succ_pos.
     - apply nat_to_semiring_succ_pos.
   Qed.
 End nat_quotient_sign.
+
+(** ** The map from the rationals into an ordered field *)
 
 Section nat_quotients.
   Context `{OrderedField F}.
@@ -84,6 +93,10 @@ Section nat_quotients.
     := simple_distribute_r x y z.
   Let distr_l (x y z : F) : x * (y + z) = x * y + x * z
     := simple_distribute_l x y z.
+  Let nF_mult_succ (m1 m2 : nat) : nF (S (m2 + m1 * S m2)) = nF (S m1) * nF (S m2)
+    := preserves_mult (S m1) (S m2).
+
+  (** *** The subfield of quotients of natural numbers *)
 
   (** An element [y] of [F] is a quotient of natural numbers, up to sign, if [y * d + b = a] for natural numbers [a], [b] and positive [d]. *)
   Local Definition IsNatQuot (y : F) : Type
@@ -109,8 +122,7 @@ Section nat_quotients.
     destruct qx as [a1 [b1 [m1 E1]]], qy as [a2 [b2 [m2 E2]]].
     apply tr; exists (a1 * S m2 + a2 * S m1)%nat,
       (b1 * S m2 + b2 * S m1)%nat, (m2 + m1 * S m2)%nat.
-    change (S (m2 + m1 * S m2)) with (S m1 * S m2)%nat.
-    rewrite (nF_mult (S m1) (S m2)), !nF_plus, !nF_mult, <- E1, <- E2.
+    rewrite nF_mult_succ, !nF_plus, !nF_mult, <- E1, <- E2.
     set (d1 := nF (S m1)); set (d2 := nF (S m2)).
     rewrite 3!distr_r, (mult_assoc x d1 d2),
       (mult_comm d1 d2), (mult_assoc y d2 d1).
@@ -135,8 +147,7 @@ Section nat_quotients.
     destruct qx as [a1 [b1 [m1 E1]]], qy as [a2 [b2 [m2 E2]]].
     apply tr; exists (a1 * a2 + b1 * b2)%nat,
       (a1 * b2 + b1 * a2)%nat, (m2 + m1 * S m2)%nat.
-    change (S (m2 + m1 * S m2)) with (S m1 * S m2)%nat.
-    rewrite (nF_mult (S m1) (S m2)), !nF_plus, !nF_mult.
+    rewrite nF_mult_succ, !nF_plus, !nF_mult.
     rewrite <- (mult_assoc x), (mult_assoc y), (mult_comm y), <- (mult_assoc _ y),
       (mult_assoc x), <- E1, <- E2.
     set (u1 := x * nF (S m1)); set (u2 := y * nF (S m2)).
@@ -154,30 +165,19 @@ Section nat_quotients.
     intros qx; strip_truncations.
     destruct qx as [a [b [m E]]].
     apply tr.
-    pose proof (nat_to_semiring_succ_pos m) as dpos.
-    set (d := nF (S m)) in *.
-    destruct (nat_add_cases a b) as [[c q]|[c q]]; destruct q.
-    - assert (Exd : x * d = nF c).
-      { apply (right_cancellation (+) (nF b)).
-        rewrite E, nF_plus; reflexivity. }
+    destruct (nat_add_cases a b) as [[c q]|[c q]].
+    - assert (Exd := nat_quotient_eq_l x a b m E c q).
       destruct c as [|c].
       + destruct (irreflexivity (≶) (0 : F)).
         exact (transport (fun z => z ≶ 0) Exd
-                 (mult_apart_zero _ _ p (positive_apart_zero _ dpos))).
+                 (mult_apart_zero _ _ p (positive_apart_zero _ (nat_to_semiring_succ_pos m)))).
       + exists (S m), 0%nat, c.
-        change (nF (S m)) with d.
         rewrite plus_0_r, <- Exd, mult_assoc, (mult_comm _ x), reciperse_alt.
         apply mult_1_l.
-    - assert (Exd : nF (S c) = - (x * d)).
-      { apply (left_cancellation (+) (x * d)).
-        rewrite plus_negate_r.
-        apply (right_cancellation (+) (nF a)).
-        rewrite <- plus_assoc, <- nF_plus, E.
-        exact (plus_0_l _)^. }
+    - assert (Exd := nat_quotient_eq_r x a b m E c q).
       exists 0%nat, (S m), c.
-      change (nF (S m)) with d.
-      rewrite Exd, <- negate_mult_distr_r, mult_assoc, (mult_comm _ x),
-        reciperse_alt, mult_1_l.
+      rewrite <- (negate_involutive (nF (S c))), <- Exd, <- negate_mult_distr_r,
+        mult_assoc, (mult_comm _ x), reciperse_alt, mult_1_l.
       apply plus_negate_l.
   Qed.
 
@@ -240,6 +240,8 @@ Section nat_quotients.
     repeat split.
   Qed.
 
+  (** *** The map from the rationals *)
+
   Context `{Rationals Q}.
 
   Local Existing Instance pseudo_order_apart.
@@ -295,21 +297,26 @@ Section nat_quotients.
     - exact (nat_quotient_succ_pos _ _ _ _ EQ (nat_quotient_pos_succ _ _ _ _ EF qpos)).
   Qed.
 
+  (** A positive rational shows that [1] is apart from [0] in [Q]. *)
+  Local Lemma pos_apart_1_0 (q : Q) : 0 < q -> PropHolds ((1 : Q) ≶ 0).
+  Proof.
+    intros qpos.
+    assert (E1 : q * 1 ≶ q * 0).
+    { rewrite mult_1_r, mult_0_r.
+      exact (snd (apart_iff_total_lt _ 0) (inr qpos)). }
+    pose proof (strong_binary_extensionality (.*.) _ 1 _ 0 E1) as h.
+    unfold PropHolds; strip_truncations; destruct h as [h|h].
+    - destruct (irreflexivity _ _ h).
+    - exact h.
+  Qed.
+
   #[export] Instance strictly_order_preserving_rationals_to_field
     : StrictlyOrderPreserving (rationals_to_field Q F).
   Proof.
     intros x y E.
     apply flip_pos_minus in E; apply flip_pos_minus.
     rewrite <- preserves_minus.
-    (* A positive rational shows that [1] is apart from [0] in [Q]. *)
-    assert (PropHolds ((1 : Q) ≶ 0)).
-    { assert (E1 : (y - x) * 1 ≶ (y - x) * 0).
-      { rewrite mult_1_r, mult_0_r.
-        exact (snd (apart_iff_total_lt _ 0) (inr E)). }
-      pose proof (strong_binary_extensionality (.*.) _ 1 _ 0 E1) as h.
-      unfold PropHolds; strip_truncations; destruct h as [h|h].
-      - destruct (irreflexivity _ _ h).
-      - exact h. }
+    assert (PropHolds ((1 : Q) ≶ 0)) by exact (pos_apart_1_0 _ E).
     exact (fst (rationals_to_field_pos_iff _) E).
   Qed.
 
