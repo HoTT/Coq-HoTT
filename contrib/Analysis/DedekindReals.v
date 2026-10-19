@@ -121,9 +121,8 @@ Section dedekind.
     - exact _.
   Qed.
 
-  (** A Dedekind real is determined by its lower cut, and also by its upper cut, so inclusions of both cuts suffice. *)
-  Lemma lower_cut_incl_rev (x y : R)
-    (ll : forall q, lower_cut x q -> lower_cut y q) (uu : forall r, upper_cut x r -> upper_cut y r)
+  (** By locatedness, an inclusion of upper cuts gives the reverse inclusion of lower cuts, and vice versa. So inclusions of both cuts suffice for equality of Dedekind reals. *)
+  Lemma lower_cut_incl_rev (x y : R) (uu : forall r, upper_cut x r -> upper_cut y r)
     (q : Q) : lower_cut y q -> lower_cut x q.
   Proof.
     intros p; apply (lower_cut_rounded y q) in p; strip_truncations; destruct p as [q' [l p]].
@@ -132,8 +131,7 @@ Section dedekind.
     - destruct (cut_disjoint y q' p (uu q' c)).
   Qed.
 
-  Lemma upper_cut_incl_rev (x y : R)
-    (ll : forall q, lower_cut x q -> lower_cut y q) (uu : forall r, upper_cut x r -> upper_cut y r)
+  Lemma upper_cut_incl_rev (x y : R) (ll : forall q, lower_cut x q -> lower_cut y q)
     (r : Q) : upper_cut y r -> upper_cut x r.
   Proof.
     intros p; apply (upper_cut_rounded y r) in p; strip_truncations; destruct p as [r' [l p]].
@@ -148,9 +146,9 @@ Section dedekind.
   Proof.
     apply path_dedekindreals_cuts; apply path_forall; intros q; apply path_iff_hprop.
     - apply ll.
-    - apply (lower_cut_incl_rev x y ll uu).
+    - apply (lower_cut_incl_rev x y uu).
     - apply uu.
-    - apply (upper_cut_incl_rev x y ll uu).
+    - apply (upper_cut_incl_rev x y ll).
   Defined.
 
   (** ** Approximation *)
