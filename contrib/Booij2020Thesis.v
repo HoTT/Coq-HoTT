@@ -822,6 +822,18 @@ Definition Booij2020Thesis_6_10_5_item_ii := @isequiv_cauchy_reals_to_dedekind_i
 (** A function lifts to locators if it is equipped with a map from locators for [x] to locators for [f x]. *)
 Definition Booij2020Thesis_7_1_1 := @LiftsToLocators.
 
+(* ================================================== 7.1.2 *)
+(** Remark 7.1.2 *)
+
+(** A lifting to locators does not determine the function, since not every real has a locator. *)
+(* Not formalized: a metatheoretic remark. *)
+
+(* ================================================== 7.1.3 *)
+(** Example 7.1.3 *)
+
+(** The exponential function lifts to locators. *)
+(* Not formalized: an example; needs the exponential function. *)
+
 (* ================================================== 7.1.4 *)
 (** Definition 7.1.4 *)
 
@@ -834,6 +846,12 @@ Definition Booij2020Thesis_7_1_4_item_ii := @IsPointwiseContinuous.
 
 (** A modulus of uniform continuity on an interval [[a, b]]: a modulus of uniform continuity for the restriction to the interval. *)
 Definition Booij2020Thesis_7_1_5 := @UniformModulusOn.
+
+(* ================================================== 7.1.6 *)
+(** Example 7.1.6 *)
+
+(** The exponential function has a modulus of uniform continuity on every [[a, b]], which can be computed when [a] and [b] have locators. *)
+(* Not formalized: an example; needs the exponential function. *)
 
 (* ================================================== 7.1.7 *)
 (** Lemma 7.1.7 *)
@@ -852,7 +870,7 @@ Definition Booij2020Thesis_7_1_8_item_iii := @not_iscontinuousat_step_function.
 (* ================================================== 7.2.1 *)
 (** Theorem 7.2.1 *)
 
-(** The integral over [[a, b]] of a function with a modulus of uniform continuity on [[a, b]] that lifts to locators has a locator, if [a] and [b] do. *)
+(** The integral over [[a, b]] of a function with a modulus of uniform continuity on [[a, b]] that lifts to locators has a locator, if [a] and [b] do. The integral is any integration operator ([Integration]); no such operator is constructed yet. *)
 Definition Booij2020Thesis_7_2_1_item_i := @Integration.
 Definition Booij2020Thesis_7_2_1_item_ii := @integral_unique.
 Definition Booij2020Thesis_7_2_1_item_iii := @riemann_sum.
@@ -861,10 +879,22 @@ Definition Booij2020Thesis_7_2_1_item_v := @islimit_riemann_sum.
 Definition Booij2020Thesis_7_2_1_item_vi := @locator_integral_lifts.
 Definition Booij2020Thesis_7_2_1_item_vii := @locator_integral.
 
+(* ================================================== 7.2.2 *)
+(** Remark 7.2.2 *)
+
+(** Integrals can be defined from the mere existence of a modulus of uniform continuity; the modulus itself is needed only for a locator. *)
+(* Not formalized: the integral is not constructed; the integration operators of [Integration] take only mere uniform continuity ([IsUniformlyContinuous]), while [locator_integral] uses a chosen modulus. *)
+
+(* ================================================== 7.2.3 *)
+(** Example 7.2.3 *)
+
+(** The integral of [sin (x + exp x)] from [0] to [8] has a locator. *)
+(* Not formalized: an example; needs sin and exp. *)
+
 (* ================================================== 7.3.1 *)
 (** Theorem 7.3.1 *)
 
-(** Approximate intermediate value theorem. *)
+(** Approximate intermediate value theorem. The plain version merely gives some [x] with [|f x| < e]: the limit of the bisection need not work, contrary to the statement in the thesis. *)
 Definition Booij2020Thesis_7_3_1_item_i := @approximate_ivt.
 Definition Booij2020Thesis_7_3_1_item_ii := @approximate_ivt_locator.
 
@@ -873,6 +903,12 @@ Definition Booij2020Thesis_7_3_1_item_ii := @approximate_ivt_locator.
 
 (** Locally nonconstant functions. *)
 Definition Booij2020Thesis_7_3_2 := @IsLocallyNonconstant.
+
+(* ================================================== 7.3.3 *)
+(** Example 7.3.3 *)
+
+(** Every strictly monotone function is locally nonconstant, but not conversely. *)
+(* Not formalized: an example. *)
 
 (* ================================================== 7.3.4 *)
 (** Lemma 7.3.4 *)
@@ -886,6 +922,24 @@ Definition Booij2020Thesis_7_3_4 := @locally_nonconstant_rational.
 (** Exact intermediate value theorem: a continuous, locally nonconstant function which lifts to locators, with [f a ≤ 0 ≤ f b] for [a < b] with locators, has a root in [[a, b]] with a locator. *)
 Definition Booij2020Thesis_7_3_5 := @exact_ivt.
 
+(* ================================================== 7.3.6 *)
+(** Remark 7.3.6 *)
+
+(** The exact intermediate value theorem only needs that the function is locally nonzero. *)
+(* Not formalized: [exact_ivt] assumes [IsLocallyNonconstant]; the proof only uses it for [t = 0]. *)
+
+(* ================================================== 7.3.7 *)
+(** Example 7.3.7 *)
+
+(** For [y > 0] with a locator, [exp x = y] has a solution with a locator. *)
+(* Not formalized: an example; needs the exponential function. *)
+
+(* ================================================== 8.0.1 *)
+(** Remark 8.0.1 *)
+
+(** Pseudometric spaces are distinct from premetric spaces. *)
+(* Not formalized: a remark on terminology. *)
+
 (* ================================================== 8.1.1 *)
 (** Definition 8.1.1 *)
 
@@ -893,11 +947,23 @@ Definition Booij2020Thesis_7_3_5 := @exact_ivt.
 Definition Booij2020Thesis_8_1_1_item_i := @IsPseudoMetric.
 Definition Booij2020Thesis_8_1_1_item_ii := @IsMetric.
 
+(* ================================================== 8.1.2 *)
+(** Remark 8.1.2 *)
+
+(** The condition [ρ (x, x) = 0] is equivalent to [x = y -> ρ (x, y) = 0]. *)
+(* Not formalized: a trivial reformulation of [pseudometric_diag]. *)
+
 (* ================================================== 8.1.3 *)
 (** Lemma 8.1.3 *)
 
 (** The Euclidean distance [|x - y|] is a metric. *)
 Definition Booij2020Thesis_8_1_3 := @ismetric_abs_minus.
+
+(* ================================================== 8.1.4 *)
+(** Example 8.1.4 *)
+
+(** Uniformly continuous functions [[a, b] -> [c, d]] that lift to locators form a pseudometric space. *)
+(* Not formalized: an example; it points to Definition 8.2.7 and Corollary 8.2.8. *)
 
 (* ================================================== 8.1.5 *)
 (** Lemma 8.1.5 *)
@@ -972,6 +1038,12 @@ Definition Booij2020Thesis_8_2_3_item_ii := @ispseudometric_uniform_dist.
 
 (** Maps on a closed interval that lift to locators. *)
 Definition Booij2020Thesis_8_2_4 := @IntervalLiftsToLocators.
+
+(* ================================================== 8.2.5 *)
+(** Remark 8.2.5 *)
+
+(** Lifting to locators on a closed interval is structure, and a map of intervals with locators does not determine the function. *)
+(* Not formalized: a metatheoretic remark. *)
 
 (* ================================================== 8.2.6 *)
 (** Lemma 8.2.6 *)
@@ -1053,6 +1125,18 @@ Definition Booij2020Thesis_8_3_7 := @rational_log.
 Definition Booij2020Thesis_8_3_8_item_i := @iterates_modulus.
 Definition Booij2020Thesis_8_3_8_item_ii := @metriccauchymodulus_iterates.
 
+(* ================================================== 8.3.9 *)
+(** Remark 8.3.9 *)
+
+(** Instead of [ρ (T x0, x0) ≤ C], one normally assumes that the space is bounded by [C]. *)
+(* Not formalized: a remark; [banach_fixed_point] assumes only [d (T x0) x0 ≤ C], which follows from such a bound. *)
+
+(* ================================================== 8.3.10 *)
+(** Remark 8.3.10 *)
+
+(** With a real Lipschitz constant [0 < c < 1] or a real bound, a modulus of Cauchy convergence of the iterates merely exists; with locators for them, one can be computed. *)
+(* Not formalized: a remark; the formalization uses rational constants and bounds throughout. *)
+
 (* ================================================== 8.3.11 *)
 (** Theorem 8.3.11 *)
 
@@ -1067,17 +1151,23 @@ Definition Booij2020Thesis_8_4_1_item_i := @prod_dist.
 Definition Booij2020Thesis_8_4_1_item_ii := @ispseudometric_prod.
 Definition Booij2020Thesis_8_4_1_item_iii := @ismetric_prod.
 
+(* ================================================== 8.4.2 *)
+(** Remark 8.4.2 *)
+
+(** The product metric on [R^2] is the taxicab metric. *)
+(* Not formalized: a remark on terminology. *)
+
 (* ================================================== 8.4.3 *)
 (** Lemma 8.4.3 *)
 
-(** A product of uniformly continuous maps has the minimum of the moduli at [e / 2] as modulus. *)
+(** A product of uniformly continuous maps has the minimum of the moduli at [e / 2] as modulus. Only binary products are formalized. *)
 Definition Booij2020Thesis_8_4_3_item_i := @qpos_min.
 Definition Booij2020Thesis_8_4_3_item_ii := @isuniformmodulus_prod.
 
 (* ================================================== 8.4.4 *)
 (** Lemma 8.4.4 *)
 
-(** The diagonal [X -> X * X] has modulus [e / 2]. *)
+(** The diagonal [X -> X * X] has modulus [e / 2]. Only the binary diagonal is formalized. *)
 Definition Booij2020Thesis_8_4_4 := @isuniformmodulus_diagonal.
 
 (* ================================================== 8.4.5 *)
@@ -1095,7 +1185,7 @@ Definition Booij2020Thesis_8_4_6 := @ProductLiftsToLocators.
 (* ================================================== 8.4.7 *)
 (** Theorem 8.4.7 *)
 
-(** Picard–Lindelöf theorem. *)
+(** Picard–Lindelöf theorem, for any integration operator ([Integration]). *)
 Definition Booij2020Thesis_8_4_7_item_i := @picard_lindelof.
 Definition Booij2020Thesis_8_4_7_item_ii := @picard_map.
 Definition Booij2020Thesis_8_4_7_item_iii := @islipschitz_picard_map.
