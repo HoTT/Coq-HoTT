@@ -123,15 +123,6 @@ Section DcpoSup.
     : dcpo_sup x d = s
     := path_issup x (issup_dcpo_sup x d) p.
 
-  Definition dcpo_sup_le {I : Type@{v}} (x y : I -> A)
-    (dx : IsDirected x) (dy : IsDirected y) (le_xy : forall i, x i ≤ y i)
-    : dcpo_sup x dx ≤ dcpo_sup y dy.
-  Proof.
-    apply dcpo_sup_least.
-    intro i.
-    exact (transitivity (le_xy i) (dcpo_sup_upper y dy i)).
-  Defined.
-
 End DcpoSup.
 
 (** ** Directed families *)
@@ -253,48 +244,7 @@ Section ScottContinuous.
     exact (issup_upper (scott_continuous f Bool _ d) false).
   Defined.
 
-  (** Image of the supremum of a directed family under a Scott continuous map into a dcpo. *)
-  Definition scott_continuous_dcpo_sup `{!IsDcpo@{v u' t' s'} Ble} (f : A -> B)
-    `{!IsScottContinuous@{v u t s u' t' s'} f} {I : Type@{v}} (x : I -> A)
-    (d : IsDirected x)
-    : f (dcpo_sup x d) = dcpo_sup (f o x) (isdirected_compose f x d)
-    := (path_dcpo_sup _ _ (scott_continuous f I x d))^.
-
-  #[export] Instance isscottcontinuous_idmap
-    : IsScottContinuous@{v u t s u t s} (idmap : A -> A)
-    := fun I => issup_dcpo_sup.
-
-  #[export] Instance isscottcontinuous_const `{!PartialOrder Ble} (b : B)
-    : IsScottContinuous@{v u t s u' t' s'} (fun _ : A => b).
-  Proof.
-    intros I x d.
-    split.
-    - intro i; reflexivity.
-    - intros t ub.
-      pose proof (fst d) as i; strip_truncations.
-      exact (ub i).
-  Defined.
-
 End ScottContinuous.
-
-Section ScottContinuousCompose.
-  Universes v u t s u' t' s' u'' t'' s''.
-  Context {A : Type@{u}} {B : Type@{u'}} {C : Type@{u''}}
-    {Ale : Le@{u t} A} {Ble : Le@{u' t'} B} {Cle : Le@{u'' t''} C}
-    `{!IsDcpo@{v u t s} Ale} `{!IsDcpo@{v u' t' s'} Ble}.
-
-  #[export] Instance isscottcontinuous_compose (g : B -> C) (f : A -> B)
-    `{!IsScottContinuous@{v u t s u' t' s'} f}
-    `{!IsScottContinuous@{v u' t' s' u'' t'' s''} g}
-    : IsScottContinuous@{v u t s u'' t'' s''} (g o f).
-  Proof.
-    intros I x d.
-    refine (transport (fun a => IsSup (g o (f o x)) (g a))
-              (scott_continuous_dcpo_sup f x d)^ _).
-    exact (scott_continuous g I (f o x) (isdirected_compose f x d)).
-  Defined.
-
-End ScottContinuousCompose.
 
 (** ** Pointed dcpos *)
 

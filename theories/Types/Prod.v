@@ -399,17 +399,6 @@ Proof.
   - apply inr@{k k}; intros [x1 _]; exact (y1 x1).
 Defined.
 
-Instance decidablepaths_prod {A B : Type}
-  `{DecidablePaths A} `{DecidablePaths B}
-  : DecidablePaths (A * B).
-Proof.
-  intros [a1 b1] [a2 b2].
-  destruct (dec (a1 = a2)) as [p|np]; [destruct (dec (b1 = b2)) as [q|nq]|].
-  - exact (inl (path_prod' p q)).
-  - exact (inr (fun r : (a1, b1) = (a2, b2) => nq (ap snd r))).
-  - exact (inr (fun r : (a1, b1) = (a2, b2) => np (ap fst r))).
-Defined.
-
 (** Interaction of [ap] and uncurry *)
 
 (** The function in [ap011] can be uncurried *)

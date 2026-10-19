@@ -6,7 +6,7 @@ From HoTT.DomainTheory Require Import Dcpo.
 
 Local Open Scope type_scope.
 
-(** We construct the dcpo of elements of a subdcpo, products of dcpos, the dcpo of all maps into a dcpo, the dcpo of Scott continuous maps between dcpos and, assuming propositional resizing, the dcpo of propositions. In each case the index universe [v] is unchanged. *)
+(** We construct the dcpo of elements of a subdcpo, the dcpo of all maps into a dcpo and, assuming propositional resizing, the dcpo of propositions. In each case the index universe [v] is unchanged. *)
 
 (** ** The dcpo of elements of a subdcpo *)
 
@@ -50,83 +50,7 @@ Section Subdcpo.
       exact (dcpo_sup_least _ d' b.1 ub).
   Defined.
 
-  (** The inclusion of a subdcpo is Scott continuous. *)
-  #[export] Instance isscottcontinuous_pr1_sig : IsScottContinuous (@pr1 A B)
-    := fun I x d => issup_dcpo_sup _ (isdirected_compose pr1 x d).
-
 End Subdcpo.
-
-(** ** Products *)
-
-Definition le_prod {A B : Type} (Ale : Le A) (Ble : Le B) : Le (A * B)
-  := fun a b => (fst a ≤ fst b) * (snd a ≤ snd b).
-
-Section Product.
-  Context {A B : Type} {Ale : Le A} {Ble : Le B}.
-
-  Local Existing Instance le_prod.
-
-  #[export] Instance partialorder_prod `{!PartialOrder Ale} `{!PartialOrder Ble}
-    : PartialOrder (le_prod Ale Ble).
-  Proof.
-    split.
-    - exact _.
-    - intros a b; unfold le, le_prod; exact _.
-    - split.
-      + intros a; exact (reflexivity _, reflexivity _).
-      + intros a b c p q.
-        exact (transitivity (fst p) (fst q), transitivity (snd p) (snd q)).
-    - intros a b p q.
-      apply path_prod.
-      + exact (antisymmetry Ale _ _ (fst p) (fst q)).
-      + exact (antisymmetry Ble _ _ (snd p) (snd q)).
-  Defined.
-
-  #[export] Instance orderpreserving_fst : OrderPreserving (@fst A B)
-    := fun _ _ => fst.
-
-  #[export] Instance orderpreserving_snd : OrderPreserving (@snd A B)
-    := fun _ _ => snd.
-
-  (** Suprema in a product are computed componentwise. *)
-  #[export] Instance isdcpo_prod `{!IsDcpo Ale} `{!IsDcpo Ble}
-    : IsDcpo (le_prod Ale Ble).
-  Proof.
-    split.
-    1: exact _.
-    intros I x d.
-    pose (d1 := isdirected_compose fst x d).
-    pose (d2 := isdirected_compose snd x d).
-    exists (dcpo_sup _ d1, dcpo_sup _ d2).
-    split.
-    - intro i.
-      exact (dcpo_sup_upper _ d1 i, dcpo_sup_upper _ d2 i).
-    - intros a ub.
-      exact (dcpo_sup_least _ d1 _ (fun i => fst (ub i)),
-             dcpo_sup_least _ d2 _ (fun i => snd (ub i))).
-  Defined.
-
-  #[export] Instance bottom_prod `{Bottom A} `{Bottom B} : Bottom (A * B)
-    := (⊥, ⊥).
-
-  #[export] Instance ispointeddcpo_prod `{Bottom A} `{Bottom B}
-    `{!IsPointedDcpo Ale} `{!IsPointedDcpo Ble}
-    : IsPointedDcpo (le_prod Ale Ble).
-  Proof.
-    split.
-    - exact _.
-    - intro a; exact (bottom_least _, bottom_least _).
-  Defined.
-
-  #[export] Instance isscottcontinuous_fst `{!IsDcpo Ale} `{!IsDcpo Ble}
-    : IsScottContinuous (@fst A B)
-    := fun I x d => issup_dcpo_sup _ (isdirected_compose fst x d).
-
-  #[export] Instance isscottcontinuous_snd `{!IsDcpo Ale} `{!IsDcpo Ble}
-    : IsScottContinuous (@snd A B)
-    := fun I x d => issup_dcpo_sup _ (isdirected_compose snd x d).
-
-End Product.
 
 (** ** Function spaces *)
 
@@ -174,56 +98,10 @@ Section Pointwise.
     : IsSup (fun i => x i a) (dcpo_sup x d a)
     := (dcpo_hassup _ _ (isdirected_compose (fun f : A -> B => f a) x d)).2.
 
-  #[export] Instance bottom_pointwise `{Bottom B} : Bottom (A -> B)
-    := fun _ => ⊥.
-
-  #[export] Instance ispointeddcpo_pointwise `{Bottom B} `{!IsPointedDcpo Ble}
-    : IsPointedDcpo le_pointwise.
-  Proof.
-    split.
-    - exact _.
-    - intros f a; rapply bottom_least.
-  Defined.
-
 End Pointwise.
 
 Hint Extern 2 (IsDcpo (relation_pointwise _)) =>
   exact (isdcpo_pointwise _) : typeclass_instances.
-
-(** ** Scott continuous maps *)
-
-Section ScottContinuousMaps.
-  Universes v u t s u' t' s'.
-  Context `{Funext} {A : Type@{u}} {B : Type@{u'}} {Ale : Le@{u t} A} {Ble : Le@{u' t'} B}
-    `{!IsDcpo@{v u t s} Ale} `{!IsDcpo@{v u' t' s'} Ble}.
-
-  Local Notation le_pointwise := (relation_pointwise (fun _ : A => Ble)).
-
-  (** The Scott continuous maps form a subdcpo of all maps. *)
-  Definition subset_isscottcontinuous : (A -> B) -> HProp
-    := fun f => Build_HProp (IsScottContinuous f).
-
-  #[export] Instance issubdcpo_isscottcontinuous
-    : IsSubdcpo le_pointwise subset_isscottcontinuous.
-  Proof.
-    intros I f d cf J x dx.
-    pose (gs := dcpo_sup_pointwise Ble f d).
-    split.
-    - intro j.
-      apply (issup_least (gs (x j))); intro i.
-      pose proof (cf i : IsScottContinuous (f i)).
-      exact (transitivity (order_preserving (f i) _ _ (dcpo_sup_upper x dx j))
-               (issup_upper (gs _) i)).
-    - intros b ub.
-      apply (issup_least (gs _)); intro i.
-      pose proof (cf i : IsScottContinuous (f i)).
-      apply (issup_least (scott_continuous (f i) J x dx)); intro j.
-      exact (transitivity (issup_upper (gs (x j)) i) (ub j)).
-  Defined.
-
-End ScottContinuousMaps.
-
-(** By [isdcpo_sig], the Scott continuous maps form a dcpo under the pointwise order. *)
 
 (** ** Joins and meets of propositions *)
 
