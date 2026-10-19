@@ -2,7 +2,7 @@
 
 (** This file links the numbered results of Chapters 3–8 of A. B. Booij, _Analysis in Univalent Type Theory_ (PhD thesis, University of Birmingham, 2020) with their formalizations in the HoTT library and in [HoTT_Contrib]. You can look up definitions and theorems by their number in the thesis: the formalization of Lemma 6.6.1 is [Booij2020Thesis_6_6_1], and an item formalized by several results has one definition per result, [Booij2020Thesis_6_6_1_item_i], [Booij2020Thesis_6_6_1_item_ii], and so on. Use [Print] or [About] on these names to find the results they stand for.
 
-Only items that have been formalized have an entry. [BLUEPRINT.md] in the root of the repository lists every numbered item of these chapters, with its status, its dependencies, and how the formalization differs from the thesis. *)
+Every numbered item of these chapters has an entry. An item that has not been formalized (an example, a remark without formal content, a conjecture, or a result that has not been done yet) has an entry with a comment saying so instead of definitions. [BLUEPRINT.md] in the root of the repository lists every numbered item of these chapters, with its status, its dependencies, and how the formalization differs from the thesis. *)
 
 (*  NOTES FOR THE DEVELOPERS:
 
@@ -12,9 +12,11 @@ Only items that have been formalized have an entry. [BLUEPRINT.md] in the root o
 
     2. Each entry defines [Booij2020Thesis_X_Y_Z], or [Booij2020Thesis_X_Y_Z_item_i], [Booij2020Thesis_X_Y_Z_item_ii], ... for an item with several parts, as an alias of the results that formalize it. Use the existing name of a result rather than adding a new definition for the index.
 
-    3. Make entries independent of each other, and import everything before the first entry.
+    3. An item that is not formalized gets an entry with no definitions: after the heading and the short statement in words comes a plain comment starting with "Not formalized:" and saying briefly why or what it would need (e.g. "Not formalized: an example." or "Not formalized: needs the interval object of Section 5.1."), or "Conjecture." for a conjecture. Replace the comment by definitions once the item is formalized. Numbered displayed equations do not get entries of their own; they are covered by the entry of the item that contains them.
 
-    4. Thesis numbers appear only here and in [BLUEPRINT.md]: the formalizations themselves describe the mathematics.
+    4. Make entries independent of each other, and import everything before the first entry.
+
+    5. Thesis numbers appear only here and in [BLUEPRINT.md]: the formalizations themselves describe the mathematics.
 *)
 
 From HoTT Require Import Basics.Overture Basics.Classes.
