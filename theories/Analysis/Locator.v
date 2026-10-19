@@ -642,6 +642,16 @@ Section locator.
 
   End binary_ops.
 
+  (** A real with a locator lies below a positive rational. *)
+  Definition qpos_upper_bound {x : F} (l : locator x) : {B : Qpos Q & x < ' (' B)}.
+  Proof.
+    destruct (upper_bound (locator_join l (locator_left 0))) as [r ltr].
+    assert (r0 : 0 < r).
+    { apply (strictly_order_reflecting (cast Q F)).
+      exact (le_lt_trans _ _ _ (join_ub_r _ _) ltr). }
+    exact (mkQpos r r0; le_lt_trans _ _ _ (join_ub_l _ _) ltr).
+  Defined.
+
   (** A real number that has rational approximations of any precision has a locator. *)
   Definition locator_from_approx {z : F}
     (approx : forall e : Qpos Q, {p : Q | ' (p - ' e) < z < ' (p + ' e)})
@@ -723,14 +733,10 @@ Section locator.
     Definition locator_times : locator (x * y).
     Proof.
       (* The absolute values of [x] and [y], and hence their maximum, have locators. This gives a rational bound [Z]. *)
-      destruct (upper_bound (locator_join (locator_join l (locator_minus l))
-                                          (locator_join m (locator_minus m))))
-        as [Z ltJZ].
+      destruct (qpos_upper_bound (locator_join (locator_join l (locator_minus l))
+                                               (locator_join m (locator_minus m))))
+        as [[Z Zpos] ltJZ].
       destruct (between_join_negate x y (' Z) ltJZ) as [ltZx ltZy].
-      assert (Zpos : 0 < Z).
-      { apply (strictly_order_reflecting qinc).
-        rewrite preserves_0.
-        exact (pos_between_negate _ _ ltZx). }
       apply locator_from_approx; intros e.
       (* We approximate [x] and [y] up to [d], so that [x y] is approximated up to [Z d + d (Z + 1) < e]. *)
       destruct (mult_precision Z Zpos e) as [d [[dpos ltd1] ltdZe]].

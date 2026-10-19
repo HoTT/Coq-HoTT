@@ -399,14 +399,10 @@ Section integration.
         (lexy : x.1 ≤ y.1)
         : locator Q F (integral f fu x y).
       Proof.
-        destruct (upper_bound Q F locator_diff) as [r ltr].
-        assert (r0 : 0 < r).
-        { apply (strictly_order_reflecting (cast Q F)).
-          rewrite (preserves_0 (f:=cast Q F)).
-          exact (le_lt_trans _ _ _ (snd (flip_nonneg_minus _ _) lexy) ltr). }
+        destruct (qpos_upper_bound Q F locator_diff) as [r ltr].
         exact (locator_limit Q F
-                 (M_ismod := cauchymodulus_riemann_sum f fu w fw x y lexy (mkQpos r r0) ltr)
-                 (locator_riemann_sum f lf) (islimit_riemann_sum f fu w fw x y lexy (mkQpos r r0) ltr)).
+                 (M_ismod := cauchymodulus_riemann_sum f fu w fw x y lexy r ltr)
+                 (locator_riemann_sum f lf) (islimit_riemann_sum f fu w fw x y lexy r ltr)).
       Defined.
     End points.
 

@@ -24,8 +24,7 @@ From HoTT.Classes Require Import
   orders.rationals.
 From HoTT.Analysis Require Import Locator.
 From HoTT_Contrib.Analysis Require Import
-  MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators IntermediateValue FunctionSpace
-  Integral.
+  MetricSpace CauchyCompleteness BanachFixedPoint LiftsToLocators FunctionSpace Integral.
 
 Section picard_lindelof.
   Universe UQ.
@@ -339,18 +338,17 @@ Section picard_lindelof.
     destruct (upper_bound Q F (locator_plus Q F (locator_width x0 a lx0 la)
                                       (locator_width y0 b ly0 lb))) as [B ltB].
     set (lgz := lg (fst z) (snd z) lx0 ly0).
-    destruct (upper_bound Q F (locator_join Q F lgz (locator_minus Q F lgz))) as [r ltr].
-    set (N := nQ (S (grid_modulus Q B v 1))).
+    destruct (qpos_upper_bound Q F (locator_join Q F lgz (locator_minus Q F lgz))) as [r ltr].
+    set (N := ' S (grid_modulus Q B v 1) : Qpos Q).
     assert (absz : abs (g z) ≤ join (g z) (- g z)).
     { apply abs_le; [|apply join_ub_l].
       apply flip_le_negate; rewrite negate_involutive; apply join_ub_r. }
-    assert (lt : forall p, abs (g p) < ' (r + N)).
+    assert (lt : forall p, abs (g p) < ' (' (r + N))).
     { intro p; refine (le_lt_trans _ _ _ (abs_le_uniform g v gv B (lt_le _ _ ltB) z p) _).
       rewrite (preserves_plus (f:=cast Q F)).
       apply (strictly_order_preserving (+ _)).
       exact (le_lt_trans _ _ _ absz ltr). }
-    assert (K0 : 0 < r + N) by exact (qpos_of_upper_bound Q F _ _ (abs_nonneg _) (lt z)).
-    exact (mkQpos _ K0; fun p => lt_le _ _ (lt p)).
+    exact (r + N; fun p => lt_le _ _ (lt p)).
   Defined.
 
   (** Picard–Lindelöf: we compute [l] with a locator and [0 < l ≤ a], and a uniformly continuous map [f : [x0 - l, x0 + l] -> [y0 - b, y0 + b]] that lifts to locators, with [f x = y0 + ∫_{x0}^x g (t, f t) dt]. *)
@@ -362,8 +360,7 @@ Section picard_lindelof.
                                   (interval_center x0 l (lt_le _ _ (fst bounds))) x}}}}.
   Proof.
     destruct picard_bound as [K gK].
-    destruct (upper_bound Q F lL) as [rL ltL].
-    assert (rL0 : 0 < rL) by exact (qpos_of_upper_bound Q F _ _ (lt_le _ _ L0) ltL).
+    destruct (qpos_upper_bound Q F lL) as [[rL rL0] ltL].
     assert (K0 := pos_is_pos K).
     set (u := b * ' (/ ' K)); set (w := ' (/ rL / 2) : F).
     assert (u0 : 0 < u).
@@ -391,13 +388,8 @@ Section picard_lindelof.
       assert (PropHolds (0 ≤ w)) by exact (lt_le _ _ w0).
       lhs' exact (order_preserving (L *.) _ _ lw).
       exact (transitivity (order_preserving (.* w) _ _ (lt_le _ _ ltL)) (eq_le _ _ rLw)). }
-    destruct (upper_bound Q F (locator_width y0 b ly0 lb)) as [C ltC].
-    assert (C0 : 0 < C).
-    { refine (qpos_of_upper_bound Q F _ _ _ ltC).
-      apply (snd (flip_nonneg_minus _ _)).
-      exact (transitivity (fst (center_bounds y0 b (lt_le _ _ b0)))
-               (snd (center_bounds y0 b (lt_le _ _ b0)))). }
-    destruct (picard_solution K gK l l0 (meet_lb_l _ _) lKb lLc (mkQpos C C0) (lt_le _ _ ltC))
+    destruct (qpos_upper_bound Q F (locator_width y0 b ly0 lb)) as [C ltC].
+    destruct (picard_solution K gK l l0 (meet_lb_l _ _) lKb lLc C (lt_le _ _ ltC))
       as [f p].
     exists f; intros x fu; rewrite p; unfold picard_value; apply ap.
     exact (ap (fun fu' => integral Q F _ fu' _ x) (path_ishprop _ _)).

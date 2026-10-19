@@ -156,15 +156,6 @@ Section ivt.
     rewrite (preserves_0 (f:=cast Q F)); exact (le_lt_trans _ _ _ u0 ltr).
   Qed.
 
-  (** A nonnegative element with a locator has a positive rational upper bound. *)
-  Local Definition qpos_upper_bound {u : F} (lu : locator Q F u)
-    (u0 : 0 ≤ u)
-    : {B : Qpos Q & u ≤ ' (' B)}.
-  Proof.
-    destruct (upper_bound Q F lu) as [B ltB].
-    exact (mkQpos B (qpos_of_upper_bound u B u0 ltB); lt_le _ _ ltB).
-  Defined.
-
   (** *** Interpolating bisection *)
 
   Local Notation half := (' (1 / 2 : Qpos Q) : Q).
@@ -543,12 +534,11 @@ Section ivt.
     (** The limit of the bisection has a locator, as a limit of midpoints with locators. *)
     Definition approximate_root_locator : locator Q F approximate_root.
     Proof.
-      destruct (qpos_upper_bound (plus lb (minus la)) (snd (flip_nonneg_minus _ _) leab))
-        as [B leB].
+      destruct (qpos_upper_bound Q F (plus lb (minus la))) as [B ltB].
       refine (locator_limit Q F (xs:=c) (M:=nested_modulus B half (pos_is_pos _) half_lt_1)
                 bisect_mid_locator islimit_bisect_mid).
       exact (cauchymodulus_nested z w zinc wdec B half (pos_is_pos _) half_lt_1
-               (bisect_width_le dec a b B leB) c
+               (bisect_width_le dec a b B (lt_le _ _ ltB)) c
                (bisect_mid_between dec (bisect_weight_between f _) a b leab)).
     Defined.
 
@@ -888,10 +878,9 @@ Section ivt.
       Local Definition step_props n := (sign_interval_step (sign_intervals n)).2.
 
       Local Definition sign_width_bound
-        : {B : Qpos Q & sign_upper I0 - sign_lower I0 ≤ ' (' B)}
-        := qpos_upper_bound (locator_plus Q F (sign_upper_locator I0)
-                                    (locator_minus Q F (sign_lower_locator I0)))
-             (lt_le _ _ (snd (flip_pos_minus _ _) (sign_lt I0))).
+        : {B : Qpos Q & sign_upper I0 - sign_lower I0 < ' (' B)}
+        := qpos_upper_bound Q F (locator_plus Q F (sign_upper_locator I0)
+                                   (locator_minus Q F (sign_lower_locator I0))).
 
       Local Notation B := sign_width_bound.1.
 
@@ -899,7 +888,7 @@ Section ivt.
         : w n - z n ≤ ' (' B * nat_iter n (mult shrink) 1).
       Proof.
         induction n as [|n IH].
-        - rewrite mult_1_r; exact sign_width_bound.2.
+        - rewrite mult_1_r; exact (lt_le _ _ sign_width_bound.2).
         - lhs' exact (snd (step_props n)).
           assert (r0 : (0 : F) ≤ ' shrink).
           { rewrite <- (preserves_0 (f:=cast Q F)).
