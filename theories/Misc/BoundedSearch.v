@@ -104,10 +104,9 @@ Section bounded_search_alt_type.
           (P_dec : forall x, Decidable (P x))
           (P_inhab : hexists P).
 
-  (** Bounded search works for every type with a surjection from the naturals, for instance a type equivalent to them: we search for an index whose image satisfies [P]. *)
+  (** Bounded search works for every type with a surjection from the naturals. *)
   Definition minimal_n_alt_type : {x : X & P x}.
   Proof.
-    (* An [x] with [P x] merely has a preimage [n], and then [P (e n)]. *)
     assert (P'_inhab : hexists (P o e)).
     { strip_truncations; destruct P_inhab as [x p].
       pose proof (@center (merely (hfiber e x)) (e_surj x)) as h; strip_truncations.

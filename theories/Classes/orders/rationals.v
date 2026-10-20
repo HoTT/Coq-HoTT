@@ -22,7 +22,6 @@ Generalizable Variables F Q R Rle Rlt.
 
 (** ** Signs of quotients of natural numbers *)
 
-(** Compare two natural numbers by the difference between them. *)
 Local Definition nat_add_cases (a b : nat)
   : {c : nat & (c + b)%nat = a} + {c : nat & (S c + a)%nat = b}.
 Proof.
@@ -32,7 +31,6 @@ Proof.
     exact (c; (nat_add_succ_r c a)^ @ p).
 Defined.
 
-(** In an ordered ring, let [y * (m + 1) + b = a] for natural numbers [a], [b] and [m]. Comparing [a] and [b] determines [y * (m + 1)] as a natural number up to sign, and [y] is positive exactly when [a = c + 1 + b] for a natural number [c]. *)
 Section nat_quotient_sign.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}.
 
@@ -94,7 +92,6 @@ Section nat_quotients.
 
   (** *** The subfield of quotients of natural numbers *)
 
-  (** An element [y] of [F] is a quotient of natural numbers, up to sign, if [y * d + b = a] for natural numbers [a], [b] and positive [d]. *)
   Local Definition IsNatQuot (y : F) : Type
     := merely {a : nat & {b : nat & {m : nat & y * iF (S m) + iF b = iF a}}}.
 
@@ -120,7 +117,6 @@ Section nat_quotients.
     reflexivity.
   Qed.
 
-  (** If [x d1 + b1 = a1] and [y d2 + b2 = a2], then [(x + y) d1 d2 + (b1 d2 + b2 d1) = a1 d2 + a2 d1]. *)
   Local Lemma isnatquot_plus (x y : F)
     : IsNatQuot x -> IsNatQuot y -> IsNatQuot (x + y).
   Proof.
@@ -132,7 +128,6 @@ Section nat_quotients.
     apply plus_quotient_identity.
   Qed.
 
-  (** If [x d + b = a], then [- x d + a = b]. *)
   Local Lemma isnatquot_negate (x : F) : IsNatQuot x -> IsNatQuot (- x).
   Proof.
     intros qx; strip_truncations.
@@ -147,13 +142,11 @@ Section nat_quotients.
   Proof.
     rewrite (plus_mult_distr_r u1 c1 c2), (plus_mult_distr_l c1 u2 c2).
     rewrite (plus_mult_distr_r u1 c1), (plus_mult_distr_l u1 u2 c2), (plus_mult_distr_l c1 u2 c2).
-    (* Both sides are [u1 u2 + u1 c2 + c1 u2 + c1 c2 + c1 c2], up to association and order. *)
     rewrite <- (plus_assoc (u1 * u2 + u1 * c2)), <- (plus_assoc (u1 * u2)).
     apply ap; rewrite <- !plus_assoc; apply ap.
     rewrite plus_comm, <- plus_assoc; apply ap, plus_comm.
   Qed.
 
-  (** If [x d1 + b1 = a1] and [y d2 + b2 = a2], then [x y d1 d2 + (a1 b2 + b1 a2) = a1 a2 + b1 b2]. *)
   Local Lemma isnatquot_mult (x y : F)
     : IsNatQuot x -> IsNatQuot y -> IsNatQuot (x * y).
   Proof.
@@ -166,7 +159,6 @@ Section nat_quotients.
     apply mult_quotient_identity.
   Qed.
 
-  (** If [x d + b = a] with [x] apart from [0], compare [a] and [b]. If [a = c + b], then [x d = c], so [c] is positive and [(1 / x) c + 0 = d]. If [b = c + 1 + a], then [x d = - (c + 1)], so [(1 / x) (c + 1) + d = 0]. *)
   Local Lemma isnatquot_recip (x : F) (p : x ≶ 0)
     : IsNatQuot x -> IsNatQuot (// (x; p)).
   Proof.
@@ -191,7 +183,6 @@ Section nat_quotients.
       apply plus_negate_l.
   Qed.
 
-  (** The subfield of [F] of quotients of natural numbers. *)
   Local Definition NatQuot := {y : F & IsNatQuot y}.
 
   Local Instance natquot_zero : Zero NatQuot := (0; isnatquot_zero).
@@ -265,7 +256,6 @@ Section nat_quotients.
     exact (toR_unique (i o iQ) n)^.
   Qed.
 
-  (** If [i x = i y] and [x] were apart from [y], then [1 = i ((x - y) / (x - y)) = (i x - i y) i (1 / (x - y)) = 0]. *)
   #[export] Instance isinjective_rationals_to_field
     : IsInjective (rationals_to_field Q F).
   Proof.
@@ -299,7 +289,6 @@ Section nat_quotients.
     exact E.
   Qed.
 
-  (** Provided [1] is apart from [0] in [Q], a rational [q] is positive if and only if [i q] is. *)
   Lemma rationals_to_field_pos_iff `{!PropHolds ((1 : Q) ≶ 0)} (q : Q)
     : 0 < q <-> 0 < i q.
   Proof.
@@ -311,7 +300,7 @@ Section nat_quotients.
       exact (nat_quotient_pos_succ (i q) a b m EF qpos).
   Qed.
 
-  (** A positive rational shows that [1] is apart from [0] in [Q]. *)
+  (** Preserving the strict order needs no hypothesis on [Q], since a positive rational shows that [1] is apart from [0] in [Q]. *)
   Local Lemma pos_apart_1_0 (q : Q) : 0 < q -> PropHolds ((1 : Q) ≶ 0).
   Proof.
     intros qpos.
@@ -324,7 +313,6 @@ Section nat_quotients.
     - exact h.
   Qed.
 
-  (** [x < y] iff [0 < y - x], and [i] preserves positivity. *)
   #[export] Instance strictly_order_preserving_rationals_to_field
     : StrictlyOrderPreserving (rationals_to_field Q F).
   Proof.

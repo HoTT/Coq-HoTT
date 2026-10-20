@@ -23,14 +23,12 @@ Section Sup.
   Constraint u <= s, t <= s, w <= s.
   Context {A : Type@{u}} {Ale : Le@{u t} A}.
 
-  (** A supremum of a family is a least upper bound. *)
   Definition IsSup {I : Type@{w}} (x : I -> A) (a : A)
     := prod@{s s} (IsUpperBound x a) (forall b, IsUpperBound x b -> a ≤ b).
 
   Definition IsSemidirected {I : Type@{w}} (x : I -> A)
     := forall i j, merely@{s} (sig@{w t} (fun k => prod@{t t} (x i ≤ x k) (x j ≤ x k))).
 
-  (** A family is directed if its index type is merely inhabited and it is semidirected. Both are properties. *)
   Definition IsDirected {I : Type@{w}} (x : I -> A)
     := prod@{w s} (merely@{w} I) (IsSemidirected x).
 
@@ -69,7 +67,6 @@ Section SupTheory.
 
   Context `{!AntiSymmetric Ale}.
 
-  (** In a partial order suprema are unique, so having a supremum is a property. *)
   Definition path_issup {I : Type} (x : I -> A) {a b : A}
     (p : IsSup x a) (q : IsSup x b)
     : a = b
@@ -88,7 +85,7 @@ End SupTheory.
 
 (** ** Dcpos *)
 
-(** A partial order on [A : Type@{u}] with order in [Type@{t}] is a [v]-dcpo if every directed family indexed by a type in [Type@{v}] has a supremum. The suprema are given as structure, but by [ishprop_hassup] this is a property. *)
+(** The suprema are given as structure, but by [ishprop_hassup] this is a property. *)
 Class IsDcpo@{v u t s} {A : Type@{u}} (Ale : Le@{u t} A) := {
   isdcpo_partialorder :: PartialOrder Ale ;
   dcpo_hassup : forall (I : Type@{v}) (x : I -> A),
@@ -101,7 +98,6 @@ Section DcpoSup.
   Universes v u t s.
   Context {A : Type@{u}} {Ale : Le@{u t} A} `{!IsDcpo@{v u t s} Ale}.
 
-  (** The supremum of a directed family. *)
   Definition dcpo_sup {I : Type@{v}} (x : I -> A) (d : IsDirected x) : A
     := (dcpo_hassup I x d).1.
 
@@ -117,7 +113,6 @@ Section DcpoSup.
     : IsUpperBound x t -> dcpo_sup x d ≤ t
     := issup_least (issup_dcpo_sup x d) t.
 
-  (** Any supremum of a directed family is the one chosen by the dcpo structure. *)
   Definition path_dcpo_sup {I : Type@{v}} (x : I -> A) (d : IsDirected x) {s : A}
     (p : IsSup x s)
     : dcpo_sup x d = s
@@ -130,7 +125,6 @@ End DcpoSup.
 Section Directed.
   Context {A : Type} {Ale : Le A}.
 
-  (** The image of a directed family under a monotone map is directed. *)
   Definition isdirected_compose {B : Type} {Ble : Le B} (f : A -> B)
     `{!OrderPreserving f} {I : Type} (x : I -> A) (d : IsDirected x)
     : IsDirected (f o x).
@@ -145,7 +139,6 @@ Section Directed.
 
   Context `{!PreOrder Ale}.
 
-  (** An increasing sequence is directed. *)
   Local Definition increasing_sequence_le (x : nat -> A) (c : forall n, x n ≤ x n.+1%nat)
     (n m : nat)
     : x n ≤ x (m + n)%nat.
@@ -173,7 +166,7 @@ End Directed.
 
 (** ** Monotone and Scott continuous maps *)
 
-(** Monotone maps are the [OrderPreserving] maps of [Classes.interfaces.orders]. Being monotone is a property. *)
+(** Monotone maps are the [OrderPreserving] maps of [Classes.interfaces.orders]. *)
 #[export] Instance ishprop_orderpreserving `{Funext} {A B : Type} {Ale : Le A}
   {Ble : Le B} `{!is_mere_relation B Ble} (f : A -> B)
   : IsHProp (OrderPreserving f).
@@ -190,7 +183,6 @@ Defined.
   : OrderPreserving (g o f)
   := fun x y p => order_preserving g (f x) (f y) (order_preserving f x y p).
 
-(** A map out of a [v]-dcpo is Scott continuous if it preserves suprema of directed families indexed by types in [Type@{v}]. *)
 Class IsScottContinuous@{v u t s u' t' s'} {A : Type@{u}} {B : Type@{u'}}
   {Ale : Le@{u t} A} {Ble : Le@{u' t'} B} `{!IsDcpo@{v u t s} Ale} (f : A -> B)
   := scott_continuous : forall (I : Type@{v}) (x : I -> A) (d : IsDirected x),
@@ -232,7 +224,7 @@ Section ScottContinuous.
       exact (ub true).
   Defined.
 
-  (** Scott continuous maps are monotone: for [x ≤ y], [y] is the supremum of the directed family with values [x] and [y], so [f y] is the supremum of [f x] and [f y]. *)
+  (** For [x ≤ y], [y] is the supremum of the directed family [bool_family x y], so [f y] is the supremum of [f x] and [f y]. *)
   #[export] Instance orderpreserving_isscottcontinuous (f : A -> B)
     `{!IsScottContinuous@{v u t s u' t' s'} f}
     : OrderPreserving f.
@@ -247,7 +239,6 @@ End ScottContinuous.
 
 (** ** Pointed dcpos *)
 
-(** A dcpo is pointed if it has a least element. *)
 Class IsPointedDcpo@{v u t s} {A : Type@{u}} (Ale : Le@{u t} A) `{Bottom A} := {
   ispointeddcpo_isdcpo :: IsDcpo@{v u t s} Ale ;
   bottom_least : forall x, ⊥ ≤ x
@@ -261,7 +252,6 @@ Section Subdcpo.
   Universes v u t s.
   Context {A : Type@{u}} {Ale : Le@{u t} A} `{!IsDcpo@{v u t s} Ale}.
 
-  (** A subdcpo is a subset that contains the suprema of the directed families in it. *)
   Class IsSubdcpo (B : A -> HProp) :=
     issubdcpo : forall (I : Type@{v}) (x : I -> A) (d : IsDirected x),
       (forall i, B (x i)) -> B (dcpo_sup x d).
@@ -280,7 +270,6 @@ Section Subsets.
   Constraint u <= v.
   Context {A : Type@{u}} {Ale : Le@{u t} A} `{!PartialOrder Ale}.
 
-  (** The image of a family, as a subset. *)
   Local Definition image_subset {I : Type@{v}} (x : I -> A) : A -> HProp@{v}
     := fun a => merely (hfiber x a).
 

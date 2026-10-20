@@ -438,7 +438,6 @@ Proof.
       split; assumption.
 Defined.
 
-(** The same holds for a sequence indexed by [nat] which starts with true and is false somewhere. *)
 Definition sperners_lemma_1d_nat (f : nat -> Type) {dprop : forall i, Decidable (f i)}
   (left_true : f 0%nat) (n : nat) (right_false : ~ f n)
   : {k : nat & f k /\ ~ f k.+1}.

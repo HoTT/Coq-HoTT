@@ -1220,7 +1220,6 @@ Section Reflective_Subuniverse.
         exact (n (to O A a)).
     Defined.
 
-    (** A function from a decidable type into [O B] can be brought inside [O]. *)
     Definition O_decidable_arrow (A B : Type) `{Decidable A} (f : A -> O B)
     : O (A -> B).
     Proof.

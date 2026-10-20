@@ -194,7 +194,6 @@ Section locator.
 
   Local Notation iQ := (naturals_to_semiring nat Q).
 
-  (** To compare [- x] with [q < r], we compare [x] with [- r < - q]. *)
   Definition locator_minus {x : F} (l : locator x) : locator (-x).
   Proof.
     intros q r ltqr.
@@ -215,24 +214,20 @@ Section locator.
     Local Definition locates_above_negate_nat (n : nat) : DHProp
       := locates_right l (lt_negate_nat n).
 
-    (** This happens for some [n]: [x] lies above some rational [q], which lies above some [- n], so the locator cannot place [x] below [- n]. *)
+    (** This happens for some [n], since [x] lies above some rational, which lies above some [- n]. *)
     Local Lemma merely_locates_above_negate_nat : hexists locates_above_negate_nat.
     Proof.
-      (* A rational [q] below [x]. *)
       assert (lt : x - 1 < x) by apply pos_minus_lt_compat_r, lt_0_1.
       assert (h := archimedean_property Q F (x - 1) x lt).
       strip_truncations.
       destruct h as [q [_ ltqx]].
-      (* An [n] with [- n < q]. *)
       destruct (round_up_strict Q (- q)) as [n ltqn].
-      (* Then [x] lies above [- n], so the locator cannot place it below [- n]. *)
       apply tr; exists n.
       apply ltrx_locates_right.
       rhs_V' exact ltqx.
       apply (strictly_order_preserving (cast Q F)), flip_lt_negate_l, ltqn.
     Qed.
 
-    (** Searching for the least such [n] gives a rational below [x]. *)
     Definition lower_bound : {q : Q | ' q < x}.
     Proof.
       destruct (minimal_n locates_above_negate_nat _ merely_locates_above_negate_nat)
@@ -242,7 +237,6 @@ Section locator.
 
   End bounds.
 
-  (** A rational below [- x] gives a rational above [x]. *)
   Definition upper_bound {x : F} (l : locator x) : {r : Q | x < ' r}.
   Proof.
     destruct (lower_bound (locator_minus l)) as [q ltqx].
@@ -274,7 +268,6 @@ Section locator.
       rewrite grid_succ; apply pos_plus_lt_compat_r, pos_is_pos.
     Defined.
 
-    (** The locator decides, for each [k], whether [x] lies above [grid k] or below [grid (k + 1)]. *)
     Local Definition locates_above_grid (k : nat) : DHProp := locates_right l (lt_grid_succ k).
 
     Local Lemma grid_1 : grid 1 = (lower_bound l).1.
@@ -283,7 +276,6 @@ Section locator.
       apply minus_plus_cancel.
     Qed.
 
-    (** The grid passes every rational [r]. *)
     Local Lemma lt_grid (r : Q) : {n : nat & r < grid n}.
     Proof.
       destruct (round_up_strict Q ((r - start) / d)) as [n ltn].
@@ -292,13 +284,11 @@ Section locator.
       apply flip_lt_minus_l, (flip_lt_mult_dec_recip_l (r - start) (iQ n) d dpos), ltn.
     Defined.
 
-    (** At [k = 0] the locator places [x] above [grid 0], since [x] lies above [grid 1 = q]. *)
     Local Lemma locates_above_grid_0 : locates_above_grid 0.
     Proof.
       apply ltrx_locates_right; rewrite grid_1; exact (lower_bound l).2.
     Qed.
 
-    (** Once the grid has passed a rational [r > x], the locator cannot place [x] above [grid k]. *)
     Local Lemma not_locates_above_grid : {n : nat & ~ locates_above_grid n}.
     Proof.
       destruct (upper_bound l) as [r ltxr], (lt_grid r) as [n ltrn].
@@ -308,7 +298,7 @@ Section locator.
       lhs' exact ltxr; apply (strictly_order_preserving (cast Q F)), ltrn.
     Qed.
 
-    (** Where the answer changes, [x] lies above [grid k] and below [grid (k + 2) = grid k + 2 d], which is less than [grid k + e]. *)
+    (** Where the answer changes, [x] lies between [grid k] and [grid (k + 2) = grid k + 2 d < grid k + e]. *)
     Lemma tight_bound : {u : Q | ' u < x < ' (u + ' e)}.
     Proof.
       destruct (sperners_lemma_1d_nat locates_above_grid locates_above_grid_0
@@ -332,28 +322,24 @@ Section locator.
             (m : locator y)
             (ltxy : x < y).
 
-    (** The precision [1 / (n + 1)], which drops below every positive rational. *)
     Local Definition precision (n : nat) : Qpos Q := / ' (S n).
 
     Local Lemma precision_lt (d : Q) (dpos : 0 < d) : {n : nat & ' (precision n) < d}.
     Proof.
       destruct (round_up_strict Q (/ d)) as [n ltn].
       exists n; apply flip_lt_dec_recip_l; [exact dpos|].
-      (* [/ d < n < n + 1] *)
       change (/ d < iQ (S n)); rewrite nat_to_semiring_succ.
       lhs' exact ltn; apply pos_plus_lt_compat_l, lt_0_1.
     Qed.
 
-    (** For each [n], [tight_bound] gives a rational [approx n] with [approx n < x < approx n + e / 2], where [e] is the [n]-th precision. *)
     Local Definition approx (n : nat) : Q := (tight_bound l (precision n / 2)).1.
 
-    (** We test whether [y] lies above [approx n + e / 2], by comparing it with [approx n + e / 2 < approx n + e]. *)
+    (** We search for an [n] for which the locator for [y] places [y] above [approx n + e / 2], comparing it with [approx n + e / 2 < approx n + e]; this happens once [e] is less than [y - x]. *)
     Local Definition locates_above_approx (n : nat) : DHProp
       := locates_right m (strictly_order_preserving (approx n +)
                             (' (precision n / 2)) (' precision n)
                             (qpos_half_lt (precision n))).
 
-    (** The test succeeds as soon as [e] is less than a rational [d < y - x], since then [approx n + e < x + d < y]. *)
     Local Lemma merely_locates_above_approx : hexists locates_above_approx.
     Proof.
       assert (ltyx : 0 < y - x) by exact (snd (flip_pos_minus x y) ltxy).
@@ -369,7 +355,6 @@ Section locator.
       - exact (fst (tight_bound l (precision n / 2)).2).
     Qed.
 
-    (** Searching for the least [n] for which the test succeeds gives a rational [approx n + e / 2] between [x] and [y]. *)
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
       destruct (minimal_n locates_above_approx _ merely_locates_above_approx)
@@ -383,7 +368,6 @@ Section locator.
 
   (** ** Cotransitivity *)
 
-  (** Strong cotransitivity: for reals [x < y] with locators and a real [z] with a locator, we can choose between [x < z] and [z < y]. We find rationals [x < q < r < y], and ask the locator for [z] to compare [z] with [q < r]. *)
   Definition locator_cotransitive {x y z : F} (l : locator x) (m : locator y) (n : locator z)
     : x < y -> (x < z) + (z < y).
   Proof.
@@ -395,7 +379,6 @@ Section locator.
     - exact (inr (transitivity ltzr ltry)).
   Defined.
 
-  (** In particular, for reals [x] and [y] with locators and a rational [s], if [x < y] then we can choose between [x < s] and [s < y]. *)
   Definition locator_cotransitive_rational {x y : F} (l : locator x) (m : locator y) (s : Q)
     : x < y -> (x < ' s) + (' s < y)
     := locator_cotransitive l m (locator_left s).
@@ -414,7 +397,6 @@ Section locator.
       - apply lt_ne_flip, rpos.
     Qed.
 
-    (** For [q < r]: if [q ≤ 0], then [q] lies below the positive [1 / x]. If [0 < q], we compare [x] with [1 / r < 1 / q]: if [1 / r < x], then [1 < r x], so [1 / x < r]; if [x < 1 / q], then [q x < 1], so [q < 1 / x]. *)
     Definition locator_recip_pos : locator (// (x ; recip_nu)).
     Proof.
       intros q r ltqr.
@@ -439,7 +421,6 @@ Section locator.
 
     Local Definition recip_neg_nu := negative_apart_zero x xneg.
 
-    (** For negative [x], we have [1 / x = - (1 / (- x))] with [- x] positive. *)
     Definition locator_recip_neg : locator (// (x ; recip_neg_nu)).
     Proof.
       assert (negxpos : 0 < - x) by exact (fst (flip_neg_negate x) xneg).
@@ -449,7 +430,6 @@ Section locator.
     Qed.
   End recip_neg.
 
-  (** A real apart from [0] is negative or positive. *)
   Definition locator_recip {x : F} (l : locator x) (nu : x ≶ 0) : locator (// (x ; nu)).
   Proof.
     destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
@@ -467,7 +447,6 @@ Section locator.
             (l : locator x)
             (m : locator y).
 
-    (** For [q < r], let [e = (r - q) / 2] and take a rational [u < y < u + e]. We compare [x] with [q - u < q - u + e]: if [q - u < x], then [q = (q - u) + u < x + y]; if [x < q - u + e], then [x + y < (q - u + e) + (u + e) = r]. *)
     Definition locator_plus : locator (x + y).
     Proof.
       intros q r ltqr.
@@ -510,7 +489,6 @@ Section locator.
 
   (** ** Approximations *)
 
-  (** A real with a locator lies below a positive rational: a rational upper bound of [max(x, 0)]. *)
   Definition qpos_upper_bound {x : F} (l : locator x) : {B : Qpos Q & x < ' (' B)}.
   Proof.
     destruct (upper_bound (locator_join l (locator_left 0))) as [r ltr].
@@ -519,7 +497,6 @@ Section locator.
     exact (mkQpos r r0; ltxr).
   Defined.
 
-  (** Splitting an interval in three: for [e = (r - q) / 3] we have [r = q + 3 e], so [q + e < r - e]. *)
   Local Lemma lt_trisect (q r : Q) (ltqr : q < r)
     : q + ' (Qpos_diff q r ltqr / 3) < r - ' (Qpos_diff q r ltqr / 3).
   Proof.
@@ -532,7 +509,7 @@ Section locator.
     apply pos_plus_lt_compat_r, pos_is_pos.
   Qed.
 
-  (** A pair of predicates [L] and [U] on [Q] is located in a reflective subuniverse [O] if [O (L q + U r)] whenever [q < r]. For the identity modality and the predicates [' q < x] and [x < ' r] this is a locator for [x], and for the propositional truncation it is the locatedness of a Dedekind cut. Such a pair is located if it has located approximations [La e] and [Ua e] of every precision [e], in the sense that [La e (q + e)] implies [L q] and [Ua e (r - e)] implies [U r]: for [q < r], we use the approximation of precision [(r - q) / 3]. *)
+  (** We work in a reflective subuniverse [O] so that this also applies to Dedekind cuts: for the identity modality and the predicates [' q < x] and [x < ' r], the conclusion is a locator for [x], and for the propositional truncation it is the locatedness of a cut. *)
   Definition located_from_approximations (O : ReflectiveSubuniverse) {L U : Q -> Type}
     (La Ua : Qpos Q -> Q -> Type) (loc : forall e q r, q < r -> O (La e q + Ua e r))
     (lower : forall e q, La e (q + ' e) -> L q) (upper : forall e r, Ua e (r - ' e) -> U r)
@@ -542,7 +519,6 @@ Section locator.
        O_functor O (functor_sum (lower e q) (upper e r))
          (loc e (q + ' e) (r - ' e) (lt_trisect q r ltqr)).
 
-  (** A real number which is arbitrarily close to real numbers with locators has a locator: if [z] is within [e] of [y] and [q + e < y], then [q < y - e < z], and if [y < r - e], then [z < y + e < r]. *)
   Definition locator_close {z : F}
     (approx : forall e : Qpos Q, {y : F & prod (locator y) (y - ' (' e) < z < y + ' (' e))})
     : locator z.
@@ -560,7 +536,6 @@ Section locator.
       apply flip_lt_minus_r, lt.
   Defined.
 
-  (** A real number that has rational approximations of any precision has a locator, since rationals have locators. *)
   Definition locator_from_approx {z : F}
     (approx : forall e : Qpos Q, {p : Q | ' (p - ' e) < z < ' (p + ' e)})
     : locator z.
@@ -576,7 +551,6 @@ Section locator.
 
   Section times.
 
-    (** For positive rationals [Z] and [e], a rational [0 < d < 1] with [d (2 Z + 1) < e]: we take [d = e / K] with [K = e + (2 Z + 1)], so that [d K = e]. Then [d < 1] since [e < K], and [d (2 Z + 1) < d e + d (2 Z + 1) = e]. *)
     Local Definition mult_precision (Z : Q) (Zpos : 0 < Z) (e : Qpos Q)
       : {d : Q & prod (prod (0 < d) (d < 1)) (d * (Z + Z + 1) < ' e)}.
     Proof.
@@ -596,7 +570,6 @@ Section locator.
         apply pos_plus_lt_compat_r, pos_mult; [exact dpos|apply pos_is_pos].
     Defined.
 
-    (** If [u < v < u + d], then [v] is within [d] of [u]. *)
     Local Lemma lt_bound_tight {u v d : F} (dpos : 0 < d) (ltuv : u < v) (ltvu : v < u + d)
       : - d < v - u < d.
     Proof.
@@ -604,7 +577,6 @@ Section locator.
       exact (transitivity (fst (pos_minus_lt_compat_r u d) dpos) ltuv).
     Qed.
 
-    (** If moreover [- Z < v < Z] and [d < 1], then [- (Z + 1) < u < Z + 1]. *)
     Local Lemma lt_bound_tight_succ {u v d Z : F} (d1 : d < 1) (ltuv : u < v) (ltvu : v < u + d)
       (ltZv : - Z < v < Z)
       : - (Z + 1) < u < Z + 1.
@@ -618,7 +590,6 @@ Section locator.
         apply pos_plus_lt_compat_r, lt_0_1.
     Qed.
 
-    (** Hence if [x] and [y] lie between [- Z] and [Z], and [a < x < a + d] and [c < y < c + d] for [0 < d < 1], then [x y] is within [Z d + d (Z + 1) = d (2 Z + 1)] of [a c]. *)
     Local Lemma mult_tight_bound {x y a c d Z : F} (ltZx : - Z < x < Z) (ltZy : - Z < y < Z)
       (dpos : 0 < d) (d1 : d < 1) (ltxa : a < x < a + d) (ltyc : c < y < c + d)
       : - (d * (Z + Z + 1)) < x * y - a * c < d * (Z + Z + 1).
@@ -636,7 +607,7 @@ Section locator.
             (l : locator x)
             (m : locator y).
 
-    (** If [x] and [y] have locators, then so does [x * y]. We bound [x] and [y] by a positive rational [Z], using locators for their absolute values. For a precision [e], we choose [d] as in [mult_precision] and rationals [a < x < a + d] and [c < y < c + d]; then [x y] is within [d (2 Z + 1) < e] of [a c]. *)
+    (** We bound [x] and [y] by a positive rational [Z]. For a precision [e], we choose [d] as in [mult_precision] and rationals [a < x < a + d] and [c < y < c + d]; then [x y] is within [d (2 Z + 1) < e] of [a c]. *)
     Definition locator_times : locator (x * y).
     Proof.
       pose (lJ := locator_join (locator_join l (locator_minus l))
@@ -650,7 +621,6 @@ Section locator.
       exists (a * c).
       rewrite (preserves_plus (f:=cast Q F)) in ltxa, ltyc.
       change (' (mkQpos d dpos)) with d in ltxa, ltyc.
-      (* Transfer [0 < d < 1] and [d (2 Z + 1) < e] to [F]. *)
       assert (dpos' : 0 < ' d) by exact (fst (rationals_to_field_pos_iff d) dpos).
       assert (ltd1' : ' d < 1).
       { rewrite <- (preserves_1 (f:=cast Q F)).
@@ -677,7 +647,6 @@ Section locator.
     Lemma locator_limit {l} : IsLimit _ _ xs l -> locator l.
     Proof.
       intros islim; apply locator_close; intros e.
-      (* The term [xs (M (e / 2))] is within [e] of the limit. *)
       exists (xs (M (e / 2))); split.
       - apply ls.
       - exact (modulus_close_limit Q F xs islim e).

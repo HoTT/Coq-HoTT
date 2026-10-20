@@ -18,7 +18,6 @@ Fixpoint nat_unpair (n : nat) : nat * nat
              end
      end.
 
-(** [nat_unpair] moves along a diagonal from [(a + 1, b)] to [(a, b + 1)], so if [(a + b, 0)] is hit, then so is [(a, b)]. *)
 Local Definition nat_unpair_hit_diagonal (a b n : nat) (p : nat_unpair n = (a + b, 0))
   : {m : nat & nat_unpair m = (a, b)}.
 Proof.
@@ -28,7 +27,6 @@ Proof.
     exists (S m); cbn; rewrite q; reflexivity.
 Defined.
 
-(** At the end of a diagonal it moves from [(0, d)] to [(d + 1, 0)], so every [(d, 0)] is hit. *)
 Local Definition nat_unpair_hit_axis (d : nat) : {n : nat & nat_unpair n = (d, 0)}.
 Proof.
   induction d as [|d IH].
@@ -40,7 +38,6 @@ Defined.
 Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
   := nat_unpair_hit_diagonal a b (nat_unpair_hit_axis (a + b)).1 (nat_unpair_hit_axis (a + b)).2.
 
-(** Surjections from the natural numbers onto [X] and onto [Y] give a surjection onto [X * Y]. *)
 Definition nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y) (n : nat) : X * Y
   := (s (fst (nat_unpair n)), t (snd (nat_unpair n))).
 

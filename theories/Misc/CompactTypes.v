@@ -55,13 +55,12 @@ Proof.
     exact (fun u => r (a; u)).
 Defined.
 
-(** The weak limited principle of omniscience: for every decidable family over [nat], we can decide whether it is nowhere inhabited. *)
+(** The weak limited principle of omniscience. *)
 Definition WLPO
   := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
 
 Instance ishprop_wlpo `{Funext} : IsHProp WLPO := _.
 
-(** It says exactly that [nat] is Π-compact. *)
 Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat.
 Proof.
   split.

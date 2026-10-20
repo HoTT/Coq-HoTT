@@ -103,7 +103,6 @@ rewrite <-(dec_recip_involutive x).
 apply flip_lt_dec_recip;trivial.
 Qed.
 
-(** Dividing by a positive [z] on the left of [<] is multiplying by [z] on the right. *)
 Lemma flip_lt_mult_dec_recip_l x y z : 0 < z -> x / z < y <-> x < y * z.
 Proof.
 intros E.

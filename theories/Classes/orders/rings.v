@@ -168,7 +168,6 @@ Section ring_order.
   apply flip_nonneg_negate. trivial.
   Qed.
 
-  (** Two elements of an interval [[a, b]] differ by at most [b - a]. *)
   Lemma interval_minus_le (a b s t : R) : a ≤ s ≤ b -> a ≤ t ≤ b -> s - t ≤ b - a.
   Proof.
     intros [_ lesb] [leat _].
@@ -230,7 +229,6 @@ Section strict_ring_order.
   split; apply flip_lt_minus_r.
   Qed.
 
-  (** The subtracted element and the bound can be exchanged. *)
   Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
   Proof.
     intros E; apply (snd (flip_lt_minus_l z y x)); rewrite plus_comm.
@@ -289,7 +287,6 @@ Section strict_ring_order.
   apply flip_pos_negate. trivial.
   Qed.
 
-  (** [v] lies within [e] of [u] iff [u - e < v < u + e]. *)
   Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
   Proof.
     split; intros [lo hi]; split.
@@ -299,7 +296,6 @@ Section strict_ring_order.
     - rewrite plus_comm; exact (fst (flip_lt_minus_l u v e) hi).
   Qed.
 
-  (** Being within [e] is symmetric. *)
   Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
   Proof.
     intros [lo hi]; rewrite (negate_swap_r u v); split.
@@ -307,7 +303,6 @@ Section strict_ring_order.
     - exact (flip_lt_negate_l e (v - u) lo).
   Qed.
 
-  (** A bound [- x < z < x] can be weakened to a larger [y]. *)
   Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
   Proof.
     intros [ltxz ltzx] ltxy; split.
@@ -333,7 +328,6 @@ End strict_ring_apart.
 Section symmetric_bounds.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
 
-  (** An element strictly between [- y] and [y] shows that [y] is positive. *)
   Lemma pos_between_negate x y : - y < x < y -> 0 < y.
   Proof.
     intros [ltyx ltxy].
@@ -343,7 +337,6 @@ Section symmetric_bounds.
     - assumption.
   Qed.
 
-  (** If [- S < s < S] and [- T < t < T], then [s * t < S * T]: either [s * t] is below the positive [S * T], or [s] and [t] have the same sign. *)
   Local Lemma mult_lt_bound_r s t S T : - S < s < S -> - T < t < T -> s * t < S * T.
   Proof.
     intros [ltSs ltsS] [ltTt lttT].
@@ -357,7 +350,6 @@ Section symmetric_bounds.
       apply mult_lt_compat; first [apply flip_neg_negate | apply flip_lt_negate_l]; assumption.
   Qed.
 
-  (** Applying this to [- s] gives the lower bound. *)
   Lemma mult_lt_bound s t S T
     : - S < s < S -> - T < t < T -> - (S * T) < s * t < S * T.
   Proof.
@@ -369,7 +361,6 @@ Section symmetric_bounds.
     - exact (mult_lt_bound_r s t S T (ltSs, ltsS) ltt).
   Qed.
 
-  (** The difference of two products, for estimating it. *)
   Local Lemma mult_minus_mult x y u w
     : x * y - u * w = x * (y - w) + (x - u) * w.
   Proof.
@@ -379,7 +370,6 @@ Section symmetric_bounds.
     reflexivity.
   Qed.
 
-  (** If [|x| < X], [|w| < W], [|x - u| < D] and [|y - w| < D], then [|x * y - u * w| < X * D + D * W]. *)
   Lemma mult_minus_mult_lt_bound x y u w X W D
     : - X < x < X -> - W < w < W -> - D < x - u < D -> - D < y - w < D
       -> - (X * D + D * W) < x * y - u * w < X * D + D * W.
@@ -398,7 +388,6 @@ End symmetric_bounds.
 Section intervals.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
 
-  (** Two elements of an interval of width less than [d] are less than [d] apart. *)
   Lemma interval_minus_lt (a b s t d : R)
     : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
   Proof.
@@ -408,7 +397,6 @@ Section intervals.
     - rapply le_lt_trans; [exact (interval_minus_le a b s t sab tab)|exact lt].
   Qed.
 
-  (** Multiplication by [v] is monotone on [[a, b]], so [u * v] cannot lie strictly below both [a * v] and [b * v]. *)
   Local Lemma not_lt_mult_endpoints a b u v
     : a ≤ u -> u ≤ b -> u * v < a * v -> u * v < b * v -> Empty.
   Proof.
@@ -425,7 +413,6 @@ Section intervals.
       + exact (le_not_lt_flip (b - u) 0 lebu ltub'').
   Qed.
 
-  (** Hence a strict lower bound on [a * v] and [b * v] is a strict lower bound on [u * v]. *)
   Lemma lt_mult_endpoints_l q a b u v
     : a ≤ u -> u ≤ b -> q < a * v -> q < b * v -> q < u * v.
   Proof.
@@ -437,7 +424,6 @@ Section intervals.
     destruct (not_lt_mult_endpoints a b u v leau leub ltua ltub).
   Qed.
 
-  (** Applying this to [- v] gives the upper bound. *)
   Lemma mult_endpoints_lt_r r a b u v
     : a ≤ u -> u ≤ b -> a * v < r -> b * v < r -> u * v < r.
   Proof.
@@ -448,7 +434,6 @@ Section intervals.
     - exact (snd (flip_lt_negate (b * v) r) ltbr).
   Qed.
 
-  (** Hence a bound on the four products of the endpoints of [[a, b]] and [[c, d]] is a bound on [u * w] for [u] in [[a, b]] and [w] in [[c, d]]. *)
   Lemma lt_mult_corners_l q a b c d u w
     : a ≤ u -> u ≤ b -> c ≤ w -> w ≤ d
       -> q < a * c -> q < a * d -> q < b * c -> q < b * d -> q < u * w.
@@ -480,14 +465,12 @@ Section abs.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt} `{!Abs R}.
   Local Existing Instance pseudo_order_apart.
 
-  (** Up to double negation, every element is nonnegative or nonpositive. *)
   Lemma nonneg_or_nonpos_not_not (x : R) : ~~ ((0 ≤ x) + (x ≤ 0)).
   Proof.
     intro n; apply n, inr, not_lt_le_flip.
     intro lt0x; apply n, inl, lt_le, lt0x.
   Qed.
 
-  (** Hence inequalities and equalities, which are stable under double negation, can be proved by cases on the sign of an element. *)
   Local Lemma le_by_sign (x a b : R)
     : (0 ≤ x -> a ≤ b) -> (x ≤ 0 -> a ≤ b) -> a ≤ b.
   Proof.

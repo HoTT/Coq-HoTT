@@ -10,7 +10,6 @@ Local Open Scope type_scope.
 
 (** ** The dcpo of elements of a subdcpo *)
 
-(** The order on [A] restricts to the elements of a subtype of [A]. *)
 Definition le_sig {A : Type} {Ale : Le A} (B : A -> Type) : Le (sig B)
   := fun a b => a.1 ≤ b.1.
 
@@ -73,12 +72,10 @@ Section Pointwise.
       apply (antisymmetry Ble); [exact (p a)|exact (q a)].
   Defined.
 
-  (** Evaluation at a point is monotone. *)
   #[export] Instance orderpreserving_ev (a : A)
     : OrderPreserving (Ale:=le_pointwise) (fun f : A -> B => f a)
     := fun f g p => p a.
 
-  (** Suprema in [A -> B] are computed pointwise. *)
   #[export] Instance isdcpo_pointwise `{!IsDcpo Ble} : IsDcpo le_pointwise.
   Proof.
     split.
@@ -111,7 +108,6 @@ Section HPropLattice.
   Constraint w <= j, i <= j.
   Context `{PropResizing} {I : Type@{w}}.
 
-  (** The join of a family of propositions in [HProp@{i}], indexed by a type in [Type@{w}]; the universe [j] contains both. *)
   Definition hprop_join (P : I -> HProp@{i}) : HProp@{i}
     := Build_HProp (smalltype@{i j} (merely@{j} {k : I & P k})).
 
@@ -146,7 +142,6 @@ End HPropLattice.
 
 (** ** The dcpo of propositions *)
 
-(** Propositions are ordered by implication. *)
 Definition le_hprop@{i u | i < u} : Le@{u i} HProp@{i}
   := fun P Q => P -> Q.
 
@@ -162,7 +157,7 @@ Proof.
     exact (path_iff_hprop p q).
 Defined.
 
-(** With propositional resizing, [HProp@{i}] is a [v]-dcpo for every universe [v]. By [isdcpo_pointwise], the same holds for the subsets [A -> HProp@{i}] of a type [A], ordered by inclusion. *)
+(** By [isdcpo_pointwise], the same holds for the subsets [A -> HProp@{i}] of a type [A], ordered by inclusion. *)
 #[export] Instance isdcpo_hprop@{v i u s} `{PropResizing} `{Univalence} : IsDcpo@{v u i s} le_hprop@{i u}.
 Proof.
   split.

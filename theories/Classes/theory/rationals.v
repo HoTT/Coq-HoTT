@@ -622,7 +622,6 @@ Qed.
 
 End enumerable.
 
-(** A surjection from [nat] onto the rationals gives one onto pairs of a rational and a positive rational. *)
 Definition rationals_qpos_enumerator (e : nat -> Q) `{!IsSurjection e} : nat -> Q * Q+
   := nat_prod_enumerator e (Qpos_enumerator (H1:=Build_Enumerable Q e _)).
 
