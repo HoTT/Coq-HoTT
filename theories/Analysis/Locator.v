@@ -515,22 +515,17 @@ Section locator.
     exact (mkQpos r r0; ltxr).
   Defined.
 
-  (** Splitting an interval in three: if [r = q + 3 e], then [q + e < r - e]. *)
-  Local Lemma lt_trisect_by (q r : Q) (e : Qpos Q) (p : q + (' e + ' e + ' e) = r)
-    : q + ' e < r - ' e.
-  Proof.
-    apply (snd (flip_lt_minus_r (' e) r (q + ' e))).
-    rewrite <- p, !plus_assoc.
-    apply pos_plus_lt_compat_r, pos_is_pos.
-  Qed.
-
-  (** This applies to [e = (r - q) / 3]. *)
+  (** Splitting an interval in three: for [e = (r - q) / 3] we have [r = q + 3 e], so [q + e < r - e]. *)
   Local Lemma lt_trisect (q r : Q) (ltqr : q < r)
     : q + ' (Qpos_diff q r ltqr / 3) < r - ' (Qpos_diff q r ltqr / 3).
   Proof.
-    apply lt_trisect_by.
-    pose (D := Qpos_diff q r ltqr).
-    exact (Qpos_diff_pr q r ltqr @ ap (q +) (ap (cast (Qpos Q) Q) (pos_split3 D)))^.
+    set (e := Qpos_diff q r ltqr / 3).
+    assert (p : q + (' e + ' e + ' e) = r).
+    { rhs napply (Qpos_diff_pr q r ltqr).
+      exact (ap (q +) (ap (cast (Qpos Q) Q) (pos_split3 (Qpos_diff q r ltqr))))^. }
+    apply (snd (flip_lt_minus_r (' e) r (q + ' e))).
+    rewrite <- p, !plus_assoc.
+    apply pos_plus_lt_compat_r, pos_is_pos.
   Qed.
 
   (** A pair of predicates [L] and [U] on [Q] is located in a reflective subuniverse [O] if [O (L q + U r)] whenever [q < r]. For the identity modality and the predicates [' q < x] and [x < ' r] this is a locator for [x], and for the propositional truncation it is the locatedness of a Dedekind cut. Such a pair is located if it has located approximations [La e] and [Ua e] of every precision [e], in the sense that [La e (q + e)] implies [L q] and [Ua e (r - e)] implies [U r]: for [q < r], we use the approximation of precision [(r - q) / 3]. *)
