@@ -57,11 +57,11 @@ Ltac strip_truncations :=
   progress repeat
     match goal with
     | [ T : ?A |- _ ]
-      => (* Checking that [T] is a truncation first is much cheaper than failing to apply [Trunc_ind] to every other hypothesis. *)
+      => (* Checking that [T] is a truncation is much cheaper than failing to apply [Trunc_ind]. *)
         lazymatch eval hnf in A with Trunc _ _ => idtac end;
         revert_opaque T;
         nrefine (@Trunc_ind _ _ _ _ _);
-        (* Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated: *)
+        (* The first subgoal is the requirement that the goal be appropriately truncated; fail if it can't be solved by typeclass search. *)
         [exact _|];
         intro T
     end.
