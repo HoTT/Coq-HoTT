@@ -34,29 +34,29 @@ Defined.
 Section nat_quotient_sign.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}.
 
-  Local Notation iR := (naturals_to_semiring nat R).
+  Local Notation nR := (naturals_to_semiring nat R).
 
-  Context (y : R) (a b m : nat) (E : y * iR (S m) + iR b = iR a).
+  Context (y : R) (a b m : nat) (E : y * nR (S m) + nR b = nR a).
 
-  Local Lemma nat_quotient_eq_l (c : nat) (p : (c + b)%nat = a) : y * iR (S m) = iR c.
+  Local Lemma nat_quotient_eq_l (c : nat) (p : (c + b)%nat = a) : y * nR (S m) = nR c.
   Proof.
-    apply (right_cancellation (+) (iR b)).
-    rewrite E, <- p, (preserves_plus (f:=iR)); reflexivity.
+    apply (right_cancellation (+) (nR b)).
+    rewrite E, <- p, (preserves_plus (f:=nR)); reflexivity.
   Qed.
 
   Local Lemma nat_quotient_eq_r (c : nat) (p : (S c + a)%nat = b)
-    : y * iR (S m) = - iR (S c).
+    : y * nR (S m) = - nR (S c).
   Proof.
-    destruct p; apply (right_cancellation (+) (iR (S c) + iR a)).
+    destruct p; apply (right_cancellation (+) (nR (S c) + nR a)).
     rewrite (plus_assoc (- _)), plus_negate_l, plus_0_l.
-    rewrite <- (preserves_plus (f:=iR)); exact E.
+    rewrite <- (preserves_plus (f:=nR)); exact E.
   Qed.
 
   Context `{!PropHolds ((1 : R) ≶ 0)}.
 
   Local Lemma nat_quotient_pos_succ (ypos : 0 < y) : {c : nat & (S c + b)%nat = a}.
   Proof.
-    assert (dpos : 0 < y * iR (S m))
+    assert (dpos : 0 < y * nR (S m))
       by (apply pos_mult_compat; [exact ypos|apply nat_to_semiring_succ_pos]).
     destruct (nat_add_cases a b) as [[c p]|[c p]].
     - destruct c as [|c]; [|exact (c; p)].
@@ -70,7 +70,7 @@ Section nat_quotient_sign.
   Local Lemma nat_quotient_succ_pos (c : {c : nat & (S c + b)%nat = a}) : 0 < y.
   Proof.
     destruct c as [c p].
-    apply (pos_mult_rev_l y (iR (S m))).
+    apply (pos_mult_rev_l y (nR (S m))).
     - rewrite (nat_quotient_eq_l (S c) p); apply nat_to_semiring_succ_pos.
     - apply nat_to_semiring_succ_pos.
   Qed.
@@ -81,19 +81,19 @@ End nat_quotient_sign.
 Section nat_quotients.
   Context `{OrderedField F}.
 
-  Local Notation iF := (naturals_to_semiring nat F).
+  Local Notation nF := (naturals_to_semiring nat F).
 
-  Let iF_plus (a b : nat) : iF (a + b)%nat = iF a + iF b
+  Let nF_plus (a b : nat) : nF (a + b)%nat = nF a + nF b
     := preserves_plus a b.
-  Let iF_mult (a b : nat) : iF (a * b)%nat = iF a * iF b
+  Let nF_mult (a b : nat) : nF (a * b)%nat = nF a * nF b
     := preserves_mult a b.
-  Let iF_mult_succ (m1 m2 : nat) : iF (S (m2 + m1 * S m2)) = iF (S m1) * iF (S m2)
+  Let nF_mult_succ (m1 m2 : nat) : nF (S (m2 + m1 * S m2)) = nF (S m1) * nF (S m2)
     := preserves_mult (S m1) (S m2).
 
   (** *** The subfield of quotients of natural numbers *)
 
   Local Definition IsNatQuot (y : F) : Type
-    := merely {a : nat & {b : nat & {m : nat & y * iF (S m) + iF b = iF a}}}.
+    := merely {a : nat & {b : nat & {m : nat & y * nF (S m) + nF b = nF a}}}.
 
   Local Lemma isnatquot_zero : IsNatQuot 0.
   Proof.
@@ -124,7 +124,7 @@ Section nat_quotients.
     destruct qx as [a1 [b1 [m1 E1]]], qy as [a2 [b2 [m2 E2]]].
     apply tr; exists (a1 * S m2 + a2 * S m1)%nat,
       (b1 * S m2 + b2 * S m1)%nat, (m2 + m1 * S m2)%nat.
-    rewrite iF_mult_succ, !iF_plus, !iF_mult, <- E1, <- E2.
+    rewrite nF_mult_succ, !nF_plus, !nF_mult, <- E1, <- E2.
     apply plus_quotient_identity.
   Qed.
 
@@ -154,7 +154,7 @@ Section nat_quotients.
     destruct qx as [a1 [b1 [m1 E1]]], qy as [a2 [b2 [m2 E2]]].
     apply tr; exists (a1 * a2 + b1 * b2)%nat,
       (a1 * b2 + b1 * a2)%nat, (m2 + m1 * S m2)%nat.
-    rewrite iF_mult_succ, !iF_plus, !iF_mult, <- E1, <- E2.
+    rewrite nF_mult_succ, !nF_plus, !nF_mult, <- E1, <- E2.
     rewrite mult_swap_middle.
     apply mult_quotient_identity.
   Qed.
@@ -164,7 +164,7 @@ Section nat_quotients.
   Proof.
     intros qx; strip_truncations.
     destruct qx as [a [b [m E]]].
-    assert (recip_mult : forall c, x * iF (S m) = c -> // (x; p) * c = iF (S m)).
+    assert (recip_mult : forall c, x * nF (S m) = c -> // (x; p) * c = nF (S m)).
     { intros c Ec; rewrite <- Ec, mult_assoc, (mult_comm (// (x; p)) x), reciperse_alt.
       apply mult_1_l. }
     apply tr.
@@ -172,14 +172,14 @@ Section nat_quotients.
     - assert (Exd := nat_quotient_eq_l x a b m E c q).
       destruct c as [|c].
       + destruct (irreflexivity (≶) (0 : F)).
-        change (iF 0%nat ≶ 0); rewrite <- Exd.
+        change (nF 0%nat ≶ 0); rewrite <- Exd.
         apply mult_apart_zero; [exact p|].
         apply positive_apart_zero, nat_to_semiring_succ_pos.
       + exists (S m), 0%nat, c.
-        rewrite plus_0_r; exact (recip_mult (iF (S c)) Exd).
+        rewrite plus_0_r; exact (recip_mult (nF (S c)) Exd).
     - exists 0%nat, (S m), c.
-      rewrite <- (negate_involutive (iF (S c))), <- negate_mult_distr_r,
-        (recip_mult (- iF (S c)) (nat_quotient_eq_r x a b m E c q)).
+      rewrite <- (negate_involutive (nF (S c))), <- negate_mult_distr_r,
+        (recip_mult (- nF (S c)) (nat_quotient_eq_r x a b m E c q)).
       apply plus_negate_l.
   Qed.
 
@@ -247,13 +247,13 @@ Section nat_quotients.
 
   Local Existing Instance pseudo_order_apart.
 
-  Local Notation i := (rationals_to_field Q F).
-  Local Notation iQ := (naturals_to_semiring nat Q).
+  Local Notation f := (rationals_to_field Q F).
+  Local Notation nQ := (naturals_to_semiring nat Q).
 
-  Local Lemma rationals_to_field_nat (n : nat) : i (iQ n) = iF n.
+  Local Lemma rationals_to_field_nat (n : nat) : f (nQ n) = nF n.
   Proof.
-    assert (IsSemiRingPreserving (i o iQ)) by rapply compose_sr_morphism.
-    exact (toR_unique (i o iQ) n)^.
+    assert (IsSemiRingPreserving (f o nQ)) by rapply compose_sr_morphism.
+    exact (toR_unique (f o nQ) n)^.
   Qed.
 
   #[export] Instance isinjective_rationals_to_field
@@ -263,9 +263,9 @@ Section nat_quotients.
     assert (ne : x - y <> 0).
     { intros e; apply (apart_ne x y apxy).
       exact (fst (equal_by_zero_sum x y) e). }
-    pose proof (ap i (dec_recip_inverse (x - y) ne)) as E'.
+    pose proof (ap f (dec_recip_inverse (x - y) ne)) as E'.
     rewrite preserves_mult, preserves_minus, E, plus_negate_r, mult_0_l,
-      (preserves_1 (f:=i)) in E'.
+      (preserves_1 (f:=f)) in E'.
     apply (apart_ne (1 : F) 0); [exact _|exact E'^].
   Qed.
 
@@ -275,29 +275,29 @@ Section nat_quotients.
 
   Local Lemma isnatquot_rational (q : Q)
     : merely {a : nat & {b : nat & {m : nat &
-        (q * iQ (S m) + iQ b = iQ a) /\ (i q * iF (S m) + iF b = iF a)}}}.
+        (q * nQ (S m) + nQ b = nQ a) /\ (f q * nF (S m) + nF b = nF a)}}}.
   Proof.
-    assert (Hq : IsNatQuot (i q)).
+    assert (Hq : IsNatQuot (f q)).
     { assert (IsSemiRingPreserving (pr1 o rationals_to_field Q NatQuot))
         by rapply compose_sr_morphism.
       rewrite (rationals_initial (h := pr1 o rationals_to_field Q NatQuot) q).
       exact (rationals_to_field Q NatQuot q).2. }
     strip_truncations; destruct Hq as [a [b [m E]]].
     apply tr; exists a, b, m; split; [|exact E].
-    apply (injective i).
-    rewrite (preserves_plus (f:=i)), (preserves_mult (f:=i)), !rationals_to_field_nat.
+    apply (injective f).
+    rewrite (preserves_plus (f:=f)), (preserves_mult (f:=f)), !rationals_to_field_nat.
     exact E.
   Qed.
 
   Lemma rationals_to_field_pos_iff `{!PropHolds ((1 : Q) ≶ 0)} (q : Q)
-    : 0 < q <-> 0 < i q.
+    : 0 < q <-> 0 < f q.
   Proof.
     assert (Hq := isnatquot_rational q).
     split; intros qpos; strip_truncations; destruct Hq as [a [b [m [EQ EF]]]].
-    - apply (nat_quotient_succ_pos (i q) a b m EF).
+    - apply (nat_quotient_succ_pos (f q) a b m EF).
       exact (nat_quotient_pos_succ q a b m EQ qpos).
     - apply (nat_quotient_succ_pos q a b m EQ).
-      exact (nat_quotient_pos_succ (i q) a b m EF qpos).
+      exact (nat_quotient_pos_succ (f q) a b m EF qpos).
   Qed.
 
   (** Preserving the strict order needs no hypothesis on [Q], since a positive rational shows that [1 ≶ 0] in [Q]. *)
@@ -340,6 +340,6 @@ Section nat_quotients.
     split; [exact _|].
     intros x y E.
     apply apart_iff_total_lt; apply apart_iff_total_lt in E.
-    destruct E; [left | right]; apply (strictly_order_reflecting i); assumption.
+    destruct E; [left | right]; apply (strictly_order_reflecting f); assumption.
   Qed.
 End nat_quotients.
