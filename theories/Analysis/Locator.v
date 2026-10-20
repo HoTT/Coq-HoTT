@@ -192,6 +192,8 @@ Section locator.
 
   Local Open Scope mc_scope.
 
+  Local Notation iQ := (naturals_to_semiring nat Q).
+
   (** To compare [- x] with [q < r], we compare [x] with [- r < - q]. *)
   Definition locator_minus {x : F} (l : locator x) : locator (-x).
   Proof.
@@ -206,10 +208,8 @@ Section locator.
   Section bounds.
     Context {x : F} (l : locator x).
 
-    Local Notation nQ := (naturals_to_semiring nat Q).
-
     (** To find a rational below [x], we ask the locator to compare [x] with [- n - 1 < - n] for [n = 0, 1, 2, ...], until it places [x] above [- n - 1]. *)
-    Local Definition lt_negate_nat (n : nat) : - nQ n - 1 < - nQ n
+    Local Definition lt_negate_nat (n : nat) : - iQ n - 1 < - iQ n
       := fst (pos_minus_lt_compat_r _ 1) lt_0_1.
 
     Local Definition locates_above_negate_nat (n : nat) : DHProp
@@ -236,7 +236,7 @@ Section locator.
     Proof.
       destruct (minimal_n locates_above_negate_nat _ merely_locates_above_negate_nat)
         as [n above].
-      exact (- nQ n - 1; locates_right_true l (lt_negate_nat n) above).
+      exact (- iQ n - 1; locates_right_true l (lt_negate_nat n) above).
     Qed.
 
   End bounds.
@@ -255,14 +255,12 @@ Section locator.
   Section tight_bound.
     Context {x : F} (l : locator x) (e : Qpos Q).
 
-    Local Notation nQ := (naturals_to_semiring nat Q).
-
     (** We step through the rationals in steps of [d = e / 3], starting at [q - d] for a rational [q < x]. *)
     Local Definition d : Q := ' (e / 3).
 
     Local Definition start : Q := (lower_bound l).1 - d.
 
-    Local Definition grid (k : nat) : Q := start + nQ k * d.
+    Local Definition grid (k : nat) : Q := start + iQ k * d.
 
     Local Lemma grid_succ (k : nat) : grid (S k) = grid k + d.
     Proof.
@@ -280,7 +278,7 @@ Section locator.
 
     Local Lemma grid_1 : grid 1 = (lower_bound l).1.
     Proof.
-      unfold grid, start; change (nQ 1) with 1; rewrite mult_1_l.
+      unfold grid, start; change (iQ 1) with 1; rewrite mult_1_l.
       apply minus_plus_cancel.
     Qed.
 
@@ -289,7 +287,7 @@ Section locator.
     Proof.
       destruct (round_up_strict Q ((r - start) / d)) as [n ltn].
       exists n; unfold grid; rewrite plus_comm.
-      apply flip_lt_minus_l, (flip_lt_mult_dec_recip_l (r - start) (nQ n) d (pos_is_pos (e / 3))).
+      apply flip_lt_minus_l, (flip_lt_mult_dec_recip_l (r - start) (iQ n) d (pos_is_pos (e / 3))).
       exact ltn.
     Defined.
 
@@ -332,8 +330,6 @@ Section locator.
             (m : locator y)
             (ltxy : x < y).
 
-    Local Notation nQ := (naturals_to_semiring nat Q).
-
     (** The precision [1 / (n + 1)], which drops below every positive rational. *)
     Local Definition precision (n : nat) : Qpos Q := / ' (S n).
 
@@ -342,7 +338,7 @@ Section locator.
       destruct (round_up_strict Q (/ d)) as [n ltn].
       exists n; apply flip_lt_dec_recip_l; [exact dpos|].
       (* [/ d < n < n + 1] *)
-      change (/ d < nQ (S n)); rewrite nat_to_semiring_succ.
+      change (/ d < iQ (S n)); rewrite nat_to_semiring_succ.
       lhs' exact ltn; apply pos_plus_lt_compat_l, lt_0_1.
     Qed.
 
