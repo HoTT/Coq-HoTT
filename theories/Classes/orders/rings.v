@@ -370,7 +370,7 @@ Section symmetric_bounds.
   Qed.
 
   (** The difference of two products, for estimating it. *)
-  Lemma mult_minus_mult x y u w
+  Local Lemma mult_minus_mult x y u w
     : x * y - u * w = x * (y - w) + (x - u) * w.
   Proof.
     rewrite <- (plus_minus_telescope (x * y) (x * w) (u * w)).
@@ -409,7 +409,7 @@ Section intervals.
   Qed.
 
   (** Multiplication by [v] is monotone on [[a, b]], so [u * v] cannot lie strictly below both [a * v] and [b * v]. *)
-  Lemma not_lt_mult_endpoints a b u v
+  Local Lemma not_lt_mult_endpoints a b u v
     : a ≤ u -> u ≤ b -> u * v < a * v -> u * v < b * v -> Empty.
   Proof.
     intros leau leub ltua ltub.

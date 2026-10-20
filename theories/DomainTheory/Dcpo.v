@@ -143,33 +143,10 @@ Section Directed.
       exists k; split; apply (order_preserving f); assumption.
   Defined.
 
-  (** A family [Bool -> A] with values [x ≤ y] is directed, and [y] is its supremum. *)
-  Definition bool_family (x y : A) : Bool -> A
-    := fun b => if b then y else x.
-
   Context `{!PreOrder Ale}.
 
-  Definition isdirected_bool_family (x y : A) (p : x ≤ y)
-    : IsDirected (bool_family x y).
-  Proof.
-    split.
-    - exact (tr true).
-    - intros i j.
-      apply tr; exists true.
-      split; destruct i, j; first [exact p | reflexivity].
-  Defined.
-
-  Definition issup_bool_family (x y : A) (p : x ≤ y)
-    : IsSup (bool_family x y) y.
-  Proof.
-    split.
-    - intros [|]; [reflexivity | exact p].
-    - intros t ub.
-      exact (ub true).
-  Defined.
-
   (** An increasing sequence is directed. *)
-  Definition increasing_sequence_le (x : nat -> A) (c : forall n, x n ≤ x n.+1%nat)
+  Local Definition increasing_sequence_le (x : nat -> A) (c : forall n, x n ≤ x n.+1%nat)
     (n m : nat)
     : x n ≤ x (m + n)%nat.
   Proof.
@@ -231,6 +208,28 @@ Section ScottContinuous.
     : IsHProp (IsScottContinuous@{v u t s u' t' s'} f).
   Proof.
     unfold IsScottContinuous; exact _.
+  Defined.
+
+  Local Definition bool_family (x y : A) : Bool -> A
+    := fun b => if b then y else x.
+
+  Local Definition isdirected_bool_family (x y : A) (p : x ≤ y)
+    : IsDirected (bool_family x y).
+  Proof.
+    split.
+    - exact (tr true).
+    - intros i j.
+      apply tr; exists true.
+      split; destruct i, j; first [exact p | reflexivity].
+  Defined.
+
+  Local Definition issup_bool_family (x y : A) (p : x ≤ y)
+    : IsSup (bool_family x y) y.
+  Proof.
+    split.
+    - intros [|]; [reflexivity | exact p].
+    - intros t ub.
+      exact (ub true).
   Defined.
 
   (** Scott continuous maps are monotone: for [x ≤ y], [y] is the supremum of the directed family with values [x] and [y], so [f y] is the supremum of [f x] and [f y]. *)

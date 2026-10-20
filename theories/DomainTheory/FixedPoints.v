@@ -35,7 +35,7 @@ Section Kleene.
     := dcpo_sup kleene_iterate isdirected_kleene_iterate.
 
   (** Every iterate lies below every prefixed point. *)
-  Definition kleene_iterate_le_prefixed_point (y : A) (fy : f y ≤ y) (n : nat)
+  Local Definition kleene_iterate_le_prefixed_point (y : A) (fy : f y ≤ y) (n : nat)
     : kleene_iterate n ≤ y.
   Proof.
     induction n as [|n IHn].
@@ -123,10 +123,10 @@ Section InflationaryFixedPoint.
   Local Notation Infl := (sig subset_inflationary).
   Local Notation le_infl := (@le_sig _ le_pointwise subset_inflationary).
 
-  Definition orderpreserving_infl (f : Infl) : OrderPreserving f.1
+  Local Definition orderpreserving_infl (f : Infl) : OrderPreserving f.1
     := fst f.2.
 
-  Definition isinflationary_infl (f : Infl) : IsInflationary f.1
+  Local Definition isinflationary_infl (f : Infl) : IsInflationary f.1
     := snd f.2.
 
   (** The monotone inflationary endomaps, as a family indexed by themselves, are directed. *)

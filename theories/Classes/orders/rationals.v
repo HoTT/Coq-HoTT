@@ -78,33 +78,6 @@ Section nat_quotient_sign.
   Qed.
 End nat_quotient_sign.
 
-(** ** Two ring identities *)
-
-(** These are the identities behind the closure of quotients of natural numbers under addition and multiplication below: with [u1 = x d1] and [u2 = y d2], they hold whenever [u1 + c1 = a1] and [u2 + c2 = a2]. *)
-Section quotient_identities.
-  Context `{IsCRing R}.
-
-  Local Lemma plus_quotient_identity (x y d1 d2 c1 c2 : R)
-    : (x + y) * (d1 * d2) + (c1 * d2 + c2 * d1) = (x * d1 + c1) * d2 + (y * d2 + c2) * d1.
-  Proof.
-    rewrite (plus_mult_distr_r x y), plus_swap_middle.
-    rewrite (plus_mult_distr_r (x * d1)), (plus_mult_distr_r (y * d2)).
-    rewrite (mult_assoc x d1 d2), (mult_comm d1 d2), (mult_assoc y d2 d1).
-    reflexivity.
-  Qed.
-
-  Local Lemma mult_quotient_identity (u1 u2 c1 c2 : R)
-    : u1 * u2 + ((u1 + c1) * c2 + c1 * (u2 + c2)) = (u1 + c1) * (u2 + c2) + c1 * c2.
-  Proof.
-    rewrite (plus_mult_distr_r u1 c1 c2), (plus_mult_distr_l c1 u2 c2).
-    rewrite (plus_mult_distr_r u1 c1), (plus_mult_distr_l u1 u2 c2), (plus_mult_distr_l c1 u2 c2).
-    (* Both sides are [u1 u2 + u1 c2 + c1 u2 + c1 c2 + c1 c2], up to association and order. *)
-    rewrite <- (plus_assoc (u1 * u2 + u1 * c2)), <- (plus_assoc (u1 * u2)).
-    apply ap; rewrite <- !plus_assoc; apply ap.
-    rewrite plus_comm, <- plus_assoc; apply ap, plus_comm.
-  Qed.
-End quotient_identities.
-
 (** ** The map from the rationals into an ordered field *)
 
 Section nat_quotients.
@@ -116,10 +89,6 @@ Section nat_quotients.
     := preserves_plus a b.
   Let iF_mult (a b : nat) : iF (a * b)%nat = iF a * iF b
     := preserves_mult a b.
-  Let distr_r (x y z : F) : (x + y) * z = x * z + y * z
-    := simple_distribute_r x y z.
-  Let distr_l (x y z : F) : x * (y + z) = x * y + x * z
-    := simple_distribute_l x y z.
   Let iF_mult_succ (m1 m2 : nat) : iF (S (m2 + m1 * S m2)) = iF (S m1) * iF (S m2)
     := preserves_mult (S m1) (S m2).
 
@@ -142,6 +111,15 @@ Section nat_quotients.
     rewrite mult_1_l; apply plus_0_r.
   Qed.
 
+  Local Lemma plus_quotient_identity (x y d1 d2 c1 c2 : F)
+    : (x + y) * (d1 * d2) + (c1 * d2 + c2 * d1) = (x * d1 + c1) * d2 + (y * d2 + c2) * d1.
+  Proof.
+    rewrite (plus_mult_distr_r x y), plus_swap_middle.
+    rewrite (plus_mult_distr_r (x * d1)), (plus_mult_distr_r (y * d2)).
+    rewrite (mult_assoc x d1 d2), (mult_comm d1 d2), (mult_assoc y d2 d1).
+    reflexivity.
+  Qed.
+
   (** If [x d1 + b1 = a1] and [y d2 + b2 = a2], then [(x + y) d1 d2 + (b1 d2 + b2 d1) = a1 d2 + a2 d1]. *)
   Local Lemma isnatquot_plus (x y : F)
     : IsNatQuot x -> IsNatQuot y -> IsNatQuot (x + y).
@@ -162,6 +140,17 @@ Section nat_quotients.
     apply tr; exists b, a, m.
     rewrite <- E, <- negate_mult_distr_l, plus_assoc, plus_negate_l.
     apply plus_0_l.
+  Qed.
+
+  Local Lemma mult_quotient_identity (u1 u2 c1 c2 : F)
+    : u1 * u2 + ((u1 + c1) * c2 + c1 * (u2 + c2)) = (u1 + c1) * (u2 + c2) + c1 * c2.
+  Proof.
+    rewrite (plus_mult_distr_r u1 c1 c2), (plus_mult_distr_l c1 u2 c2).
+    rewrite (plus_mult_distr_r u1 c1), (plus_mult_distr_l u1 u2 c2), (plus_mult_distr_l c1 u2 c2).
+    (* Both sides are [u1 u2 + u1 c2 + c1 u2 + c1 c2 + c1 c2], up to association and order. *)
+    rewrite <- (plus_assoc (u1 * u2 + u1 * c2)), <- (plus_assoc (u1 * u2)).
+    apply ap; rewrite <- !plus_assoc; apply ap.
+    rewrite plus_comm, <- plus_assoc; apply ap, plus_comm.
   Qed.
 
   (** If [x d1 + b1 = a1] and [y d2 + b2 = a2], then [x y d1 d2 + (a1 b2 + b1 a2) = a1 a2 + b1 b2]. *)

@@ -398,18 +398,17 @@ Section locator.
 
   (** ** Reciprocals *)
 
-  (** For a positive rational [r], the image of [1 / r] is the inverse of the image of [r]. *)
-  Local Lemma mult_dec_recip_cast (r : Q) (rpos : 0 < r) : ' r * ' (/ r) = 1.
-  Proof.
-    rewrite <- (preserves_mult (f:=cast Q F)), dec_recip_inverse.
-    - exact (preserves_1 (f:=cast Q F)).
-    - apply lt_ne_flip, rpos.
-  Qed.
-
   Section recip_pos.
     Context {x : F} (l : locator x) (xpos : 0 < x).
 
     Local Definition recip_nu := positive_apart_zero x xpos.
+
+    Local Lemma mult_dec_recip_cast (r : Q) (rpos : 0 < r) : ' r * ' (/ r) = 1.
+    Proof.
+      rewrite <- (preserves_mult (f:=cast Q F)), dec_recip_inverse.
+      - exact (preserves_1 (f:=cast Q F)).
+      - apply lt_ne_flip, rpos.
+    Qed.
 
     (** For [q < r]: if [q ≤ 0], then [q] lies below the positive [1 / x]. If [0 < q], we compare [x] with [1 / r < 1 / q]: if [1 / r < x], then [1 < r x], so [1 / x < r]; if [x < 1 / q], then [q x < 1], so [q < 1 / x]. *)
     Definition locator_recip_pos : locator (// (x ; recip_nu)).

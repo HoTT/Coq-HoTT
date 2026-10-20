@@ -93,36 +93,36 @@ Section strict_field_order.
     - apply ltZ; lhs' apply join_ub_l; apply join_ub_r.
   Qed.
 
-  (** For [- Z < x < Z] and [0 < D], there are rationals [a < x < b] such that all [u] in [[a, b]] lie between [- Z] and [Z] and within [D] of [x]: we take [max(x - D, - Z) < a < x < b < min(x + D, Z)]. *)
-  Lemma merely_rational_bounds_close (x D Z : F) (Dpos : 0 < D) (ltZx : - Z < x < Z)
-    : hexists (fun ab : Q * Q => (' (fst ab) < x < ' (snd ab))
-                 /\ forall u, ' (fst ab) ≤ u -> u ≤ ' (snd ab)
-                              -> (- Z < u < Z) /\ (- D < x - u < D)).
-  Proof.
-    destruct ltZx as [ltZx ltxZ].
-    assert (ha := archimedean_property Q F (join (x - D) (- Z)) x
-                    (join_lt_r (x - D) (- Z) x (fst (pos_minus_lt_compat_r x D) Dpos) ltZx)).
-    assert (hb := archimedean_property Q F x (meet (x + D) Z)
-                    (meet_lt_l x (x + D) Z (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
-    strip_truncations; destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]].
-    apply tr; exists (a, b); refine ((ltax, ltxb), _); intros u leau leub.
-    (* Then [max(x - D, - Z) < u < min(x + D, Z)]. *)
-    assert (ltju : join (x - D) (- Z) < u) by (rapply lt_le_trans; [exact ltja|exact leau]).
-    assert (ltum : u < meet (x + D) Z) by (rapply le_lt_trans; [exact leub|exact ltbm]).
-    split; [split|].
-    - rapply le_lt_trans; [apply join_ub_r|exact ltju].
-    - rapply lt_le_trans; [exact ltum|apply meet_lb_r].
-    - apply between_minus_swap, between_iff_lt_minus; split.
-      + rapply le_lt_trans; [apply join_ub_l|exact ltju].
-      + rapply lt_le_trans; [exact ltum|apply meet_lb_l].
-  Qed.
-
   Section times.
     (* Reflecting strict inequalities from [F] to [Q] needs [1] to be apart from [0] in [Q]; this holds for instance when the apartness of [Q] is trivial. *)
     Context `{!PropHolds ((1 : Q) ≶ 0)}.
 
+    (** For [- Z < x < Z] and [0 < D], there are rationals [a < x < b] such that all [u] in [[a, b]] lie between [- Z] and [Z] and within [D] of [x]: we take [max(x - D, - Z) < a < x < b < min(x + D, Z)]. *)
+    Local Lemma merely_rational_bounds_close (x D Z : F) (Dpos : 0 < D) (ltZx : - Z < x < Z)
+      : hexists (fun ab : Q * Q => (' (fst ab) < x < ' (snd ab))
+                   /\ forall u, ' (fst ab) ≤ u -> u ≤ ' (snd ab)
+                                -> (- Z < u < Z) /\ (- D < x - u < D)).
+    Proof.
+      destruct ltZx as [ltZx ltxZ].
+      assert (ha := archimedean_property Q F (join (x - D) (- Z)) x
+                      (join_lt_r (x - D) (- Z) x (fst (pos_minus_lt_compat_r x D) Dpos) ltZx)).
+      assert (hb := archimedean_property Q F x (meet (x + D) Z)
+                      (meet_lt_l x (x + D) Z (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
+      strip_truncations; destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]].
+      apply tr; exists (a, b); refine ((ltax, ltxb), _); intros u leau leub.
+      (* Then [max(x - D, - Z) < u < min(x + D, Z)]. *)
+      assert (ltju : join (x - D) (- Z) < u) by (rapply lt_le_trans; [exact ltja|exact leau]).
+      assert (ltum : u < meet (x + D) Z) by (rapply le_lt_trans; [exact leub|exact ltbm]).
+      split; [split|].
+      - rapply le_lt_trans; [apply join_ub_r|exact ltju].
+      - rapply lt_le_trans; [exact ltum|apply meet_lb_r].
+      - apply between_minus_swap, between_iff_lt_minus; split.
+        + rapply le_lt_trans; [apply join_ub_l|exact ltju].
+        + rapply lt_le_trans; [exact ltum|apply meet_lb_l].
+    Qed.
+
     (** Rational bounds [a < x < b] and [c < y < d] such that [u * w] is within [e] of [x * y] for all [u] in [[a, b]] and [w] in [[c, d]]. By [mult_minus_mult_lt_bound], it suffices that [u] and [w] lie between [- Z] and [Z] and within [D = e / 2 Z] of [x] and [y], for a bound [Z] on [x] and [y]; [merely_rational_bounds_close] gives such bounds. *)
-    Lemma archimedean_mult_approx (x y e : F) (epos : 0 < e)
+    Local Lemma archimedean_mult_approx (x y e : F) (epos : 0 < e)
       : hexists4 (fun a b c d : Q =>
                     (' a < x < ' b) /\ (' c < y < ' d)
                     /\ forall u w, ' a ≤ u -> u ≤ ' b -> ' c ≤ w -> w ≤ ' d
