@@ -225,8 +225,8 @@ Section wlpo.
         - rewrite (search_unseen m h); exact (bisect_self_in_interval m).
         - cbn [search]; destruct (seen n); [exact IH|].
           destruct (dec (P n)).
-          + exact (bisect_in_interval _ _ le _ (endpoint_in_interval n)).
-          + exact (bisect_in_interval _ _ (leq_succ_r le) _ (bisect_self_in_interval _)).
+          + apply (bisect_in_interval m n le), endpoint_in_interval.
+          + apply (bisect_in_interval m (S n) (leq_succ_r le)), bisect_self_in_interval.
       Qed.
 
       Local Lemma search_endpoint (n : nat) : seen n = true -> {j : nat & search n = endpoint j}.
@@ -258,8 +258,8 @@ Section wlpo.
           (search_unseen_interval N n len).
         destruct (seen N); intros sm sn um un.
         - rewrite (sm idpath), (sn idpath); apply (rational_close_refl Q).
-        - exact (rational_close_interval _ _ _ _ e (um idpath) (un idpath)
-                   (digit_weight_modulus Q 1 _ e _ (leq_refl _))).
+        - apply (rational_close_interval (a N) (w N)); [exact (um idpath)|exact (un idpath)|].
+          exact (digit_weight_modulus Q 1 _ e _ (leq_refl _)).
       Defined.
 
       Definition search_sequence : CauchySequence Q
@@ -561,8 +561,9 @@ Section cuts.
       : IsCauchyReal Q RD x.
     Proof.
       apply (iscauchyreal_merely_locator).
-      refine (Trunc_functor _ _ (h _ _ (snd (iscut_iff_isdedekindcut _ _) (isdedekindcut Q x)))).
-      intro s; exact (fst (cut_locator_iff_locator x) (cutstructure_locator _ _ s)).
+      generalize (h _ _ (snd (iscut_iff_isdedekindcut _ _) (isdedekindcut Q x))).
+      apply Trunc_functor; intro s.
+      exact (fst (cut_locator_iff_locator x) (cutstructure_locator _ _ s)).
     Qed.
 
     Context (Z : Type) {Zap : Apart Z} {Zplus : Plus Z} {Zmult : Mult Z}
