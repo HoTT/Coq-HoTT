@@ -36,7 +36,7 @@ Section powers.
   Proof.
     intro c0; induction n as [|n IH].
     - exact le_0_1.
-    - exact (nonneg_mult_compat _ _ c0 IH).
+    - apply nonneg_mult_compat; [exact c0|exact IH].
   Qed.
 
   (** Powers of an element of [[0, 1]] decrease. *)
@@ -51,7 +51,7 @@ Section powers.
       cbn; rewrite mult_1_l; reflexivity.
   Qed.
 
-  (** A form of Bernoulli's inequality: [c^n (1 + n (1 - c)) ≤ 1] for [c] in [[0, 1]]. *)
+  (** A form of Bernoulli's inequality: [c^n (1 + n (1 - c)) ≤ 1] for [c] in [[0, 1]]. By induction, since [c (1 + X) + (1 - c) X = 1 + n (1 - c)] for [X = (n + 1) (1 - c) ≥ 0]. *)
   Lemma power_bernoulli (c : R) (n : nat) : 0 ≤ c -> c ≤ 1
     -> nat_iter n (mult c) 1 * (1 + nR n * (1 - c)) ≤ 1.
   Proof.
@@ -62,23 +62,19 @@ Section powers.
       exact (mult_1_l _ @ ap (plus one) (mult_0_l _) @ plus_0_r one).
     - rhs_V' exact IH.
       change (nat_iter (S n) (mult c) 1) with (c * nat_iter n (mult c) 1).
-      rewrite nat_to_semiring_succ.
-      rewrite (plus_mult_distr_r 1 (nR n) (1 - c)), (mult_1_l (1 - c)).
+      rewrite nat_to_semiring_succ, (plus_mult_distr_r 1 (nR n) (1 - c)), (mult_1_l (1 - c)).
       set (P := nat_iter n (mult c) 1); set (X := 1 - c + nR n * (1 - c)).
       rewrite (mult_comm c P), <- (mult_assoc P c).
       pose proof (power_nonneg c n c0).
       apply (order_preserving (P *.)).
       assert (p : c * (1 + X) + (1 - c) * X = 1 + nR n * (1 - c)).
       { rewrite plus_mult_distr_l, mult_1_r, <- plus_assoc, <- plus_mult_distr_r.
-        rewrite (plus_comm c (1 - c)), <- (plus_assoc 1 (- c) c), plus_negate_l, plus_0_r.
-        rewrite mult_1_l; unfold X.
-        rewrite (plus_assoc c (1 - c)), (plus_comm c (1 - c)).
-        rewrite <- (plus_assoc 1 (- c) c), plus_negate_l, plus_0_r; reflexivity. }
+        rewrite <- (plus_conjugate_alt 1 c), mult_1_l; unfold X.
+        rewrite plus_assoc, <- (plus_conjugate_alt 1 c); reflexivity. }
       rewrite <- p.
       apply nonneg_plus_le_compat_r, nonneg_mult_compat; [exact b0|].
       apply nonneg_plus_compat; [exact b0|].
-      apply nonneg_mult_compat; [|exact b0].
-      apply nat_to_semiring_nonneg.
+      apply nonneg_mult_compat; [apply nat_to_semiring_nonneg|exact b0].
   Qed.
 
 End powers.
@@ -103,33 +99,32 @@ Section rational_log.
 
   Local Notation nQ := (naturals_to_semiring nat Q).
 
-  (** A logarithm-like function: for a rational [0 < c < 1] and a positive rational [q], an exponent [n] with [c^n < q]. *)
+  (** A logarithm-like function: for a rational [0 < c < 1] and a positive rational [q], an exponent [n] with [c^n < q]. With [b = 1 - c] and [1 / (q b) < n], Bernoulli's inequality gives [c^n (1 + n b) ≤ 1 < q n b < q (1 + n b)]. *)
   Definition rational_log (c : Q) (c0 : 0 < c) (c1 : c < 1) (q : Qpos Q)
     : {n : nat & nat_iter n (mult c) 1 < ' q}.
   Proof.
     assert (lt01 : 0 < 1) by exact (transitivity c0 c1).
     set (b := 1 - c).
     assert (b0 : 0 < b) by exact (snd (flip_pos_minus c 1) c1).
-    assert (qb0 : PropHolds (0 < ' q * b)) by exact (pos_mult_compat (' q) b (pos_is_pos q) b0).
+    assert (qb0 : PropHolds (0 < ' q * b)).
+    { apply pos_mult_compat; [apply pos_is_pos|exact b0]. }
     destruct (round_up_strict Q (/ (' q * b))) as [n ltn].
     exists n.
     set (B := 1 + nQ n * b).
     assert (B0 : PropHolds (0 < B)).
-    { refine (lt_le_trans 0 1 B lt01 _).
-      apply (fst (nonneg_plus_le_compat_r 1 _)), nonneg_mult_compat.
+    { apply (lt_le_trans 0 1 B lt01).
+      apply nonneg_plus_le_compat_r, nonneg_mult_compat.
       - apply nat_to_semiring_nonneg.
-      - exact (lt_le _ _ b0). }
+      - apply lt_le, b0. }
+    assert (ltqnb : 1 < ' q * (nQ n * b)).
+    { apply (strictly_order_preserving ((' q * b) *.)) in ltn.
+      rewrite dec_recip_inverse, <- (mult_assoc (' q) b), (mult_comm b) in ltn;
+        [exact ltn|apply lt_ne_flip, qb0]. }
     apply (strictly_order_reflecting (.* B)).
-    refine (le_lt_trans _ _ _ (power_bernoulli c n (lt_le _ _ c0) (lt_le _ _ c1)) _).
-    assert (E : (' q * b) / (' q * b) = 1).
-    { apply dec_recip_inverse, lt_ne_flip, qb0. }
-    assert (L : (' q * b) / (' q * b) < (' q * b) * nQ n)
-      by exact (strictly_order_preserving _ _ _ ltn).
-    rewrite E, <- (mult_assoc (' q) b), (mult_comm b) in L.
-    lhs' exact L.
+    rapply le_lt_trans; [exact (power_bernoulli c n (lt_le _ _ c0) (lt_le _ _ c1))|].
+    lhs' exact ltqnb.
     pose proof (pos_is_pos q).
-    apply (strictly_order_preserving (' q *.)).
-    apply pos_plus_lt_compat_l, lt01.
+    apply (strictly_order_preserving (' q *.)), pos_plus_lt_compat_l, lt01.
   Defined.
 End rational_log.
 
@@ -159,7 +154,7 @@ Section lipschitz.
       rewrite py, plus_0_r.
       apply Tc.
     - pose proof dpos.
-      refine (lt_eq_trans _ _ _ (strictly_order_preserving (.* d x y) _ _ c1) _).
+      rapply lt_eq_trans; [apply (strictly_order_preserving (.* d x y)), c1|].
       apply mult_1_l.
   Qed.
 
@@ -208,14 +203,14 @@ Section lipschitz_uniform.
     : IsUniformModulus Q (metric_close Q dX) (metric_close Q dY) f (fun e => e / c).
   Proof.
     intros e x y close; unfold metric_close in *.
-    refine (le_lt_trans _ _ _ (fc x y) _).
+    rapply le_lt_trans; [exact (fc x y)|].
     assert (p : ' (' c) * ' (' (e / c)) = ' (' e)).
     { rewrite <- (preserves_mult (f:=cast Q F)).
       apply (ap (cast Q F)); change (' (c * (e / c)) = ' e); apply ap.
       rewrite (associativity c e (/ c)); apply pos_unconjugate. }
     rewrite <- p.
     assert (PropHolds (0 < (' (' c) : F))) by exact (pos_rationals_to_field_qpos Q c).
-    exact (strictly_order_preserving _ _ _ close).
+    apply (strictly_order_preserving _), close.
   Qed.
 
   Context {Farch : ArchimedeanProperty Q F} `{!IsPseudoMetric dX}.
@@ -229,13 +224,12 @@ Section lipschitz_uniform.
                    (fst (pos_plus_lt_compat_r c 1) lt_0_1)).
     strip_truncations; destruct r as [r [ltcr _]].
     assert (r0 : 0 < r).
-    { apply (strictly_order_reflecting (cast Q F)).
-      rewrite (preserves_0 (f:=cast Q F)); exact (transitivity c0 ltcr). }
+    { apply rationals_to_field_pos_iff; exact (transitivity c0 ltcr). }
     apply tr; exists (fun e => e / mkQpos r r0).
     apply isuniformmodulus_lipschitz.
     intros x y; lhs' exact (fc x y).
     pose proof (pseudometric_nonneg (d:=dX) x y).
-    exact (order_preserving (.* dX x y) _ _ (lt_le _ _ ltcr)).
+    apply (order_preserving (.* dX x y)), lt_le, ltcr.
   Qed.
 
 End lipschitz_uniform.
@@ -254,14 +248,13 @@ Section banach.
 
   Local Lemma c_nonneg : PropHolds (0 ≤ (' c : F)).
   Proof.
-    apply lt_le; rewrite <- (preserves_0 (f:=cast Q F)).
-    exact (strictly_order_preserving _ _ _ c0).
+    apply lt_le, rationals_to_field_pos_iff, c0.
   Qed.
 
   Local Lemma c_lt_1 : (' c : F) < 1.
   Proof.
     rewrite <- (preserves_1 (f:=cast Q F)).
-    exact (strictly_order_preserving _ _ _ c1).
+    apply (strictly_order_preserving _), c1.
   Qed.
 
   Local Lemma one_minus_c_pos : PropHolds (0 < 1 - (' c : F)).
@@ -277,10 +270,10 @@ Section banach.
   Proof.
     induction j as [|j IH].
     - apply eq_le; symmetry; apply mult_1_l.
-    - lhs' exact (Tc _ _).
+    - lhs' apply Tc.
       change (nat_iter (S j) (mult (' c)) 1) with (' c * nat_iter j (mult (' c)) 1).
       rewrite <- mult_assoc.
-      exact (order_preserving (' c *.) _ _ IH).
+      apply (order_preserving (' c *.)), IH.
   Qed.
 
   Local Lemma iterate_dist_le_power (y : X) (j : nat)
@@ -292,19 +285,14 @@ Section banach.
       reflexivity.
     - set (P := nat_iter j (mult (' c)) 1).
       change (nat_iter (S j) (mult (' c)) 1) with (' c * P).
-      refine (transitivity (order_preserving ((1 - ' c) *.) _ _
-                (pseudometric_triangle _ (nat_iter j T y) _)) _).
+      lhs' apply (order_preserving ((1 - ' c) *.)), (pseudometric_triangle _ (nat_iter j T y) _).
       rewrite plus_mult_distr_l.
-      refine (transitivity (plus_le_compat _ _ _ _
-                (order_preserving ((1 - ' c) *.) _ _ (iterate_step_le y j)) IH) _).
+      lhs' (apply plus_le_compat; [apply (order_preserving ((1 - ' c) *.)), iterate_step_le|exact IH]).
       apply eq_le.
       rewrite mult_assoc, <- plus_mult_distr_r.
       apply (ap (.* d (T y) y)).
       rewrite plus_mult_distr_r, mult_1_l, <- negate_mult_distr_l.
-      rewrite <- (plus_assoc P (- (' c * P))), (plus_comm (- (' c * P))).
-      rewrite (plus_assoc P (1 - P)), (plus_comm 1 (- P)), (plus_assoc P (- P) 1).
-      rewrite plus_negate_r, plus_0_l.
-      reflexivity.
+      rewrite plus_comm, plus_assoc, minus_plus_cancel; reflexivity.
   Qed.
 
   (** The distance from a point to its iterates is bounded in terms of its distance to its image. *)
@@ -332,9 +320,9 @@ Section banach.
       by exact (pos_rationals_to_field_qpos Q C).
     assert (spec : nat_iter (iterates_modulus C e) (mult c) 1 < ' (e * b / C))
       by exact (rational_log c c0 c1 (e * b / C)).2.
-    assert (spec' := strictly_order_preserving (cast Q F) _ _ spec).
-    rewrite (preserves_power (cast Q F)) in spec'.
-    refine (lt_eq_trans _ _ _ (strictly_order_preserving (.* ' (' C)) _ _ spec') _).
+    apply (strictly_order_preserving (cast Q F)) in spec.
+    rewrite (preserves_power (cast Q F)) in spec.
+    rapply lt_eq_trans; [apply (strictly_order_preserving (.* ' (' C))), spec|].
     cbn beta; rewrite <- (preserves_mult (f:=cast Q F)).
     rewrite (mult_comm (1 - ' c)), <- (preserves_1 (f:=cast Q F)).
     rewrite <- (preserves_negate (f:=cast Q F)), <- (preserves_plus (f:=cast Q F)).
@@ -354,13 +342,16 @@ Section banach.
     set (M := iterates_modulus C e) in *.
     rewrite nat_iter_add.
     apply (strictly_order_reflecting ((1 - ' c) *.)).
-    refine (le_lt_trans _ _ _ (iterate_dist_le _ k) _).
-    refine (le_lt_trans _ _ _ (iterate_step_le x0 n) _).
+    rapply le_lt_trans; [exact (iterate_dist_le _ k)|].
+    rapply le_lt_trans; [exact (iterate_step_le x0 n)|].
     pose proof (power_nonneg (' c : F) n c_nonneg).
     assert (PropHolds (0 < (' (' C) : F))) by exact (pos_rationals_to_field_qpos Q C).
-    refine (le_lt_trans _ _ _ (order_preserving (_ *.) _ _ C0) _).
-    refine (le_lt_trans _ _ _ (order_preserving (.* ' (' C)) _ _
-              (power_antitone _ M n c_nonneg (lt_le _ _ c_lt_1) leMn)) _).
+    rapply le_lt_trans; [apply (order_preserving (_ *.)), C0|].
+    rapply le_lt_trans.
+    1: { apply (order_preserving (.* ' (' C))), (power_antitone _ M n).
+         - exact c_nonneg.
+         - apply lt_le, c_lt_1.
+         - exact leMn. }
     exact (iterates_modulus_spec C e).
   Qed.
 
