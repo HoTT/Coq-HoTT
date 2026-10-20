@@ -207,7 +207,7 @@ Section locator.
   Section bounds.
     Context {x : F} (l : locator x).
 
-    (** To find a rational below [x], we ask the locator to compare [x] with [- n - 1 < - n] for [n = 0, 1, 2, ...], until it places [x] above [- n - 1]. *)
+    (** To find a rational below [x], we apply the locator to [- n - 1 < - n] for [n = 0, 1, 2, ...], until we locate [- n - 1 < x]. *)
     Local Definition lt_negate_nat (n : nat) : - nQ n - 1 < - nQ n
       := fst (pos_minus_lt_compat_r _ 1) lt_0_1.
 
@@ -298,7 +298,7 @@ Section locator.
       lhs' exact ltxr; apply (strictly_order_preserving (cast Q F)), ltrn.
     Qed.
 
-    (** Where the answer changes, [x] lies between [grid k] and [grid (k + 2) = grid k + 2 d < grid k + e]. *)
+    (** At a [k] where we locate [grid k < x] and then [x < grid (k + 2)], [x] lies between [grid k] and [grid (k + 2) = grid k + 2 d < grid k + e]. *)
     Lemma tight_bound : {u : Q | ' u < x < ' (u + ' e)}.
     Proof.
       destruct (sperners_lemma_1d_nat locates_above_grid locates_above_grid_0
@@ -334,7 +334,7 @@ Section locator.
 
     Local Definition approx (n : nat) : Q := (tight_bound l (precision n / 2)).1.
 
-    (** We search for an [n] for which the locator for [y] places [y] above [approx n + e / 2], comparing it with [approx n + e / 2 < approx n + e]; this happens once [e] is less than [y - x]. *)
+    (** We search for an [n] for which the locator for [y] locates [approx n + e / 2 < y], applying it to [approx n + e / 2 < approx n + e]; this happens once [e] is less than [y - x]. *)
     Local Definition locates_above_approx (n : nat) : DHProp
       := locates_right m (strictly_order_preserving (approx n +)
                             (' (precision n / 2)) (' precision n)
