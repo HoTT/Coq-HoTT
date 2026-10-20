@@ -209,13 +209,6 @@ Section contents.
 
   Local Instance isapart_fracfield : IsApart Q := dec_strong_setoid.
 
-  Local Lemma plus_minus_plus (x y z : Q) : (z + y) - (z + x) = y - x.
-  Proof.
-    rewrite negate_plus_distr, (plus_comm z y), plus_assoc.
-    rewrite <- (plus_assoc y z), plus_negate_r, plus_0_r.
-    reflexivity.
-  Qed.
-
   Local Lemma is_pos_minus_zero (x : Q) : fracfield_pos (x - 0) = fracfield_pos x.
   Proof.
     rewrite negate_0, plus_0_r; reflexivity.
@@ -258,7 +251,7 @@ Section contents.
   Proof.
     apply from_full_pseudo_ring_order.
     - intros z x y; unfold lt, fracfield_lt.
-      rewrite plus_minus_plus; exact idmap.
+      rewrite plus_minus_plus_l; exact idmap.
     - exact (dec_strong_binary_morphism (.*.)).
     - intros x y; unfold PropHolds, lt, fracfield_lt; rewrite !is_pos_minus_zero.
       exact (is_pos_mult x y).
