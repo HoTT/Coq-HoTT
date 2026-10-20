@@ -48,7 +48,7 @@ Section lifts.
     intro e; refine (Trunc_functor (-1) _ (cont e)); intros [d close].
     exists d; intros y cxy.
     unfold field_close; rewrite <- negate_plus_distr.
-    exact (lt_bound_negate _ _ (close y cxy)).
+    apply lt_bound_negate, (close y cxy).
   Qed.
 
   (** If [f] is continuous at [x] and [t < f x], then [t < f y] for all [y] close enough to [x]. *)
@@ -95,28 +95,36 @@ Section lifts.
     Definition lifts_step_function : LiftsToLocators step_function
       := fun x _ => all_reals_locators Q F (step_function x).
 
+    Local Lemma step_function_pos (y : F) : 0 < y -> step_function y = 1.
+    Proof.
+      intros ypos; unfold step_function.
+      destruct (LEM (0 < y) _) as [_|nlt]; [reflexivity|destruct (nlt ypos)].
+    Qed.
+
+    Local Lemma step_function_0 : step_function 0 = 0.
+    Proof.
+      unfold step_function.
+      destruct (LEM (0 < 0) _) as [lt|_]; [destruct (irreflexivity (<) 0 lt)|reflexivity].
+    Qed.
+
+    (** For a modulus [d] of continuity at [0] for [1], the element [d / 2] is [d]-close to [0], but the values there are [1] apart. *)
     Lemma not_iscontinuousat_step_function : ~ IsContinuousAt step_function 0.
     Proof.
       intro cont.
       assert (c := cont 1); strip_truncations; destruct c as [d close].
-      (* The element [d / 2] is [d]-close to [0], but the values there are [1] apart. *)
       set (y := ' (' (d / 2)) : F).
       assert (ypos : 0 < y) by exact (pos_rationals_to_field_qpos Q (d / 2)).
-      assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
-      assert (ltyd : y < ' (' d)).
-      { exact (strictly_order_preserving _ _ _ (qpos_half_lt d)). }
-      assert (c : field_close Q d 0 y).
-      { unfold field_close; rewrite plus_0_l; split.
-        - exact (snd (flip_lt_negate _ _) ltyd).
+      assert (cy : field_close Q d 0 y).
+      { assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
+        assert (ltyd : y < ' (' d)) by apply (strictly_order_preserving _), qpos_half_lt.
+        unfold field_close; rewrite plus_0_l; split.
+        - apply (snd (flip_lt_negate _ _)), ltyd.
         - exact (transitivity (fst (flip_pos_negate _) ypos) dpos). }
-      assert (c' := fst (close y c)).
-      unfold step_function in c'.
-      destruct (LEM (0 < 0) _) as [lt00|_]; [exact (irreflexivity _ _ lt00)|].
-      destruct (LEM (0 < y) _) as [_|nlt]; [|exact (nlt ypos)].
-      rewrite plus_0_l in c'.
+      assert (c' := fst (close y cy)).
+      rewrite step_function_0, (step_function_pos y ypos), plus_0_l in c'.
       change (' (' (1 : Qpos Q))) with (' (1 : Q)) in c'.
       rewrite (preserves_1 (f:=cast Q F)) in c'.
-      exact (irreflexivity _ _ c').
+      exact (irreflexivity (<) _ c').
     Qed.
   End classical.
 
