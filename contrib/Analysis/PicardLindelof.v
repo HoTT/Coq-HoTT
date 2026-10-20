@@ -85,42 +85,57 @@ Section picard_lindelof.
       (gv : IsUniformModulus Q (metric_close Q (prod_dist dI dI)) closeF g v)
       (B : Q) (leB : (b - a) + (d - c) ≤ ' B).
 
-    (** A function with a modulus of uniform continuity on a product of closed intervals is bounded: along the segment from a point [z] to any point [p], we find a chain of a fixed number of steps of length less than [v 1]. *)
+    Local Notation N := (grid_modulus Q B v 1).
+
+    (** A function with a modulus of uniform continuity on a product of closed intervals is bounded: the grid from a point [z] to any point [p] is a chain of [N + 1] steps of length less than [v 1]. *)
+    Section chain.
+      Context (z p : I a b * I c d).
+
+      Local Definition chain (k : nat) : I a b * I c d
+        := (grid_point Q F (fst z) (fst p) N k, grid_point Q F (snd z) (snd p) N k).
+
+      Local Lemma chain_0 : chain 0%nat = z.
+      Proof.
+        unfold chain; rewrite 2 grid_point_0; apply eta_prod.
+      Qed.
+
+      Local Lemma chain_last : chain (S N) = p.
+      Proof.
+        unfold chain; rewrite 2 grid_point_last; apply eta_prod.
+      Qed.
+
+      (** A step of the grid from [x] to [y] has length [|y - x| / (N + 1)]. *)
+      Local Lemma grid_point_dist {u w : F} (x y : I u w) (k : nat) (ltk : (k < S N)%nat)
+        : dI (grid_point Q F x y N (S k)) (grid_point Q F x y N k) ≤ ' (/ nQ (S N)) * dI y x.
+      Proof.
+        unfold interval_dist; rewrite (grid_point_succ Q F x y N k (leq_pred' ltk)).
+        rewrite <- plus_conjugate.
+        apply abs_mult_nonneg_le, lt_le, rationals_to_field_pos_iff.
+        apply pos_dec_recip_compat, nat_to_semiring_succ_pos.
+      Qed.
+
+      (** The two steps add up to at most [B / (N + 1) < v 1]. *)
+      Local Lemma chain_close (k : nat) (ltk : (k < S N)%nat)
+        : metric_close Q (prod_dist dI dI) (v 1) (chain (S k)) (chain k).
+      Proof.
+        rapply le_lt_trans.
+        1: apply plus_le_compat; [exact (grid_point_dist (fst z) (fst p) k ltk)
+                                 |exact (grid_point_dist (snd z) (snd p) k ltk)].
+        rewrite <- plus_mult_distr_l.
+        apply (lt_grid_modulus Q F _ B); [|exact (leq_refl _)].
+        rhs_V' exact leB.
+        apply plus_le_compat; apply interval_dist_le.
+      Qed.
+    End chain.
+
     Lemma abs_le_uniform (z p : I a b * I c d)
       : abs (g p) ≤ abs (g z) + ' (nQ (S (grid_modulus Q B v 1))).
     Proof.
-      set (N := grid_modulus Q B v 1).
-      set (q := fun k => (grid_point Q F (fst z) (fst p) N k, grid_point Q F (snd z) (snd p) N k)).
-      assert (q0 : q 0%nat = z).
-      { unfold q; rewrite 2 grid_point_0; apply eta_prod. }
-      assert (qN : q (S N) = p).
-      { unfold q; rewrite 2 grid_point_last; apply eta_prod. }
-      assert (close : forall k, (k < S N)%nat -> metric_close Q (prod_dist dI dI) (v 1) (q (S k)) (q k)).
-      { intros k ltk.
-        change (dI (grid_point Q F (fst z) (fst p) N (S k)) (grid_point Q F (fst z) (fst p) N k)
-                + dI (grid_point Q F (snd z) (snd p) N (S k)) (grid_point Q F (snd z) (snd p) N k)
-                < ' (' (v 1))).
-        unfold interval_dist.
-        rewrite 2 (grid_point_succ Q F _ _ N k (leq_pred' ltk)).
-        rewrite 2 (plus_comm _ (grid_step Q F _ _ N)), <- 2 plus_assoc, 2 plus_negate_r.
-        rewrite 2 plus_0_r.
-        assert (s0 : 0 ≤ (' (/ nQ (S N)) : F)).
-        { rewrite <- (preserves_0 (f:=cast Q F)); apply (order_preserving _), lt_le.
-          apply pos_dec_recip_compat, nat_to_semiring_succ_pos. }
-        refine (le_lt_trans _ _ _ (plus_le_compat _ _ _ _ (abs_mult_nonneg_le _ _ s0)
-                  (abs_mult_nonneg_le _ _ s0)) _).
-        rewrite <- plus_mult_distr_l.
-        refine (lt_grid_modulus Q F _ B _ v 1 N (leq_refl _)).
-        refine (transitivity (plus_le_compat _ _ _ _ _ _) leB).
-        - rewrite abs_minus_swap; exact (interval_dist_le (fst z) (fst p)).
-        - rewrite abs_minus_swap; exact (interval_dist_le (snd z) (snd p)). }
-      assert (ch := abs_chain_le _ g v gv q (S N) close).
-      rewrite q0, qN in ch.
-      rhs_V' exact (plus_le_compat _ _ _ _ (reflexivity (abs (g z))) ch).
-      rewrite plus_comm.
-      rhs_V' exact (abs_triangle _ _).
-      apply eq_le; apply ap.
-      rewrite <- plus_assoc, plus_negate_l; symmetry; apply plus_0_r.
+      assert (ch := abs_chain_le _ g v gv (chain z p) (S N) (chain_close z p)).
+      rewrite chain_0, chain_last in ch.
+      rhs_V' apply (order_preserving (abs (g z) +)), ch.
+      assert (e : abs (g p) = abs (g z + (g p - g z))) by apply ap, plus_conjugate_alt.
+      rewrite e; apply abs_triangle.
     Qed.
 
   End bound.
@@ -269,10 +284,11 @@ Section picard_lindelof.
         rewrite plus_negate_r, plus_0_l; reflexivity. }
       rewrite p.
       lhs' refine (integral_abs_le Q F _ _ c x (L * dUL f f') _).
-      - intro t; lhs' exact (gL _ _ _).
-        assert (PropHolds (0 ≤ L)) by exact (lt_le _ _ L0).
+      - intro t; lhs' apply gL.
+        assert (PropHolds (0 ≤ L)) by apply lt_le, L0.
         apply (order_preserving (L *.)), (le_uniform_dist Q F _ _ _ _ leab).
-      - assert (LD0 : PropHolds (0 ≤ L * dUL f f')) by exact (nonneg_mult_compat _ _ (lt_le _ _ L0) D0).
+      - assert (LD0 : PropHolds (0 ≤ L * dUL f f')).
+        { apply nonneg_mult_compat; [apply lt_le, L0|exact D0]. }
         lhs' exact (order_preserving (_ *.) _ _ (abs_center_le x)).
         rewrite (mult_comm L), <- mult_assoc, (mult_comm (dUL f f')).
         exact (order_preserving (.* dUL f f') _ _ lLc).
@@ -296,7 +312,7 @@ Section picard_lindelof.
 
     Local Lemma half_lt_1 : (/ 2 : Q) < 1.
     Proof.
-      exact (lt_eq_trans _ _ _ (flip_lt_dec_recip 2 1 lt_0_1 lt_1_2) dec_recip_1).
+      rapply lt_eq_trans; [exact (flip_lt_dec_recip 2 1 lt_0_1 lt_1_2)|exact dec_recip_1].
     Qed.
 
     Context (C : Qpos Q) (leC : (y0 + b) - (y0 - b) ≤ ' (' C)).
@@ -326,11 +342,6 @@ Section picard_lindelof.
     := locator_plus Q F (locator_plus Q F lu lr)
          (locator_minus Q F (locator_plus Q F lu (locator_minus Q F lr))).
 
-  Local Lemma qinc_pos (r : Q) (r0 : 0 < r) : 0 < (' r : F).
-  Proof.
-    rewrite <- (preserves_0 (f:=cast Q F)); exact (strictly_order_preserving _ _ _ r0).
-  Qed.
-
   (** A rational bound on [g], from its value at the center and its modulus. *)
   Local Definition picard_bound : {K : Qpos Q & forall p, abs (g p) ≤ ' (' K)}.
   Proof.
@@ -344,12 +355,52 @@ Section picard_lindelof.
     { apply abs_le; [|apply join_ub_l].
       apply flip_le_negate; rewrite negate_involutive; apply join_ub_r. }
     assert (lt : forall p, abs (g p) < ' (' (r + N))).
-    { intro p; refine (le_lt_trans _ _ _ (abs_le_uniform g v gv B (lt_le _ _ ltB) z p) _).
+    { intro p; rapply le_lt_trans; [exact (abs_le_uniform g v gv B (lt_le _ _ ltB) z p)|].
       rewrite (preserves_plus (f:=cast Q F)).
       apply (strictly_order_preserving (+ _)).
-      exact (le_lt_trans _ _ _ absz ltr). }
-    exact (r + N; fun p => lt_le _ _ (lt p)).
+      rapply le_lt_trans; [exact absz|exact ltr]. }
+    exists (r + N); intros p; apply lt_le, lt.
   Defined.
+
+  Local Notation K := picard_bound.1.
+
+  Local Definition rL : Qpos Q := (qpos_upper_bound Q F lL).1.
+
+  (** The solution lives on [[x0 - l, x0 + l]] for [l = min a (min (b / K) (1 / (2 rL)))], where [rL] is a rational upper bound of [L]: then [K l ≤ b] and [L l ≤ 1 / 2]. *)
+  Local Definition picard_length : F := meet a (meet (b * ' (/ ' K)) (' (/ ' rL / 2))).
+
+  Local Definition picard_length_locator : locator Q F picard_length
+    := locator_meet Q F la (locator_meet Q F (locator_times Q F lb (locator_left Q F _))
+                              (locator_left Q F _)).
+
+  Local Lemma picard_length_pos : 0 < picard_length.
+  Proof.
+    apply meet_lt_l; [exact a0|apply meet_lt_l].
+    - apply pos_mult_compat; [exact b0|].
+      apply rationals_to_field_pos_iff, pos_dec_recip_compat, pos_is_pos.
+    - apply rationals_to_field_pos_iff, pos_mult_compat; [|exact half_pos].
+      apply pos_dec_recip_compat, pos_is_pos.
+  Qed.
+
+  Local Lemma picard_length_K : ' (' K) * picard_length ≤ b.
+  Proof.
+    lhs' apply (order_preserving (' (' K) *.)), (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
+    apply eq_le; rewrite (mult_comm (' (' K))), <- mult_assoc, <- (preserves_mult (f:=cast Q F)).
+    rewrite (mult_comm (/ ' K)), dec_recip_inverse; [|apply lt_ne_flip, pos_is_pos].
+    rewrite (preserves_1 (f:=cast Q F)); apply mult_1_r.
+  Qed.
+
+  Local Lemma picard_length_L : L * picard_length ≤ ' (/ 2 : Q).
+  Proof.
+    assert (PropHolds (0 ≤ L)) by apply lt_le, L0.
+    assert (PropHolds (0 ≤ (' (/ ' rL / 2) : F))).
+    { apply lt_le, rationals_to_field_pos_iff, pos_mult_compat; [|exact half_pos].
+      apply pos_dec_recip_compat, pos_is_pos. }
+    lhs' apply (order_preserving (L *.)), (transitivity (meet_lb_r _ _) (meet_lb_r _ _)).
+    lhs' apply (order_preserving (.* ' (/ ' rL / 2))), lt_le, (qpos_upper_bound Q F lL).2.
+    apply eq_le; rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
+    rewrite mult_assoc, dec_recip_inverse; [apply mult_1_l|apply lt_ne_flip, pos_is_pos].
+  Qed.
 
   (** Picard–Lindelöf: we compute [l] with a locator and [0 < l ≤ a], and a uniformly continuous map [f : [x0 - l, x0 + l] -> [y0 - b, y0 + b]] that lifts to locators, with [f x = y0 + ∫_{x0}^x g (t, f t) dt]. *)
   Definition picard_lindelof
@@ -359,38 +410,10 @@ Section picard_lindelof.
                                   (fun t => g (interval_incl x0 l a (snd bounds) t, f t)) fu
                                   (interval_center x0 l (lt_le _ _ (fst bounds))) x}}}}.
   Proof.
-    destruct picard_bound as [K gK].
-    destruct (qpos_upper_bound Q F lL) as [[rL rL0] ltL].
-    assert (K0 := pos_is_pos K).
-    set (u := b * ' (/ ' K)); set (w := ' (/ rL / 2) : F).
-    assert (u0 : 0 < u).
-    { apply pos_mult_compat; [exact b0|apply qinc_pos, pos_dec_recip_compat, K0]. }
-    assert (w0 : 0 < w).
-    { apply qinc_pos, pos_mult_compat; [apply pos_dec_recip_compat, rL0|exact half_pos]. }
-    set (l := meet a (meet u w)).
-    exists l.
-    exists (locator_meet Q F la (locator_meet Q F (locator_times Q F lb (locator_left Q F _))
-                                   (locator_left Q F _))).
-    exists (meet_lt_l _ _ _ a0 (meet_lt_l _ _ _ u0 w0), meet_lb_l _ _).
-    assert (lu : l ≤ u) by exact (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
-    assert (lw : l ≤ w) by exact (transitivity (meet_lb_r _ _) (meet_lb_r _ _)).
-    pose (l0 := lt_le _ _ (meet_lt_l _ _ _ a0 (meet_lt_l _ _ _ u0 w0)) : 0 ≤ l).
-    assert (lKb : ' (' K) * l ≤ b).
-    { refine (transitivity (order_preserving (' (' K) *.) _ _ lu) (eq_le _ _ _)).
-      unfold u; rewrite mult_assoc, (mult_comm (' (' K))), <- mult_assoc.
-      rewrite <- (preserves_mult (f:=cast Q F)), (dec_recip_inverse _ (lt_ne_flip _ _ K0)).
-      rewrite (preserves_1 (f:=cast Q F)); apply mult_1_r. }
-    assert (rLw : ' rL * w = ' (/ 2 : Q)).
-    { unfold w; rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
-      rewrite mult_assoc, (dec_recip_inverse _ (lt_ne_flip _ _ rL0)); apply mult_1_l. }
-    assert (lLc : L * l ≤ ' (/ 2 : Q)).
-    { assert (PropHolds (0 ≤ L)) by exact (lt_le _ _ L0).
-      assert (PropHolds (0 ≤ w)) by exact (lt_le _ _ w0).
-      lhs' exact (order_preserving (L *.) _ _ lw).
-      exact (transitivity (order_preserving (.* w) _ _ (lt_le _ _ ltL)) (eq_le _ _ rLw)). }
+    exists picard_length, picard_length_locator, (picard_length_pos, meet_lb_l _ _).
     destruct (qpos_upper_bound Q F (locator_width y0 b ly0 lb)) as [C ltC].
-    destruct (picard_solution K gK l l0 (meet_lb_l _ _) lKb lLc C (lt_le _ _ ltC))
-      as [f p].
+    destruct (picard_solution K picard_bound.2 picard_length (lt_le _ _ picard_length_pos)
+                (meet_lb_l _ _) picard_length_K picard_length_L C (lt_le _ _ ltC)) as [f p].
     exists f; intros x fu; rewrite p; unfold picard_value; apply ap.
     exact (ap (fun fu' => integral Q F _ fu' _ x) (path_ishprop _ _)).
   Defined.
