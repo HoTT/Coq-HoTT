@@ -209,16 +209,19 @@ Section contents.
 
   Local Instance isapart_fracfield : IsApart Q := dec_strong_setoid.
 
-  Local Lemma plus_minus_plus (x y z : Q) : (z + y) - (z + x) = y - x.
-  Proof.
-    rewrite negate_plus_distr, (plus_comm z y), plus_assoc.
-    rewrite <- (plus_assoc y z), plus_negate_r, plus_0_r.
-    reflexivity.
-  Qed.
-
   Local Lemma is_pos_minus_zero (x : Q) : fracfield_pos (x - 0) = fracfield_pos x.
   Proof.
     rewrite negate_0, plus_0_r; reflexivity.
+  Qed.
+
+  (** Trichotomy: if neither [v - u] nor [u - v] is positive, then [u = v]. *)
+  Local Lemma fracfield_lt_trichotomy (u v : Q) : (u < v) + (v < u) + (u = v).
+  Proof.
+    unfold lt, fracfield_lt.
+    destruct (bool_true_or_false (fracfield_pos (v - u))) as [p|p]; [left; left; exact p|].
+    destruct (bool_true_or_false (fracfield_pos (u - v))) as [q|q]; [left; right; exact q|].
+    right; rewrite negate_swap_r in p.
+    exact (fst (equal_by_zero_sum u v) (is_pos_zero_cases _ q p)).
   Qed.
 
   #[export] Instance pseudoorder_fracfield : PseudoOrder fracfield_lt.
@@ -229,19 +232,17 @@ Section contents.
     - intros x y [ltxy ltyx]; unfold lt, fracfield_lt in *.
       rewrite negate_swap_r in ltyx.
       exact (is_pos_negate _ ltxy ltyx).
-    - intros x y ltxy z; apply tr; unfold lt, fracfield_lt in *.
-      destruct (bool_true_or_false (fracfield_pos (z - x))) as [pzx|pzx]; [left; exact pzx|right].
-      destruct (bool_true_or_false (fracfield_pos (x - z))) as [pxz|pxz].
-      + rewrite <- (plus_minus_telescope y x z); exact (is_pos_plus _ _ ltxy pxz).
-      + rewrite negate_swap_r in pxz.
-        rewrite (fst (equal_by_zero_sum z x) (is_pos_zero_cases _ pzx pxz)).
-        exact ltxy.
+    - intros x y ltxy z; apply tr.
+      destruct (fracfield_lt_trichotomy x z) as [[ltxz|ltzx]|p].
+      + left; exact ltxz.
+      + right; unfold lt, fracfield_lt in *.
+        rewrite <- (plus_minus_telescope y x z); exact (is_pos_plus (y - x) (x - z) ltxy ltzx).
+      + right; rewrite <- p; exact ltxy.
     - intros x y; split.
-      + intros ne; unfold lt, fracfield_lt.
-        destruct (bool_true_or_false (fracfield_pos (y - x))) as [pyx|pyx]; [left; exact pyx|right].
-        destruct (bool_true_or_false (fracfield_pos (x - y))) as [pxy|pxy]; [exact pxy|].
-        rewrite negate_swap_r in pxy.
-        destruct (ne (fst (equal_by_zero_sum y x) (is_pos_zero_cases _ pyx pxy))^).
+      + intros ne; destruct (fracfield_lt_trichotomy x y) as [[l|l]|p].
+        * left; exact l.
+        * right; exact l.
+        * destruct (ne p).
       + intros l p; destruct p; unfold lt, fracfield_lt in l.
         rewrite plus_negate_r, is_pos_zero in l.
         destruct l as [l|l]; exact (false_ne_true l).
@@ -258,7 +259,7 @@ Section contents.
   Proof.
     apply from_full_pseudo_ring_order.
     - intros z x y; unfold lt, fracfield_lt.
-      rewrite plus_minus_plus; exact idmap.
+      rewrite plus_minus_plus_l; exact idmap.
     - exact (dec_strong_binary_morphism (.*.)).
     - intros x y; unfold PropHolds, lt, fracfield_lt; rewrite !is_pos_minus_zero.
       exact (is_pos_mult x y).
@@ -272,7 +273,7 @@ Section contents.
   Local Lemma nat_to_int_lt (n c : nat) : nZ n < nZ (S c + n).
   Proof.
     rewrite (preserves_plus (f:=nZ)).
-    exact (pos_plus_lt_compat_l _ _ (nat_to_semiring_succ_pos c)).
+    apply pos_plus_lt_compat_l, nat_to_semiring_succ_pos.
   Qed.
 
   Local Lemma nat_to_int_injective (n m : nat) : nZ n = nZ m -> n = m.

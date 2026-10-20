@@ -254,7 +254,7 @@ Section cauchy_structure.
       unfold field_close.
       change (' (' (e + d))) with (' (' e + ' d) : F).
       rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
-      exact (lt_le_bound_plus _ _ _ _ c c').
+      exact (lt_le_bound_plus (u - v) (v - w) _ _ c c').
     Qed.
 
     Lemma le_field_close_triangle (e d : Qpos Q) (u v w : F)
@@ -264,7 +264,7 @@ Section cauchy_structure.
       unfold field_close.
       change (' (' (d + e))) with (' (' d + ' e) : F).
       rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
-      exact (le_lt_bound_plus _ _ _ _ c c').
+      exact (le_lt_bound_plus (u - v) (v - w) _ _ c c').
     Qed.
 
     Context `{!RoundUpStrict Q}.
@@ -284,8 +284,8 @@ Section cauchy_structure.
       rewrite <- (dec_recip_involutive (' e)).
       apply flip_lt_dec_recip.
       - apply pos_dec_recip_compat, pos_is_pos.
-      - refine (lt_le_trans _ _ _ (round_up_strict Q (/ ' e)).2 _).
-        exact (nat_to_semiring_le _ _ (leq_succ_r len)).
+      - rapply lt_le_trans; [exact (round_up_strict Q (/ ' e)).2|].
+        apply nat_to_semiring_le, leq_succ_r, len.
     Qed.
 
     (** A Cauchy approximation gives a sequence with a modulus of Cauchy convergence. *)
@@ -295,7 +295,7 @@ Section cauchy_structure.
       intros e m n lem len.
       apply (field_close_weaken Q (recip_succ m + recip_succ n)).
       - rewrite (pos_split2 e).
-        exact (plus_lt_compat _ _ _ _ (recip_succ_lt _ m lem) (recip_succ_lt _ n len)).
+        apply plus_lt_compat; [exact (recip_succ_lt _ m lem)|exact (recip_succ_lt _ n len)].
       - exact (iscauchyapproximation_approximation _ x _ _).
     Qed.
 
@@ -331,8 +331,7 @@ Section cauchy_structure.
       : - ' (' d) ≤ field_lim x - x d ≤ ' (' d).
     Proof.
       rewrite (negate_swap_r (field_lim x) (x d)).
-      exact (le_bound_negate _ _
-               (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d)).
+      apply le_bound_negate, (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d).
     Qed.
 
     #[export] Instance cauchycomplete_field : CauchyComplete (field_close Q (F:=F))
@@ -379,7 +378,7 @@ Section cauchy_structure.
       1: exact (isapproximationlimit_le x _ (isapproximationlimit_field_lim x) d).
       apply (field_close_le_triangle e n _ (field_lim y)); [exact c|].
       rewrite (negate_swap_r (field_lim y) (y n)).
-      exact (le_bound_negate _ _ (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) n)).
+      apply le_bound_negate, (isapproximationlimit_le y _ (isapproximationlimit_field_lim y) n).
     Qed.
 
   End field.

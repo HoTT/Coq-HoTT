@@ -349,7 +349,7 @@ Section hottbook_reals.
     Local Instance orderpreserving_qinc : OrderPreserving (cast Q F)
       := full_pseudo_order_preserving.
 
-    (** Closeness in [F] is rounded. *)
+    (** Closeness in [F] is rounded: if [|u - v| < e], then a rational [m < e] above both [u - v] and [v - u] bounds [|u - v|], so that [u] and [v] are [m]-close and [e = m + (e - m)]. *)
     Lemma field_close_rounded (e : Qpos Q) (u v : F) (c : field_close Q e u v)
       : merely {d : Qpos Q & {d' : Qpos Q & prod (e = d + d') (field_close Q d u v)}}.
     Proof.
@@ -357,29 +357,22 @@ Section hottbook_reals.
       assert (h1 := archimedean_property Q F _ _ hi).
       assert (h2 := archimedean_property Q F _ _ (flip_lt_negate_l _ _ lo)).
       strip_truncations; destruct h1 as [q1 [l1 l1']], h2 as [q2 [l2 l2']].
-      (* A rational [m < e] above both [q1] and [q2]. *)
-      assert (hm : {m : Q & (q1 ≤ m) /\ (q2 ≤ m) /\ (m < ' e)}).
+      assert (hm : {m : Q & (u - v < ' m) /\ (- (u - v) < ' m) /\ (m < ' e)}).
       { destruct (le_or_lt q1 q2) as [le|lt].
-        - exact (q2; (le, (reflexivity _, strictly_order_reflecting (cast Q F) _ _ l2'))).
-        - exact (q1; (reflexivity _,
-                      (lt_le _ _ lt, strictly_order_reflecting (cast Q F) _ _ l1'))). }
-      destruct hm as [m [le1 [le2 lt]]].
-      assert (hi' : u - v < ' m)
-        by exact (lt_le_trans _ _ _ l1 (order_preserving (cast Q F) _ _ le1)).
-      assert (lo' : - (u - v) < ' m)
-        by exact (lt_le_trans _ _ _ l2 (order_preserving (cast Q F) _ _ le2)).
+        - exists q2; split; [|split; [exact l2|]].
+          + rapply lt_le_trans; [exact l1|apply (order_preserving _), le].
+          + apply (strictly_order_reflecting (cast Q F)), l2'.
+        - exists q1; split; [exact l1|split].
+          + rapply lt_le_trans; [exact l2|apply (order_preserving _), lt_le, lt].
+          + apply (strictly_order_reflecting (cast Q F)), l1'. }
+      destruct hm as [m [hi' [lo' lt]]].
+      assert (close_m : - ' m < u - v < ' m) by (split; [apply flip_lt_negate_l, lo'|exact hi']).
       assert (mpos : 0 < m).
-      { destruct (le_or_lt m 0) as [le|gt]; [|exact gt].
-        assert (le' : ' m ≤ (0 : F)).
-        { rewrite <- (preserves_0 (f:=cast Q F)); exact (order_preserving _ _ _ le). }
-        assert (n1 := fst (flip_neg_negate _) (lt_le_trans _ _ _ hi' le')).
-        destruct (irreflexivity (<) 0 (transitivity n1 (lt_le_trans _ _ _ lo' le'))). }
+      { apply rationals_to_field_pos_iff, (pos_between_negate (u - v)), close_m. }
       apply tr.
       exists (mkQpos m mpos), (mkQpos (' e - m) (snd (flip_pos_minus _ _) lt)).
-      split.
-      - apply pos_eq; cbn.
-        rewrite (plus_comm m), <- plus_assoc, plus_negate_l, plus_0_r; reflexivity.
-      - exact (flip_lt_negate_l _ _ lo', hi').
+      split; [|exact close_m].
+      apply pos_eq; exact (plus_conjugate_alt (' e) m).
     Qed.
 
     Context `{!RoundUpStrict Q} `{!IsComplete Q F}.
@@ -420,45 +413,63 @@ Section hottbook_reals.
 
     Local Notation i := hottbookreals_to_field.
 
-    (** The canonical map reflects closeness. *)
+    (** The canonical map reflects closeness, by induction on both points.  In each case where a point is a limit, closeness of its image to the other image splits off a term of the approximation that is closer, by [field_lim_close_split], and we use the induction hypothesis for that term. *)
+    Local Definition ReflectsClose (u v : R) : Type
+      := forall e, field_close Q e (i u) (i v) -> close e u v.
+
+    Local Lemma reflects_close_rat_rat (q r : Q) : ReflectsClose (rat q) (rat r).
+    Proof.
+      intros e c; rewrite 2 (cshom_rat Q _ _ i) in c.
+      exact (cs_close_rat_rat Q R q r e (rational_close_field_close Q e q r c)).
+    Qed.
+
+    Local Lemma reflects_close_rat_lim (q : Q) (y : CauchyApproximation Q close)
+      (IHy : forall d, ReflectsClose (rat q) (y d))
+      : ReflectsClose (rat q) (lim y).
+    Proof.
+      intros e c; rewrite (cshom_lim Q _ _ i) in c.
+      assert (s := field_lim_close_split _ _ e (field_close_symmetric Q _ _ _ c)).
+      strip_truncations; destruct s as [d [e' [p c']]].
+      rewrite p; apply cs_close_rat_lim, IHy, field_close_symmetric, c'.
+    Qed.
+
+    Local Lemma reflects_close_lim_rat (x : CauchyApproximation Q close) (r : Q)
+      (IHx : forall d v, ReflectsClose (x d) v)
+      : ReflectsClose (lim x) (rat r).
+    Proof.
+      intros e c; rewrite (cshom_lim Q _ _ i) in c.
+      assert (s := field_lim_close_split _ _ e c).
+      strip_truncations; destruct s as [d [e' [p c']]].
+      rewrite p; apply cs_close_lim_rat, IHx, c'.
+    Qed.
+
+    Local Lemma reflects_close_lim_lim (x y : CauchyApproximation Q close)
+      (IHx : forall d v, ReflectsClose (x d) v)
+      : ReflectsClose (lim x) (lim y).
+    Proof.
+      intros e c; rewrite 2 (cshom_lim Q _ _ i) in c.
+      assert (s := field_lim_close_split _ _ e c).
+      strip_truncations; destruct s as [d [e' [p c']]].
+      assert (s := field_lim_close_split _ _ e' (field_close_symmetric Q _ _ _ c')).
+      strip_truncations; destruct s as [n [e'' [p' c'']]].
+      rewrite p, p', <- Qpos_plus_assoc, (qpos_plus_comm n d), Qpos_plus_assoc.
+      apply cs_close_lim_lim, IHx, field_close_symmetric, c''.
+    Qed.
+
     Lemma hottbookreals_to_field_reflects_close `{Funext} (u v : R) (e : Qpos Q)
       : field_close Q e (i u) (i v) -> close e u v.
     Proof.
       revert u v e.
-      snapply (hottbookreals_ind_hprop R
-                 (fun u => forall v e, field_close Q e (i u) (i v) -> close e u v)).
+      snapply (hottbookreals_ind_hprop R (fun u => forall v, ReflectsClose u v)).
       1,2: exact _.
-      - intro q.
-        snapply (hottbookreals_ind_hprop R
-                   (fun v => forall e, field_close Q e (i (rat q)) (i v) -> close e (rat q) v)).
+      - intro q; snapply (hottbookreals_ind_hprop R (ReflectsClose (rat q))).
         1,2: exact _.
-        + intros r e c.
-          rewrite 2 (cshom_rat Q _ _ i) in c.
-          exact (cs_close_rat_rat Q R q r e (rational_close_field_close Q e q r c)).
-        + intros y IHy e c.
-          rewrite (cshom_lim Q _ _ i) in c.
-          assert (s := field_lim_close_split _ _ e (field_close_symmetric Q _ _ _ c)).
-          strip_truncations; destruct s as [d [e' [p c']]].
-          rewrite p.
-          apply cs_close_rat_lim, IHy, field_close_symmetric, c'.
-      - intros x IHx.
-        snapply (hottbookreals_ind_hprop R
-                   (fun v => forall e, field_close Q e (i (lim x)) (i v) -> close e (lim x) v)).
+        + apply reflects_close_rat_rat.
+        + intros y IHy; apply reflects_close_rat_lim, IHy.
+      - intros x IHx; snapply (hottbookreals_ind_hprop R (ReflectsClose (lim x))).
         1,2: exact _.
-        + intros r e c.
-          rewrite (cshom_lim Q _ _ i) in c.
-          assert (s := field_lim_close_split _ _ e c).
-          strip_truncations; destruct s as [d [e' [p c']]].
-          rewrite p.
-          apply cs_close_lim_rat, IHx, c'.
-        + intros y _ e c.
-          rewrite 2 (cshom_lim Q _ _ i) in c.
-          assert (s := field_lim_close_split _ _ e c).
-          strip_truncations; destruct s as [d [e' [p c']]].
-          assert (s := field_lim_close_split _ _ e' (field_close_symmetric Q _ _ _ c')).
-          strip_truncations; destruct s as [n [e'' [p' c'']]].
-          rewrite p, p', <- Qpos_plus_assoc, (qpos_plus_comm n d), Qpos_plus_assoc.
-          apply cs_close_lim_lim, IHx, field_close_symmetric, c''.
+        + intro r; apply reflects_close_lim_rat, IHx.
+        + intros y _; apply reflects_close_lim_lim, IHx.
     Qed.
 
     (** Hence the canonical map is an embedding. *)

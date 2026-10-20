@@ -27,6 +27,13 @@ Proof.
 split; try exact _.
 Qed.
 
+Lemma dec_recip_mult_cancel_r (x y : F) : y <> 0 -> x / y * y = x.
+Proof.
+intros E.
+rewrite <- simple_associativity, (commutativity (/y)), dec_recip_inverse by assumption.
+apply mult_1_r.
+Qed.
+
 Lemma dec_recip_1: / 1 = 1.
 Proof.
 rewrite <-(rings.mult_1_l (/1)).
@@ -180,17 +187,6 @@ End contents.
 #[export]
 Hint Extern 7 (PropHolds (/ _ <> 0)) =>
   eapply @dec_recip_ne_0 : typeclass_instances.
-
-Lemma decfield_nontrivial_apart `{IsDecField F} `{Apart F} `{!TrivialApart F}
-  : PropHolds (1 ≶ 0).
-Proof.
-  apply ne_apart; rapply decfield_nontrivial.
-Qed.
-
-(* Due to bug #2528 *)
-#[export]
-Hint Extern 5 (PropHolds (1 ≶ 0)) =>
-  eapply @decfield_nontrivial_apart : typeclass_instances.
 
 (* Given a decidable field we can easily construct a constructive field. *)
 Section is_field.

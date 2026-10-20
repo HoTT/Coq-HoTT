@@ -168,11 +168,10 @@ Section ring_order.
   apply flip_nonneg_negate. trivial.
   Qed.
 
-  (** Two elements of an interval [[a, b]] differ by at most [b - a]. *)
   Lemma interval_minus_le (a b s t : R) : a ≤ s ≤ b -> a ≤ t ≤ b -> s - t ≤ b - a.
   Proof.
     intros [_ lesb] [leat _].
-    apply plus_le_compat; [exact lesb|exact (snd (flip_le_negate _ _) leat)].
+    apply plus_le_compat; [exact lesb|exact (snd (flip_le_negate a t) leat)].
   Qed.
 End ring_order.
 
@@ -230,6 +229,18 @@ Section strict_ring_order.
   split; apply flip_lt_minus_r.
   Qed.
 
+  Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_l z y x)); rewrite plus_comm.
+    exact (fst (flip_lt_minus_l x y z) E).
+  Qed.
+
+  Lemma flip_lt_minus_swap_r (x y z : R) : z < y - x -> x < y - z.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_r z y x)); rewrite plus_comm.
+    exact (fst (flip_lt_minus_r x y z) E).
+  Qed.
+
   Lemma flip_pos_minus (x y : R) : 0 < y - x <-> x < y.
   Proof.
   pattern x at 2;apply (transport _ (plus_0_l x)).
@@ -276,11 +287,26 @@ Section strict_ring_order.
   apply flip_pos_negate. trivial.
   Qed.
 
-  (** A bound [- x < z < x] can be weakened to a larger [y]. *)
+  Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
+  Proof.
+    split; intros [lo hi]; split.
+    - apply (snd (flip_lt_minus_r u v (- e))); rewrite plus_comm; exact lo.
+    - apply (snd (flip_lt_minus_l u v e)); rewrite plus_comm; exact hi.
+    - rewrite plus_comm; exact (fst (flip_lt_minus_r u v (- e)) lo).
+    - rewrite plus_comm; exact (fst (flip_lt_minus_l u v e) hi).
+  Qed.
+
+  Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
+  Proof.
+    intros [lo hi]; rewrite (negate_swap_r u v); split.
+    - exact (snd (flip_lt_negate (v - u) e) hi).
+    - exact (flip_lt_negate_l e (v - u) lo).
+  Qed.
+
   Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
   Proof.
     intros [ltxz ltzx] ltxy; split.
-    - exact (transitivity (snd (flip_lt_negate _ _) ltxy) ltxz).
+    - lhs' exact (snd (flip_lt_negate x y) ltxy); exact ltxz.
     - exact (transitivity ltzx ltxy).
   Qed.
 
@@ -296,10 +322,12 @@ Section strict_ring_apart.
 
 End strict_ring_apart.
 
-Section full_pseudo_ring_order.
+(** ** Symmetric bounds *)
+
+(** We bound [x] by [- y < x < y]: this says that the absolute value of [x] is less than [y], without needing absolute values. *)
+Section symmetric_bounds.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
 
-  (** An element strictly between [- y] and [y] shows that [y] is positive. *)
   Lemma pos_between_negate x y : - y < x < y -> 0 < y.
   Proof.
     intros [ltyx ltxy].
@@ -309,57 +337,39 @@ Section full_pseudo_ring_order.
     - assumption.
   Qed.
 
-  (** Two elements of an interval of width less than [d] are less than [d] apart. *)
-  Lemma interval_minus_lt (a b s t d : R)
-    : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
+  Local Lemma mult_lt_bound_r s t S T : - S < s < S -> - T < t < T -> s * t < S * T.
   Proof.
-    intros sab tab lt; split.
-    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
-      exact (le_lt_trans _ _ _ (interval_minus_le a b t s tab sab) lt).
-    - exact (le_lt_trans _ _ _ (interval_minus_le a b s t sab tab) lt).
+    intros [ltSs ltsS] [ltTt lttT].
+    assert (Spos := pos_between_negate s S (ltSs, ltsS)).
+    assert (Tpos := pos_between_negate t T (ltTt, lttT)).
+    assert (c := cotransitive (pos_mult S T Spos Tpos) (s * t)).
+    strip_truncations; destruct c as [ltst|]; [|assumption].
+    destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
+    - apply mult_lt_compat; assumption.
+    - rewrite <- negate_mult_negate.
+      apply mult_lt_compat; first [apply flip_neg_negate | apply flip_lt_negate_l]; assumption.
   Qed.
 
-  (** If [|s| < S] and [|t| < T], then [|s * t| < S * T]. *)
   Lemma mult_lt_bound s t S T
     : - S < s < S -> - T < t < T -> - (S * T) < s * t < S * T.
   Proof.
-    assert (upper : forall s t, - S < s < S -> - T < t < T -> s * t < S * T).
-    { clear s t.
-      intros s t [ltSs ltsS] [ltTt lttT].
-      assert (Spos := pos_between_negate s S (ltSs, ltsS)).
-      assert (Tpos := pos_between_negate t T (ltTt, lttT)).
-      assert (c := cotransitive (pos_mult S T Spos Tpos) (s * t)).
-      strip_truncations; destruct c as [ltst|]; [|assumption].
-      destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
-      - apply mult_lt_compat; assumption.
-      - rewrite <- negate_mult_negate.
-        apply mult_lt_compat.
-        + apply flip_neg_negate; assumption.
-        + apply flip_neg_negate; assumption.
-        + exact (flip_lt_negate_l S s ltSs).
-        + exact (flip_lt_negate_l T t ltTt). }
-    intros [ltSs ltsS] ltTtT; split.
-    - apply flip_lt_negate_l.
-      rewrite negate_mult_distr_l.
-      apply upper; [split|exact ltTtT].
+    intros [ltSs ltsS] ltt; split.
+    - apply flip_lt_negate_l; rewrite negate_mult_distr_l.
+      apply mult_lt_bound_r; [split|exact ltt].
       + exact (snd (flip_lt_negate s S) ltsS).
       + exact (flip_lt_negate_l S s ltSs).
-    - apply upper; [split|]; assumption.
+    - exact (mult_lt_bound_r s t S T (ltSs, ltsS) ltt).
   Qed.
 
-  (** The difference of two products, for estimating it. *)
-  Lemma mult_minus_mult x y u w
+  Local Lemma mult_minus_mult x y u w
     : x * y - u * w = x * (y - w) + (x - u) * w.
   Proof.
-    rewrite plus_mult_distr_l, plus_mult_distr_r.
-    rewrite <- negate_mult_distr_r, <- negate_mult_distr_l.
-    rewrite <- (plus_assoc (x * y) (- (x * w)) (x * w + - (u * w))).
-    rewrite (plus_assoc (- (x * w)) (x * w) (- (u * w))).
-    rewrite plus_negate_l, plus_0_l.
+    rewrite <- (plus_minus_telescope (x * y) (x * w) (u * w)).
+    rewrite negate_mult_distr_r, <- plus_mult_distr_l.
+    rewrite negate_mult_distr_l, <- plus_mult_distr_r.
     reflexivity.
   Qed.
 
-  (** If [|x| < X], [|w| < W], [|x - u| < D] and [|y - w| < D], then [|x * y - u * w| < X * D + D * W]. *)
   Lemma mult_minus_mult_lt_bound x y u w X W D
     : - X < x < X -> - W < w < W -> - D < x - u < D -> - D < y - w < D
       -> - (X * D + D * W) < x * y - u * w < X * D + D * W.
@@ -371,22 +381,38 @@ Section full_pseudo_ring_order.
     split; apply plus_lt_compat; assumption.
   Qed.
 
-  (** Multiplication by [v] is monotone on [[a, b]], so [u * v] cannot lie strictly below both [a * v] and [b * v]. *)
-  Lemma not_lt_mult_endpoints a b u v
+End symmetric_bounds.
+
+(** ** Intervals *)
+
+Section intervals.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
+
+  Lemma interval_minus_lt (a b s t d : R)
+    : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
+  Proof.
+    intros sab tab lt; split.
+    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
+      rapply le_lt_trans; [exact (interval_minus_le a b t s tab sab)|exact lt].
+    - rapply le_lt_trans; [exact (interval_minus_le a b s t sab tab)|exact lt].
+  Qed.
+
+  Local Lemma not_lt_mult_endpoints a b u v
     : a ≤ u -> u ≤ b -> u * v < a * v -> u * v < b * v -> Empty.
   Proof.
     intros leau leub ltua ltub.
     assert (ltua' := snd (flip_neg_minus (a * v) (u * v)) ltua).
     assert (ltub' := snd (flip_pos_minus (u * v) (b * v)) ltub).
     rewrite negate_mult_distr_l, <- plus_mult_distr_r in ltua', ltub'.
-    destruct (neg_mult_decompose _ _ ltua') as [[ltua'' _]|[_ vneg]].
-    - exact (fst (le_iff_not_lt_flip _ _) (snd (flip_nonneg_minus a u) leau) ltua'').
-    - destruct (pos_mult_decompose _ _ ltub') as [[_ vpos]|[ltub'' _]].
-      + exact (irreflexivity _ _ (transitivity vneg vpos)).
-      + exact (fst (le_iff_not_lt_flip _ _) (snd (flip_nonneg_minus u b) leub) ltub'').
+    assert (leua : 0 ≤ u - a) by exact (snd (flip_nonneg_minus a u) leau).
+    assert (lebu : 0 ≤ b - u) by exact (snd (flip_nonneg_minus u b) leub).
+    destruct (neg_mult_decompose (u - a) v ltua') as [[ltua'' _]|[_ vneg]].
+    - exact (le_not_lt_flip (u - a) 0 leua ltua'').
+    - destruct (pos_mult_decompose (b - u) v ltub') as [[_ vpos]|[ltub'' _]].
+      + exact (irreflexivity (<) 0 (transitivity vneg vpos)).
+      + exact (le_not_lt_flip (b - u) 0 lebu ltub'').
   Qed.
 
-  (** Hence a strict bound on [a * v] and [b * v] is a strict bound on [u * v]. *)
   Lemma lt_mult_endpoints_l q a b u v
     : a ≤ u -> u ≤ b -> q < a * v -> q < b * v -> q < u * v.
   Proof.
@@ -402,23 +428,21 @@ Section full_pseudo_ring_order.
     : a ≤ u -> u ≤ b -> a * v < r -> b * v < r -> u * v < r.
   Proof.
     intros leau leub ltar ltbr.
-    assert (c := cotransitive ltar (u * v)).
-    strip_truncations; destruct c as [ltau|]; [|assumption].
-    assert (c := cotransitive ltbr (u * v)).
-    strip_truncations; destruct c as [ltbu|]; [|assumption].
-    destruct (not_lt_mult_endpoints a b u (- v) leau leub);
-      rewrite <- 2!negate_mult_distr_r; apply (snd (flip_lt_negate _ _)); assumption.
+    apply (fst (flip_lt_negate (u * v) r)); rewrite negate_mult_distr_r.
+    apply (lt_mult_endpoints_l (- r) a b u (- v) leau leub); rewrite <- negate_mult_distr_r.
+    - exact (snd (flip_lt_negate (a * v) r) ltar).
+    - exact (snd (flip_lt_negate (b * v) r) ltbr).
   Qed.
 
-  (** Hence a bound on the four products of the endpoints of [[a, b]] and [[c, d]] is a bound on [u * w] for [u] in [[a, b]] and [w] in [[c, d]]. *)
   Lemma lt_mult_corners_l q a b c d u w
     : a ≤ u -> u ≤ b -> c ≤ w -> w ≤ d
       -> q < a * c -> q < a * d -> q < b * c -> q < b * d -> q < u * w.
   Proof.
     intros leau leub lecw lewd ltac ltad ltbc ltbd.
     rewrite (mult_comm u w).
-    apply (lt_mult_endpoints_l q c d w u lecw lewd); rewrite (mult_comm _ u);
-      apply (lt_mult_endpoints_l q a b u _ leau leub); assumption.
+    apply (lt_mult_endpoints_l q c d w u lecw lewd).
+    - rewrite (mult_comm c u); apply (lt_mult_endpoints_l q a b u c leau leub); assumption.
+    - rewrite (mult_comm d u); apply (lt_mult_endpoints_l q a b u d leau leub); assumption.
   Qed.
 
   Lemma mult_corners_lt_r r a b c d u w
@@ -427,11 +451,12 @@ Section full_pseudo_ring_order.
   Proof.
     intros leau leub lecw lewd ltac ltad ltbc ltbd.
     rewrite (mult_comm u w).
-    apply (mult_endpoints_lt_r r c d w u lecw lewd); rewrite (mult_comm _ u);
-      apply (mult_endpoints_lt_r r a b u _ leau leub); assumption.
+    apply (mult_endpoints_lt_r r c d w u lecw lewd).
+    - rewrite (mult_comm c u); apply (mult_endpoints_lt_r r a b u c leau leub); assumption.
+    - rewrite (mult_comm d u); apply (mult_endpoints_lt_r r a b u d leau leub); assumption.
   Qed.
 
-End full_pseudo_ring_order.
+End intervals.
 
 (** ** Absolute values *)
 
@@ -440,21 +465,19 @@ Section abs.
   Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt} `{!Abs R}.
   Local Existing Instance pseudo_order_apart.
 
-  (** Up to double negation, every element is nonnegative or nonpositive. *)
   Lemma nonneg_or_nonpos_not_not (x : R) : ~~ ((0 ≤ x) + (x ≤ 0)).
   Proof.
     intro n; apply n, inr, not_lt_le_flip.
-    intro lt0x; exact (n (inl (lt_le _ _ lt0x))).
+    intro lt0x; apply n, inl, lt_le, lt0x.
   Qed.
 
-  (** Hence inequalities and equalities, which are stable under double negation, can be proved by cases on the sign of an element. *)
   Local Lemma le_by_sign (x a b : R)
     : (0 ≤ x -> a ≤ b) -> (x ≤ 0 -> a ≤ b) -> a ≤ b.
   Proof.
     intros nonneg nonpos; apply not_lt_le_flip; intro ltba.
     apply (nonneg_or_nonpos_not_not x); intros [c|c].
-    - exact (le_not_lt_flip _ _ (nonneg c) ltba).
-    - exact (le_not_lt_flip _ _ (nonpos c) ltba).
+    - exact (le_not_lt_flip b a (nonneg c) ltba).
+    - exact (le_not_lt_flip b a (nonpos c) ltba).
   Qed.
 
   Local Lemma eq_by_sign (x a b : R)
@@ -523,8 +546,8 @@ Section abs.
     destruct c as [lt|lt]; [|exact lt].
     assert (nonpos : x ≤ 0).
     { apply not_lt_le_flip; intro pos.
-      rewrite (abs_of_nonneg x (lt_le _ _ pos)) in lt.
-      exact (irreflexivity _ _ lt). }
+      rewrite (abs_of_nonneg x (lt_le 0 x pos)) in lt.
+      exact (irreflexivity (<) x lt). }
     rewrite (abs_of_nonpos x nonpos).
     apply flip_lt_negate; rewrite negate_involutive; exact ltyx.
   Qed.

@@ -155,7 +155,7 @@ Qed.
 Lemma qpos_half_lt@{} (e : Q+) : ' (e / 2) < ' e.
 Proof.
 rewrite (ap (cast Q+ Q) (pos_split2 e)).
-exact (fst (pos_plus_lt_compat_r _ _) (pos_is_pos _)).
+apply pos_plus_lt_compat_r, pos_is_pos.
 Qed.
 
 Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
@@ -165,6 +165,12 @@ path_via (e * (3 / 3)).
 - rewrite pos_recip_r,pos_mult_1_r;reflexivity.
 - apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
   ring_tac.ring_with_nat.
+Qed.
+
+Lemma qpos_two_thirds_lt@{} (e : Q+) : ' (e / 3) + ' (e / 3) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split3 e)).
+apply pos_plus_lt_compat_r, pos_is_pos.
 Qed.
 
 #[export] Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
@@ -434,13 +440,13 @@ Proof.
 intros q r E.
 assert (pos : 0 < (r - q) / 2).
 { apply pos_mult_compat;[|exact _].
-  red. apply (snd (flip_pos_minus _ _)). trivial. }
+  red. apply (snd (flip_pos_minus q r)). trivial. }
 rewrite (plus_comm q r).
 split.
 - rewrite <- path_avg_split_diff_l.
-  exact (fst (pos_plus_lt_compat_r _ _) pos).
+  apply pos_plus_lt_compat_r, pos.
 - rewrite <- path_avg_split_diff_r.
-  exact (fst (pos_minus_lt_compat_r _ _) pos).
+  apply pos_minus_lt_compat_r, pos.
 Qed.
 
 Lemma pos_gt_both : forall a b : Q, forall e, a < ' e -> b < ' e ->
@@ -616,7 +622,6 @@ Qed.
 
 End enumerable.
 
-(** A surjection from [nat] onto the rationals gives one onto pairs of a rational and a positive rational. *)
 Definition rationals_qpos_enumerator (e : nat -> Q) `{!IsSurjection e} : nat -> Q * Q+
   := nat_prod_enumerator e (Qpos_enumerator (H1:=Build_Enumerable Q e _)).
 

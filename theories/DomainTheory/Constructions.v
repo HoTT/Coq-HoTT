@@ -10,7 +10,6 @@ Local Open Scope type_scope.
 
 (** ** The dcpo of elements of a subdcpo *)
 
-(** The order on [A] restricts to the elements of a subtype of [A]. *)
 Definition le_sig {A : Type} {Ale : Le A} (B : A -> Type) : Le (sig B)
   := fun a b => a.1 ≤ b.1.
 
@@ -26,7 +25,7 @@ Proof.
     + intros a b c; unfold le, le_sig; apply transitivity.
   - intros a b p q.
     apply path_sigma_hprop.
-    exact (antisymmetry Ale _ _ p q).
+    apply (antisymmetry Ale); [exact p|exact q].
 Defined.
 
 Section Subdcpo.
@@ -43,11 +42,11 @@ Section Subdcpo.
     1: exact _.
     intros I x d.
     pose (d' := isdirected_compose pr1 x d).
-    exists (dcpo_sup _ d'; issubdcpo B I _ d' (fun i => (x i).2)).
+    exists (dcpo_sup (pr1 o x) d'; issubdcpo B I (pr1 o x) d' (fun i => (x i).2)).
     split.
-    - exact (dcpo_sup_upper _ d').
+    - exact (dcpo_sup_upper (pr1 o x) d').
     - intros b ub.
-      exact (dcpo_sup_least _ d' b.1 ub).
+      exact (dcpo_sup_least (pr1 o x) d' b.1 ub).
   Defined.
 
 End Subdcpo.
@@ -66,37 +65,35 @@ Section Pointwise.
     - exact _.
     - intros f g; unfold relation_pointwise; exact _.
     - split.
-      + intros f a; exact (reflexivity (R:=Ble) _).
+      + intros f a; exact (reflexivity (R:=Ble) (f a)).
       + intros f g h p q a; exact (transitivity (R:=Ble) (p a) (q a)).
     - intros f g p q.
       apply path_forall; intro a.
-      exact (antisymmetry Ble _ _ (p a) (q a)).
+      apply (antisymmetry Ble); [exact (p a)|exact (q a)].
   Defined.
 
-  (** Evaluation at a point is monotone. *)
   #[export] Instance orderpreserving_ev (a : A)
     : OrderPreserving (Ale:=le_pointwise) (fun f : A -> B => f a)
     := fun f g p => p a.
 
-  (** Suprema in [A -> B] are computed pointwise. *)
   #[export] Instance isdcpo_pointwise `{!IsDcpo Ble} : IsDcpo le_pointwise.
   Proof.
     split.
     1: exact _.
     intros I x d.
     pose (da := fun a => isdirected_compose (fun f : A -> B => f a) x d).
-    exists (fun a => dcpo_sup _ (da a)).
+    exists (fun a => dcpo_sup (fun i => x i a) (da a)).
     split.
     - intros i a.
-      exact (dcpo_sup_upper _ (da a) i).
+      exact (dcpo_sup_upper (fun i => x i a) (da a) i).
     - intros g ub a.
-      exact (dcpo_sup_least _ (da a) _ (fun i => ub i a)).
+      exact (dcpo_sup_least (fun i => x i a) (da a) (g a) (fun i => ub i a)).
   Defined.
 
   Definition dcpo_sup_pointwise `{!IsDcpo Ble} {I : Type} (x : I -> A -> B)
     (d : IsDirected (Ale:=le_pointwise) x) (a : A)
     : IsSup (fun i => x i a) (dcpo_sup x d a)
-    := (dcpo_hassup _ _ (isdirected_compose (fun f : A -> B => f a) x d)).2.
+    := (dcpo_hassup I (fun i => x i a) (isdirected_compose (fun f : A -> B => f a) x d)).2.
 
 End Pointwise.
 
@@ -111,7 +108,6 @@ Section HPropLattice.
   Constraint w <= j, i <= j.
   Context `{PropResizing} {I : Type@{w}}.
 
-  (** The join of a family of propositions in [HProp@{i}], indexed by a type in [Type@{w}]; the universe [j] contains both. *)
   Definition hprop_join (P : I -> HProp@{i}) : HProp@{i}
     := Build_HProp (smalltype@{i j} (merely@{j} {k : I & P k})).
 
@@ -146,7 +142,6 @@ End HPropLattice.
 
 (** ** The dcpo of propositions *)
 
-(** Propositions are ordered by implication. *)
 Definition le_hprop@{i u | i < u} : Le@{u i} HProp@{i}
   := fun P Q => P -> Q.
 
@@ -162,7 +157,7 @@ Proof.
     exact (path_iff_hprop p q).
 Defined.
 
-(** With propositional resizing, [HProp@{i}] is a [v]-dcpo for every universe [v]. By [isdcpo_pointwise], the same holds for the subsets [A -> HProp@{i}] of a type [A], ordered by inclusion. *)
+(** By [isdcpo_pointwise], the same holds for the subsets [A -> HProp@{i}] of a type [A], ordered by inclusion. *)
 #[export] Instance isdcpo_hprop@{v i u s} `{PropResizing} `{Univalence} : IsDcpo@{v u i s} le_hprop@{i u}.
 Proof.
   split.

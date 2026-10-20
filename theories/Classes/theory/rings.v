@@ -290,6 +290,14 @@ Section ring_props.
     reflexivity.
   Qed.
 
+  Lemma plus_minus_plus_l x y z : (z + x) - (z + y) = x - y.
+  Proof.
+    rewrite negate_plus_distr, (commutativity (f := (+)) z x),
+      <- (simple_associativity (f := (+)) x z),
+      (simple_associativity (f := (+)) z (- z)), plus_negate_r, (left_identity (- y)).
+    reflexivity.
+  Qed.
+
   Lemma negate_mult_l x : -x = - 1 * x.
   Proof.
   apply (left_cancellation (+) x).
@@ -460,6 +468,18 @@ Section ring_props.
   Proof.
     rewrite (simple_associativity (f := (+))).
     apply plus_conjugate.
+  Qed.
+
+  Lemma minus_plus_cancel x y : x - y + y = x.
+  Proof.
+    rewrite <- (simple_associativity (f := (+)) x (- y) y), left_inverse.
+    apply right_identity.
+  Qed.
+
+  Lemma plus_minus_cancel x y : x + y - y = x.
+  Proof.
+    rewrite <- (simple_associativity (f := (+)) x y (- y)), right_inverse.
+    apply right_identity.
   Qed.
 End ring_props.
 

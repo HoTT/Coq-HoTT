@@ -44,7 +44,7 @@ Section ivt.
 
   (** ** Nested intervals *)
 
-  (** Bounds on the tail of a sequence are bounds on its limit. *)
+  (** Bounds on the tail of a sequence are bounds on its limit: if [l < c], then [y n < l + e < c] for [e < c - l] and [n] large enough. *)
   Lemma le_limit (y : nat -> F) (l c : F) (N : nat) (islim : IsLimit Q F y l)
     (le : forall n, (N <= n)%nat -> c ≤ y n)
     : c ≤ l.
@@ -54,21 +54,20 @@ Section ivt.
     strip_truncations; destruct e as [e ltec].
     assert (c' := islim e); strip_truncations; destruct c' as [M close].
     set (n := Nat.Core.nat_max N M).
-    assert (lt := fst (close n (le_nat_max_r N M))).
+    destruct (snd (between_iff_lt_minus l (y n) _)
+                (between_minus_swap _ _ _ (close n (le_nat_max_r N M)))) as [_ ltyn].
+    apply flip_lt_minus_r in ltec; rewrite plus_comm in ltec.
     apply (irreflexivity (<) c).
-    refine (le_lt_trans _ _ _ (le n (le_nat_max_l N M)) _).
-    apply (fst (flip_lt_minus_r _ _ _)) in lt, ltec.
-    rewrite plus_comm in lt, ltec.
-    exact (transitivity (fst (flip_lt_minus_l _ _ _) lt) ltec).
+    rapply le_lt_trans; [exact (le n (le_nat_max_l N M))|].
+    exact (transitivity ltyn ltec).
   Qed.
 
   Lemma limit_le (y : nat -> F) (l c : F) (N : nat) (islim : IsLimit Q F y l)
     (le : forall n, (N <= n)%nat -> y n ≤ c)
     : l ≤ c.
   Proof.
-    apply flip_le_negate.
-    refine (le_limit _ _ _ N (islimit_negate Q _ _ islim) _).
-    intros n len; exact (snd (flip_le_negate _ _) (le n len)).
+    apply flip_le_negate, (le_limit _ _ _ N (islimit_negate Q y l islim)).
+    intros n len; exact (snd (flip_le_negate (y n) c) (le n len)).
   Qed.
 
   (** Nested intervals [[z n, w n]] whose widths are bounded by [B r^n] for rationals [B > 0] and [0 < r < 1]. Every sequence in the intervals has a modulus of Cauchy convergence, and converges to every point which lies in all the intervals. *)
@@ -93,7 +92,7 @@ Section ivt.
     Lemma nested_width_lt (e : Qpos Q) (n : nat) (len : (nested_modulus e <= n)%nat)
       : w n - z n < ' (' e).
     Proof.
-      refine (le_lt_trans _ _ _ (width n) _).
+      rapply le_lt_trans; [exact (width n)|].
       rapply strictly_order_preserving.
       rapply (le_lt_trans _ (' B * power r (nested_modulus e))).
       - apply (order_preserving (' B *.)).
@@ -153,7 +152,7 @@ Section ivt.
   Lemma qpos_of_upper_bound (u : F) (r : Q) (u0 : 0 ≤ u) (ltr : u < ' r) : 0 < r.
   Proof.
     apply (strictly_order_reflecting (cast Q F)).
-    rewrite (preserves_0 (f:=cast Q F)); exact (le_lt_trans _ _ _ u0 ltr).
+    rewrite (preserves_0 (f:=cast Q F)); exact (le_lt_trans 0 u (' r) u0 ltr).
   Qed.
 
   (** *** Interpolating bisection *)
@@ -209,7 +208,7 @@ Section ivt.
        let d := dec c in
        (fst zw + (1 - d) * h, c + (1 - d) * h).
 
-  (** The interpolated interval lies in the left half extended by its right neighbour. *)
+  (** The interpolated interval lies in the left half extended by its right neighbour: the shift [(1 - dd) h] lies between [0] and the half width [h], and [u + h + h = v]. *)
   Lemma interpolate_ordered (u v dd : F) (leuv : u ≤ v) (dd01 : 0 ≤ dd ≤ 1)
     : let h := (v - u) * ' half in
       u ≤ u + (1 - dd) * h /\ u + (1 - dd) * h ≤ u + h
@@ -217,22 +216,19 @@ Section ivt.
   Proof.
     intro h.
     assert (h0 : 0 ≤ h).
-    { apply nonneg_mult_compat; [exact (snd (flip_nonneg_minus _ _) leuv)|].
-      exact (lt_le _ _ half_pos). }
+    { apply nonneg_mult_compat; [exact (snd (flip_nonneg_minus u v) leuv)|apply lt_le, half_pos]. }
     assert (D0 : 0 ≤ (1 - dd) * h).
-    { exact (nonneg_mult_compat _ _ (snd (flip_nonneg_minus _ _) (snd dd01)) h0). }
+    { apply nonneg_mult_compat; [exact (snd (flip_nonneg_minus dd 1) (snd dd01))|exact h0]. }
     assert (Dh : (1 - dd) * h ≤ h).
     { assert (le1 : 1 - dd ≤ 1).
-      { apply (snd (flip_le_minus_l _ _ _)).
-        exact (fst (nonneg_plus_le_compat_r _ _) (fst dd01)). }
+      { apply (snd (flip_le_minus_l dd 1 1)), nonneg_plus_le_compat_r, (fst dd01). }
       lhs' exact (order_preserving (.* h) _ _ le1).
       rewrite mult_1_l; reflexivity. }
-    refine (_, (_, (_, _))).
-    - exact (fst (nonneg_plus_le_compat_r _ _) D0).
-    - exact (order_preserving (u +) _ _ Dh).
-    - exact (fst (nonneg_plus_le_compat_r _ _) D0).
-    - rewrite <- (half_double u v).
-      exact (order_preserving (u + h +) _ _ Dh).
+    split; [|split; [|split]].
+    - apply nonneg_plus_le_compat_r, D0.
+    - apply (order_preserving (u +)), Dh.
+    - apply nonneg_plus_le_compat_r, D0.
+    - rewrite <- (half_double u v); apply (order_preserving (u + h +)), Dh.
   Qed.
 
   Section bisect.
@@ -442,34 +438,41 @@ Section ivt.
                approximate_root_between).
     Qed.
 
-    (** The invariant of the bisection: at every stage, either [f] is close to [0] at one of the midpoints so far, or [f] is still negative at the lower endpoint and positive at the upper endpoint. *)
-    Lemma bisect_invariant (m : nat)
-      : hor {j : nat & prod (j < m)%nat (- ' (' e) < f (c j) < ' (' e))}
-          (prod (f (z m) < 0) (0 < f (w m))).
+    (** A step of the bisection keeps [f] negative at the lower and positive at the upper endpoint, unless [f] is close to [0] at the midpoint: we compare [f (c m)] with [e / 2 < e] and [- e < - e / 2].  If [e / 2 < f (c m)], the weight is [1] and the next interval is the left half; if [f (c m) < - e / 2], the weight is [0] and the next interval is the right half. *)
+    Local Lemma bisect_invariant_step (m : nat) (neg : f (z m) < 0) (pos : 0 < f (w m))
+      : hor (- ' (' e) < f (c m) < ' (' e)) (prod (f (z (S m)) < 0) (0 < f (w (S m)))).
     Proof.
       assert (halfpos := pos_rationals_to_field_qpos Q (F:=F) (e / 2)).
-      induction m as [|m IH].
-      1: exact (tr (inr (fa, fb))).
-      strip_truncations; destruct IH as [[j [ltj close]]|[neg pos]].
-      1: exact (tr (inl (j; (leq_succ_r ltj, close)))).
-      (* Compare [f (c m)] with [e / 2] and [e], and with [- e] and [- e / 2]. *)
-      assert (ltte : (' (' (e / 2)) : F) < ' (' e))
-        by exact (strictly_order_preserving _ _ _ (qpos_half_lt e)).
+      assert (ltte : (' (' (e / 2)) : F) < ' (' e)).
+      { apply (strictly_order_preserving _), qpos_half_lt. }
       assert (h := cotransitive ltte (f (c m))); strip_truncations.
       destruct h as [lt|lte].
-      - (* The next interval is the left half, whose upper endpoint is [c m]. *)
-        apply tr, inr.
+      - apply tr, inr.
         assert (d1 := bisect_weight_1 f _ _ lt).
         rewrite (bisect_lower_1 dec a b m d1), (bisect_upper_1 dec a b m d1).
         exact (neg, transitivity halfpos lt).
       - assert (h := cotransitive (snd (flip_lt_negate _ _) ltte) (f (c m))).
         strip_truncations; destruct h as [lte'|lt].
-        + exact (tr (inl (m; (leq_refl _, (lte', lte))))).
-        + (* The next interval is the right half, whose lower endpoint is [c m]. *)
-          apply tr, inr.
+        + exact (tr (inl (lte', lte))).
+        + apply tr, inr.
           assert (d0 := bisect_weight_0 f _ _ lt).
           rewrite (bisect_lower_0 dec a b m d0), (bisect_upper_0 dec a b m d0).
           exact (transitivity lt (fst (flip_pos_negate _) halfpos), pos).
+    Qed.
+
+    (** The invariant of the bisection: at every stage, either [f] is close to [0] at one of the midpoints so far, or [f] is still negative at the lower endpoint and positive at the upper endpoint. *)
+    Lemma bisect_invariant (m : nat)
+      : hor {j : nat & prod (j < m)%nat (- ' (' e) < f (c j) < ' (' e))}
+          (prod (f (z m) < 0) (0 < f (w m))).
+    Proof.
+      induction m as [|m IH].
+      - exact (tr (inr (fa, fb))).
+      - strip_truncations; destruct IH as [[j [ltj close]]|[neg pos]].
+        + exact (tr (inl (j; (leq_succ_r ltj, close)))).
+        + assert (h := bisect_invariant_step m neg pos); strip_truncations.
+          destruct h as [close|signs].
+          * exact (tr (inl (m; (leq_refl _, close)))).
+          * exact (tr (inr signs)).
     Qed.
 
     Context (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y).
@@ -551,7 +554,7 @@ Section ivt.
 
   End approximate.
 
-  (** If [f] lifts to locators and [a] and [b] have locators, we can find a point with a locator at which [f] is close to [0]. We search for one among the candidates for [e / 2], deciding approximately with locators for their values. *)
+  (** If [f] lifts to locators and [a] and [b] have locators, we can find a point with a locator at which [f] is close to [0]. We search for one among the candidates [y] for [e / 2], for which we locate [- e < f y] at [- e < - e / 2] and [f y < e] at [e / 2 < e]. *)
   Definition approximate_ivt_locator `{Funext} {Fcomplete : IsComplete Q F}
     (f : F -> F) (a b : F) (leab : a ≤ b) (fa : f a < 0) (fb : 0 < f b) (e : Qpos Q)
     (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y)
@@ -583,29 +586,26 @@ Section ivt.
   Definition IsLocallyNonconstant (f : F -> F)
     := forall x y t : F, x < y -> hexists (fun z => ((x < z < y) * (f z ≶ t))%type).
 
-  (** If [x < y], a rational number lies between [x] and [y] and within [d] of [z], provided [z] lies between [x] and [y]. *)
+  (** If [x < z < y], a rational number lies between [x] and [y] and within [d] of [z]: the interval from [join x (z - d)] to [meet y (z + d)] is inhabited by [z]. *)
   Local Lemma rational_between_close (x y z : F) (d : Qpos Q) (xzy : x < z < y)
     : hexists (fun r : Q => ((x < ' r < y) * field_close Q d z (' r))%type).
   Proof.
     assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
     assert (lt : join x (z - ' (' d)) < meet y (z + ' (' d))).
-    { assert (lt1 : z - ' (' d) < z) by exact (fst (pos_minus_lt_compat_r _ _) dpos).
-      assert (lt2 : z < z + ' (' d)) by exact (fst (pos_plus_lt_compat_r _ _) dpos).
+    { assert (lt1 : z - ' (' d) < z) by apply pos_minus_lt_compat_r, dpos.
+      assert (lt2 : z < z + ' (' d)) by apply pos_plus_lt_compat_r, dpos.
       apply join_lt_r; apply meet_lt_l.
       - exact (transitivity (fst xzy) (snd xzy)).
       - exact (transitivity (fst xzy) lt2).
       - exact (transitivity lt1 (snd xzy)).
       - exact (transitivity lt1 lt2). }
-    refine (Trunc_functor (-1) _ (archimedean_property Q F _ _ lt)).
-    intros [r [ltr rlt]]; exists r; split; [split|split].
-    - exact (le_lt_trans _ _ _ (join_ub_l _ _) ltr).
-    - exact (lt_le_trans _ _ _ rlt (meet_lb_l _ _)).
-    - apply (snd (flip_lt_minus_r _ _ _)); rewrite plus_comm.
-      apply (snd (flip_lt_minus_l _ _ _)).
-      exact (lt_le_trans _ _ _ rlt (meet_lb_r _ _)).
-    - apply (snd (flip_lt_minus_l _ _ _)); rewrite plus_comm.
-      apply (fst (flip_lt_minus_l _ _ _)).
-      exact (le_lt_trans _ _ _ (join_ub_r _ _) ltr).
+    generalize (archimedean_property Q F _ _ lt); apply Trunc_functor.
+    intros [r [ltr rlt]]; exists r; split; [split|].
+    - rapply le_lt_trans; [apply join_ub_l|exact ltr].
+    - rapply lt_le_trans; [exact rlt|apply meet_lb_l].
+    - apply between_minus_swap, between_iff_lt_minus; split.
+      + rapply le_lt_trans; [apply join_ub_r|exact ltr].
+      + rapply lt_le_trans; [exact rlt|apply meet_lb_r].
   Qed.
 
   (** Locators let us turn local nonconstancy into structure, and find roots. *)
@@ -641,7 +641,7 @@ Section ivt.
       Local Definition locator_value_minus (r : Q) : locator Q F (f (' r) - t)
         := locator_plus Q F (lift _ (locator_left Q F r)) (locator_minus Q F lt).
 
-      (** For a rational [r] and a positive rational [n], we decide approximately whether [r] is [n]-far from [x] and [y], and whether [f r] is [n]-far from [t]. *)
+      (** For a rational [r] and a positive rational [n], we locate [x < r] at [r - n < r] and [r < y] at [r < r + n], and we locate [n / 2 < f r - t] or [f r - t < - n / 2]. *)
       Local Definition RationalFar (rn : Q * Qpos Q) : Type
         := let (r, n) := rn in
            (locates_left Q F (lx : locator' Q F x)
@@ -691,11 +691,12 @@ Section ivt.
             apply (snd (flip_pos_minus _ _)); assumption. }
         refine (Trunc_functor (-1) _ (merely_qpos_lt Q _ lt0)); intros [n ltn].
         exists (r, n).
-        assert (lt1 := lt_le_trans _ _ _ ltn (meet_lb_l _ _)).
-        assert (ltD := lt_le_trans _ _ _ ltn (meet_lb_r _ _)).
+        assert (lt1 : ' (' n) < meet (' r - x) (y - ' r)).
+        { rapply lt_le_trans; [exact ltn|apply meet_lb_l]. }
+        assert (ltD : ' (' n) < D) by (rapply lt_le_trans; [exact ltn|apply meet_lb_r]).
         apply rationalfar_lt.
-        - exact (lt_le_trans _ _ _ lt1 (meet_lb_l _ _)).
-        - exact (lt_le_trans _ _ _ lt1 (meet_lb_r _ _)).
+        - rapply lt_le_trans; [exact lt1|apply meet_lb_l].
+        - rapply lt_le_trans; [exact lt1|apply meet_lb_r].
         - unfold D in ltD; destruct ap; [left|right]; exact ltD.
       Qed.
 
@@ -787,7 +788,7 @@ Section ivt.
 
       Local Lemma quarter_width_pos : 0 < (b - a) * ' quarter.
       Proof.
-        exact (pos_mult _ _ (snd (flip_pos_minus _ _) ltab) (pos_rationals_to_field_qpos Q _)).
+        apply pos_mult; [exact (snd (flip_pos_minus a b) ltab)|exact (pos_rationals_to_field_qpos Q _)].
       Qed.
 
       Local Lemma lt_lower_quarter : a < u.
@@ -800,20 +801,19 @@ Section ivt.
         exact (fst (pos_minus_lt_compat_r _ _) quarter_width_pos).
       Qed.
 
+      (** [v - u] is half the width [D = b - a]. *)
       Local Lemma lt_quarters : u < v.
       Proof.
-        pose proof (snd (flip_pos_minus _ _) ltab).
         set (D := b - a).
-        apply (snd (flip_lt_minus_r _ _ _)).
-        rewrite <- plus_assoc, quarter_double.
-        assert (p : a + D = b).
-        { unfold D; rewrite plus_comm, <- plus_assoc, (plus_negate_l a); apply plus_0_r. }
-        rewrite <- p.
-        apply (strictly_order_preserving (a +)).
-        refine (lt_le_trans _ (D * 1) _ _ (eq_le _ _ (mult_1_r _))).
-        apply (strictly_order_preserving (D *.)).
-        rewrite <- (preserves_1 (f:=cast Q F)).
-        exact (strictly_order_preserving _ _ _ half_lt_1).
+        assert (Dpos : 0 < D) by exact (snd (flip_pos_minus a b) ltab).
+        assert (lt : D * ' half < D).
+        { rapply lt_le_trans; [|apply eq_le, mult_1_r].
+          apply (strictly_order_preserving (D *.)).
+          rewrite <- (preserves_1 (f:=cast Q F)).
+          apply (strictly_order_preserving _), half_lt_1. }
+        apply (snd (flip_lt_minus_r (D * ' quarter) b (a + D * ' quarter))).
+        rewrite <- plus_assoc, quarter_double, plus_comm.
+        exact (fst (flip_lt_minus_r a b (D * ' half)) lt).
       Qed.
 
       Local Lemma upper_minus_lower_quarter : b - u = (b - a) * ' shrink.
@@ -888,11 +888,11 @@ Section ivt.
         : w n - z n ≤ ' (' B * nat_iter n (mult shrink) 1).
       Proof.
         induction n as [|n IH].
-        - rewrite mult_1_r; exact (lt_le _ _ sign_width_bound.2).
+        - rewrite mult_1_r; apply lt_le, sign_width_bound.2.
         - lhs' exact (snd (step_props n)).
           assert (r0 : (0 : F) ≤ ' shrink).
           { rewrite <- (preserves_0 (f:=cast Q F)).
-            exact (order_preserving _ _ _ (lt_le _ _ shrink_pos)). }
+            apply (order_preserving _), lt_le, shrink_pos. }
           lhs' exact (order_preserving (.* ' shrink) _ _ IH).
           apply eq_le.
           rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
@@ -928,12 +928,12 @@ Section ivt.
         - apply (antisymmetry (≤)); apply not_lt_le_flip; intro lt.
           + assert (h := pos_limit f x (cont x) _ islim lt); strip_truncations.
             destruct h as [n pos].
-            exact (irreflexivity (<) 0 (lt_le_trans _ _ _ pos (sign_lower_nonpos _))).
+            apply (irreflexivity (<) 0); rapply lt_le_trans; [exact pos|apply sign_lower_nonpos].
           + assert (h := pos_limit (fun y => - f y) x (iscontinuousat_negate Q F f x (cont x))
                            _ wlim (fst (flip_neg_negate _) lt)).
             strip_truncations; destruct h as [n pos].
             apply (snd (flip_neg_negate _)) in pos.
-            exact (irreflexivity (<) 0 (le_lt_trans _ _ _ (sign_upper_nonneg _) pos)).
+            apply (irreflexivity (<) 0); rapply le_lt_trans; [apply sign_upper_nonneg|exact pos].
       Defined.
 
     End exact.
