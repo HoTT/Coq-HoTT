@@ -796,8 +796,8 @@ Section dedekind.
   Lemma products_min {x y : R} (I : CutBounds x) (J : CutBounds y)
     : {m : Q & prod (IsProduct I J m) (forall q, q < m -> BelowProducts q I J)}.
   Proof.
-    pose (corner s t (is : in_bounds I s) (it : in_bounds J t)
-            := (s; (t; ((is, it), idpath))) : IsProduct I J (s * t)).
+    pose (corner s t (si : in_bounds I s) (it : in_bounds J t)
+            := (s; (t; ((si, it), idpath))) : IsProduct I J (s * t)).
     destruct (rational_min2 (bound_lo I * bound_lo J) (bound_lo I * bound_hi J))
       as [m1 [[l1 l1'] P1]].
     destruct (rational_min2 (bound_hi I * bound_lo J) (bound_hi I * bound_hi J))
@@ -817,8 +817,8 @@ Section dedekind.
   Lemma products_max {x y : R} (I : CutBounds x) (J : CutBounds y)
     : {M : Q & prod (IsProduct I J M) (forall r, M < r -> AboveProducts r I J)}.
   Proof.
-    pose (corner s t (is : in_bounds I s) (it : in_bounds J t)
-            := (s; (t; ((is, it), idpath))) : IsProduct I J (s * t)).
+    pose (corner s t (si : in_bounds I s) (it : in_bounds J t)
+            := (s; (t; ((si, it), idpath))) : IsProduct I J (s * t)).
     destruct (rational_max2 (bound_lo I * bound_lo J) (bound_lo I * bound_hi J))
       as [M1 [[l1 l1'] P1]].
     destruct (rational_max2 (bound_hi I * bound_lo J) (bound_hi I * bound_hi J))
@@ -849,14 +849,14 @@ Section dedekind.
     Proof.
       split.
       - intros p; strip_truncations; destruct p as [I p]; strip_truncations; destruct p as [J p].
-        destruct (products_min I J) as [m [[s [t [[is it] pm]]] below]].
-        destruct (Q_dense q m) as [w [lqw lwm]]; [rewrite pm; exact (p s t is it)|].
+        destruct (products_min I J) as [m [[s [t [[si it] pm]]] below]].
+        destruct (Q_dense q m) as [w [lqw lwm]]; [rewrite pm; exact (p s t si it)|].
         apply tr; exists w; split; [exact lqw|].
         apply tr; exists I; apply tr; exists J; exact (below w lwm).
       - intros p; strip_truncations; destruct p as [q' [l p]]; strip_truncations.
         destruct p as [I p]; strip_truncations; destruct p as [J p].
-        apply tr; exists I; apply tr; exists J; intros s t is it.
-        exact (transitivity l (p s t is it)).
+        apply tr; exists I; apply tr; exists J; intros s t si it.
+        exact (transitivity l (p s t si it)).
     Qed.
 
     Local Lemma mult_upper_rounded (r : Q)
@@ -864,14 +864,14 @@ Section dedekind.
     Proof.
       split.
       - intros p; strip_truncations; destruct p as [I p]; strip_truncations; destruct p as [J p].
-        destruct (products_max I J) as [M [[s [t [[is it] pM]]] above]].
-        destruct (Q_dense M r) as [w [lMw lwr]]; [rewrite pM; exact (p s t is it)|].
+        destruct (products_max I J) as [M [[s [t [[si it] pM]]] above]].
+        destruct (Q_dense M r) as [w [lMw lwr]]; [rewrite pM; exact (p s t si it)|].
         apply tr; exists w; split; [exact lwr|].
         apply tr; exists I; apply tr; exists J; exact (above w lMw).
       - intros p; strip_truncations; destruct p as [r' [l p]]; strip_truncations.
         destruct p as [I p]; strip_truncations; destruct p as [J p].
-        apply tr; exists I; apply tr; exists J; intros s t is it.
-        exact (transitivity (p s t is it) l).
+        apply tr; exists I; apply tr; exists J; intros s t si it.
+        exact (transitivity (p s t si it) l).
     Qed.
 
     (** We approximate [x] and [y] within [D], with [D] so small that any two products of points of the bounds are less than [e] apart. *)
@@ -886,10 +886,10 @@ Section dedekind.
       destruct ax as [a [b [[la ub] lab]]], ay as [c [d [[lc ud] lcd]]].
       destruct (cutbounds_intersect (Build_CutBounds x a b la ub) I0) as [I HI].
       destruct (cutbounds_intersect (Build_CutBounds y c d lc ud) J0) as [J HJ].
-      apply tr; exists I, J; intros s t s' t' is it is' it'.
-      destruct (HI s is) as [isab isX], (HI s' is') as [is'ab _].
+      apply tr; exists I, J; intros s t s' t' si it si' it'.
+      destruct (HI s si) as [isab isX], (HI s' si') as [si'ab _].
       destruct (HJ t it) as [itcd _], (HJ t' it') as [it'cd it'W].
-      assert (ss' := interval_minus_lt a b s s' (' D) isab is'ab lab).
+      assert (ss' := interval_minus_lt a b s s' (' D) isab si'ab lab).
       assert (tt' := interval_minus_lt c d t t' (' D) itcd it'cd lcd).
       assert (bound := snd (mult_minus_mult_lt_bound s t s' t' X W (' D) (IX s isX) (JW t' it'W) ss' tt')).
       rewrite (mult_comm X), <- plus_mult_distr_l in bound.
@@ -904,8 +904,8 @@ Section dedekind.
       destruct c as [I [J close]].
       destruct (products_min I J) as [m [[s0 [t0 [[is0 it0] pm]]] below]].
       destruct (le_or_lt m q) as [lmq|lqm].
-      - apply tr, inr, tr; exists I; apply tr; exists J; intros s t is it.
-        assert (lt := close s t s0 t0 is it is0 it0).
+      - apply tr, inr, tr; exists I; apply tr; exists J; intros s t si it.
+        assert (lt := close s t s0 t0 si it is0 it0).
         rewrite <- pm in lt; apply flip_lt_minus_l in lt.
         apply (order_preserving (r - q +)) in lmq; rewrite minus_plus_cancel in lmq.
         rapply lt_le_trans; [exact lt|exact lmq].
@@ -1035,8 +1035,8 @@ Section dedekind.
       destruct lE as [I1 lE], uE as [I2 uE]; strip_truncations.
       destruct lE as [J1 lE], uE as [J2 uE].
       destruct (cutbounds_intersect I1 I2) as [I HI], (cutbounds_intersect J1 J2) as [J HJ].
-      apply tr; exists I, J; intros s t w is it iw.
-      destruct (HI s is) as [i1 i2], (HJ t it) as [j1 j2].
+      apply tr; exists I, J; intros s t w si it iw.
+      destruct (HI s si) as [i1 i2], (HJ t it) as [j1 j2].
       rewrite mult_assoc; apply pE; [|exact iw].
       split; apply lt_le; [exact (lE s t i1 j1)|exact (uE s t i2 j2)].
     Qed.
@@ -1056,7 +1056,7 @@ Section dedekind.
       assert (uK : upper_cut (y * z) (M + ' D)).
       { apply tr; exists J; apply tr; exists G; apply above, pos_plus_lt_compat_r, pos_is_pos. }
       assert (sD : forall s, in_bounds I s -> - (q' - q) < s * ' D < q' - q).
-      { intros s is; destruct (IT s is) as [lTs lsT].
+      { intros s si; destruct (IT s si) as [lTs lsT].
         rewrite mult_comm in lD; split.
         - apply flip_lt_negate_l; rewrite negate_mult_distr_l.
           rhs_V' exact lD; apply (strictly_order_preserving (.* ' D)), flip_lt_negate_l, lTs.
@@ -1064,11 +1064,11 @@ Section dedekind.
       assert (shift : forall a b, q' < a -> - (q' - q) < b -> q < a + b).
       { intros a b la lb; rewrite <- (minus_minus_cancel q' q); apply plus_lt_compat; assumption. }
       assert (c : forall s, in_bounds I s -> prod (q < s * (m - ' D)) (q < s * (M + ' D))).
-      { intros s is; rewrite 2!plus_mult_distr_l, <- negate_mult_distr_r; split; apply shift.
-        - rewrite pm; exact (key s t0 w0 is it0 iw0).
-        - exact (snd (flip_lt_negate (s * ' D) (q' - q)) (snd (sD s is))).
-        - rewrite pM; exact (key s t1 w1 is it1 iw1).
-        - exact (fst (sD s is)). }
+      { intros s si; rewrite 2!plus_mult_distr_l, <- negate_mult_distr_r; split; apply shift.
+        - rewrite pm; exact (key s t0 w0 si it0 iw0).
+        - exact (snd (flip_lt_negate (s * ' D) (q' - q)) (snd (sD s si))).
+        - rewrite pM; exact (key s t1 w1 si it1 iw1).
+        - exact (fst (sD s si)). }
       apply tr; exists I; apply tr; exists (Build_CutBounds (y * z) (m - ' D) (M + ' D) lK uK).
       apply belowproducts_corners; cbn.
       + exact (fst (c _ (in_bounds_lo I))).
