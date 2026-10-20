@@ -89,7 +89,7 @@ Section strict_field_order.
   Qed.
 
   Section times.
-    (* Reflecting strict inequalities from [F] to [Q] needs [1] to be apart from [0] in [Q]; this holds for instance when the apartness of [Q] is trivial. *)
+    (* Reflecting strict inequalities from [F] to [Q] needs [1 ≶ 0] in [Q], which does not follow constructively from [Rationals Q] (that only gives [1 <> 0]) but follows from [TrivialApart Q]. *)
     Context `{!PropHolds ((1 : Q) ≶ 0)}.
 
     Local Lemma merely_rational_bounds_close (x D Z : F) (Dpos : 0 < D) (ltZx : - Z < x < Z)

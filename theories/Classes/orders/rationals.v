@@ -18,7 +18,7 @@ From HoTT.Classes Require Import
 
 Generalizable Variables F Q R Rle Rlt.
 
-(** For rationals [Q] and an ordered field [F], the map [rationals_to_field Q F] is the unique semiring morphism [Q -> F].  We show that it preserves the strict order and is injective, and that it reflects the strict order when [1] is apart from [0] in [Q] (for instance when the apartness of [Q] is trivial).  The key step is that every rational [q] satisfies [q * d + b = a] with [a], [b] and [d] images of natural numbers and [d] positive.  We obtain this by initiality of [Q]: the elements of [F] of this form make up a subfield of [F]. *)
+(** For rationals [Q] and an ordered field [F], the map [rationals_to_field Q F] is the unique semiring morphism [Q -> F].  We show that it preserves the strict order and is injective, and that it reflects the strict order when [1 ≶ 0] in [Q]. That hypothesis does not follow constructively from [Rationals Q], which only gives [1 <> 0], but it follows from [TrivialApart Q].  The key step is that every rational [q] satisfies [q * d + b = a] with [a], [b] and [d] images of natural numbers and [d] positive.  We obtain this by initiality of [Q]: the elements of [F] of this form make up a subfield of [F]. *)
 
 (** ** Signs of quotients of natural numbers *)
 
@@ -300,7 +300,7 @@ Section nat_quotients.
       exact (nat_quotient_pos_succ (i q) a b m EF qpos).
   Qed.
 
-  (** Preserving the strict order needs no hypothesis on [Q], since a positive rational shows that [1] is apart from [0] in [Q]. *)
+  (** Preserving the strict order needs no hypothesis on [Q], since a positive rational shows that [1 ≶ 0] in [Q]. *)
   Local Lemma pos_apart_1_0 (q : Q) : 0 < q -> PropHolds ((1 : Q) ≶ 0).
   Proof.
     intros qpos.
