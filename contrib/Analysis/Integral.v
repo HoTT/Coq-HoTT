@@ -65,12 +65,12 @@ Section integration.
       assert (p : f x + g x - (f y + g y) = (f x - f y) + (g x - g y)).
       { rewrite negate_plus_distr, <- 2 plus_assoc; apply ap.
         rewrite 2 plus_assoc; apply (ap (+ _)), plus_comm. }
-      rewrite p; refine (le_lt_trans _ _ _ (abs_triangle _ _) _).
+      rewrite p; rapply le_lt_trans; [apply abs_triangle|].
       rewrite (pos_split2 e), (preserves_plus (f:=cast Q F)).
       apply plus_lt_compat.
-      - apply fw; refine (lt_le_trans _ _ _ c _).
+      - apply fw; rapply lt_le_trans; [exact c|].
         apply (order_preserving (cast Q F)), qpos_min_le_l.
-      - apply gw; refine (lt_le_trans _ _ _ c _).
+      - apply gw; rapply lt_le_trans; [exact c|].
         apply (order_preserving (cast Q F)), qpos_min_le_r.
     Qed.
 
@@ -194,7 +194,7 @@ Section integration.
       apply not_lt_le_flip; intro lt.
       assert (nn : ~~ ((y.1 < x.1) + ~ (y.1 < x.1))).
       { intro n; apply n, inr; intro l; exact (n (inl l)). }
-      apply nn; intros [ltyx|nltyx]; refine (le_not_lt_flip _ _ _ lt).
+      apply nn; intros [ltyx|nltyx]; revert lt; apply le_not_lt_flip.
       - rewrite integral_swap, abs_negate, abs_minus_swap.
         rewrite (abs_of_nonneg _ (snd (flip_nonneg_minus _ _) (lt_le _ _ ltyx))).
         exact (integral_abs_le_bound f fu y x (lt_le _ _ ltyx) K (fun t _ _ => fK t)).
@@ -228,31 +228,26 @@ Section integration.
           rewrite <- plus_assoc, (plus_comm (- _) h), plus_assoc; reflexivity.
       Qed.
 
-      (** On each piece of the partition, the integral is within [e h] of [h f (q k)]. *)
+      (** On each piece [[q k, q k + h]] of the partition, [f] is within [e] of [f (q k)], since [h < w e]; integrating the constants [f (q k) ± e] bounds the integral. *)
       Local Lemma integral_piece_bounds (k : nat) (ltk : (k < N)%nat)
         : ((f (q k) - ' (' e)) * h ≤ integral f fu (q k) (q (S k)))
           * (integral f fu (q k) (q (S k)) ≤ (f (q k) + ' (' e)) * h).
       Proof.
         assert (p : forall c, c * h = integral (fun _ => c) (isuniformlycontinuous_const _ c)
                                          (q k) (q (S k))).
-        { intro c; rewrite integral_const, (step k ltk); apply ap.
-          rewrite (plus_comm (q k).1 h), <- plus_assoc, plus_negate_r, plus_0_r.
-          reflexivity. }
+        { intro c; rewrite integral_const, (step k ltk), <- plus_conjugate; reflexivity. }
         assert (le : (q k).1 ≤ (q (S k)).1).
-        { rewrite (step k ltk); apply nonneg_plus_le_compat_r.
-          exact h0. }
+        { rewrite (step k ltk); apply nonneg_plus_le_compat_r, h0. }
         assert (close : forall t : I a b, (q k).1 ≤ t.1 -> t.1 ≤ (q (S k)).1
-                        -> abs (f t - f (q k)) < ' (' e)).
-        { intros t kt tk; apply fw; unfold metric_close, interval_dist.
+                        -> f (q k) - ' (' e) < f t < f (q k) + ' (' e)).
+        { intros t kt tk; apply between_iff_lt_minus, (field_close_iff_abs Q), fw.
+          unfold metric_close, interval_dist.
           rewrite (abs_of_nonneg _ (snd (flip_nonneg_minus _ _) kt)).
-          refine (le_lt_trans _ _ _ _ hw).
+          rapply le_lt_trans; [|exact hw].
           apply flip_le_minus_l; rewrite plus_comm, <- (step k ltk); exact tk. }
         rewrite 2 p; split; apply integral_le; try exact le; intros t kt tk.
-        - assert (c := close t kt tk); rewrite abs_minus_swap in c.
-          apply lt_le, (snd (flip_lt_minus_l _ _ _)); rewrite plus_comm.
-          exact (fst (flip_lt_minus_l _ _ _) (le_lt_trans _ _ _ (le_abs _) c)).
-        - apply lt_le; rewrite plus_comm.
-          exact (fst (flip_lt_minus_l _ _ _) (le_lt_trans _ _ _ (le_abs _) (close t kt tk))).
+        - apply lt_le, (fst (close t kt tk)).
+        - apply lt_le, (snd (close t kt tk)).
       Qed.
 
       Local Lemma sum_upto_plus_const (c : F) (n : nat)
@@ -322,8 +317,9 @@ Section integration.
         (len : (riemann_modulus e <= n)%nat)
         : abs (integral f fu x y - riemann_sum f x y n) < ' (' (e / 2)).
       Proof.
-        refine (le_lt_trans _ _ _ (integral_riemann_sum (e / 2 / B) n
-                  (lt_grid_modulus Q F _ (' B) (lt_le _ _ ltB) w _ n len)) _).
+        rapply le_lt_trans.
+        1: exact (integral_riemann_sum (e / 2 / B) n
+                    (lt_grid_modulus Q F _ (' B) (lt_le _ _ ltB) w _ n len)).
         assert (p : ' (' (e / 2)) = ' (' (e / 2 / B)) * (' (' B) : F)).
         { rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
           change (' (e / 2) = ' (e / 2) * ' (/ B) * ' B).
@@ -333,18 +329,18 @@ Section integration.
         rewrite p.
         assert (PropHolds (0 < (' (' (e / 2 / B)) : F)))
           by exact (pos_rationals_to_field_qpos Q _).
-        exact (strictly_order_preserving _ _ _ ltB).
+        apply (strictly_order_preserving _), ltB.
       Qed.
 
       Lemma cauchymodulus_riemann_sum
         : CauchyModulus Q F (riemann_sum f x y) riemann_modulus.
       Proof.
         intros e m n lem len; apply (field_close_iff_abs Q).
-        refine (le_lt_trans _ _ _ (pseudometric_triangle (d:=dF) _ (integral f fu x y) _) _).
+        rapply le_lt_trans; [exact (pseudometric_triangle (d:=dF) _ (integral f fu x y) _)|].
         cbn beta; rewrite (abs_minus_swap _ (integral f fu x y)).
         rewrite (pos_split2 e), (preserves_plus (f:=cast Q F)).
-        exact (plus_lt_compat _ _ _ _ (integral_riemann_sum_lt e m lem)
-                 (integral_riemann_sum_lt e n len)).
+        apply plus_lt_compat; [exact (integral_riemann_sum_lt e m lem)|].
+        exact (integral_riemann_sum_lt e n len).
       Qed.
 
       (** The integral is the limit of the Riemann sums. *)
@@ -441,7 +437,7 @@ Section integration.
     Context `{Funext} {Farch : ArchimedeanProperty Q F} {Qroundup : RoundUpStrict Q}
       {a b : F}.
 
-    (** An element bounded by every positive rational multiple of a nonnegative [D] is nonpositive. *)
+    (** An element bounded by every positive rational multiple of a nonnegative [D] is nonpositive: if [0 < u], take rationals [r < u] and [B > D]; then [u ≤ (r / B) D < (r / B) B = r < u]. *)
     Local Lemma nonpos_le_qpos_mult (u D : F) (D0 : 0 ≤ D)
       (le : forall e : Qpos Q, u ≤ ' (' e) * D)
       : u ≤ 0.
@@ -451,19 +447,16 @@ Section integration.
       assert (c := archimedean_property Q F D (D + 1) (fst (pos_plus_lt_compat_r _ _) lt_0_1)).
       strip_truncations; destruct r as [r ltr], c as [B [ltB _]].
       assert (B0 : 0 < B).
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)); exact (le_lt_trans _ _ _ D0 ltB). }
+      { apply rationals_to_field_pos_iff; rapply le_lt_trans; [exact D0|exact ltB]. }
       set (e := r / mkQpos B B0).
-      apply (irreflexivity (<) u).
-      refine (le_lt_trans _ _ _ (le e) (transitivity _ ltr)).
       assert (p : ' (' e) * ' B = (' (' r) : F)).
       { rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
-        change (' r * / B * B = ' r).
-        rewrite <- mult_assoc, (mult_comm (/ B)).
-        rewrite (dec_recip_inverse B (lt_ne_flip _ _ B0)); apply mult_1_r. }
-      rewrite <- p.
+        apply dec_recip_mult_cancel_r, lt_ne_flip, B0. }
       assert (PropHolds (0 < (' (' e) : F))) by exact (pos_rationals_to_field_qpos Q e).
-      exact (strictly_order_preserving _ _ _ ltB).
+      apply (irreflexivity (<) u).
+      rapply le_lt_trans; [exact (le e)|].
+      rhs_V' exact ltr.
+      rewrite <- p; apply (strictly_order_preserving _), ltB.
     Qed.
 
     Context (I1 I2 : Integration).
@@ -472,7 +465,7 @@ Section integration.
       : integral (Integration:=I1) f fu x y = integral (Integration:=I2) f fu x y.
     Proof.
       apply equal_by_zero_sum, abs_eq_0, (antisymmetry (≤)); [|apply abs_nonneg].
-      apply (nonpos_le_qpos_mult _ _ (snd (flip_nonneg_minus _ _) lexy)); intro e.
+      apply (nonpos_le_qpos_mult _ (y.1 - x.1) (snd (flip_nonneg_minus _ _) lexy)); intro e.
       (* We keep [fu], which the goal mentions, and use a modulus and a bound from copies. *)
       assert (c := fu); revert c; apply Trunc_rec; intros [w fw].
       generalize (archimedean_property Q F (y.1 - x.1) (y.1 - x.1 + 1)
@@ -483,8 +476,9 @@ Section integration.
       lhs' exact (pseudometric_triangle (d:=dF) _ (riemann_sum f x y n) _).
       cbn beta; rewrite (abs_minus_swap (riemann_sum f x y n)).
       rewrite (pos_split2 e), (preserves_plus (f:=cast Q F)), plus_mult_distr_r.
-      exact (plus_le_compat _ _ _ _ (integral_riemann_sum (H:=I1) f fu w fw x y lexy _ n lt)
-               (integral_riemann_sum (H:=I2) f fu w fw x y lexy _ n lt)).
+      apply plus_le_compat.
+      - exact (integral_riemann_sum (H:=I1) f fu w fw x y lexy _ n lt).
+      - exact (integral_riemann_sum (H:=I2) f fu w fw x y lexy _ n lt).
     Qed.
 
     (** The properties of an integration operator determine it uniquely. *)
