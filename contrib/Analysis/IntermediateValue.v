@@ -554,7 +554,7 @@ Section ivt.
 
   End approximate.
 
-  (** If [f] lifts to locators and [a] and [b] have locators, we can find a point with a locator at which [f] is close to [0]. We search for one among the candidates for [e / 2], deciding approximately with locators for their values. *)
+  (** If [f] lifts to locators and [a] and [b] have locators, we can find a point with a locator at which [f] is close to [0]. We search for one among the candidates [y] for [e / 2], for which we locate [- e < f y] at [- e < - e / 2] and [f y < e] at [e / 2 < e]. *)
   Definition approximate_ivt_locator `{Funext} {Fcomplete : IsComplete Q F}
     (f : F -> F) (a b : F) (leab : a ≤ b) (fa : f a < 0) (fb : 0 < f b) (e : Qpos Q)
     (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y)
@@ -641,7 +641,7 @@ Section ivt.
       Local Definition locator_value_minus (r : Q) : locator Q F (f (' r) - t)
         := locator_plus Q F (lift _ (locator_left Q F r)) (locator_minus Q F lt).
 
-      (** For a rational [r] and a positive rational [n], we decide approximately whether [r] is [n]-far from [x] and [y], and whether [f r] is [n]-far from [t]. *)
+      (** For a rational [r] and a positive rational [n], we locate [x < r] at [r - n < r] and [r < y] at [r < r + n], and we locate [n / 2 < f r - t] or [f r - t < - n / 2]. *)
       Local Definition RationalFar (rn : Q * Qpos Q) : Type
         := let (r, n) := rn in
            (locates_left Q F (lx : locator' Q F x)
