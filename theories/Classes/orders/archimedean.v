@@ -46,7 +46,8 @@ Section strict_field_order.
   Proof.
     intros q x y; split.
     - intros ltqxy.
-      assert (hs := archimedean_property Q F (' q - y) x (snd (flip_lt_minus_l y (' q) x) ltqxy)).
+      assert (ltqyx : ' q - y < x) by exact (snd (flip_lt_minus_l y (' q) x) ltqxy).
+      assert (hs := archimedean_property Q F (' q - y) x ltqyx).
       strip_truncations; destruct hs as [s [ltqys ltsx]].
       apply tr; exists s; split; [exact ltsx|].
       rewrite preserves_minus; apply flip_lt_minus_swap_l, ltqys.
@@ -61,7 +62,8 @@ Section strict_field_order.
   Proof.
     intros r x y; split.
     - intros ltxyr.
-      assert (ht := archimedean_property Q F x (' r - y) (snd (flip_lt_minus_r y (' r) x) ltxyr)).
+      assert (ltxry : x < ' r - y) by exact (snd (flip_lt_minus_r y (' r) x) ltxyr).
+      assert (ht := archimedean_property Q F x (' r - y) ltxry).
       strip_truncations; destruct ht as [t [ltxt lttry]].
       apply tr; exists t; split; [exact ltxt|].
       rewrite preserves_minus; apply flip_lt_minus_swap_r, lttry.
@@ -104,10 +106,12 @@ Section strict_field_order.
                                 -> (- Z < u < Z) /\ (- D < x - u < D)).
     Proof.
       destruct ltZx as [ltZx ltxZ].
-      assert (ha := archimedean_property Q F (join (x - D) (- Z)) x
-                      (join_lt_r (x - D) (- Z) x (fst (pos_minus_lt_compat_r x D) Dpos) ltZx)).
-      assert (hb := archimedean_property Q F x (meet (x + D) Z)
-                      (meet_lt_l x (x + D) Z (fst (pos_plus_lt_compat_r x D) Dpos) ltxZ)).
+      assert (ltjx : join (x - D) (- Z) < x).
+      { apply join_lt_r; [apply pos_minus_lt_compat_r, Dpos|exact ltZx]. }
+      assert (ltxm : x < meet (x + D) Z).
+      { apply meet_lt_l; [apply pos_plus_lt_compat_r, Dpos|exact ltxZ]. }
+      assert (ha := archimedean_property Q F (join (x - D) (- Z)) x ltjx).
+      assert (hb := archimedean_property Q F x (meet (x + D) Z) ltxm).
       strip_truncations; destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]].
       apply tr; exists (a, b); refine ((ltax, ltxb), _); intros u leau leub.
       (* Then [max(x - D, - Z) < u < min(x + D, Z)]. *)
@@ -216,8 +220,8 @@ Section strict_field_order.
     Proof.
       intros q x y; split.
       - intros ltqxy.
-        assert (h := archimedean_mult_approx x y (x * y - ' q)
-                       (snd (flip_pos_minus (' q) (x * y)) ltqxy)).
+        assert (pos : 0 < x * y - ' q) by exact (snd (flip_pos_minus (' q) (x * y)) ltqxy).
+        assert (h := archimedean_mult_approx x y (x * y - ' q) pos).
         strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
         apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
         apply lt_meet_corners, (box_corners (fun z => ' q < z) a b c d x y ltaxb ltcyd).
@@ -244,8 +248,8 @@ Section strict_field_order.
     Proof.
       intros r x y; split.
       - intros ltxyr.
-        assert (h := archimedean_mult_approx x y (' r - x * y)
-                       (snd (flip_pos_minus (x * y) (' r)) ltxyr)).
+        assert (pos : 0 < ' r - x * y) by exact (snd (flip_pos_minus (x * y) (' r)) ltxyr).
+        assert (h := archimedean_mult_approx x y (' r - x * y) pos).
         strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
         apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
         apply join_corners_lt, (box_corners (fun z => z < ' r) a b c d x y ltaxb ltcyd).
@@ -273,7 +277,8 @@ Section strict_field_order.
 
   Local Lemma lt_iff_mult_neg_r (w : F) (wneg : w < 0) (a b : F) : a < b <-> b * w < a * w.
   Proof.
-    apply (iff_compose (lt_iff_mult_pos_r (- w) (fst (flip_neg_negate w) wneg) a b)).
+    assert (negwpos : 0 < - w) by exact (fst (flip_neg_negate w) wneg).
+    apply (iff_compose (lt_iff_mult_pos_r (- w) negwpos a b)).
     rewrite <- 2!negate_mult_distr_r; apply flip_lt_negate.
   Qed.
 

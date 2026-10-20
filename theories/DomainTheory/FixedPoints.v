@@ -136,7 +136,7 @@ Section InflationaryFixedPoint.
     split.
     - exact (tr (idmap; (_, _))).
     - intros [f [mf If]] [g [mg Ig]].
-      refine (tr ((f o g; (_, _)); (_, _))).
+      apply tr; exists (f o g; (_, _)); split.
       + intro x.
         apply mf, Ig.
       + intro x.

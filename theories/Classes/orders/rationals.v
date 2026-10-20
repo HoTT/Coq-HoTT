@@ -271,7 +271,8 @@ Section nat_quotients.
   Proof.
     intros x y E. apply (fst (tight_apart x y)). intros apxy.
     assert (ne : x - y <> 0).
-    { intros e. exact (apart_ne x y apxy (fst (equal_by_zero_sum x y) e)). }
+    { intros e; apply (apart_ne x y apxy).
+      exact (fst (equal_by_zero_sum x y) e). }
     pose proof (ap i (dec_recip_inverse (x - y) ne)) as E'.
     rewrite preserves_mult, preserves_minus, E, plus_negate_r, mult_0_l,
       (preserves_1 (f:=i)) in E'.
@@ -304,8 +305,10 @@ Section nat_quotients.
   Proof.
     assert (Hq := isnatquot_rational q).
     split; intros qpos; strip_truncations; destruct Hq as [a [b [m [EQ EF]]]].
-    - exact (nat_quotient_succ_pos (i q) a b m EF (nat_quotient_pos_succ q a b m EQ qpos)).
-    - exact (nat_quotient_succ_pos q a b m EQ (nat_quotient_pos_succ (i q) a b m EF qpos)).
+    - apply (nat_quotient_succ_pos (i q) a b m EF).
+      exact (nat_quotient_pos_succ q a b m EQ qpos).
+    - apply (nat_quotient_succ_pos q a b m EQ).
+      exact (nat_quotient_pos_succ (i q) a b m EF qpos).
   Qed.
 
   (** A positive rational shows that [1] is apart from [0] in [Q]. *)

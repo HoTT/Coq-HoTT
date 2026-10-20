@@ -347,9 +347,9 @@ Section symmetric_bounds.
   Local Lemma mult_lt_bound_r s t S T : - S < s < S -> - T < t < T -> s * t < S * T.
   Proof.
     intros [ltSs ltsS] [ltTt lttT].
-    assert (STpos := pos_mult S T (pos_between_negate s S (ltSs, ltsS))
-                       (pos_between_negate t T (ltTt, lttT))).
-    assert (c := cotransitive STpos (s * t)).
+    assert (Spos := pos_between_negate s S (ltSs, ltsS)).
+    assert (Tpos := pos_between_negate t T (ltTt, lttT)).
+    assert (c := cotransitive (pos_mult S T Spos Tpos) (s * t)).
     strip_truncations; destruct c as [ltst|]; [|assumption].
     destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
     - apply mult_lt_compat; assumption.
@@ -416,11 +416,13 @@ Section intervals.
     assert (ltua' := snd (flip_neg_minus (a * v) (u * v)) ltua).
     assert (ltub' := snd (flip_pos_minus (u * v) (b * v)) ltub).
     rewrite negate_mult_distr_l, <- plus_mult_distr_r in ltua', ltub'.
+    assert (leua : 0 ≤ u - a) by exact (snd (flip_nonneg_minus a u) leau).
+    assert (lebu : 0 ≤ b - u) by exact (snd (flip_nonneg_minus u b) leub).
     destruct (neg_mult_decompose (u - a) v ltua') as [[ltua'' _]|[_ vneg]].
-    - exact (fst (le_iff_not_lt_flip 0 (u - a)) (snd (flip_nonneg_minus a u) leau) ltua'').
+    - exact (le_not_lt_flip (u - a) 0 leua ltua'').
     - destruct (pos_mult_decompose (b - u) v ltub') as [[_ vpos]|[ltub'' _]].
       + exact (irreflexivity (<) 0 (transitivity vneg vpos)).
-      + exact (fst (le_iff_not_lt_flip 0 (b - u)) (snd (flip_nonneg_minus u b) leub) ltub'').
+      + exact (le_not_lt_flip (b - u) 0 lebu ltub'').
   Qed.
 
   (** Hence a strict lower bound on [a * v] and [b * v] is a strict lower bound on [u * v]. *)
