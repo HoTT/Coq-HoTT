@@ -174,13 +174,13 @@ Section convergence.
     Proof.
       unfold qpos_min; destruct (dec (' e < ' d)) as [lt|nlt].
       - reflexivity.
-      - exact (not_lt_le_flip _ _ nlt).
+      - apply not_lt_le_flip, nlt.
     Qed.
 
     Lemma qpos_min_le_r (e d : Qpos Q) : ' (qpos_min e d) ≤ ' d.
     Proof.
       unfold qpos_min; destruct (dec (' e < ' d)) as [lt|nlt].
-      - exact (lt_le _ _ lt).
+      - apply lt_le, lt.
       - reflexivity.
     Qed.
   End qpos_min.
@@ -193,7 +193,7 @@ Section convergence.
   Lemma pos_rationals_to_field_qpos (e : Qpos Q) : (0 : F) < ' (' e).
   Proof.
     rewrite <- (preserves_0 (f:=cast Q F)).
-    exact (strictly_order_preserving _ _ _ (pos_is_pos e)).
+    apply (strictly_order_preserving _), pos_is_pos.
   Qed.
 
   (** A distance function induces a closeness relation: [x] and [y] are [e]-close when their distance is less than [e]. *)
@@ -213,8 +213,7 @@ Section convergence.
       assert (c := archimedean_property Q F 0 a lt0a); strip_truncations.
       destruct c as [q [lt0q ltqa]].
       assert (qpos : 0 < q).
-      { apply (strictly_order_reflecting (cast Q F)).
-        rewrite (preserves_0 (f:=cast Q F)); exact lt0q. }
+      { apply rationals_to_field_pos_iff, lt0q. }
       exact (tr (mkQpos q qpos; ltqa)).
     Qed.
 
@@ -223,7 +222,7 @@ Section convergence.
     Proof.
       intros lt; apply not_lt_le_flip; intro lt0a.
       assert (c := merely_qpos_lt a lt0a); strip_truncations; destruct c as [e ltea].
-      exact (lt_antisym _ _ (lt e, ltea)).
+      exact (lt_antisym a (' (' e)) (lt e, ltea)).
     Qed.
 
     Context {X : Type} (d : X -> X -> F).
@@ -240,7 +239,7 @@ Section convergence.
       assert (c' := islim' (e / 2)).
       strip_truncations; destruct c as [N close], c' as [N' close'].
       set (n := Nat.Core.nat_max N N').
-      refine (le_lt_trans _ _ _ (pseudometric_triangle (d:=d) l (x n) l') _).
+      rapply le_lt_trans; [exact (pseudometric_triangle (d:=d) l (x n) l')|].
       rewrite (pos_split2 e), (preserves_plus (f:=cast Q F)).
       apply plus_lt_compat.
       - rewrite (pseudometric_symmetric (d:=d)).
@@ -309,8 +308,8 @@ Section convergence.
       assert (nx := pseudometric_nonneg (d:=dX) x x').
       assert (ny := pseudometric_nonneg (d:=dY) y y').
       apply path_prod; cbn; apply metric_separated.
-      - exact (nonneg_plus_eq_0_l _ _ nx ny p).
-      - rewrite plus_comm in p; exact (nonneg_plus_eq_0_l _ _ ny nx p).
+      - exact (nonneg_plus_eq_0_l (dX x x') (dY y y') nx ny p).
+      - rewrite plus_comm in p; exact (nonneg_plus_eq_0_l (dY y y') (dX x x') ny nx p).
     Defined.
 
   End products.
@@ -346,12 +345,12 @@ Section convergence.
       rewrite (qinc_split2 e).
       apply plus_lt_compat.
       - apply fw; unfold metric_close.
-        refine (le_lt_trans _ _ _ (fst (nonneg_plus_le_compat_r _ _) ny) _).
-        refine (lt_le_trans _ _ _ c _).
+        rapply le_lt_trans; [apply nonneg_plus_le_compat_r, ny|].
+        rapply lt_le_trans; [exact c|].
         apply (order_preserving (cast Q F)), qpos_min_le_l.
       - apply gw; unfold metric_close.
-        refine (le_lt_trans _ _ _ (fst (nonneg_plus_le_compat_l _ _) nx) _).
-        refine (lt_le_trans _ _ _ c _).
+        rapply le_lt_trans; [apply nonneg_plus_le_compat_l, nx|].
+        rapply lt_le_trans; [exact c|].
         apply (order_preserving (cast Q F)), qpos_min_le_r.
     Qed.
   End product_maps.
@@ -362,7 +361,7 @@ Section convergence.
         (fun x => (x, x)) (fun e => e / 2).
   Proof.
     intros e x y c; unfold metric_close, prod_dist in *; cbn.
-    rewrite (qinc_split2 e); exact (plus_lt_compat _ _ _ _ c c).
+    rewrite (qinc_split2 e); apply plus_lt_compat; exact c.
   Qed.
 
   (** If [f] has modulus [w] and [g] on the product has modulus [v], then [fun x => g (x, f x)] is uniformly continuous with the modulus below. *)

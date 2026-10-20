@@ -59,7 +59,7 @@ Section completeness.
     intros [lo hi]; unfold rational_close.
     rewrite <- (preserves_minus (f:=cast Q F)) in lo, hi.
     rewrite <- (preserves_negate (f:=cast Q F)) in lo.
-    exact (strictly_order_reflecting _ _ _ lo, strictly_order_reflecting _ _ _ hi).
+    split; apply (strictly_order_reflecting (cast Q F)); assumption.
   Qed.
 
   (** Closeness of rationals satisfies the triangle inequality. *)
@@ -67,28 +67,30 @@ Section completeness.
     : rational_close d a b -> rational_close e b c -> rational_close (d + e) a c.
   Proof.
     intros [lo hi] [lo' hi']; unfold rational_close.
-    assert (p : a - c = (a - b) + (b - c)).
-    { rewrite <- (plus_assoc a (- b) (b - c)), (plus_assoc (- b) b (- c)).
-      rewrite plus_negate_l, plus_0_l; reflexivity. }
     change (' (d + e)) with (' d + ' e).
-    rewrite p, negate_plus_distr; split; apply plus_lt_compat; assumption.
+    rewrite <- (plus_minus_telescope a b c), negate_plus_distr.
+    split; apply plus_lt_compat; assumption.
   Qed.
 
   (** Bounds add up. *)
   Lemma lt_bound_plus (a b p q : F) (ap : - p < a < p) (bq : - q < b < q)
     : - (p + q) < a + b < p + q.
   Proof.
-    rewrite negate_plus_distr; split.
-    - exact (plus_lt_compat _ _ _ _ (fst ap) (fst bq)).
-    - exact (plus_lt_compat _ _ _ _ (snd ap) (snd bq)).
+    rewrite negate_plus_distr; split; apply plus_lt_compat.
+    - exact (fst ap).
+    - exact (fst bq).
+    - exact (snd ap).
+    - exact (snd bq).
   Qed.
 
   Lemma le_lt_bound_plus (a b p q : F) (ap : - p ≤ a ≤ p) (bq : - q < b < q)
     : - (p + q) < a + b < p + q.
   Proof.
-    rewrite negate_plus_distr; split.
-    - exact (plus_le_lt_compat _ _ _ _ (fst ap) (fst bq)).
-    - exact (plus_le_lt_compat _ _ _ _ (snd ap) (snd bq)).
+    rewrite negate_plus_distr; split; apply plus_le_lt_compat.
+    - exact (fst ap).
+    - exact (fst bq).
+    - exact (snd ap).
+    - exact (snd bq).
   Qed.
 
   Lemma lt_le_bound_plus (a b p q : F) (ap : - p < a < p) (bq : - q ≤ b ≤ q)
@@ -118,14 +120,14 @@ Section completeness.
   Proof.
     intro e; refine (Trunc_functor (-1) _ (islim e)); intros [N close].
     exists N; intros n len.
-    rewrite <- negate_plus_distr; exact (lt_bound_negate _ _ (close n len)).
+    rewrite <- negate_plus_distr; apply lt_bound_negate, (close n len).
   Qed.
 
   Lemma field_close_symmetric (e : Qpos Q) (u v : F)
     : field_close e u v -> field_close e v u.
   Proof.
     intro c; unfold field_close.
-    rewrite (negate_swap_r v u); exact (lt_bound_negate _ _ c).
+    rewrite (negate_swap_r v u); apply lt_bound_negate, c.
   Qed.
 
   Lemma field_close_triangle (e d : Qpos Q) (u v w : F)
@@ -134,14 +136,15 @@ Section completeness.
     intros c c'; unfold field_close.
     change (' (' (e + d))) with (' (' e + ' d) : F).
     rewrite (preserves_plus (f:=cast Q F)), <- (plus_minus_telescope u v w).
-    exact (lt_bound_plus _ _ _ _ c c').
+    apply lt_bound_plus; [exact c|exact c'].
   Qed.
 
   (** Closeness is preserved by enlarging the bound. *)
   Lemma field_close_weaken (e d : Qpos Q) (u v : F) (ltde : ' e < ' d)
     : field_close e u v -> field_close d u v.
   Proof.
-    intro c; exact (between_weaken _ _ _ c (strictly_order_preserving (cast Q F) _ _ ltde)).
+    intro c; apply (between_weaken (' (' e))); [exact c|].
+    apply (strictly_order_preserving (cast Q F)), ltde.
   Qed.
 
   (** Closeness is a bound on the absolute value of the difference. *)
@@ -149,11 +152,11 @@ Section completeness.
     : field_close e u v <-> abs (u - v) < ' (' e).
   Proof.
     split.
-    - intros [lo hi]; exact (abs_lt _ _ lo hi).
+    - intros [lo hi]; apply abs_lt; [exact lo|exact hi].
     - intro lt; split.
       + apply flip_lt_negate_l.
-        exact (le_lt_trans _ _ _ (negate_le_abs (u - v)) lt).
-      + exact (le_lt_trans _ _ _ (le_abs (u - v)) lt).
+        rapply le_lt_trans; [apply negate_le_abs|exact lt].
+      + rapply le_lt_trans; [apply le_abs|exact lt].
   Qed.
 
   Context {Farch : ArchimedeanProperty Q F}.
@@ -181,7 +184,7 @@ Section completeness.
       strip_truncations; destruct c as [N close], c' as [N' close'].
       set (n := Nat.Core.nat_max N N').
       rewrite (pos_split2 e).
-      apply (field_close_triangle _ _ _ (x n)).
+      apply (field_close_triangle (e / 2) (e / 2) _ (x n)).
       - exact (close n (le_nat_max_l N N')).
       - apply field_close_symmetric; exact (close' n (le_nat_max_r N N')).
     Qed.
