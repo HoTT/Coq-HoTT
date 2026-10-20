@@ -56,7 +56,7 @@ Section floor.
     - destruct (dec (a < nA n)) as [ltn|nltn].
       + exact (IH ltn).
       + exists n; split.
-        * exact (not_lt_le_flip _ _ nltn).
+        * apply not_lt_le_flip, nltn.
         * rewrite plus_comm, <- nat_to_semiring_succ; exact ltan.
   Defined.
 
@@ -123,8 +123,8 @@ Section digits.
     rewrite (preserves_plus (f:=integers_to_ring Z Q)), preserves_1.
     rewrite <- (plus_assoc _ 1 (-1)), plus_negate_r, plus_0_r.
     split.
-    - refine (le_lt_trans _ _ _ _ ltux).
-      exact (order_preserving _ _ _ leju).
+    - rapply le_lt_trans; [|exact ltux].
+      apply (order_preserving _), leju.
     - lhs' exact ltxu.
       apply (strictly_order_preserving _), (strictly_order_preserving (+ 1)), ltuj.
   Defined.
@@ -132,16 +132,9 @@ Section digits.
   (** From now on we work in base [1 + d]. *)
   Context (d : nat).
 
-  Local Lemma close_negate (e u v : Q) : - e < u - v < e -> - e < v - u < e.
-  Proof.
-    intros [lo hi]; rewrite (negate_swap_r v u); split.
-    - exact (snd (flip_lt_negate _ _) hi).
-    - apply flip_lt_negate_l; exact lo.
-  Qed.
-
   Local Lemma nZ_to_rationals : ' nZ d = nQ d.
   Proof.
-    exact (to_semiring_twice _ _ _ d).
+    rapply to_semiring_twice.
   Qed.
 
   (** The weight [(1 + d)^(- n)] of the [n]th position. *)
@@ -209,8 +202,8 @@ Section digits.
     : (digit_modulus e <= n)%nat -> digit_weight n < ' e.
   Proof.
     intro le.
-    refine (le_lt_trans _ _ _ _ (rational_log _ recip_base_pos recip_base_lt_1 e).2).
-    exact (power_antitone _ _ _ (lt_le _ _ recip_base_pos) (lt_le _ _ recip_base_lt_1) le).
+    rapply le_lt_trans; [|exact (rational_log _ recip_base_pos recip_base_lt_1 e).2].
+    apply power_antitone; [apply lt_le, recip_base_pos|apply lt_le, recip_base_lt_1|exact le].
   Qed.
 
   Section bounds.
@@ -268,10 +261,10 @@ Section digits.
     Proof.
       intro le; split.
       - apply flip_lt_minus_r; rewrite plus_comm.
-        refine (le_lt_trans _ _ _ (digit_sum_lower n m le) _).
+        rapply le_lt_trans; [exact (digit_sum_lower n m le)|].
         apply flip_lt_minus_l, pos_plus_lt_compat_r, digit_weight_pos.
       - apply flip_lt_minus_l; rewrite plus_comm.
-        refine (lt_le_trans _ _ _ _ (digit_sum_upper n m le)).
+        rapply lt_le_trans; [|exact (digit_sum_upper n m le)].
         apply pos_plus_lt_compat_r, digit_weight_pos.
     Qed.
 
@@ -279,9 +272,10 @@ Section digits.
     Proof.
       intros e m n lem len.
       destruct (leq_dichotomy n m) as [le|lt].
-      - exact (between_weaken _ _ _ (digit_sum_close n m le) (digit_weight_modulus e n len)).
-      - apply close_negate.
-        exact (between_weaken _ _ _ (digit_sum_close m n (leq_lt lt)) (digit_weight_modulus e m lem)).
+      - apply (between_weaken (w n)); [exact (digit_sum_close n m le)|].
+        exact (digit_weight_modulus e n len).
+      - apply between_minus_swap, (between_weaken (w m)); [exact (digit_sum_close m n (leq_lt lt))|].
+        exact (digit_weight_modulus e m lem).
     Qed.
 
     #[export] Instance digit_sum_modulus : CauchyModulus Q F (fun n => ' s n) digit_modulus
@@ -424,7 +418,7 @@ Section digits.
         rewrite digit_sum_approx.
         destruct (digit_approx n) as [c [ltcx ltxc]]; cbn [pr1].
         assert (ltwe : ' w n < (' (' e) : F))
-          by exact (strictly_order_preserving _ _ _ (digit_weight_modulus e n len)).
+          by apply (strictly_order_preserving _), digit_weight_modulus, len.
         rewrite (preserves_minus (f:=cast Q F)) in ltcx.
         rewrite (preserves_plus (f:=cast Q F)) in ltxc.
         split.
