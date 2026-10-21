@@ -1,0 +1,1274 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Universe.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Metatheory.Core Metatheory.FunextVarieties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Univalence Implies Functional Extensionality *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section UnivalenceImpliesFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{ua : Univalence_type}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Exponentiation preserves equivalences, i.e., if [e] is an equivalence then so is post-composition by [e]. *)\n\n  (* Should this go somewhere else? *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem univalence_isequiv_postcompose `{H0 : IsEquiv A B w} C : IsEquiv (fun (g:C->A) => w o g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun g : C -> A => w o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv w"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun g : C -> A => w o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv w"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Univalence_type in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun (g : C -> A) (x : C) => w (g x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, IsEquiv (equiv_path A0 B0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsEquiv w"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify\n              (fun (g:C->A) => w o g)\n              (fun (g:C->B) => w^-1 o g)\n              _\n              _);\n    intro;\n    pose (Build_Equiv _ _ w _) as w';\n    change H0 with (@equiv_isequiv _ _ w');\n    change w with (@equiv_fun _ _ w');\n    clearbody w'; clear H0 w;\n    rewrite <- (@eisretr _ _ (@equiv_path A B) (ua A B) w');\n    generalize ((@equiv_inv _ _ (equiv_path A B) (ua A B)) w');\n    intro p;\n    clear w';\n    destruct p;\n    reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We are ready to prove functional extensionality, starting with the naive non-dependent version. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance isequiv_src_compose A B\n  : @IsEquiv (A -> {xy : B * B & fst xy = snd xy})\n             (A -> B)\n             (fun g => (fst o pr1) o g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun g : A -> {xy : B * B & fst xy = snd xy} => fst o pr1 o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun g : A -> {xy : B * B & fst xy = snd xy} => fst o pr1 o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply @univalence_isequiv_postcompose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun x : {xy : B * B & fst xy = snd xy} => fst x.1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify\n              (fst o pr1) (fun x => ((x, x); idpath))\n              (fun _ => idpath)\n              _);\n      let p := fresh in\n      intros [[? ?] p];\n        simpl in p; destruct p;\n        reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance isequiv_tgt_compose A B\n  : @IsEquiv (A -> {xy : B * B & fst xy = snd xy})\n             (A -> B)\n             (fun g => (snd o pr1) o g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun g : A -> {xy : B * B & fst xy = snd xy} => snd o pr1 o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun g : A -> {xy : B * B & fst xy = snd xy} => snd o pr1 o g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply @univalence_isequiv_postcompose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (fun x : {xy : B * B & fst xy = snd xy} => snd x.1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify\n              (snd o pr1) (fun x => ((x, x); idpath))\n              (fun _ => idpath)\n              _);\n      let p := fresh in\n      intros [[? ?] p];\n        simpl in p; destruct p;\n        reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem Univalence_implies_FunextNondep : NaiveNondepFunext.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaiveNondepFunext",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaiveNondepFunext",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B f g p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Consider the following maps. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (d := fun x : A => exist (fun xy => fst xy = snd xy) (f x, f x) (idpath (f x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (e := fun x : A => exist (fun xy => fst xy = snd xy) (f x, g x) (p x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "fun x : A => ((f x, g x); p x)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** If we compose [d] and [e] with [free_path_target], we get [f] and [g], respectively. So, if we had a path from [d] to [e], we would get one from [f] to [g]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change f with ((snd o pr1) o d).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "snd o pr1 o d = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "fun x : A => ((f x, g x); p x)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change g with ((snd o pr1) o e).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "snd o pr1 o d = snd o pr1 o e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "fun x : A => ((f x, g x); p x)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (ap (fun g => snd o pr1 o g)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "d = e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "fun x : A => ((f x, g x); p x)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Since composition with [src] is an equivalence, we can freely compose with [src]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (fun A B x y=> @equiv_inv _ _ _ (@isequiv_ap _ _ _ (@isequiv_src_compose A B) x y)) as H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "d = e",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "fun x : A => ((f x, g x); p x)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": "fun (A0 B0 : Type) (x y : A0 -> {xy : B0 * B0 & fst xy = snd xy}) =>\n(ap (fun g0 : A0 -> {xy : B0 * B0 & fst xy = snd xy} => fst o pr1 o g0))^-1",
+              "type": "forall (A0 B0 : Type) (x y : A0 -> {xy : B0 * B0 & fst xy = snd xy}),\n(fun g0 : A0 -> {xy : B0 * B0 & fst xy = snd xy} => fst o pr1 o g0) x =\n(fun g0 : A0 -> {xy : B0 * B0 & fst xy = snd xy} => fst o pr1 o g0) y ->\nx = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply H'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : A => fst (d x).1) = (fun x : A => fst (e x).1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ua"
+              ],
+              "body": null,
+              "type": "Univalence_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "d"
+              ],
+              "body": "fun x : A => ((f x, f x); 1)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "fun x : A => ((f x, g x); p x)",
+              "type": "A -> {xy : B * B & fst xy = snd xy}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": "fun (A0 B0 : Type) (x y : A0 -> {xy : B0 * B0 & fst xy = snd xy}) =>\n(ap (fun g0 : A0 -> {xy : B0 * B0 & fst xy = snd xy} => fst o pr1 o g0))^-1",
+              "type": "forall (A0 B0 : Type) (x y : A0 -> {xy : B0 * B0 & fst xy = snd xy}),\n(fun g0 : A0 -> {xy : B0 * B0 & fst xy = snd xy} => fst o pr1 o g0) x =\n(fun g0 : A0 -> {xy : B0 * B0 & fst xy = snd xy} => fst o pr1 o g0) y ->\nx = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End UnivalenceImpliesFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Now we use this to prove strong dependent funext.  Again only the codomain universe must be univalent, but the domain universe must be no larger than it is.  Thus practically speaking this means that a univalent universe satisfies funext only for functions between two types in that same universe. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Univalence_implies_WeakFunext : Univalence_type -> WeakFunext\n  := NaiveNondepFunext_implies_WeakFunext o @Univalence_implies_FunextNondep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Univalence_type_implies_Funext_type\n           `{ua : Univalence_type@{j jplusone} }\n  : Funext_type@{i j j}\n  := NaiveNondepFunext_implies_Funext\n       (@Univalence_implies_FunextNondep ua).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The above proof justifies assuming [Univalence -> Funext], which we did axiomatically in [Types/Universe.v]. *)\n"
+    }
+  ]
+]

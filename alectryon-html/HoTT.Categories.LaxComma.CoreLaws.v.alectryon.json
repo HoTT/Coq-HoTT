@@ -1,0 +1,4279 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Strict.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Paths NaturalTransformation.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pseudofunctor.Core Pseudofunctor.RewriteLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require LaxComma.CoreParts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Import Functor.Identity.FunctorIdentityNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting David Spivak:\n\n    David: ok\n       so an object of [FC \u21d3 D] is a pair [(X, G)], where [X] is a\n       finite category (or a small category or whatever you wanted)\n       and [G : X --> D] is a functor.\n       a morphism in [FC \u21d3 D] is a ``natural transformation diagram''\n       (as opposed to a commutative diagram, in which the natural\n       transformation would be ``identity'')\n       so a map in [FC \u21d3 D] from [(X, G)] to [(X', G')] is a pair\n       [(F, \u03b1)] where [F : X --> X'] is a functor and\n       [\u03b1 : G --> G' \u2218 F] is a natural transformation\n       and the punchline is that there is a functor\n       [colim : FC \u21d3 D --> D]\n\n     David: consider for yourself the case where [F : X --> X'] is\n       identity ([X = X']) and (separately) the case where\n       [\u03b1 : G --> G \u2218 F] is identity.\n       the point is, you've already done the work to get this colim\n       functor.\n       because every map in [FC \u21d3 D] can be written as a composition\n       of two maps, one where the [F]-part is identity and one where\n       the [\u03b1]-part is identity.\n       and you've worked both of those cases out already.\n       *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Import LaxCommaCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include LaxComma.CoreParts.LaxCommaCategoryParts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section lax_comma_category_parts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables A B : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable S : Pseudofunctor A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable T : Pseudofunctor B.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall a b, IsHSet (Functor (S a) (T b))}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation object := (@object _ A B S T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation morphism := (@morphism _ A B S T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation compose := (@compose _ A B S T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation identity := (@identity _ A B S T).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac t_do_work :=\n      repeat match goal with\n               | _ => reflexivity\n               | [ |- context[components_of ?T^-1 ?x] ]\n                 => progress change (T^-1 x) with ((T x)^-1)\n               | [ |- context[?F _1 ?m^-1] ]\n                 => progress change (F _1 m^-1) with ((F _1 m)^-1)\n               | _ => progress repeat iso_collapse_inverse_right'\n             end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac t_start :=\n      simpl in *;\n      repeat match goal with\n               | [ H : ?x = _ |- _ ] => rewrite H; clear H; try clear x\n             end;\n      path_natural_transformation;\n      simpl in *;\n      rewrite !Category.Core.left_identity, !Category.Core.right_identity;\n      rewrite !composition_of.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Ltac t :=\n      t_start;\n      rewrite <- !Category.Core.associativity;\n      (** A reflective simplifier would be really useful here... *)\n      repeat match goal with\n               | _ => progress t_do_work\n               | [ |- context[components_of ?T ?x] ]\n                 => simpl rewrite <- !(commutes_pT_F T)\n               | [ |- context[components_of ?T ?x] ]\n                 => simpl rewrite <- !(commutes T)\n               | _ => iso_move_inverse\n             end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** Ugh. The following code constructs the type of the helper lemma:\n<<\n      Lemma associativity x1 x2 x3 x4\n            (m1 : morphism x1 x2) (m2 : morphism x2 x3) (m3 : morphism x3 x4)\n      : compose (compose m3 m2) m1 = compose m3 (compose m2 m1).\n      Proof.\n        exact (@path_morphism' _ _\n                                (compose (compose m3 m2) m1)\n                                (compose m3 (compose m2 m1))\n                                (Category.Core.associativity _ _ _ _ _ _ _ _)\n                                (Category.Core.associativity _ _ _ _ _ _ _ _)\n                                _).\n        simpl in *.\n        repeat match goal with\n                 | [ |- context[@morphism_inverse\n                                     _ _ _ _\n                                     (@isisomorphism_isomorphic\n                                        _ _ _\n                                        (Category.Morphisms.idtoiso\n                                           ?C0\n                                           (ap (p_morphism_of ?F (s:=_) (d:=_))\n                                               (Category.Core.associativity ?C ?x1 ?x2 ?x3 ?x4 ?m1 ?m2 ?m3))))] ]\n                   => generalize (@p_composition_of_coherent_inverse_for_rewrite _ C F x1 x2 x3 x4 m1 m2 m3);\n                     generalize (Category.Morphisms.idtoiso\n                                   C0\n                                   (ap (p_morphism_of F (s:=_) (d:=_))\n                                       (Category.Core.associativity C x1 x2 x3 x4 m1 m2 m3)))\n                 | [ |- context[Category.Morphisms.idtoiso\n                                     ?C0\n                                     (ap (p_morphism_of ?F (s:=_) (d:=_))\n                                         (Category.Core.associativity ?C ?x1 ?x2 ?x3 ?x4 ?m1 ?m2 ?m3))] ]\n                   => generalize (@p_composition_of_coherent_for_rewrite _ C F x1 x2 x3 x4 m1 m2 m3);\n                     generalize (Category.Morphisms.idtoiso\n                                   C0\n                                   (ap (p_morphism_of F (s:=_) (d:=_))\n                                       (Category.Core.associativity C x1 x2 x3 x4 m1 m2 m3)))\n               end.\n        simpl.\n        destruct_head morphism.\n        destruct_head object.\n        simpl in *.\n        repeat match goal with\n                 | [ |- context[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]\n                   => generalize dependent (p_composition_of F x y z m1 m2)\n                 | [ |- context[p_identity_of ?F ?x] ]\n                   => generalize dependent (p_identity_of F x)\n                 | [ |- context[p_morphism_of ?F ?x] ]\n                   => generalize dependent (p_morphism_of F x)\n                 | [ |- context[p_object_of ?F ?x] ]\n                   => generalize dependent (p_object_of F x)\n               end.\n        simpl.\n        clear.\n        repeat (let H := fresh \"x\" in intro H).\n        repeat match goal with H : _ |- _ => revert H end.\n        intro.\n>>\n*)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma associativity_helper\n          {x x0 : PreCategory} {x1 : Functor x0 x}\n          {x2 x3 : PreCategory} {x4 : Functor x3 x2} {x5 x6 : PreCategory}\n          {x7 : Functor x6 x5} {x8 x9 : PreCategory} {x10 : Functor x9 x8}\n          {x11 : Functor x9 x6} {x12 : Functor x9 x3} {x13 : Functor x0 x6}\n          {x14 : Functor x9 x6} {x15 : Functor x8 x5} {x16 : Functor x x5}\n          {x17 : Functor x9 x0} {x18 : Functor x8 x}\n          {x19 : NaturalTransformation (x18 o x10) (x1 o x17)}\n          {x20 : Functor x0 x3} {x21 : Functor x x2}\n          {x22 : NaturalTransformation (x21 o x1) (x4 o x20)}\n          {x23 : Functor x8 x2} {x24 : Functor x3 x6} {x25 : Functor x2 x5}\n          {x26 : NaturalTransformation (x25 o x4) (x7 o x24)}\n          {x27 : Functor x8 x5} {x28 : @Isomorphic (_ -> _) x27 (x25 o x23)%functor}\n          {x29 : @Isomorphic (_ -> _) x23 (x21 o x18)%functor}\n          {x30 : @Isomorphic (_ -> _) x16 (x25 o x21)%functor}\n          {x31 : @Isomorphic (_ -> _) x15 (x16 o x18)%functor}\n          {x32 : @Isomorphic (_ -> _) x14 (x13 o x17)%functor}\n          {x33 : @Isomorphic (_ -> _) x13 (x24 o x20)%functor}\n          {x34 : @Isomorphic (_ -> _) x12 (x20 o x17)%functor}\n          {x35 : @Isomorphic (_ -> _) x11 (x24 o x12)%functor}\n          {x36 : @Isomorphic (_ -> _) x14 x11}\n          (x37 : (x36 : Category.Core.morphism _ _ _) =\n                 (x35 ^-1\n                      o (x24 oL x34 ^-1 o (associator_1 x24 x20 x17 o ((x33 : Category.Core.morphism _ _ _) oR x17 o (x32 : Category.Core.morphism _ _ _)))))%natural_transformation)\n          {x38 : @Isomorphic (_ -> _) x15 x27}\n          (x39 : x38 ^-1 =\n                 (x31 ^-1 o (x30 ^-1 oR x18) o inverse (associator_1 x25 x21 x18)\n                      o (x25 oL (x29 : Category.Core.morphism _ _ _)) o (x28 : Category.Core.morphism _ _ _))%natural_transformation)\n    : (x7 oL (x36 : Category.Core.morphism _ _ _)\n          o (x7 oL x32 ^-1 o associator_1 x7 x13 x17\n                o (x7 oL x33 ^-1 o associator_1 x7 x24 x20 o (x26 oR x20)\n                      o associator_2 x25 x4 x20 o (x25 oL x22) o\n                      associator_1 x25 x21 x1 o ((x30 : Category.Core.morphism _ _ _) oR x1) oR x17)\n                o associator_2 x16 x1 x17 o (x16 oL x19) o associator_1 x16 x18 x10\n                o ((x31 : Category.Core.morphism _ _ _) oR x10)) o (x38 ^-1 oR x10))%natural_transformation =\n      (x7 oL x35 ^-1 o associator_1 x7 x24 x12 o (x26 oR x12)\n          o associator_2 x25 x4 x12\n          o (x25\n               oL (x4 oL x34 ^-1 o associator_1 x4 x20 x17 o (x22 oR x17)\n                      o associator_2 x21 x1 x17 o (x21 oL x19)\n                      o associator_1 x21 x18 x10 o ((x29 : Category.Core.morphism _ _ _) oR x10)))\n          o associator_1 x25 x23 x10 o ((x28 : Category.Core.morphism _ _ _) oR x10))%natural_transformation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x7 oL (x36 : Core.morphism (x9 -> x6) x14 x11)\n o (x7 oL x32^-1 o associator_1 x7 x13 x17\n    o (x7 oL x33^-1 o associator_1 x7 x24 x20 o (x26 oR x20)\n       o associator_2 x25 x4 x20 o (x25 oL x22) o \n       associator_1 x25 x21 x1\n       o ((x30 : Core.morphism (x -> x5) x16 (x25 o x21)%functor) oR x1)\n       oR x17)\n    o associator_2 x16 x1 x17 o (x16 oL x19) o associator_1 x16 x18 x10\n    o ((x31 : Core.morphism (x8 -> x5) x15 (x16 o x18)%functor) oR x10))\n o (x38^-1 oR x10))%natural_transformation =\n(x7 oL x35^-1 o associator_1 x7 x24 x12 o (x26 oR x12)\n o associator_2 x25 x4 x12\n o (x25\n    oL (x4 oL x34^-1 o associator_1 x4 x20 x17 o (x22 oR x17)\n        o associator_2 x21 x1 x17 o (x21 oL x19) o \n        associator_1 x21 x18 x10\n        o ((x29 : Core.morphism (x8 -> x2) x23 (x21 o x18)%functor) oR x10)))\n o associator_1 x25 x23 x10\n o ((x28 : Core.morphism (x8 -> x5) x27 (x25 o x23)%functor) oR x10))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x3 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Functor x6 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x9 x8"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x9 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "Functor x9 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "Functor x0 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "Functor x9 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "Functor x8 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "Functor x x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "Functor x9 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x18"
+              ],
+              "body": null,
+              "type": "Functor x8 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x19"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x18 o x10) (x1 o x17)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x20"
+              ],
+              "body": null,
+              "type": "Functor x0 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x21"
+              ],
+              "body": null,
+              "type": "Functor x x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x22"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x21 o x1) (x4 o x20)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x23"
+              ],
+              "body": null,
+              "type": "Functor x8 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x24"
+              ],
+              "body": null,
+              "type": "Functor x3 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x25"
+              ],
+              "body": null,
+              "type": "Functor x2 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x26"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x25 o x4) (x7 o x24)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x27"
+              ],
+              "body": null,
+              "type": "Functor x8 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x28"
+              ],
+              "body": null,
+              "type": "x27 <~=~> (x25 o x23)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x29"
+              ],
+              "body": null,
+              "type": "x23 <~=~> (x21 o x18)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x30"
+              ],
+              "body": null,
+              "type": "x16 <~=~> (x25 o x21)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x31"
+              ],
+              "body": null,
+              "type": "x15 <~=~> (x16 o x18)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x32"
+              ],
+              "body": null,
+              "type": "x14 <~=~> (x13 o x17)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x33"
+              ],
+              "body": null,
+              "type": "x13 <~=~> (x24 o x20)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x34"
+              ],
+              "body": null,
+              "type": "x12 <~=~> (x20 o x17)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x35"
+              ],
+              "body": null,
+              "type": "x11 <~=~> (x24 o x12)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x36"
+              ],
+              "body": null,
+              "type": "x14 <~=~> x11"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x37"
+              ],
+              "body": null,
+              "type": "(x36 : Core.morphism (x9 -> x6) x14 x11) =\n(x35^-1\n o (x24 oL x34^-1\n    o (associator_1 x24 x20 x17\n       o ((x33 : Core.morphism (x0 -> x6) x13 (x24 o x20)%functor) oR x17\n          o (x32 : Core.morphism (x9 -> x6) x14 (x13 o x17)%functor)))))%natural_transformation"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x38"
+              ],
+              "body": null,
+              "type": "x15 <~=~> x27"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x39"
+              ],
+              "body": null,
+              "type": "x38^-1 =\n(x31^-1 o (x30^-1 oR x18) o inverse (associator_1 x25 x21 x18)\n o (x25 oL (x29 : Core.morphism (x8 -> x2) x23 (x21 o x18)%functor))\n o (x28 : Core.morphism (x8 -> x5) x27 (x25 o x23)%functor))%natural_transformation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x7 oL (x36 : Core.morphism (x9 -> x6) x14 x11)\n o (x7 oL x32^-1 o associator_1 x7 x13 x17\n    o (x7 oL x33^-1 o associator_1 x7 x24 x20 o (x26 oR x20)\n       o associator_2 x25 x4 x20 o (x25 oL x22) o \n       associator_1 x25 x21 x1\n       o ((x30 : Core.morphism (x -> x5) x16 (x25 o x21)%functor) oR x1)\n       oR x17)\n    o associator_2 x16 x1 x17 o (x16 oL x19) o associator_1 x16 x18 x10\n    o ((x31 : Core.morphism (x8 -> x5) x15 (x16 o x18)%functor) oR x10))\n o (x38^-1 oR x10))%natural_transformation =\n(x7 oL x35^-1 o associator_1 x7 x24 x12 o (x26 oR x12)\n o associator_2 x25 x4 x12\n o (x25\n    oL (x4 oL x34^-1 o associator_1 x4 x20 x17 o (x22 oR x17)\n        o associator_2 x21 x1 x17 o (x21 oL x19) o \n        associator_1 x21 x18 x10\n        o ((x29 : Core.morphism (x8 -> x2) x23 (x21 o x18)%functor) oR x10)))\n o associator_1 x25 x23 x10\n o ((x28 : Core.morphism (x8 -> x5) x27 (x25 o x23)%functor) oR x10))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x3 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x6"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Functor x6 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x9 x8"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x9 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "Functor x9 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "Functor x0 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "Functor x9 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "Functor x8 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "Functor x x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "Functor x9 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x18"
+              ],
+              "body": null,
+              "type": "Functor x8 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x19"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x18 o x10) (x1 o x17)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x20"
+              ],
+              "body": null,
+              "type": "Functor x0 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x21"
+              ],
+              "body": null,
+              "type": "Functor x x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x22"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x21 o x1) (x4 o x20)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x23"
+              ],
+              "body": null,
+              "type": "Functor x8 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x24"
+              ],
+              "body": null,
+              "type": "Functor x3 x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x25"
+              ],
+              "body": null,
+              "type": "Functor x2 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x26"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x25 o x4) (x7 o x24)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x27"
+              ],
+              "body": null,
+              "type": "Functor x8 x5"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x28"
+              ],
+              "body": null,
+              "type": "x27 <~=~> (x25 o x23)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x29"
+              ],
+              "body": null,
+              "type": "x23 <~=~> (x21 o x18)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x30"
+              ],
+              "body": null,
+              "type": "x16 <~=~> (x25 o x21)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x31"
+              ],
+              "body": null,
+              "type": "x15 <~=~> (x16 o x18)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x32"
+              ],
+              "body": null,
+              "type": "x14 <~=~> (x13 o x17)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x33"
+              ],
+              "body": null,
+              "type": "x13 <~=~> (x24 o x20)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x34"
+              ],
+              "body": null,
+              "type": "x12 <~=~> (x20 o x17)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x35"
+              ],
+              "body": null,
+              "type": "x11 <~=~> (x24 o x12)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x36"
+              ],
+              "body": null,
+              "type": "x14 <~=~> x11"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x37"
+              ],
+              "body": null,
+              "type": "(x36 : Core.morphism (x9 -> x6) x14 x11) =\n(x35^-1\n o (x24 oL x34^-1\n    o (associator_1 x24 x20 x17\n       o ((x33 : Core.morphism (x0 -> x6) x13 (x24 o x20)%functor) oR x17\n          o (x32 : Core.morphism (x9 -> x6) x14 (x13 o x17)%functor)))))%natural_transformation"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x38"
+              ],
+              "body": null,
+              "type": "x15 <~=~> x27"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x39"
+              ],
+              "body": null,
+              "type": "x38^-1 =\n(x31^-1 o (x30^-1 oR x18) o inverse (associator_1 x25 x21 x18)\n o (x25 oL (x29 : Core.morphism (x8 -> x2) x23 (x21 o x18)%functor))\n o (x28 : Core.morphism (x8 -> x5) x27 (x25 o x23)%functor))%natural_transformation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* 18.647s *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma associativity x1 x2 x3 x4\n          (m1 : morphism x1 x2) (m2 : morphism x2 x3) (m3 : morphism x3 x4)\n    : compose (compose m3 m2) m1 = compose m3 (compose m2 m1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose (compose m3 m2) m1 = compose m3 (compose m2 m1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose (compose m3 m2) m1 = compose m3 (compose m2 m1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@path_morphism' _ A B S T _ _\n                              (compose (compose m3 m2) m1)\n                              (compose m3 (compose m2 m1))\n                              (Category.Core.associativity _ _ _ _ _ _ _ _)\n                              (Category.Core.associativity _ _ _ _ _ _ _ _)\n                              _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f x4\n oL Category.Morphisms.idtoiso (S (a x1) -> S (a x4))\n      (ap (p_morphism_of S)\n         (Core.associativity A (a x1) (a x2) (a x3) \n            (a x4) (g m1) (g m2) (g m3)))\n o p (compose (compose m3 m2) m1)\n o ((Category.Morphisms.idtoiso (T (b x1) -> T (b x4))\n       (ap (p_morphism_of T)\n          (Core.associativity B (b x1) (b x2) (b x3) \n             (b x4) (h m1) (h m2) (h m3))))^-1\n    oR f x1))%natural_transformation =\np (compose m3 (compose m2 m1))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f x4\n oL Category.Morphisms.idtoiso (S (a x1) -> S (a x4))\n      (ap (p_morphism_of S)\n         (Core.associativity A (a x1) (a x2) (a x3) \n            (a x4) (g m1) (g m2) (g m3)))\n o (f x4 oL (p_composition_of S (a x1) (a x2) (a x4) (g m3 o g m2) (g m1))^-1\n    o associator_1 (f x4) (p_morphism_of S (g m3 o g m2))\n        (p_morphism_of S (g m1))\n    o (f x4 oL (p_composition_of S (a x2) (a x3) (a x4) (g m3) (g m2))^-1\n       o associator_1 (f x4) (p_morphism_of S (g m3))\n           (p_morphism_of S (g m2))\n       o (p m3 oR p_morphism_of S (g m2))\n       o associator_2 (p_morphism_of T (h m3)) (f x3)\n           (p_morphism_of S (g m2))\n       o (p_morphism_of T (h m3) oL p m2)\n       o associator_1 (p_morphism_of T (h m3)) (p_morphism_of T (h m2))\n           (f x2)\n       o (p_composition_of T (b x2) (b x3) (b x4) (h m3) (h m2) oR f x2)\n       oR p_morphism_of S (g m1))\n    o associator_2 (p_morphism_of T (h m3 o h m2)) \n        (f x2) (p_morphism_of S (g m1))\n    o (p_morphism_of T (h m3 o h m2) oL p m1)\n    o associator_1 (p_morphism_of T (h m3 o h m2)) \n        (p_morphism_of T (h m1)) (f x1)\n    o (p_composition_of T (b x1) (b x2) (b x4) (h m3 o h m2) (h m1) oR f x1))\n o ((Category.Morphisms.idtoiso (T (b x1) -> T (b x4))\n       (ap (p_morphism_of T)\n          (Core.associativity B (b x1) (b x2) (b x3) \n             (b x4) (h m1) (h m2) (h m3))))^-1\n    oR f x1))%natural_transformation =\n(f x4 oL (p_composition_of S (a x1) (a x3) (a x4) (g m3) (g m2 o g m1))^-1\n o associator_1 (f x4) (p_morphism_of S (g m3))\n     (p_morphism_of S (g m2 o g m1))\n o (p m3 oR p_morphism_of S (g m2 o g m1))\n o associator_2 (p_morphism_of T (h m3)) (f x3)\n     (p_morphism_of S (g m2 o g m1))\n o (p_morphism_of T (h m3)\n    oL (f x3 oL (p_composition_of S (a x1) (a x2) (a x3) (g m2) (g m1))^-1\n        o associator_1 (f x3) (p_morphism_of S (g m2))\n            (p_morphism_of S (g m1))\n        o (p m2 oR p_morphism_of S (g m1))\n        o associator_2 (p_morphism_of T (h m2)) (f x2)\n            (p_morphism_of S (g m1))\n        o (p_morphism_of T (h m2) oL p m1)\n        o associator_1 (p_morphism_of T (h m2)) (p_morphism_of T (h m1))\n            (f x1)\n        o (p_composition_of T (b x1) (b x2) (b x3) (h m2) (h m1) oR f x1)))\n o associator_1 (p_morphism_of T (h m3)) (p_morphism_of T (h m2 o h m1))\n     (f x1)\n o (p_composition_of T (b x1) (b x3) (b x4) (h m3) (h m2 o h m1) oR f x1))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply associativity_helper.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Category.Morphisms.idtoiso (S (a x1) -> S (a x4))\n  (ap (p_morphism_of S)\n     (Core.associativity A (a x1) (a x2) (a x3) (a x4) (g m1) (g m2) (g m3))) =\n((p_composition_of S (a x1) (a x3) (a x4) (g m3) (g m2 o g m1))^-1\n o (p_morphism_of S (g m3)\n    oL (p_composition_of S (a x1) (a x2) (a x3) (g m2) (g m1))^-1\n    o (associator_1 (p_morphism_of S (g m3)) (p_morphism_of S (g m2))\n         (p_morphism_of S (g m1))\n       o (p_composition_of S (a x2) (a x3) (a x4) (g m3) (g m2)\n          oR p_morphism_of S (g m1)\n          o p_composition_of S (a x1) (a x2) (a x4) (g m3 o g m2) (g m1)))))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Category.Morphisms.idtoiso (T (b x1) -> T (b x4))\n   (ap (p_morphism_of T)\n      (Core.associativity B (b x1) (b x2) (b x3) (b x4) (h m1) (h m2) (h m3))))^-1 =\n((p_composition_of T (b x1) (b x2) (b x4) (h m3 o h m2) (h m1))^-1\n o ((p_composition_of T (b x2) (b x3) (b x4) (h m3) (h m2))^-1\n    oR p_morphism_of T (h m1))\n o inverse\n     (associator_1 (p_morphism_of T (h m3)) (p_morphism_of T (h m2))\n        (p_morphism_of T (h m1)))\n o (p_morphism_of T (h m3)\n    oL p_composition_of T (b x1) (b x2) (b x3) (h m2) (h m1))\n o p_composition_of T (b x1) (b x3) (b x4) (h m3) (h m2 o h m1))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Category.Morphisms.idtoiso (S (a x1) -> S (a x4))\n  (ap (p_morphism_of S)\n     (Core.associativity A (a x1) (a x2) (a x3) (a x4) (g m1) (g m2) (g m3))) =\n((p_composition_of S (a x1) (a x3) (a x4) (g m3) (g m2 o g m1))^-1\n o (p_morphism_of S (g m3)\n    oL (p_composition_of S (a x1) (a x2) (a x3) (g m2) (g m1))^-1\n    o (associator_1 (p_morphism_of S (g m3)) (p_morphism_of S (g m2))\n         (p_morphism_of S (g m1))\n       o (p_composition_of S (a x2) (a x3) (a x4) (g m3) (g m2)\n          oR p_morphism_of S (g m1)\n          o p_composition_of S (a x1) (a x2) (a x4) (g m3 o g m2) (g m1)))))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p_composition_of_coherent_for_rewrite _ _ _ _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Category.Morphisms.idtoiso (T (b x1) -> T (b x4))\n   (ap (p_morphism_of T)\n      (Core.associativity B (b x1) (b x2) (b x3) (b x4) (h m1) (h m2) (h m3))))^-1 =\n((p_composition_of T (b x1) (b x2) (b x4) (h m3 o h m2) (h m1))^-1\n o ((p_composition_of T (b x2) (b x3) (b x4) (h m3) (h m2))^-1\n    oR p_morphism_of T (h m1))\n o inverse\n     (associator_1 (p_morphism_of T (h m3)) (p_morphism_of T (h m2))\n        (p_morphism_of T (h m1)))\n o (p_morphism_of T (h m3)\n    oL p_composition_of T (b x1) (b x2) (b x3) (h m2) (h m1))\n o p_composition_of T (b x1) (b x3) (b x4) (h m3) (h m2 o h m1))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1",
+                "x2",
+                "x3",
+                "x4"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "morphism x1 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "morphism x2 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m3"
+              ],
+              "body": null,
+              "type": "morphism x3 x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p_composition_of_coherent_inverse_for_rewrite _ _ _ _ _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** Ugh.  To construct the type of this lemma, the code is:\n<<\nLemma left_identity (s d : object) (m : morphism s d)\n      : compose (identity _) m = m.\n      Proof.\n        exact (@path_morphism' _ _\n                               (compose (identity _) m) m\n                               (Category.Core.left_identity _ _ _ _)\n                               (Category.Core.left_identity _ _ _ _)\n                               _).\n        simpl in *.\n        repeat match goal with\n                 | [ |- context[@morphism_inverse\n                                     _ _ _ _\n                                     (@isisomorphism_isomorphic\n                                        _ _ _\n                                        (Category.Morphisms.idtoiso\n                                           ?C0\n                                           (ap (p_morphism_of ?F (s:=_) (d:=_))\n                                               (Category.Core.left_identity ?C ?x ?y ?f))))] ]\n                   => generalize (@p_left_identity_of_coherent_inverse_for_rewrite _ C F x y f);\n                     generalize (Category.Morphisms.idtoiso\n                                   C0\n                                   (ap (p_morphism_of F (s:=_) (d:=_))\n                                       (Category.Core.left_identity C x y f)))\n                 | [ |- context[Category.Morphisms.idtoiso\n                                     ?C0\n                                     (ap (p_morphism_of ?F (s:=_) (d:=_))\n                                         (Category.Core.left_identity ?C ?x ?y ?f))] ]\n                   => generalize (@p_left_identity_of_coherent_for_rewrite _ C F x y f);\n                     generalize (Category.Morphisms.idtoiso\n                                   C0\n                                   (ap (p_morphism_of F (s:=_) (d:=_))\n                                       (Category.Core.left_identity C x y f)))\n               end.\n        simpl.\n        destruct_head morphism.\n        destruct_head object.\n        simpl in *.\n        repeat match goal with\n                 | [ |- context[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]\n                   => generalize dependent (p_composition_of F x y z m1 m2)\n                 | [ |- context[p_identity_of ?F ?x] ]\n                   => generalize dependent (p_identity_of F x)\n                 | [ |- context[p_morphism_of ?F ?x] ]\n                   => generalize dependent (p_morphism_of F x)\n                 | [ |- context[p_object_of ?F ?x] ]\n                   => generalize dependent (p_object_of F x)\n               end.\n        simpl.\n        clear.\n        repeat (let H := fresh \"x\" in intro H).\n        repeat match goal with H : _ |- _ => revert H end.\n        intro.\n>>\n*)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma left_identity_helper\n          {x x0 : PreCategory} {x1 : Functor x0 x}\n          {x2 x3 : PreCategory} {x4 : Functor x3 x2} {x5 x6 : Functor x3 x0}\n          {x7 : Functor x2 x} {x8 : NaturalTransformation (x7 o x4) (x1 o x6)}\n          {x9 : Functor x2 x} {x10 : Functor x0 x0} {x11 : Functor x x}\n          {x12 : @Isomorphic (_ -> _) x11 1%functor} {x13 : @Isomorphic (_ -> _) x10 1%functor}\n          {x14 : @Isomorphic (_ -> _) x9 (x11 o x7)%functor} {x15 : @Isomorphic (_ -> _) x5 (x10 o x6)%functor}\n          {x16 : @Isomorphic (_ -> _) x5 x6}\n          {x17 : (x16 : Category.Core.morphism _ _ _) =\n                 (left_identity_natural_transformation_1 x6 o ((x13 : Category.Core.morphism _ _ _) oR x6 o (x15 : Category.Core.morphism _ _ _)))%natural_transformation}\n          {x18 : @Isomorphic (_ -> _) x9 x7}\n          {x19 : x18 ^-1 =\n                 (x14 ^-1 o (x12 ^-1 oR x7)\n                      o inverse (left_identity_natural_transformation_1 x7))%natural_transformation}\n    : (x1 oL (x16 : Category.Core.morphism _ _ _)\n          o (x1 oL x15 ^-1 o associator_1 x1 x10 x6\n                o (x1 oL x13 ^-1 o right_identity_natural_transformation_2 x1\n                      o left_identity_natural_transformation_1 x1 o\n                      ((x12 : Category.Core.morphism _ _ _) oR x1) oR x6) o associator_2 x11 x1 x6 o\n                (x11 oL x8) o associator_1 x11 x7 x4 o ((x14 : Category.Core.morphism _ _ _) oR x4)) o\n          (x18 ^-1 oR x4))%natural_transformation = x8.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1 oL (x16 : Core.morphism (x3 -> x0) x5 x6)\n o (x1 oL x15^-1 o associator_1 x1 x10 x6\n    o (x1 oL x13^-1 o right_identity_natural_transformation_2 x1\n       o left_identity_natural_transformation_1 x1\n       o ((x12 : Core.morphism (x -> x) x11 1%functor) oR x1) oR x6)\n    o associator_2 x11 x1 x6 o (x11 oL x8) o associator_1 x11 x7 x4\n    o ((x14 : Core.morphism (x2 -> x) x9 (x11 o x7)%functor) oR x4))\n o (x18^-1 oR x4))%natural_transformation =\nx8",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x3 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5",
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x3 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x7 o x4) (x1 o x6)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x11 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x10 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x9 <~=~> (x11 o x7)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 <~=~> (x10 o x6)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "x5 <~=~> x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "(x16 : Core.morphism (x3 -> x0) x5 x6) =\n(left_identity_natural_transformation_1 x6\n o ((x13 : Core.morphism (x0 -> x0) x10 1%functor) oR x6\n    o (x15 : Core.morphism (x3 -> x0) x5 (x10 o x6)%functor)))%natural_transformation"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x18"
+              ],
+              "body": null,
+              "type": "x9 <~=~> x7"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x19"
+              ],
+              "body": null,
+              "type": "x18^-1 =\n(x14^-1 o (x12^-1 oR x7)\n o inverse (left_identity_natural_transformation_1 x7))%natural_transformation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1 oL (x16 : Core.morphism (x3 -> x0) x5 x6)\n o (x1 oL x15^-1 o associator_1 x1 x10 x6\n    o (x1 oL x13^-1 o right_identity_natural_transformation_2 x1\n       o left_identity_natural_transformation_1 x1\n       o ((x12 : Core.morphism (x -> x) x11 1%functor) oR x1) oR x6)\n    o associator_2 x11 x1 x6 o (x11 oL x8) o associator_1 x11 x7 x4\n    o ((x14 : Core.morphism (x2 -> x) x9 (x11 o x7)%functor) oR x4))\n o (x18^-1 oR x4))%natural_transformation =\nx8",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x3 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5",
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x3 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x7 o x4) (x1 o x6)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x0 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x11 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x10 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x9 <~=~> (x11 o x7)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 <~=~> (x10 o x6)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "x5 <~=~> x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "(x16 : Core.morphism (x3 -> x0) x5 x6) =\n(left_identity_natural_transformation_1 x6\n o ((x13 : Core.morphism (x0 -> x0) x10 1%functor) oR x6\n    o (x15 : Core.morphism (x3 -> x0) x5 (x10 o x6)%functor)))%natural_transformation"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x18"
+              ],
+              "body": null,
+              "type": "x9 <~=~> x7"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x19"
+              ],
+              "body": null,
+              "type": "x18^-1 =\n(x14^-1 o (x12^-1 oR x7)\n o inverse (left_identity_natural_transformation_1 x7))%natural_transformation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* 3.959 s *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma left_identity (s d : object) (m : morphism s d)\n    : compose (identity _) m = m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose (identity d) m = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose (identity d) m = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@path_morphism' _ A B S T _ _\n                              (compose (identity _) m) m\n                              (Category.Core.left_identity _ _ _ _)\n                              (Category.Core.left_identity _ _ _ _)\n                              _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f d\n oL Category.Morphisms.idtoiso (S (a s) -> S (a d))\n      (ap (p_morphism_of S) (Core.left_identity A (a s) (a d) (g m)))\n o p (compose (identity d) m)\n o ((Category.Morphisms.idtoiso (T (b s) -> T (b d))\n       (ap (p_morphism_of T) (Core.left_identity B (b s) (b d) (h m))))^-1\n    oR f s))%natural_transformation =\np m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f d\n oL Category.Morphisms.idtoiso (S (a s) -> S (a d))\n      (ap (p_morphism_of S) (Core.left_identity A (a s) (a d) (g m)))\n o (f d oL (p_composition_of S (a s) (a d) (a d) 1 (g m))^-1\n    o associator_1 (f d) (p_morphism_of S 1) (p_morphism_of S (g m))\n    o (f d oL (p_identity_of S (a d))^-1\n       o right_identity_natural_transformation_2 (f d)\n       o left_identity_natural_transformation_1 (f d)\n       o (p_identity_of T (b d) oR f d) oR p_morphism_of S (g m))\n    o associator_2 (p_morphism_of T 1) (f d) (p_morphism_of S (g m))\n    o (p_morphism_of T 1 oL p m)\n    o associator_1 (p_morphism_of T 1) (p_morphism_of T (h m)) (f s)\n    o (p_composition_of T (b s) (b d) (b d) 1 (h m) oR f s))\n o ((Category.Morphisms.idtoiso (T (b s) -> T (b d))\n       (ap (p_morphism_of T) (Core.left_identity B (b s) (b d) (h m))))^-1\n    oR f s))%natural_transformation =\np m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine left_identity_helper.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Category.Morphisms.idtoiso (S (a s) -> S (a d))\n  (ap (p_morphism_of S) (Core.left_identity A (a s) (a d) (g m))) =\n(left_identity_natural_transformation_1 (p_morphism_of S (g m))\n o (p_identity_of S (a d) oR p_morphism_of S (g m)\n    o p_composition_of S (a s) (a d) (a d) 1 (g m)))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Category.Morphisms.idtoiso (T (b s) -> T (b d))\n   (ap (p_morphism_of T) (Core.left_identity B (b s) (b d) (h m))))^-1 =\n((p_composition_of T (b s) (b d) (b d) 1 (h m))^-1\n o ((p_identity_of T (b d))^-1 oR p_morphism_of T (h m))\n o inverse (left_identity_natural_transformation_1 (p_morphism_of T (h m))))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Category.Morphisms.idtoiso (S (a s) -> S (a d))\n  (ap (p_morphism_of S) (Core.left_identity A (a s) (a d) (g m))) =\n(left_identity_natural_transformation_1 (p_morphism_of S (g m))\n o (p_identity_of S (a d) oR p_morphism_of S (g m)\n    o p_composition_of S (a s) (a d) (a d) 1 (g m)))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p_left_identity_of_coherent_for_rewrite _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Category.Morphisms.idtoiso (T (b s) -> T (b d))\n   (ap (p_morphism_of T) (Core.left_identity B (b s) (b d) (h m))))^-1 =\n((p_composition_of T (b s) (b d) (b d) 1 (h m))^-1\n o ((p_identity_of T (b d))^-1 oR p_morphism_of T (h m))\n o inverse (left_identity_natural_transformation_1 (p_morphism_of T (h m))))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p_left_identity_of_coherent_inverse_for_rewrite _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** To generate the type of this helper lemma, we used:\n<<\n      Lemma right_identity (s d : object) (m : morphism s d)\n      : compose m (identity _) = m.\n      Proof.\n        exact (@path_morphism' _ _\n                               (compose m (identity _)) m\n                               (Category.Core.right_identity _ _ _ _)\n                               (Category.Core.right_identity _ _ _ _)\n                               _).\n        simpl in *.\n        repeat match goal with\n                 | [ |- context[@morphism_inverse\n                                     _ _ _ _\n                                     (@isisomorphism_isomorphic\n                                        _ _ _\n                                        (Category.Morphisms.idtoiso\n                                           ?C0\n                                           (ap (p_morphism_of ?F (s:=_) (d:=_))\n                                               (Category.Core.right_identity ?C ?x ?y ?f))))] ]\n                   => generalize (@p_right_identity_of_coherent_inverse_for_rewrite _ C F x y f);\n                     generalize (Category.Morphisms.idtoiso\n                                   C0\n                                   (ap (p_morphism_of F (s:=_) (d:=_))\n                                       (Category.Core.right_identity C x y f)))\n                 | [ |- context[Category.Morphisms.idtoiso\n                                     ?C0\n                                     (ap (p_morphism_of ?F (s:=_) (d:=_))\n                                         (Category.Core.right_identity ?C ?x ?y ?f))] ]\n                   => generalize (@p_right_identity_of_coherent_for_rewrite _ C F x y f);\n                     generalize (Category.Morphisms.idtoiso\n                                   C0\n                                   (ap (p_morphism_of F (s:=_) (d:=_))\n                                       (Category.Core.right_identity C x y f)))\n               end.\n        simpl.\n        destruct_head morphism.\n        destruct_head object.\n        simpl in *.\n        repeat match goal with\n                 | [ |- context[p_composition_of ?F ?x ?y ?z ?m1 ?m2] ]\n                   => generalize dependent (p_composition_of F x y z m1 m2)\n                 | [ |- context[p_identity_of ?F ?x] ]\n                   => generalize dependent (p_identity_of F x)\n                 | [ |- context[p_morphism_of ?F ?x] ]\n                   => generalize dependent (p_morphism_of F x)\n                 | [ |- context[p_object_of ?F ?x] ]\n                   => generalize dependent (p_object_of F x)\n               end.\n        simpl.\n        clear.\n        repeat (let H := fresh \"x\" in intro H).\n        repeat match goal with H : _ |- _ => revert H end.\n        intro.\n>>\n*)\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma right_identity_helper\n          {x x0 : PreCategory} {x1 : Functor x0 x}\n          {x2 x3 : PreCategory} {x4 : Functor x3 x2} {x5 x6 : Functor x3 x0}\n          {x7 : Functor x2 x} {x8 : NaturalTransformation (x7 o x4) (x1 o x6)}\n          {x9 : Functor x2 x} {x10 : Functor x3 x3} {x11 : Functor x2 x2}\n          {x12 : @Isomorphic (_ -> _) x11 1%functor} {x13 : @Isomorphic (_ -> _) x10 1%functor}\n          {x14 : @Isomorphic (_ -> _) x9 (x7 o x11)%functor} {x15 : @Isomorphic (_ -> _) x5 (x6 o x10)%functor}\n          {x16 : @Isomorphic (_ -> _) x5 x6}\n          {x17 : (x16 : Category.Core.morphism _ _ _) =\n                 (right_identity_natural_transformation_1 x6 o (x6 oL (x13 : Category.Core.morphism _ _ _) o (x15 : Category.Core.morphism _ _ _)))%natural_transformation}\n          {x18 : @Isomorphic (_ -> _) x9 x7}\n          {x19 : x18 ^-1 =\n                 (x14 ^-1 o (x7 oL x12 ^-1)\n                      o inverse (right_identity_natural_transformation_1 x7))%natural_transformation}\n    : (x1 oL (x16 : Category.Core.morphism _ _ _)\n          o (x1 oL x15 ^-1 o associator_1 x1 x6 x10 o (x8 oR x10)\n                o associator_2 x7 x4 x10\n                o (x7\n                     oL (x4 oL x13 ^-1 o right_identity_natural_transformation_2 x4\n                            o left_identity_natural_transformation_1 x4 o\n                            ((x12 : Category.Core.morphism _ _ _) oR x4))) o associator_1 x7 x11 x4 o\n                ((x14 : Category.Core.morphism _ _ _) oR x4)) o (x18 ^-1 oR x4))%natural_transformation = x8.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1 oL (x16 : Core.morphism (x3 -> x0) x5 x6)\n o (x1 oL x15^-1 o associator_1 x1 x6 x10 o (x8 oR x10)\n    o associator_2 x7 x4 x10\n    o (x7\n       oL (x4 oL x13^-1 o right_identity_natural_transformation_2 x4\n           o left_identity_natural_transformation_1 x4\n           o ((x12 : Core.morphism (x2 -> x2) x11 1%functor) oR x4)))\n    o associator_1 x7 x11 x4\n    o ((x14 : Core.morphism (x2 -> x) x9 (x7 o x11)%functor) oR x4))\n o (x18^-1 oR x4))%natural_transformation =\nx8",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x3 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5",
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x3 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x7 o x4) (x1 o x6)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x3 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x2 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x11 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x10 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x9 <~=~> (x7 o x11)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 <~=~> (x6 o x10)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "x5 <~=~> x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "(x16 : Core.morphism (x3 -> x0) x5 x6) =\n(right_identity_natural_transformation_1 x6\n o (x6 oL (x13 : Core.morphism (x3 -> x3) x10 1%functor)\n    o (x15 : Core.morphism (x3 -> x0) x5 (x6 o x10)%functor)))%natural_transformation"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x18"
+              ],
+              "body": null,
+              "type": "x9 <~=~> x7"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x19"
+              ],
+              "body": null,
+              "type": "x18^-1 =\n(x14^-1 o (x7 oL x12^-1)\n o inverse (right_identity_natural_transformation_1 x7))%natural_transformation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1 oL (x16 : Core.morphism (x3 -> x0) x5 x6)\n o (x1 oL x15^-1 o associator_1 x1 x6 x10 o (x8 oR x10)\n    o associator_2 x7 x4 x10\n    o (x7\n       oL (x4 oL x13^-1 o right_identity_natural_transformation_2 x4\n           o left_identity_natural_transformation_1 x4\n           o ((x12 : Core.morphism (x2 -> x2) x11 1%functor) oR x4)))\n    o associator_1 x7 x11 x4\n    o ((x14 : Core.morphism (x2 -> x) x9 (x7 o x11)%functor) oR x4))\n o (x18^-1 oR x4))%natural_transformation =\nx8",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x2"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x3"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x4"
+              ],
+              "body": null,
+              "type": "Functor x3 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x5",
+                "x6"
+              ],
+              "body": null,
+              "type": "Functor x3 x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x7"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x8"
+              ],
+              "body": null,
+              "type": "NaturalTransformation (x7 o x4) (x1 o x6)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x9"
+              ],
+              "body": null,
+              "type": "Functor x2 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x10"
+              ],
+              "body": null,
+              "type": "Functor x3 x3"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x11"
+              ],
+              "body": null,
+              "type": "Functor x2 x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x12"
+              ],
+              "body": null,
+              "type": "x11 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x13"
+              ],
+              "body": null,
+              "type": "x10 <~=~> 1%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x14"
+              ],
+              "body": null,
+              "type": "x9 <~=~> (x7 o x11)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x15"
+              ],
+              "body": null,
+              "type": "x5 <~=~> (x6 o x10)%functor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x16"
+              ],
+              "body": null,
+              "type": "x5 <~=~> x6"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x17"
+              ],
+              "body": null,
+              "type": "(x16 : Core.morphism (x3 -> x0) x5 x6) =\n(right_identity_natural_transformation_1 x6\n o (x6 oL (x13 : Core.morphism (x3 -> x3) x10 1%functor)\n    o (x15 : Core.morphism (x3 -> x0) x5 (x6 o x10)%functor)))%natural_transformation"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x18"
+              ],
+              "body": null,
+              "type": "x9 <~=~> x7"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x19"
+              ],
+              "body": null,
+              "type": "x18^-1 =\n(x14^-1 o (x7 oL x12^-1)\n o inverse (right_identity_natural_transformation_1 x7))%natural_transformation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* 3.26 s *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma right_identity (s d : object) (m : morphism s d)\n    : compose m (identity _) = m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose m (identity s) = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "compose m (identity s) = m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (@path_morphism' _ A B S T _ _\n                              (compose m (identity _)) m\n                              (Category.Core.right_identity _ _ _ _)\n                              (Category.Core.right_identity _ _ _ _)\n                              _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f d\n oL Category.Morphisms.idtoiso (S (a s) -> S (a d))\n      (ap (p_morphism_of S) (Core.right_identity A (a s) (a d) (g m)))\n o p (compose m (identity s))\n o ((Category.Morphisms.idtoiso (T (b s) -> T (b d))\n       (ap (p_morphism_of T) (Core.right_identity B (b s) (b d) (h m))))^-1\n    oR f s))%natural_transformation =\np m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f d\n oL Category.Morphisms.idtoiso (S (a s) -> S (a d))\n      (ap (p_morphism_of S) (Core.right_identity A (a s) (a d) (g m)))\n o (f d oL (p_composition_of S (a s) (a s) (a d) (g m) 1)^-1\n    o associator_1 (f d) (p_morphism_of S (g m)) (p_morphism_of S 1)\n    o (p m oR p_morphism_of S 1)\n    o associator_2 (p_morphism_of T (h m)) (f s) (p_morphism_of S 1)\n    o (p_morphism_of T (h m)\n       oL (f s oL (p_identity_of S (a s))^-1\n           o right_identity_natural_transformation_2 (f s)\n           o left_identity_natural_transformation_1 (f s)\n           o (p_identity_of T (b s) oR f s)))\n    o associator_1 (p_morphism_of T (h m)) (p_morphism_of T 1) (f s)\n    o (p_composition_of T (b s) (b s) (b d) (h m) 1 oR f s))\n o ((Category.Morphisms.idtoiso (T (b s) -> T (b d))\n       (ap (p_morphism_of T) (Core.right_identity B (b s) (b d) (h m))))^-1\n    oR f s))%natural_transformation =\np m",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine right_identity_helper.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Category.Morphisms.idtoiso (S (a s) -> S (a d))\n  (ap (p_morphism_of S) (Core.right_identity A (a s) (a d) (g m))) =\n(right_identity_natural_transformation_1 (p_morphism_of S (g m))\n o (p_morphism_of S (g m) oL p_identity_of S (a s)\n    o p_composition_of S (a s) (a s) (a d) (g m) 1))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Category.Morphisms.idtoiso (T (b s) -> T (b d))\n   (ap (p_morphism_of T) (Core.right_identity B (b s) (b d) (h m))))^-1 =\n((p_composition_of T (b s) (b s) (b d) (h m) 1)^-1\n o (p_morphism_of T (h m) oL (p_identity_of T (b s))^-1)\n o inverse (right_identity_natural_transformation_1 (p_morphism_of T (h m))))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Category.Morphisms.idtoiso (S (a s) -> S (a d))\n  (ap (p_morphism_of S) (Core.right_identity A (a s) (a d) (g m))) =\n(right_identity_natural_transformation_1 (p_morphism_of S (g m))\n o (p_morphism_of S (g m) oL p_identity_of S (a s)\n    o p_composition_of S (a s) (a s) (a d) (g m) 1))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p_right_identity_of_coherent_for_rewrite _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Category.Morphisms.idtoiso (T (b s) -> T (b d))\n   (ap (p_morphism_of T) (Core.right_identity B (b s) (b d) (h m))))^-1 =\n((p_composition_of T (b s) (b s) (b d) (h m) 1)^-1\n o (p_morphism_of T (h m) oL (p_identity_of T (b s))^-1)\n o inverse (right_identity_natural_transformation_1 (p_morphism_of T (h m))))%natural_transformation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "S"
+              ],
+              "body": null,
+              "type": "Pseudofunctor A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": null,
+              "type": "Pseudofunctor B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall (a0 : A) (b0 : B), IsHSet (Functor (S a0) (T b0))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s",
+                "d"
+              ],
+              "body": null,
+              "type": "object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "morphism s d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p_right_identity_of_coherent_inverse_for_rewrite _ _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End lax_comma_category_parts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End LaxCommaCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

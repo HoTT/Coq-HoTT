@@ -1,0 +1,330 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(**\nIn this file we describe interfaces for ordered structures. Since we are in a\nconstructive setting we use a pseudo order instead of a total order. Therefore\nwe also have to include an apartness relation.\n\nObviously, in case we consider decidable structures these interfaces are quite\ninconvenient. Hence we will, later on, provide means to go back and forth\nbetween the usual classical notions and these constructive notions.\n\nOn the one hand, if we have an ordinary (total) partial order (\u2264) with a\ncorresponding strict order (<), we will prove that we can construct a\n[FullPartialOrder] and [PseudoPartialOrder], respectively.\n\nOn the other hand, if equality is decidable, we will prove that we have the\nusual properties like [Trichotomy (<)] and [TotalRelation (\u2264)].\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class PartialOrder `(Ale : Le A) :=\n  { po_hset :: IsHSet A\n  ; po_hprop :: is_mere_relation A Ale\n  ; po_preorder :: PreOrder (\u2264)\n  ; po_antisym :: AntiSymmetric (\u2264) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class TotalOrder `(Ale : Le A) :=\n  { total_order_po :: PartialOrder (\u2264)\n  ; total_order_total :: TotalRelation (\u2264) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*\nWe define a variant of the order theoretic definition of meet and join\nsemilattices. Notice that we include a meet operation instead of the\nmore common:\n  forall x y, exists m, m \u2264 x /\\ m \u2264 y /\\ forall z, z \u2264 x -> z \u2264 y -> m \u2264 z\nOur definition is both stronger and more convenient than the above.\nThis is needed to prove equivalence with the algebraic definition. We\ndo this in orders.lattices.\n*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class MeetSemiLatticeOrder `(Ale : Le A) `{Meet A} :=\n  { meet_sl_order :: PartialOrder (\u2264)\n  ; meet_lb_l : forall x y, x \u2293 y \u2264 x\n  ; meet_lb_r : forall x y, x \u2293 y \u2264 y\n  ; meet_glb : forall x y z, z \u2264 x -> z \u2264 y -> z \u2264 x \u2293 y }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class JoinSemiLatticeOrder `(Ale : Le A) `{Join A} :=\n  { join_sl_order :: PartialOrder (\u2264)\n  ; join_ub_l : forall x y, x \u2264 x \u2294 y\n  ; join_ub_r : forall x y, y \u2264 x \u2294 y\n  ; join_lub : forall x y z, x \u2264 z -> y \u2264 z -> x \u2294 y \u2264 z }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class LatticeOrder `(Ale : Le A) `{Meet A} `{Join A} :=\n  { lattice_order_meet :: MeetSemiLatticeOrder (\u2264)\n  ; lattice_order_join :: JoinSemiLatticeOrder (\u2264) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrictOrder `(Alt : Lt A) :=\n  { strict_order_mere :: is_mere_relation A lt\n  ; strictorder_irrefl :: Irreflexive (<)\n  ; strictorder_trans :: Transitive (<) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The constructive notion of a total strict total order.\n   We will prove that [(<)] is in fact a [StrictOrder]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=\n{ pseudo_order_apart : IsApart A\n  ; pseudo_order_mere_lt :: is_mere_relation A lt\n  ; pseudo_order_antisym : forall x y, ~(x < y /\\ y < x)\n  ; pseudo_order_cotrans :: CoTransitive (<)\n  ; apart_iff_total_lt : forall x y, x \u2276 y <-> x < y |_| y < x }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A partial order [(\u2264)] with a corresponding [(<)]. We will prove that [(<)] is in fact\n  a [StrictOrder] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=\n  { strict_po_apart : IsApart A\n  ; strict_po_mere_lt : is_mere_relation A lt\n  ; strict_po_po :: PartialOrder (\u2264)\n  ; strict_po_trans :: Transitive (<)\n  ; lt_iff_le_apart : forall x y, x < y <-> x \u2264 y /\\ x \u2276 y }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A pseudo order [(<)] with a corresponding [(\u2264)]. We will prove that [(\u2264)] is in fact\n  a [PartialOrder]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=\n  { fullpseudo_le_hprop :: is_mere_relation A Ale\n  ; full_pseudo_order_pseudo :: PseudoOrder Alt\n  ; le_iff_not_lt_flip : forall x y, x \u2264 y <-> ~(y < x) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section order_maps.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B : Type} {Ale: Le A} {Ble: Le B}(f : A -> B).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class OrderPreserving := order_preserving : forall x y, (x \u2264 y -> f x \u2264 f y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class OrderReflecting := order_reflecting : forall x y, (f x \u2264 f y -> x \u2264 y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class OrderEmbedding :=\n    { order_embedding_preserving :: OrderPreserving\n    ; order_embedding_reflecting :: OrderReflecting }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End order_maps.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section srorder_maps.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B : Type} {Alt: Lt A} {Blt: Lt B} (f : A -> B).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrictlyOrderPreserving := strictly_order_preserving\n    : forall x y, (x < y -> f x < f y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrictlyOrderReflecting := strictly_order_reflecting\n    : forall x y, (f x < f y -> x < y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrictOrderEmbedding :=\n    { strict_order_embedding_preserving :: StrictlyOrderPreserving\n    ; strict_order_embedding_reflecting :: StrictlyOrderReflecting }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End srorder_maps.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (?f _ \u2264 ?f _) => apply (order_preserving f) : core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 4 (?f _ < ?f _) => apply (strictly_order_preserving f) : core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(**\nWe define various classes to describe the order on the lower part of the\nalgebraic hierarchy. This results in the notion of a [PseudoSemiRingOrder], which\nspecifies the order on the naturals, integers, rationals and reals. This notion\nis quite similar to a strictly linearly ordered unital commutative protoring in\nDavorin Le\u0161nik's PhD thesis.\n*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class SemiRingOrder `{Plus A} `{Mult A}\n    `{Zero A} `{One A} (Ale : Le A) :=\n  { srorder_po :: PartialOrder Ale\n  ; srorder_partial_minus : forall x y, x \u2264 y -> exists z, y = x + z\n  ; srorder_plus :: forall z, OrderEmbedding (z +)\n  ; nonneg_mult_compat : forall x y, PropHolds (0 \u2264 x) -> PropHolds (0 \u2264 y) ->\n                                PropHolds (0 \u2264 x * y) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class StrictSemiRingOrder `{Plus A} `{Mult A}\n    `{Zero A} `{One A} (Alt : Lt A) :=\n  { strict_srorder_so :: StrictOrder Alt\n  ; strict_srorder_partial_minus : forall x y, x < y -> exists z, y = x + z\n  ; strict_srorder_plus :: forall z, StrictOrderEmbedding (z +)\n  ; pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->\n                             PropHolds (0 < x * y) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class PseudoSemiRingOrder `{Apart A} `{Plus A}\n    `{Mult A} `{Zero A} `{One A} (Alt : Lt A) :=\n  { pseudo_srorder_strict :: PseudoOrder Alt\n  ; pseudo_srorder_partial_minus : forall x y, ~(y < x) -> exists z, y = x + z\n  ; pseudo_srorder_plus :: forall z, StrictOrderEmbedding (z +)\n  ; pseudo_srorder_mult_ext :: StrongBinaryExtensionality (.*.)\n  ; pseudo_srorder_pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->\n                                            PropHolds (0 < x * y) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}\n    `{Mult A} `{Zero A} `{One A} (Ale : Le A) (Alt : Lt A) :=\n  { full_pseudo_srorder_le_hprop :: is_mere_relation A Ale\n  ; full_pseudo_srorder_pso :: PseudoSemiRingOrder Alt\n  ; full_pseudo_srorder_le_iff_not_lt_flip : forall x y, x \u2264 y <-> ~(y < x) }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Due to bug #2528 *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 7 (PropHolds (0 < _ * _)) =>\n  eapply @pos_mult_compat : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Extern 7 (PropHolds (0 \u2264 _ * _)) =>\n  eapply @nonneg_mult_compat : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(*\nAlternatively, we could have defined the standard notion of a RingOrder:\n\nClass RingOrder `{Equiv A} `{Plus A} `{Mult A} `{Zero A} (Ale : Le A) :=\n  { ringorder_po :> PartialOrder Ale\n  ; ringorder_plus :> forall z, OrderPreserving (z +)\n  ; ringorder_mult : forall x y, 0 \u2264 x -> 0 \u2264 y -> 0 \u2264 x * y }.\n\nUnfortunately, this notion is too weak when we consider semirings (e.g. the\nnaturals). Moreover, in case of rings, we prove that this notion is equivalent\nto our SemiRingOrder class (see orders.rings.from_ring_order). Hence we omit\ndefining such a class.\n\nSimilarly we prove that a FullSemiRingOrder\nand a FullPseudoRingOrder are equivalent.\n\nClass FullPseudoRingOrder `{Apart A} `{Plus A}\n    `{Mult A} `{Zero A} (Ale : Le A) (Alt : Lt A) :=\n  { pseudo_ringorder_spo :> FullPseudoOrder Ale Alt\n  ; pseudo_ringorder_mult_ext :> StrongSetoid_BinaryMorphism (.*.)\n  ; pseudo_ringorder_plus :> forall z, StrictlyOrderPreserving (z +)\n  ; pseudo_ringorder_mult : forall x y, 0 < x -> 0 < y -> 0 < x * y }.\n*)\n\n(* Next, a constructive definition of fields - the ordered fields from\nHoTT book chapter 11. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class OrderedField (A : Type) {Alt : Lt A} {Ale : Le A} {Aap : Apart A} {Azero : Zero A}\n      {Aone : One A} {Aplus : Plus A} {Anegate : Negate A} {Amult : Mult A}\n      {Arecip : Recip A} {Ajoin : Join A} {Ameet : Meet A} :=\n  { ordered_field_field :: @IsField A Aplus Amult Azero Aone Anegate Aap Arecip\n  ; ordered_field_lattice :: LatticeOrder Ale\n  ; ordered_field_fssro :: @FullPseudoSemiRingOrder A _ _ _ Azero _ _ _\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

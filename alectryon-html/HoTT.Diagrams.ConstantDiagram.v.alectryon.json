@@ -1,0 +1,3478 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cone.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cocone.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Diagram.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Diagrams.Graph.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Constant diagram *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section ConstantDiagram.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {G : Graph}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition diagram_const (C : Type) : Diagram G.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Diagram G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Diagram G",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_Diagram.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "G -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i j : G, G i j -> ?obj i -> ?obj j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (fun _ => C).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i j : G, G i j -> (fun _ : G => C) i -> (fun _ : G => C) j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros i j k.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun _ : G => C) i -> (fun _ : G => C) j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "G i j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition diagram_const_functor {A B : Type} (f : A -> B)\n    : DiagramMap (diagram_const A) (diagram_const B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap (diagram_const A) (diagram_const B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap (diagram_const A) (diagram_const B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_DiagramMap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : G, diagram_const A i -> diagram_const B i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : diagram_const A i),\n((diagram_const B) _f g) (?DiagramMap_obj i x) =\n?DiagramMap_obj j (((diagram_const A) _f g) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: intro i; exact f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : diagram_const A i),\n((diagram_const B) _f g) ((fun _ : G => f) i x) =\n(fun _ : G => f) j (((diagram_const A) _f g) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition diagram_const_functor_comp {A B C : Type}\n    (f : A -> B) (g : B -> C)\n    : diagram_const_functor (g o f)\n      = diagram_comp (diagram_const_functor g) (diagram_const_functor f)\n    := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition diagram_const_functor_idmap {A : Type}\n    : diagram_const_functor (idmap : A -> A) = diagram_idmap (diagram_const A)\n    := idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_diagram_const_cocone `{Funext} (D : Diagram G) (X : Type)\n    : DiagramMap D (diagram_const X) <~> Cocone D X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap D (diagram_const X) <~> Cocone D X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap D (diagram_const X) <~> Cocone D X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap D (diagram_const X) -> Cocone D X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Cocone D X -> DiagramMap D (diagram_const X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o ?f == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The two functions are defined in parallel: *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros [? w]; econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j),\n(fun x : D i => ?legs j ((D _f g) x)) == ?legs i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (?DiagramMap_obj i x) =\n?DiagramMap_obj j ((D _f g) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : DiagramMap D (diagram_const X) =>\n (fun (DiagramMap_obj : forall i : G, D i -> diagram_const X i)\n    (w : forall (i j : G) (g : G i j) (x : D i),\n         ((diagram_const X) _f g) (DiagramMap_obj i x) =\n         DiagramMap_obj j ((D _f g) x)) =>\n  {| legs := ?legs; legs_comm := ?Goal |}) X0 (DiagramMap_comm X0))\no (fun X0 : Cocone D X =>\n   (fun (legs : forall i : G, D i -> X)\n      (w : forall (i j : G) (g : G i j),\n           (fun x : D i => legs j ((D _f g) x)) == legs i) =>\n    {| DiagramMap_obj := ?DiagramMap_obj; DiagramMap_comm := ?Goal0 |}) X0\n     (legs_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : Cocone D X =>\n (fun (legs : forall i : G, D i -> X)\n    (w : forall (i j : G) (g : G i j),\n         (fun x : D i => legs j ((D _f g) x)) == legs i) =>\n  {| DiagramMap_obj := ?DiagramMap_obj; DiagramMap_comm := ?Goal0 |}) X0\n   (legs_comm X0))\no (fun X0 : DiagramMap D (diagram_const X) =>\n   (fun (DiagramMap_obj : forall i : G, D i -> diagram_const X i)\n      (w : forall (i j : G) (g : G i j) (x : D i),\n           ((diagram_const X) _f g) (DiagramMap_obj i x) =\n           DiagramMap_obj j ((D _f g) x)) =>\n    {| legs := ?legs; legs_comm := ?Goal |}) X0 (DiagramMap_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* This reversal is a defect in the definition of [Cocone]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros x y z z'; symmetry; revert x y z z'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x y : G) (z : G x y) (z' : D x), ?legs x z' = ?legs y ((D _f z) z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (x y : G) (z : G x y) (z' : D x),\n?DiagramMap_obj y ((D _f z) z') =\n((diagram_const X) _f z) (?DiagramMap_obj x z')",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : DiagramMap D (diagram_const X) =>\n (fun (DiagramMap_obj : forall i : G, D i -> diagram_const X i)\n    (w : forall (i j : G) (g : G i j) (x : D i),\n         ((diagram_const X) _f g) (DiagramMap_obj i x) =\n         DiagramMap_obj j ((D _f g) x)) =>\n  {|\n    legs := ?legs;\n    legs_comm :=\n      fun (x y : G) (z : G x y) =>\n      (fun z' : D x => (?Goal x y z z')^)\n      :\n      (fun x0 : D x => ?legs y ((D _f z) x0)) == ?legs x\n  |}) X0 (DiagramMap_comm X0))\no (fun X0 : Cocone D X =>\n   (fun (legs : forall i : G, D i -> X)\n      (w : forall (i j : G) (g : G i j),\n           (fun x : D i => legs j ((D _f g) x)) == legs i) =>\n    {|\n      DiagramMap_obj := ?DiagramMap_obj;\n      DiagramMap_comm :=\n        fun (x y : G) (z : G x y) (z' : D x) => (?Goal0 x y z z')^\n    |}) X0 (legs_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : Cocone D X =>\n (fun (legs : forall i : G, D i -> X)\n    (w : forall (i j : G) (g : G i j),\n         (fun x : D i => legs j ((D _f g) x)) == legs i) =>\n  {|\n    DiagramMap_obj := ?DiagramMap_obj;\n    DiagramMap_comm :=\n      fun (x y : G) (z : G x y) (z' : D x) => (?Goal0 x y z z')^\n  |}) X0 (legs_comm X0))\no (fun X0 : DiagramMap D (diagram_const X) =>\n   (fun (DiagramMap_obj : forall i : G, D i -> diagram_const X i)\n      (w : forall (i j : G) (g : G i j) (x : D i),\n           ((diagram_const X) _f g) (DiagramMap_obj i x) =\n           DiagramMap_obj j ((D _f g) x)) =>\n    {|\n      legs := ?legs;\n      legs_comm :=\n        fun (x y : G) (z : G x y) =>\n        (fun z' : D x => (?Goal x y z z')^)\n        :\n        (fun x0 : D x => ?legs y ((D _f z) x0)) == ?legs x\n    |}) X0 (DiagramMap_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact w.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : DiagramMap D (diagram_const X) =>\n (fun (DiagramMap_obj : forall i : G, D i -> diagram_const X i)\n    (w : forall (i j : G) (g : G i j) (x : D i),\n         ((diagram_const X) _f g) (DiagramMap_obj i x) =\n         DiagramMap_obj j ((D _f g) x)) =>\n  {|\n    legs := DiagramMap_obj;\n    legs_comm :=\n      fun (x y : G) (z : G x y) =>\n      (fun z' : D x => (w x y z z')^)\n      :\n      (fun x0 : D x => DiagramMap_obj y ((D _f z) x0)) == DiagramMap_obj x\n  |}) X0 (DiagramMap_comm X0))\no (fun X0 : Cocone D X =>\n   (fun (legs : forall i : G, D i -> X)\n      (w : forall (i j : G) (g : G i j),\n           (fun x : D i => legs j ((D _f g) x)) == legs i) =>\n    {|\n      DiagramMap_obj := legs;\n      DiagramMap_comm :=\n        fun (x y : G) (z : G x y) (z' : D x) => (w x y z z')^\n    |}) X0 (legs_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : Cocone D X =>\n (fun (legs : forall i : G, D i -> X)\n    (w : forall (i j : G) (g : G i j),\n         (fun x : D i => legs j ((D _f g) x)) == legs i) =>\n  {|\n    DiagramMap_obj := legs;\n    DiagramMap_comm := fun (x y : G) (z : G x y) (z' : D x) => (w x y z z')^\n  |}) X0 (legs_comm X0))\no (fun X0 : DiagramMap D (diagram_const X) =>\n   (fun (DiagramMap_obj : forall i : G, D i -> diagram_const X i)\n      (w : forall (i j : G) (g : G i j) (x : D i),\n           ((diagram_const X) _f g) (DiagramMap_obj i x) =\n           DiagramMap_obj j ((D _f g) x)) =>\n    {|\n      legs := DiagramMap_obj;\n      legs_comm :=\n        fun (x y : G) (z : G x y) =>\n        (fun z' : D x => (w x y z z')^)\n        :\n        (fun x0 : D x => DiagramMap_obj y ((D _f z) x0)) == DiagramMap_obj x\n    |}) X0 (DiagramMap_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The two homotopies are proved in parallel: *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros [].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  legs := legs;\n  legs_comm :=\n    fun (x y : G) (z : G x y) (z' : D x) => ((legs_comm x y z z')^)^\n|} = {| legs := legs; legs_comm := legs_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  DiagramMap_obj := DiagramMap_obj;\n  DiagramMap_comm :=\n    fun (x y : G) (z : G x y) (z' : D x) => ((DiagramMap_comm x y z z')^)^\n|} =\n{| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: srapply path_cocone; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : G, legs i == legs i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : D i),\n((legs_comm i j g x)^)^ @ ?Goal0 i x =\n?Goal0 j ((D _f g) x) @ legs_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{|\n  DiagramMap_obj := DiagramMap_obj;\n  DiagramMap_comm :=\n    fun (x y : G) (z : G x y) (z' : D x) => ((DiagramMap_comm x y z z')^)^\n|} =\n{| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "3: srapply path_DiagramMap; snrefine (_; _); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : G, legs i == legs i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : D i),\n((legs_comm i j g x)^)^ @ ?Goal i x =\n?Goal j ((D _f g) x) @ legs_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : G, DiagramMap_obj i == DiagramMap_obj i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : D i),\n((DiagramMap_comm i j g x)^)^ @ ?Goal1 j ((D _f g) x) =\nap idmap (?Goal1 i x) @ DiagramMap_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,3: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : D i),\n((legs_comm i j g x)^)^ @ (fun (i0 : G) (x0 : D i0) => 1) i x =\n(fun (i0 : G) (x0 : D i0) => 1) j ((D _f g) x) @ legs_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : D i => legs j ((D _f g) x)) == legs i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : D i),\n((DiagramMap_comm i j g x)^)^ @\n(fun (i0 : G) (x0 : D i0) => 1) j ((D _f g) x) =\nap idmap ((fun (i0 : G) (x0 : D i0) => 1) i x) @ DiagramMap_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, D i -> diagram_const X i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : D i),\n((diagram_const X) _f g) (DiagramMap_obj i x) = DiagramMap_obj j ((D _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((legs_comm i j g x)^)^ @ 1 = 1 @ legs_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i0 : G, D i0 -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i0 j0 : G) (g0 : G i0 j0),\n(fun x0 : D i0 => legs j0 ((D _f g0) x0)) == legs i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G i j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "D i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((DiagramMap_comm i j g x)^)^ @ 1 = 1 @ DiagramMap_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i0 : G, D i0 -> diagram_const X i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i0 j0 : G) (g0 : G i0 j0) (x0 : D i0),\n((diagram_const X) _f g0) (DiagramMap_obj i0 x0) =\nDiagramMap_obj j0 ((D _f g0) x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G i j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "D i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: apply equiv_p1_1q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((legs_comm i j g x)^)^ = legs_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i0 : G, D i0 -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i0 j0 : G) (g0 : G i0 j0),\n(fun x0 : D i0 => legs j0 ((D _f g0) x0)) == legs i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G i j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "D i"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((DiagramMap_comm i j g x)^)^ = DiagramMap_comm i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i0 : G, D i0 -> diagram_const X i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i0 j0 : G) (g0 : G i0 j0) (x0 : D i0),\n((diagram_const X) _f g0) (DiagramMap_obj i0 x0) =\nDiagramMap_obj j0 ((D _f g0) x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G i j"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "D i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: apply inv_V.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_diagram_const_cone `{Funext} (X : Type) (D : Diagram G)\n    : DiagramMap (diagram_const X) D <~> Cone X D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap (diagram_const X) D <~> Cone X D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap (diagram_const X) D <~> Cone X D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_adjointify.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap (diagram_const X) D -> Cone X D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Cone X D -> DiagramMap (diagram_const X) D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o ?f == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros [? w]; econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (?legs i x)) == ?legs j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, diagram_const X i -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : diagram_const X i),\n(D _f g) (DiagramMap_obj i x) = DiagramMap_obj j (((diagram_const X) _f g) x)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : diagram_const X i),\n(D _f g) (?DiagramMap_obj i x) =\n?DiagramMap_obj j (((diagram_const X) _f g) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : DiagramMap (diagram_const X) D =>\n (fun (DiagramMap_obj : forall i : G, diagram_const X i -> D i)\n    (w : forall (i j : G) (g : G i j) (x : diagram_const X i),\n         (D _f g) (DiagramMap_obj i x) =\n         DiagramMap_obj j (((diagram_const X) _f g) x)) =>\n  {| Cone.legs := ?legs; Cone.legs_comm := ?Goal |}) X0 \n   (DiagramMap_comm X0))\no (fun X0 : Cone X D =>\n   (fun (legs : forall i : G, X -> D i)\n      (w : forall (i j : G) (g : G i j),\n           (fun x : X => (D _f g) (legs i x)) == legs j) =>\n    {| DiagramMap_obj := ?DiagramMap_obj; DiagramMap_comm := ?Goal0 |}) X0\n     (Cone.legs_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : Cone X D =>\n (fun (legs : forall i : G, X -> D i)\n    (w : forall (i j : G) (g : G i j),\n         (fun x : X => (D _f g) (legs i x)) == legs j) =>\n  {| DiagramMap_obj := ?DiagramMap_obj; DiagramMap_comm := ?Goal0 |}) X0\n   (Cone.legs_comm X0))\no (fun X0 : DiagramMap (diagram_const X) D =>\n   (fun (DiagramMap_obj : forall i : G, diagram_const X i -> D i)\n      (w : forall (i j : G) (g : G i j) (x : diagram_const X i),\n           (D _f g) (DiagramMap_obj i x) =\n           DiagramMap_obj j (((diagram_const X) _f g) x)) =>\n    {| Cone.legs := ?legs; Cone.legs_comm := ?Goal |}) X0\n     (DiagramMap_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact w.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : DiagramMap (diagram_const X) D =>\n (fun (DiagramMap_obj : forall i : G, diagram_const X i -> D i)\n    (w : forall (i j : G) (g : G i j) (x : diagram_const X i),\n         (D _f g) (DiagramMap_obj i x) =\n         DiagramMap_obj j (((diagram_const X) _f g) x)) =>\n  {| Cone.legs := DiagramMap_obj; Cone.legs_comm := w |}) X0\n   (DiagramMap_comm X0))\no (fun X0 : Cone X D =>\n   (fun (legs : forall i : G, X -> D i)\n      (w : forall (i j : G) (g : G i j),\n           (fun x : X => (D _f g) (legs i x)) == legs j) =>\n    {| DiagramMap_obj := legs; DiagramMap_comm := w |}) X0\n     (Cone.legs_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : Cone X D =>\n (fun (legs : forall i : G, X -> D i)\n    (w : forall (i j : G) (g : G i j),\n         (fun x : X => (D _f g) (legs i x)) == legs j) =>\n  {| DiagramMap_obj := legs; DiagramMap_comm := w |}) X0 \n   (Cone.legs_comm X0))\no (fun X0 : DiagramMap (diagram_const X) D =>\n   (fun (DiagramMap_obj : forall i : G, diagram_const X i -> D i)\n      (w : forall (i j : G) (g : G i j) (x : diagram_const X i),\n           (D _f g) (DiagramMap_obj i x) =\n           DiagramMap_obj j (((diagram_const X) _f g) x)) =>\n    {| Cone.legs := DiagramMap_obj; Cone.legs_comm := w |}) X0\n     (DiagramMap_comm X0)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: intros[].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| Cone.legs := legs; Cone.legs_comm := legs_comm |} =\n{| Cone.legs := legs; Cone.legs_comm := legs_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |} =\n{| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, diagram_const X i -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : diagram_const X i),\n(D _f g) (DiagramMap_obj i x) = DiagramMap_obj j (((diagram_const X) _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: srapply path_cone.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : G,\n{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i ==\n{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : X),\nCone.legs_comm {| Cone.legs := legs; Cone.legs_comm := legs_comm |} i j g x @\n?path_legs j x =\nap (D _f g) (?path_legs i x) @\nCone.legs_comm {| Cone.legs := legs; Cone.legs_comm := legs_comm |} i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |} =\n{| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, diagram_const X i -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : diagram_const X i),\n(D _f g) (DiagramMap_obj i x) = DiagramMap_obj j (((diagram_const X) _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "3: srapply path_DiagramMap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : G,\n{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i ==\n{| Cone.legs := legs; Cone.legs_comm := legs_comm |} i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : X),\nCone.legs_comm {| Cone.legs := legs; Cone.legs_comm := legs_comm |} i j g x @\n?path_legs j x =\nap (D _f g) (?path_legs i x) @\nCone.legs_comm {| Cone.legs := legs; Cone.legs_comm := legs_comm |} i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DiagramMap_homotopy\n  {| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |}\n  {| DiagramMap_obj := DiagramMap_obj; DiagramMap_comm := DiagramMap_comm |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_obj"
+              ],
+              "body": null,
+              "type": "forall i : G, diagram_const X i -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "DiagramMap_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j) (x : diagram_const X i),\n(D _f g) (DiagramMap_obj i x) = DiagramMap_obj j (((diagram_const X) _f g) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,3: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (i j : G) (g : G i j) (x : X),\nCone.legs_comm {| Cone.legs := legs; Cone.legs_comm := legs_comm |} i j g x @\n(fun (i0 : G) (x0 : X) => 1) j x =\nap (D _f g) ((fun (i0 : G) (x0 : X) => 1) i x) @\nCone.legs_comm {| Cone.legs := legs; Cone.legs_comm := legs_comm |} i j g x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Diagram G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs"
+              ],
+              "body": null,
+              "type": "forall i : G, X -> D i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "legs_comm"
+              ],
+              "body": null,
+              "type": "forall (i j : G) (g : G i j), (fun x : X => (D _f g) (legs i x)) == legs j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: cbn; intros; hott_simpl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End ConstantDiagram.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

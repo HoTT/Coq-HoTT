@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Algebra.Universal.Algebra.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** This file defines [Algebra], which is a generalization of group,</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">    <span class="bp">ring</span>, module, etc. An [Algebra] moreover generalizes structures
+    <span class="k">with</span> infinitary operations, such <span class="k">as</span> infinite complete lattice. *)
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Unset Elimination Schemes</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> HoTT.Basics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span>
+  HoTT.Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> Algebra_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> Algebra_scope <span class="k">with</span> Algebra.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** The below definition [SymbolTypeOf] is used to specify algebra</span>
+<span class="sd">    operations. See [SymbolType] and [Operation] below. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">SymbolTypeOf</span> {<span class="nv">Sort</span> : <span class="kt">Type</span>} := Build_SymbolTypeOf
+  { Arity : <span class="kt">Type</span>
+  ; sorts_dom : Arity -&gt; <span class="kn">Sort</span>
+  ; sort_cod : <span class="kn">Sort</span> }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> SymbolTypeOf : <span class="kn">clear implicits</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Build_SymbolTypeOf {<span class="kn">Sort</span>}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** A [Signature] is used to specify [Algebra]s. A signature describes</span>
+<span class="sd">    which operations (functions) an algebra for the signature is</span>
+<span class="sd">    expected to provide. A signature consists of</span>
+<span class="sd">    - A type of [Sort]s. An algebra for the signature provides</span>
+<span class="sd">      a type for each [Sort] element.</span>
+<span class="sd">    - A type of function symbols [Symbol]. For each function symbol</span>
+<span class="sd">      [u : Symbol], an algebra for the signature provides a</span>
+<span class="sd">      corresponding operation.</span>
+<span class="sd">    - The field [symbol_types σ u] indicates which type the operation</span>
+<span class="sd">      corresponding to [u] is expected to have. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Signature</span> := Build_Signature
+  { <span class="kn">Sort</span> : <span class="kt">Type</span>
+  ; Symbol : <span class="kt">Type</span>
+  ; symbol_types : Symbol -&gt; SymbolTypeOf <span class="kn">Sort</span>
+  ; hset_sort :: IsHSet <span class="kn">Sort</span>
+  ; hset_symbol :: IsHSet Symbol }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">SymbolType</span> σ := (SymbolTypeOf (<span class="kn">Sort</span> σ)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Coercion</span> <span class="nf">symbol_types</span> : Signature &gt;-&gt; <span class="kt">Funclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Each [Algebra] has a collection of carrier types [Carriers σ],</span>
+<span class="sd">    indexed by the type of sorts [Sort σ]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">Carriers</span> σ := (<span class="kn">Sort</span> σ -&gt; <span class="kt">Type</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Given [A : Carriers σ] and [w : SymbolType σ], the domain of an</span>
+<span class="sd">    algebra operation [DomOperation A w] is a product of carrier types</span>
+<span class="sd">    from [A], indexed by [Arity w]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">DomOperation</span> A w
+  := (<span class="k">forall</span> <span class="nv">i</span> : Arity w, A (sorts_dom w i)) (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Given a symbol type [w : SymbolType σ], an algebra with carriers</span>
+<span class="sd">    [A : Carriers σ] provides a corresponding operation of type</span>
+<span class="sd">    [Operation A w]. See below for definition [Algerba].</span>
+
+<span class="sd">    Algebra operations are developed further in</span>
+<span class="sd">    [HoTT.Algebra.Universal.Operation]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Operation</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) (<span class="nv">w</span> : SymbolType σ) : <span class="kt">Type</span>
+  := DomOperation A w -&gt; A (sort_cod w).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** An [Algebra σ] for a signature [σ] consists of a collection of</span>
+<span class="sd">    carriers [Carriers σ], and for each symbol [u : Symbol σ], an</span>
+<span class="sd">    operation/function of type [Operation carriers (σ u)],</span>
+<span class="sd">    where [σ u : SymbolType σ] is the symbol type of [u].</span>
+<span class="sd">    Notice that [Algebra] does not specify equations involving</span>
+<span class="sd">    carriers and operations. Equations are defined elsewhere. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Algebra</span> {<span class="nv">σ</span> : Signature} : <span class="kt">Type</span> := Build_Algebra
+  { carriers : Carriers σ
+  ; operations : <span class="k">forall</span> (<span class="nv">u</span> : Symbol σ), Operation carriers (σ u)
+  ; hset_algebra :: <span class="k">forall</span> (<span class="nv">s</span> : Sort σ), IsHSet (carriers s) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Algebra : <span class="kn">clear implicits</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> Build_Algebra {σ} carriers operations {hset_algebra}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Coercion</span> <span class="nf">carriers</span> : Algebra &gt;-&gt; <span class="kt">Funclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> Algebra_scope <span class="k">with</span> Algebra.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">SigAlgebra</span> (<span class="nv">σ</span> : Signature) : <span class="kt">Type</span>
+  := {c : Carriers σ
+        | { _ : <span class="k">forall</span> (<span class="nv">u</span> : Symbol σ), Operation c (σ u)
+              | <span class="k">forall</span> (<span class="nv">s</span> : Sort σ), IsHSet (c s) } }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk0"><span class="kn">Lemma</span> <span class="nf">issig_algebra</span> (<span class="nv">σ</span> : Signature) : SigAlgebra σ &lt;~&gt; Algebra σ.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">SigAlgebra σ &lt;~&gt; Algebra σ</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">SigAlgebra σ &lt;~&gt; Algebra σ</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk2"><span class="kn">Lemma</span> <span class="nf">path_algebra</span> `{Funext} {σ : Signature} (A B : Algebra σ)
+  (p : carriers A = carriers B)
+  (q : transport (<span class="k">fun</span> <span class="nv">i</span> =&gt; <span class="k">forall</span> <span class="nv">u</span>, Operation i (σ u)) p (operations A)
+       = operations B)
+  : A = B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk3"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk4"><span class="nb">apply</span> (ap (issig_algebra σ)^-<span class="mi">1</span>)^-<span class="mi">1</span>; <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(A; operations A; hset_algebra A) = (B; operations B; hset_algebra B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk5"><span class="nb">apply</span> (path_sigma&#39; _ p).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">c</span> : Carriers σ =&gt;
+   {_ : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation c (σ u) &amp;
+   <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (c s)})
+  p (operations A; hset_algebra A) =
+(operations B; hset_algebra B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk6"><span class="nb">refine</span> (transport_sigma p _ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(transport (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) p
+   (operations A; hset_algebra A).<span class="mi">1</span>;
+transportD (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+  (<span class="k">fun</span> (<span class="nv">x</span> : Carriers σ) (<span class="nv">_</span> : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (x s))
+  p (operations A; hset_algebra A).<span class="mi">1</span> (operations A; hset_algebra A).<span class="mi">2</span>) =
+(operations B; hset_algebra B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk7"><span class="nb">apply</span> path_sigma_hprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(transport (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) p
+   (operations A; hset_algebra A).<span class="mi">1</span>;
+transportD (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+  (<span class="k">fun</span> (<span class="nv">x</span> : Carriers σ) (<span class="nv">_</span> : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (x s))
+  p (operations A; hset_algebra A).<span class="mi">1</span> (operations A; hset_algebra A).<span class="mi">2</span>).<span class="mi">1</span> =
+(operations B; hset_algebra B).<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> q.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> path_algebra {_} {_} (A B)%_Algebra_scope (p q)%_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk8"><span class="kn">Lemma</span> <span class="nf">path_ap_carriers_path_algebra</span> `{Funext} {σ} (A B : Algebra σ)
+  (p : carriers A = carriers B)
+  (q : transport (<span class="k">fun</span> <span class="nv">i</span> =&gt; <span class="k">forall</span> <span class="nv">u</span>, Operation i (σ u)) p (operations A)
+       = operations B)
+  : ap carriers (path_algebra A B p q) = p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers (path_algebra A B p q) = p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p
+  (operations A) =
+operations B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers (path_algebra A B p q) = p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chka"><span class="nb">destruct</span> A <span class="k">as</span> [A a ha], B <span class="k">as</span> [B b hb]; <span class="nb">cbn</span> <span class="k">in</span> p, q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation A (σ u)</span></span></span><br><span><var>ha</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (A s)</span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>b</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation B (σ u)</span></span></span><br><span><var>hb</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (B s)</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>q</var><span class="hyp-type"><b>: </b><span>transport (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) p a =
+b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers
+  (path_algebra {| carriers := A; operations := a; hset_algebra := ha |}
+     {| carriers := B; operations := b; hset_algebra := hb |} p q) =
+p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkb"><span class="nb">destruct</span> p, q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation A (σ u)</span></span></span><br><span><var>ha, hb</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (A s)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers
+  (path_algebra {| carriers := A; operations := a; hset_algebra := ha |}
+     {|
+       carriers := A;
+       operations :=
+         transport
+           (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u)) <span class="mi">1</span> a;
+       hset_algebra := hb
+     |} <span class="mi">1</span> <span class="mi">1</span>) =
+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkc"><span class="nb">unfold</span> path_algebra, path_sigma_hprop, path_sigma_uncurried.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation A (σ u)</span></span></span><br><span><var>ha, hb</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (A s)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers
+  ((ap (issig_algebra σ)^-<span class="mi">1</span>)^-<span class="mi">1</span>
+     (path_sigma&#39;
+        (<span class="k">fun</span> <span class="nv">c</span> : Carriers σ =&gt;
+         {_ : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation c (σ u) &amp;
+         <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (c s)})
+        <span class="mi">1</span>
+        (transport_sigma <span class="mi">1</span> (a; ha) @
+         <span class="k">match</span>
+           (pr1^-<span class="mi">1</span> <span class="mi">1</span>).<span class="mi">2</span> <span class="k">in</span> (_ = v2)
+           <span class="k">return</span>
+             ((transport
+                 (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt;
+                  <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+                 <span class="mi">1</span> (a; ha).<span class="mi">1</span>;
+              transportD
+                (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt; <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+                (<span class="k">fun</span> (<span class="nv">x</span> : Carriers σ)
+                   (<span class="nv">_</span> : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) =&gt;
+                 <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (x s))
+                <span class="mi">1</span> (a; ha).<span class="mi">1</span> (a; ha).<span class="mi">2</span>) =
+              ((transport
+                  (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt;
+                   <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u))
+                  <span class="mi">1</span> a;
+               hb).<span class="mi">1</span>;
+              v2))
+         <span class="k">with</span>
+         | <span class="mi">1</span> =&gt;
+             <span class="k">match</span>
+               (pr1^-<span class="mi">1</span> <span class="mi">1</span>).<span class="mi">1</span> <span class="k">as</span> p <span class="k">in</span> (_ = v1)
+               <span class="k">return</span>
+                 ((transport
+                     (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt;
+                      <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+                     <span class="mi">1</span> (a; ha).<span class="mi">1</span>;
+                  transportD
+                    (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt;
+                     <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+                    (<span class="k">fun</span> (<span class="nv">x</span> : Carriers σ)
+                       (<span class="nv">_</span> : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) =&gt;
+                     <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (x s))
+                    <span class="mi">1</span> (a; ha).<span class="mi">1</span> (a; ha).<span class="mi">2</span>) =
+                  (v1;
+                  transport
+                    (<span class="k">fun</span>
+                       <span class="nv">_</span> : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ,
+                           Operation
+                             {|
+                               carriers := A;
+                               operations :=
+                                 transport
+                                   (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt;
+                                    <span class="k">forall</span> <span class="nv">u0</span> : Symbol σ, Operation i (σ u0))
+                                   <span class="mi">1</span> a;
+                               hset_algebra := hb
+                             |} (σ u) =&gt;
+                     <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ,
+                     IsHSet
+                       ({|
+                          carriers := A;
+                          operations :=
+                            transport
+                              (<span class="k">fun</span> <span class="nv">i</span> : Carriers σ =&gt;
+                               <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation i (σ u))
+                              <span class="mi">1</span> a;
+                          hset_algebra := hb
+                        |} s))
+                    p
+                    (transport
+                       (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt;
+                        <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+                       <span class="mi">1</span> (a; ha).<span class="mi">1</span>;
+                    transportD
+                      (<span class="k">fun</span> <span class="nv">x</span> : Carriers σ =&gt;
+                       <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u))
+                      (<span class="k">fun</span> (<span class="nv">x</span> : Carriers σ)
+                         (<span class="nv">_</span> : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation x (σ u)) =&gt;
+                       <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (x s))
+                      <span class="mi">1</span> (a; ha).<span class="mi">1</span> (a; ha).<span class="mi">2</span>).<span class="mi">2</span>))
+             <span class="k">with</span>
+             | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+             <span class="k">end</span>
+         <span class="k">end</span>))) =
+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkd"><span class="nb">cbn</span> -[center].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation A (σ u)</span></span></span><br><span><var>ha, hb</var><span class="hyp-type"><b>: </b><span><span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (A s)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers
+  ((<span class="mi">1</span> @
+    ap
+      (<span class="k">fun</span> <span class="nv">u</span> : SigAlgebra σ =&gt;
+       {| carriers := u.<span class="mi">1</span>; operations := (u.<span class="mi">2</span>).<span class="mi">1</span>; hset_algebra := (u.<span class="mi">2</span>).<span class="mi">2</span> |})
+      (path_sigma&#39;
+         (<span class="k">fun</span> <span class="nv">c</span> : Carriers σ =&gt;
+          {_ : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation c (σ u) &amp;
+          <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (c s)})
+         <span class="mi">1</span>
+         (<span class="mi">1</span> @
+          <span class="k">match</span> center (ha = hb) <span class="k">in</span> (_ = v2) <span class="k">return</span> ((a; ha) = (a; v2)) <span class="k">with</span>
+          | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+          <span class="k">end</span>))) @
+   <span class="mi">1</span>) =
+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">destruct</span> (center (ha = hb)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> path_ap_carriers_path_algebra {_} {_} (A B)%_Algebra_scope (p q)%_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chke"><span class="kn">Lemma</span> <span class="nf">path_path_algebra_issig</span> {<span class="nv">σ</span> : Signature} {<span class="nv">A</span> <span class="nv">B</span> : Algebra σ} (<span class="nv">p</span> <span class="nv">q</span> : A = B)
+  (<span class="nv">r</span> : ap (issig_algebra σ)^-<span class="mi">1</span> p = ap (issig_algebra σ)^-<span class="mi">1</span> q)
+  : p = q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap (issig_algebra σ)^-<span class="mi">1</span> p = ap (issig_algebra σ)^-<span class="mi">1</span> q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chkf"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap (issig_algebra σ)^-<span class="mi">1</span> p = ap (issig_algebra σ)^-<span class="mi">1</span> q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk10"><span class="nb">set</span> (e := (equiv_ap (issig_algebra σ)^-<span class="mi">1</span> A B)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap (issig_algebra σ)^-<span class="mi">1</span> p = ap (issig_algebra σ)^-<span class="mi">1</span> q</span></span></span><br><span><var>e</var><span><span class="hyp-body"><b>:= </b><span>equiv_ap (issig_algebra σ)^-<span class="mi">1</span> A B</span></span><span class="hyp-type"><b>: </b><span>A = B &lt;~&gt; (issig_algebra σ)^-<span class="mi">1</span> A = (issig_algebra σ)^-<span class="mi">1</span> B</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">apply</span> (@equiv_inv _ _ (ap e) (Equivalences.isequiv_ap _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> path_path_algebra_issig {_} {A B}%_Algebra_scope (p q r)%_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk11"><span class="kn">Lemma</span> <span class="nf">path_path_algebra</span> `{Funext} {σ} {A B : Algebra σ}
+  (p q : A = B) (r : ap carriers p = ap carriers q)
+  : p = q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk12"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk13"><span class="nb">apply</span> path_path_algebra_issig.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (issig_algebra σ)^-<span class="mi">1</span> p = ap (issig_algebra σ)^-<span class="mi">1</span> q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk14"><span class="nb">unshelve</span> <span class="nb">eapply</span> path_path_sigma.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(ap (issig_algebra σ)^-<span class="mi">1</span> p) ..<span class="mi">1</span> = (ap (issig_algebra σ)^-<span class="mi">1</span> q) ..<span class="mi">1</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk15" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><label class="goal-separator" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk15"><hr></label><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">x</span> : ((issig_algebra σ)^-<span class="mi">1</span> A).<span class="mi">1</span> = ((issig_algebra σ)^-<span class="mi">1</span> B).<span class="mi">1</span> =&gt;
+   transport
+     (<span class="k">fun</span> <span class="nv">c</span> : Carriers σ =&gt;
+      {_ : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation c (σ u) &amp;
+      <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (c s)})
+     x ((issig_algebra σ)^-<span class="mi">1</span> A).<span class="mi">2</span> =
+   ((issig_algebra σ)^-<span class="mi">1</span> B).<span class="mi">2</span>)
+  <span class="nl">?r</span> (ap (issig_algebra σ)^-<span class="mi">1</span> p) ..<span class="mi">2</span> =
+(ap (issig_algebra σ)^-<span class="mi">1</span> q) ..<span class="mi">2</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk16">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(ap (issig_algebra σ)^-<span class="mi">1</span> p) ..<span class="mi">1</span> = (ap (issig_algebra σ)^-<span class="mi">1</span> q) ..<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk17"><span class="nb">transitivity</span> (ap carriers p); [<span class="bp">by</span> <span class="nb">destruct</span> p |].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap carriers p = (ap (issig_algebra σ)^-<span class="mi">1</span> q) ..<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">transitivity</span> (ap carriers q); [<span class="bp">exact</span> r | <span class="bp">by</span> <span class="nb">destruct</span> q].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Algebra-Universal-Algebra-v-alectryon-json-chk18">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>r</var><span class="hyp-type"><b>: </b><span>ap carriers p = ap carriers q</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">x</span> : ((issig_algebra σ)^-<span class="mi">1</span> A).<span class="mi">1</span> = ((issig_algebra σ)^-<span class="mi">1</span> B).<span class="mi">1</span> =&gt;
+   transport
+     (<span class="k">fun</span> <span class="nv">c</span> : Carriers σ =&gt;
+      {_ : <span class="k">forall</span> <span class="nv">u</span> : Symbol σ, Operation c (σ u) &amp;
+      <span class="k">forall</span> <span class="nv">s</span> : <span class="kn">Sort</span> σ, IsHSet (c s)})
+     x ((issig_algebra σ)^-<span class="mi">1</span> A).<span class="mi">2</span> =
+   ((issig_algebra σ)^-<span class="mi">1</span> B).<span class="mi">2</span>)
+  (<span class="k">match</span>
+     p <span class="k">as</span> p0 <span class="k">in</span> (_ = a)
+     <span class="k">return</span>
+       (<span class="k">forall</span> <span class="nv">q0</span> : A = a,
+        ap carriers p0 = ap carriers q0 -&gt;
+        (ap (issig_algebra σ)^-<span class="mi">1</span> p0) ..<span class="mi">1</span> = ap carriers p0)
+   <span class="k">with</span>
+   | <span class="mi">1</span> =&gt; <span class="k">fun</span> (<span class="nv">q0</span> : A = A) (<span class="nv">_</span> : ap carriers <span class="mi">1</span> = ap carriers q0) =&gt; <span class="mi">1</span>
+   <span class="k">end</span> q r @
+   (r @
+    <span class="k">match</span>
+      q <span class="k">as</span> p0 <span class="k">in</span> (_ = a)
+      <span class="k">return</span>
+        (<span class="k">forall</span> <span class="nv">p1</span> : A = a,
+         ap carriers p1 = ap carriers p0 -&gt;
+         ap carriers p0 = (ap (issig_algebra σ)^-<span class="mi">1</span> p0) ..<span class="mi">1</span>)
+    <span class="k">with</span>
+    | <span class="mi">1</span> =&gt; <span class="k">fun</span> (<span class="nv">p0</span> : A = A) (<span class="nv">_</span> : ap carriers p0 = ap carriers <span class="mi">1</span>) =&gt; <span class="mi">1</span>
+    <span class="k">end</span> p r))
+  (ap (issig_algebra σ)^-<span class="mi">1</span> p) ..<span class="mi">2</span> =
+(ap (issig_algebra σ)^-<span class="mi">1</span> q) ..<span class="mi">2</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> path_path_algebra {_} {σ} {A B}%_Algebra_scope (p q r)%_path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Notation</span> <span class="s2">&quot;u .# A&quot;</span> := (operations A u) : Algebra_scope.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

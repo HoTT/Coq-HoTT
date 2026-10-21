@@ -1,0 +1,28 @@
+digraph HoTT_Basics_Tactics {
+  graph [ratio=0.5]
+  node [style=filled]
+Tactics_issig_isequiv [label="issig_isequiv", URL=<Tactics.html#issig_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_issig_equiv [label="issig_equiv", URL=<Tactics.html#issig_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_is_global_axiom_propresizing [label="is_global_axiom_propresizing", URL=<Tactics.html#is_global_axiom_propresizing>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_is_global_axiom_funext [label="is_global_axiom_funext", URL=<Tactics.html#is_global_axiom_funext>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_IsGlobalAxiom_sind [label="IsGlobalAxiom_sind", URL=<Tactics.html#IsGlobalAxiom_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_IsGlobalAxiom_rec [label="IsGlobalAxiom_rec", URL=<Tactics.html#IsGlobalAxiom_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Tactics_IsGlobalAxiom_ind [label="IsGlobalAxiom_ind", URL=<Tactics.html#IsGlobalAxiom_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Tactics_IsGlobalAxiom_rect [label="IsGlobalAxiom_rect", URL=<Tactics.html#IsGlobalAxiom_rect>, fillcolor="#F070D1"] ;
+Tactics_Build_IsGlobalAxiom [label="Build_IsGlobalAxiom", URL=<Tactics.html#Build_IsGlobalAxiom>, fillcolor="#7FAAFF"] ;
+Tactics_IsGlobalAxiom [label="IsGlobalAxiom", URL=<Tactics.html#IsGlobalAxiom>, fillcolor="#E2CDFA"] ;
+Tactics_fix_proto [label="fix_proto", URL=<Tactics.html#fix_proto>, peripheries=3, fillcolor="#F070D1"] ;
+  Tactics_is_global_axiom_propresizing -> Tactics_Build_IsGlobalAxiom [] ;
+  Tactics_is_global_axiom_propresizing -> Tactics_IsGlobalAxiom [] ;
+  Tactics_is_global_axiom_funext -> Tactics_Build_IsGlobalAxiom [] ;
+  Tactics_is_global_axiom_funext -> Tactics_IsGlobalAxiom [] ;
+  Tactics_IsGlobalAxiom_sind -> Tactics_Build_IsGlobalAxiom [] ;
+  Tactics_IsGlobalAxiom_sind -> Tactics_IsGlobalAxiom [] ;
+  Tactics_IsGlobalAxiom_rec -> Tactics_IsGlobalAxiom_rect [] ;
+  Tactics_IsGlobalAxiom_ind -> Tactics_Build_IsGlobalAxiom [] ;
+  Tactics_IsGlobalAxiom_ind -> Tactics_IsGlobalAxiom [] ;
+  Tactics_IsGlobalAxiom_rect -> Tactics_Build_IsGlobalAxiom [] ;
+  Tactics_IsGlobalAxiom_rect -> Tactics_IsGlobalAxiom [] ;
+subgraph cluster_Tactics { label="Tactics"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Tactics_fix_proto; Tactics_IsGlobalAxiom; Tactics_Build_IsGlobalAxiom; Tactics_IsGlobalAxiom_rect; Tactics_IsGlobalAxiom_ind; Tactics_IsGlobalAxiom_rec; Tactics_IsGlobalAxiom_sind; Tactics_is_global_axiom_funext; Tactics_is_global_axiom_propresizing; Tactics_issig_equiv; Tactics_issig_isequiv; };
+} /* END */

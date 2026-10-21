@@ -1,0 +1,6442 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.orders.naturals\n  HoTT.Classes.implementations.peano_naturals.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Classes.interfaces.abstract_algebra\n  HoTT.Classes.interfaces.orders\n  HoTT.Classes.theory.naturals.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables N.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext} `{Univalence}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Naturals N}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Add Ring N : (rings.stdlib_semiring_theory N). *)\n\n(* NatDistance instances are all equivalent, because their behavior is fully\n determined by the specification. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma nat_distance_unique {a b : NatDistance N}\n  : forall x y, @nat_distance _ _ a x y = @nat_distance _ _ b x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : N, nat_distance x y = nat_distance x y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : N, nat_distance x y = nat_distance x y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat_distance x y = nat_distance x y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold nat_distance.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "match nat_distance_sig x y with\n| inl s => s.1\n| inr s => s.1\nend = match nat_distance_sig x y with\n      | inl s => s.1\n      | inr s => s.1\n      end",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (@nat_distance_sig _ _ a x y) as [[z1 E1]|[z1 E1]],\n(@nat_distance_sig _ _ b x y) as [[z2 E2]|[z2 E2]];simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "x + z1 = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "x + z1 = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "y + z1 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "y + z1 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "x + z1 = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (left_cancellation plus x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x + z1 = x + z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "x + z1 = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_via y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "x + z1 = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <-(rings.plus_0_r y),<-E2,<-rings.plus_assoc in E1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1",
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "y + (z2 + z1) = y + 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (left_cancellation plus y) in E1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1",
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "z2 + z1 = 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply naturals.zero_sum in E1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1",
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "(z2 = 0) * (z1 = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct E1;path_via 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "y + z1 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <-(rings.plus_0_r x),<-E2,<-rings.plus_assoc in E1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1",
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "x + (z2 + z1) = x + 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (left_cancellation plus x) in E1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1",
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "z2 + z1 = 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply naturals.zero_sum in E1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1",
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "(z2 = 0) * (z1 = 0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "x + z2 = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct E1;path_via 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "z1 = z2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "NatDistance N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "z1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E1"
+              ],
+              "body": null,
+              "type": "y + z1 = x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "z2"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E2"
+              ],
+              "body": null,
+              "type": "y + z2 = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (left_cancellation plus y);path_via x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* An existing instance of [CutMinus]\n   allows to create an instance of [NatDistance] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance natdistance_cut_minus `{Naturals N} `{!TrivialApart N}\n   {cm} `{!CutMinusSpec N cm} `{forall x y, Decidable (x \u2264 y)} : NatDistance N.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NatDistance N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x y : N, Decidable (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NatDistance N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x y : N, Decidable (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "red.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x y : N, {z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x y : N, Decidable (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (decide_rel (<=) x y) as [E|E].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "x \u2264 y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "~ (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "x \u2264 y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "left.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "x \u2264 y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (y \u2238 x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x + (y \u2238 x) = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "x \u2264 y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite rings.plus_comm;apply cut_minus_le;trivial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "~ (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "right.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "~ (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (x \u2238 y).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "y + (x \u2238 y) = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TrivialApart0"
+              ],
+              "body": null,
+              "type": "TrivialApart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cm"
+              ],
+              "body": null,
+              "type": "CutMinus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "CutMinusSpec0"
+              ],
+              "body": null,
+              "type": "CutMinusSpec N cm"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall x0 y0 : N, Decidable (x0 \u2264 y0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "~ (x \u2264 y)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite rings.plus_comm;apply cut_minus_le, orders.le_flip;trivial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* Using the preceding instance we can make an instance\n   for arbitrary models of the naturals\n   by translation into [nat] on which we already have a [CutMinus] instance. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance natdistance_default `{Naturals N} : NatDistance N | 10.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NatDistance N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NatDistance N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (nat_distance_sig (naturals_to_semiring N nat x)\n  (naturals_to_semiring N nat y)) as [[n E]|[n E]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat x + n = naturals_to_semiring N nat y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat y + n = naturals_to_semiring N nat x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat x + n = naturals_to_semiring N nat y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "left.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat x + n = naturals_to_semiring N nat y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (naturals_to_semiring nat N n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x + naturals_to_semiring nat N n = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat x + n = naturals_to_semiring N nat y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <-(naturals.to_semiring_involutive N nat y), <-E.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x + naturals_to_semiring nat N n =\nnaturals_to_semiring nat N (naturals_to_semiring N nat x + n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat x + n = naturals_to_semiring N nat y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (rings.preserves_plus (A:=nat)), (naturals.to_semiring_involutive _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x + naturals_to_semiring nat N n = x + naturals_to_semiring nat N n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat x + n = naturals_to_semiring N nat y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & x + z = y} + {z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat y + n = naturals_to_semiring N nat x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "right.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{z : N & y + z = x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat y + n = naturals_to_semiring N nat x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (naturals_to_semiring nat N n).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "y + naturals_to_semiring nat N n = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat y + n = naturals_to_semiring N nat x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <-(naturals.to_semiring_involutive N nat x), <-E.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "y + naturals_to_semiring nat N n =\nnaturals_to_semiring nat N (naturals_to_semiring N nat y + n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat y + n = naturals_to_semiring N nat x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (rings.preserves_plus (A:=nat)), (naturals.to_semiring_involutive _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "y + naturals_to_semiring nat N n = y + naturals_to_semiring nat N n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aap"
+              ],
+              "body": null,
+              "type": "Apart N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aplus"
+              ],
+              "body": null,
+              "type": "Plus N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Amult"
+              ],
+              "body": null,
+              "type": "Mult N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Azero"
+              ],
+              "body": null,
+              "type": "Zero N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Aone"
+              ],
+              "body": null,
+              "type": "One N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ale"
+              ],
+              "body": null,
+              "type": "Le N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Alt"
+              ],
+              "body": null,
+              "type": "Lt N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "U"
+              ],
+              "body": null,
+              "type": "NaturalsToSemiRing N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Naturals N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "E"
+              ],
+              "body": null,
+              "type": "naturals_to_semiring N nat y + n = naturals_to_semiring N nat x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

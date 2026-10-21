@@ -1,0 +1,1862 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Varieties of function extensionality *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Metatheory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In the Overture, we defined function extensionality to be the assertion that the map [apD10] is an equivalence.   We now prove that this follows from a couple of weaker-looking forms of function extensionality.  We do require eta conversion, which Coq 8.4+ has judgmentally.\n\n   This proof is originally due to Voevodsky; it has since been simplified by Peter Lumsdaine and Michael Shulman. *)\n\n(** Naive funext is the simple assertion that pointwise equal functions are equal.  The domain and codomain could live in different universes; the third universe argument is essentially the max of [i] and [j] (and similarly for all subsequent axioms). *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition NaiveFunext :=\n  forall (A : Type@{i}) (P : A -> Type@{j}) (f g : forall x, P x),\n    (forall x, f x = g x) -> (f = g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Naive non-dependent funext is the same, but only for non-dependent functions.  *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition NaiveNondepFunext :=\n  forall (A B : Type) (f g : A -> B),\n    (forall x, f x = g x) -> (f = g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Weak funext says that a product of contractible types is contractible. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition WeakFunext :=\n  forall (A : Type) (P : A -> Type),\n    (forall x, Contr (P x)) -> Contr (forall x, P x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The obvious implications are\n   [Funext -> NaiveFunext -> WeakFunext] and [NaiveFunext -> NaiveNondepFunext].\n   None of these do anything fiddly with the universes either. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Funext_implies_NaiveFunext@{i j max}\n  : Funext_type@{i j max} -> NaiveFunext@{i j max}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Funext_type -> NaiveFunext",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Funext_type -> NaiveFunext",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros fe A P f g h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fe"
+              ],
+              "body": null,
+              "type": "Funext_type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Funext_type in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "fe"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P0 : A0 -> Type) (f0 g0 : forall x : A0, P0 x),\nIsEquiv apD10"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, P x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x : A, f x = g x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((@apD10 A P f g)^-1 h).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition NaiveFunext_implies_WeakFunext@{i j max}\n  : NaiveFunext@{i j max} -> WeakFunext@{i j max}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaiveFunext -> WeakFunext",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaiveFunext -> WeakFunext",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros nf A P Pc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (forall x : A, P x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nf"
+              ],
+              "body": null,
+              "type": "NaiveFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pc"
+              ],
+              "body": null,
+              "type": "forall x : A, Contr (P x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Build_Contr _ (fun x => center (P x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : forall x : A, P x, (fun x : A => center (P x)) = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nf"
+              ],
+              "body": null,
+              "type": "NaiveFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pc"
+              ],
+              "body": null,
+              "type": "forall x : A, Contr (P x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f; apply nf; intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "center (P x) = f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nf"
+              ],
+              "body": null,
+              "type": "NaiveFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Pc"
+              ],
+              "body": null,
+              "type": "forall x0 : A, Contr (P x0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x0 : A, P x0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition NaiveFunext_implies_NaiveNondepFunext@{i j max}\n  : NaiveFunext@{i j max} -> NaiveNondepFunext@{i j max}\n  := fun nf A B f g => nf A (fun _ => B) f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The non-obvious directions are that [WeakFunext] implies Funext and that [NaiveNondepFunext] implies [WeakFunext] (and hence all four are logically equivalent). *)\n\n(** ** [WeakFunext] implies [Funext] *)\n\n(** To show that [WeakFunext] implies Funext, the point is that under weak funext, the space of \"pointwise homotopies\" has the same universal property as the space of paths. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Homotopies.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (wf : WeakFunext).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A:Type} {B : A -> Type}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (f : forall x, B x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (* Recall that [f == g] is the type of pointwise paths (or \"homotopies\") from [f] to [g]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let idhtpy : f == f := fun x => idpath (f x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Weak funext implies that the \"based homotopy space\" of the Pi-type is contractible, just like the based path space. *)\n  (** Use priority 1, so we don't override [Contr Unit]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance contr_basedhtpy : Contr {g : forall x, B x & f == g } | 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr {g : forall x : A, B x & f == g}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr {g : forall x : A, B x & f == g}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold WeakFunext in wf.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr {g : forall x : A, B x & f == g}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P : A0 -> Type),\n(forall x : A0, Contr (P x)) -> Contr (forall x : A0, P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "    (* Allow typeclass inference to find it *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Build_Contr _ (f;idhtpy)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall y : {x : _ & f == x}, (f; idhtpy) = y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P : A0 -> Type),\n(forall x : A0, Contr (P x)) -> Contr (forall x : A0, P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [g h].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f; idhtpy) = (g; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P : A0 -> Type),\n(forall x : A0, Contr (P x)) -> Contr (forall x : A0, P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* The trick is to show that the type [{g : forall x, B x & f == g }] is a retract of [forall x, {y : B x & f x = y}], which is contractible due to J and weak funext.  Here are the retraction and its section. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (r := fun k => exist (fun g => f == g)\n      (fun x => (k x).1) (fun x => (k x).2)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f; idhtpy) = (g; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P : A0 -> Type),\n(forall x : A0, Contr (P x)) -> Contr (forall x : A0, P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "fun k : forall x : A, {x0 : _ & f x = x0} =>\n(fun x : A => (k x).1; fun x : A => (k x).2)",
+              "type": "(forall x : A, {x0 : _ & f x = x0}) -> {g0 : forall x : A, B x & f == g0}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (s := fun (g : forall x, B x) (h : f == g) x => (g x ; h x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f; idhtpy) = (g; h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P : A0 -> Type),\n(forall x : A0, Contr (P x)) -> Contr (forall x : A0, P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "fun k : forall x : A, {x0 : _ & f x = x0} =>\n(fun x : A => (k x).1; fun x : A => (k x).2)",
+              "type": "(forall x : A, {x0 : _ & f x = x0}) -> {g0 : forall x : A, B x & f == g0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "fun (g0 : forall x : A, B x) (h0 : f == g0) (x : A) => (g0 x; h0 x)",
+              "type": "forall g0 : forall x : A, B x, f == g0 -> forall x : A, {x0 : _ & f x = x0}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (* Because of judgemental eta-conversion, the retraction is actually definitional, so we can just replace the goal. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (r (fun x => (f x ; idpath (f x))) = r (s g h)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r (fun x : A => (f x; 1)) = r (s g h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "forall (A0 : Type) (P : A0 -> Type),\n(forall x : A0, Contr (P x)) -> Contr (forall x : A0, P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "idhtpy"
+              ],
+              "body": "fun x : A => 1",
+              "type": "f == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "f == g"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "fun k : forall x : A, {x0 : _ & f x = x0} =>\n(fun x : A => (k x).1; fun x : A => (k x).2)",
+              "type": "(forall x : A, {x0 : _ & f x = x0}) -> {g0 : forall x : A, B x & f == g0}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "fun (g0 : forall x : A, B x) (h0 : f == g0) (x : A) => (g0 x; h0 x)",
+              "type": "forall g0 : forall x : A, B x, f == g0 -> forall x : A, {x0 : _ & f x = x0}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap; srapply path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** This enables us to prove that pointwise homotopies have the same elimination rule as the identity type. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (Q : forall g (h : f == g), Type).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (d : Q f idhtpy).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition htpy_ind g h : Q g h\n    := @transport _ (fun gh => Q gh.1 gh.2) (f;idhtpy) (g;h)\n         (@path_contr _ _ _ _) d.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The computation rule, of course, is only propositional. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition htpy_ind_beta : htpy_ind f idhtpy = d\n    := transport (fun p : (f;idhtpy) = (f;idhtpy) =>\n                    transport (fun gh => Q gh.1 gh.2) p d = d)\n         (@path2_contr _ _ _ _\n           (path_contr (f;idhtpy) (f;idhtpy)) (idpath _))^\n         (idpath _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Homotopies.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Now the proof is fairly easy; we can just use the same induction principle on both sides.  This proof also preserves all the universes. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem WeakFunext_implies_Funext@{i j max}\n  : WeakFunext@{i j max} -> Funext_type@{i j max}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakFunext -> Funext_type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakFunext -> Funext_type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros wf; hnf; intros A B f g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv apD10",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (isequiv_adjointify (@apD10 A B f g)\n    (htpy_ind wf f (fun g' _ => f = g') idpath g) _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : f == g =>\n apD10\n   (htpy_ind wf f (fun (g' : forall x0 : A, B x0) (_ : f == g') => f = g') 1\n      g x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : f = g =>\n htpy_ind wf f (fun (g' : forall x0 : A, B x0) (_ : f == g') => f = g') 1 g\n   (apD10 x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : f == g =>\n apD10\n   (htpy_ind wf f (fun (g' : forall x0 : A, B x0) (_ : f == g') => f = g') 1\n      g x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert g; refine (htpy_ind wf _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "apD10\n  (htpy_ind wf f (fun (g' : forall x : A, B x) (_ : f == g') => f = g') 1 f\n     (fun x : A => 1)) =\n(fun x : A => 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap _ (htpy_ind_beta wf _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : f = g =>\n htpy_ind wf f (fun (g' : forall x0 : A, B x0) (_ : f == g') => f = g') 1 g\n   (apD10 x)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h; destruct h.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "htpy_ind wf f (fun (g' : forall x : A, B x) (_ : f == g') => f = g') 1 f\n  (apD10 1) =\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "wf"
+              ],
+              "body": null,
+              "type": "WeakFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "A -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall x : A, B x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (htpy_ind_beta wf _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition NaiveFunext_implies_Funext : NaiveFunext -> Funext_type\n  := WeakFunext_implies_Funext o NaiveFunext_implies_WeakFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Naive non-dependent funext implies weak funext  *)\n\n(** First we show that naive non-dependent funext suffices to show that postcomposition with an equivalence is an equivalence. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_postcompose_from_NaiveNondepFunext\n           (nf : NaiveNondepFunext) {A B C : Type} (f : B <~> C)\n  : (A -> B) <~> (A -> C)\n  := Build_Equiv\n       _ _ (fun (g:A->B) => f o g)\n       (isequiv_adjointify\n          (fun (g:A->B) => f o g)\n          (fun h => f^-1 o h)\n          (fun h => nf _ _ _ _ (fun x => eisretr f (h x)))\n          (fun g => nf _ _ _ _ (fun y => eissect f (g y)))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Now, if each [P x] is contractible, the projection [pr1 : {x:X & P x} -> X] is an equivalence (this requires no funext).  Thus, postcomposition with it is also an equivalence, and hence the fiber of postcomposition over [idmap X] is contractible.  But this fiber is \"the type of sections of [pr1]\" and hence equivalent to [forall x:X, P x].  The latter equivalence requires full funext to prove, but without any funext we can show that [forall x:X, P x] is a *retract* of the type of sections, hence also contractible. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem NaiveNondepFunext_implies_WeakFunext\n  : NaiveNondepFunext -> WeakFunext.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaiveNondepFunext -> WeakFunext",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "NaiveNondepFunext -> WeakFunext",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros nf X P H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (forall x : X, P x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nf"
+              ],
+              "body": null,
+              "type": "NaiveNondepFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall x : X, Contr (P x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (T := (hfiber (equiv_postcompose_from_NaiveNondepFunext nf (equiv_pr1 P)) idmap)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (forall x : X, P x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nf"
+              ],
+              "body": null,
+              "type": "NaiveNondepFunext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "X -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall x : X, Contr (P x)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "T"
+              ],
+              "body": "hfiber (equiv_postcompose_from_NaiveNondepFunext nf (equiv_pr1 P)) idmap",
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (@contr_retract T _ _\n           (fun fp x => transport P (ap10 fp.2 x) (fp.1 x).2)\n           (fun f => ((fun x => (x ; f x)) ; 1)) (fun f => 1)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Therefore, naive non-dependent funext also implies full funext.  Interestingly, this requires the universe of the assumption codomain to be not just that of the conclusion codomain, but the max of that universe with the domain universe (which is unchanged). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition NaiveNondepFunext_implies_Funext@{i j max}\n  : NaiveNondepFunext@{i max max} -> Funext_type@{i j max}\n  := WeakFunext_implies_Funext o NaiveNondepFunext_implies_WeakFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Functional extensionality is downward closed *)\n\n(** If universe [U_i] is functionally extensional, then so are universes [U_i'] for [i' \u2264 i]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma Funext_downward_closed@{i j max i' j' max' | i <= max, j <= max, i' <= max', j' <= max', i' <= i, j' <= j}\n  `{H : Funext_type@{i j max}} : Funext_type@{i' j' max'}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Funext_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext_type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Funext_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext_type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A : Type) (P : A -> Type) (f g : forall x : A, P x), IsEquiv apD10",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (A : Type) (P : A -> Type) (f g : forall x : A, P x), IsEquiv apD10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Here we make use of cumulativity. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun A P => H A P).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

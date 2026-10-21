@@ -1,0 +1,274 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functoriality of the construction of adjunctions *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Sigma.OnObjects Category.Prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Adjoint.Functorial.Parts Adjoint.Functorial.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Types.Prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section left.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Non-dependent functor for left adjoints *)\n  (** We'd need \u03a0 types (dependent functors) to include functoriality\n      on the categories. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section nondep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition left_functor_nondep\n    : Functor (sig_obj (D -> C) (fun G => { F : Functor C D & F -| G }))\n              (sig_obj ((C -> D)^op * (D -> C)) (fun FG => fst FG -| snd FG))\n      := Build_Functor\n           (sig_obj (D -> C) (fun G => { F : Functor C D & F -| G }))\n           (sig_obj ((C -> D)^op * (D -> C)) (fun FG => fst FG -| snd FG))\n           (fun GFA => ((GFA.2.1, GFA.1); GFA.2.2))\n           (fun GFA G'F'A' m => (left_morphism_of_nondep GFA.2.2 G'F'A'.2.2 m, m))\n           (fun s d d' m1 m2 => path_prod' (left_composition_of_nondep _ _ _ _ _) 1)\n           (fun x => path_prod' (left_identity_of_nondep _) 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End nondep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End left.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section right.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** ** Non-dependent functor for right adjoints *)\n  (** We'd need \u03a0 types (dependent functors) to include functoriality\n      on the categories. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section nondep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    (** TODO: Is there a nice way to write this functor as a\n              composition of the above with some dualization functors?\n              (I suspect there is.) *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition right_functor_nondep\n    : Functor (sig_obj (C -> D) (fun F => { G : Functor D C & F -| G }))\n              (sig_obj ((C -> D) * (D -> C)^op) (fun FG => fst FG -| snd FG))\n      := Build_Functor\n           (sig_obj (C -> D) (fun F => { G : Functor D C & F -| G }))\n           (sig_obj ((C -> D) * (D -> C)^op) (fun FG => fst FG -| snd FG))\n           (fun GFA => ((GFA.1, GFA.2.1); GFA.2.2))\n           (fun GFA G'F'A' m => (m, right_morphism_of_nondep G'F'A'.2.2 GFA.2.2 m))\n           (fun s d d' m1 m2 => path_prod' 1 (right_composition_of_nondep _ _ _ _ _))\n           (fun x => path_prod' 1 (right_identity_of_nondep _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "End nondep.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End right.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

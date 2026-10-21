@@ -1,0 +1,1688 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Diagrams.Graph.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Diagrams.Diagram.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Sequence *)\n\n(** A Sequence is a sequence of maps from [X(n)] to [X(n+1)]. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sequence_graph : Graph.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Graph",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Graph",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (Build_Graph nat).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat -> nat -> Type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros n m; exact (S n = m).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Sequence := Diagram sequence_graph.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_Sequence\n  (X : nat -> Type)\n  (f : forall n, X n -> X n.+1)\n  : Sequence.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sequence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Sequence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_Diagram.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sequence_graph -> Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i j : sequence_graph, sequence_graph i j -> ?obj i -> ?obj j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i j : sequence_graph, sequence_graph i j -> X i -> X j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ? ? p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X i -> X j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "sequence_graph i j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "X i -> X i.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "nat -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall n : nat, X n -> X n.+1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A useful lemma to show that two sequences are equivalent. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_sequence (D1 D2 : Sequence)\n  (H0 : (D1 0) <~> (D2 0))\n  (Hn: forall n (e: (D1 n) <~> (D2 n)),\n    {e' : (D1 n.+1) <~> (D2 n.+1) & (D2 _f 1) o e == e' o (D1 _f 1)})\n  : D1 ~d~ D2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 ~d~ D2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 ~d~ D2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (Build_diagram_equiv (Build_DiagramMap _ _)); intro n; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 n -> D2 n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (j : nat) (g : n.+1 = j) (x : D1 n),\n(D2 _f g) (?Goal x) = ?Goal@{n:=j} ((D1 _f g) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 n -> D2 n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_fun.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 n <~> D2 n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 0 <~> D2 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 n.+1 <~> D2 n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "D1 n <~> D2 n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 0 <~> D2 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact H0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "D1 n.+1 <~> D2 n.+1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "D1 n <~> D2 n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Hn n IHn).1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (j : nat) (g : n.+1 = j) (x : D1 n),\n(D2 _f g)\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn : D1 n0 <~> D2 n0) => (Hn n0 IHn).1) n x) =\nnat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n  (fun (n0 : nat) (IHn : D1 n0 <~> D2 n0) => (Hn n0 IHn).1) j \n  ((D1 _f g) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros m q; destruct q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : D1 n,\n(D2 _f 1)\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn : D1 n0 <~> D2 n0) => (Hn n0 IHn).1) n x) =\nnat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n  (fun (n0 : nat) (IHn : D1 n0 <~> D2 n0) => (Hn n0 IHn).1) n.+1\n  ((D1 _f 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : D1 0, (D2 _f 1) (H0 x) = (Hn 0 H0).1 ((D1 _f 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : D1 n.+1,\n(D2 _f 1)\n  ((Hn n\n      (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n         (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)).1\n     x) =\n(Hn n.+1\n   (Hn n\n      (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n         (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)).1).1\n  ((D1 _f 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall x : D1 n,\n(D2 _f 1)\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n x) =\nnat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n  (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n.+1\n  ((D1 _f 1) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : D1 0, (D2 _f 1) (H0 x) = (Hn 0 H0).1 ((D1 _f 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Hn 0 H0).2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : D1 n.+1,\n(D2 _f 1)\n  ((Hn n\n      (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n         (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)).1\n     x) =\n(Hn n.+1\n   (Hn n\n      (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n         (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)).1).1\n  ((D1 _f 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "forall x : D1 n,\n(D2 _f 1)\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n x) =\nnat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n  (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n.+1\n  ((D1 _f 1) x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Hn n.+1 _).2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn : D1 n0 <~> D2 n0) => (Hn n0 IHn).1) n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "sequence_graph"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv H0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv\n  (Hn n\n     (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n        (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "IsEquiv\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv H0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n : sequence_graph) (e : D1 n <~> D2 n),\n{e' : D1 n.+1 <~> D2 n.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply H0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv\n  (Hn n\n     (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n        (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D1"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D2"
+              ],
+              "body": null,
+              "type": "Sequence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "D1 0 <~> D2 0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Hn"
+              ],
+              "body": null,
+              "type": "forall (n0 : sequence_graph) (e : D1 n0 <~> D2 n0),\n{e' : D1 n0.+1 <~> D2 n0.+1 & D2 _f 1 o e == e' o D1 _f 1}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "IsEquiv\n  (nat_rect (fun n0 : nat => D1 n0 <~> D2 n0) H0\n     (fun (n0 : nat) (IHn0 : D1 n0 <~> D2 n0) => (Hn n0 IHn0).1) n)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (Hn n _ ).1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

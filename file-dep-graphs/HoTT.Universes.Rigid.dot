@@ -1,0 +1,21 @@
+digraph HoTT_Universes_Rigid {
+  graph [ratio=0.5]
+  node [style=filled]
+Rigid_baut_prod_rigid_equiv [label="baut_prod_rigid_equiv", URL=<Rigid.html#baut_prod_rigid_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+Rigid_aut_homomorphism_end [label="aut_homomorphism_end", URL=<Rigid.html#aut_homomorphism_end>, fillcolor="#F070D1"] ;
+Rigid_rigid_ishprop [label="rigid_ishprop", URL=<Rigid.html#rigid_ishprop>, peripheries=3, fillcolor="#F070D1"] ;
+Rigid_rigid_contr_Baut [label="rigid_contr_Baut", URL=<Rigid.html#rigid_contr_Baut>, peripheries=3, fillcolor="#F070D1"] ;
+Rigid_contr_baut_rigid [label="contr_baut_rigid", URL=<Rigid.html#contr_baut_rigid>, peripheries=3, fillcolor="#F070D1"] ;
+Rigid_contr_aut_rigid [label="contr_aut_rigid", URL=<Rigid.html#contr_aut_rigid>, fillcolor="#F070D1"] ;
+Rigid_path_aut_rigid [label="path_aut_rigid", URL=<Rigid.html#path_aut_rigid>, fillcolor="#F070D1"] ;
+Rigid_IsRigid [label="IsRigid", URL=<Rigid.html#IsRigid>, fillcolor="#F070D1"] ;
+  Rigid_baut_prod_rigid_equiv -> Rigid_aut_homomorphism_end [] ;
+  Rigid_baut_prod_rigid_equiv -> Rigid_path_aut_rigid [] ;
+  Rigid_rigid_ishprop -> Rigid_IsRigid [] ;
+  Rigid_rigid_contr_Baut -> Rigid_IsRigid [] ;
+  Rigid_contr_baut_rigid -> Rigid_contr_aut_rigid [] ;
+  Rigid_contr_aut_rigid -> Rigid_path_aut_rigid [] ;
+  Rigid_path_aut_rigid -> Rigid_IsRigid [] ;
+subgraph cluster_Rigid { label="Rigid"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Rigid_IsRigid; Rigid_path_aut_rigid; Rigid_contr_aut_rigid; Rigid_contr_baut_rigid; Rigid_rigid_contr_Baut; Rigid_rigid_ishprop; Rigid_aut_homomorphism_end; Rigid_baut_prod_rigid_equiv; };
+} /* END */

@@ -1,0 +1,56 @@
+digraph HoTT_Classes_theory_ua_isomorphic {
+  graph [ratio=0.5]
+  node [style=filled]
+ua_isomorphic_isequiv_isomorphic_id [label="isequiv_isomorphic_id", URL=<ua_isomorphic.html#isequiv_isomorphic_id>, peripheries=3, fillcolor="#F070D1"] ;
+ua_isomorphic_sect_isomorphic_id [label="sect_isomorphic_id", URL=<ua_isomorphic.html#sect_isomorphic_id>, fillcolor="#F070D1"] ;
+ua_isomorphic_sect_id_isomorphic [label="sect_id_isomorphic", URL=<ua_isomorphic.html#sect_id_isomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_path_path_isomorphism_hom_id_hset [label="path_path_isomorphism_hom_id_hset", URL=<ua_isomorphic.html#path_path_isomorphism_hom_id_hset>, fillcolor="#F070D1"] ;
+ua_isomorphic_path_def_isomorphic_id_transport_cod [label="path_def_isomorphic_id_transport_cod", URL=<ua_isomorphic.html#path_def_isomorphic_id_transport_cod>, fillcolor="#F070D1"] ;
+ua_isomorphic_path_def_isomorphic_id_transport_dom [label="path_def_isomorphic_id_transport_dom", URL=<ua_isomorphic.html#path_def_isomorphic_id_transport_dom>, peripheries=3, fillcolor="#F070D1"] ;
+ua_isomorphic_path_hset_isomorphic [label="path_hset_isomorphic", URL=<ua_isomorphic.html#path_hset_isomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_path_isomorphic [label="path_isomorphic", URL=<ua_isomorphic.html#path_isomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_isomorphic_id [label="isomorphic_id", URL=<ua_isomorphic.html#isomorphic_id>, fillcolor="#F070D1"] ;
+ua_isomorphic_id_isomorphic [label="id_isomorphic", URL=<ua_isomorphic.html#id_isomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_issig_isomorphic [label="issig_isomorphic", URL=<ua_isomorphic.html#issig_isomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_SigIsomorphic [label="SigIsomorphic", URL=<ua_isomorphic.html#SigIsomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_is_isomorphism_isomorphic [label="is_isomorphism_isomorphic", URL=<ua_isomorphic.html#is_isomorphism_isomorphic>, peripheries=3, fillcolor="#F070D1"] ;
+ua_isomorphic_is_homomorphism_isomorphic [label="is_homomorphism_isomorphic", URL=<ua_isomorphic.html#is_homomorphism_isomorphic>, peripheries=3, fillcolor="#F070D1"] ;
+ua_isomorphic_def_isomorphic [label="def_isomorphic", URL=<ua_isomorphic.html#def_isomorphic>, fillcolor="#F070D1"] ;
+ua_isomorphic_Isomorphic_sind [label="Isomorphic_sind", URL=<ua_isomorphic.html#Isomorphic_sind>, peripheries=3, fillcolor="#F070D1"] ;
+ua_isomorphic_Isomorphic_rec [label="Isomorphic_rec", URL=<ua_isomorphic.html#Isomorphic_rec>, peripheries=3, fillcolor="#F070D1"] ;
+ua_isomorphic_Isomorphic_ind [label="Isomorphic_ind", URL=<ua_isomorphic.html#Isomorphic_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+ua_isomorphic_Isomorphic_rect [label="Isomorphic_rect", URL=<ua_isomorphic.html#Isomorphic_rect>, fillcolor="#F070D1"] ;
+ua_isomorphic_BuildIsomorphic [label="BuildIsomorphic", URL=<ua_isomorphic.html#BuildIsomorphic>, fillcolor="#7FAAFF"] ;
+ua_isomorphic_Isomorphic [label="Isomorphic", URL=<ua_isomorphic.html#Isomorphic>, fillcolor="#E2CDFA"] ;
+  ua_isomorphic_isequiv_isomorphic_id -> ua_isomorphic_sect_isomorphic_id [] ;
+  ua_isomorphic_isequiv_isomorphic_id -> ua_isomorphic_sect_id_isomorphic [] ;
+  ua_isomorphic_sect_isomorphic_id -> ua_isomorphic_path_path_isomorphism_hom_id_hset [] ;
+  ua_isomorphic_sect_isomorphic_id -> ua_isomorphic_isomorphic_id [] ;
+  ua_isomorphic_sect_isomorphic_id -> ua_isomorphic_id_isomorphic [] ;
+  ua_isomorphic_sect_id_isomorphic -> ua_isomorphic_path_def_isomorphic_id_transport_cod [] ;
+  ua_isomorphic_sect_id_isomorphic -> ua_isomorphic_path_hset_isomorphic [] ;
+  ua_isomorphic_sect_id_isomorphic -> ua_isomorphic_id_isomorphic [] ;
+  ua_isomorphic_sect_id_isomorphic -> ua_isomorphic_def_isomorphic [] ;
+  ua_isomorphic_path_def_isomorphic_id_transport_cod -> ua_isomorphic_isomorphic_id [] ;
+  ua_isomorphic_path_def_isomorphic_id_transport_dom -> ua_isomorphic_isomorphic_id [] ;
+  ua_isomorphic_path_hset_isomorphic -> ua_isomorphic_path_isomorphic [] ;
+  ua_isomorphic_path_isomorphic -> ua_isomorphic_issig_isomorphic [] ;
+  ua_isomorphic_isomorphic_id -> ua_isomorphic_BuildIsomorphic [] ;
+  ua_isomorphic_isomorphic_id -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_id_isomorphic -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_issig_isomorphic -> ua_isomorphic_SigIsomorphic [] ;
+  ua_isomorphic_issig_isomorphic -> ua_isomorphic_BuildIsomorphic [] ;
+  ua_isomorphic_issig_isomorphic -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_is_isomorphism_isomorphic -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_is_homomorphism_isomorphic -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_def_isomorphic -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_Isomorphic_sind -> ua_isomorphic_BuildIsomorphic [] ;
+  ua_isomorphic_Isomorphic_sind -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_Isomorphic_rec -> ua_isomorphic_Isomorphic_rect [] ;
+  ua_isomorphic_Isomorphic_ind -> ua_isomorphic_BuildIsomorphic [] ;
+  ua_isomorphic_Isomorphic_ind -> ua_isomorphic_Isomorphic [] ;
+  ua_isomorphic_Isomorphic_rect -> ua_isomorphic_BuildIsomorphic [] ;
+  ua_isomorphic_Isomorphic_rect -> ua_isomorphic_Isomorphic [] ;
+subgraph cluster_ua_isomorphic { label="ua_isomorphic"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ua_isomorphic_Isomorphic; ua_isomorphic_BuildIsomorphic; ua_isomorphic_Isomorphic_rect; ua_isomorphic_Isomorphic_ind; ua_isomorphic_Isomorphic_rec; ua_isomorphic_Isomorphic_sind; ua_isomorphic_def_isomorphic; ua_isomorphic_is_homomorphism_isomorphic; ua_isomorphic_is_isomorphism_isomorphic; ua_isomorphic_SigIsomorphic; ua_isomorphic_issig_isomorphic; ua_isomorphic_id_isomorphic; ua_isomorphic_isomorphic_id; ua_isomorphic_path_isomorphic; ua_isomorphic_path_hset_isomorphic; ua_isomorphic_path_def_isomorphic_id_transport_dom; ua_isomorphic_path_def_isomorphic_id_transport_cod; ua_isomorphic_path_path_isomorphism_hom_id_hset; ua_isomorphic_sect_id_isomorphic; ua_isomorphic_sect_isomorphic_id; ua_isomorphic_isequiv_isomorphic_id; };
+} /* END */

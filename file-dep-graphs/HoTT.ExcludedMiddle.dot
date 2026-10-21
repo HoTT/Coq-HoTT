@@ -1,0 +1,25 @@
+digraph HoTT_ExcludedMiddle {
+  graph [ratio=0.5]
+  node [style=filled]
+ExcludedMiddle_DNE_from_allneg [label="DNE_from_allneg", URL=<ExcludedMiddle.html#DNE_from_allneg>, peripheries=3, fillcolor="#F070D1"] ;
+ExcludedMiddle_allneg_from_DNE [label="allneg_from_DNE", URL=<ExcludedMiddle.html#allneg_from_DNE>, peripheries=3, fillcolor="#F070D1"] ;
+ExcludedMiddle_DNE_to_LEM [label="DNE_to_LEM", URL=<ExcludedMiddle.html#DNE_to_LEM>, peripheries=3, fillcolor="#F070D1"] ;
+ExcludedMiddle_LEM_to_DNE [label="LEM_to_DNE", URL=<ExcludedMiddle.html#LEM_to_DNE>, peripheries=3, fillcolor="#F070D1"] ;
+ExcludedMiddle_DNE_type [label="DNE_type", URL=<ExcludedMiddle.html#DNE_type>, fillcolor="#F070D1"] ;
+ExcludedMiddle_decidable_lem [label="decidable_lem", URL=<ExcludedMiddle.html#decidable_lem>, peripheries=3, fillcolor="#F070D1"] ;
+ExcludedMiddle_ExcludedMiddle_type [label="ExcludedMiddle_type", URL=<ExcludedMiddle.html#ExcludedMiddle_type>, fillcolor="#F070D1"] ;
+ExcludedMiddle_LEM [label="LEM", URL=<ExcludedMiddle.html#LEM>, fillcolor="#FACDEF"] ;
+ExcludedMiddle_is_global_axiom_excludedmiddle [label="is_global_axiom_excludedmiddle", URL=<ExcludedMiddle.html#is_global_axiom_excludedmiddle>, peripheries=3, fillcolor="#F070D1"] ;
+ExcludedMiddle_ExcludedMiddle [label="ExcludedMiddle", URL=<ExcludedMiddle.html#ExcludedMiddle>, fillcolor="#FACDEF"] ;
+  ExcludedMiddle_DNE_from_allneg -> ExcludedMiddle_DNE_type [] ;
+  ExcludedMiddle_allneg_from_DNE -> ExcludedMiddle_DNE_type [] ;
+  ExcludedMiddle_DNE_to_LEM -> ExcludedMiddle_DNE_type [] ;
+  ExcludedMiddle_DNE_to_LEM -> ExcludedMiddle_ExcludedMiddle_type [] ;
+  ExcludedMiddle_LEM_to_DNE -> ExcludedMiddle_DNE_type [] ;
+  ExcludedMiddle_LEM_to_DNE -> ExcludedMiddle_LEM [] ;
+  ExcludedMiddle_decidable_lem -> ExcludedMiddle_LEM [] ;
+  ExcludedMiddle_LEM -> ExcludedMiddle_ExcludedMiddle [] ;
+  ExcludedMiddle_is_global_axiom_excludedmiddle -> ExcludedMiddle_ExcludedMiddle [] ;
+subgraph cluster_ExcludedMiddle { label="ExcludedMiddle"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ExcludedMiddle_ExcludedMiddle; ExcludedMiddle_is_global_axiom_excludedmiddle; ExcludedMiddle_LEM; ExcludedMiddle_ExcludedMiddle_type; ExcludedMiddle_decidable_lem; ExcludedMiddle_DNE_type; ExcludedMiddle_LEM_to_DNE; ExcludedMiddle_DNE_to_LEM; ExcludedMiddle_allneg_from_DNE; ExcludedMiddle_DNE_from_allneg; };
+} /* END */

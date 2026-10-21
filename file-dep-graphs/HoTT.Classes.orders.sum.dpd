@@ -1,0 +1,9 @@
+N: 6 "Empty_lt" [body=yes, kind=cnst, prop=no, path="sum", ];
+N: 5 "Unit_lt" [body=yes, kind=cnst, prop=no, path="sum", ];
+N: 4 "empty_tricho" [body=yes, kind=cnst, prop=no, path="sum", ];
+N: 2 "sum_lt" [body=yes, kind=cnst, prop=no, path="sum", ];
+N: 1 "sum_tricho" [body=yes, kind=cnst, prop=no, path="sum", ];
+N: 3 "unit_tricho" [body=yes, kind=cnst, prop=no, path="sum", ];
+E: 1 2 [weight=16, ];
+E: 3 5 [weight=9, ];
+E: 4 6 [weight=4, ];

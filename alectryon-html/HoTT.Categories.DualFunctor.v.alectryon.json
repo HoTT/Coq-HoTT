@@ -1,0 +1,2001 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * The functor [\u1d52\u1d56 : cat \u2192 cat] *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Dual Functor.Dual.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cat.Core Functor.Paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Trunc Types.Sigma HoTT.Tactics Types.Forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope category_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section opposite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variable P : PreCategory -> Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{forall C, IsHProp (P C)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let cat := (@sub_pre_cat _ P HF).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hypothesis has_op : forall C : cat, P C.1^op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition opposite_functor : Functor cat cat\n    := Build_Functor\n         cat cat\n         (fun C => (C.1^op; has_op _))\n         (fun _ _ F => F^op)%functor\n         (fun _ _ _ _ _ => idpath)\n         (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let opposite_functor_involutive_helper (x : cat)\n  : (x.1^op^op; has_op (_; has_op _)) = x\n    := path_sigma_uncurried\n         P\n         (((x.1^op)^op)%category;\n          has_op ((x.1^op)%category;\n                  has_op x))\n         x\n         (Category.Dual.opposite_involutive x.1;\n          path_ishprop _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Arguments path_sigma_uncurried : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition opposite_functor_involutive\n  : opposite_functor o opposite_functor = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "opposite_functor o opposite_functor = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x : cat =>\npath_sigma_uncurried P\n  (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n  (Category.Dual.opposite_involutive x.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x.1)\n       (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)).2)\n    x.2)",
+              "type": "forall x : cat,\n(((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "opposite_functor o opposite_functor = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x : cat =>\npath_sigma_uncurried P\n  (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n  (Category.Dual.opposite_involutive x.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x.1)\n       (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)).2)\n    x.2)",
+              "type": "forall x : cat,\n(((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: (fun c : {C : PreCategory & P C} =>\n   (((c.1)^op)^op%category; has_op ((c.1)^op%category; has_op c))) =\n  idmap\n&\ntransport\n  (fun GO : {C : PreCategory & P C} -> {C : PreCategory & P C} =>\n   forall s d : {C : PreCategory & P C},\n   Functor s.1 d.1 -> Functor (GO s).1 (GO d).1)\n  HO (fun (s d : {C : PreCategory & P C}) (m : Functor s.1 d.1) => (m^op)^op) =\n(fun s d : {C : PreCategory & P C} => idmap)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x : cat =>\npath_sigma_uncurried P\n  (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n  (Category.Dual.opposite_involutive x.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x.1)\n       (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)).2)\n    x.2)",
+              "type": "forall x : cat,\n(((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (path_forall _ _ opposite_functor_involutive_helper; _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : {C : PreCategory & P C} -> {C : PreCategory & P C} =>\n   forall s d : {C : PreCategory & P C},\n   Functor s.1 d.1 -> Functor (GO s).1 (GO d).1)\n  (path_forall\n     (fun x : cat =>\n      (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)))\n     idmap opposite_functor_involutive_helper)\n  (fun (s d : {C : PreCategory & P C}) (m : Functor s.1 d.1) => (m^op)^op) =\n(fun s d : {C : PreCategory & P C} => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x : cat =>\npath_sigma_uncurried P\n  (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n  (Category.Dual.opposite_involutive x.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x.1)\n       (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)).2)\n    x.2)",
+              "type": "forall x : cat,\n(((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat (apply path_forall; intro).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : {C : PreCategory & P C} -> {C : PreCategory & P C} =>\n   forall s d : {C : PreCategory & P C},\n   Functor s.1 d.1 -> Functor (GO s).1 (GO d).1)\n  (path_forall\n     (fun x2 : cat =>\n      (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)))\n     idmap opposite_functor_involutive_helper)\n  (fun (s d : {C : PreCategory & P C}) (m : Functor s.1 d.1) => (m^op)^op) x\n  x0 x1 =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : cat =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x2.1)\n       (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)).2)\n    x2.2)",
+              "type": "forall x2 : cat,\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{C : PreCategory & P C}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !transport_forall_constant.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x2 : {C : PreCategory & P C} -> {C : PreCategory & P C} =>\n   Functor (x2 x).1 (x2 x0).1)\n  (path_forall\n     (fun x2 : cat =>\n      (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)))\n     idmap opposite_functor_involutive_helper)\n  (x1^op)^op =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : cat =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x2.1)\n       (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)).2)\n    x2.2)",
+              "type": "forall x2 : cat,\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{C : PreCategory & P C}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_path_forall_hammer.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : {C : PreCategory & P C} => Functor x.1 y.1)\n  (opposite_functor_involutive_helper x0)\n  (transport\n     (fun y : {C : PreCategory & P C} =>\n      Functor y.1\n        (((x0.1)^op)^op%category; has_op ((x0.1)^op%category; has_op x0)).1)\n     (opposite_functor_involutive_helper x) (x1^op)^op) =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : cat =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x2.1)\n       (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)).2)\n    x2.2)",
+              "type": "forall x2 : cat,\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{C : PreCategory & P C}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold opposite_functor_involutive_helper.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : {C : PreCategory & P C} => Functor x.1 y.1)\n  (path_sigma_uncurried P\n     (((x0.1)^op)^op%category; has_op ((x0.1)^op%category; has_op x0)) x0\n     (Category.Dual.opposite_involutive x0.1;\n     path_ishprop\n       (transport P (Category.Dual.opposite_involutive x0.1)\n          (((x0.1)^op)^op%category; has_op ((x0.1)^op%category; has_op x0)).2)\n       x0.2))\n  (transport\n     (fun y : {C : PreCategory & P C} =>\n      Functor y.1\n        (((x0.1)^op)^op%category; has_op ((x0.1)^op%category; has_op x0)).1)\n     (path_sigma_uncurried P\n        (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n        (Category.Dual.opposite_involutive x.1;\n        path_ishprop\n          (transport P (Category.Dual.opposite_involutive x.1)\n             (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)).2)\n          x.2))\n     (x1^op)^op) =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : cat =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x2.1)\n       (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)).2)\n    x2.2)",
+              "type": "forall x2 : cat,\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{C : PreCategory & P C}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !transport_pr1_path_sigma_uncurried.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (Functor x.1)\n  (Category.Dual.opposite_involutive x0.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x0.1)\n       (((x0.1)^op)^op%category; has_op ((x0.1)^op%category; has_op x0)).2)\n    x0.2).1\n  (transport\n     (fun y : {C : PreCategory & P C} =>\n      Functor y.1\n        (((x0.1)^op)^op%category; has_op ((x0.1)^op%category; has_op x0)).1)\n     (path_sigma_uncurried P\n        (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n        (Category.Dual.opposite_involutive x.1;\n        path_ishprop\n          (transport P (Category.Dual.opposite_involutive x.1)\n             (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)).2)\n          x.2))\n     (x1^op)^op) =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : cat, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : cat =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop\n    (transport P (Category.Dual.opposite_involutive x2.1)\n       (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)).2)\n    x2.2)",
+              "type": "forall x2 : cat,\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{C : PreCategory & P C}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : {C : PreCategory & P C} => Functor y.1 ((x0.1)^op)^op)\n  (path_sigma_uncurried P\n     (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n     (Category.Dual.opposite_involutive x.1;\n     path_ishprop (has_op ((x.1)^op%category; has_op x)) x.2))\n  (x1^op)^op =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {C : PreCategory & P C}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : {C : PreCategory & P C} =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop (has_op ((x2.1)^op%category; has_op x2)) x2.2)",
+              "type": "forall x2 : {C : PreCategory & P C},\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{C : PreCategory & P C}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat progress change (fun x => ?f x) with f in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun y : {x : _ & P x} => Functor y.1 ((x0.1)^op)^op)\n  (path_sigma_uncurried P\n     (((x.1)^op)^op%category; has_op ((x.1)^op%category; has_op x)) x\n     (Category.Dual.opposite_involutive x.1;\n     path_ishprop (has_op ((x.1)^op%category; has_op x)) x.2))\n  (x1^op)^op =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : {x : _ & P x} =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop (has_op ((x2.1)^op%category; has_op x2)) x2.2)",
+              "type": "forall x2 : {x : _ & P x},\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "match goal with\n      | [ |- context[transport\n                          (fun x' => ?f x'.1 ?y)\n                          (@path_sigma_uncurried ?A ?P ?u ?v ?pq)] ]\n        => rewrite (@transport_pr1_path_sigma_uncurried\n                      A P u v pq\n                      (fun x => f x y))\n    end.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x2 : PreCategory => Functor x2 ((x0.1)^op)^op)\n  (Category.Dual.opposite_involutive x.1;\n  path_ishprop (has_op ((x.1)^op%category; has_op x)) x.2).1 \n  (x1^op)^op =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : {x : _ & P x} =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop (has_op ((x2.1)^op%category; has_op x2)) x2.2)",
+              "type": "forall x2 : {x : _ & P x},\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1^op)^op = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "sub_pre_cat P",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : {x : _ & P x} =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop (has_op ((x2.1)^op%category; has_op x2)) x2.2)",
+              "type": "forall x2 : {x : _ & P x},\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1^op)^op = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat"
+              ],
+              "body": "{|\n  object := {C : PreCategory & P C};\n  morphism :=\n    fun (C : {C : PreCategory & P C}) (D : {C0 : PreCategory & P C0}) =>\n    Functor C.1 D.1;\n  Core.identity := fun C : {C : PreCategory & P C} => 1;\n  Category.Core.compose :=\n    fun (s d d' : {C : PreCategory & P C}) (F : Functor d.1 d'.1)\n      (G : Functor s.1 d.1) =>\n    F o G;\n  associativity :=\n    fun (x2 x3 x4 x5 : {C : PreCategory & P C}) (m1 : Functor x2.1 x3.1)\n      (m2 : Functor x3.1 x4.1) (m3 : Functor x4.1 x5.1) =>\n    Laws.associativity m1 m2 m3;\n  associativity_sym :=\n    fun (x2 x3 x4 x5 : {C : PreCategory & P C}) (m1 : Functor x2.1 x3.1)\n      (m2 : Functor x3.1 x4.1) (m3 : Functor x4.1 x5.1) =>\n    symmetry (m3 o m2 o m1) (m3 o (m2 o m1)) (Laws.associativity m1 m2 m3);\n  left_identity :=\n    fun (a b : {C : PreCategory & P C}) (f : Functor a.1 b.1) =>\n    Laws.left_identity f;\n  right_identity :=\n    fun (a b : {C : PreCategory & P C}) (f : Functor a.1 b.1) =>\n    Laws.right_identity f;\n  identity_identity :=\n    fun x2 : {C : PreCategory & P C} => Laws.left_identity 1;\n  trunc_morphism := fun s d : {C : PreCategory & P C} => HF s.2 d.2\n|}",
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "opposite_functor_involutive_helper"
+              ],
+              "body": "fun x2 : {x : _ & P x} =>\npath_sigma_uncurried P\n  (((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) x2\n  (Category.Dual.opposite_involutive x2.1;\n  path_ishprop (has_op ((x2.1)^op%category; has_op x2)) x2.2)",
+              "type": "forall x2 : {x : _ & P x},\n(((x2.1)^op)^op%category; has_op ((x2.1)^op%category; has_op x2)) = x2"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "subst_body.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1^op)^op = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "{x : _ & P x}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor x.1 x0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct_head @sig.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(x1^op)^op = x1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj3"
+              ],
+              "body": null,
+              "type": "P proj0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "P proj1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "Functor proj0 proj1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct_head @Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "({|\n   object_of := object_of;\n   morphism_of := morphism_of;\n   composition_of := composition_of;\n   identity_of := identity_of\n |}^op)^op =\n{|\n  object_of := object_of;\n  morphism_of := morphism_of;\n  composition_of := composition_of;\n  identity_of := identity_of\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj0"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj3"
+              ],
+              "body": null,
+              "type": "P proj0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj1"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "P proj1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object_of"
+              ],
+              "body": null,
+              "type": "proj0 -> proj1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism_of"
+              ],
+              "body": null,
+              "type": "forall s d : proj0,\nmorphism proj0 s d -> morphism proj1 (object_of s) (object_of d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "composition_of"
+              ],
+              "body": null,
+              "type": "forall (s d d' : proj0) (m1 : morphism proj0 s d) \n(m2 : morphism proj0 d d'),\nmorphism_of s d' (m2 o m1)%morphism =\n(morphism_of d d' m2 o morphism_of s d m1)%morphism"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_of"
+              ],
+              "body": null,
+              "type": "forall x : proj0, morphism_of x x 1%morphism = 1%morphism"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct_head @PreCategory.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "({|\n   object_of := object_of;\n   morphism_of := morphism_of;\n   composition_of := composition_of;\n   identity_of := identity_of\n |}^op)^op =\n{|\n  object_of := object_of;\n  morphism_of := morphism_of;\n  composition_of := composition_of;\n  identity_of := identity_of\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "PreCategory -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall C : PreCategory, IsHProp (P C)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HF"
+              ],
+              "body": null,
+              "type": "forall C D : PreCategory, P C -> P D -> IsHSet (Functor C D)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "has_op"
+              ],
+              "body": null,
+              "type": "forall C : {x : _ & P x}, P (C.1)^op"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object0"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism0"
+              ],
+              "body": null,
+              "type": "object0 -> object0 -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, morphism0 x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose0"
+              ],
+              "body": null,
+              "type": "forall s d d' : object0, morphism0 d d' -> morphism0 s d -> morphism0 s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1 =\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym0"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object0) (m1 : morphism0 x1 x2) \n(m2 : morphism0 x2 x3) (m3 : morphism0 x3 x4),\ncompose0 x1 x3 x4 m3 (compose0 x1 x2 x3 m2 m1) =\ncompose0 x1 x2 x4 (compose0 x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a b b (identity0 b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity0"
+              ],
+              "body": null,
+              "type": "forall (a b : object0) (f : morphism0 a b),\ncompose0 a a b f (identity0 a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity0"
+              ],
+              "body": null,
+              "type": "forall x : object0, compose0 x x x (identity0 x) (identity0 x) = identity0 x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism0"
+              ],
+              "body": null,
+              "type": "forall s d : object0, IsHSet (morphism0 s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj3"
+              ],
+              "body": null,
+              "type": "P\n  {|\n    object := object0;\n    morphism := morphism0;\n    Core.identity := identity0;\n    Category.Core.compose := compose0;\n    associativity := associativity0;\n    associativity_sym := associativity_sym0;\n    left_identity := left_identity0;\n    right_identity := right_identity0;\n    identity_identity := identity_identity0;\n    trunc_morphism := trunc_morphism0\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism"
+              ],
+              "body": null,
+              "type": "object -> object -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity"
+              ],
+              "body": null,
+              "type": "forall x : object, morphism x x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "compose"
+              ],
+              "body": null,
+              "type": "forall s d d' : object, morphism d d' -> morphism s d -> morphism s d'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1 =\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "associativity_sym"
+              ],
+              "body": null,
+              "type": "forall (x1 x2 x3 x4 : object) (m1 : morphism x1 x2) \n(m2 : morphism x2 x3) (m3 : morphism x3 x4),\ncompose x1 x3 x4 m3 (compose x1 x2 x3 m2 m1) =\ncompose x1 x2 x4 (compose x2 x3 x4 m3 m2) m1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "left_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a b b (identity b) f = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "right_identity"
+              ],
+              "body": null,
+              "type": "forall (a b : object) (f : morphism a b), compose a a b f (identity a) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_identity"
+              ],
+              "body": null,
+              "type": "forall x : object, compose x x x (identity x) (identity x) = identity x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "trunc_morphism"
+              ],
+              "body": null,
+              "type": "forall s d : object, IsHSet (morphism s d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "proj2"
+              ],
+              "body": null,
+              "type": "P\n  {|\n    object := object;\n    morphism := morphism;\n    Core.identity := identity;\n    Category.Core.compose := compose;\n    associativity := associativity;\n    associativity_sym := associativity_sym;\n    left_identity := left_identity;\n    right_identity := right_identity;\n    identity_identity := identity_identity;\n    trunc_morphism := trunc_morphism\n  |}"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "object_of"
+              ],
+              "body": null,
+              "type": "object0 -> object"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "morphism_of"
+              ],
+              "body": null,
+              "type": "forall s d : object0, morphism0 s d -> morphism (object_of s) (object_of d)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "composition_of"
+              ],
+              "body": null,
+              "type": "forall (s d d' : object0) (m1 : morphism0 s d) (m2 : morphism0 d d'),\nmorphism_of s d' (compose0 s d d' m2 m1) =\ncompose (object_of s) (object_of d) (object_of d') \n  (morphism_of d d' m2) (morphism_of s d m1)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "identity_of"
+              ],
+              "body": null,
+              "type": "forall x : object0, morphism_of x x (identity0 x) = identity (object_of x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End opposite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

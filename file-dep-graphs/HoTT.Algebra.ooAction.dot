@@ -1,0 +1,9 @@
+digraph HoTT_Algebra_ooAction {
+  graph [ratio=0.5]
+  node [style=filled]
+ooAction_action_space [label="action_space", URL=<ooAction.html#action_space>, peripheries=3, fillcolor="#F070D1"] ;
+ooAction_ooAction [label="ooAction", URL=<ooAction.html#ooAction>, fillcolor="#F070D1"] ;
+  ooAction_action_space -> ooAction_ooAction [] ;
+subgraph cluster_ooAction { label="ooAction"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ooAction_ooAction; ooAction_action_space; };
+} /* END */

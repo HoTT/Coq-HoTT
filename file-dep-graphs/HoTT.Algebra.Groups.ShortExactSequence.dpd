@@ -1,0 +1,14 @@
+N: 2 "equiv_grp_isexact_kernel" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 8 "grp_cxfib" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 5 "grp_iscomplex_trivial" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 7 "grp_iso_cxfib" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 6 "grp_iso_cxfib_beta" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 1 "grp_iso_isexact" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 3 "iff_grp_isexact_isembedding" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+N: 4 "isembedding_isexact" [body=yes, kind=cnst, prop=no, path="ShortExactSequence", ];
+E: 1 4 [weight=1, ];
+E: 2 3 [weight=1, ];
+E: 3 4 [weight=1, ];
+E: 3 5 [weight=7, ];
+E: 6 7 [weight=2, ];
+E: 7 8 [weight=1, ];

@@ -1,0 +1,7104 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types HSpace.Core HSpace.Coherent HSpace.Pointwise",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types HSpace.Core HSpace.Coherent HSpace.Pointwise\n  Pointed Homotopy.EvaluationFibration.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * The moduli type of coherent H-space structures *)\n\n(** When [A] is a left-invertible coherent H-space, we construct an equivalence between the (\"moduli\") type of coherent H-space structures on [A] and the type [A ->* (A ->** A)]. By the smash-hom adjunction for pointed types, due to Floris van Doorn in HoTT, the latter is also equivalent to the type [Smash A A ->* A].\n\nThis equivalence generalizes a formula of Arkowitz--Curjel and Copeland for spaces, and appears as Theorem 2.27 in https://arxiv.org/abs/2301.02636v1 *)\n\n(** ** Paths between H-space structures *)\n\n(** Paths between H-space structures correspond to homotopies between the underlying binary operations which respect the identities. This is the type of the latter. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition path_ishspace_type {X : pType} (mu nu : IsHSpace X) : Type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu",
+                "nu"
+              ],
+              "body": null,
+              "type": "IsHSpace X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu",
+                "nu"
+              ],
+              "body": null,
+              "type": "IsHSpace X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine { h : forall x0 x1, mu x0 x1 = nu x0 x1 & prod (forall x:X, _) (forall x:X, _) }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x0 x1 : X, mu x0 x1 = nu x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x0 x1 : X, mu x0 x1 = nu x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x0 x1 : X, mu x0 x1 = nu x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (mu_lid x = h pt x @ nu_lid x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x0 x1 : X, mu x0 x1 = nu x0 x1"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (mu_rid x = h x pt @ nu_rid x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Transport of left and right identities of binary operations along paths between the underlying functions. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Definition transport_binop_lr_id `{Funext} {X : Type} {x : X}\n  {mu nu : X -> X -> X} `{mu_lid : forall y, mu x y = y}\n  `{mu_rid : forall y, mu y x = y} (p : mu = nu)\n  : transport (fun m : X -> X -> X =>\n                 (forall y, m x y = y) * (forall y, m y x = y))\n      p (mu_lid, mu_rid)\n    = (fun y => (ap100 p _ _)^ @ mu_lid y,\n         fun y => (ap100 p _ _)^ @ mu_rid y).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun m : X -> X -> X =>\n   (forall y : X, m x y = y) * (forall y : X, m y x = y))\n  p (mu_lid, mu_rid) =\n(fun y : X => (ap100 p x y)^ @ mu_lid y,\nfun y : X => (ap100 p y x)^ @ mu_rid y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu",
+                "nu"
+              ],
+              "body": null,
+              "type": "X -> X -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "forall y : X, mu x y = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "forall y : X, mu y x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "mu = nu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun m : X -> X -> X =>\n   (forall y : X, m x y = y) * (forall y : X, m y x = y))\n  p (mu_lid, mu_rid) =\n(fun y : X => (ap100 p x y)^ @ mu_lid y,\nfun y : X => (ap100 p y x)^ @ mu_rid y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu",
+                "nu"
+              ],
+              "body": null,
+              "type": "X -> X -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "forall y : X, mu x y = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "forall y : X, mu y x = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "mu = nu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction p; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(mu_lid, mu_rid) = (fun y : X => 1 @ mu_lid y, fun y : X => 1 @ mu_rid y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "X -> X -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "forall y : X, mu x y = y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "forall y : X, mu y x = y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_prod'; funext y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mu_lid y = 1 @ mu_lid y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "X -> X -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "forall y0 : X, mu x y0 = y0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "forall y0 : X, mu y0 x = y0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mu_rid y = 1 @ mu_rid y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "X -> X -> X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "forall y0 : X, mu x y0 = y0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "forall y0 : X, mu y0 x = y0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: exact (concat_1p _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Characterization of paths between H-space structures. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_path_ishspace `{Funext} {X : pType} (mu nu : IsHSpace X)\n  : path_ishspace_type mu nu <~> (mu = nu).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_ishspace_type mu nu <~> mu = nu",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu",
+                "nu"
+              ],
+              "body": null,
+              "type": "IsHSpace X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "path_ishspace_type mu nu <~> mu = nu",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu",
+                "nu"
+              ],
+              "body": null,
+              "type": "IsHSpace X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid];\n    unfold path_ishspace_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : forall x0 x1 : X, mu x0 x1 = nu x0 x1 &\n((forall x : X, mu_lid x = h pt x @ nu_lid x) *\n (forall x : X, mu_rid x = h x pt @ nu_rid x))%type} <~>\n{|\n  hspace_op := mu;\n  hspace_left_identity := mu_lid;\n  hspace_right_identity := mu_rid\n|} =\n{|\n  hspace_op := nu;\n  hspace_left_identity := nu_lid;\n  hspace_right_identity := nu_rid\n|}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (equiv_ap_inv' issig_ishspace _ _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : forall x0 x1 : X, mu x0 x1 = nu x0 x1 &\n((forall x : X, mu_lid x = h pt x @ nu_lid x) *\n (forall x : X, mu_rid x = h x pt @ nu_rid x))%type} <~>\nissig_ishspace^-1\n  {|\n    hspace_op := mu;\n    hspace_left_identity := mu_lid;\n    hspace_right_identity := mu_rid\n  |} =\nissig_ishspace^-1\n  {|\n    hspace_op := nu;\n    hspace_left_identity := nu_lid;\n    hspace_right_identity := nu_rid\n  |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (equiv_path_sigma _ _ _ oE _); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : forall x0 x1 : X, mu x0 x1 = nu x0 x1 &\n((forall x : X, mu_lid x = h pt x @ nu_lid x) *\n (forall x : X, mu_rid x = h x pt @ nu_rid x))%type} <~>\n{p : mu = nu &\ntransport\n  (fun mu0 : X -> X -> X =>\n   ((forall x : X, mu0 pt x = x) * (forall x : X, mu0 x pt = x))%type)\n  p (mu_lid, mu_rid) =\n(nu_lid, nu_rid)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_functor_sigma' (equiv_path_arrow2 _ _)); intro h; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall x : X, mu_lid x = h pt x @ nu_lid x) *\n(forall x : X, mu_rid x = h x pt @ nu_rid x) <~>\ntransport\n  (fun mu0 : X -> X -> X =>\n   ((forall x : X, mu0 pt x = x) * (forall x : X, mu0 x pt = x))%type)\n  (path_forall mu nu\n     (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n  (mu_lid, mu_rid) =\n(nu_lid, nu_rid)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : X, mu x y = nu x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (equiv_concat_l _ _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun mu0 : X -> X -> X =>\n   ((forall x : X, mu0 pt x = x) * (forall x : X, mu0 x pt = x))%type)\n  (path_forall mu nu\n     (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n  (mu_lid, mu_rid) =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : X, mu x y = nu x y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall x : X, mu_lid x = h pt x @ nu_lid x) *\n(forall x : X, mu_rid x = h x pt @ nu_rid x) <~> ?Goal = (nu_lid, nu_rid)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : X, mu x y = nu x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: apply transport_binop_lr_id.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall x : X, mu_lid x = h pt x @ nu_lid x) *\n(forall x : X, mu_rid x = h x pt @ nu_rid x) <~>\n(fun y : X =>\n (ap100\n    (path_forall mu nu\n       (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n    pt y)^ @\n mu_lid y,\nfun y : X =>\n(ap100\n   (path_forall mu nu\n      (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n   y pt)^ @\nmu_rid y) = (nu_lid, nu_rid)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : X, mu x y = nu x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (equiv_path_prod _ _ oE _); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall x : X, mu_lid x = h pt x @ nu_lid x) *\n(forall x : X, mu_rid x = h x pt @ nu_rid x) <~>\n((fun y : X =>\n  (ap100\n     (path_forall mu nu\n        (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n     pt y)^ @\n  mu_lid y) =\n nu_lid) *\n((fun y : X =>\n  (ap100\n     (path_forall mu nu\n        (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n     y pt)^ @\n  mu_rid y) =\n nu_rid)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x y : X, mu x y = nu x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_prod';\n    nrefine (equiv_path_forall _ _ oE _);\n    apply equiv_functor_forall_id; intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mu_lid x = h pt x @ nu_lid x <~>\n(ap100\n   (path_forall mu nu\n      (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n   pt x)^ @\nmu_lid x = nu_lid x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x0 y : X, mu x0 y = nu x0 y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mu_rid x = h x pt @ nu_rid x <~>\n(ap100\n   (path_forall mu nu\n      (functor_forall idmap (fun a : X => path_forall (mu a) (nu a)) h))\n   x pt)^ @\nmu_rid x = nu_rid x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity mu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu"
+              ],
+              "body": null,
+              "type": "SgOp X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_lid"
+              ],
+              "body": null,
+              "type": "LeftIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nu_rid"
+              ],
+              "body": null,
+              "type": "RightIdentity nu pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "forall x0 y : X, mu x0 y = nu x0 y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "all: nrefine (equiv_moveR_Vp _ _ _ oE _);\n    apply equiv_concat_r;\n    apply whiskerR; symmetry;\n    apply ap100_path_arrow2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Sections of evaluation fibrations *)\n\n(** We first show that coherent H-space structures on a pointed type correspond to pointed sections of the evaluation fibration [ev A]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_iscohhspace_psect `{Funext} (A : pType)\n  : IsCohHSpace A <~> pSect (ev A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A <~> pSect (ev A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A <~> pSect (ev A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (issig_psect (ev A) oE _^-1%equiv oE (issig_iscohhspace A)^-1%equiv).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : A -> selfmaps A &\n{p : s pt = pt &\n{H0 : (fun x : A => ev A (s x)) == idmap &\nH0 pt = ap (ev A) p @ point_eq (ev A)}}} <~>\n{hspace_op : SgOp A &\n{hspace_left_identity : LeftIdentity hspace_op pt &\n{hspace_right_identity : RightIdentity hspace_op pt &\nhspace_left_identity pt = hspace_right_identity pt}}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold SgOp, LeftIdentity, RightIdentity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : A -> selfmaps A &\n{p : s pt = pt &\n{H0 : (fun x : A => ev A (s x)) == idmap &\nH0 pt = ap (ev A) p @ point_eq (ev A)}}} <~>\n{hspace_op : A -> A -> A &\n{hspace_left_identity : forall y : A, hspace_op pt y = y &\n{hspace_right_identity : forall x : A, hspace_op x pt = x &\nhspace_left_identity pt = hspace_right_identity pt}}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_sigma_id; intro mu.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : mu pt = pt &\n{H0 : (fun x : A => ev A (mu x)) == idmap &\nH0 pt = ap (ev A) p @ point_eq (ev A)}} <~>\n{hspace_left_identity : forall y : A, mu pt y = y &\n{hspace_right_identity : forall x : A, mu x pt = x &\nhspace_left_identity pt = hspace_right_identity pt}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "A -> selfmaps A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_functor_sigma' (equiv_apD10 _ _ _)); intro H1; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{H0 : (fun x : A => mu x pt) == idmap &\nH0 pt = ap (fun f : A -> A => f pt) H1 @ 1} <~>\n{hspace_right_identity : forall x : A, mu x pt = x &\napD10 H1 pt = hspace_right_identity pt}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "A -> selfmaps A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "mu pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_sigma_id; intro H2; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H2 pt = ap (fun f : A -> A => f pt) H1 @ 1 <~> apD10 H1 pt = H2 pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "A -> selfmaps A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "mu pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "(fun x : A => mu x pt) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_path_inverse _ _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H2 pt = ap (fun f : A -> A => f pt) H1 @ 1 <~> H2 pt = apD10 H1 pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "A -> selfmaps A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "mu pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "(fun x : A => mu x pt) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_concat_r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun f : A -> A => f pt) H1 @ 1 = apD10 H1 pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mu"
+              ],
+              "body": null,
+              "type": "A -> selfmaps A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "mu pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "(fun x : A => mu x pt) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply concat_p1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Our next goal is to see that when [A] is a left-invertible H-space, then the fibration [ev A] is trivial. We begin with two results that allow the domain to be a general pointed type [B]. We'll later just need the case when [B] is [A]. *)\n\n(** This lemma says that the family [fun a => B ->* [A,a]] is trivial. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma equiv_pmap_hspace `{Funext} {A B : pType}\n  (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}\n  : (B ->* A) <~> (B ->* [A,a]).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) <~> (B ->* [A, a])",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) <~> (B ->* [A, a])",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pequiv_pequiv_postcompose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A <~>* [A, a]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply pequiv_hspace_left_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The next result is a consequence of the previous lemma. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proposition equiv_map_pmap_hspace `{Funext} {A B : pType}\n  `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}\n  : (B ->* A) * A <~> (B -> A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) * A <~> (B -> A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) * A <~> (B -> A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity {a : A  & {f : B -> A & f pt = a}}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) * A <~> {a : A & {f : B -> A & f pt = a}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{a : A & {f : B -> A & f pt = a}} <~> (B -> A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: exact (equiv_sigma_contr _ oE (equiv_sigma_symm _)^-1%equiv).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) * A <~> {a : A & {f : B -> A & f pt = a}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE (equiv_sigma_prod0 _ _)^-1%equiv oE equiv_prod_symm _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{_ : A & B ->* A} <~> {a : A & {f : B -> A & f pt = a}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_sigma_id; intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(B ->* A) <~> {f : B -> A & f pt = a}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((issig_pmap B [A,a])^-1%equiv oE equiv_pmap_hspace a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The equivalence [equiv_map_pmap_hspace] is pointed when [B] is [A]. (Note that [selfmaps A] is pointed at [idmap].) This is a pointed equivalence between the domains of [psnd : (A ->* A) * A ->* A] and [ev A : selfmaps A -> A], respectively. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proposition pequiv_map_pmap_hspace `{Funext} {A : pType}\n  `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}\n  : [(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[(A ->* A) * A, (pmap_idmap, pt)] <~>* selfmaps A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_pEquiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[(A ->* A) * A, (pmap_idmap, pt)] <~> selfmaps A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact equiv_map_pmap_hspace.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_map_pmap_hspace pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : A => pt * x) = idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall, hspace_left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** When [A] is coherent, the pointed equivalence [pequiv_map_pmap_hspace] is a pointed equivalence over [A], i.e., a trivialization of [ev A]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proposition hspace_ev_trivialization `{Funext} {A : pType}\n  `{IsCoherent A} `{forall a:A, IsEquiv (a *.)}\n  : ev A o* pequiv_map_pmap_hspace ==* psnd (A:=[A ->* A, pmap_idmap]).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ev A o* pequiv_map_pmap_hspace ==* psnd",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ev A o* pequiv_map_pmap_hspace ==* psnd",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_pHomotopy.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ev A o* pequiv_map_pmap_hspace == psnd",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?p pt = dpoint_eq (ev A o* pequiv_map_pmap_hspace) @ (dpoint_eq psnd)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ev A o* pequiv_map_pmap_hspace == psnd",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [f x]; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x * f pt = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap _ (dpoint_eq f) @ hspace_right_identity _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((fun x0 : [(A ->* A) * A, (pmap_idmap, pt)] =>\n  (fun (f : A ->* A) (x : A) =>\n   ap (hspace_op x) (dpoint_eq f) @ hspace_right_identity x\n   :\n   (ev A o* pequiv_map_pmap_hspace) (f, x) = psnd (f, x)) \n    (fst x0) (snd x0))\n :\n ev A o* pequiv_map_pmap_hspace == psnd) pt =\ndpoint_eq (ev A o* pequiv_map_pmap_hspace) @ (dpoint_eq psnd)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 @ hspace_right_identity pt =\n(ap (fun f : A -> A => f pt)\n   (path_forall (fun x : A => pt * x) idmap hspace_left_identity) @\n 1) @\n1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (concat_1p _ @ _^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap (fun f : A -> A => f pt)\n   (path_forall (fun x : A => pt * x) idmap hspace_left_identity) @\n 1) @\n1 = hspace_right_identity pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (concat_p1 _ @ concat_p1 _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun f : A -> A => f pt)\n  (path_forall (fun x : A => pt * x) idmap hspace_left_identity) =\nhspace_right_identity pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap10_path_forall _ _ _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_left_identity pt = hspace_right_identity pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact iscoherent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The equivalence [IsCohHSpace A <~> (A ->* (A ->** A))] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem equiv_cohhspace_ppmap `{Funext} {A : pType}\n  `{IsCoherent A} `{forall a:A, IsEquiv (hspace_op a)}\n  : IsCohHSpace A <~> (A ->* (A ->** A)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A <~> (A ->* (A ->** A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A <~> (A ->* (A ->** A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_iscohhspace_psect A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pSect (ev A) <~> (A ->* (A ->** A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE (equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization^*)^-1%equiv).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pSect psnd <~> (A ->* (A ->** A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_psect_psnd (A:=[A ->* A, pmap_idmap])).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(A ->* [A ->* A, pmap_idmap]) <~> (A ->* (A ->** A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (pequiv_pequiv_postcompose _); symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(A ->** A) <~>* [A ->* A, pmap_idmap]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "IsCoherent A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H2"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (hspace_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply pequiv_hspace_left_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here is a third characterization of the type of coherent H-space structures. It simply involves shuffling the data around and using [Funext]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_iscohhspace_ptd_action `{Funext} (A : pType)\n  : IsCohHSpace A <~> { act : forall a, A ->* [A,a] & act pt ==* pmap_idmap }.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A <~>\n{act : forall a : IsPointed A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A <~>\n{act : forall a : IsPointed A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE (issig_iscohhspace A)^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{hspace_op : SgOp A &\n{hspace_left_identity : LeftIdentity hspace_op pt &\n{hspace_right_identity : RightIdentity hspace_op pt &\nhspace_left_identity pt = hspace_right_identity pt}}} <~>\n{act : forall a : IsPointed A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold IsPointed.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{hspace_op : SgOp A &\n{hspace_left_identity : LeftIdentity hspace_op pt &\n{hspace_right_identity : RightIdentity hspace_op pt &\nhspace_left_identity pt = hspace_right_identity pt}}} <~>\n{act : forall a : A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* First we shuffle the data on the LHS to be of this form: *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "equiv_via {s : {act : A -> (A -> A) & forall a, act a pt = a} & {h : s.1 pt == idmap & h pt = s.2 pt}}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{hspace_op : SgOp A &\n{hspace_left_identity : LeftIdentity hspace_op pt &\n{hspace_right_identity : RightIdentity hspace_op pt &\nhspace_left_identity pt = hspace_right_identity pt}}} <~>\n{s : {act : A -> A -> A & forall a : A, act a pt = a} &\n{h : s.1 pt == idmap & h pt = s.2 pt}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : {act : A -> A -> A & forall a : A, act a pt = a} &\n{h : s.1 pt == idmap & h pt = s.2 pt}} <~>\n{act : forall a : A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: make_equiv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s : {act : A -> A -> A & forall a : A, act a pt = a} &\n{h : s.1 pt == idmap & h pt = s.2 pt}} <~>\n{act : forall a : A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Then we break up [->*] and [==*] on the RHS using issig lemmas, and handle a trailing [@ 1]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply equiv_functor_sigma'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{act : A -> A -> A & forall a : A, act a pt = a} <~>\n(forall a : A, A ->* [A, a])",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : {act : A -> A -> A & forall a : A, act a pt = a},\n(fun s : {act : A -> A -> A & forall a0 : A, act a0 pt = a0} =>\n {h : s.1 pt == idmap & h pt = s.2 pt}) a <~>\n(fun act : forall a0 : A, A ->* [A, a0] => act pt ==* pmap_idmap) (?f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{act : A -> A -> A & forall a : A, act a pt = a} <~>\n(forall a : A, A ->* [A, a])",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_functor_forall_id (fun a => issig_pmap A [A,a]) oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{act : A -> A -> A & forall a : A, act a pt = a} <~>\n(forall a : IsPointed A, {f : A -> [A, a] & f pt = pt})",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold IsPointed.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{act : A -> A -> A & forall a : A, act a pt = a} <~>\n(forall a : A, {f : A -> [A, a] & f pt = pt})",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply equiv_sig_coind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : {act : A -> A -> A & forall a : A, act a pt = a},\n(fun s : {act : A -> A -> A & forall a0 : A, act a0 pt = a0} =>\n {h : s.1 pt == idmap & h pt = s.2 pt}) a <~>\n(fun act : forall a0 : A, A ->* [A, a0] => act pt ==* pmap_idmap)\n  ((equiv_functor_forall_id (fun a0 : IsPointed A => issig_pmap A [A, a0])\n    oE (equiv_sig_coind (fun _ : A => A -> A)\n          (fun (x : A) (f : A -> [A, x]) => f pt = pt)\n        :\n        {act : A -> A -> A & forall a0 : A, act a0 pt = a0} <~>\n        (forall a0 : IsPointed A, {f : A -> [A, a0] & f pt = pt})))\n     a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : {act : A -> A -> A & forall a : A, act a pt = a},\n{h : a.1 pt == idmap & h pt = a.2 pt} <~>\n{| pointed_fun := a.1 pt; dpoint_eq := a.2 pt |} ==* pmap_idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [act p]; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : act pt == idmap & h pt = p pt} <~>\n{| pointed_fun := act pt; dpoint_eq := p pt |} ==* pmap_idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "act"
+              ],
+              "body": null,
+              "type": "A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall a : A, act a pt = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (issig_phomotopy _ _ oE _); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{h : act pt == idmap & h pt = p pt} <~>\n{p0 : act pt == idmap & p0 pt = p pt @ 1}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "act"
+              ],
+              "body": null,
+              "type": "A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall a : A, act a pt = a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_sigma_id; intro q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "q pt = p pt <~> q pt = p pt @ 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "act"
+              ],
+              "body": null,
+              "type": "A -> A -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall a : A, act a pt = a"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "act pt == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_concat_r; symmetry; apply concat_p1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** It follows that any homogeneous type is a coherent H-space.  This generalizes [ishspace_homogeneous]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition iscohhspace_homogeneous `{Funext} {A : pType} `{IsHomogeneous A}\n  : IsCohHSpace A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_iscohhspace_ptd_action A)^-1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{act : forall a : IsPointed A, A ->* [A, a] & act pt ==* pmap_idmap}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists homogeneous_pt_id.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "homogeneous_pt_id pt ==* pmap_idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact homogeneous_pt_id_beta.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** One can also show directly that the H-space structure defined by [ishspace_homogeneous] is coherent. This also avoids [Funext]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition iscoherent_homogeneous {A : pType} `{IsHomogeneous A}\n  : @IsCoherent A (ishspace_homogeneous).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold IsCoherent; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr (ishomogeneous pt) pt =\nap (ishomogeneous pt) (moveR_equiv_V pt pt (point_eq (ishomogeneous pt))^) @\npoint_eq (ishomogeneous pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "set (f := ishomogeneous pt).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr (ishomogeneous pt) pt =\nap (ishomogeneous pt) (moveR_equiv_V pt pt (point_eq (ishomogeneous pt))^) @\npoint_eq (ishomogeneous pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (eisretr f pt = ap f (moveR_equiv_V pt pt (point_eq f)^) @ point_eq f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr f pt = ap f (moveR_equiv_V pt pt (point_eq f)^) @ point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (point_eq f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr f pt = ap f (moveR_equiv_V pt pt 1^) @ 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold moveR_equiv_V; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr f pt = ap f (1 @ eissect f pt) @ 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rhs napply concat_p1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eisretr f pt = ap f (1 @ eissect f pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply (eisadj f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f (eissect f pt) = ap f (1 @ eissect f pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "eissect f pt = 1 @ eissect f pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHomogeneous A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": "ishomogeneous pt",
+              "type": "A <~>* [A, pt]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; apply concat_1p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Using either of these, we can \"upgrade\" any left-invertible H-space structure to a coherent one. This one has a prime because the direct proof below computes better. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition iscohhspace_hspace' (A : pType)\n  `{IsHSpace A} `{forall a, IsEquiv (a *.)}\n  : IsCohHSpace A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_IsCohHSpace.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply ishspace_homogeneous.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHomogeneous A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ishomogeneous_hspace.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact iscoherent_homogeneous.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The new multiplication is homotopic to the original one.  Relative to this, we expect that one of the identity laws also agrees, but that the other does not. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition iscohhspace_hspace'_beta_mu `{Funext} (A : pType)\n  {m : IsHSpace A} `{forall a, IsEquiv (a *.)}\n  : @hspace_op A (@ishspace_cohhspace A (iscohhspace_hspace' A)) = @hspace_op A m.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_op = hspace_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_op = hspace_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun a b : A => a * (sg_op pt)^-1 b) = hspace_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* [*], [sg_op] and [hspace_op] all denote the original operation. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "funext a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a * (sg_op pt)^-1 b = hspace_op a b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap (a *.) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(sg_op pt)^-1 b = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_equiv_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "b = pt * b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; apply left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here's a different proof that directly upgrades an H-space structure, leaving the multiplication and left-identity definitionally the same, but changing the right-identity. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition iscohhspace_hspace (A : pType)\n  {m : IsHSpace A} `{forall a, IsEquiv (a *.)}\n  : IsCohHSpace A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCohHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_IsCohHSpace.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSpace A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: snapply Build_IsHSpace.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity ?hspace_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightIdentity ?hspace_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (@hspace_op A m).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity hspace_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (@hspace_left_identity A m).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightIdentity hspace_op pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_op a pt = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs exact (ap (a *.) (hspace_right_identity pt))^.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a * hspace_op pt pt = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs exact (ap (a *.) (hspace_left_identity pt)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "a * pt = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a0 : A, IsEquiv (sg_op a0)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (hspace_right_identity a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoherent A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold IsCoherent; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_left_identity pt =\n(ap (sg_op pt) (hspace_right_identity pt))^ @\n(ap (sg_op pt) (hspace_left_identity pt) @ hspace_right_identity pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_Vp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (sg_op pt) (hspace_right_identity pt) @ hspace_left_identity pt =\nap (sg_op pt) (hspace_left_identity pt) @ hspace_right_identity pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "lhs napply concat_A1p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_left_identity (hspace_op pt pt) @ hspace_right_identity pt =\nap (sg_op pt) (hspace_left_identity pt) @ hspace_right_identity pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @@ 1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_left_identity (hspace_op pt pt) =\nap (sg_op pt) (hspace_left_identity pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (cancelR _ _ (hspace_left_identity pt)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hspace_left_identity (hspace_op pt pt) @ hspace_left_identity pt =\nap (sg_op pt) (hspace_left_identity pt) @ hspace_left_identity pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m"
+              ],
+              "body": null,
+              "type": "IsHSpace A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall a : A, IsEquiv (sg_op a)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; apply concat_A1p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

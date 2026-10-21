@@ -1,0 +1,18 @@
+N: 9 "abses_pushout_trivial_factors_inclusion" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 4 "cyclic'" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 1 "ext_cyclic_ab" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 2 "ext_cyclic_exact" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 11 "isexact_abses_sixterm_i" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 10 "isexact_ext_contra_sixterm_ii" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 8 "isexact_ext_contra_sixterm_iii" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 6 "isexact_ext_contra_sixterm_iv" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 7 "isexact_ext_contra_sixterm_iv_mor" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 5 "isexact_ext_contra_sixterm_v" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+N: 3 "isexact_ext_cyclic_ab_iii" [body=yes, kind=cnst, prop=no, path="SixTerm", ];
+E: 1 2 [weight=1, ];
+E: 1 4 [weight=9, ];
+E: 1 6 [weight=1, ];
+E: 2 3 [weight=1, ];
+E: 3 8 [weight=1, ];
+E: 6 7 [weight=1, ];
+E: 8 9 [weight=1, ];

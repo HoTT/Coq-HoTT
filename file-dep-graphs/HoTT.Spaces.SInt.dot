@@ -1,0 +1,54 @@
+digraph HoTT_Spaces_SInt {
+  graph [ratio=0.5]
+  node [style=filled]
+SInt_SInt_rec [label="SInt_rec", URL=<SInt.html#SInt_rec>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_SInt_rect [label="SInt_rect", URL=<SInt.html#SInt_rect>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_SInt_ind [label="SInt_ind", URL=<SInt.html#SInt_ind>, fillcolor="#F070D1"] ;
+SInt_ishset_sint [label="ishset_sint", URL=<SInt.html#ishset_sint>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_decidablepaths_sint [label="decidablepaths_sint", URL=<SInt.html#decidablepaths_sint>, fillcolor="#F070D1"] ;
+SInt_sint_pred_succ [label="sint_pred_succ", URL=<SInt.html#sint_pred_succ>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_sint_succ_pred [label="sint_succ_pred", URL=<SInt.html#sint_succ_pred>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_sint_neg [label="sint_neg", URL=<SInt.html#sint_neg>, fillcolor="#F070D1"] ;
+SInt_sint_pred [label="sint_pred", URL=<SInt.html#sint_pred>, fillcolor="#F070D1"] ;
+SInt_sint_succ [label="sint_succ", URL=<SInt.html#sint_succ>, fillcolor="#F070D1"] ;
+SInt_sint_of_number_int [label="sint_of_number_int", URL=<SInt.html#sint_of_number_int>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_sint_to_number_int [label="sint_to_number_int", URL=<SInt.html#sint_to_number_int>, peripheries=3, fillcolor="#F070D1"] ;
+SInt_negsint_of_nat [label="negsint_of_nat", URL=<SInt.html#negsint_of_nat>, fillcolor="#F070D1"] ;
+SInt_sint_of_nat [label="sint_of_nat", URL=<SInt.html#sint_of_nat>, fillcolor="#F070D1"] ;
+SInt_sint_PosS [label="sint_PosS", URL=<SInt.html#sint_PosS>, fillcolor="#7FAAFF"] ;
+SInt_sint_zero [label="sint_zero", URL=<SInt.html#sint_zero>, fillcolor="#7FAAFF"] ;
+SInt_sint_NegS [label="sint_NegS", URL=<SInt.html#sint_NegS>, fillcolor="#7FAAFF"] ;
+SInt_SInt [label="SInt", URL=<SInt.html#SInt>, fillcolor="#E2CDFA"] ;
+  SInt_SInt_rec -> SInt_SInt_ind [] ;
+  SInt_SInt_rect -> SInt_SInt_ind [] ;
+  SInt_SInt_ind -> SInt_sint_neg [] ;
+  SInt_SInt_ind -> SInt_sint_of_nat [] ;
+  SInt_ishset_sint -> SInt_decidablepaths_sint [] ;
+  SInt_decidablepaths_sint -> SInt_sint_PosS [] ;
+  SInt_decidablepaths_sint -> SInt_sint_zero [] ;
+  SInt_decidablepaths_sint -> SInt_sint_NegS [] ;
+  SInt_decidablepaths_sint -> SInt_SInt [] ;
+  SInt_sint_pred_succ -> SInt_sint_pred [] ;
+  SInt_sint_pred_succ -> SInt_sint_succ [] ;
+  SInt_sint_succ_pred -> SInt_sint_pred [] ;
+  SInt_sint_succ_pred -> SInt_sint_succ [] ;
+  SInt_sint_neg -> SInt_sint_PosS [] ;
+  SInt_sint_neg -> SInt_sint_zero [] ;
+  SInt_sint_neg -> SInt_sint_NegS [] ;
+  SInt_sint_neg -> SInt_SInt [] ;
+  SInt_sint_pred -> SInt_sint_of_nat [] ;
+  SInt_sint_pred -> SInt_sint_NegS [] ;
+  SInt_sint_succ -> SInt_negsint_of_nat [] ;
+  SInt_sint_succ -> SInt_sint_PosS [] ;
+  SInt_sint_of_number_int -> SInt_negsint_of_nat [] ;
+  SInt_sint_of_number_int -> SInt_sint_of_nat [] ;
+  SInt_sint_to_number_int -> SInt_SInt [] ;
+  SInt_negsint_of_nat -> SInt_sint_zero [] ;
+  SInt_negsint_of_nat -> SInt_sint_NegS [] ;
+  SInt_negsint_of_nat -> SInt_SInt [] ;
+  SInt_sint_of_nat -> SInt_sint_PosS [] ;
+  SInt_sint_of_nat -> SInt_sint_zero [] ;
+  SInt_sint_of_nat -> SInt_SInt [] ;
+subgraph cluster_SInt { label="SInt"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+SInt_SInt; SInt_sint_NegS; SInt_sint_zero; SInt_sint_PosS; SInt_sint_of_nat; SInt_negsint_of_nat; SInt_sint_to_number_int; SInt_sint_of_number_int; SInt_sint_succ; SInt_sint_pred; SInt_sint_neg; SInt_sint_succ_pred; SInt_sint_pred_succ; SInt_decidablepaths_sint; SInt_ishset_sint; SInt_SInt_ind; SInt_SInt_rect; SInt_SInt_rec; };
+} /* END */

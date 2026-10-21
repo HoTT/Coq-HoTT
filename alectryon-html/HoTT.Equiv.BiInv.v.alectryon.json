@@ -1,0 +1,5010 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Basics Require Import Overture Equivalences Tactics Iff Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Basics Require Import Overture Equivalences Tactics Iff Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Basics Require Import PathGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Types Require Import Sigma Prod Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable Variables A B f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Bi-invertible maps *)\n\n(** A map is \"bi-invertible\" if it has both a section and a retraction, not necessarily the same.  This definition of equivalence was proposed by Andre Joyal. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBiInv {A B : Type} (e : A -> B) := {\n  sect_biinv : B -> A ;\n  retr_biinv : B -> A ;\n  eisretr_biinv : e o sect_biinv == idmap ;\n  eissect_biinv : retr_biinv o e == idmap ;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments sect_biinv {A B}%_type_scope e%_function_scope {_} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments retr_biinv {A B}%_type_scope e%_function_scope {_} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments eisretr_biinv {A B}%_type_scope e%_function_scope {_} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments eissect_biinv {A B}%_type_scope e%_function_scope {_} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record BiInv A B := {\n  biinv_fun : A -> B ;\n  biinv_isbiinv :: IsBiInv biinv_fun\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion biinv_fun : BiInv >-> Funclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments biinv_fun {A B} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments biinv_isbiinv {A B} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The record is equivalent to a product type.  This is used below in a 'product of contractible types is contractible' argument. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition prod_isbiinv (A B : Type) `{f : A -> B}\n  : {g : B -> A & g o f == idmap} * {h : B -> A & f o h == idmap} <~> IsBiInv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g : B -> A & g o f == idmap} * {h : B -> A & f o h == idmap} <~> IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g : B -> A & g o f == idmap} * {h : B -> A & f o h == idmap} <~> IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "make_equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_biinv (A B : Type) : {f : A -> B & IsBiInv f} <~> BiInv A B\n  := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [e] is bi-invertible, then the retraction and the section of [e] are homotopic. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sect_retr_homotopic_isbiinv {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : sect_biinv f == retr_biinv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sect_biinv f == retr_biinv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sect_biinv f == retr_biinv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert bi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall bi : IsBiInv f, sect_biinv f == retr_biinv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [h g r s].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sect_biinv f == retr_biinv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h",
+                "g"
+              ],
+              "body": null,
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(fun x : B => f (h x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(fun x : A => g (f x)) == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun y => (s (h y))^ @ ap g (r y)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** From a bi-invertible map, we can construct a half-adjoint equivalence in two ways.  Here we take the inverse to be the retraction.  Note that [isequiv_adjointify] modifies the last field provided.  So in order that [eissect_biinv f] not be modified, we first use [isequiv_adjointify] to prove that [retr_biinv f] is an equivalence, and then use [isequiv_inverse] to deduce that [f] is an equivalence. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isequiv_retr_biinv {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : IsEquiv (retr_biinv f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (retr_biinv f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (retr_biinv f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (isequiv_adjointify (retr_biinv f) f (eissect_biinv f) _); intro b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (retr_biinv f b) = b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* This inlined proof will be modified by [isequiv_adjointify]: *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap f (sect_retr_homotopic_isbiinv f b)^ @ eisretr_biinv f b).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isequiv_isbiinv {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : IsEquiv f\n  := isequiv_inverse (retr_biinv f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Now we extract the proof generated by [isequiv_adjointify]; it will satisfy the adjoint law [eisadj]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition retr_is_sect_isbiinv {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : f o retr_biinv f == idmap\n  := eisretr f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [f] is an equivalence in a second way.  Here we take the inverse to be the section.  Again, the last field we provide is modified, and we extract it. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isequiv_isbiinv' {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (isequiv_adjointify f (sect_biinv f) (eisretr_biinv f) _); intro a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "sect_biinv f (f a) = a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bi"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (sect_retr_homotopic_isbiinv f (f a) @ eissect_biinv f a).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sect_is_retr_isbiinv {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : sect_biinv f o f == idmap\n  := eissect f (IsEquiv:=isequiv_isbiinv' f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance isequiv_sect_biinv {A B : Type} (f : A -> B) `{bi : !IsBiInv f}\n  : IsEquiv (sect_biinv f)\n  := isequiv_inverse f (feq:=isequiv_isbiinv' f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isbiinv_isequiv {A B : Type} (f : A -> B)\n  : IsEquiv f -> IsBiInv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [g s r adj].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": null,
+              "type": "(fun x : B => f (g x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(fun x : A => g (f x)) == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "adj"
+              ],
+              "body": null,
+              "type": "forall x : A, s (f x) = ap f (r x)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Build_IsBiInv _ _ f g g s r).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition iff_isbiinv_isequiv {A B : Type} (f : A -> B)\n  : IsBiInv f <-> IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f <-> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f <-> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f -> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_isbiinv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f -> IsBiInv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isbiinv_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_isbiinv `{Funext} {A B : Type} (f : A -> B)\n  : IsHProp (IsBiInv f) | 0.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsBiInv f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (IsBiInv f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_inhabited_contr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f -> Contr (IsBiInv f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros bif.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (IsBiInv f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "bif"
+              ],
+              "body": null,
+              "type": "IsBiInv f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* This uses implicitly that the product of contractible types is contractible: *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (contr_equiv' _ (prod_isbiinv A B)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_isbiinv_isequiv `{Funext} {A B : Type} (f : A -> B)\n  : IsBiInv f <~> IsEquiv f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f <~> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsBiInv f <~> IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_iff_hprop_uncurried, iff_isbiinv_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Some lemmas to send equivalences and biinvertible maps back and forth. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_biinv A B (f : BiInv A B) : A <~> B\n  := Build_Equiv A B f _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition biinv_equiv A B (e : A <~> B) : BiInv A B\n  := Build_BiInv A B e (isbiinv_isequiv e (equiv_isequiv e)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_biinv_equiv `{Funext} A B\n  : BiInv A B <~> (A <~> B).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BiInv A B <~> (A <~> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BiInv A B <~> (A <~> B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine ((issig_equiv A B) oE _ oE (issig_biinv A B)^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : A -> B & IsBiInv f} <~> {f : A -> B & IsEquiv f}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (equiv_functor_sigma_id equiv_isbiinv_isequiv).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition biinv_idmap (A : Type) : BiInv A A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BiInv A A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BiInv A A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by nrefine (Build_BiInv A A idmap (Build_IsBiInv A A idmap idmap idmap _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Assume we have a commutative square [g o e == e' o f] in which [e] and [e'] are bi-invertible.  Then [f] and [g] also commute with the retractions and sections, and the homotopies in these new squares each satisfy a coherence condition. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section EquivalenceCompatibility.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A B C D : Type}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (e : BiInv A B) (e' : BiInv C D) (f : A -> C) (g : B -> D).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (pe : g o e == e' o f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let s := sect_biinv e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let r := retr_biinv e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let re := eissect_biinv e : r o e == idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let es := eisretr_biinv e : e o s == idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let s' := sect_biinv e'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let r' := retr_biinv e'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let re' := eissect_biinv e' : r' o e' == idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Let es' := eisretr_biinv e' : e' o s' == idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The following lemmas express the coherence conditions mentioned above. *)\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition biinv_compat_pr : r' o g == f o r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r' o g == f o r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "r' o g == f o r",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (equiv_ind e).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A, r' (g (e x)) = f (r (e x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun a => ap r' (pe a) @ (re' (f a) @ (ap f (re a))^)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition biinv_compat_ps : s' o g == f o s.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "s' o g == f o s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "s' o g == f o s",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "s' (g b) = f (s b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj e').",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "e' (s' (g b)) = e' (f (s b))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (es' (g b) @ (ap g (es b))^ @ pe (s b)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition biinv_compat_pre (x : A)\n    : re' (f x) = (ap r' (pe x))^ @ biinv_compat_pr (e x) @ ap f (re x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "re' (f x) = ((ap r' (pe x))^ @ biinv_compat_pr (e x)) @ ap f (re x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "re' (f x) = ((ap r' (pe x))^ @ biinv_compat_pr (e x)) @ ap f (re x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold biinv_compat_pr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "re' (f x) =\n((ap r' (pe x))^ @\n equiv_ind e (fun y : B => r' (g y) = f (r y))\n   (fun a : A => ap r' (pe a) @ (re' (f a) @ (ap f (re a))^)) \n   (e x)) @\nap f (re x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite equiv_ind_comp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "re' (f x) =\n((ap r' (pe x))^ @ (ap r' (pe x) @ (re' (f x) @ (ap f (re x))^))) @\nap f (re x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_pM.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "re' (f x) @ (ap f (re x))^ =\n(ap r' (pe x))^ @ (ap r' (pe x) @ (re' (f x) @ (ap f (re x))^))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_Vp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap r' (pe x) @ (re' (f x) @ (ap f (re x))^) =\nap r' (pe x) @ (re' (f x) @ (ap f (re x))^)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition biinv_compat_pes (y : B)\n    : es' (g y) = ap e' (biinv_compat_ps y) @ (pe (s y))^ @ ap g (es y).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "es' (g y) = (ap e' (biinv_compat_ps y) @ (pe (s y))^) @ ap g (es y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "es' (g y) = (ap e' (biinv_compat_ps y) @ (pe (s y))^) @ ap g (es y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ap_equiv_inj.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "es' (g y) =\n(((es' (g y) @ (ap g (es y))^) @ pe (s y)) @ (pe (s y))^) @ ap g (es y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_pM.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "es' (g y) @ (ap g (es y))^ =\n((es' (g y) @ (ap g (es y))^) @ pe (s y)) @ (pe (s y))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_pV.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(es' (g y) @ (ap g (es y))^) @ pe (s y) =\n(es' (g y) @ (ap g (es y))^) @ pe (s y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "BiInv A B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e'"
+              ],
+              "body": null,
+              "type": "BiInv C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "B -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "pe"
+              ],
+              "body": null,
+              "type": "g o e == e' o f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s"
+              ],
+              "body": "sect_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": "retr_biinv e",
+              "type": "B -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re"
+              ],
+              "body": "eissect_biinv e",
+              "type": "r o e == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es"
+              ],
+              "body": "eisretr_biinv e",
+              "type": "e o s == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "s'"
+              ],
+              "body": "sect_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r'"
+              ],
+              "body": "retr_biinv e'",
+              "type": "D -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "re'"
+              ],
+              "body": "eissect_biinv e'",
+              "type": "r' o e' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "es'"
+              ],
+              "body": "eisretr_biinv e'",
+              "type": "e' o s' == idmap"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End EquivalenceCompatibility.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

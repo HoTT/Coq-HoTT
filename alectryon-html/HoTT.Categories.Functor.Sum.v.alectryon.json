@@ -1,0 +1,745 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Functors involving coproduct categories *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Sum Functor.Core Functor.Composition.Core Functor.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Paths HoTT.Tactics Types.Forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We save [inl] and [inr] so we can use them to refer to the functors, too.  Outside of the [Categories/] directory, they should always be referred to as [Functor.inl] and [Functor.inr], after a [Require Functor].  Outside of this file, but in the [Categories/] directory, if you do not want to depend on all of [Functor] (for e.g., speed reasons), they should be referred to as [Functor.Sum.inl] and [Functor.Sum.inr] after a [Require Functor.Sum]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation type_inl := inl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation type_inr := inr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Injections [inl : C \u2192 C + D] and [inr : D \u2192 C + D] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sum_functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition inl : Functor C (C + D)\n    := Build_Functor C (C + D)\n                     (@inl _ _)\n                     (fun _ _ m => m)\n                     (fun _ _ _ _ _ => idpath)\n                     (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition inr : Functor D (C + D)\n    := Build_Functor D (C + D)\n                     (@inr _ _)\n                     (fun _ _ m => m)\n                     (fun _ _ _ _ _ => idpath)\n                     (fun _ => idpath).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sum_functors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Coproduct of functors [F + F' : C + C' \u2192 D] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section sum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Variables C C' D : PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sum (F : Functor C D) (F' : Functor C' D)\n  : Functor (C + C') D.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (C + C') D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "Functor C' D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Functor (C + C') D",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C'"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F"
+              ],
+              "body": null,
+              "type": "Functor C D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "F'"
+              ],
+              "body": null,
+              "type": "Functor C' D"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (Build_Functor\n              (C + C') D\n              (fun cc'\n               => match cc' with\n                    | type_inl c => F c\n                    | type_inr c' => F' c'\n                  end)\n              (fun s d\n               => match s, d with\n                    | type_inl cs, type_inl cd\n                      => fun m : morphism _ cs cd => F _1 m\n                    | type_inr c's, type_inr c'd\n                      => fun m : morphism _ c's c'd => F' _1 m\n                    | _, _ => fun m => match m with end\n                  end%morphism)\n              _\n              _);\n    abstract (\n        repeat (intros [] || intro);\n        simpl in *;\n          auto with functor\n      ).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End sum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** swap : [C + D \u2192 D + C] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section swap_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition swap C D\n  : Functor (C + D) (D + C)\n    := sum (inr _ _) (inl _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition swap_involutive_helper {C D} c\n  : (swap C D) ((swap D C) c)\n    = c\n    := match c with type_inl _ => idpath | type_inr _ => idpath end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma swap_involutive `{Funext} C D\n  : swap C D o swap D C = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "swap C D o swap D C = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "swap C D o swap D C = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "path_functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{HO\n: (fun c : D + C =>\n   match\n     match c with\n     | type_inl _ _ c0 => type_inr c0\n     | type_inr _ _ c' => type_inl c'\n     end\n   with\n   | type_inl _ _ c0 => type_inr c0\n   | type_inr _ _ c' => type_inl c'\n   end) =\n  idmap\n&\ntransport\n  (fun GO : D + C -> D + C =>\n   forall s d : D + C,\n   match s with\n   | type_inl _ _ s0 =>\n       match d with\n       | type_inl _ _ d0 => morphism D s0 d0\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s0 =>\n       match d with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d0 => morphism C s0 d0\n       end\n   end ->\n   match GO s with\n   | type_inl _ _ s0 =>\n       match GO d with\n       | type_inl _ _ d0 => morphism D s0 d0\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s0 =>\n       match GO d with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d0 => morphism C s0 d0\n       end\n   end)\n  HO\n  (fun (s d : D + C)\n     (m : match s with\n          | type_inl _ _ s0 =>\n              match d with\n              | type_inl _ _ d0 => morphism D s0 d0\n              | type_inr _ _ _ => Empty\n              end\n          | type_inr _ _ s0 =>\n              match d with\n              | type_inl _ _ _ => Empty\n              | type_inr _ _ d0 => morphism C s0 d0\n              end\n          end) =>\n   match\n     match s with\n     | type_inl _ _ c => type_inr c\n     | type_inr _ _ c' => type_inl c'\n     end as s0\n     return\n       (match s0 with\n        | type_inl _ _ s1 =>\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism C s1 d0\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s1 =>\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism D s1 d0\n            end\n        end ->\n        match\n          match s0 with\n          | type_inl _ _ c => type_inr c\n          | type_inr _ _ c' => type_inl c'\n          end\n        with\n        | type_inl _ _ s1 =>\n            match\n              match\n                match d with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism D s1 d0\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s1 =>\n            match\n              match\n                match d with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism C s1 d0\n            end\n        end)\n   with\n   | type_inl _ _ cs =>\n       match\n         match d with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d0\n         return\n           (match d0 with\n            | type_inl _ _ d1 => morphism C cs d1\n            | type_inr _ _ _ => Empty\n            end ->\n            match\n              match d0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d1 => morphism C cs d1\n            end)\n       with\n       | type_inl _ _ cd => idmap\n       | type_inr _ _ _ => fun m0 : Empty => match m0 return Empty with\n                                             end\n       end\n   | type_inr _ _ c's =>\n       match\n         match d with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d0\n         return\n           (match d0 with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d1 => morphism D c's d1\n            end ->\n            match\n              match d0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d1 => morphism D c's d1\n            | type_inr _ _ _ => Empty\n            end)\n       with\n       | type_inl _ _ _ => fun m0 : Empty => match m0 return Empty with\n                                             end\n       | type_inr _ _ c'd => idmap\n       end\n   end\n     (match\n        s as s0\n        return\n          (match s0 with\n           | type_inl _ _ s1 =>\n               match d with\n               | type_inl _ _ d0 => morphism D s1 d0\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s1 =>\n               match d with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism C s1 d0\n               end\n           end ->\n           match\n             match s0 with\n             | type_inl _ _ c => type_inr c\n             | type_inr _ _ c' => type_inl c'\n             end\n           with\n           | type_inl _ _ s1 =>\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d0 => morphism C s1 d0\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s1 =>\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism D s1 d0\n               end\n           end)\n      with\n      | type_inl _ _ cs =>\n          match\n            d as d0\n            return\n              (match d0 with\n               | type_inl _ _ d1 => morphism D cs d1\n               | type_inr _ _ _ => Empty\n               end ->\n               match\n                 match d0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d1 => morphism D cs d1\n               end)\n          with\n          | type_inl _ _ cd => idmap\n          | type_inr _ _ _ =>\n              fun m0 : Empty => match m0 return Empty with\n                                end\n          end\n      | type_inr _ _ c's =>\n          match\n            d as d0\n            return\n              (match d0 with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d1 => morphism C c's d1\n               end ->\n               match\n                 match d0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d1 => morphism C c's d1\n               | type_inr _ _ _ => Empty\n               end)\n          with\n          | type_inl _ _ _ =>\n              fun m0 : Empty => match m0 return Empty with\n                                end\n          | type_inr _ _ c'd => idmap\n          end\n      end m)) =\n(fun s d : D + C => idmap)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_forall _ _ swap_involutive_helper).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : D + C -> D + C =>\n   forall s d : D + C,\n   match s with\n   | type_inl _ _ s0 =>\n       match d with\n       | type_inl _ _ d0 => morphism D s0 d0\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s0 =>\n       match d with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d0 => morphism C s0 d0\n       end\n   end ->\n   match GO s with\n   | type_inl _ _ s0 =>\n       match GO d with\n       | type_inl _ _ d0 => morphism D s0 d0\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s0 =>\n       match GO d with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d0 => morphism C s0 d0\n       end\n   end)\n  (path_forall\n     (fun c : (D + C)%category => ((swap C D) _0 ((swap D C) _0 c))%object)\n     idmap swap_involutive_helper)\n  (fun (s d : D + C)\n     (m : match s with\n          | type_inl _ _ s0 =>\n              match d with\n              | type_inl _ _ d0 => morphism D s0 d0\n              | type_inr _ _ _ => Empty\n              end\n          | type_inr _ _ s0 =>\n              match d with\n              | type_inl _ _ _ => Empty\n              | type_inr _ _ d0 => morphism C s0 d0\n              end\n          end) =>\n   match\n     match s with\n     | type_inl _ _ c => type_inr c\n     | type_inr _ _ c' => type_inl c'\n     end as s0\n     return\n       (match s0 with\n        | type_inl _ _ s1 =>\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism C s1 d0\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s1 =>\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism D s1 d0\n            end\n        end ->\n        match\n          match s0 with\n          | type_inl _ _ c => type_inr c\n          | type_inr _ _ c' => type_inl c'\n          end\n        with\n        | type_inl _ _ s1 =>\n            match\n              match\n                match d with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism D s1 d0\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s1 =>\n            match\n              match\n                match d with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism C s1 d0\n            end\n        end)\n   with\n   | type_inl _ _ cs =>\n       match\n         match d with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d0\n         return\n           (match d0 with\n            | type_inl _ _ d1 => morphism C cs d1\n            | type_inr _ _ _ => Empty\n            end ->\n            match\n              match d0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d1 => morphism C cs d1\n            end)\n       with\n       | type_inl _ _ cd => idmap\n       | type_inr _ _ _ => fun m0 : Empty => match m0 return Empty with\n                                             end\n       end\n   | type_inr _ _ c's =>\n       match\n         match d with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d0\n         return\n           (match d0 with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d1 => morphism D c's d1\n            end ->\n            match\n              match d0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d1 => morphism D c's d1\n            | type_inr _ _ _ => Empty\n            end)\n       with\n       | type_inl _ _ _ => fun m0 : Empty => match m0 return Empty with\n                                             end\n       | type_inr _ _ c'd => idmap\n       end\n   end\n     (match\n        s as s0\n        return\n          (match s0 with\n           | type_inl _ _ s1 =>\n               match d with\n               | type_inl _ _ d0 => morphism D s1 d0\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s1 =>\n               match d with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism C s1 d0\n               end\n           end ->\n           match\n             match s0 with\n             | type_inl _ _ c => type_inr c\n             | type_inr _ _ c' => type_inl c'\n             end\n           with\n           | type_inl _ _ s1 =>\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d0 => morphism C s1 d0\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s1 =>\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism D s1 d0\n               end\n           end)\n      with\n      | type_inl _ _ cs =>\n          match\n            d as d0\n            return\n              (match d0 with\n               | type_inl _ _ d1 => morphism D cs d1\n               | type_inr _ _ _ => Empty\n               end ->\n               match\n                 match d0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d1 => morphism D cs d1\n               end)\n          with\n          | type_inl _ _ cd => idmap\n          | type_inr _ _ _ =>\n              fun m0 : Empty => match m0 return Empty with\n                                end\n          end\n      | type_inr _ _ c's =>\n          match\n            d as d0\n            return\n              (match d0 with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d1 => morphism C c's d1\n               end ->\n               match\n                 match d0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d1 => morphism C c's d1\n               | type_inr _ _ _ => Empty\n               end)\n          with\n          | type_inl _ _ _ =>\n              fun m0 : Empty => match m0 return Empty with\n                                end\n          | type_inr _ _ c'd => idmap\n          end\n      end m)) =\n(fun s d : D + C => idmap)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat (apply (@path_forall _); intro).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun GO : D + C -> D + C =>\n   forall s d : D + C,\n   match s with\n   | type_inl _ _ s0 =>\n       match d with\n       | type_inl _ _ d0 => morphism D s0 d0\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s0 =>\n       match d with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d0 => morphism C s0 d0\n       end\n   end ->\n   match GO s with\n   | type_inl _ _ s0 =>\n       match GO d with\n       | type_inl _ _ d0 => morphism D s0 d0\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s0 =>\n       match GO d with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d0 => morphism C s0 d0\n       end\n   end)\n  (path_forall\n     (fun c : (D + C)%category => ((swap C D) _0 ((swap D C) _0 c))%object)\n     idmap swap_involutive_helper)\n  (fun (s d : D + C)\n     (m : match s with\n          | type_inl _ _ s0 =>\n              match d with\n              | type_inl _ _ d0 => morphism D s0 d0\n              | type_inr _ _ _ => Empty\n              end\n          | type_inr _ _ s0 =>\n              match d with\n              | type_inl _ _ _ => Empty\n              | type_inr _ _ d0 => morphism C s0 d0\n              end\n          end) =>\n   match\n     match s with\n     | type_inl _ _ c => type_inr c\n     | type_inr _ _ c' => type_inl c'\n     end as s0\n     return\n       (match s0 with\n        | type_inl _ _ s1 =>\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism C s1 d0\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s1 =>\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism D s1 d0\n            end\n        end ->\n        match\n          match s0 with\n          | type_inl _ _ c => type_inr c\n          | type_inr _ _ c' => type_inl c'\n          end\n        with\n        | type_inl _ _ s1 =>\n            match\n              match\n                match d with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism D s1 d0\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s1 =>\n            match\n              match\n                match d with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism C s1 d0\n            end\n        end)\n   with\n   | type_inl _ _ cs =>\n       match\n         match d with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d0\n         return\n           (match d0 with\n            | type_inl _ _ d1 => morphism C cs d1\n            | type_inr _ _ _ => Empty\n            end ->\n            match\n              match d0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d1 => morphism C cs d1\n            end)\n       with\n       | type_inl _ _ cd => idmap\n       | type_inr _ _ _ => fun m0 : Empty => match m0 return Empty with\n                                             end\n       end\n   | type_inr _ _ c's =>\n       match\n         match d with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d0\n         return\n           (match d0 with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d1 => morphism D c's d1\n            end ->\n            match\n              match d0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d1 => morphism D c's d1\n            | type_inr _ _ _ => Empty\n            end)\n       with\n       | type_inl _ _ _ => fun m0 : Empty => match m0 return Empty with\n                                             end\n       | type_inr _ _ c'd => idmap\n       end\n   end\n     (match\n        s as s0\n        return\n          (match s0 with\n           | type_inl _ _ s1 =>\n               match d with\n               | type_inl _ _ d0 => morphism D s1 d0\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s1 =>\n               match d with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism C s1 d0\n               end\n           end ->\n           match\n             match s0 with\n             | type_inl _ _ c => type_inr c\n             | type_inr _ _ c' => type_inl c'\n             end\n           with\n           | type_inl _ _ s1 =>\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d0 => morphism C s1 d0\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s1 =>\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism D s1 d0\n               end\n           end)\n      with\n      | type_inl _ _ cs =>\n          match\n            d as d0\n            return\n              (match d0 with\n               | type_inl _ _ d1 => morphism D cs d1\n               | type_inr _ _ _ => Empty\n               end ->\n               match\n                 match d0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d1 => morphism D cs d1\n               end)\n          with\n          | type_inl _ _ cd => idmap\n          | type_inr _ _ _ =>\n              fun m0 : Empty => match m0 return Empty with\n                                end\n          end\n      | type_inr _ _ c's =>\n          match\n            d as d0\n            return\n              (match d0 with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d1 => morphism C c's d1\n               end ->\n               match\n                 match d0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d1 => morphism C c's d1\n               | type_inr _ _ _ => Empty\n               end)\n          with\n          | type_inl _ _ _ =>\n              fun m0 : Empty => match m0 return Empty with\n                                end\n          | type_inr _ _ c'd => idmap\n          end\n      end m))\n  x x0 x1 =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "D + C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "match x with\n| type_inl _ _ s =>\n    match x0 with\n    | type_inl _ _ d => morphism D s d\n    | type_inr _ _ _ => Empty\n    end\n| type_inr _ _ s =>\n    match x0 with\n    | type_inl _ _ _ => Empty\n    | type_inr _ _ d => morphism C s d\n    end\nend"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat match goal with\n               | [ |- context[transport (fun x' => forall y, @?C x' y) ?p ?f ?x] ]\n                 => simpl rewrite (@transport_forall_constant _ _ C _ _ p f x)\n           end.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x2 : D + C -> D + C =>\n   match x2 x with\n   | type_inl _ _ s =>\n       match x2 x0 with\n       | type_inl _ _ d => morphism D s d\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s =>\n       match x2 x0 with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d => morphism C s d\n       end\n   end)\n  (path_forall\n     (fun c : D + C =>\n      match\n        match c with\n        | type_inl _ _ c0 => type_inr c0\n        | type_inr _ _ c' => type_inl c'\n        end\n      with\n      | type_inl _ _ c0 => type_inr c0\n      | type_inr _ _ c' => type_inl c'\n      end)\n     idmap swap_involutive_helper)\n  (match\n     match x with\n     | type_inl _ _ c => type_inr c\n     | type_inr _ _ c' => type_inl c'\n     end as s\n     return\n       (match s with\n        | type_inl _ _ s0 =>\n            match\n              match x0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d => morphism C s0 d\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s0 =>\n            match\n              match x0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d => morphism D s0 d\n            end\n        end ->\n        match\n          match s with\n          | type_inl _ _ c => type_inr c\n          | type_inr _ _ c' => type_inl c'\n          end\n        with\n        | type_inl _ _ s0 =>\n            match\n              match\n                match x0 with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d => morphism D s0 d\n            | type_inr _ _ _ => Empty\n            end\n        | type_inr _ _ s0 =>\n            match\n              match\n                match x0 with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d => morphism C s0 d\n            end\n        end)\n   with\n   | type_inl _ _ cs =>\n       match\n         match x0 with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d\n         return\n           (match d with\n            | type_inl _ _ d0 => morphism C cs d0\n            | type_inr _ _ _ => Empty\n            end ->\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism C cs d0\n            end)\n       with\n       | type_inl _ _ cd => idmap\n       | type_inr _ _ _ => fun m : Empty => match m return Empty with\n                                            end\n       end\n   | type_inr _ _ c's =>\n       match\n         match x0 with\n         | type_inl _ _ c => type_inr c\n         | type_inr _ _ c' => type_inl c'\n         end as d\n         return\n           (match d with\n            | type_inl _ _ _ => Empty\n            | type_inr _ _ d0 => morphism D c's d0\n            end ->\n            match\n              match d with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ d0 => morphism D c's d0\n            | type_inr _ _ _ => Empty\n            end)\n       with\n       | type_inl _ _ _ => fun m : Empty => match m return Empty with\n                                            end\n       | type_inr _ _ c'd => idmap\n       end\n   end\n     (match\n        x as s\n        return\n          (match s with\n           | type_inl _ _ s0 =>\n               match x0 with\n               | type_inl _ _ d => morphism D s0 d\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s0 =>\n               match x0 with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d => morphism C s0 d\n               end\n           end ->\n           match\n             match s with\n             | type_inl _ _ c => type_inr c\n             | type_inr _ _ c' => type_inl c'\n             end\n           with\n           | type_inl _ _ s0 =>\n               match\n                 match x0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d => morphism C s0 d\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s0 =>\n               match\n                 match x0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d => morphism D s0 d\n               end\n           end)\n      with\n      | type_inl _ _ cs =>\n          match\n            x0 as d\n            return\n              (match d with\n               | type_inl _ _ d0 => morphism D cs d0\n               | type_inr _ _ _ => Empty\n               end ->\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism D cs d0\n               end)\n          with\n          | type_inl _ _ cd => idmap\n          | type_inr _ _ _ => fun m : Empty => match m return Empty with\n                                               end\n          end\n      | type_inr _ _ c's =>\n          match\n            x0 as d\n            return\n              (match d with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism C c's d0\n               end ->\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d0 => morphism C c's d0\n               | type_inr _ _ _ => Empty\n               end)\n          with\n          | type_inl _ _ _ => fun m : Empty => match m return Empty with\n                                               end\n          | type_inr _ _ c'd => idmap\n          end\n      end x1)) =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "D + C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "match x with\n| type_inl _ _ s =>\n    match x0 with\n    | type_inl _ _ d => morphism D s d\n    | type_inr _ _ _ => Empty\n    end\n| type_inr _ _ s =>\n    match x0 with\n    | type_inl _ _ _ => Empty\n    | type_inr _ _ d => morphism C s d\n    end\nend"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transport_path_forall_hammer.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun y : D + C =>\n   match x with\n   | type_inl _ _ s =>\n       match y with\n       | type_inl _ _ d => morphism D s d\n       | type_inr _ _ _ => Empty\n       end\n   | type_inr _ _ s =>\n       match y with\n       | type_inl _ _ _ => Empty\n       | type_inr _ _ d => morphism C s d\n       end\n   end)\n  (swap_involutive_helper x0)\n  (transport\n     (fun y : D + C =>\n      match y with\n      | type_inl _ _ s =>\n          match\n            match\n              match x0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ c => type_inr c\n            | type_inr _ _ c' => type_inl c'\n            end\n          with\n          | type_inl _ _ d => morphism D s d\n          | type_inr _ _ _ => Empty\n          end\n      | type_inr _ _ s =>\n          match\n            match\n              match x0 with\n              | type_inl _ _ c => type_inr c\n              | type_inr _ _ c' => type_inl c'\n              end\n            with\n            | type_inl _ _ c => type_inr c\n            | type_inr _ _ c' => type_inl c'\n            end\n          with\n          | type_inl _ _ _ => Empty\n          | type_inr _ _ d => morphism C s d\n          end\n      end)\n     (swap_involutive_helper x)\n     (match\n        match x with\n        | type_inl _ _ c => type_inr c\n        | type_inr _ _ c' => type_inl c'\n        end as s\n        return\n          (match s with\n           | type_inl _ _ s0 =>\n               match\n                 match x0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d => morphism C s0 d\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s0 =>\n               match\n                 match x0 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d => morphism D s0 d\n               end\n           end ->\n           match\n             match s with\n             | type_inl _ _ c => type_inr c\n             | type_inr _ _ c' => type_inl c'\n             end\n           with\n           | type_inl _ _ s0 =>\n               match\n                 match\n                   match x0 with\n                   | type_inl _ _ c => type_inr c\n                   | type_inr _ _ c' => type_inl c'\n                   end\n                 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d => morphism D s0 d\n               | type_inr _ _ _ => Empty\n               end\n           | type_inr _ _ s0 =>\n               match\n                 match\n                   match x0 with\n                   | type_inl _ _ c => type_inr c\n                   | type_inr _ _ c' => type_inl c'\n                   end\n                 with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d => morphism C s0 d\n               end\n           end)\n      with\n      | type_inl _ _ cs =>\n          match\n            match x0 with\n            | type_inl _ _ c => type_inr c\n            | type_inr _ _ c' => type_inl c'\n            end as d\n            return\n              (match d with\n               | type_inl _ _ d0 => morphism C cs d0\n               | type_inr _ _ _ => Empty\n               end ->\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism C cs d0\n               end)\n          with\n          | type_inl _ _ cd => idmap\n          | type_inr _ _ _ => fun m : Empty => match m return Empty with\n                                               end\n          end\n      | type_inr _ _ c's =>\n          match\n            match x0 with\n            | type_inl _ _ c => type_inr c\n            | type_inr _ _ c' => type_inl c'\n            end as d\n            return\n              (match d with\n               | type_inl _ _ _ => Empty\n               | type_inr _ _ d0 => morphism D c's d0\n               end ->\n               match\n                 match d with\n                 | type_inl _ _ c => type_inr c\n                 | type_inr _ _ c' => type_inl c'\n                 end\n               with\n               | type_inl _ _ d0 => morphism D c's d0\n               | type_inr _ _ _ => Empty\n               end)\n          with\n          | type_inl _ _ _ => fun m : Empty => match m return Empty with\n                                               end\n          | type_inr _ _ c'd => idmap\n          end\n      end\n        (match\n           x as s\n           return\n             (match s with\n              | type_inl _ _ s0 =>\n                  match x0 with\n                  | type_inl _ _ d => morphism D s0 d\n                  | type_inr _ _ _ => Empty\n                  end\n              | type_inr _ _ s0 =>\n                  match x0 with\n                  | type_inl _ _ _ => Empty\n                  | type_inr _ _ d => morphism C s0 d\n                  end\n              end ->\n              match\n                match s with\n                | type_inl _ _ c => type_inr c\n                | type_inr _ _ c' => type_inl c'\n                end\n              with\n              | type_inl _ _ s0 =>\n                  match\n                    match x0 with\n                    | type_inl _ _ c => type_inr c\n                    | type_inr _ _ c' => type_inl c'\n                    end\n                  with\n                  | type_inl _ _ d => morphism C s0 d\n                  | type_inr _ _ _ => Empty\n                  end\n              | type_inr _ _ s0 =>\n                  match\n                    match x0 with\n                    | type_inl _ _ c => type_inr c\n                    | type_inr _ _ c' => type_inl c'\n                    end\n                  with\n                  | type_inl _ _ _ => Empty\n                  | type_inr _ _ d => morphism D s0 d\n                  end\n              end)\n         with\n         | type_inl _ _ cs =>\n             match\n               x0 as d\n               return\n                 (match d with\n                  | type_inl _ _ d0 => morphism D cs d0\n                  | type_inr _ _ _ => Empty\n                  end ->\n                  match\n                    match d with\n                    | type_inl _ _ c => type_inr c\n                    | type_inr _ _ c' => type_inl c'\n                    end\n                  with\n                  | type_inl _ _ _ => Empty\n                  | type_inr _ _ d0 => morphism D cs d0\n                  end)\n             with\n             | type_inl _ _ cd => idmap\n             | type_inr _ _ _ =>\n                 fun m : Empty => match m return Empty with\n                                  end\n             end\n         | type_inr _ _ c's =>\n             match\n               x0 as d\n               return\n                 (match d with\n                  | type_inl _ _ _ => Empty\n                  | type_inr _ _ d0 => morphism C c's d0\n                  end ->\n                  match\n                    match d with\n                    | type_inl _ _ c => type_inr c\n                    | type_inr _ _ c' => type_inl c'\n                    end\n                  with\n                  | type_inl _ _ d0 => morphism C c's d0\n                  | type_inr _ _ _ => Empty\n                  end)\n             with\n             | type_inl _ _ _ =>\n                 fun m : Empty => match m return Empty with\n                                  end\n             | type_inr _ _ c'd => idmap\n             end\n         end x1))) =\nx1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "x0"
+              ],
+              "body": null,
+              "type": "D + C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x1"
+              ],
+              "body": null,
+              "type": "match x with\n| type_inl _ _ s =>\n    match x0 with\n    | type_inl _ _ d => morphism D s d\n    | type_inr _ _ _ => Empty\n    end\n| type_inr _ _ s =>\n    match x0 with\n    | type_inl _ _ _ => Empty\n    | type_inr _ _ d => morphism C s d\n    end\nend"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by repeat match goal with\n                  | [ H : Empty |- _ ] => destruct H\n                  | [ H : (_ + _) |- _ ] => destruct H\n                  | _ => progress hnf in *\n                end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End swap_functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Export FunctorSumNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"F + G\" := (sum F G) : functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End FunctorSumNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

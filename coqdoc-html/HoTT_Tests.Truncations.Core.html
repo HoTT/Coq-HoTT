@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT_Tests.Truncations.Core</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT_Tests.Truncations.Core</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Truncations.Core.html#"><span class="id" title="library">Truncations.Core</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab6"></a><h1 class="section">Tests for <span class="inlinecode"><span class="id" title="var">strip_truncations</span></span></h1>
+
+<div class="paragraph"> </div>
+
+ Hypotheses that are not truncations are skipped, and truncations hidden behind definitions such as <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#merely"><span class="id" title="definition">merely</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#hexists"><span class="id" title="definition">hexists</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#hor"><span class="id" title="definition">hor</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a></span> are stripped. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="binder, definition"><span id="A:1" class="id">A</span></span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="binder, definition"><span id="B:2" class="id">B</span></span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="binder, definition"><span id="C:3" class="id">C</span></span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="binder, definition"><span id="P:4" class="id">P</span></span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">IsHProp</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">B</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">hexists</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">P</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">hor</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">B</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Tr</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(-1)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">C</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Tr</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(-1)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">×</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">sig</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">P</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">×</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">+</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">B</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">×</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">C</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">P</span> <span class="id" title="var">HB</span> <span class="id" title="var">a</span> <span class="id" title="var">p</span> <span class="id" title="var">ab</span> <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;All&nbsp;four&nbsp;truncated&nbsp;hypotheses&nbsp;keep&nbsp;their&nbsp;names&nbsp;and&nbsp;have&nbsp;been&nbsp;replaced&nbsp;by&nbsp;their&nbsp;underlying&nbsp;types.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">a</span> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> ⇒ <span class="id" title="tactic">idtac</span> <span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Basics.Overture.html#sig"><span class="id" title="record">sig</span></a> <span class="id" title="var">P</span> ⇒ <span class="id" title="tactic">idtac</span> <span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">ab</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">A</span> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <span class="id" title="var">B</span>)%<span class="id" title="keyword">type</span> ⇒ <span class="id" title="tactic">idtac</span> <span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="var">C</span> ⇒ <span class="id" title="tactic">idtac</span> <span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;other&nbsp;hypotheses&nbsp;are&nbsp;untouched.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">HB</span> <span class="id" title="keyword">with</span> <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <span class="id" title="var">B</span> ⇒ <span class="id" title="tactic">idtac</span> <span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">a</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">ab</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <span class="id" title="var">c</span><a class="idref" href="HoTT.Basics.Overture.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A truncated hypothesis on which the goal depends is stripped using dependent elimination. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="A:5" class="id">A</span></span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="P:6" class="id">P</span></span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="x:7" class="id">x</span></span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">IsHProp</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">P</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">x</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">))</span></a><br/>
+&nbsp;&nbsp;<a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="a:8" class="id">a</span></span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">P</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">tr</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">a</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">))</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="x:9" class="id">x</span></span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">P</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">x</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> ? <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Truncations behind local definitions are stripped too. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="Local" class="idref" href="#Local"><span class="id" title="section">Local</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="Local.A" class="idref" href="#Local.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Local.mA" class="idref" href="#Local.mA"><span class="id" title="variable">mA</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#merely"><span class="id" title="definition">merely</span></a> <a class="idref" href="HoTT_Tests.Truncations.Core.html#Local.A"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">mA</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT_Tests.Truncations.Core.html#Local"><span class="id" title="section">Local</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Let-bound hypotheses are not stripped. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="A:11" class="id">A</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">b</span> := <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <span class="id" title="var">a</span> : <a class="idref" href="HoTT.Truncations.Core.html#merely"><span class="id" title="definition">merely</span></a> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="var">strip_truncations</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nothing is stripped if the goal is not appropriately truncated. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="A:12" class="id">A</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Tr</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">0</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="var">strip_truncations</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="A:13" class="id">A</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="var">strip_truncations</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A truncation of a higher level than the goal is not stripped, but the others are. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="A:14" class="id">A</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="B:15" class="id">B</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Type</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="binder, definition"><span id="n:16" class="id">n</span></span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">trunc_index</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">),</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Tr</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">A</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">B</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">merely</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">n</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">T</span> := <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">a</span> <span class="id" title="tactic">in</span> <span class="id" title="var">unify</span> <span class="id" title="var">T</span> (<a class="idref" href="HoTT.Truncations.Core.html#Tr"><span class="id" title="definition">Tr</span></a> <span class="id" title="var">n</span> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span> <span class="id" title="var">B</span> ⇒ <span class="id" title="tactic">idtac</span> <span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> <span class="id" title="var">b</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

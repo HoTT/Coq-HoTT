@@ -1,0 +1,928 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Zero objects in categories",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n    Zero objects (both initial and terminal) and zero morphisms, foundational\n    concepts for additive and stable category theory.\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.Categories Require Import Category.Core Category.Objects.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Zero objects\n    \n    A zero object in a category is an object that is both initial and terminal.\n    Such objects play a fundamental role in additive and abelian categories,\n    where they enable the definition of zero morphisms and kernels.\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class ZeroObject (C : PreCategory) := {\n  zero : object C;\n  is_initial :: IsInitialObject C zero;\n  is_terminal :: IsTerminalObject C zero\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion zero : ZeroObject >-> object.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments zero {C} z : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments is_initial {C} z : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments is_terminal {C} z : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance initialobject_zeroobject {C : PreCategory} (Z : ZeroObject C)\n  : InitialObject C\n  := {| object_initial := zero Z; isinitial_object_initial := _ |}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance terminalobject_zeroobject {C : PreCategory} (Z : ZeroObject C)\n  : TerminalObject C\n  := {| object_terminal := zero Z; isterminal_object_terminal := _ |}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The zero morphism between any two objects is the unique morphism\n    that factors through the zero object. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition zero_morphism {C : PreCategory} {Z : ZeroObject C} (X Y : object C)\n  : morphism C X Y\n  := morphism_from_initial Y o morphism_to_terminal X.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments zero_morphism {C Z} X Y : simpl never.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Basic properties of zero objects *)\n\n(** ** Properties of zero morphisms *)\n\n(** Any morphism that factors through a zero object is the zero morphism. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma morphism_through_zero_is_zero {C : PreCategory} \n  {Z : ZeroObject C} {X Y : object C}\n  (f : morphism C X Z)\n  (g : morphism C Z Y)\n  : g o f = zero_morphism X Y.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g o f = zero_morphism X Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g o f = zero_morphism X Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold zero_morphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g o f = morphism_from_initial Y o morphism_to_terminal X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap011.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g = morphism_from_initial Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = morphism_to_terminal X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g = morphism_from_initial Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply initial_morphism_unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f = morphism_to_terminal X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Z Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply terminal_morphism_unique.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Composition properties of zero morphisms *)\n\n(** Composition with zero morphism on the right. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma zero_morphism_right {C : PreCategory} {Z : ZeroObject C}\n  {X Y W : object C}\n  (g : morphism C Y W)\n  : g o zero_morphism X Y = zero_morphism X W.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g o zero_morphism X Y = zero_morphism X W",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "W"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Y W"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g o zero_morphism X Y = zero_morphism X W",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "W"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Y W"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g o morphism_from_initial Y o morphism_to_terminal X = zero_morphism X W",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "W"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "morphism C Y W"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply morphism_through_zero_is_zero.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Composition with zero morphism on the left. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma zero_morphism_left {C : PreCategory} {Z : ZeroObject C}\n  {X Y W : object C}\n  (f : morphism C X Y)\n  : zero_morphism Y W o f = zero_morphism X W.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "zero_morphism Y W o f = zero_morphism X W",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "W"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "zero_morphism Y W o f = zero_morphism X W",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "W"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite associativity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "morphism_from_initial W o (morphism_to_terminal Y o f) = zero_morphism X W",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "ZeroObject C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "W"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "morphism C X Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply morphism_through_zero_is_zero.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Export hints *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Rewrite @zero_morphism_left @zero_morphism_right : zero_morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

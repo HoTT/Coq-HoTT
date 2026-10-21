@@ -1,0 +1,5754 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Equivalences Basics.Tactics Basics.Decidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Equivalences Basics.Tactics Basics.Decidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Bool.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core WildCat.Equiv WildCat.Forall WildCat.NatTrans\n               WildCat.Opposite WildCat.Products WildCat.Universe\n               WildCat.Yoneda WildCat.ZeroGroupoid WildCat.PointedCat\n               WildCat.Monoidal WildCat.Bifunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Categories with coproducts *)\n\n(** ** Indexed coproducts *)\n\n(** For [A] a wild 1-category, [I] a type, and [x : I -> A] an [I]-indexed family of objects in [A], we study the categorical coproduct of this family of objects.  As much as possible, we use the results from Products.v in [A^op]. *)\n\n(** When [x] is an [I]-indexed family of objects in [A] and [coprod] is an object with an [I]-indexed family of inclusions, we get for each [z] an induced map from the 0-groupoid of morphisms [coprod $-> z] to the product of the 0-groupoids [x i $-> z] over [i : I]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_rec_inv {A : Type} `{Is1Cat A}\n  {I : Type} (x : I -> A) (coprod : A) (inj : forall i, x i $-> coprod) (z : A)\n  : yon_0gpd z coprod $-> prod_0gpd I (fun i => yon_0gpd z (x i))\n  := cat_prod_corec_inv (A:=A^op) x coprod inj z.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** An object is a coproduct of an [I]-indexed family if there is an [I]-indexed family of inclusions such that the induced map defined above is an equivalence.  We record this as the object being a product in the opposite category and deduce the relevant structure.  *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsCoproduct {A : Type} `{Is1Cat A} {I : Type} (x : I -> A) (cat_coprod : A)\n  := iscoproduct :: IsProduct (A:=A^op) x cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_in {A : Type} `{Is1Cat A} {I : Type} {x : I -> A} {cat_coprod : A}\n  `{!IsCoproduct x cat_coprod} (i : I)\n  : x i $-> cat_coprod\n  := cat_pr (A:=A^op) (x:=x) (cat_prod:=cat_coprod) i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments cat_in {A _ _ _ _ _ x cat_coprod iscoprod} : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cat_isequiv_cat_coprod_rec_inv {A : Type} `{Is1Cat A}\n  {I : Type} (x : I -> A) (cat_coprod : A) `{!IsCoproduct x cat_coprod}\n  : forall (z : A), CatIsEquiv (cat_coprod_rec_inv x cat_coprod cat_in z)\n  := cat_isequiv_cat_prod_corec_inv (A:=A^op) x cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments cat_isequiv_cat_coprod_rec_inv {A _ _ _ _ _} x cat_coprod {iscoprod} : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A coproduct in a category is a product in the opposite category. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Coproduct {A : Type} `{Is1Cat A} {I : Type} (x : I -> A)\n  := coprod : Product (A:=A^op) x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod {A : Type} `{Is1Cat A} {I : Type} (x : I -> A) `{!Coproduct x} : A\n  := coprod.(cat_prod x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments cat_coprod {A _ _ _ _ _} x {coproduct} : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We derive that a coproduct is also a coproduct in the sense above. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cat_iscoprod {A : Type} `{Is1Cat A} {I : Type} (x : I -> A) `{!Coproduct x}\n  : IsCoproduct x (cat_coprod x)\n  := coprod.(cat_isprod x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments cat_iscoprod {A _ _ _ _ _} x {coproduct} : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A wrapper for building coproducts with less typechecking. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_Coproduct' {A : Type} `{Is1Cat A} {I : Type} (x : I -> A)\n  (cat_coprod : A) (cat_iscoprod : IsCoproduct x cat_coprod)\n  : Coproduct x\n  := Build_Product' (A:=A^op) x cat_coprod cat_iscoprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section CoproductConstructors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{Is1Cat A} {I : Type} (x : I -> A)\n    (cat_coprod : A) (cat_in : forall i : I, x i $-> cat_coprod)\n    (cat_coprod_rec : forall z : A,\n      (forall i : I, x i $-> z) -> (cat_coprod $-> z))\n    (cat_coprod_beta_in : forall (z : A) (f : forall i, x i $-> z) (i : I),\n      cat_coprod_rec z f $o cat_in i $== f i)\n    (cat_coprod_eta_in : forall (z : A) (f g : cat_coprod $-> z),\n      (forall i : I, f $o cat_in i $== g $o cat_in i) -> f $== g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A convenience wrapper for building [IsCoproduct]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsCoproduct : IsCoproduct x cat_coprod\n    := Build_IsProduct (A:=A^op) x cat_coprod cat_in cat_coprod_rec\n        cat_coprod_beta_in cat_coprod_eta_in.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A convenience wrapper for building coproducts. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_Coproduct : Coproduct x\n    := Build_Coproduct' x cat_coprod Build_IsCoproduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End CoproductConstructors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Lemmata.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{Is1Cat A} {I : Type} {x : I -> A} (cat_coprod : A)\n    `{!IsCoproduct x cat_coprod}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cate_cat_coprod_rec_inv {z : A}\n    : yon_0gpd z cat_coprod $<~> prod_0gpd I (fun i => yon_0gpd z (x i))\n    := cate_cat_prod_corec_inv (A:=A^op) (x:=x) cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cate_cat_coprod_rec {z : A}\n    : prod_0gpd I (fun i => yon_0gpd z (x i)) $<~> yon_0gpd z cat_coprod\n    := cate_cat_prod_corec (A:=A^op) (x:=x) cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_rec {z : A}\n    : (forall i, x i $-> z) -> cat_coprod $-> z\n    := cat_prod_corec (A:=A^op) (x:=x) cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_beta {z : A} (f : forall i, x i $-> z)\n    : forall i, cat_coprod_rec f $o cat_in i $== f i\n    := cat_prod_beta (A:=A^op) (x:=x) cat_coprod f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_eta {z : A} (f : cat_coprod $-> z)\n    : cat_coprod_rec (fun i => f $o cat_in i) $== f\n    := cat_prod_eta (A:=A^op) (x:=x) cat_coprod f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition natequiv_cat_coprod_rec_inv\n    : NatEquiv (fun z => yon_0gpd z cat_coprod)\n      (fun z : A => prod_0gpd I (fun i => yon_0gpd z (x i)))\n    := natequiv_cat_prod_corec_inv (A:=A^op) (x:=x) cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_rec_eta {z : A} {f g : forall i, x i $-> z}\n    : (forall i, f i $== g i) -> cat_coprod_rec f $== cat_coprod_rec g\n    := cat_prod_corec_eta (A:=A^op) (x:=x) cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_in_eta {z : A} {f g : cat_coprod $-> z}\n    : (forall i, f $o cat_in i $== g $o cat_in i) -> f $== g\n    := cat_prod_pr_eta (A:=A^op) (x:=x) cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Lemmata.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section InducedFromEquiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{HasEquivs A} {I : Type} {x : I -> A}\n    (cat_coprod : A) `{!IsCoproduct x cat_coprod}\n    (y : A) (f : cat_coprod $<~> y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A categorical equivalence out of a coproduct induces a coproduct structure on the codomain. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance cat_coprod_coprod_equiv : IsCoproduct x y\n    := cat_prod_equiv_prod (A:=A^op) (x:=x) cat_coprod _ f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The induced inclusion is given by the equivalence. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_in_comp (i : I)\n    : cat_in i $== f $o cat_in i\n    := cat_pr_comp cat_coprod y _ i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The induced recursion is given by the equivalence. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_rec_comp {z : A} (D : forall i, x i $-> z)\n    : cat_coprod_rec y D $o f $== cat_coprod_rec cat_coprod D\n    := cat_prod_corec_comp (A:=A^op) (he:=hasequivs_op) cat_coprod y f D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End InducedFromEquiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Codiagonal / fold map out of the coproduct of a constant family *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_codiag {A : Type} {I : Type} (x : A) (cat_coprod : A)\n  `{IsCoproduct _ I (fun _ => x) cat_coprod}\n  : cat_coprod $-> x\n  := cat_prod_diag (A:=A^op) x cat_coprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Uniqueness of coproducts *)\n\n(** [I]-indexed coproducts are unique no matter how they are constructed. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cate_cat_coprod {A : Type} `{HasEquivs A} {I J : Type} (ie : I <~> J)\n  (x : I -> A) (coprod_x : A) `{!IsCoproduct x coprod_x}\n  (y : J -> A) (coprod_y : A) `{!IsCoproduct y coprod_y}\n  (e : forall (i : I), y (ie i) $<~> x i)\n  : coprod_y $<~> coprod_x\n  := cate_cat_prod (A:=A^op) ie x coprod_x y coprod_y e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** [I]-indexed coproducts are unique. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_unique {A : Type} `{HasEquivs A} {I : Type}\n  (x : I -> A) (coprod_x : A) `{!IsCoproduct x coprod_x}\n  (y : I -> A) (coprod_y : A) `{!IsCoproduct y coprod_y}\n  (e : forall i : I, x i $<~> y i)\n  : coprod_x $<~> coprod_y\n  := cate_cat_coprod 1 y _ x _ e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Existence of coproducts *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class HasCoproducts (A : Type) `{Is1Cat A} (I : Type)\n  := has_coproducts :: forall x : I -> A, Coproduct x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class HasAllCoproducts (A : Type) `{Is1Cat A}\n  := has_all_coproducts :: forall I : Type, HasCoproducts A I.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Coproduct functor *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Instance hasproductsop_hascoproducts {A I : Type} `{HasCoproducts A I}\n  : HasProducts A^op I\n  := fun x : I -> A^op => has_coproducts (A:=A) x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_cat_coprod (A : Type) (I : Type) `{IsGraph I}\n  `{HasCoproducts A I}\n  : @Is0Functor (I -> A) A (isgraph_forall I (fun _ => A)) _\n    (fun x : I -> A => cat_coprod x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (fun x : I -> A => cat_coprod x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsGraph I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "HasCoproducts A I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (fun x : I -> A => cat_coprod x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsGraph I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "HasCoproducts A I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply is0functor_op'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (fun x : I -> A => cat_coprod x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsGraph I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "HasCoproducts A I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (is0functor_cat_prod A^op I).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1functor_cat_coprod (A : Type) (I : Type) `{IsGraph I}\n  `{HasCoproducts A I}\n  : @Is1Functor (I -> A) A _ _ _ (is1cat_forall I (fun _ => A)) _ _ _ _\n    (fun x : I -> A => cat_coprod x) _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (fun x : I -> A => cat_coprod x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsGraph I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "HasCoproducts A I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (fun x : I -> A => cat_coprod x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsGraph I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "HasCoproducts A I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply is1functor_op'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor (fun x : I -> A => cat_coprod x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "IsGraph I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "HasCoproducts A I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (is1functor_cat_prod A^op I).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Categories with specific kinds of coproducts *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isinitial_coprod_empty {A : Type} `{Is1Cat A} {x : Empty -> A}\n  {coprod_empty : A} {coprod : IsCoproduct x coprod_empty}\n  : IsInitial coprod_empty\n  := isterminal_prod_empty (A:=A^op) (isprod:=coprod).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Binary coproducts *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsBinaryCoproduct {A : Type} `{Is1Cat A} (x y : A) (cat_bincoprod : A)\n  := is_binary_coproduct :: IsBinaryProduct (A:=A^op) x y cat_bincoprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isbincoprod_iscoprod {A : Type} `{Is1Cat A} (x y : A)\n  (cat_bincoprod : A) `{!IsBinaryCoproduct x y cat_bincoprod}\n  : IsCoproduct (Bool_rec _ x y) cat_bincoprod\n  := is_binary_product.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class BinaryCoproduct {A : Type} `{Is1Cat A} (x y : A)\n  := binary_coproduct :: BinaryProduct (A:=A^op) x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isbinarycoproduct_binarycoproduct {A : Type} `{Is1Cat A}\n  (x y : A) {coprod : BinaryCoproduct x y}\n  : IsBinaryCoproduct x y coprod.(cat_prod _)\n  := cat_isprod _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A category with binary coproducts is a category with a binary coproduct for each pair of objects. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class HasBinaryCoproducts (A : Type) `{Is1Cat A}\n  := has_binary_coproducts :: forall x y : A, BinaryCoproduct x y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasbinarycoproducts_hascoproductsbool {A : Type}\n  `{HasCoproducts A Bool}\n  : HasBinaryCoproducts A\n  := fun x y => has_coproducts (Bool_rec _ x y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section BinaryCoproducts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{Is1Cat A} {x y : A}\n    (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x y cat_bincoprod}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_inl : x $-> cat_bincoprod\n    := cat_pr1 cat_bincoprod (isbinprod:=isbincoprod).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_inr : y $-> cat_bincoprod\n    := cat_pr2 cat_bincoprod (isbinprod:=isbincoprod).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_rec {z : A} (f : x $-> z) (g : y $-> z)\n    : cat_bincoprod $-> z\n    := cat_binprod_corec (isbinprod:=isbincoprod) cat_bincoprod f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_beta_inl {z : A} (f : x $-> z) (g : y $-> z)\n    : cat_bincoprod_rec f g $o cat_inl $== f\n    := cat_binprod_beta_pr1 (isbinprod:=isbincoprod) cat_bincoprod f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_beta_inr {z : A} (f : x $-> z) (g : y $-> z)\n    : cat_bincoprod_rec f g $o cat_inr $== g\n    := cat_binprod_beta_pr2 (isbinprod:=isbincoprod) cat_bincoprod f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_eta {z : A} (f : cat_bincoprod $-> z)\n    : cat_bincoprod_rec (f $o cat_inl) (f $o cat_inr) $== f\n    := cat_binprod_eta (isbinprod:=isbincoprod) cat_bincoprod f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_eta_in {z : A} {f g : cat_bincoprod $-> z}\n    : f $o cat_inl $== g $o cat_inl\n      -> f $o cat_inr $== g $o cat_inr\n      -> f $== g\n    := cat_binprod_eta_pr (isbinprod:=isbincoprod) cat_bincoprod f g.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_rec_eta {z : A} {f f' : x $-> z} {g g' : y $-> z}\n    : f $== f'\n      -> g $== g'\n      -> cat_bincoprod_rec f g $== cat_bincoprod_rec f' g'\n    := cat_binprod_corec_eta (isbinprod:=isbincoprod) cat_bincoprod f f' g g'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End BinaryCoproducts.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section BinaryCoproductConstructors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {A : Type} `{Is1Cat A} {x y : A}\n    (cat_bincoprod : A) (cat_inl : x $-> cat_bincoprod) (cat_inr : y $-> cat_bincoprod)\n    (cat_bincoprod_rec : forall z : A, (x $-> z) -> (y $-> z) -> cat_bincoprod $-> z)\n    (cat_bincoprod_beta_inl : forall (z : A) (f : x $-> z) (g : y $-> z),\n      cat_bincoprod_rec z f g $o cat_inl $== f)\n    (cat_bincoprod_beta_inr : forall (z : A) (f : x $-> z) (g : y $-> z),\n      cat_bincoprod_rec z f g $o cat_inr $== g)\n    (cat_bincoprod_eta_in : forall (z : A) (f g : cat_bincoprod $-> z),\n      f $o cat_inl $== g $o cat_inl -> f $o cat_inr $== g $o cat_inr -> f $== g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A convenience wrapper for building [IsBinaryCoproduct]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_IsBinaryCoproduct : IsBinaryCoproduct x y cat_bincoprod\n    := Build_IsBinaryProduct\n        (cat_bincoprod : A^op)\n        cat_inl\n        cat_inr\n        cat_bincoprod_rec\n        cat_bincoprod_beta_inl\n        cat_bincoprod_beta_inr\n        cat_bincoprod_eta_in.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A convenience wrapper for building binary coproducts. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_BinaryCoproduct : BinaryCoproduct x y\n    := Build_Coproduct' _ cat_bincoprod Build_IsBinaryCoproduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End BinaryCoproductConstructors.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A) : A\n  := cat_coprod (Bool_rec _ x y) (coproduct:=has_binary_coproducts x y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance cat_isbincoprod {A: Type} `{HasBinaryCoproducts A} (x y : A)\n  : IsBinaryCoproduct x y (cat_bincoprod x y)\n  := cat_iscoprod (Bool_rec _ x y) (coproduct:=has_binary_coproducts x y).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** From binary coproducts, all [Bool]-shaped coproducts can be constructed. This should not be an instance to avoid a cycle with [hasbinarycoproducts_hascoproductsbool]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hascoproductsbool_hasbinarycoproducts {A : Type}\n  `{hbc : HasBinaryCoproducts A}\n  : HasCoproducts A Bool\n  := hasproductsbool_hasbinaryproducts (A:=A^op) (hbp:=hbc).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Binary coproduct functor *)\n\n(** Hint: Use [Set Printing Implicit] to see the implicit arguments in the following proofs. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0bifunctor_cat_bincoprod {A : Type}\n  `{hbc : HasBinaryCoproducts A}\n  : Is0Bifunctor cat_bincoprod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Bifunctor cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Bifunctor cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply is0bifunctor_op'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Bifunctor cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (is0bifunctor_cat_binprod (A:=A^op) (hbp:=hbc)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1bifunctor_cat_bincoprod {A : Type}\n  `{hbc : HasBinaryCoproducts A}\n  : Is1Bifunctor cat_bincoprod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Bifunctor cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Bifunctor cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply is1bifunctor_op'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Bifunctor cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (is1bifunctor_cat_binprod (A:=A^op) (hbp:=hbc)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Products.v proves further results about the functoriality of binary products which have not been needed for coproducts so far:  that [cat_binprod_corec] is functorial in each of its two morphism arguments ([is0functor_cat_binprod_corec_l] and [is0functor_cat_binprod_corec_r]), and how each projection interacts with each of [fmap01], [fmap10] and [fmap11] ([cat_pr1_fmap01_binprod] and its five variants).  If needed, the duals can be obtained from those results in [A^op]. *)\n\n(** *** Products and coproducts in the opposite category *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance iscoproduct_op {A I : Type} `{Is1Cat A} (x : I -> A)\n  (cat_prod : A) {isprod : IsProduct x cat_prod}\n  : IsCoproduct (A:=A^op) x cat_prod\n  := isprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance coproduct_op {A I : Type} `{Is1Cat A} (x : I -> A)\n  {prod : Product x}\n  : Coproduct (A:=A^op) x\n  := prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasbinarycoproducts_op_hasbinaryproducts {A : Type}\n  `{Is1Cat A, hbp : !HasBinaryProducts A}\n  : HasBinaryCoproducts A^op\n  := hbp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hasbinarycoproducts_hasbinaryproducts_op {A : Type}\n  `{Is1Cat A, hbp : !HasBinaryProducts A^op}\n  : HasBinaryCoproducts A\n  := hbp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Immediate hasbinarycoproducts_hasbinaryproducts_op : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasbinaryproducts_op_hasbinarycoproducts {A : Type}\n  `{Is1Cat A, hbc : !HasBinaryCoproducts A}\n  : HasBinaryProducts A^op\n  := hbc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition hasbinaryproducts_hasbinarycoproducts_op {A : Type}\n  `{Is1Cat A, hbc : !HasBinaryCoproducts A^op}\n  : HasBinaryProducts A\n  := hbc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Hint Immediate hasbinaryproducts_hasbinarycoproducts_op : typeclass_instances.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Lemmas about [cat_bincoprod_rec] *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_fmap01_rec {A : Type}\n  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {w x y z : A}\n  (f : z $-> w) (g : y $-> x) (h : x $-> w)\n  : cat_bincoprod_rec _ f h\n      $o fmap01 cat_bincoprod z g\n    $== cat_bincoprod_rec _ f (h $o g)\n  := cat_binprod_fmap01_corec (hbp:=hbc) f g h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_fmap10_rec {A : Type}\n  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {w x y z : A}\n  (f : y $-> x) (g : x $-> w) (h : z $-> w)\n  : cat_bincoprod_rec _ g h\n      $o fmap10 cat_bincoprod f z\n    $== cat_bincoprod_rec _ (g $o f) h\n  := cat_binprod_fmap10_corec (hbp:=hbc) f g h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_fmap11_rec {A : Type}\n  `{Is1Cat A, hbc : !HasBinaryCoproducts A} {v w x y z : A}\n  (f : y $-> w) (g : z $-> x) (h : w $-> v) (i : x $-> v)\n  : cat_bincoprod_rec _ h i\n      $o fmap11 cat_bincoprod f g\n    $== cat_bincoprod_rec _ (h $o f) (i $o g)\n  := cat_binprod_fmap11_corec (hbp:=hbc) f g h i.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Codiagonal *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_codiag {A : Type} `{Is1Cat A} (x : A)\n  (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x x cat_bincoprod}\n  : cat_bincoprod $-> x\n  := cat_binprod_diag (isbinprod:=isbincoprod) x cat_bincoprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_fmap11_codiag {A : Type}\n  `{HasBinaryCoproducts A} {x y : A} (f : x $-> y)\n  : f $o cat_bincoprod_codiag x _\n    $== cat_bincoprod_codiag y _ $o fmap11 cat_bincoprod f f\n  := cat_binprod_fmap11_diag (A:=A^op) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Symmetry of coproducts *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_swap {A : Type} `{Is1Cat A}\n  {hbc : HasBinaryCoproducts A} (x y : A)\n  : cat_bincoprod x y $-> cat_bincoprod y x\n  := cat_binprod_swap (hbp:=hbc) _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cate_bincoprod_swap {A : Type} `{HasEquivs A}\n  {hbc : HasBinaryCoproducts A} (x y : A)\n  : cat_bincoprod x y $<~> cat_bincoprod y x\n  := cate_binprod_swap (A:=A^op) (hbp:=hbc) _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_swap_codiag {A : Type} `{Is1Cat A}\n  {hbc : HasBinaryCoproducts A} (x : A)\n  : cat_bincoprod_codiag x _ $o cat_bincoprod_swap x x\n    $== cat_bincoprod_codiag x _\n  := cat_binprod_swap_diag (A:=A^op) x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}\n  `{hbc : !HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)\n  : cat_bincoprod_rec _ f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec _ g f\n  := cat_binprod_swap_corec (A:=A^op) _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The swap map is a symmetric braiding.  Its two fields give the naturality and the involutivity of the swap map, which Products.v also states separately as [cat_binprod_swap_nat] and [cat_binprod_swap_cat_binprod_swap]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition symmetricbraiding_bincoprod {A : Type} `{HasEquivs A}\n  `{!HasBinaryCoproducts A}\n  : SymmetricBraiding cat_bincoprod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SymmetricBraiding cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SymmetricBraiding cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply symmetricbraiding_op'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasEquivs A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SymmetricBraiding cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SymmetricBraiding cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact symmetricbraiding_binprod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Associativity of coproducts *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance associator_cat_bincoprod {A : Type} `{HasEquivs A}\n  `{hbc : !HasBinaryCoproducts A}\n  : Associator cat_bincoprod\n  := associator_op' (bf0:=is0bifunctor_cat_bincoprod (hbc:=hbc))\n      (assoc:=associator_cat_binprod (A:=A^op)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_rec_associator {A : Type} `{HasEquivs A}\n  {hbc : HasBinaryCoproducts A}\n  {w x y z : A} (f : w $-> z) (g : x $-> z) (h : y $-> z)\n  : cat_bincoprod_rec _ (cat_bincoprod_rec _ f g) h $o associator_cat_bincoprod w x y\n    $== cat_bincoprod_rec _ f (cat_bincoprod_rec _ g h).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_bincoprod_rec (cat_bincoprod (cat_bincoprod w x) y)\n  (cat_bincoprod_rec (cat_bincoprod w x) f g) h $o\nassociator_cat_bincoprod w x y $==\ncat_bincoprod_rec (cat_bincoprod w (cat_bincoprod x y)) f\n  (cat_bincoprod_rec (cat_bincoprod x y) g h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w",
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "w $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "x $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "y $-> z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_bincoprod_rec (cat_bincoprod (cat_bincoprod w x) y)\n  (cat_bincoprod_rec (cat_bincoprod w x) f g) h $o\nassociator_cat_bincoprod w x y $==\ncat_bincoprod_rec (cat_bincoprod w (cat_bincoprod x y)) f\n  (cat_bincoprod_rec (cat_bincoprod x y) g h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w",
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "w $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "x $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "y $-> z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply cate_moveR_eV.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_bincoprod_rec (cat_bincoprod (cat_bincoprod w x) y)\n  (cat_bincoprod_rec (cat_bincoprod w x) f g) h $==\ncat_bincoprod_rec (cat_bincoprod w (cat_bincoprod x y)) f\n  (cat_bincoprod_rec (cat_bincoprod x y) g h) $o\nMonoidalTwistConstruction.associator_twist' A^op cat_binprod\n  symmetricbraiding_binprod cat_binprod_twist\n  cat_binprod_twist_cat_binprod_twist w x y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w",
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "w $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "x $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "y $-> z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_bincoprod_rec (cat_bincoprod w (cat_bincoprod x y)) f\n  (cat_bincoprod_rec (cat_bincoprod x y) g h) $o\nMonoidalTwistConstruction.associator_twist' A^op cat_binprod\n  symmetricbraiding_binprod cat_binprod_twist\n  cat_binprod_twist_cat_binprod_twist w x y $==\ncat_bincoprod_rec (cat_bincoprod (cat_bincoprod w x) y)\n  (cat_bincoprod_rec (cat_bincoprod w x) f g) h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "hbc"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "w",
+                "x",
+                "y",
+                "z"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "w $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "x $-> z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "y $-> z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (cat_binprod_associator_corec (A:=A^op) (hbp:=hbc) f g h).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Cocartesian Monoidal Structure *)\n\n(** If [A] has binary coproducts and an initial object, then these form a symmetric monoidal structure.  Other things follow from this via typeclass search. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance issymmetricmonoidal_cat_bincoprod {A : Type} `{HasEquivs A}\n  `{!HasBinaryCoproducts A} (zero : A) `{!IsInitial zero}\n  : IsSymmetricMonoidal A cat_bincoprod zero | 10.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSymmetricMonoidal A cat_bincoprod zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zero"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInitial0"
+              ],
+              "body": null,
+              "type": "IsInitial zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSymmetricMonoidal A cat_bincoprod zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zero"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInitial0"
+              ],
+              "body": null,
+              "type": "IsInitial zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply issymmetricmonoidal_op'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSymmetricMonoidal A^op cat_bincoprod zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zero"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInitial0"
+              ],
+              "body": null,
+              "type": "IsInitial zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply (issymmetricmonoidal_cat_binprod (A:=A^op) zero).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsTerminal zero",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "HasEquivs A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "HasBinaryCoproducts0"
+              ],
+              "body": null,
+              "type": "HasBinaryCoproducts A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zero"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsInitial0"
+              ],
+              "body": null,
+              "type": "IsInitial zero"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by napply isterminal_op_isinitial.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Examples *)\n\n(** *** Coproducts in Type *)\n\n(** [Type] has all coproducts. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasallcoproducts_type : HasAllCoproducts Type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasAllCoproducts Type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasAllCoproducts Type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros I x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Coproduct x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Coproduct.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : I, x i $-> ?cat_coprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall z : Type, (forall i : I, x i $-> z) -> ?cat_coprod $-> z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Type) (f : forall i : I, x i $-> z) (i : I),\n?cat_coprod_rec z f $o ?cat_in i $== f i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Type) (f g : ?cat_coprod $-> z),\n(forall i : I, f $o ?cat_in i $== g $o ?cat_in i) -> f $== g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (sig (fun i : I => x i)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : I, x i $-> {i0 : I & x i0}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (exist x).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall z : Type, (forall i : I, x i $-> z) -> {i : I & x i} $-> z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A f [i xi].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "forall i0 : I, x i0 $-> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xi"
+              ],
+              "body": null,
+              "type": "x i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (f i xi).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Type) (f : forall i : I, x i $-> z) (i : I),\n(fun (A : Type) (f0 : forall i0 : I, x i0 $-> A) =>\n (fun X : {i0 : I & x i0} => (fun (i0 : I) (xi : x i0) => f0 i0 xi) X.1 X.2)\n :\n {i0 : I & x i0} $-> A) z f $o\nexist x i $== f i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A f i xi; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Type) (f g : {i : I & x i} $-> z),\n(forall i : I, f $o exist x i $== g $o exist x i) -> f $== g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A f g p [i xi].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (i; xi) = g (i; xi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "{i0 : I & x i0} $-> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall i0 : I, f $o exist x i0 $== g $o exist x i0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "xi"
+              ],
+              "body": null,
+              "type": "x i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p i xi).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In particular, [Type] has all binary coproducts. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasbinarycoproducts_type : HasBinaryCoproducts Type\n  := {}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Canonical coproduct-product map *)\n\n(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed.  We factor out the components of this map into a separate definition to make goals involving [cat_coprod_prod] easier to read. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_prod_component {A : Type} `{IsPointedCat A}\n  {I : Type} `{DecidablePaths I}\n  (x : I -> A) (i j : I)\n  : x i $-> x j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct (dec_paths i j) as [p|].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "i = j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x i",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Id _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H1"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "i <> j"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact zero_morphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_coprod_prod {A : Type} `{Is1Cat A, !IsPointedCat A}\n  {I : Type} `{DecidablePaths I}\n  (x : I -> A) (cat_coprod cat_prod : A)\n  `{!IsCoproduct x cat_coprod, !IsProduct x cat_prod}\n  : cat_coprod $-> cat_prod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_coprod $-> cat_prod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat_coprod",
+                "cat_prod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCoproduct0"
+              ],
+              "body": null,
+              "type": "IsCoproduct x cat_coprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsProduct0"
+              ],
+              "body": null,
+              "type": "IsProduct x cat_prod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_coprod $-> cat_prod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat_coprod",
+                "cat_prod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCoproduct0"
+              ],
+              "body": null,
+              "type": "IsCoproduct x cat_coprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsProduct0"
+              ],
+              "body": null,
+              "type": "IsProduct x cat_prod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply cat_coprod_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i : I, x i $-> cat_prod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat_coprod",
+                "cat_prod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCoproduct0"
+              ],
+              "body": null,
+              "type": "IsCoproduct x cat_coprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsProduct0"
+              ],
+              "body": null,
+              "type": "IsProduct x cat_prod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros i.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> cat_prod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat_coprod",
+                "cat_prod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCoproduct0"
+              ],
+              "body": null,
+              "type": "IsCoproduct x cat_coprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsProduct0"
+              ],
+              "body": null,
+              "type": "IsProduct x cat_prod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply cat_prod_corec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall i0 : I, x i $-> x i0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat_coprod",
+                "cat_prod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCoproduct0"
+              ],
+              "body": null,
+              "type": "IsCoproduct x cat_coprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsProduct0"
+              ],
+              "body": null,
+              "type": "IsProduct x cat_prod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros j.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "x i $-> x j",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "DecidablePaths I"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "I -> A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "cat_coprod",
+                "cat_prod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCoproduct0"
+              ],
+              "body": null,
+              "type": "IsCoproduct x cat_coprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsProduct0"
+              ],
+              "body": null,
+              "type": "IsProduct x cat_prod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i",
+                "j"
+              ],
+              "body": null,
+              "type": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (cat_coprod_prod_component x i j).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}\n  (x y cat_bincoprod cat_binprod: A)\n  `{!IsBinaryCoproduct x y cat_bincoprod, !IsBinaryProduct x y cat_binprod}\n  : cat_bincoprod $-> cat_binprod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_bincoprod $-> cat_binprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "cat_bincoprod $-> cat_binprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply cat_coprod_prod.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPointedCat A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DecidablePaths ?Goal3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoproduct ?Goal5 cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsProduct ?Goal5 cat_binprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,4: exact _.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsCoproduct (Bool_rec A x y) cat_bincoprod",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsGraph0"
+              ],
+              "body": null,
+              "type": "IsGraph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is2Graph0"
+              ],
+              "body": null,
+              "type": "Is2Graph A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Is01Cat0"
+              ],
+              "body": null,
+              "type": "Is01Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Is1Cat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsPointedCat0"
+              ],
+              "body": null,
+              "type": "IsPointedCat A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y",
+                "cat_bincoprod",
+                "cat_binprod"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryCoproduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryCoproduct x y cat_bincoprod"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsBinaryProduct0"
+              ],
+              "body": null,
+              "type": "IsBinaryProduct x y cat_binprod"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply is_binary_coproduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,2250 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core Pointed.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Groups.Group Groups.Subgroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.ExactSequence Modalities.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Complexes of groups *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grp_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C} (cx : IsComplex i f)\n  : GroupHomomorphism A (grp_kernel f)\n  := grp_kernel_corec _ cx.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grp_iso_cxfib {A B C : Group} {i : A $-> B} {f : B $-> C}\n           `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)\n  : GroupIsomorphism A (grp_kernel f)\n  := Build_GroupIsomorphism _ _ (grp_cxfib cx_isexact) (isequiv_cxfib ex).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This is the same proof as for [equiv_cxfib_beta], but giving the proof is easier than specializing the general result. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proposition grp_iso_cxfib_beta {A B C : Group} {i : A $-> B} {f : B $-> C}\n            `{IsEmbedding i} (ex : IsExact (Tr (-1)) i f)\n  : i $o (grp_iso_inverse (grp_iso_cxfib ex)) $== subgroup_incl (grp_kernel f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i $o grp_iso_inverse (grp_iso_cxfib ex) $== subgroup_incl (grp_kernel f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "i $o grp_iso_inverse (grp_iso_cxfib ex) $== subgroup_incl (grp_kernel f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply equiv_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : ?Goal,\n(i $o grp_iso_inverse (grp_iso_cxfib ex)) (?Goal0 x) =\nsubgroup_incl (grp_kernel f) (?Goal0 x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact (isequiv_cxfib ex).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : A,\n(i $o grp_iso_inverse (grp_iso_cxfib ex)) (cxfib cx_isexact x) =\nsubgroup_incl (grp_kernel f) (cxfib cx_isexact x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(i $o grp_iso_inverse (grp_iso_cxfib ex)) (cxfib cx_isexact x) =\nsubgroup_incl (grp_kernel f) (cxfib cx_isexact x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (fun y => i y) (eissect _ x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grp_iscomplex_trivial {X Y : Group} (f : X $-> Y)\n  : IsComplex (grp_trivial_rec X) f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsComplex (grp_trivial_rec X) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X $-> Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsComplex (grp_trivial_rec X) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X $-> Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply phomotopy_homotopy_hset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f o* grp_trivial_rec X == pconst",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X $-> Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f group_unit = ispointed_group Y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X $-> Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "grp_trivial"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (grp_homo_unit f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [A -> B -> C] is exact at [B] with [A] contractible, then [B -> C] is an embedding.  Only [B] and [C] need to be groups; [A] can be any pointed type.  Note also that [(-1)]-exactness suffices, which is what one gets from a fiber sequence after truncating. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition isembedding_isexact {A : pType} {B C : Group} {i : A ->* B} {f : B $-> C}\n  `{Contr A} (ex : IsExact (Tr (-1)) i f)\n  : IsEmbedding f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Since [A] is contractible and [B] is a set, [i] is an embedding, which upgrades exactness to an equivalence between [A] and the fiber of [f] over the identity. This is needed by [equiv_cxfib]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "assert (IsEmbedding i) by (intro b; rapply istrunc_sigma).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro c.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (hfiber f c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply hprop_inhabited_contr; intro b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr (hfiber f c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "hfiber f c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply (contr_equiv' A).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A <~> hfiber f c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "i"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) i f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "IsEmbedding i"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "hfiber f c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((equiv_grp_hfiber f c b)^-1 oE equiv_cxfib ex).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A complex 0 -> A -> B of groups is purely exact if and only if the map A -> B is an embedding. (This is also true with [purely] replaced by [Tr (-1)].) *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma iff_grp_isexact_isembedding {A B : Group} (f : A $-> B)\n  : IsExact purely (grp_trivial_rec A) f <-> IsEmbedding f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact purely (grp_trivial_rec A) f <-> IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact purely (grp_trivial_rec A) f <-> IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact purely (grp_trivial_rec A) f -> IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f -> IsExact purely (grp_trivial_rec A) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact purely (grp_trivial_rec A) f -> IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro ex.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "ex"
+              ],
+              "body": null,
+              "type": "IsExact purely (grp_trivial_rec A) f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (isembedding_isexact (isexact_purely_O _ _ (H:=ex))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f -> IsExact purely (grp_trivial_rec A) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro isemb_f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsExact purely (grp_trivial_rec A) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isemb_f"
+              ],
+              "body": null,
+              "type": "IsEmbedding f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (grp_iscomplex_trivial f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectiveSubuniverse.IsConnMap purely (cxfib (grp_iscomplex_trivial f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isemb_f"
+              ],
+              "body": null,
+              "type": "IsEmbedding f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros y; rapply contr_inhabited_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "purely (hfiber (cxfib (grp_iscomplex_trivial f)) y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A $-> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isemb_f"
+              ],
+              "body": null,
+              "type": "IsEmbedding f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "y"
+              ],
+              "body": null,
+              "type": "pFiber.pfiber f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists tt; apply path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A complex 0 -> A -> B is purely exact if and only if the kernel of the map A -> B is trivial. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_grp_isexact_kernel `{Univalence} {A B : Group} (f : A $-> B)\n  : IsExact purely (grp_trivial_rec A) f <~> IsTrivialGroup (grp_kernel f)\n  := (equiv_istrivial_kernel_isembedding f)^-1%equiv\n       oE equiv_iff_hprop_uncurried (iff_grp_isexact_isembedding f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [A -> B -> C -> D] is exact at [B] and [C], with [A] and [D] contractible, then the middle map is an isomorphism.  Only [B] and [C] need to be groups. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grp_iso_isexact {A : pType} {B C : Group} {D : pType}\n  {h : A ->* B} {f : B $-> C} {g : C ->* D} `{Contr A} `{Contr D}\n  (exl : IsExact (Tr (-1)) h f) (exr : IsExact (Tr (-1)) f g)\n  : GroupIsomorphism B C.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupIsomorphism B C",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupIsomorphism B C",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (Build_GroupIsomorphism _ _ f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply isequiv_surj_emb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectiveSubuniverse.IsConnMap (Tr (-1)) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ReflectiveSubuniverse.IsConnMap (Tr (-1)) f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (isconnmap_O_isexact_base_contr _ f g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEmbedding f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B",
+                "C"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "B $-> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr0"
+              ],
+              "body": null,
+              "type": "Contr A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Contr1"
+              ],
+              "body": null,
+              "type": "Contr D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exl"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) h f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "exr"
+              ],
+              "body": null,
+              "type": "IsExact (Tr (-1)) f g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (isembedding_isexact exl).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

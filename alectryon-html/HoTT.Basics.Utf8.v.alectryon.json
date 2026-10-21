@@ -1,0 +1,560 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'\u2200'  x .. y , P\"",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'\u2200'  x .. y , P\"\n  (at level 200, x binder, y binder, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'\u2203'  x .. y , P\"\n  (at level 200, x binder, y binder, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'\u03bb'  x .. y , t\"\n  (at level 200, x binder, y binder, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2227 y\" (at level 80, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2192 y\" (at level 99, y at level 200, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2194 y\" (at level 95, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(*Notation \"\u00ac x\" (at level 75, right associativity).*)\n(*Notation \"x \u2260 y\" (at level 70).*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2229\" (at level 20).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u22c5\" (at level 20).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2219\" (at level 20).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2218\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2218\u02e1\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2218\u02b3\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u22a3\" (at level 60, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2245\" (at level 70, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"A '\u1d52\u1d56'\" (at level 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"A \u00d7 B\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"a \u2264 b\" (at level 70, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"A \u2243 B\" (at level 85).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[warnings=\"-postfix-notation-not-level-1\"]\nReserved Notation \"a \u21d3 'CAT'\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[warnings=\"-postfix-notation-not-level-1\"]\nReserved Notation \"a \u21d1 'CAT'\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"a \u2264_{ x } b\" (at level 70, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"C \u2193 a\" (at level 70, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'CAT' \u21d3 a\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'CAT' \u21d1 a\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"C \u2192 D\" (at level 99, D at level 200, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"f '\u207b\u00b9'\" (at level 1, format \"f '\u207b\u00b9'\").",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Reserved Notation \"f \u00d7\u1d31 g\" (at level 40, no associativity). *)\n(* Reserved Notation \"f *\u1d31 g\" (at level 40, no associativity). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"f +\u1d31 g\" (at level 50, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"F \u2081 m\" (at level 10, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"F \u2080 x\" (at level 10, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"g \u2218 f\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"g \u2218\u1d31 f\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"m \u2264 n\" (at level 70, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"p \u2022 q\" (at level 20).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"p \u2022' q\" (at level 21, left associativity, format \"'[v' p '/' '\u2022''  q ']'\").",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[warnings=\"-postfix-notation-not-level-1\"]\nReserved Notation \"x \u2081\" (at level 10).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2082\" (at level 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"\u00ac x\" (at level 35, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u21d3 F\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u21d1 F\" (at level 40, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2208 v\" (at level 30).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2286 y\" (at level 30).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2260 y\" (at level 70).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u21f8 y\" (at level 99, right associativity, y at level 200).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u21a0 y\" (at level 99, right associativity, y at level 200).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u21aa y\" (at level 99, right associativity, y at level 200).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"A \u2297 B\" (at level 45, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Reserved Notation \"\u2200  x .. y , P\" (at level 200, x binder, y binder, right associativity). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2228 y\" (at level 85, right associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Reserved Notation \"x \u2294 y\" (at level 85, right associativity). *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2276\" (at level 70, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2293\" (at level 50, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2294\" (at level 50, no associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Infix \"\u2238\" (at level 50, left associativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2264 y \u2264 z\" (at level 70, y at next level).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x \u2264 y < z\" (at level 70, y at next level).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"x < y \u2264 z\" (at level 70, y at next level).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Reserved Notation \"'\u03c0'\" (at level 0).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

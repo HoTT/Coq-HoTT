@@ -1,0 +1,6988 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n  HoTT.Types.Arrow.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export\n  HoTT.Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Classes.theory.rings.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module SemiRings.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Operations\n  := operations : sig (fun T => Plus T * Mult T * Zero T * One T)%type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition BuildOperations (T : Type) `{Plus T} `{Mult T} `{Zero T} `{One T}\n  : Operations\n  := exist _ T (plus,mult,zero,one).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion SR_carrier (s : Operations) : Type := s.1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance SR_plus (s : Operations) : Plus s := fst (fst (fst s.2)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance SR_mult (s : Operations) : Mult s := snd (fst (fst s.2)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance SR_zero (s : Operations) : Zero s := snd (fst s.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance SR_one (s : Operations) : One s := snd s.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments SR_plus !_ / _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments SR_mult !_ / _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments SR_zero !_ /.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments SR_one !_ /.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universe U V.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext} `{Univalence}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (A B : Operations@{U V}).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (f : A -> B) `{!IsEquiv f} `{!IsSemiRingPreserving f}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma iso_same_semirings : A = B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_uncurried.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : A.1 = B.1 &\ntransport (fun T : Type => (Plus T * Mult T * Zero T * One T)%type) p A.2 =\nB.2}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct A as [TA [[[plA mlA] zA] uA]], B as [TB [[[plB mlB] zB] uB]];simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : TA = TB &\ntransport (fun T : Type => (Plus T * Mult T * Zero T * One T)%type) p\n  (plA, mlA, zA, uA) =\n(plB, mlB, zB, uB)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "change plA with (@plus TA plA);change plB with (@plus TB plB);\nchange mlA with (@mult TA mlA);change mlB with (@mult TB mlB);\nchange zA with (@zero TA zA);change zB with (@zero TB zB);\nchange uA with (@one TA uA);change uB with (@one TB uB).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : TA = TB &\ntransport (fun T : Type => (Plus T * Mult T * Zero T * One T)%type) p\n  (plus, mult, 0, 1) =\n(plus, mult, 0, 1)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_universe f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun T : Type => (Plus T * Mult T * Zero T * One T)%type)\n  (path_universe f) (plus, mult, 0, 1) =\n(plus, mult, 0, 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !transport_prod;simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport Plus (path_universe f) plus,\ntransport Mult (path_universe f) mult, transport Zero (path_universe f) 0,\ntransport One (path_universe f) 1) = (plus, mult, 0, 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Plus,Mult,Zero,One.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport (fun A0 : Type => A0 -> A0 -> A0) (path_universe f) plus,\ntransport (fun A0 : Type => A0 -> A0 -> A0) (path_universe f) mult,\ntransport idmap (path_universe f) 0, transport idmap (path_universe f) 1) =\n(plus, mult, 0, 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat apply path_prod;simpl;try\n( apply path_forall;intros x;rewrite transport_arrow;\n  apply path_forall;intros y;rewrite transport_arrow);\nrewrite transport_path_universe, ?transport_path_universe_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x + f^-1 y) = x + y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x * f^-1 y) = x * y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x + f^-1 y) = x + y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (preserves_plus (f:=f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x) + f (f^-1 y) = x + y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap011;apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x * f^-1 y) = x * y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (preserves_mult (f:=f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x) * f (f^-1 y) = x * y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap011;apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact preserves_0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact preserves_1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall P : Operations -> Type, P A -> P B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall P : Operations -> Type, P A -> P B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P;apply transport.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Operations -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "first [exact iso_same_semirings|exact iso_same_semirings@{V V}].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End SemiRings.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module Rings.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class Operations\n  := operations : sig (fun T => Plus T * Mult T * Zero T * One T * Negate T)%type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition BuildOperations (T : Type)\n  `{Plus T} `{Mult T} `{Zero T} `{One T} `{Negate T}\n  : Operations\n  := exist _ T (plus,mult,zero,one,negate).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion R_carrier (s : Operations) : Type := s.1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance R_plus (s : Operations) : Plus s := fst (fst (fst (fst s.2))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance R_mult (s : Operations) : Mult s := snd (fst (fst (fst s.2))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance R_zero (s : Operations) : Zero s := snd (fst (fst s.2)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance R_one (s : Operations) : One s := snd (fst s.2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance R_negate (s : Operations) : Negate s := snd s.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments R_plus !_ / _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments R_mult !_ / _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments R_zero !_ /.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments R_one !_ /.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments R_negate !_ / _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Universe U V.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Funext} `{Univalence}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (A B : Operations@{U V}).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* NB: we need to know they're rings for preserves_negate *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (f : A -> B) `{!IsEquiv f} `{!IsCRing A} `{!IsCRing B} `{!IsSemiRingPreserving f}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma iso_same_rings : A = B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_uncurried.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : A.1 = B.1 &\ntransport\n  (fun T : Type => (Plus T * Mult T * Zero T * One T * Negate T)%type) p A.2 =\nB.2}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct A as [TA [[[[plA mlA] zA] uA] nA]],\n  B as [TB [[[[plB mlB] zB] uB] nB]];simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : TA = TB &\ntransport\n  (fun T : Type => (Plus T * Mult T * Zero T * One T * Negate T)%type) p\n  (plA, mlA, zA, uA, nA) =\n(plB, mlB, zB, uB, nB)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "change plA with (@plus TA plA);change plB with (@plus TB plB);\nchange mlA with (@mult TA mlA);change mlB with (@mult TB mlB);\nchange zA with (@zero TA zA);change zB with (@zero TB zB);\nchange uA with (@one TA uA);change uB with (@one TB uB);\nchange nA with (@negate TA nA);change nB with (@negate TB nB).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{p : TA = TB &\ntransport\n  (fun T : Type => (Plus T * Mult T * Zero T * One T * Negate T)%type) p\n  (plus, mult, 0, 1, negate) =\n(plus, mult, 0, 1, negate)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (path_universe f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun T : Type => (Plus T * Mult T * Zero T * One T * Negate T)%type)\n  (path_universe f) (plus, mult, 0, 1, negate) =\n(plus, mult, 0, 1, negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !transport_prod;simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport Plus (path_universe f) plus,\ntransport Mult (path_universe f) mult, transport Zero (path_universe f) 0,\ntransport One (path_universe f) 1, transport Negate (path_universe f) negate) =\n(plus, mult, 0, 1, negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold Plus,Mult,Zero,One,Negate.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(transport (fun A0 : Type => A0 -> A0 -> A0) (path_universe f) plus,\ntransport (fun A0 : Type => A0 -> A0 -> A0) (path_universe f) mult,\ntransport idmap (path_universe f) 0, transport idmap (path_universe f) 1,\ntransport (fun A0 : Type => A0 -> A0) (path_universe f) negate) =\n(plus, mult, 0, 1, negate)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "repeat apply path_prod;simpl;try\n( apply path_forall;intros x;rewrite transport_arrow;\n  try (apply path_forall;intros y;rewrite transport_arrow));\nrewrite transport_path_universe, ?transport_path_universe_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x + f^-1 y) = x + y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x * f^-1 y) = x * y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (- f^-1 x) = - x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x + f^-1 y) = x + y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (preserves_plus (f:=f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x) + f (f^-1 y) = x + y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap011;apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x * f^-1 y) = x * y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (preserves_mult (f:=f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f^-1 x) * f (f^-1 y) = x * y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x",
+                "y"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap011;apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 0 = 0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact preserves_0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact preserves_1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (- f^-1 x) = - x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (preserves_negate (f:=f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "- f (f^-1 x) = - x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TA"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plA"
+              ],
+              "body": null,
+              "type": "Plus TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlA"
+              ],
+              "body": null,
+              "type": "Mult TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zA"
+              ],
+              "body": null,
+              "type": "Zero TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uA"
+              ],
+              "body": null,
+              "type": "One TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nA"
+              ],
+              "body": null,
+              "type": "Negate TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "TB"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "plB"
+              ],
+              "body": null,
+              "type": "Plus TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "mlB"
+              ],
+              "body": null,
+              "type": "Mult TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "zB"
+              ],
+              "body": null,
+              "type": "Zero TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "uB"
+              ],
+              "body": null,
+              "type": "One TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "nB"
+              ],
+              "body": null,
+              "type": "Negate TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "TA -> TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing TA"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing TB"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "TB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap,eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Lemma iso_leibnitz : forall P : Operations -> Type, P A -> P B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall P : Operations -> Type, P A -> P B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall P : Operations -> Type, P A -> P B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P;apply transport.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Operations"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEquiv0"
+              ],
+              "body": null,
+              "type": "IsEquiv f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing0"
+              ],
+              "body": null,
+              "type": "IsCRing A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsCRing1"
+              ],
+              "body": null,
+              "type": "IsCRing B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsSemiRingPreserving0"
+              ],
+              "body": null,
+              "type": "IsSemiRingPreserving f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Operations -> Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "first [exact iso_same_rings|exact iso_same_rings@{V V}].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End contents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Rings.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

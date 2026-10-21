@@ -1,0 +1,52 @@
+digraph HoTT_Universes_UniverseLevel {
+  graph [ratio=0.5]
+  node [style=filled]
+UniverseLevel_lower__equiv [label="lower'_equiv", URL=<UniverseLevel.html#lower'_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_lower__isequiv [label="lower'_isequiv", URL=<UniverseLevel.html#lower'_isequiv>, fillcolor="#F070D1"] ;
+UniverseLevel_lift__isequiv [label="lift'_isequiv", URL=<UniverseLevel.html#lift'_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_isequiv_lift_2 [label="isequiv_lift'2", URL=<UniverseLevel.html#isequiv_lift'2>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_isequiv_lift_ [label="isequiv_lift'", URL=<UniverseLevel.html#isequiv_lift'>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_lower_2 [label="lower'2", URL=<UniverseLevel.html#lower'2>, fillcolor="#F070D1"] ;
+UniverseLevel_lift_2 [label="lift'2", URL=<UniverseLevel.html#lift'2>, fillcolor="#F070D1"] ;
+UniverseLevel_lower_ [label="lower'", URL=<UniverseLevel.html#lower'>, fillcolor="#F070D1"] ;
+UniverseLevel_lift_ [label="lift'", URL=<UniverseLevel.html#lift'>, fillcolor="#F070D1"] ;
+UniverseLevel_Lift_ [label="Lift'", URL=<UniverseLevel.html#Lift'>, fillcolor="#F070D1"] ;
+UniverseLevel_lower_equiv [label="lower_equiv", URL=<UniverseLevel.html#lower_equiv>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_lower_isequiv [label="lower_isequiv", URL=<UniverseLevel.html#lower_isequiv>, fillcolor="#F070D1"] ;
+UniverseLevel_lift_isequiv [label="lift_isequiv", URL=<UniverseLevel.html#lift_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_isequiv_lift2 [label="isequiv_lift2", URL=<UniverseLevel.html#isequiv_lift2>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_isequiv_lift [label="isequiv_lift", URL=<UniverseLevel.html#isequiv_lift>, peripheries=3, fillcolor="#F070D1"] ;
+UniverseLevel_lower2 [label="lower2", URL=<UniverseLevel.html#lower2>, fillcolor="#F070D1"] ;
+UniverseLevel_lift2 [label="lift2", URL=<UniverseLevel.html#lift2>, fillcolor="#F070D1"] ;
+UniverseLevel_lower [label="lower", URL=<UniverseLevel.html#lower>, fillcolor="#F070D1"] ;
+UniverseLevel_lift [label="lift", URL=<UniverseLevel.html#lift>, fillcolor="#F070D1"] ;
+UniverseLevel_Lift [label="Lift", URL=<UniverseLevel.html#Lift>, fillcolor="#F070D1"] ;
+  UniverseLevel_lower__equiv -> UniverseLevel_lower__isequiv [] ;
+  UniverseLevel_lower__isequiv -> UniverseLevel_lower_2 [] ;
+  UniverseLevel_lower__isequiv -> UniverseLevel_lift_ [] ;
+  UniverseLevel_lift__isequiv -> UniverseLevel_lift_2 [] ;
+  UniverseLevel_lift__isequiv -> UniverseLevel_lift_ [] ;
+  UniverseLevel_isequiv_lift_2 -> UniverseLevel_lower_2 [] ;
+  UniverseLevel_isequiv_lift_2 -> UniverseLevel_lift_2 [] ;
+  UniverseLevel_isequiv_lift_ -> UniverseLevel_lower_ [] ;
+  UniverseLevel_isequiv_lift_ -> UniverseLevel_lift_ [] ;
+  UniverseLevel_lower_2 -> UniverseLevel_lower_ [] ;
+  UniverseLevel_lift_2 -> UniverseLevel_lower_ [] ;
+  UniverseLevel_lower_ -> UniverseLevel_Lift_ [] ;
+  UniverseLevel_lift_ -> UniverseLevel_Lift_ [] ;
+  UniverseLevel_lower_equiv -> UniverseLevel_lower_isequiv [] ;
+  UniverseLevel_lower_isequiv -> UniverseLevel_lower2 [] ;
+  UniverseLevel_lower_isequiv -> UniverseLevel_lift [] ;
+  UniverseLevel_lift_isequiv -> UniverseLevel_lift2 [] ;
+  UniverseLevel_lift_isequiv -> UniverseLevel_lift [] ;
+  UniverseLevel_isequiv_lift2 -> UniverseLevel_lower2 [] ;
+  UniverseLevel_isequiv_lift2 -> UniverseLevel_lift2 [] ;
+  UniverseLevel_isequiv_lift -> UniverseLevel_lower [] ;
+  UniverseLevel_isequiv_lift -> UniverseLevel_lift [] ;
+  UniverseLevel_lower2 -> UniverseLevel_lower [] ;
+  UniverseLevel_lift2 -> UniverseLevel_lower [] ;
+  UniverseLevel_lower -> UniverseLevel_Lift [] ;
+  UniverseLevel_lift -> UniverseLevel_Lift [] ;
+subgraph cluster_UniverseLevel { label="UniverseLevel"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+UniverseLevel_Lift; UniverseLevel_lift; UniverseLevel_lower; UniverseLevel_lift2; UniverseLevel_lower2; UniverseLevel_isequiv_lift; UniverseLevel_isequiv_lift2; UniverseLevel_lift_isequiv; UniverseLevel_lower_isequiv; UniverseLevel_lower_equiv; UniverseLevel_Lift_; UniverseLevel_lift_; UniverseLevel_lower_; UniverseLevel_lift_2; UniverseLevel_lower_2; UniverseLevel_isequiv_lift_; UniverseLevel_isequiv_lift_2; UniverseLevel_lift__isequiv; UniverseLevel_lower__isequiv; UniverseLevel_lower__equiv; };
+} /* END */

@@ -1,0 +1,204 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Definition of pseudonatural transformation *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Core Functor.Core NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Category.Morphisms FunctorCategory.Morphisms.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Functor.Composition.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import NaturalTransformation.Identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Set Implicit Arguments.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Generalizable All Variables.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare Scope pseudonatural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Delimit Scope pseudonatural_transformation_scope with pseudonatural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope natural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope functor_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope morphism_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pseudonatural_transformation_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Quoting Michael Shulman from an email:\n\n    The 2-limit in question is sometimes called a \"descent object\", or\n    the totalization of a truncated cosimplicial object.  It's a\n    generalization of an equalizer.  The set of natural\n    transformations between two ordinary functors [F],[G : C \u2192 D] is\n    the equalizer of\n\n    [\u03a0_x D(Fx,Gx) \u21c9 \u03a0_{x\u2192y} D(Fx,Gy)]\n\n    The category of pseudonatural transformations between two\n    2-functors is the descent object of\n\n    [\u03a0_x D(Fx,Gx) \u21c9 \u03a0_{x\u2192y} D(Fx,Gy) \u21db \u03a0_{x\u2192y\u2192z} D(Fx,Gz)]\n\n    where there are three maps from the second product to the third,\n    corresponding to picking out [x\u2192y], [y\u2192z], and [x\u2192z].\n\n    In general, the descent object of\n\n    [A \u21c9 B \u21db C]\n\n    is the category of objects [a\u2208A] equipped with an isomorphism\n    between their two images in [B] which results in a commutative\n    triangle between their three images in [C]. *)\n\n(** Later, he said (https://github.com/HoTT/HoTT/pull/382##issuecomment-41240787):\n\n    The \"naturality\" axiom is only necessary if the domain is a\n    2-category rather than a 1-category. However, the respect for\n    units axiom really is necessary; I guess I forgot to mention that\n    in the email. The way it comes up in the descent object is that\n    there's a map from [B] to [A] given by projecting the components\n    of identities, and the coherence cell has to become an identity\n    when composed with that map. *)\n\n(** We construct the parts as above, but inline the resulting definitions for speed.\n<<\nModule PseudonaturalTransformationParts.\n  Section PseudonaturalTransformation.\n    Context `{Funext}.\n\n    Variable X : PreCategory.\n\n    Variables F G : Pseudofunctor X.\n    Definition A : PreCategory\n      := (forall x : X, F x -> G x)%category.\n    Definition B : PreCategory\n      := (forall x y (m : morphism X x y), F x -> G y)%category.\n    Definition C : PreCategory\n      := (forall x y z (m1 : morphism X y z) (m2 : morphism X x y), F x -> G z)%category.\n\n    Definition a_part := Eval simpl in object A.\n\n    Definition A_to_B_1 : Functor A B.\n    Proof.\n      exact (Build_Functor\n                A B\n                (fun x__Fx_to_Gx => fun x y m => x__Fx_to_Gx y o p_morphism_of F m)%functor\n                (fun x__s x__d x__m => fun x y m => x__m y oR p_morphism_of F m)\n                _\n                _);\n      simpl; repeat (intro || apply path_forall);\n      [ apply composition_of_whisker_r\n      | apply whisker_r_left_identity ].\n    Defined.\n\n    Definition A_to_B_2 : Functor A B.\n    Proof.\n      exact (Build_Functor\n                A B\n                (fun x__Fx_to_Gx => fun x y m => p_morphism_of G m o x__Fx_to_Gx x)%functor\n                (fun x__s x__d x__m => fun x y m => p_morphism_of G m oL x__m x)\n                _\n                _);\n      simpl; repeat (intro || apply path_forall);\n      [ apply composition_of_whisker_l\n      | apply whisker_l_right_identity ].\n    Defined.\n\n    Definition b_part (a : a_part)\n      := Eval simpl in forall x y m, (A_to_B_1 a x y m <~=~> A_to_B_2 a x y m).\n\n    Definition B_to_A : Functor B A\n      := Build_Functor\n           B A\n           (fun xym__Fx_to_Gy => fun x => xym__Fx_to_Gy x x 1)\n           (fun x__s x__d x__m => fun x => x__m x x 1)\n           (fun _ _ _ _ _ => idpath)\n           (fun _ => idpath).\n\n    Definition b_id_part (a : a_part) (b : b_part a)\n      := Eval simpl in\n          forall x,\n            (((left_identity_natural_transformation_1 _)\n                o (p_identity_of G _ oR _)\n                o (B_to_A _1 b x)\n                o (_ oL (p_identity_of F _)^-1)\n                o (left_identity_natural_transformation_2 _))\n             = 1)%natural_transformation.\n\n    Definition B_to_C_1 : Functor B C.\n    Proof.\n      exact (Build_Functor\n                B C\n                (fun xym__Fx_to_Gy => fun x y z m1 m2 => xym__Fx_to_Gy y z m1 o p_morphism_of F m2)%functor\n                (fun xym__s xym__d xym__m => fun x y z m1 m2 => xym__m y z m1 oR p_morphism_of F m2)\n                _\n                _);\n      simpl; repeat (intro || apply path_forall);\n      [ apply composition_of_whisker_r\n      | apply whisker_r_left_identity ].\n    Defined.\n\n    Definition B_to_C_2 : Functor B C.\n    Proof.\n      exact (Build_Functor\n                B C\n                (fun xym__Fx_to_Gy => fun x y z m1 m2 => p_morphism_of G m1 o xym__Fx_to_Gy x y m2)%functor\n                (fun xym__s xym__d xym__m => fun x y z m1 m2 => p_morphism_of G m1 oL xym__m x y m2)\n                _\n                _);\n      simpl; repeat (intro || apply path_forall);\n      [ apply composition_of_whisker_l\n      | apply whisker_l_right_identity ].\n    Defined.\n\n    Definition B_to_C_3 : Functor B C\n      := Build_Functor\n           B C\n           (fun xym__Fx_to_Gy => fun x y z m1 m2 => xym__Fx_to_Gy x z (m1 o m2))\n           (fun xym__s xym__d xym__m => fun x y z m1 m2 => xym__m x z (m1 o m2))\n           (fun _ _ _ _ _ => idpath)\n           (fun _ => idpath).\n\n    Definition c_part' (a : a_part) (b : b_part a)\n    : forall (x y z : X) (m1 : morphism X y z) (m2 : morphism X x y), Type.\n    Proof.\n      hnf in a, b.\n      pose (fun x y m => (b x y m : morphism _ _ _)) as bB; simpl in *.\n      intros x y z m1 m2.\n      exact (((associator_2 _ _ _)\n                o (B_to_C_2 _1 bB x y z m1 m2)\n                o (associator_1 _ _ _)\n                o (B_to_C_1 _1 bB x y z m1 m2)\n                o (associator_2 _ _ _))\n             = ((p_composition_of G _ _ _ m1 m2 oR _)\n                  o (B_to_C_3 _1 bB x y z m1 m2)\n                  o (_ oL (p_composition_of F _ _ _ m1 m2)^-1)))%natural_transformation.\n    Defined.\n\n    Arguments c_part' / .\n\n    Definition c_part (a : a_part) (b : b_part a)\n      := Eval simpl in forall x y z m1 m2, @c_part' a b x y z m1 m2.\n\n    (** We would like to define [PseudonaturalTransformation] here, then our types are \u03b7-expanded. *)\n  (*Record PseudonaturalTransformation :=\n      { p_components_of :> a_part;\n        p_commutes : b_part p_components_of;\n        p_commutes_coherent : c_part p_commutes }.*)\n  End PseudonaturalTransformation.\nEnd PseudonaturalTransformationParts.\n\nPrint PseudonaturalTransformationParts.a_part.\nPrint PseudonaturalTransformationParts.b_part.\nPrint PseudonaturalTransformationParts.b_id_part.\nPrint PseudonaturalTransformationParts.c_part.\n>>\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record PseudonaturalTransformation `{Funext} (X : PreCategory)\n       (F G : Pseudofunctor X) :=\n  { p_components_of\n      :> forall a : X, Functor (F a) (G a);\n    p_commutes\n    : forall (x y : X) (m : morphism X x y),\n        ((p_components_of y o p_morphism_of F m)%functor <~=~> (p_morphism_of G m o p_components_of x)%functor)%natural_transformation;\n    p_commutes_respects_identity\n    : forall x : X,\n        ((left_identity_natural_transformation_1 (p_components_of x))\n           o (p_identity_of G x oR p_components_of x)\n           o (p_commutes x x 1%morphism)\n           o (p_components_of x oL (p_identity_of F x) ^-1)\n           o (right_identity_natural_transformation_2 (p_components_of x))\n         = 1)%natural_transformation;\n    p_commutes_respects_composition\n    : forall (x y z : X) (m1 : morphism X y z) (m2 : morphism X x y),\n        (((associator_2 (p_morphism_of G m1) (p_morphism_of G m2) (p_components_of x))\n            o (p_morphism_of G m1 oL p_commutes x y m2)\n            o (associator_1 (p_morphism_of G m1) (p_components_of y) (p_morphism_of F m2))\n            o (p_commutes y z m1 oR p_morphism_of F m2)\n            o (associator_2 (p_components_of z) (p_morphism_of F m1) (p_morphism_of F m2)))\n         = ((p_composition_of G x y z m1 m2 oR p_components_of x o p_commutes x z (m1 o m2)%morphism)\n              o (p_components_of z oL (p_composition_of F x y z m1 m2) ^-1)))%natural_transformation }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Bind Scope pseudonatural_transformation_scope with PseudonaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb pseuodnatural_transformation discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments p_components_of {_} {X}%_category {F G}%_pseudofunctor T%_pseudonatural_transformation\n          a%_object : rename, simpl nomatch.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export]\nHint Resolve p_commutes_respects_identity p_commutes_respects_composition : category pseudonatural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

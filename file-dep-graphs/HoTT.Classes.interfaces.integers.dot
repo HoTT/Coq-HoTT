@@ -1,0 +1,40 @@
+digraph HoTT_Classes_interfaces_integers {
+  graph [ratio=0.5]
+  node [style=filled]
+integers_int_to_nat [label="int_to_nat", URL=<integers.html#int_to_nat>, peripheries=3, fillcolor="#F070D1"] ;
+integers_int_abs [label="int_abs", URL=<integers.html#int_abs>, peripheries=3, fillcolor="#F070D1"] ;
+integers_int_abs_sig [label="int_abs_sig", URL=<integers.html#int_abs_sig>, fillcolor="#F070D1"] ;
+integers_IntAbs [label="IntAbs", URL=<integers.html#IntAbs>, fillcolor="#F070D1"] ;
+integers_integers_initial [label="integers_initial", URL=<integers.html#integers_initial>, peripheries=3, fillcolor="#F070D1"] ;
+integers_integers_to_ring_mor [label="integers_to_ring_mor", URL=<integers.html#integers_to_ring_mor>, peripheries=3, fillcolor="#F070D1"] ;
+integers_integers_order [label="integers_order", URL=<integers.html#integers_order>, peripheries=3, fillcolor="#F070D1"] ;
+integers_integers_ring [label="integers_ring", URL=<integers.html#integers_ring>, peripheries=3, fillcolor="#F070D1"] ;
+integers_Integers_sind [label="Integers_sind", URL=<integers.html#Integers_sind>, peripheries=3, fillcolor="#F070D1"] ;
+integers_Integers_rec [label="Integers_rec", URL=<integers.html#Integers_rec>, peripheries=3, fillcolor="#F070D1"] ;
+integers_Integers_ind [label="Integers_ind", URL=<integers.html#Integers_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+integers_Integers_rect [label="Integers_rect", URL=<integers.html#Integers_rect>, fillcolor="#F070D1"] ;
+integers_Build_Integers [label="Build_Integers", URL=<integers.html#Build_Integers>, fillcolor="#7FAAFF"] ;
+integers_Integers [label="Integers", URL=<integers.html#Integers>, fillcolor="#E2CDFA"] ;
+integers_integers_to_ring [label="integers_to_ring", URL=<integers.html#integers_to_ring>, fillcolor="#F070D1"] ;
+integers_IntegersToRing [label="IntegersToRing", URL=<integers.html#IntegersToRing>, fillcolor="#F070D1"] ;
+  integers_int_to_nat -> integers_int_abs_sig [] ;
+  integers_int_abs -> integers_int_abs_sig [] ;
+  integers_int_abs_sig -> integers_IntAbs [] ;
+  integers_IntAbs -> integers_Integers [] ;
+  integers_integers_initial -> integers_Integers [] ;
+  integers_integers_to_ring_mor -> integers_Integers [] ;
+  integers_integers_order -> integers_Integers [] ;
+  integers_integers_ring -> integers_Integers [] ;
+  integers_Integers_sind -> integers_Build_Integers [] ;
+  integers_Integers_sind -> integers_Integers [] ;
+  integers_Integers_rec -> integers_Integers_rect [] ;
+  integers_Integers_ind -> integers_Build_Integers [] ;
+  integers_Integers_ind -> integers_Integers [] ;
+  integers_Integers_rect -> integers_Build_Integers [] ;
+  integers_Integers_rect -> integers_Integers [] ;
+  integers_Build_Integers -> integers_integers_to_ring [] ;
+  integers_Integers -> integers_integers_to_ring [] ;
+  integers_integers_to_ring -> integers_IntegersToRing [] ;
+subgraph cluster_integers { label="integers"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+integers_IntegersToRing; integers_integers_to_ring; integers_Integers; integers_Build_Integers; integers_Integers_rect; integers_Integers_ind; integers_Integers_rec; integers_Integers_sind; integers_integers_ring; integers_integers_order; integers_integers_to_ring_mor; integers_integers_initial; integers_IntAbs; integers_int_abs_sig; integers_int_abs; integers_int_to_nat; };
+} /* END */

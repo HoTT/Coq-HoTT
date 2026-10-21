@@ -1,0 +1,60 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import\n        HoTT.Classes.interfaces.abstract_algebra\n        HoTT.Classes.interfaces.orders\n        HoTT.Classes.interfaces.naturals\n        HoTT.Classes.implementations.peano_naturals.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section round_up.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class RoundUpStrict A `{IsSemiCRing A} `{StrictSemiRingOrder A}\n    := round_up_strict : forall a : A, {n : nat & a < naturals_to_semiring nat A n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Arguments round_up_strict A {_ _ _ _ _ _ _ _ _ _ _ _} _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End round_up.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

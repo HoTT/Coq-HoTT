@@ -1,0 +1,7 @@
+digraph HoTT_Axioms_PropResizing {
+  graph [ratio=0.5]
+  node [style=filled]
+PropResizing_propresizing_axiom [label="propresizing_axiom", URL=<PropResizing.html#propresizing_axiom>, peripheries=3, fillcolor="#FACDEF"] ;
+subgraph cluster_PropResizing { label="PropResizing"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+PropResizing_propresizing_axiom; };
+} /* END */

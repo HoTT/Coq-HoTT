@@ -1,0 +1,44 @@
+digraph HoTT_Classes_theory_integers {
+  graph [ratio=0.5]
+  node [style=filled]
+integers_int_integral_domain [label="int_integral_domain", URL=<integers.html#int_integral_domain>, peripheries=3, fillcolor="#F070D1"] ;
+integers_int_zero_product [label="int_zero_product", URL=<integers.html#int_zero_product>, fillcolor="#F070D1"] ;
+integers_int_nontrivial [label="int_nontrivial", URL=<integers.html#int_nontrivial>, fillcolor="#F070D1"] ;
+integers_slow_int_abs [label="slow_int_abs", URL=<integers.html#slow_int_abs>, peripheries=3, fillcolor="#F070D1"] ;
+integers_int_dec [label="int_dec", URL=<integers.html#int_dec>, peripheries=3, fillcolor="#F070D1"] ;
+integers_from_int_stmt [label="from_int_stmt", URL=<integers.html#from_int_stmt>, peripheries=3, fillcolor="#F070D1"] ;
+integers_int_to_int_equiv [label="int_to_int_equiv", URL=<integers.html#int_to_int_equiv>, fillcolor="#F070D1"] ;
+integers_retract_is_int [label="retract_is_int", URL=<integers.html#retract_is_int>, peripheries=3, fillcolor="#F070D1"] ;
+integers_same_morphism [label="same_morphism", URL=<integers.html#same_morphism>, fillcolor="#F070D1"] ;
+integers_IsSemiRingPreserving_instance_0 [label="IsSemiRingPreserving_instance_0", URL=<integers.html#IsSemiRingPreserving_instance_0>, peripheries=3, fillcolor="#F070D1"] ;
+integers_retract_is_int_to_ring [label="retract_is_int_to_ring", URL=<integers.html#retract_is_int_to_ring>, fillcolor="#F070D1"] ;
+integers_naturals_to_integers_injective [label="naturals_to_integers_injective", URL=<integers.html#naturals_to_integers_injective>, fillcolor="#F070D1"] ;
+integers_integers_to_integers_injective [label="integers_to_integers_injective", URL=<integers.html#integers_to_integers_injective>, fillcolor="#F070D1"] ;
+integers_to_ring_injective [label="to_ring_injective", URL=<integers.html#to_ring_injective>, fillcolor="#F070D1"] ;
+integers_to_ring_self [label="to_ring_self", URL=<integers.html#to_ring_self>, peripheries=3, fillcolor="#F070D1"] ;
+integers_to_ring_twice [label="to_ring_twice", URL=<integers.html#to_ring_twice>, fillcolor="#F070D1"] ;
+integers_morphisms_involutive [label="morphisms_involutive", URL=<integers.html#morphisms_involutive>, peripheries=3, fillcolor="#F070D1"] ;
+integers_to_ring_involutive [label="to_ring_involutive", URL=<integers.html#to_ring_involutive>, fillcolor="#F070D1"] ;
+integers_to_ring_unique_alt [label="to_ring_unique_alt", URL=<integers.html#to_ring_unique_alt>, fillcolor="#F070D1"] ;
+integers_to_ring_unique [label="to_ring_unique", URL=<integers.html#to_ring_unique>, fillcolor="#F070D1"] ;
+  integers_int_integral_domain -> integers_int_zero_product [] ;
+  integers_int_integral_domain -> integers_int_nontrivial [] ;
+  integers_int_zero_product -> integers_integers_to_integers_injective [] ;
+  integers_int_nontrivial -> integers_naturals_to_integers_injective [] ;
+  integers_slow_int_abs -> integers_integers_to_integers_injective [] ;
+  integers_int_dec -> integers_int_to_int_equiv [] ;
+  integers_from_int_stmt -> integers_int_to_int_equiv [] ;
+  integers_int_to_int_equiv -> integers_to_ring_involutive [] ;
+  integers_retract_is_int -> integers_same_morphism [] ;
+  integers_retract_is_int -> integers_retract_is_int_to_ring [] ;
+  integers_same_morphism -> integers_to_ring_unique [] ;
+  integers_integers_to_integers_injective -> integers_to_ring_injective [] ;
+  integers_to_ring_injective -> integers_to_ring_twice [] ;
+  integers_to_ring_self -> integers_to_ring_unique_alt [] ;
+  integers_to_ring_twice -> integers_to_ring_unique_alt [] ;
+  integers_morphisms_involutive -> integers_to_ring_unique_alt [] ;
+  integers_to_ring_involutive -> integers_to_ring_unique_alt [] ;
+  integers_to_ring_unique_alt -> integers_to_ring_unique [] ;
+subgraph cluster_integers { label="integers"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+integers_to_ring_unique; integers_to_ring_unique_alt; integers_to_ring_involutive; integers_morphisms_involutive; integers_to_ring_twice; integers_to_ring_self; integers_to_ring_injective; integers_integers_to_integers_injective; integers_naturals_to_integers_injective; integers_retract_is_int_to_ring; integers_IsSemiRingPreserving_instance_0; integers_same_morphism; integers_retract_is_int; integers_int_to_int_equiv; integers_from_int_stmt; integers_int_dec; integers_slow_int_abs; integers_int_nontrivial; integers_int_zero_product; integers_int_integral_domain; };
+} /* END */

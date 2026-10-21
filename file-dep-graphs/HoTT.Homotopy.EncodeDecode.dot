@@ -1,0 +1,12 @@
+digraph HoTT_Homotopy_EncodeDecode {
+  graph [ratio=0.5]
+  node [style=filled]
+EncodeDecode_encode_decode_trunc_loops [label="encode_decode_trunc_loops", URL=<EncodeDecode.html#encode_decode_trunc_loops>, peripheries=3, fillcolor="#F070D1"] ;
+EncodeDecode_encode_decode_loops [label="encode_decode_loops", URL=<EncodeDecode.html#encode_decode_loops>, peripheries=3, fillcolor="#F070D1"] ;
+EncodeDecode_encode_decode_trunc [label="encode_decode_trunc", URL=<EncodeDecode.html#encode_decode_trunc>, fillcolor="#F070D1"] ;
+EncodeDecode_encode_decode [label="encode_decode", URL=<EncodeDecode.html#encode_decode>, fillcolor="#F070D1"] ;
+  EncodeDecode_encode_decode_trunc_loops -> EncodeDecode_encode_decode_trunc [] ;
+  EncodeDecode_encode_decode_loops -> EncodeDecode_encode_decode [] ;
+subgraph cluster_EncodeDecode { label="EncodeDecode"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EncodeDecode_encode_decode; EncodeDecode_encode_decode_trunc; EncodeDecode_encode_decode_loops; EncodeDecode_encode_decode_trunc_loops; };
+} /* END */

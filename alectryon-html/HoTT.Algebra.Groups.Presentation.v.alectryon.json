@@ -1,0 +1,2015 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.Group.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.FreeGroup.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.GroupCoeq.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Finite Spaces.List.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.WildCat Require Import Core Equiv Yoneda.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In this file we develop presentations of groups. *)\n\n(** The data of a group presentation *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record GroupPresentation := {\n  (** We have a type of generators *)\n  gp_generators : Type ;\n  (** An indexing type for relators *)\n  gp_rel_index : Type ;\n  (** The relators are picked out amongst elements of the free group on the generators. *)\n  gp_relators : gp_rel_index -> FreeGroup gp_generators;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Note: A relator is a relation in the form of \"w = 1\", any relation \"w = v\" can become a relator \"wv^-1 = 1\" for words v and w. *)\n\n(** Given the data of a group presentation we can construct the group. This is sometimes called the presented group. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_gp : GroupPresentation -> Group.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupPresentation -> Group",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupPresentation -> Group",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [X I R].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Group",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "I"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "R"
+              ],
+              "body": null,
+              "type": "I -> FreeGroup X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (GroupCoeq\n    (FreeGroup_rec R)\n    (FreeGroup_rec (fun x => @group_unit (FreeGroup X)))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A group [G] has a presentation if there exists a group presentation whose presented group is isomorphic to [G]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class HasPresentation (G : Group) := {\n  presentation : GroupPresentation;\n  grp_iso_presentation : GroupIsomorphism (group_gp presentation) G;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion presentation : HasPresentation >-> GroupPresentation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here are a few finiteness properties of group presentations. *)\n\n(** A group presentation is finitely generated if its generating set is finite. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FinitelyGeneratedPresentation (P : GroupPresentation)\n  := finite_gp_generators : Finite (gp_generators P).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A group presentation is finitely related if its relators indexing set is finite. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FinitelyRelatedPresentation (P : GroupPresentation)\n  := finite_gp_relators : Finite (gp_rel_index P).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A group presentation is a finite presentation if it is finitely generated and related. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class FinitePresentation (P : GroupPresentation) := {\n  fp_generators : FinitelyGeneratedPresentation P;\n  fp_relators : FinitelyRelatedPresentation P;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** These directly translate into properties of groups. *)\n\n(** A group is finitely generated if it has a finitely generated presentation. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsFinitelyGenerated (G : Group) := {\n  fg_presentation : HasPresentation G;\n  fg_presentation_fg : FinitelyGeneratedPresentation fg_presentation;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A group is finitely related if it has a finitely related presentation. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsFinitelyRelated (G : Group) := {\n  fr_presentation : HasPresentation G;\n  fr_presentation_fr : FinitelyRelatedPresentation fr_presentation;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Class IsFinitelyPresented (G : Group) := {\n  fp_presentation : HasPresentation G;\n  fp_presentation_fp : FinitePresentation fp_presentation;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Fundamental theorem of presentations of groups *)\n\n(** A group homomorphism from a presented group is determined with how the underlying map acts on generators subject to the condition that relators are sent to the unit. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem grp_pres_rec {funext : Funext} (G : Group) (P : HasPresentation G) (H : Group)\n  : {f : gp_generators P -> H & forall r,\n      FreeGroup_rec f (gp_relators P r) = group_unit}\n    <~> GroupHomomorphism G H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : gp_generators P -> H &\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit} <~>\nGroupHomomorphism G H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : gp_generators P -> H &\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit} <~>\nGroupHomomorphism G H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((equiv_precompose_cat_equiv grp_iso_presentation (z:=H))^-1 oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : gp_generators P -> H &\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit} <~>\n(group_gp P $-> H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_groupcoeq_rec _ _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : gp_generators P -> H &\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit} <~>\n{h : FreeGroup (gp_generators P) $-> H &\nh $o FreeGroup_rec (gp_relators P) $==\nh $o FreeGroup_rec (fun _ : gp_rel_index P => group_unit)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srefine (equiv_functor_sigma_pb _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?A <~> (FreeGroup (gp_generators P) $-> H)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : gp_generators P -> H &\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit} <~>\n{x : _ &\n((fun h : FreeGroup (gp_generators P) $-> H =>\n  h $o FreeGroup_rec (gp_relators P) $==\n  h $o FreeGroup_rec (fun _ : gp_rel_index P => group_unit))\n o ?f) x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: apply equiv_freegroup_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : gp_generators P -> H &\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit} <~>\n{x : _ &\n((fun h : FreeGroup (gp_generators P) $-> H =>\n  h $o FreeGroup_rec (gp_relators P) $==\n  h $o FreeGroup_rec (fun _ : gp_rel_index P => group_unit))\n o equiv_freegroup_rec H (gp_generators P)) x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_functor_sigma_id.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : gp_generators P -> H,\n(forall r : gp_rel_index P, FreeGroup_rec a (gp_relators P r) = group_unit) <~>\nequiv_freegroup_rec H (gp_generators P) a $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) a $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit) <~>\nequiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_iff_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit) ->\nequiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit) ->\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(forall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit) ->\nequiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (equiv_freegroup_rec H _ f $o FreeGroup_rec (gp_relators P)\n      $== equiv_freegroup_rec _ _ f $o FreeGroup_rec (fun _ => group_unit)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply FreeGroup_ind_homotopy.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : gp_rel_index P,\n(equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P))\n  (freegroup_in x) =\n(equiv_freegroup_rec H (gp_generators P) f $o\n FreeGroup_rec (fun _ : gp_rel_index P => group_unit)) \n  (freegroup_in x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit) ->\nforall r : gp_rel_index P, FreeGroup_rec f (gp_relators P r) = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros p r.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FreeGroup_rec f (gp_relators P r) = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P) $==\nequiv_freegroup_rec H (gp_generators P) f $o\nFreeGroup_rec (fun _ : gp_rel_index P => group_unit)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "gp_rel_index P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "hnf in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FreeGroup_rec f (gp_relators P r) = group_unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "funext"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "HasPresentation G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "gp_generators P -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "forall x : FreeGroup (gp_rel_index P),\n(equiv_freegroup_rec H (gp_generators P) f $o FreeGroup_rec (gp_relators P))\n  x =\n(equiv_freegroup_rec H (gp_generators P) f $o\n FreeGroup_rec (fun _ : gp_rel_index P => group_unit)) x"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "gp_rel_index P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p (freegroup_in r)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Constructors for finite presentations *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_Finite_GroupPresentation n m\n  (f : FinSeq m (FreeGroup (Fin n)))\n  : GroupPresentation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupPresentation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "GroupPresentation",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_GroupPresentation.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?gp_rel_index -> FreeGroup ?gp_generators",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Fin n).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Fin m).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Fin m -> FreeGroup (Fin n)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance FinitelyGeneratedPresentation_Build_Finite_GroupPresentation\n  {n m f}\n  : FinitelyGeneratedPresentation (Build_Finite_GroupPresentation n m f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FinitelyGeneratedPresentation (Build_Finite_GroupPresentation n m f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FinitelyGeneratedPresentation (Build_Finite_GroupPresentation n m f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unshelve econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merely (gp_generators (Build_Finite_GroupPresentation n m f) <~> Fin ?fcard)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: simpl; apply tr; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance FinitelyRelatedPresentation_Build_Finite_GroupPresentation\n  {n m f}\n  : FinitelyRelatedPresentation (Build_Finite_GroupPresentation n m f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FinitelyRelatedPresentation (Build_Finite_GroupPresentation n m f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "FinitelyRelatedPresentation (Build_Finite_GroupPresentation n m f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unshelve econstructor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "nat",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merely (gp_rel_index (Build_Finite_GroupPresentation n m f) <~> Fin ?fcard)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n",
+                "m"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "FinSeq m (FreeGroup (Fin n))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: simpl; apply tr; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Notations for presentations *)\n\n(** Convenient abbreviation when defining notations. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation ff := (freegroup_in o fin_nat).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** TODO: I haven't worked out how to generalize to any number of binders, so we explicitly list the first few levels. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope nat_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** One generator *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u27e8 x | F , .. , G \u27e9\" :=\n  (Build_Finite_GroupPresentation 1 _\n    (fscons ((fun (x : FreeGroup (Fin 1))\n      => F : FreeGroup (Fin _)) (ff 0%nat))\n    .. (fscons ((fun (x : FreeGroup (Fin 1))\n      => G : FreeGroup (Fin _)) (ff 0)) fsnil) ..))\n  (at level 200, x binder).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Two generators *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u27e8 x , y | F , .. , G \u27e9\" :=\n  (Build_Finite_GroupPresentation 2 _\n    (fscons ((fun (x y : FreeGroup (Fin 2))\n      => F : FreeGroup (Fin _)) (ff 0) (ff 1))\n    .. (fscons ((fun (x y : FreeGroup (Fin 2))\n      => G : FreeGroup (Fin _)) (ff 0) (ff 1)) fsnil) ..))\n  (at level 200, x binder, y binder).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Three generators *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Notation \"\u27e8 x , y , z | F , .. , G \u27e9\" :=\n  (Build_Finite_GroupPresentation 3 _\n    (fscons ((fun (x y z : FreeGroup (Fin 3))\n      => F : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2))\n    .. (fscons ((fun (x y z : FreeGroup (Fin 3))\n      => G : FreeGroup (Fin _)) (ff 0) (ff 1) (ff 2)) fsnil) ..))\n  (at level 200, x binder, y binder, z binder).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]
