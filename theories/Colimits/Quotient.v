@@ -29,11 +29,11 @@ Definition Quotient@{i j k} {A : Type@{i}} (R : Relation@{i j} A) : Type@{k}
   := Trunc@{k} 0 (GraphQuotient@{i j k} R).
 
 Definition class_of@{i j k} {A : Type@{i}} (R : Relation@{i j} A)
-  : A -> Quotient@{i j k} R := tr o gq.
+  : A -> Quotient@{i j k} R := tr o gq@{i j k}.
 
 Definition qglue@{i j k} {A : Type@{i}} {R : Relation@{i j} A} {a b : A}
   : R a b -> class_of@{i j k} R a = class_of R b
-  := fun p => ap tr (gqglue p).
+  := fun p => ap tr (gqglue@{i j k} p).
 
 Instance ishset_quotient {A : Type} (R : Relation A)
   : IsHSet (Quotient R) := _.

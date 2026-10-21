@@ -260,7 +260,7 @@ Section Hartogs_Number.
       + srapply equiv_adjointify.
         * intros [a Ha % equiv_smalltype]. unshelve eexists.
           -- exists a. transitivity (card hartogs_number).
-             ++ napply le_Cardinal_lt_Ordinal; exact Ha.
+             ++ exact (le_Cardinal_lt_Ordinal a hartogs_number Ha).
              ++ exact HN.
           -- apply equiv_smalltype. cbn. exact Ha.
         * intros [[a Ha] H % equiv_smalltype]. exists a.

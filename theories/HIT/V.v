@@ -9,9 +9,11 @@ Local Open Scope path_scope.
 
 (** Bitotal relation *)
 
-Definition bitotal {A B : Type} (R : A -> B -> HProp) :=
-   (forall a : A, hexists (fun (b : B) => R a b))
- * (forall b : B, hexists (fun (a : A) => R a b)).
+Definition bitotal@{a b r k | a <= k, b <= k, r <= k}
+  {A : Type@{a}} {B : Type@{b}} (R : A -> B -> HProp@{r})
+  := prod@{k k}
+       (forall a : A, merely@{k} (sig@{b r} (fun b : B => R a b)))
+       (forall b : B, merely@{k} (sig@{a r} (fun a : A => R a b))).
 
 (** ** The cumulative hierarchy V *)
 
@@ -20,9 +22,11 @@ Module Export CumulativeHierarchy.
 Private Inductive V@{U' U | U < U'} : Type@{U'} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
-Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
-  (bitot_R : bitotal R) (h : SPushout R -> V),
-set (h o (spushl R)) = set (h o (spushr R)).
+Axiom setext@{U' U r p | U < U', U <= p, r <= p} :
+  forall {A B : Type@{U}} (R : A -> B -> HProp@{r})
+    (bitot_R : bitotal@{U U r p} R)
+    (h : SPushout@{U U r p} R -> V@{U' U}),
+    set@{U' U} (h o spushl R) = set@{U' U} (h o spushr R).
 
 Axiom ishset_V : IsHSet V.
 Existing Instance ishset_V.
@@ -30,12 +34,16 @@ Existing Instance ishset_V.
 (** The induction principle.  Annotating the universes here greatly reduces the number of universe variables later in the file.  For example, [function] below went from 279 to 3.  If [V_ind] needs to be generalized in the future, check [function] to make sure things haven't exploded again. *)
 Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
   (H_0trunc : forall v : V@{U' U}, IsTrunc 0 (P v))
-  (H_set : forall (A : Type@{U}) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
-  (H_setext : forall (A B : Type@{U}) (R : A -> B -> HProp@{U}) (bitot_R : bitotal R)
-    (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
-    transport@{U' u} _ (setext R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
-      = H_set B (h o spushr R) (H_h oD spushr R) )
-  (v : V)
+  (H_set : forall (A : Type@{U}) (f : A -> V@{U' U})
+    (H_f : forall a : A, P (f a)), P (set@{U' U} f))
+  (H_setext : forall (A B : Type@{U}) (R : A -> B -> HProp@{U})
+    (bitot_R : bitotal@{U U U U} R)
+    (h : SPushout@{U U U U} R -> V@{U' U})
+    (H_h : forall x : SPushout@{U U U U} R, P (h x)),
+    transport@{U' u} _ (setext@{U' U U U} R bitot_R h)
+      (H_set A (h o spushl R) (H_h oD spushl R))
+      = H_set B (h o spushr R) (H_h oD spushr R))
+  (v : V@{U' U})
 : P v
 := (match v with
      | set A f => fun _ _ => H_set A f (fun a => V_ind P H_0trunc H_set H_setext (f a))

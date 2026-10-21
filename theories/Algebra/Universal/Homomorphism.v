@@ -91,7 +91,7 @@ Section homomorphism_id.
     intros u a. reflexivity.
   Defined.
 
-  Definition homomorphism_id : A $-> A
+  Definition homomorphism_id : Homomorphism A A
     := Build_Homomorphism (fun s (x : A s) => x).
 
 End homomorphism_id.
@@ -112,7 +112,8 @@ Section homomorphism_compose.
     by rewrite <- (oppreserving_hom g), (oppreserving_hom f).
   Qed.
 
-  Definition homomorphism_compose (g : B $-> C) (f : A $-> B) : A $-> C
+  Definition homomorphism_compose
+    (g : Homomorphism B C) (f : Homomorphism A B) : Homomorphism A C
     := Build_Homomorphism (fun s => g s o f s).
 
 End homomorphism_compose.
