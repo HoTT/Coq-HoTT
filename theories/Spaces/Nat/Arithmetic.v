@@ -182,6 +182,7 @@ Inductive increasing_geq (n : nat) : nat -> Type0 :=
 Scheme increasing_geq_ind := Induction for increasing_geq Sort Type.
 Scheme increasing_geq_rec := Minimality for increasing_geq Sort Type.
 Definition increasing_geq_rect := increasing_geq_rec.
+Register Scheme increasing_geq_rec as rec_nodep for increasing_geq.
 
 Local Set Elimination Schemes.
 
