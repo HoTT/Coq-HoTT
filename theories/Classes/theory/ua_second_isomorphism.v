@@ -44,11 +44,11 @@ Section cong_trace.
     (R : for_all_2_family_prod (A&&P) (A&&P) cong_trace a b)
     : for_all_2_family_prod A A Φ
         (map_family_prod i a) (map_family_prod i b).
-  Proof with try assumption.
-    induction w...
+  Proof.
+    induction w; try assumption.
     destruct a as [x a], b as [y b], R as [C R].
-    split...
-    apply IHw...
+    split; try assumption.
+    apply IHw; try assumption.
   Qed.
 
   #[export] Instance ops_compatible_trace_trace
