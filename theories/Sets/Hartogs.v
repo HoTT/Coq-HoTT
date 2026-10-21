@@ -60,7 +60,7 @@ Section Hartogs_Number.
   Declare Scope Hartogs.
   Open Scope Hartogs.
 
-  Notation "'𝒫'" := power_type (at level 30) : Hartogs.
+  Notation "'𝒫'" := power_type (at level 0) : Hartogs.
 
   Local Coercion subtype_as_type' {X} (Y : 𝒫 X) := { x : X & Y x }.
 
