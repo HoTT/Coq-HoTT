@@ -1,6 +1,6 @@
+From HoTT Require Import Basics.
 Require Import Types.Paths.
-Require Import Classes.interfaces.abstract_algebra.
-Require Import Cubical.DPath Cubical.PathSquare.
+Require Import Classes.interfaces.abstract_algebra Classes.theory.groups.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Homotopy.HSpace.Core.
 Require Import Homotopy.Suspension.
@@ -8,6 +8,7 @@ Require Import Homotopy.Join.Core.
 
 Local Open Scope pointed_scope.
 Local Open Scope mc_mult_scope.
+Local Open Scope path_scope.
 
 (** The Cayley-Dickson Construction *)
 
@@ -15,7 +16,7 @@ Local Open Scope mc_mult_scope.
 
 The construction works by replicating the classical Cayley-Dickson construction on convolution algebras ([*]-algebras), which can produce the complex numbers, quaternions, octonions, etc. starting with the real numbers. We cannot replicate this directly in HoTT since such algebras have a contractible underlying vector space, therefore the construction here attempts to axiomatize the properties of the units of those algebras instead.
 
-This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. An open problem is to show that this space itself is also an imaginaroid given further, yet unspecified, coherences on [A]. *)
+This is done by postulating a structure called a "Cayley-Dickson imaginaroid" on a type [A] and showing that [Join (Susp A) (Susp A)] is an H-space. Here we separate the algebra from the geometry: an associative spheroid [X] with a chosen diamond gives an H-space on [Join X X], and suspensions supply the canonical diamond. We also prove the doubled involution, inverse, and sign laws, without additional coherences of the diamond. In fact, doubled negation is homotopic to the identity. Associativity of the doubled multiplication is not established here. Once it is supplied, inverse anti-multiplicativity completes the doubled spheroid structure, and the join supplies its next diamond directly. Recovering an imaginaroid on [Join A (Susp A)] remains an open problem requiring further coherences. *)
 
 (** ** Cayley-Dickson spheroids *)
 
@@ -69,6 +70,13 @@ Section CayleyDicksonSpheroid_Properties.
 
 End CayleyDicksonSpheroid_Properties.
 
+(** ** Chosen diamonds *)
+
+(** The geometric input to doubling a spheroid is a chosen filler, not merely the assertion that a filler exists. We express it as an equality of zigzags, so the construction only needs path algebra. No multiplication or associativity is needed to state this data. Additional laws for the doubled multiplication can then be formulated as coherences of this choice. *)
+Class CayleyDicksonDiamond (X : pType) (neg : X -> X)
+  := cd_diamond : forall t : X,
+    zigzag (neg pt) t pt = zigzag (neg pt) t t.
+
 (** ** Negation and conjugation on suspensions *)
 
 Instance conjugate_susp (A : Type) `(Negate A) : Conjugate (Susp A)
@@ -108,6 +116,13 @@ Proof.
   lhs rapply susp_neg_inv.
   rapply involutive.
 Defined.
+
+(** Every suspension supplies a canonical diamond. Only the value of suspension negation at the north pole is used; no laws of the negation on [A], or multiplication on [Susp A], are needed. *)
+Instance cd_diamond_susp {A : Type} `{Negate A}
+  : CayleyDicksonDiamond (psusp A) (-)
+  := Susp_ind (fun t => zigzag South t North = zigzag South t t)
+       (diamond_v South North 1) (diamond_h North South 1)
+       (fun a => diamond_twist (merid a)).
 
 (** ** Cayley-Dickson imaginaroids *)
 
@@ -154,68 +169,129 @@ Proof.
   stapply cds_factorneg_l.
 Defined.
 
-(** A Cayley-Dickson imaginaroid [A] whose multiplication on the suspension is associative gives rise to an H-space structure on the join of the suspension of [A] with itself. *)
-Section ImaginaroidHSpace.
+(** ** Negation and conjugation on the double *)
 
-  (** Let [A] be a Cayley-Dickson imaginaroid with associative H-space multiplication on [Susp A]. *)
-  Context {A} `(CayleyDicksonImaginaroid A) `(!Associative hspace_op).
+Instance cd_negate {X : Type} `{Negate X} : Negate (Join X X)
+  := functor_join (-) (-).
 
-  (** Declaring these as local instances so that they can be found *)
-  Local Instance hspace_op' : SgOp (Susp A) := hspace_op.
-  Local Instance hspace_unit' : MonUnit (Susp A) := hspace_mon_unit.
+(** The next diamond is available on every double, independently of multiplication or a diamond on [X]. *)
+#[export] Instance cd_diamond_double {X : pType} `{Negate X}
+  : CayleyDicksonDiamond (pjoin X X) cd_negate
+  := @diamond_join X X (-pt) pt pt.
 
-  (** First we make some observations with the context we have. *)
-  Section Lemmata.
+Instance cd_conjugate {X : Type} `{Negate X, Conjugate X}
+  : Conjugate (Join X X)
+  := functor_join conj (-).
 
-    Context (a b c d : Susp A).
+Instance involutive_cd_negate {X : Type}
+  `{Negate X, !Involutive (-)} : Involutive cd_negate.
+Proof.
+  intro x.
+  lhs_V napply functor_join_compose.
+  rhs_V napply functor_join_idmap.
+  napply functor2_join; exact involutive.
+Defined.
 
-    Local Definition f := (fun x => a * (c * -x)).
-    Local Definition g := (fun y => c * (y * b)).
+Instance involutive_cd_conjugate {X : Type}
+  `{Negate X, Conjugate X, !Involutive (-), !Involutive conj}
+  : Involutive cd_conjugate.
+Proof.
+  intro x.
+  lhs_V napply functor_join_compose.
+  rhs_V napply functor_join_idmap.
+  napply functor2_join; exact involutive.
+Defined.
 
-    Lemma lemma1 : f (- mon_unit) = a * c.
-    Proof.
-      unfold f; apply ap.
-      exact (hspace_right_identity c).
-    Defined.
+Instance swapop_cd {X : Type} `{Negate X, Conjugate X, !SwapOp (-) conj}
+  : SwapOp cd_negate cd_conjugate.
+Proof.
+  intro x.
+  lhs_V napply functor_join_compose.
+  rhs_V napply functor_join_compose.
+  napply functor2_join.
+  1: exact swapop.
+  reflexivity.
+Defined.
 
-    Lemma lemma2 : f (conj c * conj a * d * conj b) = (-d) * conj b.
-    Proof.
-      unfold f.
-      rewrite 2 factorneg_r.
-      rewrite 3 simple_associativity.
-      rewrite <- distropp.
-      rewrite (right_inverse (a * c)).
-      rewrite (left_identity d).
-      symmetry.
-      apply factorneg_l.
-    Defined.
+Instance isunitpreserving_cd_conjugate {X : pType}
+  `{Negate X, Conjugate X, !@IsUnitPreserving X X pt pt conj}
+  : @IsUnitPreserving (pjoin X X) (pjoin X X) pt pt cd_conjugate
+  := ap joinl preserves_mon_unit.
 
-    Lemma lemma3 : g mon_unit = c * b.
-    Proof.
-      unfold g; apply ap.
-      apply left_identity.
-    Defined.
+(** ** Multiplication on the double *)
 
-    Lemma lemma4 : g (conj c * conj a * d * conj b) = conj a * d.
-    Proof.
-      unfold g.
-      rewrite 2 simple_associativity.
-      rewrite <- simple_associativity.
-      rewrite left_inverse.
-      rewrite right_identity.
-      rewrite 2 simple_associativity.
-      rewrite right_inverse.
-      rewrite <- simple_associativity.
-      apply left_identity.
-    Defined.
+(** An associative Cayley-Dickson spheroid with a chosen diamond gives an H-space structure on its self-join. For an imaginaroid, [cd_diamond_susp] supplies the diamond automatically. *)
+Section SpheroidHSpace.
 
-  End Lemmata.
+  Context {X : pType} `{CayleyDicksonSpheroid X}
+    `{!Associative hspace_op} `{!CayleyDicksonDiamond X (-)}.
 
-  Arguments f {_ _}.
-  Arguments g {_ _}.
+  (** These maps send the chosen diamond to the multiplication's mixed coherence. The suffixes [l] and [r] refer to the two join factors, not to left and right multiplication. *)
+  Definition cd_diamond_map_l (a c : X) := fun x => a * (c * -x).
+  Definition cd_diamond_map_r (b c : X) := fun y => c * (y * b).
+
+  (** This is [functor_join (cd_diamond_map_l a c) (cd_diamond_map_r b c)], expressed via [Join_rec] to avoid an unused universe parameter. *)
+  Definition cd_diamond_map (a b c : X) : Join X X -> Join X X
+    := Join_rec (joinl o cd_diamond_map_l a c)
+         (joinr o cd_diamond_map_r b c)
+         (fun x y => jglue (cd_diamond_map_l a c x)
+           (cd_diamond_map_r b c y)).
+
+  Definition cd_diamond_parameter (a b c d : X)
+    := conj c * conj a * d * conj b.
+
+  Local Notation assoc := (simple_associativity (f:=hspace_op)).
+
+  (** The four scalar boundary identifications for [cd_diamond_map]. *)
+  Lemma cd_diamond_map_l_neg_unit (a c : X)
+    : cd_diamond_map_l a c (- mon_unit) = a * c.
+  Proof.
+    exact (ap (fun x => a * (c * x)) (cds_negate_inv mon_unit)
+      @ ap (a *.) (hspace_right_identity c)).
+  Defined.
+
+  Lemma cd_diamond_map_l_parameter (a b c d : X)
+    : cd_diamond_map_l a c (cd_diamond_parameter a b c d) = (-d) * conj b.
+  Proof.
+    (** Move the sign out, then cancel [a * c] against its conjugate. *)
+    refine (_ @ (factorneg_l d (conj b))^).
+    refine (ap (a *.) (factorneg_r c _) @ factorneg_r a _ @ _).
+    napply (ap (-)).
+    refine (assoc a c _ @ assoc (a * c) _ (conj b) @ _).
+    napply (ap (.* conj b)).
+    refine (assoc (a * c) _ d @ _ @ left_identity d).
+    napply (ap (.* d)).
+    exact (ap ((a * c) *.) (distropp a c)^
+      @ right_inverse (a * c)).
+  Defined.
+
+  Lemma cd_diamond_map_r_unit (b c : X)
+    : cd_diamond_map_r b c mon_unit = c * b.
+  Proof.
+    exact (ap (c *.) (left_identity b)).
+  Defined.
+
+  Lemma cd_diamond_map_r_parameter (a b c d : X)
+    : cd_diamond_map_r b c (cd_diamond_parameter a b c d) = conj a * d.
+  Proof.
+    pose (u := conj c * conj a * d).
+    nrefine (concat (y:=c * u) _ _).
+    - (** First cancel [conj b * b] on the right. *)
+      refine (_ @ ap ((c * u) *.) (left_inverse b)
+        @ right_identity (c * u)).
+      refine (_ @ (assoc (c * u) (conj b) b)^).
+      exact (assoc c (u * conj b) b
+        @ ap (.* b) (assoc c u (conj b))).
+    - (** Then cancel [c * conj c] on the left. *)
+      refine (_ @ (assoc mon_unit (conj a) d)^
+        @ left_identity (conj a * d)).
+      refine (assoc c _ d @ ap (.* d) _).
+      exact (assoc c (conj c) (conj a)
+        @ ap (.* conj a) (right_inverse c)).
+  Defined.
 
   (** Here is the multiplication map in algebraic form: [(a,b) * (c,d) = (a * c - d * b*, a* * d + c * b)].  The following is the spherical form. *)
-  #[export] Instance cd_op : SgOp (pjoin (psusp A) (psusp A)).
+  #[export] Instance cd_op : SgOp (pjoin X X).
   Proof.
     snapply Join_rec2.
     - exact (fun a b => joinl (a * b)).
@@ -227,43 +303,37 @@ Section ImaginaroidHSpace.
     - intros; apply jglue.
     - intros; symmetry; apply jglue.
     - intros a b c d; cbn beta.
-      symmetry.
-      apply sq_path.
-      rewrite <- (lemma1 a c).
-      rewrite <- (lemma2 a b c d).
-      rewrite <- (lemma3 b c).
-      rewrite <- (lemma4 a b c d).
-      refine (sq_GGGG _ _ _ _ _).
-      2,4: apply ap.
-      1,2,3,4: srapply (Join_rec_beta_jglue _ _ (fun a b => jglue (f a) (g b))).
-      refine (sq_cGcG _ _ _).
-      1,2: exact (ap_V _ (jglue _ _ )).
-      refine (@sq_ap _ _ _ _ _ _ _ (jglue _ _) (jglue _ _)^
-        (jglue _ _) (jglue _ _)^ _).
-      change (PathSquare
-        (jglue (- mon_unit) mon_unit)
-        (jglue (conj c * conj a * d * conj b) (conj c * conj a * d * conj b))^
-        (jglue (- mon_unit) (conj c * conj a * d * conj b))
-        (jglue (conj c * conj a * d * conj b) mon_unit)^).
-      generalize (conj c * conj a * d * conj b).
-      clear a b c d.
-      change (forall s : Susp A,
-        Diamond (-mon_unit) s (mon_unit) s).
-      srapply Susp_ind; hnf.
-      1: by apply diamond_v_sq.
-      1: by apply diamond_h_sq.
-      intro a.
-      apply diamond_twist.
+      (** Identify the scalar vertices using naturality of zigzags. *)
+      napply (cancelL (ap joinl (cd_diamond_map_l_neg_unit a c))).
+      refine (zigzag_natsq
+        (cd_diamond_map_l_neg_unit a c)
+        (cd_diamond_map_l_parameter a b c d)
+        (cd_diamond_map_r_parameter a b c d) @ _
+        @ (zigzag_natsq
+          (cd_diamond_map_l_neg_unit a c)
+          (cd_diamond_map_l_parameter a b c d)
+          (cd_diamond_map_r_unit b c))^).
+      (** The remaining comparison is the image of the chosen diamond. *)
+      napply whiskerR.
+      lhs_V napply (Join_rec_beta_zigzag _ _
+        (fun x y => jglue (cd_diamond_map_l a c x)
+          (cd_diamond_map_r b c y))).
+      rhs_V napply (Join_rec_beta_zigzag _ _
+        (fun x y => jglue (cd_diamond_map_l a c x)
+          (cd_diamond_map_r b c y))).
+      exact (ap (ap (cd_diamond_map a b c))
+        (cd_diamond (cd_diamond_parameter a b c d))^).
   Defined.
 
   #[export] Instance cd_op_left_identity
     : LeftIdentity cd_op pt.
   Proof.
     snapply Join_ind_Flr.
-    1,2: exact (fun _ => ap _ (hspace_left_identity _)).
+    1: exact (fun _ => ap joinl (hspace_left_identity _)).
+    1: exact (fun b => ap joinr
+      (ap (.* b) cds_conjug_unit_pres @ hspace_left_identity b)).
     intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
+    lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
     symmetry.
     apply join_natsq.
   Defined.
@@ -275,14 +345,115 @@ Section ImaginaroidHSpace.
     1: exact (fun _ => ap joinl (hspace_right_identity _)).
     1: exact (fun _ => ap joinr (hspace_left_identity _)).
     intros a b.
-    lhs napply whiskerR.
-    1: exact (Join_rec_beta_jglue _ _ _ a b).
+    lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
     simpl; symmetry.
     apply join_natsq.
   Defined.
 
-  #[export] Instance hspace_cdi_susp_assoc
-    : IsHSpace (pjoin (psusp A) (psusp A))
-    := {}.
+  (** Negation is left translation by the image of [-1]. The glue case uses only naturality of [jglue], not a comparison of diamond fillers. *)
+  Definition cd_negate_translation
+    : cd_op (joinl (-mon_unit)) == cd_negate.
+  Proof.
+    snapply Join_ind_FlFr.
+    - intro a.
+      exact (ap joinl (factorneg_l mon_unit a
+        @ ap (-) (hspace_left_identity a))).
+    - intro b.
+      napply (ap joinr).
+      refine (ap (.* b) _ @ _).
+      1: exact (swapop mon_unit @ ap (-) cds_conjug_unit_pres).
+      exact (factorneg_l mon_unit b
+        @ ap (-) (hspace_left_identity b)).
+    - intros a b.
+      lhs napply (Join_rec_beta_jglue _ _ _ a b @@ 1).
+      symmetry.
+      lhs napply (1 @@ functor_join_beta_jglue (-) (-) a b).
+      apply join_natsq.
+  Defined.
 
-End ImaginaroidHSpace.
+  (** The points [joinl (-pt)] and [joinl pt] are connected through [joinr pt], even when [-pt] and [pt] are in different components of [X]. *)
+  Definition cd_negate_homotopic_id (z : pjoin X X) : cd_negate z = z.
+  Proof.
+    exact ((cd_negate_translation z)^
+      @ ap (fun w => cd_op w z) (zigzag (-pt) pt pt)
+      @ cd_op_left_identity z).
+  Defined.
+
+  (** These are the sign laws as unstructured paths; no prescribed higher coherence of these witnesses is asserted. *)
+  #[export] Instance cd_op_factorneg_r : FactorNegRight cd_negate cd_op.
+  Proof.
+    intros x y.
+    exact (ap (cd_op x) (cd_negate_homotopic_id y)
+      @ (cd_negate_homotopic_id (cd_op x y))^).
+  Defined.
+
+  #[export] Instance cd_op_factorneg_l : FactorNegLeft cd_negate cd_op.
+  Proof.
+    intros x y.
+    exact (ap (fun z => cd_op z y) (cd_negate_homotopic_id x)
+      @ (cd_negate_homotopic_id (cd_op x y))^).
+  Defined.
+
+  (** The diagonal inverse law only uses the one-glue computation rules. Its image is a zigzag with a common right vertex, so no symmetry of the chosen diamond is needed. *)
+  #[export] Instance cd_op_conjugate_left_inverse
+    : LeftInverse cd_op cd_conjugate pt.
+  Proof.
+    snapply Join_ind_FlFr.
+    - intro a; exact (ap joinl (left_inverse a)).
+    - intro b; exact (ap joinl (right_inverse (-b))).
+    - intros a b.
+      rhs napply (1 @@ ap_const _ _).
+      rhs napply concat_p1.
+      apply moveR_pM.
+      rhs_V napply (ap_pV joinl).
+      rhs_V napply (triangle_h' (B:=X) (conj (conj a) * b)).
+      (** Compute the diagonal path by changing the second argument first. *)
+      lhs_V napply (ap011_diag
+        (fun x y => cd_op (cd_conjugate y) x) (jglue a b)).
+      lhs napply (ap011_is_ap
+        (fun x y => cd_op (cd_conjugate y) x)).
+      napply concat2.
+      + exact (Join_rec_beta_jglue _ _ _ a b).
+      + lhs napply (ap_compose cd_conjugate
+          (fun z => cd_op z (joinr b))).
+        lhs napply (ap _ (functor_join_beta_jglue conj (-) a b)).
+        exact (Join_rec_beta_jglue _ _ _ (conj a) (-b)).
+  Defined.
+
+  #[export] Instance cd_op_conjugate_right_inverse
+    : RightInverse cd_op cd_conjugate pt.
+  Proof.
+    intro z.
+    lhs_V exact (ap (fun w => cd_op w (cd_conjugate z))
+      (involutive_cd_conjugate z)).
+    apply cd_op_conjugate_left_inverse.
+  Defined.
+
+  #[export] Instance hspace_cd : IsHSpace (pjoin X X) := {}.
+
+  (** Once doubled associativity is supplied, inverse anti-multiplicativity completes the spheroid structure. No independent coherence of conjugation is assumed. This is an explicit construction, rather than an instance, so instance search does not attempt to synthesize doubled associativity. *)
+  Definition cd_spheroid_of_associative `{!Associative cd_op}
+    : CayleyDicksonSpheroid (pjoin X X).
+  Proof.
+    snapply Build_CayleyDicksonSpheroid.
+    - exact hspace_cd.
+    - exact cd_negate.
+    - exact cd_conjugate.
+    - exact involutive_cd_negate.
+    - exact involutive_cd_conjugate.
+    - exact isunitpreserving_cd_conjugate.
+    - exact cd_op_conjugate_left_inverse.
+    - intros x y.
+      rapply (inverse_sg_op (op:=cd_op) (unit:=pt) (i:=cd_conjugate) x y).
+    - exact swapop_cd.
+    - exact cd_op_factorneg_r.
+  Defined.
+
+End SpheroidHSpace.
+
+(** Resolve the inherited spheroid structure before searching for associativity. Ordinary instance search does not always unfold the inherited multiplication when matching the imaginaroid's associativity hypothesis. *)
+#[export] Hint Extern 0 (IsHSpace (pjoin (psusp _) _))
+  => rapply hspace_cd : typeclass_instances.
+
+(** The original imaginaroid construction is the suspension instance of [hspace_cd]. *)
+Notation hspace_cdi_susp_assoc := hspace_cd.
