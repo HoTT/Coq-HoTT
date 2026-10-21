@@ -1,0 +1,10 @@
+(rule
+ (alias runtest)
+ (enabled_if %{bin-available:python3})
+ (deps
+  test_rocq_wrappers.py
+  ../rocq_wrapper.py
+  ../coqcreplace.py
+  ../coqcstriprequires.py
+  ../coqccount.sh)
+ (action (run python3 %{dep:test_rocq_wrappers.py})))
