@@ -170,6 +170,7 @@ Require Export HoTT.Homotopy.Cofiber.
 Require Export HoTT.Homotopy.EMSpace.
 Require Export HoTT.Homotopy.ExactSequence.
 Require Export HoTT.Homotopy.HSpaceS1.
+Require Export HoTT.Homotopy.HSpaceS3.
 Require Export HoTT.Homotopy.Bouquet.
 Require Export HoTT.Homotopy.EncodeDecode.
 Require Export HoTT.Homotopy.SuccessorStructure.
