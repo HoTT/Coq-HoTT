@@ -38,7 +38,7 @@ Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
   (v : V)
 : P v
 := (match v with
-     | set A f => fun _ _ => H_set A f (fun a => V_ind P H_0trunc H_set H_setext (f a))
+     | @set A f => fun _ _ => H_set A f (fun a => V_ind P H_0trunc H_set H_setext (f a))
     end) H_setext H_0trunc.
 
 (** We don't need to axiomatize the computation rule because we get it for free thanks to 0-truncation *)
