@@ -518,12 +518,7 @@ Section locator.
 
     Definition archimedean_structure : {q : Q | x < 'q < y}.
     Proof.
-      assert (R : sig P).
-      {
-        apply (minimal_n_alt_type _ QQpos_eq).
-        - exact P_dec.
-        - exact P_inhab.
-      }
+      pose proof (R:=minimal_n_alt_type _ QQpos_eq _ P_dec P_inhab).
       unfold P in R.
       destruct R as [[q eps] [lleft mright]].
       exists q; split.

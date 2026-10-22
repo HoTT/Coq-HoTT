@@ -22,9 +22,10 @@ Local Definition nat_unpair_hit_diagonal (a b n : nat) (p : nat_unpair n = (a + 
   : {m : nat & nat_unpair m = (a, b)}.
 Proof.
   revert a p; induction b as [|b IH]; intros a p.
-  - exists n; rewrite p, nat_add_zero_r; reflexivity.
-  - destruct (IH (S a) (p @ ap (fun k => (k, 0)) (nat_add_succ_r a b))) as [m q].
-    exists (S m); cbn; rewrite q; reflexivity.
+  - rewrite nat_add_zero_r in p.  exact (n; p).
+  - rewrite nat_add_succ_r in p.
+    destruct (IH (S a) p) as [m q].
+    exists (S m). cbn; rewrite q. reflexivity.
 Defined.
 
 Local Definition nat_unpair_hit_axis (d : nat) : {n : nat & nat_unpair n = (d, 0)}.
