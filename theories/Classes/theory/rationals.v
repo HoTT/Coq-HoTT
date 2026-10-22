@@ -151,6 +151,12 @@ path_via (e * (2 / 2)).
   ring_tac.ring_with_nat.
 Qed.
 
+Lemma qpos_half_lt@{} (e : Q+) : ' (e / 2) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split2 e)).
+apply pos_plus_lt_compat_r, pos_is_pos.
+Qed.
+
 Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
 Proof.
 intros.
@@ -158,6 +164,12 @@ path_via (e * (3 / 3)).
 - rewrite pos_recip_r,pos_mult_1_r;reflexivity.
 - apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
   ring_tac.ring_with_nat.
+Qed.
+
+Lemma qpos_two_thirds_lt@{} (e : Q+) : ' (e / 3) + ' (e / 3) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split3 e)).
+apply pos_plus_lt_compat_r, pos_is_pos.
 Qed.
 
 #[export] Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
