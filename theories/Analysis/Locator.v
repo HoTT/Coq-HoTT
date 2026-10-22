@@ -1,5 +1,6 @@
 From HoTT Require Import
   Basics DProp Misc.BoundedSearch Spaces.Finite.Fin ExcludedMiddle
+  Modalities.ReflectiveSubuniverse Modalities.Identity
   Classes.interfaces.abstract_algebra
   Classes.interfaces.orders
   Classes.interfaces.rationals
@@ -515,8 +516,7 @@ Section locator.
     Proof.
       assert (R : sig P).
       {
-        apply minimal_n_alt_type.
-        - exact QQpos_eq.
+        apply (minimal_n_alt_type _ QQpos_eq).
         - exact P_dec.
         - exact P_inhab.
       }
