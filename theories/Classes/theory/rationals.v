@@ -284,8 +284,7 @@ Defined.
 
 Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
 Proof.
-intros q r E. change (r = q + (r - q)).
-abstract ring_tac.ring_with_integers (NatPair.Z nat).
+intros q r E. exact (plus_conjugate_alt r q).
 Qed.
 
 
@@ -384,32 +383,6 @@ destruct (total le a b) as [E3|E3];rewrite ?(join_r _ _ E3),?(join_l _ _ E3);
 trivial.
 Qed.
 
-Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
-Proof.
-intros q r E.
-split.
-- apply flip_pos_minus.
-  assert (Hrw : (q + r) / 2 - q = (r - q) / 2);[|rewrite Hrw;clear Hrw].
-  { path_via ((q + r) / 2 - 2 / 2 * q).
-    { rewrite dec_recip_inverse;[|solve_propholds].
-      rewrite mult_1_l;trivial.
-    }
-    ring_tac.ring_with_integers (NatPair.Z nat).
-  }
-  apply pos_mult_compat;[|exact _].
-  red. apply (snd (flip_pos_minus _ _)). trivial.
-- apply flip_pos_minus.
-  assert (Hrw : r - (q + r) / 2 = (r - q) / 2);[|rewrite Hrw;clear Hrw].
-  { path_via (2 / 2 * r - (q + r) / 2).
-    { rewrite dec_recip_inverse;[|solve_propholds].
-      rewrite mult_1_l;trivial.
-    }
-    ring_tac.ring_with_integers (NatPair.Z nat).
-  }
-  apply pos_mult_compat;[|exact _].
-  red. apply (snd (flip_pos_minus _ _)). trivial.
-Qed.
-
 Lemma path_avg_split_diff_l (q r : Q) : q + ((r - q) / 2) = (r + q) / 2.
 Proof.
   pattern q at 1.
@@ -447,6 +420,20 @@ Proof.
   rewrite (plus_0_l r).
   rewrite (plus_comm q r).
   reflexivity.
+Qed.
+
+Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
+Proof.
+intros q r E.
+assert (pos : 0 < (r - q) / 2).
+{ apply pos_mult_compat;[|exact _].
+  red. apply (snd (flip_pos_minus q r)). trivial. }
+rewrite (plus_comm q r).
+split.
+- rewrite <- path_avg_split_diff_l.
+  apply pos_plus_lt_compat_r, pos.
+- rewrite <- path_avg_split_diff_r.
+  apply pos_minus_lt_compat_r, pos.
 Qed.
 
 Lemma pos_gt_both : forall a b : Q, forall e, a < ' e -> b < ' e ->
