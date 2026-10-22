@@ -1220,6 +1220,14 @@ Section Reflective_Subuniverse.
         exact (n (to O A a)).
     Defined.
 
+    Definition O_decidable_arrow (A B : Type) `{Decidable A} (f : A -> O B)
+    : O (A -> B).
+    Proof.
+      destruct (dec A) as [a|n].
+      - exact (O_functor (fun b _ => b) (f a)).
+      - apply to; intro a; exact (Empty_rec (n a)).
+    Defined.
+
   End Decidable.
 
   Section Monad.

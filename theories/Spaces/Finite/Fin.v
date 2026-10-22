@@ -437,3 +437,14 @@ Proof.
       exists (fin_incl k').
       split; assumption.
 Defined.
+
+Definition sperners_lemma_1d_nat (f : nat -> Type) {dprop : forall i, Decidable (f i)}
+  (left_true : f 0%nat) (n : nat) (right_false : ~ f n)
+  : {k : nat & f k /\ ~ f k.+1}.
+Proof.
+  induction n as [|n IH].
+  - exact (Empty_rec (right_false left_true)).
+  - destruct (dec (f n)) as [prev_true|prev_false].
+    + exact (n; (prev_true, right_false)).
+    + exact (IH prev_false).
+Defined.
