@@ -8,7 +8,7 @@
     - derive the characteristic in [ArchimedeanProperty] from [OrderedField] instead of taking it as an argument, which also removes [archimedean_property_change_char];
     - declare [RationalsToField] and [Rationals] cumulative, so that one concrete [Rationals] instance can be used at several universe levels (untested). *)
 
-From HoTT Require Import Basics Spaces.Nat.Core.
+From HoTT Require Import Basics Spaces.Nat.Core Spaces.Nat.Enumeration.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
   interfaces.orders
@@ -53,12 +53,15 @@ Section models.
   Definition enum_Qm := fracfield_enumerator Zm.
   Definition issurj_enum_Qm : IsSurjection enum_Qm
     := issurj_fracfield_enumerator Zm (Zdom:=NatPair.Z_integral_domain nat).
+  Definition enumerable_Qm : Enumerable Qm := Build_Enumerable Qm enum_Qm issurj_enum_Qm.
   Definition enum_Qm_qpos
-    := rationals_qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
-         (Qtrivialapart:=trivialapart_Qm) enum_Qm (IsSurjection0:=issurj_enum_Qm).
+    := nat_prod_enumerator enum_Qm
+         (Qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
+            (Qtrivialapart:=trivialapart_Qm) (Qenum:=enumerable_Qm)).
   Definition issurj_enum_Qm_qpos : IsSurjection enum_Qm_qpos
-    := issurj_rationals_qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
-         (Qtrivialapart:=trivialapart_Qm) enum_Qm (IsSurjection0:=issurj_enum_Qm).
+    := issurj_nat_prod_enumerator (s_surj:=issurj_enum_Qm)
+         (t_surj:=Qpos_is_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
+                    (Qtrivialapart:=trivialapart_Qm) (Qenum:=enumerable_Qm)).
 
   (** The Dedekind reals are an Archimedean, Cauchy complete ordered field. *)
   Definition orderedfield_Rm

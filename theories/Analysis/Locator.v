@@ -1,6 +1,11 @@
 From HoTT Require Import
-  Basics DProp Misc.BoundedSearch Spaces.Finite.Fin ExcludedMiddle
-  Modalities.ReflectiveSubuniverse Modalities.Identity
+  Basics
+  DProp
+  Misc.BoundedSearch
+  Spaces.Finite.Fin
+  ExcludedMiddle
+  Modalities.ReflectiveSubuniverse
+  Modalities.Identity
   Classes.interfaces.abstract_algebra
   Classes.interfaces.orders
   Classes.interfaces.rationals
