@@ -1,5 +1,6 @@
 Require Import
-  HoTT.Types.Sigma.
+  HoTT.Types.Sigma
+  HoTT.Spaces.Nat.Core.
 Require Import
   HoTT.Classes.theory.naturals.
 Require Import
@@ -90,3 +91,47 @@ End naturals_order.
 
 #[export]
 Hint Extern 20 (PropHolds (_ ≤ _)) => eapply @nat_nonneg : typeclass_instances.
+
+(** ** The map from [nat] into an ordered semiring *)
+
+Section nat_to_semiring.
+  Context `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}.
+
+  Local Notation nR := (naturals_to_semiring nat R).
+
+  Lemma nat_to_semiring_succ (n : nat) : nR (S n) = 1 + nR n.
+  Proof.
+    exact (preserves_plus (f:=nR) 1%nat n).
+  Qed.
+
+  Lemma nat_to_semiring_nonneg (n : nat) : 0 ≤ nR n.
+  Proof.
+    induction n as [|n IH].
+    - reflexivity.
+    - rewrite nat_to_semiring_succ; apply nonneg_plus_compat; [exact le_0_1|exact IH].
+  Qed.
+
+  Lemma nat_to_semiring_le (m n : nat) : (m <= n)%nat -> nR m ≤ nR n.
+  Proof.
+    intro lemn; induction lemn as [|n lemn IH].
+    - reflexivity.
+    - lhs' exact IH.
+      rewrite nat_to_semiring_succ.
+      apply nonneg_plus_le_compat_l, le_0_1.
+  Qed.
+
+  Context `{!PropHolds ((1 : R) ≶ 0)}.
+
+  Lemma nat_to_semiring_succ_pos (n : nat) : 0 < nR (S n).
+  Proof.
+    rewrite nat_to_semiring_succ.
+    apply pos_plus_le_lt_compat_l; [exact lt_0_1|apply nat_to_semiring_nonneg].
+  Qed.
+
+  Lemma nat_to_semiring_pos (n : nat) : (0 < n)%nat -> 0 < nR n.
+  Proof.
+    destruct n as [|n]; intro lt.
+    - destruct (not_lt_zero_r 0 lt).
+    - apply nat_to_semiring_succ_pos.
+  Qed.
+End nat_to_semiring.
