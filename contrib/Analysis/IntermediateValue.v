@@ -400,7 +400,7 @@ Section ivt.
                (bisect_width_le dec a b B leB) z (fun n => (reflexivity _, zw n))).
     Qed.
 
-    (** The common limit of the endpoints and midpoints of the bisection. *)
+    (** The common limit of the endpoints and midpoints of the bisection. We only merely have a bound on [b - a], so we use [limit_complete], which computes a limit from a merely existing modulus because limits are unique; that the type of limits is a proposition is what needs [Funext]. [Funext] can be avoided by computing the limit from an explicit bound, e.g. one given by locators of [a] and [b] via [qpos_upper_bound], at the price of the root depending on that bound. *)
     Definition approximate_root_islimit : {x : F & IsLimit Q F z x}.
     Proof.
       refine (limit_complete Q z _).
