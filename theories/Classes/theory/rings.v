@@ -120,16 +120,10 @@ Section semiring_props.
   Qed.
 
   Lemma plus_swap_middle (a b c d : R) : (a + b) + (c + d) = (a + c) + (b + d).
-  Proof.
-    rewrite <- !plus_assoc; apply ap.
-    rewrite !plus_assoc; apply (ap (+ d)), plus_comm.
-  Qed.
+  Proof. exact (groups.sg_op_swap_middle a b c d). Qed.
 
   Lemma mult_swap_middle (a b c d : R) : (a * b) * (c * d) = (a * c) * (b * d).
-  Proof.
-    rewrite <- !mult_assoc; apply ap.
-    rewrite !mult_assoc; apply (ap (.* d)), mult_comm.
-  Qed.
+  Proof. exact (groups.sg_op_swap_middle a b c d). Qed.
 
   #[export] Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
@@ -284,19 +278,10 @@ Section ring_props.
   Proof. exact groups.negate_sg_op_distr. Qed.
 
   Lemma plus_minus_telescope x y z : (x - y) + (y - z) = x - z.
-  Proof.
-    rewrite <- (simple_associativity (f := (+)) x (- y)),
-      (simple_associativity (f := (+)) (- y) y), plus_negate_l, (left_identity (- z)).
-    reflexivity.
-  Qed.
+  Proof. exact (groups.sg_op_inverse_telescope x y z). Qed.
 
   Lemma plus_minus_plus_l x y z : (z + x) - (z + y) = x - y.
-  Proof.
-    rewrite negate_plus_distr, (commutativity (f := (+)) z x),
-      <- (simple_associativity (f := (+)) x z),
-      (simple_associativity (f := (+)) z (- z)), plus_negate_r, (left_identity (- y)).
-    reflexivity.
-  Qed.
+  Proof. exact (groups.sg_op_negate_sg_op_l x y z). Qed.
 
   Lemma negate_mult_l x : -x = - 1 * x.
   Proof.
@@ -471,16 +456,10 @@ Section ring_props.
   Qed.
 
   Lemma minus_plus_cancel x y : x - y + y = x.
-  Proof.
-    rewrite <- (simple_associativity (f := (+)) x (- y) y), left_inverse.
-    apply right_identity.
-  Qed.
+  Proof. exact (groups.sg_op_inverse_sg_op x y). Qed.
 
   Lemma plus_minus_cancel x y : x + y - y = x.
-  Proof.
-    rewrite <- (simple_associativity (f := (+)) x y (- y)), right_inverse.
-    apply right_identity.
-  Qed.
+  Proof. exact (groups.sg_op_sg_op_inverse x y). Qed.
 End ring_props.
 
 Section integral_domain_props.

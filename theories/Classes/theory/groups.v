@@ -47,6 +47,18 @@ Section inverse_cancellation.
 
 End inverse_cancellation.
 
+Section semigroup_props.
+  Context `{IsSemiGroup G} `{!Commutative (A:=G) sg_op}.
+
+  Lemma sg_op_swap_middle (a b c d : G) : (a * b) * (c * d) = (a * c) * (b * d).
+  Proof.
+    rewrite <- !simple_associativity; apply ap.
+    rewrite !simple_associativity; apply (ap (.* d)), commutativity.
+  Qed.
+
+End semigroup_props.
+
+
 (** The properties in this section can also be proved without assuming that [G] is set-truncated, but currently typeclass inference can fail to find these results for rings if proved without the [IsGroup] hypothesis. *)
 Section group_props.
   Context `{IsGroup G}.
@@ -99,6 +111,24 @@ Section group_props.
     apply right_inverse.
   Defined.
 
+  Lemma sg_op_inverse_sg_op x y : x * y^ * y = x.
+  Proof.
+    rewrite <- simple_associativity, left_inverse.
+    apply right_identity.
+  Qed.
+
+  Lemma sg_op_sg_op_inverse x y : x * y * y^ = x.
+  Proof.
+    rewrite <- simple_associativity, right_inverse.
+    apply right_identity.
+  Qed.
+
+  Lemma sg_op_inverse_telescope x y z : (x * y^) * (y * z^) = x * z^.
+  Proof.
+    rewrite simple_associativity.
+    apply (ap (.* z^)), sg_op_inverse_sg_op.
+  Qed.
+
 End group_props.
 
 Section abgroup_props.
@@ -109,6 +139,12 @@ Section abgroup_props.
     path_via (-y + -x).
     - rapply inverse_sg_op.
     - apply commutativity.
+  Qed.
+
+  Lemma sg_op_negate_sg_op_l `{IsAbGroup G} x y z : (z + x) - (z + y) = x - y.
+  Proof.
+    rewrite negate_sg_op_distr, (commutativity (f := sg_op) z x), simple_associativity.
+    apply (ap (+ -y)), sg_op_sg_op_inverse.
   Qed.
 
   Local Close Scope mc_add_scope.
