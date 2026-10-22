@@ -6,7 +6,7 @@ As Frank points out, the point is not always the limit of the bisection: interpo
 
 We then prove an exact intermediate value theorem for functions which are locally nonconstant, continuous and lift to locators, without any choice principles: locators let us find a rational point at which the function is apart from [0], which we use to shrink an interval around a root. *)
 
-From HoTT Require Import Basics Truncations.Core DProp Misc.BoundedSearch.
+From HoTT Require Import Basics Truncations.Core Types.Sum Misc.BoundedSearch.
 From HoTT.Spaces Require Import Nat.Core.
 From HoTT.Classes Require Import
   interfaces.abstract_algebra
@@ -554,7 +554,7 @@ Section ivt.
 
   End approximate.
 
-  (** If [f] lifts to locators and [a] and [b] have locators, we can find a point with a locator at which [f] is close to [0]. We search for one among the candidates [y] for [e / 2], for which we locate [- e < f y] at [- e < - e / 2] and [f y < e] at [e / 2 < e]. *)
+  (** If [f] lifts to locators and [a] and [b] have locators, we can find a point with a locator at which [f] is close to [0]. We search for one among the candidates [y] for [e / 2] at which the locator of [f y] locates [- e < f y] at [- e < - e / 2] and [f y < e] at [e / 2 < e]. *)
   Definition approximate_ivt_locator `{Funext} {Fcomplete : IsComplete Q F}
     (f : F -> F) (a b : F) (leab : a ≤ b) (fa : f a < 0) (fb : 0 < f b) (e : Qpos Q)
     (cont : forall y, a ≤ y ≤ b -> IsContinuousAt Q F f y)
@@ -565,19 +565,18 @@ Section ivt.
     set (ly := approximate_candidate_locator f a b leab (e / 2) lift la lb).
     set (l n := lift (y n) (ly n)).
     assert (lt1 : - ' e < - ' (e / 2)) by exact (snd (flip_lt_negate _ _) (qpos_half_lt e)).
-    set (P n := (locates_right Q F _ (l n) _ _ lt1 * locates_left Q F (l n) (qpos_half_lt e))%type).
-    assert (Pdec : forall n, Decidable (P n)) by exact _.
+    set (P n := (is_inl (l n _ _ lt1) * is_inr (l n _ _ (qpos_half_lt e)))%type).
     assert (inh : hexists P).
     { refine (Trunc_functor (-1) _ (approximate_ivt_candidates f a b leab fa fb (e / 2) cont)).
       intros [n [lo hi]]; exists n; split.
-      - apply ltrx_locates_right.
+      - apply is_inr_not_inl, lt_flip.
         rewrite (preserves_negate (f:=cast Q F)); exact lo.
-      - exact (ltxq_locates_left Q F (l n) _ hi). }
-    destruct (minimal_n P Pdec inh) as [n [Pr Pl]].
+      - exact (is_inl_not_inr _ (lt_flip _ _ hi)). }
+    destruct (minimal_n P _ inh) as [n [Pl Pr]].
     exists (y n); split; [exact (ly n)|split].
     - rewrite <- (preserves_negate (f:=cast Q F)).
-      exact (locates_right_true Q F _ (l n) _ _ lt1 Pr).
-    - exact (locates_right_false Q F _ (l n) _ _ _ Pl).
+      exact (un_inl _ Pl).
+    - exact (un_inr _ Pr).
   Defined.
 
   (** ** The exact intermediate value theorem *)
@@ -610,7 +609,7 @@ Section ivt.
 
   (** Locators let us turn local nonconstancy into structure, and find roots. *)
   Section search.
-    Context `{Funext} (QQpos_enum : nat -> Q * Qpos Q) `{!IsSurjection QQpos_enum}.
+    Context (QQpos_enum : nat -> Q * Qpos Q) `{!IsSurjection QQpos_enum}.
     Context (f : F -> F) (cont : IsPointwiseContinuous Q F f) (lnc : IsLocallyNonconstant f)
       (lift : LiftsToLocators Q F f).
 
@@ -641,16 +640,13 @@ Section ivt.
       Local Definition locator_value_minus (r : Q) : locator Q F (f (' r) - t)
         := locator_plus Q F (lift _ (locator_left Q F r)) (locator_minus Q F lt).
 
-      (** For a rational [r] and a positive rational [n], we locate [x < r] at [r - n < r] and [r < y] at [r < r + n], and we locate [n / 2 < f r - t] or [f r - t < - n / 2]. *)
+      (** For a rational [r] and a positive rational [n], the locators locate [x < r] at [r - n < r] and [r < y] at [r < r + n], and locate [n / 2 < f r - t] or [f r - t < - n / 2]. *)
       Local Definition RationalFar (rn : Q * Qpos Q) : Type
         := let (r, n) := rn in
-           (locates_left Q F (lx : locator' Q F x)
-              (fst (pos_minus_lt_compat_r r (' n)) (pos_is_pos n))
-            * locates_right Q F _ (ly : locator' Q F y) _ _
-                (fst (pos_plus_lt_compat_r r (' n)) (pos_is_pos n))
-            * (locates_right Q F _ (locator_value_minus r : locator' Q F _) _ _ (qpos_half_lt n)
-               + locates_left Q F (locator_value_minus r : locator' Q F _)
-                   (snd (flip_lt_negate _ _) (qpos_half_lt n))))%type.
+           (is_inr (lx _ _ (fst (pos_minus_lt_compat_r r (' n)) (pos_is_pos n)))
+            * is_inl (ly _ _ (fst (pos_plus_lt_compat_r r (' n)) (pos_is_pos n)))
+            * (is_inl (locator_value_minus r _ _ (qpos_half_lt n))
+               + is_inr (locator_value_minus r _ _ (snd (flip_lt_negate _ _) (qpos_half_lt n)))))%type.
 
       Local Instance decidable_rationalfar (rn : Q * Qpos Q) : Decidable (RationalFar rn).
       Proof.
@@ -664,19 +660,19 @@ Section ivt.
         : RationalFar (r, n).
       Proof.
         refine ((_, _), _).
-        - apply ltxq_locates_left.
+        - apply is_inl_not_inr, lt_flip.
           rewrite (preserves_minus (f:=cast Q F)).
           apply flip_lt_minus_r; rewrite plus_comm; apply flip_lt_minus_r; exact ltr.
-        - apply ltrx_locates_right.
+        - apply is_inr_not_inl, lt_flip.
           rewrite (preserves_plus (f:=cast Q F)).
           rewrite plus_comm; apply flip_lt_minus_r; exact rlt.
         - destruct ap as [ltD|ltD].
-          + left; apply ltrx_locates_right; exact ltD.
+          + left; exact (is_inr_not_inl _ (lt_flip _ _ ltD)).
           + right.
             assert (lt' : f (' r) - t < ' (- ' n)).
             { rewrite (preserves_negate (f:=cast Q F)).
               apply flip_lt_negate_r; rewrite <- (negate_swap_r t (f (' r))); exact ltD. }
-            exact (ltxq_locates_left Q F _ _ lt').
+            exact (is_inl_not_inr _ (lt_flip _ _ lt')).
       Qed.
 
       Local Lemma merely_rationalfar (ltxy : x < y) : hexists RationalFar.
@@ -706,16 +702,16 @@ Section ivt.
       Proof.
         destruct far as [[pl pr] pt].
         split; [split|].
-        - exact (locates_right_false Q F _ lx _ _ _ pl).
-        - exact (locates_right_true Q F _ ly _ _ _ pr).
+        - exact (un_inr _ pl).
+        - exact (un_inl _ pr).
         - apply (snd (apart_iff_total_lt _ _)).
           destruct pt as [p|p].
           + right.
-            assert (lt' := locates_right_true Q F _ (locator_value_minus r) _ _ _ p).
+            assert (lt' := un_inl _ p).
             apply (fst (flip_pos_minus _ _)).
             exact (transitivity (pos_rationals_to_field_qpos Q _) lt').
           + left.
-            assert (lt' := locates_right_false Q F _ (locator_value_minus r) _ _ _ p).
+            assert (lt' := un_inr _ p).
             apply (fst (flip_neg_minus _ _)).
             assert (neg : (' (- ' (n / 2)) : F) < 0).
             { rewrite (preserves_negate (f:=cast Q F)).
