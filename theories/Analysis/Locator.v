@@ -416,6 +416,8 @@ Section locator.
 
   End tight_bound.
 
+  (** ** The Archimedean structure *)
+
   Section arch_struct.
 
     Context {x y : F}
@@ -502,6 +504,8 @@ Section locator.
 
   End arch_struct.
 
+  (** ** Reciprocals *)
+
   Section unary_ops.
 
     Context {x : F}
@@ -565,49 +569,29 @@ Section locator.
   End unary_ops.
 
   Section recip_neg.
-    Context {x : F}
-            (l : locator x)
-            (xneg : x < 0).
+    Context {x : F} (l : locator x) (xneg : x < 0).
 
     Local Definition recip_neg_nu := negative_apart_zero x xneg.
 
     Definition locator_recip_neg : locator (// (x ; recip_neg_nu)).
     Proof.
-      assert (negxpos : 0 < (-x))
-        by (apply flip_neg_negate; assumption).
+      assert (negxpos : 0 < - x) by exact (fst (flip_neg_negate x) xneg).
       assert (l' := locator_minus (locator_recip_pos (locator_minus l) negxpos)).
-      rewrite (recip_negate (-x)) in l'.
-      unfold negate_apart in l'.
-      rewrite
-        (recip_proper_alt
-           (- - x)
-           x
-           (apart_negate (- x) (positive_apart_zero (- x) negxpos)) recip_neg_nu)
-        in l'.
-      - assumption.
-      - apply negate_involutive.
+      refine (transport locator _ l').
+      rewrite recip_negate; apply recip_proper_alt, negate_involutive.
     Qed.
-
   End recip_neg.
 
-  Section unary_ops2.
+  Definition locator_recip {x : F} (l : locator x) (nu : x ≶ 0) : locator (// (x ; nu)).
+  Proof.
+    destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
+    - rewrite <- (recip_irrelevant x (recip_neg_nu xneg) nu).
+      exact (locator_recip_neg l xneg).
+    - rewrite <- (recip_irrelevant x (recip_nu xpos) nu).
+      exact (locator_recip_pos l xpos).
+  Qed.
 
-    Context {x : F}
-            (l : locator x)
-            (nu : x ≶ 0).
-
-    Definition locator_recip : locator (// (x ; nu)).
-    Proof.
-      destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
-      - set (l' := locator_recip_neg l xneg).
-        rewrite (recip_proper_alt x x (negative_apart_zero x xneg) nu) in l';
-          try reflexivity; exact l'.
-      - set (l' := locator_recip_pos l xpos).
-        rewrite (recip_proper_alt x x (positive_apart_zero x xpos) nu) in l';
-          try reflexivity; exact l'.
-    Qed.
-
-  End unary_ops2.
+  (** ** Binary operations *)
 
   Section binary_ops.
 
