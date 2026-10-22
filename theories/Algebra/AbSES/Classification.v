@@ -1,13 +1,13 @@
 From HoTT Require Import Basics Types HFiber Truncations.Core
   Truncations.SeparatedTrunc.
-From HoTT.WildCat Require Import Core PointedCat.
+From HoTT.WildCat Require Import Core PointedCat Equiv.
 Require Import Pointed.
 Require Import AbelianGroup.
 Require Import AbSES.Core AbSES.Ext.
 Require Import Spaces.Nat.Core.
 Require Import Universes.Smallness.
-Require Import Homotopy.HomotopyGroup Homotopy.EMSpace Homotopy.ExactSequence.
-Require Import Homotopy.WhiteheadsPrinciple.
+From HoTT.Homotopy Require Import HomotopyGroup EMSpace ExactSequence Hopf
+  WhiteheadsPrinciple.
 Require Import Groups.Group.
 Require Import Equiv.BiInv.
 Require Import Modalities.Identity Modalities.Descent.
