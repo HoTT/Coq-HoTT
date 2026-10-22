@@ -167,6 +167,12 @@ Section ring_order.
   transitivity 0; trivial.
   apply flip_nonneg_negate. trivial.
   Qed.
+
+  Lemma interval_minus_le (a b s t : R) : a ≤ s ≤ b -> a ≤ t ≤ b -> s - t ≤ b - a.
+  Proof.
+    intros [_ lesb] [leat _].
+    apply plus_le_compat; [exact lesb|exact (snd (flip_le_negate a t) leat)].
+  Qed.
 End ring_order.
 
 Section strict_ring_order.
@@ -223,6 +229,18 @@ Section strict_ring_order.
   split; apply flip_lt_minus_r.
   Qed.
 
+  Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_l z y x)); rewrite plus_comm.
+    exact (fst (flip_lt_minus_l x y z) E).
+  Qed.
+
+  Lemma flip_lt_minus_swap_r (x y z : R) : z < y - x -> x < y - z.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_r z y x)); rewrite plus_comm.
+    exact (fst (flip_lt_minus_r x y z) E).
+  Qed.
+
   Lemma flip_pos_minus (x y : R) : 0 < y - x <-> x < y.
   Proof.
   pattern x at 2;apply (transport _ (plus_0_l x)).
@@ -267,6 +285,29 @@ Section strict_ring_order.
   intros E.
   transitivity 0; trivial.
   apply flip_pos_negate. trivial.
+  Qed.
+
+  Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
+  Proof.
+    split; intros [lo hi]; split.
+    - apply (snd (flip_lt_minus_r u v (- e))); rewrite plus_comm; exact lo.
+    - apply (snd (flip_lt_minus_l u v e)); rewrite plus_comm; exact hi.
+    - rewrite plus_comm; exact (fst (flip_lt_minus_r u v (- e)) lo).
+    - rewrite plus_comm; exact (fst (flip_lt_minus_l u v e) hi).
+  Qed.
+
+  Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
+  Proof.
+    intros [lo hi]; rewrite (negate_swap_r u v); split.
+    - exact (snd (flip_lt_negate (v - u) e) hi).
+    - exact (flip_lt_negate_l e (v - u) lo).
+  Qed.
+
+  Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
+  Proof.
+    intros [ltxz ltzx] ltxy; split.
+    - lhs' exact (snd (flip_lt_negate x y) ltxy); exact ltxz.
+    - exact (transitivity ltzx ltxy).
   Qed.
 
 End strict_ring_order.
