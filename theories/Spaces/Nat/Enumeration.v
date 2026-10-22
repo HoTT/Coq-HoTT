@@ -41,7 +41,7 @@ Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
 Definition nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y) (n : nat) : X * Y
   := (s (fst (nat_unpair n)), t (snd (nat_unpair n))).
 
-Definition issurj_nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y)
+Instance issurj_nat_prod_enumerator {X Y : Type} {s : nat -> X} {t : nat -> Y}
   {s_surj : IsSurjection s} {t_surj : IsSurjection t}
   : IsSurjection (nat_prod_enumerator s t).
 Proof.

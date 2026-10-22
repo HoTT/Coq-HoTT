@@ -13,8 +13,7 @@ Require Import
   HoTT.Classes.orders.lattices
   HoTT.Classes.theory.additional_operations
   HoTT.Classes.tactics.ring_quote
-  HoTT.Classes.tactics.ring_tac
-  HoTT.Spaces.Nat.Enumeration.
+  HoTT.Classes.tactics.ring_tac.
 
 Import Quoting.Instances.
 Import NatPair.Instances.
@@ -581,7 +580,7 @@ intros q r;destruct (le_or_lt r q).
 Qed.
 
 Section enumerable.
-Context `{Enumerable Q}.
+Context {Qenum : Enumerable Q}.
 
 Definition Qpos_enumerator : nat -> Q+.
 Proof.
@@ -591,7 +590,7 @@ destruct (le_or_lt (enumerator Q n) 0) as [E|E].
 - exists (enumerator Q n);trivial.
 Defined.
 
-Lemma Qpos_is_enumerator :
+#[export] Instance Qpos_is_enumerator :
   IsSurjection@{UQ} Qpos_enumerator.
 Proof.
 apply BuildIsSurjection.
@@ -612,13 +611,6 @@ Proof.
 Qed.
 
 End enumerable.
-
-Definition rationals_qpos_enumerator (e : nat -> Q) `{!IsSurjection e} : nat -> Q * Q+
-  := nat_prod_enumerator e (Qpos_enumerator (H1:=Build_Enumerable Q e _)).
-
-Definition issurj_rationals_qpos_enumerator (e : nat -> Q) `{!IsSurjection e}
-  : IsSurjection (rationals_qpos_enumerator e)
-  := issurj_nat_prod_enumerator _ _ (t_surj:=Qpos_is_enumerator (H1:=Build_Enumerable Q e _)).
 
 End contents.
 
