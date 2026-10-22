@@ -102,6 +102,15 @@ intros E1 E2.
 rewrite <-(dec_recip_involutive x).
 apply flip_lt_dec_recip;trivial.
 Qed.
+
+Lemma flip_lt_mult_dec_recip_l x y z : 0 < z -> x / z < y <-> x < y * z.
+Proof.
+intros E.
+assert (p := dec_recip_mult_cancel_r x z (lt_ne_flip 0 z E)).
+split; intros E'.
+- rewrite <- p; apply (strictly_order_preserving (.* z)); trivial.
+- apply (strictly_order_reflecting (.* z)); rewrite p; trivial.
+Qed.
 End contents.
 
 (* Due to bug #2528 *)
