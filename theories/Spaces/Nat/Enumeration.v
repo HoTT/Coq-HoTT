@@ -33,7 +33,7 @@ Proof.
   induction d as [|d IH].
   - exact (0; idpath).
   - destruct (nat_unpair_hit_diagonal 0 d _ IH.2) as [n p].
-    exists (S n); cbn; rewrite p; reflexivity.
+    exists (S n). cbn; rewrite p. reflexivity.
 Defined.
 
 Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
@@ -51,5 +51,6 @@ Proof.
   pose proof (@center _ (t_surj y)) as b.
   strip_truncations; destruct a as [a p], b as [b q].
   destruct (nat_unpair_hit a b) as [n r].
-  apply tr; exists n; unfold nat_prod_enumerator; rewrite r; exact (path_prod' p q).
+  apply tr; exists n.
+  unfold nat_prod_enumerator; rewrite r. exact (path_prod' p q).
 Defined.

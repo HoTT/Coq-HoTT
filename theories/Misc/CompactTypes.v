@@ -66,12 +66,12 @@ Proof.
   split.
   - intros w P dP.
     destruct (w (not o P) _) as [l|r].
-    + left; intro n; exact (stable_decidable (P n) (fun u => l (n; u))).
-    + right; intro f; exact (r (fun u => u.2 (f u.1))).
+    + left. intro n; exact (stable_decidable (P n) (fun u => l (n; u))).
+    + right. intro f; exact (r (fun u => u.2 (f u.1))).
   - intros c P dP.
     destruct (c (not o P) _) as [l|r].
-    + left; intro u; exact (l u.1 u.2).
-    + right; intro nu; exact (r (fun n p => nu (n; p))).
+    + left. intro u; exact (l u.1 u.2).
+    + right. intro nu; exact (r (fun n p => nu (n; p))).
 Defined.
 
 (** Compact types are closed under retracts. *)
