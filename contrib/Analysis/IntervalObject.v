@@ -113,8 +113,8 @@ Section Iteration.
   (** The iteration property is a proposition. *)
   #[export] Instance ishprop_iterationoperator@{} : IsHProp (IterationOperator A).
   Proof.
-    apply hprop_allpath; intros [M HM] [N HN].
-    apply path_sigma_hprop; cbn.
+    apply hprop_allpath. intros [M HM] [N HN].
+    apply path_sigma_hprop. cbn.
     exact (path_iteration_operator M N HM HN).
   Defined.
 
@@ -123,8 +123,8 @@ Section Iteration.
     (M : (nat -> A) -> A) (HM : IsIterationOperator M) (x : nat -> A)
     : IsHProp (IteratedMidpoints x).
   Proof.
-    apply hprop_allpath; intros [a p] [b q].
-    apply path_sigma_hprop; cbn.
+    apply hprop_allpath. intros [a p] [b q].
+    apply path_sigma_hprop. cbn.
     funext k.
     (** Both [a] and [b] shifted by [k] are iterated midpoints of [x] shifted by [k], so they start with the same element. *)
     transitivity (M (fun n => x (n + k))).
@@ -215,7 +215,7 @@ Proof.
     exact (ap10 (ap pr1 (path_contr f g)) x).
   - intros [f u].
     snapply (contr_inhabited_hprop _ f).
-    apply hprop_allpath; intros g h.
+    apply hprop_allpath. intros g h.
     apply path_sigma_hprop.
-    funext x; exact (u g h x).
+    funext x. exact (u g h x).
 Defined.

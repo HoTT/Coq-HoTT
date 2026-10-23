@@ -55,9 +55,9 @@ Section floor.
       destruct (irreflexivity (<) a (lt_le_trans _ _ _ ltan a0)).
     - destruct (dec (a < nA n)) as [ltn|nltn].
       + exact (IH ltn).
-      + exists n; split.
+      + exists n. split.
         * apply not_lt_le_flip, nltn.
-        * rewrite plus_comm, <- nat_to_semiring_succ; exact ltan.
+        * rewrite plus_comm, <- nat_to_semiring_succ. exact ltan.
   Defined.
 
   Context `{Integers Z}.
@@ -142,7 +142,7 @@ Section digits.
 
   Local Lemma base_pos : 0 < 1 + nQ d.
   Proof.
-    rewrite <- nat_to_semiring_succ; apply nat_to_semiring_succ_pos.
+    rewrite <- nat_to_semiring_succ. apply nat_to_semiring_succ_pos.
   Qed.
 
   Lemma digit_weight_pos (n : nat) : 0 < digit_weight n.
@@ -159,7 +159,7 @@ Section digits.
     - change (digit_weight (S n)) with (/ (1 + nQ d) * digit_weight n).
       rewrite mult_assoc, dec_recip_inverse, mult_1_l; [reflexivity|].
       apply lt_ne_flip, base_pos.
-    - rewrite plus_mult_distr_r, mult_1_l; reflexivity.
+    - rewrite plus_mult_distr_r, mult_1_l. reflexivity.
   Qed.
 
   (** The partial sums [k + sum_(i < n) a i (1 + d)^(- i - 1)]. *)
@@ -260,10 +260,10 @@ Section digits.
     Lemma digit_sum_close (n m : nat) : (n <= m)%nat -> - w n < s m - s n < w n.
     Proof.
       intro le; split.
-      - apply flip_lt_minus_r; rewrite plus_comm.
+      - apply flip_lt_minus_r. rewrite plus_comm.
         rapply le_lt_trans; [exact (digit_sum_lower n m le)|].
         apply flip_lt_minus_l, pos_plus_lt_compat_r, digit_weight_pos.
-      - apply flip_lt_minus_l; rewrite plus_comm.
+      - apply flip_lt_minus_l. rewrite plus_comm.
         rapply lt_le_trans; [|exact (digit_sum_upper n m le)].
         apply pos_plus_lt_compat_r, digit_weight_pos.
     Qed.
@@ -296,22 +296,22 @@ Section digits.
       (lta : ' G (a - 1) < x) (ltx : x < ' G (a + nZ N + 1))
       : {b : Z & prod (a ≤ b ≤ a + nZ N) (' G (b - 1) < x < ' G (b + 1))}.
     Proof.
-      revert a lta ltx; induction N as [|N IH]; intros a lta ltx.
+      revert a lta ltx. induction N as [|N IH]; intros a lta ltx.
       - assert (p : a + nZ 0%nat = a) by exact (ap (a +) (preserves_0 (f:=nZ)) @ plus_0_r a).
         rewrite p in ltx.
-        exists a; split; [split; [reflexivity|rewrite p; reflexivity]|exact (lta, ltx)].
+        exists a. split; [split; [reflexivity|rewrite p; reflexivity]|exact (lta, ltx)].
       - assert (pS : a + nZ (S N) = a + 1 + nZ N).
-        { rewrite <- plus_assoc; apply ap.
+        { rewrite <- plus_assoc. apply ap.
           exact (preserves_plus (f:=nZ) 1%nat N @ ap (+ nZ N) preserves_1). }
         destruct (l (G a) (G (a + 1)) (Ginc a)) as [ltGa|ltxG].
         + destruct (IH (a + 1)) as [b [[le1 le2] bounds]].
-          * rewrite <- plus_assoc, plus_negate_r, plus_0_r; exact ltGa.
-          * rewrite <- pS; exact ltx.
-          * exists b; refine (_, bounds); split.
+          * rewrite <- plus_assoc, plus_negate_r, plus_0_r. exact ltGa.
+          * rewrite <- pS. exact ltx.
+          * exists b. refine (_, bounds). split.
             -- rhs_V' exact le1.
                apply nonneg_plus_le_compat_r, le_0_1.
-            -- rewrite pS; exact le2.
-        + exists a; refine (_, (lta, ltxG)); split; [reflexivity|].
+            -- rewrite pS. exact le2.
+        + exists a. refine (_, (lta, ltxG)). split; [reflexivity|].
           apply nonneg_plus_le_compat_r, nat_to_semiring_nonneg.
     Defined.
   End scan.
@@ -328,39 +328,39 @@ Section digits.
     Proof.
       unfold digit_grid.
       rewrite (preserves_plus (f:=cast Z Q)), preserves_1.
-      rewrite plus_mult_distr_r, mult_1_l, plus_assoc; reflexivity.
+      rewrite plus_mult_distr_r, mult_1_l, plus_assoc. reflexivity.
     Qed.
 
     Local Lemma digit_grid_pred (j : Z) : digit_grid (j - 1) = digit_grid j - w (S n).
     Proof.
       unfold digit_grid.
       rewrite (preserves_minus (f:=cast Z Q)), preserves_1.
-      rewrite plus_mult_distr_r, <- negate_mult_distr_l, mult_1_l, plus_assoc; reflexivity.
+      rewrite plus_mult_distr_r, <- negate_mult_distr_l, mult_1_l, plus_assoc. reflexivity.
     Qed.
 
     (** This is used as an argument of a locator, so we keep it transparent. *)
     Local Definition digit_grid_lt (j : Z) : digit_grid j < digit_grid (j + 1).
     Proof.
-      rewrite digit_grid_succ; apply pos_plus_lt_compat_r, digit_weight_pos.
+      rewrite digit_grid_succ. apply pos_plus_lt_compat_r, digit_weight_pos.
     Defined.
 
     Local Lemma nZ_double : - nZ d + nZ (d + d) = nZ d.
     Proof.
-      rewrite (preserves_plus (f:=nZ)), plus_assoc, plus_negate_l, plus_0_l; reflexivity.
+      rewrite (preserves_plus (f:=nZ)), plus_assoc, plus_negate_l, plus_0_l. reflexivity.
     Qed.
 
     (** The grid points [- d - 1] and [d + 1] are [c - w n] and [c + w n]. *)
     Local Lemma digit_grid_lower : digit_grid (- nZ d - 1) = c - w n.
     Proof.
-      rewrite digit_grid_pred; unfold digit_grid.
+      rewrite digit_grid_pred. unfold digit_grid.
       rewrite (preserves_negate (f:=cast Z Q)), nZ_to_rationals, (digit_weight_succ n).
       rewrite <- negate_mult_distr_l, <- plus_assoc, <- negate_plus_distr.
-      rewrite (plus_comm (nQ d * w (S n))); reflexivity.
+      rewrite (plus_comm (nQ d * w (S n))). reflexivity.
     Qed.
 
     Local Lemma digit_grid_upper : digit_grid (- nZ d + nZ (d + d) + 1) = c + w n.
     Proof.
-      rewrite nZ_double, digit_grid_succ; unfold digit_grid.
+      rewrite nZ_double, digit_grid_succ. unfold digit_grid.
       rewrite nZ_to_rationals, (digit_weight_succ n), (plus_comm (w (S n))), plus_assoc.
       reflexivity.
     Qed.
@@ -375,14 +375,14 @@ Section digits.
                    (' (c + ' b * w (S n) - w (S n)) < x < ' (c + ' b * w (S n) + w (S n)))}.
     Proof.
       destruct h as [ltcx ltxc].
-      rewrite <- digit_grid_lower in ltcx; rewrite <- digit_grid_upper in ltxc.
+      rewrite <- digit_grid_lower in ltcx. rewrite <- digit_grid_upper in ltxc.
       destruct (locator_scan l (digit_grid n c) (digit_grid_lt n c) (d + d) (- nZ d) ltcx ltxc)
         as [b [[lb ub] [ltb ltb']]].
-      exists b; split; [split|split].
+      exists b. split; [split|split].
       - exact lb.
-      - rewrite <- nZ_double; exact ub.
-      - rewrite digit_grid_pred in ltb; exact ltb.
-      - rewrite digit_grid_succ in ltb'; exact ltb'.
+      - rewrite <- nZ_double. exact ub.
+      - rewrite digit_grid_pred in ltb. exact ltb.
+      - rewrite digit_grid_succ in ltb'. exact ltb'.
     Defined.
 
     (** Successive rational approximations of [x], the [n]th within [w n] of [x]. *)
@@ -406,7 +406,7 @@ Section digits.
       - reflexivity.
       - change (digit_sum (integer_bound l).1 locator_digit n + ' locator_digit n * w (S n)
                 = (digit_approx n).1 + ' locator_digit n * w (S n)).
-        rewrite IH; reflexivity.
+        rewrite IH. reflexivity.
     Qed.
 
     (** A real with a locator has a signed-digit representation. *)
@@ -414,7 +414,7 @@ Section digits.
     Proof.
       snrefine {| sd_integer := (integer_bound l).1; sd_digit := locator_digit |}.
       - intro n; exact (fst (digit_step n (digit_approx n).1 (digit_approx n).2).2).
-      - intro e; apply tr; exists (digit_modulus e); intros n len.
+      - intro e. apply tr; exists (digit_modulus e). intros n len.
         rewrite digit_sum_approx.
         destruct (digit_approx n) as [c [ltcx ltxc]]; cbn [pr1].
         assert (ltwe : ' w n < (' (' e) : F))
@@ -422,10 +422,10 @@ Section digits.
         rewrite (preserves_minus (f:=cast Q F)) in ltcx.
         rewrite (preserves_plus (f:=cast Q F)) in ltxc.
         split.
-        + apply flip_lt_minus_r; rewrite plus_comm.
+        + apply flip_lt_minus_r. rewrite plus_comm.
           rhs_V' exact ltcx.
           apply (strictly_order_preserving (' c +)), (snd (flip_lt_negate _ _) ltwe).
-        + apply flip_lt_minus_l; rewrite plus_comm.
+        + apply flip_lt_minus_l. rewrite plus_comm.
           lhs' exact ltxc.
           apply (strictly_order_preserving (' c +)), ltwe.
     Defined.

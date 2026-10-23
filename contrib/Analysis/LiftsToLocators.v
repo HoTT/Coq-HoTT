@@ -45,8 +45,8 @@ Section lifts.
   Lemma iscontinuousat_negate (f : F -> F) (x : F) (cont : IsContinuousAt f x)
     : IsContinuousAt (fun y => - f y) x.
   Proof.
-    intro e; refine (Trunc_functor (-1) _ (cont e)); intros [d close].
-    exists d; intros y cxy.
+    intro e. refine (Trunc_functor (-1) _ (cont e)). intros [d close].
+    exists d. intros y cxy.
     unfold field_close; rewrite <- negate_plus_distr.
     apply lt_bound_negate, (close y cxy).
   Qed.
@@ -59,9 +59,9 @@ Section lifts.
   Proof.
     assert (e := merely_qpos_lt Q (f x - t) (snd (flip_pos_minus _ _) lt)).
     strip_truncations; destruct e as [e lte].
-    refine (Trunc_functor (-1) _ (cont e)); intros [d close].
-    exists d; intros y cxy.
-    assert (lt' := snd (close y cxy)); change (f x - f y < ' (' e)) in lt'.
+    refine (Trunc_functor (-1) _ (cont e)). intros [d close].
+    exists d. intros y cxy.
+    assert (lt' := snd (close y cxy)). change (f x - f y < ' (' e)) in lt'.
     apply (fst (flip_lt_minus_r _ _ _)) in lte.
     apply (fst (flip_lt_minus_l _ _ _)) in lt'.
     apply (strictly_order_reflecting (' (' e) +)).
@@ -111,13 +111,13 @@ Section lifts.
     Lemma not_iscontinuousat_step_function : ~ IsContinuousAt step_function 0.
     Proof.
       intro cont.
-      assert (c := cont 1); strip_truncations; destruct c as [d close].
+      assert (c := cont 1). strip_truncations; destruct c as [d close].
       set (y := ' (' (d / 2)) : F).
       assert (ypos : 0 < y) by exact (pos_rationals_to_field_qpos Q (d / 2)).
       assert (cy : field_close Q d 0 y).
       { assert (dpos := pos_rationals_to_field_qpos Q (F:=F) d).
         assert (ltyd : y < ' (' d)) by apply (strictly_order_preserving _), qpos_half_lt.
-        unfold field_close; rewrite plus_0_l; split.
+        unfold field_close; rewrite plus_0_l. split.
         - apply (snd (flip_lt_negate _ _)), ltyd.
         - exact (transitivity (fst (flip_pos_negate _) ypos) dpos). }
       assert (c' := fst (close y cy)).

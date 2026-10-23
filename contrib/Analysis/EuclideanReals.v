@@ -133,7 +133,7 @@ Section euclidean.
     Lemma path_subhom {Y : F -> HProp} (a b : SubHom Y) (p : a == b) : a = b.
     Proof.
       apply (equiv_ap' (issig_subhom Y)^-1 _ _).
-      apply path_sigma_hprop; funext u; exact (p u).
+      apply path_sigma_hprop. funext u. exact (p u).
     Defined.
 
     Definition contr_subhom_iff (Y : F -> HProp)
@@ -142,7 +142,7 @@ Section euclidean.
       split.
       - intros c; split; [exact (center _)|].
         intros a b; exact (ap10 (ap (subhom_fun (Y:=Y)) (path_contr a b))).
-      - intros [a h]; apply (Build_Contr _ a); intro b; exact (path_subhom a b (h a b)).
+      - intros [a h]; apply (Build_Contr _ a). intro b; exact (path_subhom a b (h a b)).
     Defined.
 
     (** A restricted morphism on [Y] restricts to every subset of [Y]. *)
@@ -162,7 +162,7 @@ Section euclidean.
     Proof.
       rhs_V exact (subhom_lim a (const_approximation Q y) (fun _ => h)
                      (transport X (field_lim_const Q y)^ h)).
-      apply ap; exact (path_sigma_hprop (y; h) (_; _) (field_lim_const Q y)^).
+      apply ap. exact (path_sigma_hprop (y; h) (_; _) (field_lim_const Q y)^).
     Qed.
 
     (** Approximations with the same limit have images with the same limit. *)
@@ -170,8 +170,8 @@ Section euclidean.
       (hx : forall e, X (x e)) (hx' : forall e, X (x' e)) (p : field_lim Q x = field_lim Q x')
       : cs_lim Q S (subhom_approximation a x hx) = cs_lim Q S (subhom_approximation a x' hx').
     Proof.
-      rapply cs_lim_path; intros e d n; apply subhom_close.
-      apply (field_close_lim_lim Q x x' e); rewrite p; apply (field_close_refl Q).
+      rapply cs_lim_path. intros e d n; apply subhom_close.
+      apply (field_close_lim_lim Q x x' e). rewrite p. apply (field_close_refl Q).
     Qed.
 
     (** The subsets [Y] containing the rationals and contained in the Euclidean reals on which there is a unique restricted morphism. *)
@@ -191,12 +191,12 @@ Section euclidean.
     Proof.
       snapply Build_SubHom.
       - exact (fun u => cs_rat Q S (u.2).1).
-      - intros e [y [q p]] [y' [r p']] c; cbn in c |- *; destruct p, p'.
+      - intros e [y [q p]] [y' [r p']] c; cbn in c |- *. destruct p, p'.
         exact (cs_close_rat_rat Q S q r e (rational_close_field_close Q e q r c)).
       - intros q h; cbn.
         exact (ap (cs_rat Q S) (ap pr1 (path_ishprop h (q; idpath)))).
       - intros x hx [s p]; cbn.
-        apply cs_eq; intro e; rewrite (pos_split3 e).
+        apply cs_eq. intro e; rewrite (pos_split3 e).
         apply cs_close_rat_lim; cbn.
         destruct (hx (e / 3)) as [q p']; cbn.
         apply (cs_close_rat_rat Q S), (rational_close_field_close Q (F:=F)).
@@ -208,14 +208,14 @@ Section euclidean.
     Lemma subhom_rationals_unique (a : SubHom rationals_subset) (u : sig rationals_subset)
       : a u = cs_rat Q S (u.2).1.
     Proof.
-      destruct u as [y [q p]]; destruct p; exact (subhom_rat a q _).
+      destruct u as [y [q p]]. destruct p. exact (subhom_rat a q _).
     Qed.
 
     Definition unique_subhom_rationals : unique_subhom_subset rationals_subset.
     Proof.
       refine ((containsrationals_rationals, _), _).
-      - intros y [q p]; destruct p; exact (containsrationals_euclidean_reals q).
-      - apply (snd (contr_subhom_iff _)); split.
+      - intros y [q p]; destruct p. exact (containsrationals_euclidean_reals q).
+      - apply (snd (contr_subhom_iff _)). split.
         + exact subhom_rationals.
         + intros a b u; exact (subhom_rationals_unique a u @ (subhom_rationals_unique b u)^).
     Defined.
@@ -261,13 +261,13 @@ Section euclidean.
         : closeS e (limits_fun u) (limits_fun v).
       Proof.
         destruct u as [y h], v as [y' h']; cbn in c.
-        pose proof h as h0; pose proof h' as h0'; revert h h'.
-        strip_truncations; destruct h0 as [x [hx p]], h0' as [x' [hx' p']]; intros h h'.
+        pose proof h as h0. pose proof h' as h0'. revert h h'.
+        strip_truncations; destruct h0 as [x [hx p]], h0' as [x' [hx' p']]. intros h h'.
         rewrite (limits_fun_beta x hx y p), (limits_fun_beta x' hx' y' p').
         destruct p, p'.
-        assert (r := field_close_rounded Q e _ _ c); strip_truncations.
-        destruct r as [d [d' [q c']]]; rewrite q.
-        rapply cs_close_lim_lim_split; intros n m; apply subhom_close.
+        assert (r := field_close_rounded Q e _ _ c). strip_truncations.
+        destruct r as [d [d' [q c']]]. rewrite q.
+        rapply cs_close_lim_lim_split. intros n m; apply subhom_close.
         exact (field_close_lim_lim Q x x' d c' n m).
       Qed.
 
@@ -281,20 +281,20 @@ Section euclidean.
                      (field_lim_const Q _)).
           exact ((subhom_const fX _ _)^ @ subhom_rat fX q _).
         - intros x hx h.
-          pose proof h as h0; revert h; strip_truncations; destruct h0 as [x' [hx' p]]; intro h.
+          pose proof h as h0. revert h. strip_truncations; destruct h0 as [x' [hx' p]]. intro h.
           rewrite (limits_fun_beta x' hx' _ p).
-          rapply cs_lim_path; intros e d n; cbn.
+          rapply cs_lim_path. intros e d n; cbn.
           rewrite <- limits_fun_incl.
           apply limits_fun_close; cbn.
-          apply (field_close_lim_lim Q x' x e); rewrite p; apply (field_close_refl Q).
+          apply (field_close_lim_lim Q x' x e). rewrite p. apply (field_close_refl Q).
       Defined.
 
       Local Lemma subhom_limits_unique (a : SubHom PX) (u : sig PX)
         : a u = limits_fun u.
       Proof.
-        destruct u as [y h]; pose proof h as h0; revert h.
-        strip_truncations; destruct h0 as [x [hx p]]; intro h.
-        rewrite (limits_fun_beta x hx y p); destruct p.
+        destruct u as [y h]. pose proof h as h0. revert h.
+        strip_truncations; destruct h0 as [x [hx p]]. intro h.
+        rewrite (limits_fun_beta x hx y p). destruct p.
         lhs exact (subhom_lim a x (fun e => limits_subset_incl X _ (hx e)) h).
         exact (ap (fun b => cs_lim Q S (subhom_approximation b x hx))
                  (@path_contr _ (snd hX) (subhom_restrict (limits_subset_incl X) a) fX)).
@@ -304,9 +304,9 @@ Section euclidean.
       Proof.
         refine ((_, _), _).
         - intro q; exact (limits_subset_incl X _ (fst (fst hX) q)).
-        - intros y h; strip_truncations; destruct h as [x [hx p]]; destruct p.
+        - intros y h. strip_truncations; destruct h as [x [hx p]]. destruct p.
           exact (iscauchycompletesubset_euclidean_reals x (fun e => snd (fst hX) _ (hx e))).
-        - apply (snd (contr_subhom_iff _)); split.
+        - apply (snd (contr_subhom_iff _)). split.
           + exact subhom_limits.
           + intros a b u; exact (subhom_limits_unique a u @ (subhom_limits_unique b u)^).
       Defined.
@@ -328,7 +328,7 @@ Section euclidean.
       Proof.
         intro h.
         assert (le' : le Y (fun y => hprop_join (fun k => D k y))).
-        { apply (issup_least sY); intros k y' h'; exact (hprop_join_in _ k h'). }
+        { apply (issup_least sY). intros k y' h'; exact (hprop_join_in _ k h'). }
         exact (equiv_smalltype _ (le' y h)).
       Qed.
 
@@ -344,9 +344,9 @@ Section euclidean.
       Proof.
         srapply (merely_rec_hset (fun w : {k : I & D k u.1} => fk w.1 (u.1; w.2)) (sup_out _ u.2)).
         intros [k hk] [k' hk'].
-        assert (m := snd d k k'); strip_truncations; destruct m as [m [lk lk']].
+        assert (m := snd d k k'). strip_truncations; destruct m as [m [lk lk']].
         rewrite (sup_compat k m lk), (sup_compat k' m lk').
-        apply ap, path_sigma_hprop; reflexivity.
+        apply ap, path_sigma_hprop. reflexivity.
       Defined.
 
       Arguments sup_fun : simpl never.
@@ -361,9 +361,9 @@ Section euclidean.
         : closeS e (sup_fun u) (sup_fun v).
       Proof.
         destruct u as [y h], v as [y' h']; cbn in c.
-        assert (w := sup_out y h); assert (w' := sup_out y' h'); strip_truncations.
+        assert (w := sup_out y h). assert (w' := sup_out y' h'). strip_truncations.
         destruct w as [k hk], w' as [k' hk'].
-        assert (m := snd d k k'); strip_truncations; destruct m as [m [lk lk']].
+        assert (m := snd d k k'). strip_truncations; destruct m as [m [lk lk']].
         rewrite (sup_fun_beta m y (lk _ hk)), (sup_fun_beta m y' (lk' _ hk')).
         exact (subhom_close (fk m) e (y; lk _ hk) (y'; lk' _ hk') c).
       Qed.
@@ -374,23 +374,23 @@ Section euclidean.
         - exact sup_fun.
         - exact sup_fun_close.
         - intros q h.
-          assert (k := fst d); strip_truncations.
+          assert (k := fst d). strip_truncations.
           rewrite (sup_fun_beta k _ (fst (fst (hD k)) q)).
           exact (subhom_rat (fk k) q _).
         - intros x hx h.
-          assert (w := sup_out _ h); strip_truncations; destruct w as [k hk].
+          assert (w := sup_out _ h). strip_truncations; destruct w as [k hk].
           rewrite (sup_fun_beta k _ hk), (subhom_const (fk k)).
-          rapply cs_lim_path; intros e d' n; cbn.
+          rapply cs_lim_path. intros e d' n; cbn.
           rewrite <- (sup_fun_beta k _ hk h).
           apply sup_fun_close; cbn.
           apply (field_close_lim_lim Q (const_approximation Q _) x e).
-          rewrite (field_lim_const Q); apply (field_close_refl Q).
+          rewrite (field_lim_const Q). apply (field_close_refl Q).
       Defined.
 
       Local Lemma subhom_sup_unique (a : SubHom Y) (u : sig Y) : a u = sup_fun u.
       Proof.
         destruct u as [y h].
-        assert (w := sup_out _ h); strip_truncations; destruct w as [k hk].
+        assert (w := sup_out _ h). strip_truncations; destruct w as [k hk].
         rewrite (sup_fun_beta k _ hk).
         lhs exact (ap a (path_sigma_hprop (y; h) (y; sup_in k y hk) idpath)).
         exact (ap10 (ap (subhom_fun (Y:=D k))
@@ -400,11 +400,11 @@ Section euclidean.
       Definition unique_subhom_sup : unique_subhom_subset Y.
       Proof.
         refine ((_, _), _).
-        - intro q; assert (k := fst d); strip_truncations.
+        - intro q. assert (k := fst d). strip_truncations.
           exact (sup_in k _ (fst (fst (hD k)) q)).
-        - intros y h; assert (w := sup_out _ h); strip_truncations; destruct w as [k hk].
+        - intros y h. assert (w := sup_out _ h). strip_truncations; destruct w as [k hk].
           exact (snd (fst (hD k)) y hk).
-        - apply (snd (contr_subhom_iff _)); split.
+        - apply (snd (contr_subhom_iff _)). split.
           + exact subhom_sup.
           + intros a b u; exact (subhom_sup_unique a u @ (subhom_sup_unique b u)^).
       Defined.
@@ -434,7 +434,7 @@ Section euclidean.
       assert (Rc : IsCauchyCompleteSubset Q R).
       { intros x hx; exact (transport (fun Z : F -> HProp => Z (field_lim Q x)) p (tr (x; (hx, idpath)))). }
       assert (q : R = euclidean_reals).
-      { funext y; apply path_iff_hprop.
+      { funext y. apply path_iff_hprop.
         - exact (snd (fst hR) y).
         - exact (euclidean_reals_least R (fst (fst hR)) Rc y). }
       exact (transport (fun Z => Contr (SubHom Z)) q (snd hR)).
@@ -469,14 +469,14 @@ Section euclidean.
         refine (_ @ cshom_lim Q _ _ f x' @ _).
         + exact (ap f (path_sigma_hprop (exist euclidean_reals (field_lim Q x) h)
                          (cs_lim Q euclidean_reals_cauchy_structure x') idpath)).
-        + apply ap; snapply path_cauchyapproximation; [exact _|]; intro e; reflexivity.
+        + apply ap. snapply path_cauchyapproximation; [exact _|]. intro e; reflexivity.
     Defined.
 
     (** The Euclidean reals are homotopy-initial among Cauchy structures on sets. *)
     Theorem contr_cshom_euclidean_reals
       : Contr (CauchyStructureHom Q euclidean_reals_cauchy_structure S).
     Proof.
-      apply (snd (contr_cauchystructurehom_iff Q _ _)); split.
+      apply (snd (contr_cauchystructurehom_iff Q _ _)). split.
       - exact (cshom_subhom_euclidean_reals (@center _ contr_subhom_euclidean_reals)).
       - intros f g.
         exact (ap10 (ap (subhom_fun (Y:=euclidean_reals))

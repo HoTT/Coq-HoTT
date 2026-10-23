@@ -80,7 +80,7 @@ Section wlpo.
   Proof.
     rewrite (digit_weight_succ Q 1 n).
     assert (p : naturals_to_semiring nat Q 1 = 1) by exact preserves_1.
-    rewrite p, mult_1_l; reflexivity.
+    rewrite p, mult_1_l. reflexivity.
   Qed.
 
   Local Definition w_pos (n : nat) : 0 < w n := digit_weight_pos Q 1 n.
@@ -99,10 +99,10 @@ Section wlpo.
     Lemma bisect_separates (n : nat) : g (bisect n) <> g (bisect n + w n).
     Proof.
       induction n as [|n IH].
-      - change (g 0 <> g (0 + 1)); rewrite plus_0_l; exact g01.
-      - rewrite (w_succ n) in IH; cbn [bisect].
+      - change (g 0 <> g (0 + 1)); rewrite plus_0_l. exact g01.
+      - rewrite (w_succ n) in IH. cbn [bisect].
         destruct (dec (g (bisect n + w (S n)) = g (bisect n))) as [e|ne].
-        + rewrite e, <- plus_assoc; exact IH.
+        + rewrite e, <- plus_assoc. exact IH.
         + exact (fun p => ne p^).
     Qed.
 
@@ -112,11 +112,11 @@ Section wlpo.
       : a n ≤ a (S n) /\ a (S n) + w (S n) ≤ a n + w n.
     Proof.
       assert (wle : w (S n) ≤ w n).
-      { rewrite (w_succ n); apply nonneg_plus_le_compat_r, lt_le, w_pos. }
+      { rewrite (w_succ n). apply nonneg_plus_le_compat_r, lt_le, w_pos. }
       cbn [bisect].
       destruct (dec (g (a n + w (S n)) = g (a n))) as [e|ne]; split.
       - apply nonneg_plus_le_compat_r, lt_le, w_pos.
-      - rewrite <- plus_assoc, <- w_succ; reflexivity.
+      - rewrite <- plus_assoc, <- w_succ. reflexivity.
       - reflexivity.
       - apply (order_preserving (a n +)), wle.
     Qed.
@@ -126,7 +126,7 @@ Section wlpo.
     Proof.
       intros le; induction le as [|n le [IH1 IH2]].
       - split; reflexivity.
-      - destruct (bisect_succ_bounds n) as [b1 b2]; split.
+      - destruct (bisect_succ_bounds n) as [b1 b2]. split.
         + exact (transitivity IH1 b1).
         + exact (transitivity b2 IH2).
     Qed.
@@ -136,20 +136,21 @@ Section wlpo.
       : c ≤ u ≤ c + d -> c ≤ v ≤ c + d -> d < ' e -> rational_close Q e u v.
     Proof.
       intros lu lv lde; apply (interval_minus_lt c (c + d) u v _ lu lv).
-      rewrite (plus_comm c d), <- plus_assoc, plus_negate_r, plus_0_r; exact lde.
+      rewrite (plus_comm c d), <- plus_assoc, plus_negate_r, plus_0_r. exact lde.
     Qed.
 
     Local Lemma bisect_in_interval (m n : nat) (le : (m <= n)%nat) (t : Q)
       : a n ≤ t ≤ a n + w n -> a m ≤ t ≤ a m + w m.
     Proof.
-      destruct (bisect_bounds m n le) as [b1 b2]; intros [t1 t2]; split.
+      destruct (bisect_bounds m n le) as [b1 b2]. intros [t1 t2]; split.
       - exact (transitivity b1 t1).
       - exact (transitivity t2 b2).
     Qed.
 
     Local Lemma bisect_self_in_interval (n : nat) : a n ≤ a n ≤ a n + w n.
     Proof.
-      split; [reflexivity|]; apply nonneg_plus_le_compat_r, lt_le, w_pos.
+      split; [reflexivity|].
+      apply nonneg_plus_le_compat_r, lt_le, w_pos.
     Qed.
 
     Definition bisect_modulus : MetricCauchyModulus Q (rational_close Q) a (digit_modulus Q 1 _)
@@ -200,29 +201,29 @@ Section wlpo.
 
       Local Lemma search_unseen (n : nat) : seen n = false -> search n = a n.
       Proof.
-        induction n as [|n IH]; [reflexivity|]; cbn [seen search].
-        revert IH; destruct (seen n); intros IH h.
+        induction n as [|n IH]; [reflexivity|]. cbn [seen search].
+        revert IH. destruct (seen n); intros IH h.
         - destruct (true_ne_false h).
         - destruct (dec (P n)); [destruct (true_ne_false h)|reflexivity].
       Qed.
 
       Local Lemma seen_le (m n : nat) : (m <= n)%nat -> seen m = true -> seen n = true.
       Proof.
-        intros le h; induction le as [|n le IH]; [exact h|]; cbn [seen].
-        rewrite IH; reflexivity.
+        intros le h. induction le as [|n le IH]; [exact h|]. cbn [seen].
+        rewrite IH. reflexivity.
       Qed.
 
       Local Lemma search_seen (m n : nat) : (m <= n)%nat -> seen m = true -> search n = search m.
       Proof.
-        intros le h; induction le as [|n le IH]; [reflexivity|]; cbn [search].
-        rewrite (seen_le m n le h); exact IH.
+        intros le h. induction le as [|n le IH]; [reflexivity|]. cbn [search].
+        rewrite (seen_le m n le h). exact IH.
       Qed.
 
       Local Lemma search_unseen_interval (m n : nat) : (m <= n)%nat -> seen m = false
         -> a m ≤ search n ≤ a m + w m.
       Proof.
         intros le h; induction le as [|n le IH].
-        - rewrite (search_unseen m h); exact (bisect_self_in_interval m).
+        - rewrite (search_unseen m h). exact (bisect_self_in_interval m).
         - cbn [search]; destruct (seen n); [exact IH|].
           destruct (dec (P n)).
           + apply (bisect_in_interval m n le), endpoint_in_interval.
@@ -233,19 +234,19 @@ Section wlpo.
       Proof.
         induction n as [|n IH]; cbn [seen search].
         - intros h; destruct (true_ne_false h^).
-        - revert IH; destruct (seen n); intros IH h; [exact (IH idpath)|].
+        - revert IH. destruct (seen n); intros IH h; [exact (IH idpath)|].
           destruct (dec (P n)); [exact (n; idpath)|destruct (true_ne_false h^)].
       Qed.
 
       Local Lemma seen_succ (i : nat) : P i -> seen (S i) = true.
       Proof.
-        intros p; cbn [seen]; destruct (seen i); [reflexivity|].
+        intros p. cbn [seen]; destruct (seen i); [reflexivity|].
         destruct (dec (P i)) as [_|np]; [reflexivity|destruct (np p)].
       Qed.
 
       Local Lemma never_seen (np : forall n, ~ P n) (n : nat) : seen n = false.
       Proof.
-        induction n as [|n IH]; [reflexivity|]; cbn [seen]; rewrite IH.
+        induction n as [|n IH]; [reflexivity|]. cbn [seen]; rewrite IH.
         destruct (dec (P n)) as [p|_]; [destruct (np n p)|reflexivity].
       Qed.
 
@@ -257,7 +258,7 @@ Section wlpo.
         generalize (search_seen N m lem) (search_seen N n len) (search_unseen_interval N m lem)
           (search_unseen_interval N n len).
         destruct (seen N); intros sm sn um un.
-        - rewrite (sm idpath), (sn idpath); apply (rational_close_refl Q).
+        - rewrite (sm idpath), (sn idpath). apply (rational_close_refl Q).
         - apply (rational_close_interval (a N) (w N)); [exact (um idpath)|exact (un idpath)|].
           exact (digit_weight_modulus Q 1 _ e _ (leq_refl _)).
       Defined.
@@ -273,8 +274,8 @@ Section wlpo.
         apply (limit_unique Q (fun n => ' search n)).
         - exact (islimit_cauchy_limit Q F search_sequence).
         - assert (p : (fun n => ' search n) = (fun n => ' a n)).
-          { apply path_forall; intro n; exact (ap _ (search_unseen n (never_seen np n))). }
-          rewrite p; exact (islimit_cauchy_limit Q F bisect_sequence).
+          { apply path_forall. intro n; exact (ap _ (search_unseen n (never_seen np n))). }
+          rewrite p. exact (islimit_cauchy_limit Q F bisect_sequence).
       Qed.
 
       (** If [P i] holds, the search sequence is eventually constant. *)
@@ -283,7 +284,7 @@ Section wlpo.
       Proof.
         apply (limit_unique Q (fun n => ' search n)).
         - exact (islimit_cauchy_limit Q F search_sequence).
-        - intro e; apply tr; exists (S i); intros n le.
+        - intro e. apply tr; exists (S i). intros n le.
           rewrite (search_seen _ _ le (seen_succ i p)), plus_negate_r.
           assert (epos := pos_rationals_to_field_qpos Q (F:=F) e).
           split; [apply flip_pos_negate|]; exact epos.
@@ -300,11 +301,11 @@ Section wlpo.
       set (b0 := h (cauchy_limit Q F bisect_sequence)).
       set (m := cauchy_limit Q F (search_sequence b0 P)).
       destruct (dec (h m = b0)) as [e|ne].
-      - left; intros [i p].
+      - left. intros [i p].
         destruct (search_endpoint b0 P (S i) (seen_succ P i p)) as [j q].
         apply (endpoint_ne b0 j).
-        rewrite <- hg, <- q, <- (search_limit_seen b0 P i p); exact e.
-      - right; intros np; apply ne.
+        rewrite <- hg, <- q, <- (search_limit_seen b0 P i p). exact e.
+      - right. intros np; apply ne.
         exact (ap h (search_limit_never b0 P (fun n p => np (n; p)))).
     Qed.
   End bisection.
@@ -324,7 +325,7 @@ Section wlpo.
 
   Definition wlpo_isstronglynonconstant (f : F -> Bool) : IsStronglyNonconstant f -> WLPO.
   Proof.
-    apply Trunc_rec; intros [x h]; revert h; apply Trunc_rec; intros [y ne].
+    apply Trunc_rec. intros [x h]. revert h. apply Trunc_rec. intros [y ne].
     exact (wlpo_nonconstant f x y ne).
   Defined.
 
@@ -419,16 +420,16 @@ Section cuts.
         + exact bl.
         + exact bu.
         + intro q; split; [exact (ol q)|].
-          apply Trunc_rec; intros [q' [ltqq' lq']]; exact (cl q q' ltqq' lq').
+          apply Trunc_rec. intros [q' [ltqq' lq']]; exact (cl q q' ltqq' lq').
         + intro r; split; [exact (ou r)|].
-          apply Trunc_rec; intros [r' [ltr'r ur']]; exact (cu r r' ltr'r ur').
+          apply Trunc_rec. intros [r' [ltr'r ur']]; exact (cu r r' ltr'r ur').
         + exact t.
         + exact l.
       - intros c; snapply Build_IsCut.
         + exact (cut_lower_inhabited c).
         + exact (cut_upper_inhabited c).
-        + intros q q' ltqq' lq'; apply (snd (cut_lower_rounded c q)), tr; exact (q'; (ltqq', lq')).
-        + intros r r' ltr'r ur'; apply (snd (cut_upper_rounded c r)), tr; exact (r'; (ltr'r, ur')).
+        + intros q q' ltqq' lq'; apply (snd (cut_lower_rounded c q)), tr. exact (q'; (ltqq', lq')).
+        + intros r r' ltr'r ur'; apply (snd (cut_upper_rounded c r)), tr. exact (r'; (ltr'r, ur')).
         + intro q; exact (fst (cut_lower_rounded c q)).
         + intro r; exact (fst (cut_upper_rounded c r)).
         + exact (cut_transitive c).
@@ -562,7 +563,7 @@ Section cuts.
     Proof.
       apply (iscauchyreal_merely_locator).
       generalize (h _ _ (snd (iscut_iff_isdedekindcut _ _) (isdedekindcut Q x))).
-      apply Trunc_functor; intro s.
+      apply Trunc_functor. intro s.
       exact (fst (cut_locator_iff_locator x) (cutstructure_locator _ _ s)).
     Qed.
 

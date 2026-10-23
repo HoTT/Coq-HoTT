@@ -69,21 +69,21 @@ Section function_space.
 
   Local Lemma qinc_nonneg (t : Q) (t0 : 0 ≤ t) : 0 ≤ (' t : F).
   Proof.
-    rewrite <- (preserves_0 (f:=cast Q F)); apply (order_preserving _), t0.
+    rewrite <- (preserves_0 (f:=cast Q F)). apply (order_preserving _), t0.
   Qed.
 
   Local Lemma qinc_le_1 (t : Q) (t1 : t ≤ 1) : (' t : F) ≤ 1.
   Proof.
-    rewrite <- (preserves_1 (f:=cast Q F)); apply (order_preserving _), t1.
+    rewrite <- (preserves_1 (f:=cast Q F)). apply (order_preserving _), t1.
   Qed.
 
   (** Moving from [u] towards [v] by a fraction [s] is a convex combination. *)
   Local Lemma convex_combination (s u v : F) : u + s * (v - u) = (1 - s) * u + s * v.
   Proof.
     rewrite plus_mult_distr_r, mult_1_l, plus_mult_distr_l, <- plus_assoc.
-    apply ap; rewrite plus_comm.
+    apply ap. rewrite plus_comm.
     apply (ap (+ _)).
-    rewrite <- negate_mult_distr_r, negate_mult_distr_l; reflexivity.
+    rewrite <- negate_mult_distr_r, negate_mult_distr_l. reflexivity.
   Qed.
 
   (** Convex combinations of elements of [[a, b]] lie in [[a, b]]. *)
@@ -96,10 +96,10 @@ Section function_space.
     { intro w; rewrite <- plus_mult_distr_r, <- plus_assoc, plus_negate_l, plus_0_r.
       apply mult_1_l. }
     split.
-    - rewrite <- (p a); apply plus_le_compat.
+    - rewrite <- (p a). apply plus_le_compat.
       + exact (order_preserving ((1 - s) *.) _ _ (fst au)).
       + exact (order_preserving (s *.) _ _ (fst av)).
-    - rewrite <- (p b); apply plus_le_compat.
+    - rewrite <- (p b). apply plus_le_compat.
       + exact (order_preserving ((1 - s) *.) _ _ (snd au)).
       + exact (order_preserving (s *.) _ _ (snd av)).
   Qed.
@@ -183,7 +183,7 @@ Section function_space.
       apply path_sigma_hprop.
       change (x.1 + ' (grid_weight n (S n)) * (y.1 - x.1) = y.1); unfold grid_weight.
       rewrite nat_min_idem, recip_nQ_succ, (preserves_1 (f:=cast Q F)), mult_1_l.
-      rewrite plus_comm, <- plus_assoc, plus_negate_l; apply plus_0_r.
+      rewrite plus_comm, <- plus_assoc, plus_negate_l. apply plus_0_r.
     Qed.
 
     (** For a rational bound [B] on the distance from [x] to [y] and a modulus [w], an [n] with [B / w e < n], so that from [n] on the points are closer together than [w e]. *)
@@ -200,8 +200,8 @@ Section function_space.
         rapply lt_le_trans; [exact (round_up_strict Q (B / ' (w e))).2|].
         apply nat_to_semiring_le, leq_succ_r, len. }
       assert (lt' : / nQ (S n) * B < ' (w e)).
-      { rewrite mult_comm; apply (flip_lt_mult_dec_recip_l B (' (w e)) (nQ (S n)) (nQ_succ_pos n)).
-        rewrite mult_comm; exact lt. }
+      { rewrite mult_comm. apply (flip_lt_mult_dec_recip_l B (' (w e)) (nQ (S n)) (nQ_succ_pos n)).
+        rewrite mult_comm. exact lt. }
       assert (PropHolds (0 ≤ (' (/ nQ (S n)) : F))).
       { apply qinc_nonneg, lt_le, pos_dec_recip_compat, nQ_succ_pos. }
       rapply le_lt_trans; [apply (order_preserving (' (/ nQ (S n)) *.)), leB|].
@@ -224,15 +224,15 @@ Section function_space.
                               + (p j ≤ z))).
     { intro j; induction j as [|j IH]; intro lejN.
       - exact (tr (inr lo)).
-      - assert (h := IH (leq_succ_l lejN)); strip_truncations.
+      - assert (h := IH (leq_succ_l lejN)). strip_truncations.
         destruct h as [found|lez]; [exact (tr (inl found))|].
-        assert (c := cotransitive (step j lejN) z); strip_truncations; apply tr.
+        assert (c := cotransitive (step j lejN) z). strip_truncations. apply tr.
         destruct c as [lt|lt].
         + exact (inr (lt_le _ _ lt)).
         + exact (inl (j; (leq_succ_l lejN, lez, lt))). }
-    assert (h := scan N (leq_refl N)); strip_truncations; apply tr.
+    assert (h := scan N (leq_refl N)). strip_truncations. apply tr.
     destruct h as [found|lez]; [exact found|].
-    exists N; refine (leq_refl N, lez, _).
+    exists N. refine (leq_refl N, lez, _).
     rapply le_lt_trans; [exact hi|apply pos_plus_lt_compat_r, d0].
   Qed.
 
@@ -248,9 +248,9 @@ Section function_space.
   Lemma le_max_upto (g : nat -> F) (n k : nat) (lekn : (k <= n)%nat) : g k ≤ max_upto g n.
   Proof.
     induction n as [|n IH].
-    - rewrite (path_zero_leq_zero_r k lekn); reflexivity.
+    - rewrite (path_zero_leq_zero_r k lekn). reflexivity.
     - destruct (leq_succ_dichotomy lekn) as [p|lekn'].
-      + rewrite p; exact (join_ub_r (max_upto g n) _).
+      + rewrite p. exact (join_ub_r (max_upto g n) _).
       + exact (transitivity (IH lekn') (join_ub_l _ (g (S n)))).
   Qed.
 
@@ -298,7 +298,7 @@ Section function_space.
     Proof.
       set (p := fun k => grid_point (interval_left leab) (interval_right leab) n k).
       assert (step : forall k, (k < S n)%nat -> (p (S k)).1 < (p k).1 + ' (' (w e))).
-      { intros k ltk; unfold p; rewrite (grid_point_succ _ _ n k (leq_pred' ltk)).
+      { intros k ltk. unfold p; rewrite (grid_point_succ _ _ n k (leq_pred' ltk)).
         exact (strictly_order_preserving (_ +) _ _ ltstep). }
       assert (lo : (p 0%nat).1 ≤ z.1) by (unfold p; rewrite grid_point_0; exact (fst z.2)).
       assert (hi : z.1 ≤ (p (S n)).1) by (unfold p; rewrite grid_point_last; exact (snd z.2)).
@@ -308,11 +308,11 @@ Section function_space.
       assert (cz : closeI (w e) z (p k)).
       { unfold metric_close, interval_dist.
         rewrite (abs_of_nonneg _ (snd (flip_nonneg_minus _ _) lez)).
-        apply (snd (flip_lt_minus_l (p k).1 z.1 _)); rewrite plus_comm; exact ltz. }
+        apply (snd (flip_lt_minus_l (p k).1 z.1 _)). rewrite plus_comm. exact ltz. }
       assert (ltf : f z - f (p k) < ' (' e)).
       { rapply le_lt_trans; [apply le_abs|exact (fw e z (p k) cz)]. }
       apply flip_lt_minus_l in ltf.
-      rapply lt_le_trans; [exact ltf|]; rewrite (plus_comm (' (' e))).
+      rapply lt_le_trans; [exact ltf|]. rewrite (plus_comm (' (' e))).
       apply (order_preserving (+ _)).
       exact (le_max_upto (fun k => f (p k)) (S n) k lekn).
     Qed.
@@ -325,12 +325,12 @@ Section function_space.
       intros e m n lem len.
       assert (lt : forall m' n', (grid_modulus B w e <= n')%nat
                      -> sample_max m' < sample_max n' + ' (' e)).
-      { intros m' n' len'; apply max_upto_lt; intros k _.
+      { intros m' n' len'; apply max_upto_lt. intros k _.
         exact (lt_sample_max w fw e n' (lt_grid_modulus _ B leB w e n' len') _). }
       split.
-      - apply flip_lt_minus_r; rewrite plus_comm.
-        apply flip_lt_minus_l; exact (lt n m lem).
-      - apply flip_lt_minus_l; rewrite plus_comm; exact (lt m n len).
+      - apply flip_lt_minus_r. rewrite plus_comm.
+        apply flip_lt_minus_l. exact (lt n m lem).
+      - apply flip_lt_minus_l. rewrite plus_comm. exact (lt m n len).
     Qed.
 
     (* [merely_bound] in IntermediateValue.v is a variant of this lemma that uses [a ≤ b] to give a positive bound; sharing it would mean stating it outside its section there and passing [' B] for [B] below. *)
@@ -349,7 +349,7 @@ Section function_space.
     Proof.
       split.
       - intro z.
-        apply (fst (flip_nonpos_minus _ _)), (nonpos_lt_qpos Q); intro e.
+        apply (fst (flip_nonpos_minus _ _)), (nonpos_lt_qpos Q). intro e.
         assert (c := merely_rational_bound).
         strip_truncations; destruct fu as [w fw], c as [B leB].
         assert (le : f z - ' (' (e / 2)) ≤ l).
@@ -357,12 +357,12 @@ Section function_space.
           intros n len; apply lt_le, flip_lt_minus_l.
           exact (lt_sample_max w fw (e / 2) n (lt_grid_modulus _ B leB w _ n len) z). }
         apply (fst (flip_le_minus_l _ _ _)) in le.
-        rewrite plus_comm in le; apply (snd (flip_le_minus_l _ _ _)) in le.
+        rewrite plus_comm in le. apply (snd (flip_le_minus_l _ _ _)) in le.
         rapply le_lt_trans; [exact le|].
         apply (strictly_order_preserving (cast Q F)), qpos_half_lt.
       - intros u ub.
-        apply (limit_le Q F sample_max l u 0 islim); intros n _.
-        apply max_upto_le; intros k _; apply ub.
+        apply (limit_le Q F sample_max l u 0 islim). intros n _.
+        apply max_upto_le. intros k _; apply ub.
     Qed.
 
     Lemma merely_cauchymodulus_sample_max (fu : IsUniformlyContinuous Q closeI closeF f)
@@ -413,13 +413,13 @@ Section function_space.
   Proof.
     intros e x y c; unfold metric_close in *.
     assert (cf : dY (f x) (f y) < ' (' (e / 2))).
-    { apply fw; rapply lt_le_trans; [exact c|].
+    { apply fw. rapply lt_le_trans; [exact c|].
       apply (order_preserving (cast Q F)), qpos_min_le_l. }
     assert (cg : dY (g x) (g y) < ' (' (e / 2))).
-    { apply gw; rapply lt_le_trans; [exact c|].
+    { apply gw. rapply lt_le_trans; [exact c|].
       apply (order_preserving (cast Q F)), qpos_min_le_r. }
     apply abs_lt.
-    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
+    - apply flip_lt_negate_l. rewrite <- negate_swap_r.
       apply (pseudometric_minus_lt dY e); rewrite (pseudometric_symmetric (d:=dY)); assumption.
     - exact (pseudometric_minus_lt dY e (f x) (g x) (f y) (g y) cf cg).
   Qed.
@@ -478,11 +478,11 @@ Section function_space.
       - intros f g.
         exact (transitivity (pseudometric_nonneg (d:=interval_dist) _ _) (le_uniform_dist f g (interval_left leab))).
       - intro f; apply (antisymmetry (≤)).
-        + apply uniform_dist_le; intro x; apply eq_le, (pseudometric_diag (d:=interval_dist)).
+        + apply uniform_dist_le. intro x; apply eq_le, (pseudometric_diag (d:=interval_dist)).
         + exact (transitivity (pseudometric_nonneg (d:=interval_dist) _ _) (le_uniform_dist f f (interval_left leab))).
       - intros f g; apply (antisymmetry (≤)); apply uniform_dist_le; intro x;
           rewrite (pseudometric_symmetric (d:=interval_dist)); apply le_uniform_dist.
-      - intros f g h; apply uniform_dist_le; intro x.
+      - intros f g h; apply uniform_dist_le. intro x.
         lhs' exact (pseudometric_triangle (d:=interval_dist) _ (g x) _).
         apply plus_le_compat; apply le_uniform_dist.
     Defined.
@@ -491,9 +491,9 @@ Section function_space.
     Lemma path_uniform_dist_zero (f g : UniformMap) (p : uniform_dist f g = 0)
       : (f : ClosedInterval a b -> ClosedInterval c d) = g.
     Proof.
-      apply path_forall; intro x; apply path_sigma_hprop.
+      apply path_forall. intro x; apply path_sigma_hprop.
       apply equal_by_zero_sum, abs_eq_0, (antisymmetry (≤)).
-      - rewrite <- p; apply le_uniform_dist.
+      - rewrite <- p. apply le_uniform_dist.
       - apply abs_nonneg.
     Qed.
 
@@ -531,20 +531,20 @@ Section function_space.
                         -> - ' (' e) < (fs k x).1 - (fs n x).1 < ' (' e)).
         { intros k lek; exact (cauchymodulus_values x e k n lek len). }
         assert (lo : (fs n x).1 - ' (' e) ≤ l.1).
-        { apply (le_limit Q F _ l.1 _ (M e) l.2); intros k lek; apply lt_le.
-          rewrite plus_comm; exact (fst (flip_lt_minus_r _ _ _) (fst (close k lek))). }
+        { apply (le_limit Q F _ l.1 _ (M e) l.2). intros k lek; apply lt_le.
+          rewrite plus_comm. exact (fst (flip_lt_minus_r _ _ _) (fst (close k lek))). }
         assert (hi : l.1 ≤ (fs n x).1 + ' (' e)).
-        { apply (limit_le Q F _ l.1 _ (M e) l.2); intros k lek; apply lt_le.
-          rewrite plus_comm; exact (fst (flip_lt_minus_l _ _ _) (snd (close k lek))). }
+        { apply (limit_le Q F _ l.1 _ (M e) l.2). intros k lek; apply lt_le.
+          rewrite plus_comm. exact (fst (flip_lt_minus_l _ _ _) (snd (close k lek))). }
         apply abs_le.
-        - apply (snd (flip_le_minus_r _ _ _)); rewrite plus_comm; exact lo.
-        - apply (snd (flip_le_minus_l _ _ _)); rewrite plus_comm; exact hi.
+        - apply (snd (flip_le_minus_r _ _ _)). rewrite plus_comm. exact lo.
+        - apply (snd (flip_le_minus_l _ _ _)). rewrite plus_comm. exact hi.
       Qed.
 
       (** The pointwise limit, which lies in [[c, d]]. *)
       Definition limit_map (x : ClosedInterval a b) : ClosedInterval c d.
       Proof.
-        exists (limit_value x).1; split.
+        exists (limit_value x).1. split.
         - exact (le_limit Q F _ _ c 0 (limit_value x).2 (fun k _ => fst (fs k x).2)).
         - exact (limit_le Q F _ _ d 0 (limit_value x).2 (fun k _ => snd (fs k x).2)).
       Defined.
@@ -571,7 +571,7 @@ Section function_space.
         apply plus_le_lt_compat; [exact (limit_value_close x _ N (leq_refl _))|].
         apply plus_lt_le_compat.
         - exact (isuniformmodulus_umap (fs N) (e / 3) x y cxy).
-        - rewrite abs_minus_swap; exact (limit_value_close y _ N (leq_refl _)).
+        - rewrite abs_minus_swap. exact (limit_value_close y _ N (leq_refl _)).
       Qed.
 
       (** The limit lifts to locators, since each of the values does. *)
@@ -582,13 +582,13 @@ Section function_space.
 
       Lemma ismetriclimit_ulmap_limit : IsMetricLimit Q (metric_close Q ulmap_dist) fs ulmap_limit.
       Proof.
-        intro e; apply tr; exists (M (e / 2)); intros n len.
+        intro e. apply tr; exists (M (e / 2)). intros n len.
         unfold metric_close, ulmap_dist.
         apply (le_lt_trans _ (' (' (e / 2)))).
         2: apply (strictly_order_preserving (cast Q F)), qpos_half_lt.
-        apply uniform_dist_le; intro x; unfold interval_dist.
+        apply uniform_dist_le. intro x; unfold interval_dist.
         change (abs ((fs n x).1 - (limit_value x).1) ≤ ' (' (e / 2))).
-        rewrite abs_minus_swap; exact (limit_value_close x _ n len).
+        rewrite abs_minus_swap. exact (limit_value_close x _ n len).
       Qed.
 
     End completeness.
