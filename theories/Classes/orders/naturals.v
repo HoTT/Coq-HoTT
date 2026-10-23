@@ -108,7 +108,8 @@ Section nat_to_semiring.
   Proof.
     induction n as [|n IH].
     - reflexivity.
-    - rewrite nat_to_semiring_succ; apply nonneg_plus_compat; [exact le_0_1|exact IH].
+    - rewrite nat_to_semiring_succ.
+      apply nonneg_plus_compat; [exact le_0_1|exact IH].
   Qed.
 
   Lemma nat_to_semiring_le (m n : nat) : (m <= n)%nat -> nR m ≤ nR n.

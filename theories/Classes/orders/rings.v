@@ -231,13 +231,15 @@ Section strict_ring_order.
 
   Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
   Proof.
-    intros E; apply (snd (flip_lt_minus_l z y x)); rewrite plus_comm.
+    intros E; apply (snd (flip_lt_minus_l z y x)).
+    rewrite plus_comm.
     exact (fst (flip_lt_minus_l x y z) E).
   Qed.
 
   Lemma flip_lt_minus_swap_r (x y z : R) : z < y - x -> x < y - z.
   Proof.
-    intros E; apply (snd (flip_lt_minus_r z y x)); rewrite plus_comm.
+    intros E; apply (snd (flip_lt_minus_r z y x)).
+    rewrite plus_comm.
     exact (fst (flip_lt_minus_r x y z) E).
   Qed.
 
@@ -290,15 +292,15 @@ Section strict_ring_order.
   Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
   Proof.
     split; intros [lo hi]; split.
-    - apply (snd (flip_lt_minus_r u v (- e))); rewrite plus_comm; exact lo.
-    - apply (snd (flip_lt_minus_l u v e)); rewrite plus_comm; exact hi.
-    - rewrite plus_comm; exact (fst (flip_lt_minus_r u v (- e)) lo).
-    - rewrite plus_comm; exact (fst (flip_lt_minus_l u v e) hi).
+    - apply (snd (flip_lt_minus_r u v (- e))). rewrite plus_comm. exact lo.
+    - apply (snd (flip_lt_minus_l u v e)). rewrite plus_comm. exact hi.
+    - rewrite plus_comm. exact (fst (flip_lt_minus_r u v (- e)) lo).
+    - rewrite plus_comm. exact (fst (flip_lt_minus_l u v e) hi).
   Qed.
 
   Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
   Proof.
-    intros [lo hi]; rewrite (negate_swap_r u v); split.
+    intros [lo hi]. rewrite (negate_swap_r u v). split.
     - exact (snd (flip_lt_negate (v - u) e) hi).
     - exact (flip_lt_negate_l e (v - u) lo).
   Qed.
@@ -306,7 +308,7 @@ Section strict_ring_order.
   Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
   Proof.
     intros [ltxz ltzx] ltxy; split.
-    - lhs' exact (snd (flip_lt_negate x y) ltxy); exact ltxz.
+    - lhs' exact (snd (flip_lt_negate x y) ltxy). exact ltxz.
     - exact (transitivity ltzx ltxy).
   Qed.
 
