@@ -8,7 +8,7 @@ Local Open Scope nat_scope.
 
 (** ** Enumerating pairs *)
 
-(** We enumerate pairs of natural numbers diagonal by diagonal. *)
+(** We enumerate pairs of natural numbers diagonal by diagonal.  Here the [m]th diagonal consists of the pairs [(a, b)] with [a + b = m]. *)
 Fixpoint nat_unpair (n : nat) : nat * nat
   := match n with
      | 0 => (0, 0)
@@ -18,26 +18,28 @@ Fixpoint nat_unpair (n : nat) : nat * nat
              end
      end.
 
-Local Definition nat_unpair_hit_diagonal (a b n : nat) (p : nat_unpair n = (a + b, 0))
+(** If we hit the end of a diagonal, we hit everything else on the diagonal. *)
+Local Definition nat_unpair_hit_diagonal (a b : nat) (p : {n : nat & nat_unpair n = (a + b, 0)})
   : {m : nat & nat_unpair m = (a, b)}.
 Proof.
   revert a p; induction b as [|b IH]; intros a p.
-  - rewrite nat_add_zero_r in p.  exact (n; p).
+  - rewrite nat_add_zero_r in p.  exact p.
   - rewrite nat_add_succ_r in p.
     destruct (IH (S a) p) as [m q].
     exists (S m). cbn; rewrite q. reflexivity.
 Defined.
 
+(** We hit everything on the x-axis. *)
 Local Definition nat_unpair_hit_axis (d : nat) : {n : nat & nat_unpair n = (d, 0)}.
 Proof.
   induction d as [|d IH].
   - exact (0; idpath).
-  - destruct (nat_unpair_hit_diagonal 0 d _ IH.2) as [n p].
+  - destruct (nat_unpair_hit_diagonal 0 d IH) as [n p].
     exists (S n). cbn; rewrite p. reflexivity.
 Defined.
 
 Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
-  := nat_unpair_hit_diagonal a b (nat_unpair_hit_axis (a + b)).1 (nat_unpair_hit_axis (a + b)).2.
+  := nat_unpair_hit_diagonal a b (nat_unpair_hit_axis (a + b)).
 
 Definition nat_prod_enumerator {X Y : Type} (s : nat -> X) (t : nat -> Y) (n : nat) : X * Y
   := (s (fst (nat_unpair n)), t (snd (nat_unpair n))).
