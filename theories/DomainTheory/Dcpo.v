@@ -130,9 +130,9 @@ Section Directed.
     split.
     - exact (fst d).
     - intros i j.
-      specialize (snd d i j); apply Trunc_functor.
+      specialize (snd d i j). apply Trunc_functor.
       intros [k [p q]].
-      exists k; split; apply (order_preserving f); assumption.
+      exists k. split; apply (order_preserving f); assumption.
   Defined.
 
   Context `{!PreOrder Ale}.
