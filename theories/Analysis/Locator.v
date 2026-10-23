@@ -212,8 +212,8 @@ Section locator.
   Proof.
     intros q r ltqr.
     destruct (l (- r) (- q) (snd (flip_lt_negate q r) ltqr)) as [ltrx|ltxq].
-    - right; apply char_minus_left; rewrite <- preserves_negate; exact ltrx.
-    - left; apply char_minus_right; rewrite <- preserves_negate; exact ltxq.
+    - right. apply char_minus_left. rewrite <- preserves_negate. exact ltrx.
+    - left. apply char_minus_right. rewrite <- preserves_negate. exact ltxq.
   Qed.
 
   (** ** Rational bounds *)
@@ -578,7 +578,7 @@ Section locator.
       assert (negxpos : 0 < - x) by exact (fst (flip_neg_negate x) xneg).
       assert (l' := locator_minus (locator_recip_pos (locator_minus l) negxpos)).
       refine (transport locator _ l').
-      rewrite recip_negate; apply recip_proper_alt, negate_involutive.
+      rewrite recip_negate. apply recip_proper_alt, negate_involutive.
     Qed.
   End recip_neg.
 
