@@ -1420,6 +1420,12 @@ Section ConnectedTypes.
     exact ((nB a).2 b @ nA.2 a).
   Defined.
 
+  (** Connected types are closed under products. *)
+  #[export] Instance isconnected_prod {A B : Type}
+             `{IsConnected O A} `{IsConnected O B}
+    : IsConnected O (A * B)
+    := contr_equiv' _ (equiv_O_prod_cmp O A B)^-1%equiv.
+
   (** Contractible types are connected. *)
   #[export] Instance isconnected_contr {A : Type} `{Contr A}
     : IsConnected O A.
@@ -1938,6 +1944,15 @@ Section ConnectedMaps.
   Proof.
     unfold O_functor.
     rapply conn_map_compose.
+  Defined.
+
+  (** Connected maps are preserved by products.  Note that if this changed to a one-liner, the universe variables become less general. *)
+  #[export] Instance conn_map_functor_prod {A B A' B'} (f : A -> A') (g : B -> B')
+             `{IsConnMap O _ _ f} `{IsConnMap O _ _ g}
+    : IsConnMap O (functor_prod f g).
+  Proof.
+    intro y.
+    exact (isconnected_equiv' _ _ (hfiber_functor_prod _ _ _)^-1%equiv _).
   Defined.
 
   (** Connected maps are preserved by coproducts *)
