@@ -122,9 +122,9 @@ Section AbSESPfiber.
 
 End AbSESPfiber.
 
-(** ** The first round trip *)
+(** ** [abses_pfiber] composed with [abses_classifying_map] is the identity *)
 
-(** The short exact sequence extracted from the classifying map of [E] is [E] itself. *)
+(** In other words, the short exact sequence extracted from the classifying map of [E] is [E] itself. *)
 
 Section ClassifyingRoundTrip.
   Context `{Univalence} (n : nat) {B A : AbGroup@{u}} (E : AbSES B A).
@@ -204,8 +204,8 @@ Section ClassifyingRoundTrip.
     symmetry; napply eisretr.
   Qed.
 
-  (** The first round trip: the short exact sequence extracted from the classifying map of [E] is [E]. *)
-  Definition abses_pfiber_classifying
+  (** The short exact sequence extracted from the classifying map of [E] is [E]. *)
+  Definition abses_pfiber_abses_classifying_map
     : abses_pfiber (abses_classifying_map n E) = E
     := path_abses (E := abses_pfiber (abses_classifying_map n E)) (F := E)
          grp_iso_pi_pfiber_classifying_map
@@ -216,7 +216,7 @@ End ClassifyingRoundTrip.
 
 (** ** The classifying map of the sequence of a delooped map *)
 
-(** Rather than proving that the other composite is the identity, we will define an a priori different section of [abses_classifying_map].  To do this, we first show that for [psi : K(B,n.+3) ->* K(A,n.+4)], the classifying map of [abses_pfiber psi] is [fmap loops psi], twisted by negation on [K(B,n.+2)].  Since every map [K(B,n.+2) ->* K(A,n.+3)] can be delooped to such a [psi], this will give a section of [abses_classifying_map] in [abses_classifying_section] below. *)
+(** Rather than proving that the other composite is the identity, we will define an a priori different section of [abses_classifying_map].  To do this, we first show that for [psi : K(B,n.+3) ->* K(A,n.+4)], the classifying map [K(B,n.+2) ->* K(A,n.+3)] of [abses_pfiber psi] is [fmap loops psi] (with corrected endpoints) precomposed with negation on [K(B,n.+2)].  Since every map [K(B,n.+2) ->* K(A,n.+3)] can be delooped to such a [psi], this will give a section of [abses_classifying_map] in [abses_classifying_section] below. *)
 
 Section PfiberDeloop.
   Context `{Univalence} {n : nat} {B A : AbGroup@{u}}
@@ -226,7 +226,7 @@ Section PfiberDeloop.
   Local Instance isconnected_pfiber_em : IsConnected n.+2 (pfiber psi)
     := OO_isconnected_hfiber (Tr (n.+3)%nat) (Tr (n.+2)%nat) psi pt.
 
-  (** The fiber is the Eilenberg-Mac Lane space of its homotopy group in degree [n.+3], by [pequiv_em_connected_truncated], and on [Pi n.+3] that identification inverts [equiv_g_pi_n_em]. *)
+  (** The fiber of [psi] is the Eilenberg-Mac Lane space of its homotopy group in degree [n.+3], by [pequiv_em_connected_truncated].  On [Pi n.+3], that identification is the inverse of [equiv_g_pi_n_em]. *)
   Local Definition fmap_pi_pequiv_em_pfiber
     (x : Pi n.+3 K(abgroup_pi n.+1 (pfiber psi), n.+3))
     : fmap (Pi n.+3) (pequiv_em_connected_truncated (pfiber psi) n.+2) x
@@ -246,33 +246,33 @@ Section PfiberDeloop.
     tapply (ap _ (fmap_pi_pequiv_em_pfiber x)^).
   Qed.
 
-  (** Through that identification, [fmap (K' n.+3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,n.+3)].  We state this using the description of the connecting map from [connecting_map_pfib]. *)
+  (** Through that identification, [fmap (K' n.+3)] of the inclusion is the connecting map of [psi], modulo the loop identification of [K(A,n.+3)]. *)
   Local Definition phomotopy_em_incl_pfib
     : pequiv_em_connected_truncated (pfiber psi) n.+2
         o* fmap (K' n.+3) (abses_pfiber_incl psi)
-      ==* pfib (pfib psi)
-          o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3).
+      ==* connecting_map (pfib psi) psi
+        o* pequiv_loops_em_em A n.+3.
   Proof.
-    rhs_V' napply pmap_compose_assoc.
-    rhs_V' napply (pmap_prewhisker _ (connecting_map_pfib psi)).
     rapply (phomotopy_pmap_pi_connected n.+2).
     intro x.
     lhs tapply (fmap_comp (Pi n.+3)).
     lhs tapply (ap _ (pi_em_fmap' (abses_pfiber_incl psi) n.+2 x)).
     lhs napply fmap_pi_pequiv_em_pfiber.
-    lhs napply (eissect (equiv_g_pi_n_em (abgroup_pi n.+1 (pfiber psi)) n.+2)).
+    lhs napply eissect.
     rhs tapply (fmap_comp (Pi n.+3)).
-    refine (ap (fmap (Pi n.+3) (connecting_map (pfib psi) psi)) _).
-    tapply (ap _ (eisretr (equiv_g_pi_n_em A n.+2) x)).
-  Qed.
+    unfold abses_pfiber_incl.
+    (* This is faster than using [_] for [F]. *)
+    match goal with |- _ = ?F x =>
+                      exact (ap F (eisretr (equiv_g_pi_n_em A n.+2) x)) end.
+  Qed. (* A bit slow. *)
 
-  (** The projection square as a square of pointed maps. *)
+  (** The projection triangle enlarged to a square. *)
   Local Definition square_em_proj_pfib
     : pequiv_pmap_idmap o* fmap (K' n.+3) (projection (abses_pfiber psi))
       ==* pfib psi o* pequiv_em_connected_truncated (pfiber psi) n.+2
     := pmap_postcompose_idmap _ @* phomotopy_em_proj_pfib.
 
-  (** The two squares above form a map from the fiber sequence of Eilenberg-Mac Lane spaces of the extracted sequence to the fiber sequence of [pfib psi]. *)
+  (** The two squares above form a map from the fiber sequence of Eilenberg-Mac Lane spaces of the extracted sequence to the fiber sequence of [pfib psi] in the sense required by [connecting_map_natural_isexact]. *)
   Local Definition phomotopy_cxfib_em_pfib
     : functor_pfiber square_em_proj_pfib
       o* pequiv_cxfib (i := fmap (K' n.+3) (inclusion (abses_pfiber psi)))
@@ -280,19 +280,20 @@ Section PfiberDeloop.
       ==* pequiv_cxfib (i := pfib (pfib psi)) (f := pfib psi)
           o* ((pfiber2_loops psi)^-1* o* pequiv_loops_em_em A n.+3).
   Proof.
-    (* Writing this as a single term is slower for some reason. *)
-    napply (phomotopy_functor_pfiber_cxfib n.+2).
-    4: exact phomotopy_em_incl_pfib.
-    all: exact _.
+    rapply (phomotopy_functor_pfiber_cxfib n.+2).
+    rhs_V' napply pmap_compose_assoc.
+    rhs_V' napply (pmap_prewhisker _ (connecting_map_pfib psi)).
+    exact phomotopy_em_incl_pfib.
   Defined.
 
   (** Through the loop identification of [K(A,n.+3)], the connecting map of the extracted fiber sequence is [loops psi], twisted by loop inversion. *)
   Local Definition connecting_map_em_loops
-    : pequiv_loops_em_em A n.+3
-      o* connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))
-           (fmap (K' n.+3) (projection (abses_pfiber psi)))
-      ==* fmap loops psi o* loops_inv K(B, n.+3).
+    : connecting_map (fmap (K' n.+3) (inclusion (abses_pfiber psi)))
+        (fmap (K' n.+3) (projection (abses_pfiber psi)))
+      ==* (pequiv_loops_em_em A n.+3)^-1*
+        o* (fmap loops psi o* loops_inv K(B, n.+3)).
   Proof.
+    napply moveL_pequiv_Vf.
     (* By [connecting_map_pfib2], it suffices to compare with the connecting map of the fiber sequence of [pfib psi], which we do by naturality. *)
     rhs_V' napply (connecting_map_pfib2 psi).
     napply moveL_pequiv_Mf.
@@ -313,15 +314,15 @@ Section PfiberDeloop.
       ==* loops_inv K(B, n.+3) o* pequiv_loops_em_em B n.+2
     := moveR_pequiv_Mf _ _ _ (reflexivity _).
 
-  (** The classifying map of the extracted sequence is [equiv_loops_em_pmap] applied to [psi], twisted by [pequiv_neg_em]. *)
+  (** The classifying map of the extracted sequence is [equiv_loops_em_pmap] applied to [psi], twisted by [pequiv_neg_em].  Recall that [equiv_loops_em_pmap] is [fmap loops] conjugated by the loop identifications. *)
   Local Definition abses_classifying_pfiber_loop
     : abses_classifying_map n (abses_pfiber psi)
       ==* equiv_loops_em_pmap B A n.+2 n.+3 psi o* pequiv_neg_em.
   Proof.
+    unfold abses_classifying_map, equiv_loops_em_pmap.
     rhs' napply (pmap_compose_assoc _ _ _
                  @* pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
-    lhs' napply (pmap_prewhisker _
-      (moveL_pequiv_Vf _ _ _ connecting_map_em_loops)).
+    lhs' napply (pmap_prewhisker _ connecting_map_em_loops).
     lhs' napply pmap_compose_assoc.
     lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
     napply pmap_postwhisker.
@@ -335,7 +336,7 @@ End PfiberDeloop.
 
 (** [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
 
-Section Classification.
+Section ClassificationTheorem.
   (** We declare [u] so that it refers to the same universe in the [Context] and in [equiv_ext_classifying]. *)
   Universe u.
   Context `{Univalence} (n : nat) {B A : AbGroup@{u}}.
@@ -356,13 +357,13 @@ Section Classification.
     apply pmap_precompose_idmap.
   Qed.
 
-  (** The map [abses_classifying_map] has a retraction [abses_pfiber] by [abses_pfiber_classifying] and a section by [abses_classifying_section].  Therefore it is an equivalence.  This proof uses [abses_pfiber] as the inverse. *)
+  (** The map [abses_classifying_map] has a retraction [abses_pfiber] by [abses_pfiber_abses_classifying_map] and a section by [abses_classifying_section].  Therefore it is an equivalence.  This proof uses [abses_pfiber] as the inverse. *)
   #[export] Instance isequiv_abses_classifying_map
     : IsEquiv (abses_classifying_map (A:=A) (B:=B) n).
   Proof.
     snapply isequiv_isbiinv.
     exact (Build_IsBiInv _ _ _ _ _ abses_classifying_section
-             (abses_pfiber_classifying n)).
+             (abses_pfiber_abses_classifying_map n)).
   Defined.
 
   (** Short exact sequences [A -> E -> B] are classified by pointed maps [K(B,n.+2) ->* K(A,n.+3)]. *)
@@ -375,7 +376,7 @@ Section Classification.
     : Ext B A <~> Tr@{u} 0 (K(B, n.+2) ->* K(A, n.+3))
     := Trunc_functor_equiv 0 equiv_abses_classifying_map.
 
-End Classification.
+End ClassificationTheorem.
 
 (** ** Smallness *)
 
