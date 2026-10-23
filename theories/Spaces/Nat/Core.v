@@ -1080,6 +1080,14 @@ Proof.
   exact (ap (fun x => x.+2%trunc) IHn).
 Defined.
 
+(** The inclusion of [nat] into [trunc_index] preserves [<=]. *)
+Definition trunc_index_leq_nat {n m : nat} (p : n <= m) : (n <= m)%trunc.
+Proof.
+  induction p as [|k p IHp].
+  - reflexivity.
+  - exact (trunc_index_leq_succ' _ _ IHp).
+Defined.
+
 (** *** Subtraction *)
 
 Instance leq_sub_add_l n m : n <= n - m + m.

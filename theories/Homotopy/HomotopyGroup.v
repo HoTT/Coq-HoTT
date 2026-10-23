@@ -3,7 +3,8 @@ Require Import Modalities.Modality Modalities.Identity.
 Require Import Truncations.Core Truncations.SeparatedTrunc
   Truncations.Connectedness.
 Require Import Algebra.AbGroups.AbelianGroup.
-Require Import Spaces.Finite.Tactics.
+Require Import Algebra.Groups.ShortExactSequence.
+Require Import Spaces.Finite.Tactics Spaces.Nat.Core.
 Require Import Homotopy.SuccessorStructure Homotopy.ExactSequence.
 From HoTT.WildCat Require Import Core Universe Equiv.
 
@@ -121,6 +122,10 @@ Proof.
   cbn; apply (ap tr).
   apply eckmann_hilton.
 Defined.
+
+(** In this range the homotopy groups are abelian, so they define abelian groups. *)
+Definition abgroup_pi (n : nat) (X : pType) : AbGroup
+  := Build_AbGroup (Pi n.+2 X) _.
 
 (** For the same reason as above, we make [Pi1] a functor before making [Pi] a functor. *)
 Instance is0functor_pi1 : Is0Functor Pi1.
@@ -289,11 +294,10 @@ Definition isequiv_pi_connmap' `{Univalence} (n : nat) {X Y : pType} (f : X ->* 
   `{!IsConnMap n f}
   : IsEquiv (fmap (pTr 0) (fmap (iterated_loops n) f)).
 Proof.
-  rapply O_inverts_conn_map.
-  rapply conn_map_iterated_fmap_loops.
-  rewrite 2 trunc_index_inc'_succ.
-  rewrite <- trunc_index_inc_agree.
-  assumption.
+  napply O_inverts_conn_map.
+  napply isconnmap_iterated_fmap_loops.
+  by apply (transport@{Set _} (fun k => IsConnMap (Tr k) f)
+              (inverse@{Set} (trunc_index_inc'_0n n))).
 Defined.
 
 (** The same holds for [pPi n]. *)
@@ -335,8 +339,9 @@ Definition issurj_iterated_loops_connmap `{Univalence} (n : nat) {X Y : pType} (
   {C : IsConnMap n f}
   : IsSurjection (fmap (iterated_loops (n.+1)) f).
 Proof.
-  apply conn_map_iterated_fmap_loops. cbn.
-  rewrite trunc_index_inc'_0n; assumption.
+  apply isconnmap_iterated_fmap_loops; cbn.
+  exact (transport@{Set _} (fun k => IsConnMap (Tr k) f)
+           (inverse@{Set} (trunc_index_inc'_0n n)) C).
 Defined.
 
 Definition issurj_pi_connmap `{Univalence} (n : nat) {X Y : pType} (f : X ->* Y)
@@ -347,13 +352,34 @@ Proof.
   by apply issurj_iterated_loops_connmap.
 Defined.
 
-(** The [n.+2]-nd homotopy group of an [n.+1]-truncated type vanishes. *)
-Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
-  `{IsTrunc n.+1 X}
-  : Contr (Pi n.+2 X).
+(** The homotopy groups of a contractible type vanish. *)
+Instance contr_pi_contr (n : nat) (X : pType) `{Contr X}
+  : Contr (Pi n X).
 Proof.
-  rapply contr_O_contr.
-  rapply (equiv_istrunc_contr_iterated_loops n.+2).
+  generalize dependent X; induction n; intros.
+  - exact _.
+  - exact (contr_equiv' _ (pi_loops n X)^-1%equiv).
+Defined.
+
+(** Homotopy groups at or below the connectivity vanish. *)
+Definition contr_pi_isconnected `{Univalence} (n : nat) {m : nat} {mlen : m <= n}
+  (X : pType) `{IsConnected n X}
+  : Contr (Pi m X).
+Proof.
+  induction mlen as [|n mlen IHn].
+  - exact (contr_equiv _ (pequiv_pi_Tr m X)^-1).
+  - rapply IHn.
+Defined.
+
+(** Homotopy groups above the truncation level vanish. *)
+Definition contr_pi_istrunc `{Univalence} (n : nat) {m : nat} {nltm : n < m} (X : pType)
+  `{istr : IsTrunc n X}
+  : Contr (Pi m X).
+Proof.
+  induction nltm as [|m nltm IHm] in X, istr |- *.
+  - rapply contr_O_contr.
+    rapply (equiv_istrunc_contr_iterated_loops n.+1).
+  - exact (contr_equiv _ (pi_loops m X)^-1).
 Defined.
 
 (** An [n.+1]-truncated pointed [0]-connected type whose [n.+1]-st homotopy group vanishes is [n]-truncated. *)
@@ -365,6 +391,18 @@ Proof.
   rapply (conn_point_elim (-1)).
   pose proof (istrunc_iterated_loops n.+1 X).
   exact (contr_equiv' (Pi n.+1 X) (equiv_tr 0 _)^-1%equiv).
+Defined.
+
+(** An [n]-connected type whose [n.+1]-st homotopy group vanishes is [n.+1]-connected. *)
+Definition isconnected_succ_contr_pi `{Univalence} (n : nat) (X : pType)
+  `{IsConnected n X} (c : Contr (Pi n.+1 X))
+  : IsConnected n.+1 X.
+Proof.
+  (* The [n.+1]-truncation of [X] is [n]-truncated by [istrunc_contr_pi], and it is [n]-connected, hence contractible. *)
+  napply (contr_trunc_conn n); only 2: exact _.
+  napply (istrunc_contr_pi n (pTr n.+1 X)); only 2: exact _.
+  - rapply is0connected_isconnected.
+  - rapply (contr_equiv' _ (grp_iso_pi_Tr n X)).
 Defined.
 
 (** Pointed sections induce embeddings on homotopy groups. *)
@@ -386,9 +424,13 @@ Defined.
 
 Section PiLES.
   Local Open Scope succ_scope.
+  (** The next line gets rid of stray universe variables coming from things like [inr tt] and puts the successor structure [N3] in [Set], its natural level, since [NatSucc] is in [Set]. *)
+  Local Set Universe Minimization ToSet.
 
-  Context `{Univalence} {F X Y : pType} (i : F ->* X) (f : X ->* Y)
-    `{IsExact purely F X Y i f}.
+  (** Because of the use of wild category machinery, [F], [X] and [Y] end up constrained to lie in the same universe, so we declare this to be the case to reduce universe variables. *)
+  Universe u.
+  Context `{Univalence} {F X Y : pType@{u}}.
+  Context (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}.
 
   (** The types appearing in the sequence. *)
   Definition pi_carrier (n : N3) : pType :=
@@ -457,6 +499,17 @@ Section PiLES.
   Definition isexact_pi_base (n : nat)
     : IsExact (Tr (-1)) (fmap (pPi n.+1) f) (pi_connecting_map n)
     := les_isexact _ _ Pi_les (n, inr tt).
+
+  (** When [Pi n.+2 Y] is trivial, exactness at [Pi n.+1 F] says that [fmap (Pi n.+1) i] is an embedding. *)
+  Definition isembedding_fmap_pi_isexact (n : nat) {c : Contr (Pi n.+2 Y)}
+    : IsEmbedding (fmap (pPi n.+1) i)
+    := isembedding_isexact (A := pPi n.+2 Y) (isexact_pi_fiber n.+1).
+
+  (** When [Pi n Y] is trivial, exactness at [Pi n X] says that [fmap (Pi n) i] is a surjection. *)
+  Definition issurj_fmap_pi_isexact (n : nat) {c : Contr (Pi n Y)}
+    : IsSurjection (fmap (pPi n) i)
+    := isconnmap_O_isexact_base_contr (Tr (-1)) _ (fmap (pPi n) f)
+         (H := isexact_pi_total n).
 
 End PiLES.
 
