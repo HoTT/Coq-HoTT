@@ -153,6 +153,10 @@ Require Export HoTT.Algebra.Universal.Homomorphism.
 Require Export HoTT.Algebra.Universal.Operation.
 Require Export HoTT.Algebra.Universal.TermAlgebra.
 
+Require Export HoTT.DomainTheory.Dcpo.
+Require Export HoTT.DomainTheory.Constructions.
+Require Export HoTT.DomainTheory.FixedPoints.
+
 Require Export HoTT.Analysis.Locator.
 
 Require Export HoTT.Homotopy.HomotopyGroup.

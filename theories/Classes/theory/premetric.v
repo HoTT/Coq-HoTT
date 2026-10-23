@@ -1029,15 +1029,15 @@ End lipschitz_lim.
 
 End contents.
 
-Arguments rounded_le {_ _ A _ _} e u v _ d _.
+Arguments rounded_le {A _ _} e u v _ d _.
 Arguments non_expanding {A _ B _} f {_ e x y} _.
 Arguments lipschitz {A _ B _} f L {_ e x y} _.
 Arguments uniform {A _ B _} f mu {_} _ _ _ _.
 Arguments continuous {A _ B _} f {_} _ _.
 
 Arguments map2_nonexpanding {A _ B _ C _ D _} f g {_ _} e x y xi.
-Arguments map2_lipschitz {_ _ A _ B _ C _ D _} f g {_ _} Lf Lg {_ _} e x y xi.
-Arguments map2_continuous {_ _ A _ B _ C _ D _} f g {_ _ _ _} u e.
+Arguments map2_lipschitz {A _ B _ C _ D _} f g {_ _} Lf Lg {_ _} e x y xi.
+Arguments map2_continuous {A _ B _ C _ D _} f g {_ _ _ _} u e.
 
 Arguments Interval_close {_ _ _} _ _ _ _ _ /.
 

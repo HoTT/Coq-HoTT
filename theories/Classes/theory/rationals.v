@@ -19,15 +19,29 @@ Import Quoting.Instances.
 Import NatPair.Instances.
 Local Set Universe Minimization ToSet.
 
+(** The positive rationals depend only on [Q], its zero and its order. *)
+Section qpos.
+Universe UQ.
+Context {Q : Type@{UQ} } {Qzero : Zero Q} {Qlt : Lt@{UQ UQ} Q}.
+
+Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
+
+#[export] Instance Qpos_Q@{} : Cast Qpos Q := pos.
+Arguments Qpos_Q /.
+End qpos.
+
+Arguments Qpos Q {_ _}.
+
 Section contents.
 Context `{Funext} `{Univalence}.
-Universe UQ.
+(** The fields that [Q] maps into live in a universe [UF], which may be larger than [UQ], and their apartness relations take values in a universe [UA]. *)
+Universe UQ UF UA.
 Context {Q : Type@{UQ} } {Qap : Apart@{UQ UQ} Q}
   {Qplus : Plus Q} {Qmult : Mult Q}
   {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
   {Qle : Le@{UQ UQ} Q} {Qlt : Lt@{UQ UQ} Q}
-  {QtoField : RationalsToField@{UQ UQ UQ UQ} Q}
-  {Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UQ UQ UQ UQ} Q}
+  {QtoField : RationalsToField@{UQ UF UA UF} Q}
+  {Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UF UQ UF UA} Q}
   {Qtrivialapart : TrivialApart Q} {Qdec : DecidablePaths Q}
   {Qmeet : Meet Q} {Qjoin : Join Q} {Qlattice : LatticeOrder Qle}
   {Qle_total : TotalRelation (@le Q _)}
@@ -38,19 +52,15 @@ Proof.
 red. apply trivial_apart. solve_propholds.
 Qed.
 
-Record Qpos@{} : Type@{UQ} := mkQpos { pos : Q; is_pos : 0 < pos }.
-Notation "Q+" := Qpos.
+Notation "Q+" := (Qpos Q).
 
-#[export] Instance Qpos_Q@{} : Cast Qpos Q := pos.
-Arguments Qpos_Q /.
-
-Lemma Qpos_plus_pr@{} : forall a b : Qpos, 0 < 'a + 'b.
+Lemma Qpos_plus_pr@{} : forall a b : Q+, 0 < 'a + 'b.
 Proof.
 intros.
 apply semirings.pos_plus_compat;apply is_pos.
 Qed.
 
-#[export] Instance Qpos_plus@{} : Plus Qpos := fun a b => mkQpos _ (Qpos_plus_pr a b).
+#[export] Instance Qpos_plus@{} : Plus Q+ := fun a b => mkQpos _ (Qpos_plus_pr a b).
 
 #[export] Instance pos_is_pos@{} : forall q : Q+, PropHolds (0 < ' q)
   := is_pos.
@@ -141,6 +151,12 @@ path_via (e * (2 / 2)).
   ring_tac.ring_with_nat.
 Qed.
 
+Lemma qpos_half_lt@{} (e : Q+) : ' (e / 2) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split2 e)).
+apply pos_plus_lt_compat_r, pos_is_pos.
+Qed.
+
 Lemma pos_split3@{} : forall e : Q+, e = e / 3 + e / 3 + e / 3.
 Proof.
 intros.
@@ -148,6 +164,12 @@ path_via (e * (3 / 3)).
 - rewrite pos_recip_r,pos_mult_1_r;reflexivity.
 - apply pos_eq. change (' e * (3 / 3) = ' e / 3 + ' e / 3 + ' e / 3).
   ring_tac.ring_with_nat.
+Qed.
+
+Lemma qpos_two_thirds_lt@{} (e : Q+) : ' (e / 3) + ' (e / 3) < ' e.
+Proof.
+rewrite (ap (cast Q+ Q) (pos_split3 e)).
+apply pos_plus_lt_compat_r, pos_is_pos.
 Qed.
 
 #[export] Instance Qpos_mult_assoc@{} : Associative (@mult Q+ _).
@@ -274,8 +296,7 @@ Defined.
 
 Lemma Qpos_diff_pr@{} : forall q r E, r = q + ' (Qpos_diff q r E).
 Proof.
-intros q r E. change (r = q + (r - q)).
-abstract ring_tac.ring_with_integers (NatPair.Z nat).
+intros q r E. exact (plus_conjugate_alt r q).
 Qed.
 
 
@@ -374,32 +395,6 @@ destruct (total le a b) as [E3|E3];rewrite ?(join_r _ _ E3),?(join_l _ _ E3);
 trivial.
 Qed.
 
-Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
-Proof.
-intros q r E.
-split.
-- apply flip_pos_minus.
-  assert (Hrw : (q + r) / 2 - q = (r - q) / 2);[|rewrite Hrw;clear Hrw].
-  { path_via ((q + r) / 2 - 2 / 2 * q).
-    { rewrite dec_recip_inverse;[|solve_propholds].
-      rewrite mult_1_l;trivial.
-    }
-    ring_tac.ring_with_integers (NatPair.Z nat).
-  }
-  apply pos_mult_compat;[|exact _].
-  red. apply (snd (flip_pos_minus _ _)). trivial.
-- apply flip_pos_minus.
-  assert (Hrw : r - (q + r) / 2 = (r - q) / 2);[|rewrite Hrw;clear Hrw].
-  { path_via (2 / 2 * r - (q + r) / 2).
-    { rewrite dec_recip_inverse;[|solve_propholds].
-      rewrite mult_1_l;trivial.
-    }
-    ring_tac.ring_with_integers (NatPair.Z nat).
-  }
-  apply pos_mult_compat;[|exact _].
-  red. apply (snd (flip_pos_minus _ _)). trivial.
-Qed.
-
 Lemma path_avg_split_diff_l (q r : Q) : q + ((r - q) / 2) = (r + q) / 2.
 Proof.
   pattern q at 1.
@@ -437,6 +432,20 @@ Proof.
   rewrite (plus_0_l r).
   rewrite (plus_comm q r).
   reflexivity.
+Qed.
+
+Lemma Q_average_between@{} : forall q r : Q, q < r -> q < (q + r) / 2 < r.
+Proof.
+intros q r E.
+assert (pos : 0 < (r - q) / 2).
+{ apply pos_mult_compat;[|exact _].
+  red. apply (snd (flip_pos_minus q r)). trivial. }
+rewrite (plus_comm q r).
+split.
+- rewrite <- path_avg_split_diff_l.
+  apply pos_plus_lt_compat_r, pos.
+- rewrite <- path_avg_split_diff_r.
+  apply pos_minus_lt_compat_r, pos.
 Qed.
 
 Lemma pos_gt_both : forall a b : Q, forall e, a < ' e -> b < ' e ->
@@ -580,7 +589,7 @@ intros q r;destruct (le_or_lt r q).
 Qed.
 
 Section enumerable.
-Context `{Enumerable Q}.
+Context {Qenum : Enumerable Q}.
 
 Definition Qpos_enumerator : nat -> Q+.
 Proof.
@@ -590,7 +599,7 @@ destruct (le_or_lt (enumerator Q n) 0) as [E|E].
 - exists (enumerator Q n);trivial.
 Defined.
 
-Lemma Qpos_is_enumerator :
+#[export] Instance Qpos_is_enumerator :
   IsSurjection@{UQ} Qpos_enumerator.
 Proof.
 apply BuildIsSurjection.
@@ -613,5 +622,3 @@ Qed.
 End enumerable.
 
 End contents.
-
-Arguments Qpos Q {_ _}.

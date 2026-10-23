@@ -167,6 +167,12 @@ Section ring_order.
   transitivity 0; trivial.
   apply flip_nonneg_negate. trivial.
   Qed.
+
+  Lemma interval_minus_le (a b s t : R) : a ≤ s ≤ b -> a ≤ t ≤ b -> s - t ≤ b - a.
+  Proof.
+    intros [_ lesb] [leat _].
+    apply plus_le_compat; [exact lesb|exact (snd (flip_le_negate a t) leat)].
+  Qed.
 End ring_order.
 
 Section strict_ring_order.
@@ -223,6 +229,20 @@ Section strict_ring_order.
   split; apply flip_lt_minus_r.
   Qed.
 
+  Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_l z y x)).
+    rewrite plus_comm.
+    exact (fst (flip_lt_minus_l x y z) E).
+  Qed.
+
+  Lemma flip_lt_minus_swap_r (x y z : R) : z < y - x -> x < y - z.
+  Proof.
+    intros E; apply (snd (flip_lt_minus_r z y x)).
+    rewrite plus_comm.
+    exact (fst (flip_lt_minus_r x y z) E).
+  Qed.
+
   Lemma flip_pos_minus (x y : R) : 0 < y - x <-> x < y.
   Proof.
   pattern x at 2;apply (transport _ (plus_0_l x)).
@@ -269,6 +289,29 @@ Section strict_ring_order.
   apply flip_pos_negate. trivial.
   Qed.
 
+  Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
+  Proof.
+    split; intros [lo hi]; split.
+    - apply (snd (flip_lt_minus_r u v (- e))). rewrite plus_comm. exact lo.
+    - apply (snd (flip_lt_minus_l u v e)). rewrite plus_comm. exact hi.
+    - rewrite plus_comm. exact (fst (flip_lt_minus_r u v (- e)) lo).
+    - rewrite plus_comm. exact (fst (flip_lt_minus_l u v e) hi).
+  Qed.
+
+  Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
+  Proof.
+    intros [lo hi]. rewrite (negate_swap_r u v). split.
+    - exact (snd (flip_lt_negate (v - u) e) hi).
+    - exact (flip_lt_negate_l e (v - u) lo).
+  Qed.
+
+  Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
+  Proof.
+    intros [ltxz ltzx] ltxy; split.
+    - lhs' exact (snd (flip_lt_negate x y) ltxy). exact ltxz.
+    - exact (transitivity ltzx ltxy).
+  Qed.
+
 End strict_ring_order.
 
 Section strict_ring_apart.
@@ -280,6 +323,260 @@ Section strict_ring_apart.
     := pseudo_order_lt_apart z 0 Nz.
 
 End strict_ring_apart.
+
+(** ** Symmetric bounds *)
+
+(** We bound [x] by [- y < x < y]: this says that the absolute value of [x] is less than [y], without needing absolute values. *)
+Section symmetric_bounds.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
+
+  Lemma pos_between_negate x y : - y < x < y -> 0 < y.
+  Proof.
+    intros [ltyx ltxy].
+    assert (c := cotransitive (transitivity ltyx ltxy) 0).
+    strip_truncations; destruct c as [ltny0|lt0y].
+    - apply flip_pos_negate; assumption.
+    - assumption.
+  Qed.
+
+  Local Lemma mult_lt_bound_r s t S T : - S < s < S -> - T < t < T -> s * t < S * T.
+  Proof.
+    intros [ltSs ltsS] [ltTt lttT].
+    assert (Spos := pos_between_negate s S (ltSs, ltsS)).
+    assert (Tpos := pos_between_negate t T (ltTt, lttT)).
+    assert (c := cotransitive (pos_mult S T Spos Tpos) (s * t)).
+    strip_truncations; destruct c as [ltst|]; [|assumption].
+    destruct (pos_mult_decompose s t ltst) as [[spos tpos]|[sneg tneg]].
+    - apply mult_lt_compat; assumption.
+    - rewrite <- negate_mult_negate.
+      apply mult_lt_compat; first [apply flip_neg_negate | apply flip_lt_negate_l]; assumption.
+  Qed.
+
+  Lemma mult_lt_bound s t S T
+    : - S < s < S -> - T < t < T -> - (S * T) < s * t < S * T.
+  Proof.
+    intros [ltSs ltsS] ltt; split.
+    - apply flip_lt_negate_l. rewrite negate_mult_distr_l.
+      apply mult_lt_bound_r; [split|exact ltt].
+      + exact (snd (flip_lt_negate s S) ltsS).
+      + exact (flip_lt_negate_l S s ltSs).
+    - exact (mult_lt_bound_r s t S T (ltSs, ltsS) ltt).
+  Qed.
+
+  Local Lemma mult_minus_mult x y u w
+    : x * y - u * w = x * (y - w) + (x - u) * w.
+  Proof.
+    rewrite <- (plus_minus_telescope (x * y) (x * w) (u * w)).
+    rewrite negate_mult_distr_r, <- plus_mult_distr_l.
+    rewrite negate_mult_distr_l, <- plus_mult_distr_r.
+    reflexivity.
+  Qed.
+
+  Lemma mult_minus_mult_lt_bound x y u w X W D
+    : - X < x < X -> - W < w < W -> - D < x - u < D -> - D < y - w < D
+      -> - (X * D + D * W) < x * y - u * w < X * D + D * W.
+  Proof.
+    intros ltx ltw ltxu ltyw.
+    destruct (mult_lt_bound x (y - w) X D ltx ltyw) as [lt1 lt1'].
+    destruct (mult_lt_bound (x - u) w D W ltxu ltw) as [lt2 lt2'].
+    rewrite mult_minus_mult, negate_plus_distr.
+    split; apply plus_lt_compat; assumption.
+  Qed.
+
+End symmetric_bounds.
+
+(** ** Intervals *)
+
+Section intervals.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt}.
+
+  Lemma interval_minus_lt (a b s t d : R)
+    : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
+  Proof.
+    intros sab tab lt; split.
+    - apply flip_lt_negate_l. rewrite <- negate_swap_r.
+      rapply le_lt_trans; [exact (interval_minus_le a b t s tab sab)|exact lt].
+    - rapply le_lt_trans; [exact (interval_minus_le a b s t sab tab)|exact lt].
+  Qed.
+
+  Local Lemma not_lt_mult_endpoints a b u v
+    : a ≤ u -> u ≤ b -> u * v < a * v -> u * v < b * v -> Empty.
+  Proof.
+    intros leau leub ltua ltub.
+    assert (ltua' := snd (flip_neg_minus (a * v) (u * v)) ltua).
+    assert (ltub' := snd (flip_pos_minus (u * v) (b * v)) ltub).
+    rewrite negate_mult_distr_l, <- plus_mult_distr_r in ltua', ltub'.
+    assert (leua : 0 ≤ u - a) by exact (snd (flip_nonneg_minus a u) leau).
+    assert (lebu : 0 ≤ b - u) by exact (snd (flip_nonneg_minus u b) leub).
+    destruct (neg_mult_decompose (u - a) v ltua') as [[ltua'' _]|[_ vneg]].
+    - exact (le_not_lt_flip (u - a) 0 leua ltua'').
+    - destruct (pos_mult_decompose (b - u) v ltub') as [[_ vpos]|[ltub'' _]].
+      + exact (irreflexivity (<) 0 (transitivity vneg vpos)).
+      + exact (le_not_lt_flip (b - u) 0 lebu ltub'').
+  Qed.
+
+  Lemma lt_mult_endpoints_l q a b u v
+    : a ≤ u -> u ≤ b -> q < a * v -> q < b * v -> q < u * v.
+  Proof.
+    intros leau leub ltqa ltqb.
+    assert (c := cotransitive ltqa (u * v)).
+    strip_truncations; destruct c as [|ltua]; [assumption|].
+    assert (c := cotransitive ltqb (u * v)).
+    strip_truncations; destruct c as [|ltub]; [assumption|].
+    destruct (not_lt_mult_endpoints a b u v leau leub ltua ltub).
+  Qed.
+
+  Lemma mult_endpoints_lt_r r a b u v
+    : a ≤ u -> u ≤ b -> a * v < r -> b * v < r -> u * v < r.
+  Proof.
+    intros leau leub ltar ltbr.
+    apply (fst (flip_lt_negate (u * v) r)). rewrite negate_mult_distr_r.
+    apply (lt_mult_endpoints_l (- r) a b u (- v) leau leub); rewrite <- negate_mult_distr_r.
+    - exact (snd (flip_lt_negate (a * v) r) ltar).
+    - exact (snd (flip_lt_negate (b * v) r) ltbr).
+  Qed.
+
+  Lemma lt_mult_corners_l q a b c d u w
+    : a ≤ u -> u ≤ b -> c ≤ w -> w ≤ d
+      -> q < a * c -> q < a * d -> q < b * c -> q < b * d -> q < u * w.
+  Proof.
+    intros leau leub lecw lewd ltac ltad ltbc ltbd.
+    rewrite (mult_comm u w).
+    apply (lt_mult_endpoints_l q c d w u lecw lewd).
+    - rewrite (mult_comm c u). apply (lt_mult_endpoints_l q a b u c leau leub); assumption.
+    - rewrite (mult_comm d u). apply (lt_mult_endpoints_l q a b u d leau leub); assumption.
+  Qed.
+
+  Lemma mult_corners_lt_r r a b c d u w
+    : a ≤ u -> u ≤ b -> c ≤ w -> w ≤ d
+      -> a * c < r -> a * d < r -> b * c < r -> b * d < r -> u * w < r.
+  Proof.
+    intros leau leub lecw lewd ltac ltad ltbc ltbd.
+    rewrite (mult_comm u w).
+    apply (mult_endpoints_lt_r r c d w u lecw lewd).
+    - rewrite (mult_comm c u). apply (mult_endpoints_lt_r r a b u c leau leub); assumption.
+    - rewrite (mult_comm d u). apply (mult_endpoints_lt_r r a b u d leau leub); assumption.
+  Qed.
+
+End intervals.
+
+(** ** Absolute values *)
+
+(** The order need not be total, so an element is only nonnegative or nonpositive up to double negation; this suffices for the inequalities and equalities below. *)
+Section abs.
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder Rle Rlt} `{!Abs R}.
+  Local Existing Instance pseudo_order_apart.
+
+  Lemma nonneg_or_nonpos_not_not (x : R) : ~~ ((0 ≤ x) + (x ≤ 0)).
+  Proof.
+    intro n; apply n, inr, not_lt_le_flip.
+    intro lt0x; apply n, inl, lt_le, lt0x.
+  Qed.
+
+  Local Lemma le_by_sign (x a b : R)
+    : (0 ≤ x -> a ≤ b) -> (x ≤ 0 -> a ≤ b) -> a ≤ b.
+  Proof.
+    intros nonneg nonpos. apply not_lt_le_flip. intro ltba.
+    apply (nonneg_or_nonpos_not_not x). intros [c|c].
+    - exact (le_not_lt_flip b a (nonneg c) ltba).
+    - exact (le_not_lt_flip b a (nonpos c) ltba).
+  Qed.
+
+  Local Lemma eq_by_sign (x a b : R)
+    : (0 ≤ x -> a = b) -> (x ≤ 0 -> a = b) -> a = b.
+  Proof.
+    intros nonneg nonpos. apply (fst (tight_apart a b)). intro apab.
+    apply (nonneg_or_nonpos_not_not x). intros [c|c].
+    - exact (snd (tight_apart a b) (nonneg c) apab).
+    - exact (snd (tight_apart a b) (nonpos c) apab).
+  Qed.
+
+  Definition abs_of_nonneg (x : R) : 0 ≤ x -> abs x = x
+    := fst (abs_sig x).2.
+
+  Definition abs_of_nonpos (x : R) : x ≤ 0 -> abs x = - x
+    := snd (abs_sig x).2.
+
+  Lemma abs_nonneg (x : R) : 0 ≤ abs x.
+  Proof.
+    apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c). exact c.
+    - rewrite (abs_of_nonpos x c). exact (fst (flip_nonpos_negate x) c).
+  Qed.
+
+  Lemma abs_0 : abs 0 = 0 :> R.
+  Proof.
+    exact (abs_of_nonneg 0 (reflexivity 0)).
+  Qed.
+
+  Lemma abs_negate (x : R) : abs (- x) = abs x.
+  Proof.
+    apply (eq_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c).
+      rewrite (abs_of_nonpos (- x) (fst (flip_nonneg_negate x) c)).
+      apply negate_involutive.
+    - rewrite (abs_of_nonpos x c).
+      exact (abs_of_nonneg (- x) (fst (flip_nonpos_negate x) c)).
+  Qed.
+
+  Lemma le_abs (x : R) : x ≤ abs x.
+  Proof.
+    apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c). reflexivity.
+    - rewrite (abs_of_nonpos x c).
+      exact (transitivity c (fst (flip_nonpos_negate x) c)).
+  Qed.
+
+  Lemma negate_le_abs (x : R) : - x ≤ abs x.
+  Proof.
+    rewrite <- (abs_negate x). apply le_abs.
+  Qed.
+
+  Lemma abs_le (x y : R) : - y ≤ x -> x ≤ y -> abs x ≤ y.
+  Proof.
+    intros leyx lexy. apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c). exact lexy.
+    - rewrite (abs_of_nonpos x c). apply flip_le_negate.
+      rewrite negate_involutive. exact leyx.
+  Qed.
+
+  (** Strict bounds are not stable under double negation, so we use cotransitivity instead. *)
+  Lemma abs_lt (x y : R) : - y < x -> x < y -> abs x < y.
+  Proof.
+    intros ltyx ltxy.
+    assert (c := cotransitive ltxy (abs x)). strip_truncations.
+    destruct c as [lt|lt]; [|exact lt].
+    assert (nonpos : x ≤ 0).
+    { apply not_lt_le_flip. intro pos.
+      rewrite (abs_of_nonneg x (lt_le 0 x pos)) in lt.
+      exact (irreflexivity (<) x lt). }
+    rewrite (abs_of_nonpos x nonpos).
+    apply flip_lt_negate. rewrite negate_involutive. exact ltyx.
+  Qed.
+
+  Lemma abs_triangle (x y : R) : abs (x + y) ≤ abs x + abs y.
+  Proof.
+    apply abs_le.
+    - rewrite negate_plus_distr.
+      apply plus_le_compat; apply flip_le_negate; rewrite negate_involutive;
+        apply negate_le_abs.
+    - apply plus_le_compat; apply le_abs.
+  Qed.
+
+  Lemma abs_eq_0 (x : R) : abs x = 0 -> x = 0.
+  Proof.
+    intro p. apply (eq_by_sign x); intro c.
+    - exact ((abs_of_nonneg x c)^ @ p).
+    - rewrite <- (negate_involutive x), <- (abs_of_nonpos x c), p.
+      apply negate_0.
+  Qed.
+
+  Lemma abs_minus_swap (x y : R) : abs (x - y) = abs (y - x).
+  Proof.
+    rewrite (negate_swap_r x y). apply abs_negate.
+  Qed.
+
+End abs.
 
 Section another_ring_order.
   Context `{IsCRing R1} `{!SemiRingOrder R1le} `{IsCRing R2} `{R2le : Le R2}

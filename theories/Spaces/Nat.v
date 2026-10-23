@@ -6,3 +6,4 @@ Require Export Nat.Binomial.
 Require Export Nat.Division.
 Require Export Nat.Paths.
 Require Export Nat.Factorial.
+Require Export Nat.Enumeration.

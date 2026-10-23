@@ -1,3 +1,7 @@
+; Tell dune to look through subdirectories
+
+(include_subdirs qualified)
+
 (rocq.theory
  (name HoTT_Contrib)
  (package coq-hott)
