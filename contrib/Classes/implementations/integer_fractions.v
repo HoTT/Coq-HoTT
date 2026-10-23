@@ -36,7 +36,7 @@ Section ring_identities.
 
   Local Lemma minus_plus_minus (p q r s : R) : (p - q) + (r - s) = (p + r) - (q + s).
   Proof.
-    rewrite plus_swap_middle, negate_plus_distr; reflexivity.
+    rewrite plus_swap_middle, negate_plus_distr. reflexivity.
   Qed.
 
   Local Lemma minus_mult_minus (p q r s : R) : (p - q) * (r - s) = (p * r + q * s) - (p * s + q * r).
@@ -63,19 +63,19 @@ Section contents.
   Proof.
     destruct (trichotomy (<) x y) as [l|[e|l]].
     - exact (inl l).
-    - right; intros l'; rewrite e in l'; exact (irreflexivity (<) y l').
-    - right; intros l'; exact (irreflexivity (<) x (transitivity l' l)).
+    - right. intros l'; rewrite e in l'. exact (irreflexivity (<) y l').
+    - right. intros l'; exact (irreflexivity (<) x (transitivity l' l)).
   Defined.
 
   Local Lemma int_pos_ge_1 (z : Z) : 0 < z -> 1 <= z.
   Proof.
     intros zpos; destruct (int_abs_sig Z nat z) as [[[|c] p]|[k p]].
-    - destruct p; destruct (irreflexivity (<) _ zpos).
+    - destruct p. destruct (irreflexivity (<) _ zpos).
     - rewrite <- p, nat_to_semiring_succ.
       apply nonneg_plus_le_compat_r, nat_to_semiring_nonneg.
     - apply Empty_rec, (irreflexivity (<) (0 : Z)).
       apply (lt_le_trans _ z _ zpos).
-      apply (snd (flip_nonpos_negate z)); rewrite <- p; apply nat_to_semiring_nonneg.
+      apply (snd (flip_nonpos_negate z)). rewrite <- p. apply nat_to_semiring_nonneg.
   Qed.
 
 
@@ -89,7 +89,7 @@ Section contents.
 
   Lemma frac_pos_spec (x : Frac) : frac_pos x = true <-> 0 < Frac.num x * Frac.den x.
   Proof.
-    unfold frac_pos; destruct (dec _) as [l|nl]; split; intro p.
+    unfold frac_pos. destruct (dec _) as [l|nl]; split; intro p.
     - exact l.
     - reflexivity.
     - destruct (false_ne_true p).
@@ -127,7 +127,7 @@ Section contents.
     { rewrite (mult_swap_middle (Frac.num y)), (mult_comm (Frac.den y) (Frac.den x)).
       rewrite <- E, (mult_swap_middle (Frac.num x)).
       reflexivity. }
-    rewrite p; apply pos_mult; [exact px|apply den_square_pos].
+    rewrite p. apply pos_mult; [exact px|apply den_square_pos].
   Qed.
 
   Lemma frac_pos_respect (x y : Frac) : Frac.equiv x y -> frac_pos x = frac_pos y.
@@ -151,24 +151,24 @@ Section contents.
 
   Lemma is_pos_plus (x y : Q) : fracfield_pos x = true -> fracfield_pos y = true -> fracfield_pos (x + y) = true.
   Proof.
-    revert x y; srapply (FracField.F_ind2 (fun x y => _ -> _ -> _)).
-    intros x y px py; apply frac_pos_spec; apply frac_pos_spec in px, py.
+    revert x y. srapply (FracField.F_ind2 (fun x y => _ -> _ -> _)).
+    intros x y px py; apply frac_pos_spec. apply frac_pos_spec in px, py.
     cbn; rewrite plus_over_product.
     apply pos_plus_compat; apply pos_mult; trivial; apply den_square_pos.
   Qed.
 
   Lemma is_pos_mult (x y : Q) : fracfield_pos x = true -> fracfield_pos y = true -> fracfield_pos (x * y) = true.
   Proof.
-    revert x y; srapply (FracField.F_ind2 (fun x y => _ -> _ -> _)).
-    intros x y px py; apply frac_pos_spec; apply frac_pos_spec in px, py.
+    revert x y. srapply (FracField.F_ind2 (fun x y => _ -> _ -> _)).
+    intros x y px py; apply frac_pos_spec. apply frac_pos_spec in px, py.
     cbn; rewrite mult_swap_middle.
     apply pos_mult; assumption.
   Qed.
 
   Lemma is_pos_negate (x : Q) : fracfield_pos x = true -> fracfield_pos (- x) = true -> Empty.
   Proof.
-    revert x; srapply (FracField.F_ind (fun x => _ -> _ -> _)).
-    intros x px pnx; apply frac_pos_spec in px, pnx; cbn in pnx.
+    revert x. srapply (FracField.F_ind (fun x => _ -> _ -> _)).
+    intros x px pnx; apply frac_pos_spec in px, pnx. cbn in pnx.
     rewrite <- negate_mult_distr_l in pnx.
     apply flip_neg_negate in pnx.
     exact (irreflexivity (<) 0 (transitivity pnx px)).
@@ -176,23 +176,23 @@ Section contents.
 
   Lemma is_pos_zero : fracfield_pos 0 = false.
   Proof.
-    apply not_true_iff_false; intros p; apply frac_pos_spec in p; cbn in p.
-    rewrite mult_0_l in p; exact (irreflexivity (<) 0 p).
+    apply not_true_iff_false. intros p; apply frac_pos_spec in p. cbn in p.
+    rewrite mult_0_l in p. exact (irreflexivity (<) 0 p).
   Qed.
 
   Lemma is_pos_zero_cases (x : Q) : fracfield_pos x = false -> fracfield_pos (- x) = false -> x = 0.
   Proof.
-    revert x; srapply (FracField.F_ind (fun x => _ -> _ -> _)).
+    revert x. srapply (FracField.F_ind (fun x => _ -> _ -> _)).
     intros x px pnx.
     apply (snd (not_true_iff_false _)) in px, pnx.
-    apply FracField.path; unfold Frac.equiv; cbn.
+    apply FracField.path. unfold Frac.equiv; cbn.
     rewrite mult_0_l, mult_1_r.
     destruct (trichotomy (<) 0 (Frac.num x * Frac.den x)) as [l|[e|l]].
     - destruct (px (snd (frac_pos_spec _) l)).
     - destruct (zero_product _ _ e^) as [n0|d0].
       + exact n0.
       + destruct (Frac.den_ne_0 x d0).
-    - destruct pnx; apply frac_pos_spec; cbn.
+    - destruct pnx. apply frac_pos_spec. cbn.
       rewrite <- negate_mult_distr_l.
       apply flip_neg_negate, l.
   Qed.
@@ -211,7 +211,7 @@ Section contents.
 
   Local Lemma is_pos_minus_zero (x : Q) : fracfield_pos (x - 0) = fracfield_pos x.
   Proof.
-    rewrite negate_0, plus_0_r; reflexivity.
+    rewrite negate_0, plus_0_r. reflexivity.
   Qed.
 
   (** Trichotomy: if neither [v - u] nor [u - v] is positive, then [u = v]. *)
@@ -220,7 +220,7 @@ Section contents.
     unfold lt, fracfield_lt.
     destruct (bool_true_or_false (fracfield_pos (v - u))) as [p|p]; [left; left; exact p|].
     destruct (bool_true_or_false (fracfield_pos (u - v))) as [q|q]; [left; right; exact q|].
-    right; rewrite negate_swap_r in p.
+    right. rewrite negate_swap_r in p.
     exact (fst (equal_by_zero_sum u v) (is_pos_zero_cases _ q p)).
   Qed.
 
@@ -234,16 +234,17 @@ Section contents.
       exact (is_pos_negate _ ltxy ltyx).
     - intros x y ltxy z; apply tr.
       destruct (fracfield_lt_trichotomy x z) as [[ltxz|ltzx]|p].
-      + left; exact ltxz.
-      + right; unfold lt, fracfield_lt in *.
-        rewrite <- (plus_minus_telescope y x z); exact (is_pos_plus (y - x) (x - z) ltxy ltzx).
-      + right; rewrite <- p; exact ltxy.
+      + left. exact ltxz.
+      + right. unfold lt, fracfield_lt in *.
+        rewrite <- (plus_minus_telescope y x z).
+        exact (is_pos_plus (y - x) (x - z) ltxy ltzx).
+      + right. rewrite <- p. exact ltxy.
     - intros x y; split.
       + intros ne; destruct (fracfield_lt_trichotomy x y) as [[l|l]|p].
-        * left; exact l.
-        * right; exact l.
+        * left. exact l.
+        * right. exact l.
         * destruct (ne p).
-      + intros l p; destruct p; unfold lt, fracfield_lt in l.
+      + intros l p; destruct p. unfold lt, fracfield_lt in l.
         rewrite plus_negate_r, is_pos_zero in l.
         destruct l as [l|l]; exact (false_ne_true l).
   Qed.
@@ -259,9 +260,9 @@ Section contents.
   Proof.
     apply from_full_pseudo_ring_order.
     - intros z x y; unfold lt, fracfield_lt.
-      rewrite plus_minus_plus_l; exact idmap.
+      rewrite plus_minus_plus_l. exact idmap.
     - exact (dec_strong_binary_morphism (.*.)).
-    - intros x y; unfold PropHolds, lt, fracfield_lt; rewrite !is_pos_minus_zero.
+    - intros x y. unfold PropHolds, lt, fracfield_lt; rewrite !is_pos_minus_zero.
       exact (is_pos_mult x y).
   Qed.
 
@@ -278,11 +279,11 @@ Section contents.
 
   Local Lemma nat_to_int_injective (n m : nat) : nZ n = nZ m -> n = m.
   Proof.
-    intros p; destruct (nat_trichotomy n m) as [l|[e|l]]; [|exact e|].
-    - destruct (equiv_leq_add (S n) m l) as [k q]; destruct q.
+    intros p. destruct (nat_trichotomy n m) as [l|[e|l]]; [|exact e|].
+    - destruct (equiv_leq_add (S n) m l) as [k q]. destruct q.
       rewrite nat_add_succ_r in p.
       destruct (irreflexivity (<) (nZ n) (transport (fun z => nZ n < z) p^ (nat_to_int_lt n k))).
-    - destruct (equiv_leq_add (S m) n l) as [k q]; destruct q.
+    - destruct (equiv_leq_add (S m) n l) as [k q]. destruct q.
       rewrite nat_add_succ_r in p.
       destruct (irreflexivity (<) (nZ m) (transport (fun z => nZ m < z) p (nat_to_int_lt m k))).
   Qed.
@@ -290,8 +291,8 @@ Section contents.
   Local Lemma int_difference (z : Z) : {a : nat & {b : nat & nZ a - nZ b = z}}.
   Proof.
     destruct (int_abs_sig Z nat z) as [[a p]|[a p]].
-    - exists a, 0%nat; change (nZ 0%nat) with (0 : Z); rewrite negate_0, plus_0_r; exact p.
-    - exists 0%nat, a; change (nZ 0%nat) with (0 : Z); rewrite plus_0_l, p; apply negate_involutive.
+    - exists a, 0%nat. change (nZ 0%nat) with (0 : Z). rewrite negate_0, plus_0_r. exact p.
+    - exists 0%nat, a. change (nZ 0%nat) with (0 : Z). rewrite plus_0_l, p. apply negate_involutive.
   Qed.
 
   Section to_field.
@@ -304,7 +305,7 @@ Section contents.
       induction n as [|n IH].
       - reflexivity.
       - change (nB (1 + n) = 1 + nat_iter n (1 +) 0).
-        rewrite (preserves_plus (f:=nB)), preserves_1, IH; reflexivity.
+        rewrite (preserves_plus (f:=nB)), preserves_1, IH. reflexivity.
     Qed.
 
     Local Lemma nat_to_field_apart_zero (n : nat) : n <> 0%nat -> nB n ≶ 0.
@@ -328,21 +329,23 @@ Section contents.
     Proof.
       unfold int_to_field; destruct (int_abs_sig Z nat (nZ a - nZ b)) as [[k p]|[k p]].
       - assert (e : (k + b)%nat = a).
-        { apply nat_to_int_injective; rewrite (preserves_plus (f:=nZ)), p.
-          rewrite <- plus_assoc, plus_negate_l; apply plus_0_r. }
-        rewrite <- e, (preserves_plus (f:=nB)), <- plus_assoc, plus_negate_r; symmetry; apply plus_0_r.
+        { apply nat_to_int_injective. rewrite (preserves_plus (f:=nZ)), p.
+          rewrite <- plus_assoc, plus_negate_l. apply plus_0_r. }
+        rewrite <- e, (preserves_plus (f:=nB)), <- plus_assoc, plus_negate_r.
+        symmetry. apply plus_0_r.
       - assert (e : (k + a)%nat = b).
-        { apply nat_to_int_injective; rewrite (preserves_plus (f:=nZ)), p.
-          rewrite <- negate_swap_l, (plus_comm (- nZ a)), <- plus_assoc, plus_negate_l; apply plus_0_r. }
+        { apply nat_to_int_injective. rewrite (preserves_plus (f:=nZ)), p.
+          rewrite <- negate_swap_l, (plus_comm (- nZ a)), <- plus_assoc, plus_negate_l.
+          apply plus_0_r. }
         rewrite <- e, (preserves_plus (f:=nB)), negate_plus_distr, (plus_comm (- nB k)), plus_assoc.
-        rewrite plus_negate_r, plus_0_l; reflexivity.
+        rewrite plus_negate_r, plus_0_l. reflexivity.
     Qed.
 
     Local Lemma int_to_field_nat (n : nat) : iZ (nZ n) = nB n.
     Proof.
       refine (ap iZ _ @ int_to_field_nat_minus n 0 @ _).
-      - change (nZ n = nZ n - 0); rewrite negate_0; symmetry; apply plus_0_r.
-      - change (nB n - 0 = nB n); rewrite negate_0; apply plus_0_r.
+      - change (nZ n = nZ n - 0); rewrite negate_0. symmetry. apply plus_0_r.
+      - change (nB n - 0 = nB n); rewrite negate_0. apply plus_0_r.
     Qed.
 
     #[export] Instance issemiringpreserving_int_to_field : IsSemiRingPreserving iZ.
@@ -351,7 +354,7 @@ Section contents.
       - intros x y; change (iZ (x + y) = iZ x + iZ y).
         destruct (int_difference x) as [a [b []]], (int_difference y) as [c [d []]].
         rewrite minus_plus_minus, <- !(preserves_plus (f:=nZ)), !int_to_field_nat_minus.
-        rewrite !(preserves_plus (f:=nB)); symmetry; apply minus_plus_minus.
+        rewrite !(preserves_plus (f:=nB)). symmetry. apply minus_plus_minus.
       - exact (int_to_field_nat 0).
       - intros x y; change (iZ (x * y) = iZ x * iZ y).
         destruct (int_difference x) as [a [b []]], (int_difference y) as [c [d []]].
@@ -360,7 +363,7 @@ Section contents.
         rewrite (preserves_plus (f:=nB) (a * c)), (preserves_plus (f:=nB) (a * d)).
         rewrite (preserves_mult (f:=nB) a c), (preserves_mult (f:=nB) b d).
         rewrite (preserves_mult (f:=nB) a d), (preserves_mult (f:=nB) b c).
-        symmetry; apply minus_mult_minus.
+        symmetry. apply minus_mult_minus.
       - exact (int_to_field_nat 1).
     Qed.
 
@@ -370,16 +373,16 @@ Section contents.
       destruct (int_difference z) as [a [b []]].
       assert (IsSemiRingPreserving (g o nZ)) by rapply compose_sr_morphism.
       rewrite int_to_field_nat_minus, (preserves_minus (f:=g)).
-      rewrite <- (toR_unique (g o nZ) a), <- (toR_unique (g o nZ) b); reflexivity.
+      rewrite <- (toR_unique (g o nZ) a), <- (toR_unique (g o nZ) b). reflexivity.
     Qed.
 
     Lemma int_to_field_apart_zero (d : Z) : d <> 0 -> iZ d ≶ 0.
     Proof.
       intros ne.
       assert (nn : forall n : nat, (nZ n = d) + (nZ n = - d) -> n <> 0%nat).
-      { intros n p q; rewrite q in p; apply ne.
+      { intros n p q; rewrite q in p. apply ne.
         destruct p as [p|p].
-        - rewrite <- p; exact preserves_0.
+        - rewrite <- p. exact preserves_0.
         - change (nZ 0%nat) with (0 : Z) in p.
           exact (fst (flip_negate_0 d) p^). }
       destruct (int_abs_sig Z nat d) as [[n p]|[n p]].
@@ -405,7 +408,7 @@ Section contents.
     Lemma frac_to_field_unique (x : Frac) (y : B)
       : y * iZ (Frac.den x) = iZ (Frac.num x) -> frac_to_field x = y.
     Proof.
-      intros p; unfold frac_to_field; rewrite <- p.
+      intros p. unfold frac_to_field; rewrite <- p.
       rewrite <- mult_assoc, (recip_inverse (den_apart x)).
       apply mult_1_r.
     Qed.
@@ -426,43 +429,43 @@ Section contents.
 
     Lemma rationals_to_field_frac_plus (x y : Q) : f (x + y) = f x + f y.
     Proof.
-      revert x y; srapply FracField.F_ind2; intros x y.
+      revert x y. srapply FracField.F_ind2. intros x y.
       napply (frac_to_field_unique (Frac.pl _ x y)).
       cbn [Frac.num Frac.den Frac.pl].
       rewrite (preserves_plus (f:=iZ) (Frac.num x * Frac.den y)), !(preserves_mult (f:=iZ)).
       rewrite plus_mult_product.
-      rewrite !frac_to_field_mult_den; reflexivity.
+      rewrite !frac_to_field_mult_den. reflexivity.
     Qed.
 
     Lemma rationals_to_field_frac_mult (x y : Q) : f (x * y) = f x * f y.
     Proof.
-      revert x y; srapply FracField.F_ind2; intros x y.
+      revert x y. srapply FracField.F_ind2. intros x y.
       napply (frac_to_field_unique (Frac.ml _ x y)).
       cbn [Frac.num Frac.den Frac.ml].
       rewrite !(preserves_mult (f:=iZ)), mult_swap_middle.
-      rewrite !frac_to_field_mult_den; reflexivity.
+      rewrite !frac_to_field_mult_den. reflexivity.
     Qed.
 
     #[export] Instance issemiringpreserving_rationals_to_field_frac : IsSemiRingPreserving f.
     Proof.
       repeat split.
       - exact rationals_to_field_frac_plus.
-      - apply frac_to_field_unique; cbn.
-        rewrite mult_0_l; exact preserves_0^.
+      - apply frac_to_field_unique. cbn.
+        rewrite mult_0_l. exact preserves_0^.
       - exact rationals_to_field_frac_mult.
-      - apply frac_to_field_unique; cbn.
-        rewrite mult_1_l; reflexivity.
+      - apply frac_to_field_unique. cbn.
+        rewrite mult_1_l. reflexivity.
     Qed.
 
     Lemma rationals_to_field_frac_unique (h : Q -> B) `{!IsSemiRingPreserving h} (q : Q)
       : f q = h q.
     Proof.
-      revert q; srapply FracField.F_ind; intros x; apply frac_to_field_unique.
+      revert q. srapply FracField.F_ind. intros x; apply frac_to_field_unique.
       assert (IsSemiRingPreserving (h o cast Z Q)) by rapply compose_sr_morphism.
-      rewrite <- 2!(int_to_field_unique (h o cast Z Q)); unfold Compose.
-      rewrite <- (preserves_mult (f:=h)); apply ap.
-      apply FracField.path; unfold Frac.equiv; cbn.
-      rewrite !mult_1_r; reflexivity.
+      rewrite <- 2!(int_to_field_unique (h o cast Z Q)). unfold Compose.
+      rewrite <- (preserves_mult (f:=h)). apply ap.
+      apply FracField.path. unfold Frac.equiv; cbn.
+      rewrite !mult_1_r. reflexivity.
     Qed.
   End to_field.
 
@@ -493,11 +496,11 @@ Section contents.
   Proof.
     assert (le : {k : nat & z <= nZ k}).
     { destruct (int_abs_sig Z nat z) as [[k p]|[k p]]; exists k.
-      - rewrite p; reflexivity.
+      - rewrite p. reflexivity.
       - apply (transitivity (y:=0)).
-        + apply flip_nonpos_negate; rewrite <- p; apply to_semiring_nonneg.
+        + apply flip_nonpos_negate. rewrite <- p. apply to_semiring_nonneg.
         + apply to_semiring_nonneg. }
-    destruct le as [k le]; exists (S k).
+    destruct le as [k le]. exists (S k).
     change (z < nZ (1 + k)); rewrite (preserves_plus (f:=nZ) 1 k), preserves_1.
     apply (le_lt_trans _ (nZ k)); [exact le|].
     apply pos_plus_lt_compat_l, lt_0_1.
@@ -506,8 +509,8 @@ Section contents.
   (** Every fraction lies strictly below the image of some natural number; on the quotient we choose the least one, by bounded search. *)
   Local Lemma frac_round_up (x : Frac) : {m : nat & ' x < nQ m}.
   Proof.
-    destruct (int_round_up (Frac.num x * Frac.den x)) as [m l]; exists m.
-    unfold lt, fracfield_lt; rewrite nat_to_rationals_int; apply frac_pos_spec.
+    destruct (int_round_up (Frac.num x * Frac.den x)) as [m l]. exists m.
+    unfold lt, fracfield_lt; rewrite nat_to_rationals_int. apply frac_pos_spec.
     cbn [Frac.num Frac.den Frac.pl Frac.neg Frac.Frac_inject].
     rewrite mult_1_r, mult_1_l, plus_mult_distr_r, <- mult_assoc, <- negate_mult_distr_l.
     apply (snd (flip_pos_minus _ _)).
@@ -518,8 +521,8 @@ Section contents.
 
   #[export] Instance roundupstrict_fracfield : RoundUpStrict Q.
   Proof.
-    intros q; apply minimal_n; [exact _|].
-    revert q; srapply FracField.F_ind; intros x.
+    intros q. apply minimal_n; [exact _|].
+    revert q. srapply FracField.F_ind. intros x.
     exact (tr (frac_round_up x)).
   Qed.
 End contents.
@@ -560,11 +563,11 @@ Section enumeration.
   Proof.
     intros zpos.
     destruct (int_abs_sig Z nat z) as [[[|c] p]|[k p]].
-    - change (nZ 0%nat) with (0 : Z) in p; destruct p; destruct (irreflexivity (<) _ zpos).
+    - change (nZ 0%nat) with (0 : Z) in p. destruct p. destruct (irreflexivity (<) _ zpos).
     - exact (c; p).
     - apply Empty_rec, (irreflexivity (<) (0 : Z)).
       apply (lt_le_trans _ z _ zpos).
-      apply (snd (flip_nonpos_negate z)); rewrite <- p; apply nat_to_semiring_nonneg.
+      apply (snd (flip_nonpos_negate z)). rewrite <- p. apply nat_to_semiring_nonneg.
   Qed.
 
   Lemma fracfield_enumerator_hit (x : Frac) : {n : nat & fracfield_enumerator n = ' x}.
@@ -574,14 +577,14 @@ Section enumeration.
     { apply square_pos, trivial_apart, Frac.den_ne_0. }
     destruct (nat_unpair_hit b c) as [m r].
     destruct (nat_unpair_hit a m) as [n s].
-    exists n; unfold fracfield_enumerator; rewrite s, r.
-    apply FracField.path; unfold Frac.equiv, frac_of_nats; cbn [Frac.num Frac.den].
-    rewrite p, q; symmetry; apply mult_assoc.
+    exists n. unfold fracfield_enumerator; rewrite s, r.
+    apply FracField.path. unfold Frac.equiv, frac_of_nats; cbn [Frac.num Frac.den].
+    rewrite p, q. symmetry. apply mult_assoc.
   Qed.
 
   Definition issurj_fracfield_enumerator : IsSurjection fracfield_enumerator.
   Proof.
     apply BuildIsSurjection.
-    srapply FracField.F_ind; intros x; exact (tr (fracfield_enumerator_hit x)).
+    srapply FracField.F_ind. intros x; exact (tr (fracfield_enumerator_hit x)).
   Defined.
 End enumeration.

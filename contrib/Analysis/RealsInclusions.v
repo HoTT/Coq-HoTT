@@ -50,20 +50,20 @@ Section cauchy_reals.
   Lemma qpos_plus_half (a : Qpos Q) : (a + a) / 2 = a.
   Proof.
     assert (p : a + a = 2 * a).
-    { apply pos_eq; change (' a + ' a = (1 + 1) * ' a).
-      rewrite plus_mult_distr_r, mult_1_l; reflexivity. }
-    rewrite p; apply pos_unconjugate.
+    { apply pos_eq. change (' a + ' a = (1 + 1) * ' a).
+      rewrite plus_mult_distr_r, mult_1_l. reflexivity. }
+    rewrite p. apply pos_unconjugate.
   Qed.
 
   (** Related sequences have the same limit in [R]. *)
   Lemma cauchy_sequence_lim_related (s t : CauchySequence Q) (r : cauchy_related Q s t)
     : lim (cauchy_sequence_approximation s) = lim (cauchy_sequence_approximation t).
   Proof.
-    apply (cs_eq Q R); intro e.
+    apply (cs_eq Q R). intro e.
     assert (p : e = (e / 3 + e / 3) + (e / 3 + e / 3) / 4 + (e / 3 + e / 3) / 4).
     { rewrite <- Qpos_plus_assoc, (qpos_quarter Q), qpos_plus_half.
       exact (pos_split3 e). }
-    rewrite p; apply cs_close_lim_lim, cs_close_rat_rat, r.
+    rewrite p. apply cs_close_lim_lim, cs_close_rat_rat, r.
   Qed.
 
   Definition cauchy_reals_to_hottbookreals `{Funext} : CauchyReals Q -> R
@@ -82,11 +82,11 @@ Section cauchy_reals.
       : hottbookreals_to_field Q R (F:=F) (cauchy_reals_to_hottbookreals x)
         = cauchy_reals_to_field Q F x.
     Proof.
-      revert x; srapply Quotient_ind_hprop; intro s.
+      revert x. srapply Quotient_ind_hprop. intro s.
       change (hottbookreals_to_field Q R (lim (cauchy_sequence_approximation s))
               = cauchy_limit Q F s).
       rewrite (cshom_lim Q _ _ _).
-      apply (field_close_eq Q); intro e.
+      apply (field_close_eq Q). intro e.
       rewrite (pos_split3 e).
       apply field_close_symmetric.
       apply (field_close_le_triangle Q (e / 3 + e / 3) (e / 3) _
@@ -101,9 +101,9 @@ Section cauchy_reals.
 
     Lemma isinj_cauchy_reals_to_field `{Funext} : IsInjective (cauchy_reals_to_field Q F).
     Proof.
-      intros x y; revert x; srapply Quotient_ind_hprop; intro s.
-      revert y; srapply Quotient_ind_hprop; intros t p.
-      apply qglue; intro e.
+      intros x y. revert x. srapply Quotient_ind_hprop. intro s.
+      revert y. srapply Quotient_ind_hprop. intros t p.
+      apply qglue. intro e.
       apply (rational_close_field_close Q (F:=F)).
       assert (c := field_close_triangle Q _ _ _ _ _
                      (field_close_symmetric Q _ _ _ (cauchy_limit_close Q F s (e / 4)))
@@ -117,7 +117,7 @@ Section cauchy_reals.
       : IsInjective cauchy_reals_to_hottbookreals.
     Proof.
       intros x y p; apply isinj_cauchy_reals_to_field.
-      rewrite <- 2 hottbookreals_to_field_cauchy_reals, p; reflexivity.
+      rewrite <- 2 hottbookreals_to_field_cauchy_reals, p. reflexivity.
     Qed.
 
     Definition isembedding_cauchy_reals_to_hottbookreals `{Funext}
@@ -136,8 +136,8 @@ Definition archimedean_property_change_char `{Funext} (Q : Type) `{RationalsToFi
   : ArchimedeanProperty Q F (Achar:=c) -> ArchimedeanProperty Q F (Achar:=c').
 Proof.
   assert (p : c = c').
-  { snapply path_ishprop; unfold FieldCharacteristic; exact _. }
-  destruct p; exact idmap.
+  { snapply path_ishprop. unfold FieldCharacteristic; exact _. }
+  destruct p. exact idmap.
 Defined.
 
 (** The following are stated outside a section, with all assumptions as arguments: applying them to the Dedekind reals constrains the universes of the rationals, and constraints on section universes cannot be added by later definitions. *)
@@ -205,7 +205,7 @@ Section subsets.
 
     #[export] Instance ispremetric_subset_close : IsPremetric Q subset_close.
     Proof.
-      intros e u v; unfold subset_close; exact _.
+      intros e u v. unfold subset_close; exact _.
     Defined.
 
     Definition approximation_subset_pr1 (x : CauchyApproximation Q subset_close)
@@ -220,7 +220,7 @@ Section subsets.
       refine (Build_CauchyStructure Q (sig R) subset_close _ (fun q => exist R (' q) (Rq q))
                 (fun x => exist R (field_lim Q (approximation_subset_pr1 x))
                            (Rc (approximation_subset_pr1 x) (fun e => (x e).2))) _ _ _ _ _).
-      - intros u v c; apply path_sigma_hprop; exact (field_close_eq Q _ _ c).
+      - intros u v c; apply path_sigma_hprop. exact (field_close_eq Q _ _ c).
       - exact (cs_close_rat_rat Q FS).
       - intros q y; exact (cs_close_rat_lim Q FS q (approximation_subset_pr1 y)).
       - intros x r; exact (cs_close_lim_rat Q FS (approximation_subset_pr1 x) r).
@@ -275,7 +275,7 @@ Section subsets.
         exact (iscauchyapproximation_approximation Q _ x d e). }
       exists (cs_lim Q RH (Build_CauchyApproximation Q _ u c)).
       rewrite (cshom_lim Q _ _ i).
-      apply ap; snapply path_cauchyapproximation; [exact _|]; intro e; exact (h e).2.
+      apply ap. snapply path_cauchyapproximation; [exact _|]. intro e; exact (h e).2.
     Qed.
 
     (** The Cauchy reals in [F] are Cauchy complete exactly when they coincide with the HoTT book reals. *)
@@ -285,7 +285,7 @@ Section subsets.
     Proof.
       split.
       - intros c x; split.
-        + apply Trunc_rec; intros [r p].
+        + apply Trunc_rec. intros [r p].
           exists (cauchy_reals_to_hottbookreals Q RH r).
           exact (hottbookreals_to_field_cauchy_reals Q RH r @ p).
         + intros [u p]; rewrite <- p.

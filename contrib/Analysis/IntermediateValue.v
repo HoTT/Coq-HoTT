@@ -49,14 +49,14 @@ Section ivt.
     (le : forall n, (N <= n)%nat -> c ≤ y n)
     : c ≤ l.
   Proof.
-    apply not_lt_le_flip; intro ltlc.
+    apply not_lt_le_flip. intro ltlc.
     assert (e := merely_qpos_lt Q (c - l) (snd (flip_pos_minus _ _) ltlc)).
     strip_truncations; destruct e as [e ltec].
-    assert (c' := islim e); strip_truncations; destruct c' as [M close].
+    assert (c' := islim e). strip_truncations; destruct c' as [M close].
     set (n := Nat.Core.nat_max N M).
     destruct (snd (between_iff_lt_minus l (y n) _)
                 (between_minus_swap _ _ _ (close n (le_nat_max_r N M)))) as [_ ltyn].
-    apply flip_lt_minus_r in ltec; rewrite plus_comm in ltec.
+    apply flip_lt_minus_r in ltec. rewrite plus_comm in ltec.
     apply (irreflexivity (<) c).
     rapply le_lt_trans; [exact (le n (le_nat_max_l N M))|].
     exact (transitivity ltyn ltec).
@@ -134,7 +134,7 @@ Section ivt.
       (l : F) (zlw : forall n, z n ≤ l ≤ w n)
       : IsLimit Q F y l.
     Proof.
-      intro e; apply tr; exists (nested_modulus e); intros n len.
+      intro e. apply tr; exists (nested_modulus e). intros n len.
       exact (interval_minus_lt (z n) (w n) l (y n) _ (zlw n) (zyw n) (nested_width_lt e n len)).
     Qed.
 
@@ -152,7 +152,7 @@ Section ivt.
   Lemma qpos_of_upper_bound (u : F) (r : Q) (u0 : 0 ≤ u) (ltr : u < ' r) : 0 < r.
   Proof.
     apply (strictly_order_reflecting (cast Q F)).
-    rewrite (preserves_0 (f:=cast Q F)); exact (le_lt_trans 0 u (' r) u0 ltr).
+    rewrite (preserves_0 (f:=cast Q F)). exact (le_lt_trans 0 u (' r) u0 ltr).
   Qed.
 
   (** *** Interpolating bisection *)
@@ -165,7 +165,7 @@ Section ivt.
     rewrite <- plus_mult_distr_l, <- (preserves_plus (f:=cast Q F)).
     change (half + half) with (' (1 / 2 + 1 / 2 : Qpos Q)).
     rewrite <- (pos_split2 1).
-    rewrite (preserves_1 (f:=cast Q F)); apply mult_1_r.
+    rewrite (preserves_1 (f:=cast Q F)). apply mult_1_r.
   Qed.
 
   Definition half_lt_1 : half < 1 := qpos_half_lt 1.
@@ -178,7 +178,7 @@ Section ivt.
   Lemma half_double (u v : F) : u + (v - u) * ' half + (v - u) * ' half = v.
   Proof.
     rewrite <- plus_assoc, half_plus_half.
-    rewrite plus_comm, <- plus_assoc, (plus_negate_l u); apply plus_0_r.
+    rewrite plus_comm, <- plus_assoc, (plus_negate_l u). apply plus_0_r.
   Qed.
 
   (** Clamping to the unit interval. *)
@@ -193,12 +193,12 @@ Section ivt.
 
   Lemma clamp_1 (u : F) (le1u : 1 ≤ u) : clamp u = 1.
   Proof.
-    unfold clamp; rewrite (meet_r u 1 le1u); exact (join_r 0 1 le_0_1).
+    unfold clamp; rewrite (meet_r u 1 le1u). exact (join_r 0 1 le_0_1).
   Qed.
 
   Lemma clamp_0 (u : F) (leu0 : u ≤ 0) : clamp u = 0.
   Proof.
-    unfold clamp; rewrite (meet_l u 1 (transitivity leu0 le_0_1)); exact (join_l 0 u leu0).
+    unfold clamp; rewrite (meet_l u 1 (transitivity leu0 le_0_1)). exact (join_l 0 u leu0).
   Qed.
 
   (** A step of the bisection. Given an interval [[z, w]] with midpoint [c = z + h] and a weight [d] in [[0, 1]], the next interval is [[z + (1 - d) h, c + (1 - d) h]]: for [d = 1] this is the left half, for [d = 0] the right half, and in general it interpolates between the two. *)
@@ -223,12 +223,12 @@ Section ivt.
     { assert (le1 : 1 - dd ≤ 1).
       { apply (snd (flip_le_minus_l dd 1 1)), nonneg_plus_le_compat_r, (fst dd01). }
       lhs' exact (order_preserving (.* h) _ _ le1).
-      rewrite mult_1_l; reflexivity. }
+      rewrite mult_1_l. reflexivity. }
     split; [|split; [|split]].
     - apply nonneg_plus_le_compat_r, D0.
     - apply (order_preserving (u +)), Dh.
     - apply nonneg_plus_le_compat_r, D0.
-    - rewrite <- (half_double u v); apply (order_preserving (u + h +)), Dh.
+    - rewrite <- (half_double u v). apply (order_preserving (u + h +)), Dh.
   Qed.
 
   Section bisect.
@@ -255,27 +255,27 @@ Section ivt.
 
     Lemma bisect_width (n : nat) : w (S n) - z (S n) = h n.
     Proof.
-      rewrite bisect_lower_succ, bisect_upper_succ; unfold bisect_mid.
+      rewrite bisect_lower_succ, bisect_upper_succ. unfold bisect_mid.
       rewrite negate_plus_distr, (plus_comm (- z n)).
       rewrite <- (plus_assoc (z n + h n)), (plus_assoc ((1 - d n) * h n)).
       rewrite (plus_negate_r ((1 - d n) * h n)), (plus_0_l (- z n)).
-      rewrite (plus_comm (z n)), <- plus_assoc, (plus_negate_r (z n)); apply plus_0_r.
+      rewrite (plus_comm (z n)), <- plus_assoc, (plus_negate_r (z n)). apply plus_0_r.
     Qed.
 
     (** For the weights [1] and [0] the bisection takes the left and the right half. *)
     Lemma bisect_lower_1 (n : nat) (d1 : d n = 1) : z (S n) = z n.
     Proof.
-      rewrite bisect_lower_succ, d1, (plus_negate_r 1), (mult_0_l (h n)); apply plus_0_r.
+      rewrite bisect_lower_succ, d1, (plus_negate_r 1), (mult_0_l (h n)). apply plus_0_r.
     Qed.
 
     Lemma bisect_lower_0 (n : nat) (d0 : d n = 0) : z (S n) = c n.
     Proof.
-      rewrite bisect_lower_succ, d0, negate_0, (plus_0_r 1), (mult_1_l (h n)); reflexivity.
+      rewrite bisect_lower_succ, d0, negate_0, (plus_0_r 1), (mult_1_l (h n)). reflexivity.
     Qed.
 
     Lemma bisect_upper_1 (n : nat) (d1 : d n = 1) : w (S n) = c n.
     Proof.
-      rewrite bisect_upper_succ, d1, (plus_negate_r 1), (mult_0_l (h n)); apply plus_0_r.
+      rewrite bisect_upper_succ, d1, (plus_negate_r 1), (mult_0_l (h n)). apply plus_0_r.
     Qed.
 
     Lemma bisect_upper_0 (n : nat) (d0 : d n = 0) : w (S n) = w n.
@@ -289,9 +289,9 @@ Section ivt.
       : w n - z n = (b - a) * ' (nat_iter n (mult half) 1).
     Proof.
       induction n as [|n IH].
-      - rewrite (preserves_1 (f:=cast Q F)), mult_1_r; reflexivity.
+      - rewrite (preserves_1 (f:=cast Q F)), mult_1_r. reflexivity.
       - rewrite bisect_width, IH, <- mult_assoc, <- (preserves_mult (f:=cast Q F)).
-        rewrite (mult_comm _ half); reflexivity.
+        rewrite (mult_comm _ half). reflexivity.
     Qed.
 
     (** The intervals are nested, and each contains the previous midpoint. *)
@@ -340,7 +340,7 @@ Section ivt.
     Proof.
       rewrite <- (preserves_mult (f:=cast Q F)).
       change ((' (' ((t + t) / (t + t))) : F) = 1).
-      rewrite pos_recip_r; apply (preserves_1 (f:=cast Q F)).
+      rewrite pos_recip_r. apply (preserves_1 (f:=cast Q F)).
     Qed.
 
     Lemma bisect_weight_between (y : F) : 0 ≤ bisect_weight f t y ≤ 1.
@@ -382,7 +382,7 @@ Section ivt.
     Local Lemma merely_bound : hexists (fun B : Qpos Q => b - a ≤ ' (' B)).
     Proof.
       assert (lt := fst (pos_plus_lt_compat_r (b - a) 1) lt_0_1).
-      assert (q := archimedean_property Q F _ _ lt); strip_truncations.
+      assert (q := archimedean_property Q F _ _ lt). strip_truncations.
       destruct q as [q [ltq _]].
       assert (qpos := qpos_of_upper_bound _ q (snd (flip_nonneg_minus _ _) leab) ltq).
       exact (tr (mkQpos q qpos; lt_le _ _ ltq)).
@@ -404,7 +404,7 @@ Section ivt.
     Definition approximate_root_islimit : {x : F & IsLimit Q F z x}.
     Proof.
       refine (limit_complete Q z _).
-      assert (B := merely_bound); strip_truncations; destruct B as [B leB].
+      assert (B := merely_bound). strip_truncations; destruct B as [B leB].
       exact (tr (_; cauchymodulus_bisect B leB)).
     Defined.
 
@@ -423,7 +423,7 @@ Section ivt.
 
     Local Lemma islimit_bisect_upper : IsLimit Q F w approximate_root.
     Proof.
-      assert (B := merely_bound); strip_truncations; destruct B as [B leB].
+      assert (B := merely_bound). strip_truncations; destruct B as [B leB].
       exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
                (bisect_width_le dec a b B leB) w (fun n => (zw n, reflexivity _)) _
                approximate_root_between).
@@ -431,7 +431,7 @@ Section ivt.
 
     Local Lemma islimit_bisect_mid : IsLimit Q F c approximate_root.
     Proof.
-      assert (B := merely_bound); strip_truncations; destruct B as [B leB].
+      assert (B := merely_bound). strip_truncations; destruct B as [B leB].
       exact (islimit_nested z w B half (pos_is_pos _) half_lt_1
                (bisect_width_le dec a b B leB) c
                (bisect_mid_between dec (bisect_weight_between f _) a b leab) _
@@ -445,7 +445,7 @@ Section ivt.
       assert (halfpos := pos_rationals_to_field_qpos Q (F:=F) (e / 2)).
       assert (ltte : (' (' (e / 2)) : F) < ' (' e)).
       { apply (strictly_order_preserving _), qpos_half_lt. }
-      assert (h := cotransitive ltte (f (c m))); strip_truncations.
+      assert (h := cotransitive ltte (f (c m))). strip_truncations.
       destruct h as [lt|lte].
       - apply tr, inr.
         assert (d1 := bisect_weight_1 f _ _ lt).
@@ -469,7 +469,7 @@ Section ivt.
       - exact (tr (inr (fa, fb))).
       - strip_truncations; destruct IH as [[j [ltj close]]|[neg pos]].
         + exact (tr (inl (j; (leq_succ_r ltj, close)))).
-        + assert (h := bisect_invariant_step m neg pos); strip_truncations.
+        + assert (h := bisect_invariant_step m neg pos). strip_truncations.
           destruct h as [close|signs].
           * exact (tr (inl (m; (leq_refl _, close)))).
           * exact (tr (inr signs)).
@@ -483,14 +483,14 @@ Section ivt.
     Lemma approximate_ivt_candidates
       : hexists (fun n => - ' (' e) < f (approximate_candidate n) < ' (' e)).
     Proof.
-      assert (d := cont_root e); strip_truncations; destruct d as [d close].
-      assert (N := approximate_root_islimit.2 d); assert (M := islimit_bisect_upper d).
+      assert (d := cont_root e). strip_truncations; destruct d as [d close].
+      assert (N := approximate_root_islimit.2 d). assert (M := islimit_bisect_upper d).
       strip_truncations; destruct N as [N zN], M as [M wM].
       set (m := Nat.Core.nat_max N M).
-      assert (inv := bisect_invariant m); strip_truncations.
+      assert (inv := bisect_invariant m). strip_truncations.
       destruct inv as [[j [_ cj]]|[neg pos]].
       1: exact (tr (S j; cj)).
-      apply tr; exists 0%nat; split.
+      apply tr; exists 0%nat. split.
       - lhs' exact (fst (close (w m) (wM m (le_nat_max_r N M)))).
         exact (fst (pos_minus_lt_compat_r _ _) pos).
       - rhs_V' exact (snd (close (z m) (zN m (le_nat_max_l N M)))).
@@ -568,12 +568,12 @@ Section ivt.
     set (P n := (is_inl (l n _ _ lt1) * is_inr (l n _ _ (qpos_half_lt e)))%type).
     assert (inh : hexists P).
     { refine (Trunc_functor (-1) _ (approximate_ivt_candidates f a b leab fa fb (e / 2) cont)).
-      intros [n [lo hi]]; exists n; split.
+      intros [n [lo hi]]; exists n. split.
       - apply is_inr_not_inl, lt_flip.
-        rewrite (preserves_negate (f:=cast Q F)); exact lo.
+        rewrite (preserves_negate (f:=cast Q F)). exact lo.
       - exact (is_inl_not_inr _ (lt_flip _ _ hi)). }
     destruct (minimal_n P _ inh) as [n [Pl Pr]].
-    exists (y n); split; [exact (ly n)|split].
+    exists (y n). split; [exact (ly n)|split].
     - rewrite <- (preserves_negate (f:=cast Q F)).
       exact (un_inl _ Pl).
     - exact (un_inr _ Pr).
@@ -598,11 +598,11 @@ Section ivt.
       - exact (transitivity (fst xzy) lt2).
       - exact (transitivity lt1 (snd xzy)).
       - exact (transitivity lt1 lt2). }
-    generalize (archimedean_property Q F _ _ lt); apply Trunc_functor.
-    intros [r [ltr rlt]]; exists r; split; [split|].
+    generalize (archimedean_property Q F _ _ lt). apply Trunc_functor.
+    intros [r [ltr rlt]]; exists r. split; [split|].
     - rapply le_lt_trans; [apply join_ub_l|exact ltr].
     - rapply lt_le_trans; [exact rlt|apply meet_lb_l].
-    - apply between_minus_swap, between_iff_lt_minus; split.
+    - apply between_minus_swap, between_iff_lt_minus. split.
       + rapply le_lt_trans; [apply join_ub_r|exact ltr].
       + rapply lt_le_trans; [exact rlt|apply meet_lb_r].
   Qed.
@@ -617,18 +617,18 @@ Section ivt.
     Local Lemma merely_rational_apart (x y t : F) (ltxy : x < y)
       : hexists (fun r : Q => ((x < ' r < y) * ((t < f (' r)) + (f (' r) < t)))%type).
     Proof.
-      assert (h := lnc x y t ltxy); strip_truncations; destruct h as [z [xzy ap]].
+      assert (h := lnc x y t ltxy). strip_truncations; destruct h as [z [xzy ap]].
       destruct (fst (apart_iff_total_lt _ _) ap) as [ltzt|lttz].
       - assert (d := iscontinuousat_lt Q F (fun u => - f u) z
                        (iscontinuousat_negate Q F f z (cont z)) _ (snd (flip_lt_negate _ _) ltzt)).
         strip_truncations; destruct d as [d below].
         refine (Trunc_functor (-1) _ (rational_between_close x y z d xzy)).
-        intros [r [xry c]]; exists r; split; [exact xry|right].
+        intros [r [xry c]]; exists r. split; [exact xry|right].
         exact (fst (flip_lt_negate _ _) (below _ c)).
       - assert (d := iscontinuousat_lt Q F f z (cont z) _ lttz).
         strip_truncations; destruct d as [d above].
         refine (Trunc_functor (-1) _ (rational_between_close x y z d xzy)).
-        intros [r [xry c]]; exists r; split; [exact xry|left].
+        intros [r [xry c]]; exists r. split; [exact xry|left].
         exact (above _ c).
     Qed.
 
@@ -650,7 +650,7 @@ Section ivt.
 
       Local Instance decidable_rationalfar (rn : Q * Qpos Q) : Decidable (RationalFar rn).
       Proof.
-        destruct rn as [r n]; exact _.
+        destruct rn as [r n]. exact _.
       Defined.
 
       (** A rational [r] which is [n]-far from [x], [y] and, in its value, from [t] satisfies [RationalFar]. *)
@@ -662,30 +662,30 @@ Section ivt.
         refine ((_, _), _).
         - apply is_inl_not_inr, lt_flip.
           rewrite (preserves_minus (f:=cast Q F)).
-          apply flip_lt_minus_r; rewrite plus_comm; apply flip_lt_minus_r; exact ltr.
+          apply flip_lt_minus_r. rewrite plus_comm. apply flip_lt_minus_r. exact ltr.
         - apply is_inr_not_inl, lt_flip.
           rewrite (preserves_plus (f:=cast Q F)).
-          rewrite plus_comm; apply flip_lt_minus_r; exact rlt.
+          rewrite plus_comm. apply flip_lt_minus_r. exact rlt.
         - destruct ap as [ltD|ltD].
-          + left; exact (is_inr_not_inl _ (lt_flip _ _ ltD)).
+          + left. exact (is_inr_not_inl _ (lt_flip _ _ ltD)).
           + right.
             assert (lt' : f (' r) - t < ' (- ' n)).
             { rewrite (preserves_negate (f:=cast Q F)).
-              apply flip_lt_negate_r; rewrite <- (negate_swap_r t (f (' r))); exact ltD. }
+              apply flip_lt_negate_r. rewrite <- (negate_swap_r t (f (' r))). exact ltD. }
             exact (is_inl_not_inr _ (lt_flip _ _ lt')).
       Qed.
 
       Local Lemma merely_rationalfar (ltxy : x < y) : hexists RationalFar.
       Proof.
-        assert (h := merely_rational_apart x y t ltxy); strip_truncations.
+        assert (h := merely_rational_apart x y t ltxy). strip_truncations.
         destruct h as [r [[xr ry] ap]].
         set (D := match ap with inl _ => f (' r) - t | inr _ => t - f (' r) end).
         assert (Dpos : 0 < D).
-        { unfold D; destruct ap as [l|l]; exact (snd (flip_pos_minus _ _) l). }
+        { unfold D. destruct ap as [l|l]; exact (snd (flip_pos_minus _ _) l). }
         assert (lt0 : 0 < meet (meet (' r - x) (y - ' r)) D).
         { apply meet_lt_l; [apply meet_lt_l|exact Dpos];
             apply (snd (flip_pos_minus _ _)); assumption. }
-        refine (Trunc_functor (-1) _ (merely_qpos_lt Q _ lt0)); intros [n ltn].
+        refine (Trunc_functor (-1) _ (merely_qpos_lt Q _ lt0)). intros [n ltn].
         exists (r, n).
         assert (lt1 : ' (' n) < meet (' r - x) (y - ' r)).
         { rapply lt_le_trans; [exact ltn|apply meet_lb_l]. }
@@ -693,7 +693,7 @@ Section ivt.
         apply rationalfar_lt.
         - rapply lt_le_trans; [exact lt1|apply meet_lb_l].
         - rapply lt_le_trans; [exact lt1|apply meet_lb_r].
-        - unfold D in ltD; destruct ap; [left|right]; exact ltD.
+        - unfold D in ltD. destruct ap; [left|right]; exact ltD.
       Qed.
 
       (** A rational satisfying [RationalFar] is as required. *)
@@ -737,7 +737,7 @@ Section ivt.
     Proof.
       assert (d := iscontinuousat_lt Q F g x gcont 0 pos).
       strip_truncations; destruct d as [d above].
-      refine (Trunc_functor (-1) _ (islim d)); intros [N sN]; exists N.
+      refine (Trunc_functor (-1) _ (islim d)). intros [N sN]; exists N.
       exact (above _ (sN N (Nat.Core.leq_refl N))).
     Qed.
 
@@ -747,7 +747,7 @@ Section ivt.
     Proof.
       rewrite <- plus_mult_distr_l, <- (preserves_plus (f:=cast Q F)).
       change (quarter + quarter) with (' (1 / 2 / 2 + 1 / 2 / 2 : Qpos Q)).
-      rewrite <- (pos_split2 (1 / 2)); reflexivity.
+      rewrite <- (pos_split2 (1 / 2)). reflexivity.
     Qed.
 
     Local Lemma quarter_lt_1 : quarter < 1.
@@ -772,7 +772,8 @@ Section ivt.
     Proof.
       unfold shrink.
       rewrite (preserves_minus (f:=cast Q F)), (preserves_1 (f:=cast Q F)).
-      rewrite (plus_mult_distr_l u 1 (- ' quarter)), (mult_1_r u), <- (negate_mult_distr_r u (' quarter)); reflexivity.
+      rewrite (plus_mult_distr_l u 1 (- ' quarter)), (mult_1_r u), <- (negate_mult_distr_r u (' quarter)).
+      reflexivity.
     Qed.
 
     (** The points [u] and [v] a quarter of the way into an interval [[a, b]] satisfy [a < u < v < b], and [[a, v]] and [[u, b]] are shorter than [[a, b]] by the factor [shrink]. *)
@@ -814,12 +815,12 @@ Section ivt.
 
       Local Lemma upper_minus_lower_quarter : b - u = (b - a) * ' shrink.
       Proof.
-        rewrite negate_plus_distr, plus_assoc; apply minus_quarter.
+        rewrite negate_plus_distr, plus_assoc. apply minus_quarter.
       Qed.
 
       Local Lemma upper_quarter_minus_lower : v - a = (b - a) * ' shrink.
       Proof.
-        rewrite <- plus_assoc, (plus_comm (- _)), plus_assoc; apply minus_quarter.
+        rewrite <- plus_assoc, (plus_comm (- _)), plus_assoc. apply minus_quarter.
       Qed.
     End quarters.
 
@@ -884,16 +885,16 @@ Section ivt.
         : w n - z n ≤ ' (' B * nat_iter n (mult shrink) 1).
       Proof.
         induction n as [|n IH].
-        - rewrite mult_1_r; apply lt_le, sign_width_bound.2.
+        - rewrite mult_1_r. apply lt_le, sign_width_bound.2.
         - lhs' exact (snd (step_props n)).
           assert (r0 : (0 : F) ≤ ' shrink).
           { rewrite <- (preserves_0 (f:=cast Q F)).
             apply (order_preserving _), lt_le, shrink_pos. }
           lhs' exact (order_preserving (.* ' shrink) _ _ IH).
           apply eq_le.
-          rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
+          rewrite <- (preserves_mult (f:=cast Q F)). apply ap.
           change (nat_iter (S n) (mult shrink) 1) with (shrink * nat_iter n (mult shrink) 1).
-          rewrite <- mult_assoc, (mult_comm _ shrink); reflexivity.
+          rewrite <- mult_assoc, (mult_comm _ shrink). reflexivity.
       Qed.
 
       Local Definition sign_zinc n : z n ≤ z (S n) := fst (fst (step_props n)).
@@ -922,14 +923,14 @@ Section ivt.
         refine ((_, zxw 0%nat), _).
         - exact (locator_limit Q F (fun n => sign_lower_locator _) islim).
         - apply (antisymmetry (≤)); apply not_lt_le_flip; intro lt.
-          + assert (h := pos_limit f x (cont x) _ islim lt); strip_truncations.
+          + assert (h := pos_limit f x (cont x) _ islim lt). strip_truncations.
             destruct h as [n pos].
-            apply (irreflexivity (<) 0); rapply lt_le_trans; [exact pos|apply sign_lower_nonpos].
+            apply (irreflexivity (<) 0). rapply lt_le_trans; [exact pos|apply sign_lower_nonpos].
           + assert (h := pos_limit (fun y => - f y) x (iscontinuousat_negate Q F f x (cont x))
                            _ wlim (fst (flip_neg_negate _) lt)).
             strip_truncations; destruct h as [n pos].
             apply (snd (flip_neg_negate _)) in pos.
-            apply (irreflexivity (<) 0); rapply le_lt_trans; [apply sign_upper_nonneg|exact pos].
+            apply (irreflexivity (<) 0). rapply le_lt_trans; [apply sign_upper_nonneg|exact pos].
       Defined.
 
     End exact.
