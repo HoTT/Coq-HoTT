@@ -57,7 +57,7 @@ Section hottbook_reals.
 
     #[export] Instance ispremetric_sig_close : IsPremetric Q sig_close.
     Proof.
-      intros e w w'; unfold sig_close; exact _.
+      intros e w w'. unfold sig_close; exact _.
     Defined.
 
     (** A dependent Cauchy approximation over a Cauchy approximation [x]. *)
@@ -81,7 +81,7 @@ Section hottbook_reals.
       : a = b.
     Proof.
       apply (equiv_ap' (issig_dependentcauchyapproximation x)^-1 _ _).
-      apply path_sigma_hprop; funext e; exact (p e).
+      apply path_sigma_hprop. funext e; exact (p e).
     Defined.
 
     Definition transport_dependentcauchyapproximation
@@ -90,7 +90,7 @@ Section hottbook_reals.
       : transport DependentCauchyApproximation s a e
         = transport A (ap10 (ap (approximation Q close) s) e) (a e).
     Proof.
-      destruct s; reflexivity.
+      destruct s. reflexivity.
     Defined.
 
     (** Pairing [x] with [a] gives a Cauchy approximation in the total space exactly when [a] is a dependent Cauchy approximation over [x]. *)
@@ -127,7 +127,7 @@ Section hottbook_reals.
       : ap10 (ap (cshom_fun Q R S) p) (cs_rat Q R q) @ cshom_rat Q R S g q
         = cshom_rat Q R S f q.
     Proof.
-      destruct p; apply concat_1p.
+      destruct p. apply concat_1p.
     Defined.
 
     (** The path [f o x = g o x] of Cauchy approximations induced by [p]. *)
@@ -143,7 +143,7 @@ Section hottbook_reals.
       : ap10 (ap (cshom_fun Q R S) p) (cs_lim Q R x) @ cshom_lim Q R S g x
         = cshom_lim Q R S f x @ ap (cs_lim Q S) (cshom_path_approximation p x).
     Proof.
-      destruct p; exact (concat_1p _ @ (concat_p1 _)^).
+      destruct p. exact (concat_1p _ @ (concat_p1 _)^).
     Defined.
 
     Definition ap10_cshom_path_approximation {f g : CauchyStructureHom Q R S} (p : f = g)
@@ -151,7 +151,7 @@ Section hottbook_reals.
       : ap10 (ap (approximation Q _) (cshom_path_approximation p x)) e
         = ap10 (ap (cshom_fun Q R S) p) (x e).
     Proof.
-      destruct p; reflexivity.
+      destruct p. reflexivity.
     Defined.
 
   End cshom_path.
@@ -261,7 +261,7 @@ Section hottbook_reals.
     Local Lemma transport_f_lim {y x : CauchyApproximation Q close} (s : y = x) (b : D y)
       : transport A (ap lim s) (f_lim y b) = f_lim x (transport D s b).
     Proof.
-      destruct s; reflexivity.
+      destruct s. reflexivity.
     Defined.
 
     Definition hottbookreals_ind_beta_lim `{Funext} (x : CauchyApproximation Q close)
@@ -275,7 +275,7 @@ Section hottbook_reals.
         exact (whiskerR (concat_p1 _) _). }
       rewrite p, transport_pp, (pr2_path (cshom_lim Q _ _ h x)).
       lhs napply transport_f_lim.
-      apply ap; snapply path_dependentcauchyapproximation; [exact _ | intro e].
+      apply ap. snapply path_dependentcauchyapproximation; [exact _ | intro e].
       lhs napply transport_dependentcauchyapproximation.
       apply (ap (fun r => transport A r _)).
       exact (ap10_cshom_path_approximation hottbookreals_sig_hom_pr1 x e).
@@ -324,7 +324,7 @@ Section hottbook_reals.
         assert (p : e = e / 2 / 2 + e / 2 / 2 + e / 2 / 2 + e / 2 / 2).
         { rewrite <- (pos_split2 (e / 2)), <- Qpos_plus_assoc, <- (pos_split2 (e / 2)).
           exact (pos_split2 e). }
-        rewrite p; apply cs_close_lim_lim, iscauchyapproximation_approximation.
+        rewrite p. apply cs_close_lim_lim, iscauchyapproximation_approximation.
     Qed.
 
     #[export] Instance ishset_hottbookreals `{Funext} {Qdec : DecidablePaths Q}
@@ -359,10 +359,10 @@ Section hottbook_reals.
       strip_truncations; destruct h1 as [q1 [l1 l1']], h2 as [q2 [l2 l2']].
       assert (hm : {m : Q & (u - v < ' m) /\ (- (u - v) < ' m) /\ (m < ' e)}).
       { destruct (le_or_lt q1 q2) as [le|lt].
-        - exists q2; split; [|split; [exact l2|]].
+        - exists q2. split; [|split; [exact l2|]].
           + rapply lt_le_trans; [exact l1|apply (order_preserving _), le].
           + apply (strictly_order_reflecting (cast Q F)), l2'.
-        - exists q1; split; [exact l1|split].
+        - exists q1. split; [exact l1|split].
           + rapply lt_le_trans; [exact l2|apply (order_preserving _), lt_le, lt].
           + apply (strictly_order_reflecting (cast Q F)), l1'. }
       destruct hm as [m [hi' [lo' lt]]].
@@ -372,7 +372,7 @@ Section hottbook_reals.
       apply tr.
       exists (mkQpos m mpos), (mkQpos (' e - m) (snd (flip_pos_minus _ _) lt)).
       split; [|exact close_m].
-      apply pos_eq; exact (plus_conjugate_alt (' e) m).
+      apply pos_eq. exact (plus_conjugate_alt (' e) m).
     Qed.
 
     Context `{!RoundUpStrict Q} `{!IsComplete Q F}.
@@ -382,10 +382,10 @@ Section hottbook_reals.
       (e : Qpos Q) (c : field_close Q e (field_lim Q y) w)
       : merely {d : Qpos Q & {e' : Qpos Q & prod (e = e' + d) (field_close Q e' (y d) w)}}.
     Proof.
-      assert (r := field_close_rounded e _ _ c); strip_truncations.
+      assert (r := field_close_rounded e _ _ c). strip_truncations.
       destruct r as [d0 [d0' [p c']]].
-      apply tr; exists (d0' / 2), (d0 + d0' / 2); split.
-      - rewrite p, <- Qpos_plus_assoc, <- pos_split2; reflexivity.
+      apply tr; exists (d0' / 2), (d0 + d0' / 2). split.
+      - rewrite p, <- Qpos_plus_assoc, <- pos_split2. reflexivity.
       - rewrite (qpos_plus_comm d0).
         exact (le_field_close_triangle Q d0 (d0' / 2) _ _ _
                  (isapproximationlimit_le Q y _ (isapproximationlimit_field_lim Q y) _) c').
@@ -430,7 +430,7 @@ Section hottbook_reals.
       intros e c; rewrite (cshom_lim Q _ _ i) in c.
       assert (s := field_lim_close_split _ _ e (field_close_symmetric Q _ _ _ c)).
       strip_truncations; destruct s as [d [e' [p c']]].
-      rewrite p; apply cs_close_rat_lim, IHy, field_close_symmetric, c'.
+      rewrite p. apply cs_close_rat_lim, IHy, field_close_symmetric, c'.
     Qed.
 
     Local Lemma reflects_close_lim_rat (x : CauchyApproximation Q close) (r : Q)
@@ -440,7 +440,7 @@ Section hottbook_reals.
       intros e c; rewrite (cshom_lim Q _ _ i) in c.
       assert (s := field_lim_close_split _ _ e c).
       strip_truncations; destruct s as [d [e' [p c']]].
-      rewrite p; apply cs_close_lim_rat, IHx, c'.
+      rewrite p. apply cs_close_lim_rat, IHx, c'.
     Qed.
 
     Local Lemma reflects_close_lim_lim (x y : CauchyApproximation Q close)
@@ -475,9 +475,9 @@ Section hottbook_reals.
     (** Hence the canonical map is an embedding. *)
     #[export] Instance isinj_hottbookreals_to_field `{Funext} : IsInjective i.
     Proof.
-      intros u v p; apply (cs_eq Q R); intro e.
+      intros u v p. apply (cs_eq Q R). intro e.
       apply hottbookreals_to_field_reflects_close.
-      rewrite p; exact (cshom_close Q _ _ i e v v (hottbookreals_close_refl R e v)).
+      rewrite p. exact (cshom_close Q _ _ i e v v (hottbookreals_close_refl R e v)).
     Qed.
 
     #[export] Instance isembedding_hottbookreals_to_field `{Funext} : IsEmbedding i

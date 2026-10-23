@@ -62,8 +62,8 @@ Section cauchy_reals.
       change (' e * / (1 + (1 + (1 + 1))) = ' e * / (1 + 1) * / (1 + 1)).
       rewrite <- mult_assoc, <- dec_recip_distr.
       apply ap, ap.
-      rewrite plus_mult_distr_l, mult_1_r, plus_assoc; reflexivity. }
-    rewrite p; exact (pos_split2 (e / 2))^.
+      rewrite plus_mult_distr_l, mult_1_r, plus_assoc. reflexivity. }
+    rewrite p. exact (pos_split2 (e / 2))^.
   Qed.
 
   Section limit.
@@ -88,7 +88,7 @@ Section cauchy_reals.
     Lemma cauchy_limit_close (x : CauchySequence) (d : Qpos Q)
       : field_close Q (d + d) (cauchy_limit x) (' x (cauchy_modulus x d)).
     Proof.
-      assert (c := islimit_cauchy_limit x d); strip_truncations.
+      assert (c := islimit_cauchy_limit x d). strip_truncations.
       destruct c as [N close].
       set (n := Nat.Core.nat_max N (cauchy_modulus x d)).
       apply (field_close_triangle Q _ _ _ (' x n)).
@@ -100,10 +100,10 @@ Section cauchy_reals.
     Lemma cauchy_limit_related (x y : CauchySequence) (r : cauchy_related x y)
       : cauchy_limit x = cauchy_limit y.
     Proof.
-      apply (field_close_eq Q); intro e.
+      apply (field_close_eq Q). intro e.
       assert (p : e = e / 2 / 4 + e / 2 / 4 + e / 2 + (e / 2 / 4 + e / 2 / 4)).
       { rewrite qpos_quarter, (qpos_plus_comm (e / 2 / 2) (e / 2)), <- Qpos_plus_assoc.
-        rewrite <- (pos_split2 (e / 2)); exact (pos_split2 e). }
+        rewrite <- (pos_split2 (e / 2)). exact (pos_split2 e). }
       rewrite p.
       apply (field_close_triangle Q _ _ _ (' y (cauchy_modulus y (e / 2 / 4)))).
       1: apply (field_close_triangle Q _ _ _ (' x (cauchy_modulus x (e / 2 / 4)))).
@@ -122,9 +122,9 @@ Section cauchy_reals.
     Proof.
       apply (limit_unique Q (fun _ => ' q)).
       - exact (islimit_cauchy_limit (const_cauchy_sequence q)).
-      - intro e; apply tr; exists 0%nat; intros n _.
+      - intro e. apply tr; exists 0%nat. intros n _.
         assert (epos := pos_rationals_to_field_qpos Q (F:=F) e).
-        unfold field_close; rewrite plus_negate_r; split.
+        unfold field_close; rewrite plus_negate_r. split.
         + apply flip_pos_negate, epos.
         + exact epos.
     Qed.
@@ -139,10 +139,10 @@ Section cauchy_reals.
       : IsCauchyReal x <-> hexists (fun s : CauchySequence => IsLimit Q F (fun n => ' s n) x).
     Proof.
       split.
-      - apply Trunc_rec; intros [r p]; revert r p.
-        srapply (Quotient_ind_hprop cauchy_related); intros s p; apply tr.
-        exists s; exact (transport _ p (islimit_cauchy_limit s)).
-      - apply Trunc_functor; intros [s islim].
+      - apply Trunc_rec. intros [r p]; revert r p.
+        srapply (Quotient_ind_hprop cauchy_related). intros s p; apply tr.
+        exists s. exact (transport _ p (islimit_cauchy_limit s)).
+      - apply Trunc_functor. intros [s islim].
         exists (class_of _ s).
         exact (limit_unique Q _ _ _ (islimit_cauchy_limit s) islim).
     Qed.

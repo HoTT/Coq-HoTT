@@ -38,7 +38,7 @@ Section completeness.
 
   Lemma rational_close_refl (e : Qpos Q) (q : Q) : rational_close e q q.
   Proof.
-    unfold rational_close; rewrite plus_negate_r; split.
+    unfold rational_close; rewrite plus_negate_r. split.
     - apply flip_pos_negate, is_pos.
     - apply is_pos.
   Qed.
@@ -76,7 +76,7 @@ Section completeness.
   Lemma lt_bound_plus (a b p q : F) (ap : - p < a < p) (bq : - q < b < q)
     : - (p + q) < a + b < p + q.
   Proof.
-    rewrite negate_plus_distr; split; apply plus_lt_compat.
+    rewrite negate_plus_distr. split; apply plus_lt_compat.
     - exact (fst ap).
     - exact (fst bq).
     - exact (snd ap).
@@ -86,7 +86,7 @@ Section completeness.
   Lemma le_lt_bound_plus (a b p q : F) (ap : - p ≤ a ≤ p) (bq : - q < b < q)
     : - (p + q) < a + b < p + q.
   Proof.
-    rewrite negate_plus_distr; split; apply plus_le_lt_compat.
+    rewrite negate_plus_distr. split; apply plus_le_lt_compat.
     - exact (fst ap).
     - exact (fst bq).
     - exact (snd ap).
@@ -103,31 +103,31 @@ Section completeness.
   Lemma lt_bound_negate (a p : F) (ap : - p < a < p) : - p < - a < p.
   Proof.
     split.
-    - apply (flip_lt_negate a p); exact (snd ap).
-    - apply flip_lt_negate_l; exact (fst ap).
+    - apply (flip_lt_negate a p). exact (snd ap).
+    - apply flip_lt_negate_l. exact (fst ap).
   Qed.
 
   Lemma le_bound_negate (a p : F) (ap : - p ≤ a ≤ p) : - p ≤ - a ≤ p.
   Proof.
     split.
-    - apply (flip_le_negate a p); exact (snd ap).
-    - rewrite <- (negate_involutive p); apply (flip_le_negate (- p) a); exact (fst ap).
+    - apply (flip_le_negate a p). exact (snd ap).
+    - rewrite <- (negate_involutive p). apply (flip_le_negate (- p) a). exact (fst ap).
   Qed.
 
   (** If [l] is a limit of [x], then [- l] is a limit of [- x]. *)
   Lemma islimit_negate (x : nat -> F) (l : F) (islim : IsLimit Q F x l)
     : IsLimit Q F (fun n => - x n) (- l).
   Proof.
-    intro e; refine (Trunc_functor (-1) _ (islim e)); intros [N close].
-    exists N; intros n len.
-    rewrite <- negate_plus_distr; apply lt_bound_negate, (close n len).
+    intro e. refine (Trunc_functor (-1) _ (islim e)). intros [N close].
+    exists N. intros n len.
+    rewrite <- negate_plus_distr. apply lt_bound_negate, (close n len).
   Qed.
 
   Lemma field_close_symmetric (e : Qpos Q) (u v : F)
     : field_close e u v -> field_close e v u.
   Proof.
     intro c; unfold field_close.
-    rewrite (negate_swap_r v u); apply lt_bound_negate, c.
+    rewrite (negate_swap_r v u). apply lt_bound_negate, c.
   Qed.
 
   Lemma field_close_triangle (e d : Qpos Q) (u v w : F)
@@ -143,7 +143,7 @@ Section completeness.
   Lemma field_close_weaken (e d : Qpos Q) (u v : F) (ltde : ' e < ' d)
     : field_close e u v -> field_close d u v.
   Proof.
-    intro c; apply (between_weaken (' (' e))); [exact c|].
+    intro c. apply (between_weaken (' (' e))); [exact c|].
     apply (strictly_order_preserving (cast Q F)), ltde.
   Qed.
 
@@ -152,7 +152,7 @@ Section completeness.
     : field_close e u v <-> abs (u - v) < ' (' e).
   Proof.
     split.
-    - intros [lo hi]; apply abs_lt; [exact lo|exact hi].
+    - intros [lo hi]. apply abs_lt; [exact lo|exact hi].
     - intro lt; split.
       + apply flip_lt_negate_l.
         rapply le_lt_trans; [apply negate_le_abs|exact lt].
@@ -178,7 +178,7 @@ Section completeness.
     Lemma limit_unique (l l' : F) (islim : IsLimit Q F x l) (islim' : IsLimit Q F x l')
       : l = l'.
     Proof.
-      apply field_close_eq; intro e.
+      apply field_close_eq. intro e.
       assert (c := islim (e / 2)).
       assert (c' := islim' (e / 2)).
       strip_truncations; destruct c as [N close], c' as [N' close'].
@@ -186,7 +186,7 @@ Section completeness.
       rewrite (pos_split2 e).
       apply (field_close_triangle (e / 2) (e / 2) _ (x n)).
       - exact (close n (le_nat_max_l N N')).
-      - apply field_close_symmetric; exact (close' n (le_nat_max_r N N')).
+      - apply field_close_symmetric. exact (close' n (le_nat_max_r N N')).
     Qed.
 
     #[export] Instance ishprop_islimit `{Funext} (l : F) : IsHProp (IsLimit Q F x l).
@@ -197,8 +197,8 @@ Section completeness.
     (** The type of limits of a sequence is a proposition. *)
     #[export] Instance ishprop_limit `{Funext} : IsHProp {l : F & IsLimit Q F x l}.
     Proof.
-      apply hprop_allpath; intros [l islim] [l' islim'].
-      apply path_sigma_hprop; exact (limit_unique l l' islim islim').
+      apply hprop_allpath. intros [l islim] [l' islim'].
+      apply path_sigma_hprop. exact (limit_unique l l' islim islim').
     Defined.
 
     (** Hence a limit that merely exists can be computed. *)

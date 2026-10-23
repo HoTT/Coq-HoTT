@@ -50,13 +50,13 @@ Section metric.
   Proof.
     snapply Build_IsMetric; [snapply Build_IsPseudoMetric|].
     - intros x y; apply abs_nonneg.
-    - intro x; change (abs (x - x) = 0); rewrite plus_negate_r; apply abs_0.
+    - intro x; change (abs (x - x) = 0). rewrite plus_negate_r. apply abs_0.
     - intros x y; apply abs_minus_swap.
     - intros x y z; change (abs (x - z) ≤ abs (x - y) + abs (y - z)).
       assert (p : (x - y) + (y - z) = x - z).
       { rewrite <- (plus_assoc x (- y) (y - z)), (plus_assoc (- y) y (- z)).
-        rewrite plus_negate_l, plus_0_l; reflexivity. }
-      rewrite <- p; apply abs_triangle.
+        rewrite plus_negate_l, plus_0_l. reflexivity. }
+      rewrite <- p. apply abs_triangle.
     - intros x y p; apply equal_by_zero_sum, abs_eq_0, p.
   Defined.
 
@@ -102,9 +102,9 @@ Section convergence.
     Lemma ismetriclimit_tail (x : nat -> X) (l : X) (islim : IsMetricLimit x l)
       : IsMetricLimit (fun n => x (S n)) l.
     Proof.
-      intro e; assert (c := islim e); strip_truncations; apply tr.
+      intro e; assert (c := islim e). strip_truncations. apply tr.
       destruct c as [N close'].
-      exists N; intros n leNn.
+      exists N. intros n leNn.
       exact (close' (S n) (leq_succ_r leNn)).
     Defined.
 
@@ -152,9 +152,9 @@ Section convergence.
       : PreservesMetricLimits f.
     Proof.
       intros x l islim e.
-      assert (c := islim (w e)); strip_truncations; apply tr.
+      assert (c := islim (w e)). strip_truncations. apply tr.
       destruct c as [N close].
-      exists N; intros n leNn.
+      exists N. intros n leNn.
       exact (fw e _ _ (close n leNn)).
     Defined.
 
@@ -210,7 +210,7 @@ Section convergence.
     Lemma merely_qpos_lt (a : F) (lt0a : 0 < a)
       : hexists (fun e : Qpos Q => ' (' e) < a).
     Proof.
-      assert (c := archimedean_property Q F 0 a lt0a); strip_truncations.
+      assert (c := archimedean_property Q F 0 a lt0a). strip_truncations.
       destruct c as [q [lt0q ltqa]].
       assert (qpos : 0 < q).
       { apply rationals_to_field_pos_iff, lt0q. }
@@ -220,8 +220,8 @@ Section convergence.
     (** An element of [F] below every positive rational is nonpositive. *)
     Lemma nonpos_lt_qpos (a : F) : (forall e : Qpos Q, a < ' (' e)) -> a ≤ 0.
     Proof.
-      intros lt; apply not_lt_le_flip; intro lt0a.
-      assert (c := merely_qpos_lt a lt0a); strip_truncations; destruct c as [e ltea].
+      intros lt; apply not_lt_le_flip. intro lt0a.
+      assert (c := merely_qpos_lt a lt0a). strip_truncations; destruct c as [e ltea].
       exact (lt_antisym a (' (' e)) (lt e, ltea)).
     Qed.
 
@@ -234,7 +234,7 @@ Section convergence.
       : d l l' = 0.
     Proof.
       apply (antisymmetry (≤)); [|apply pseudometric_nonneg].
-      apply nonpos_lt_qpos; intro e.
+      apply nonpos_lt_qpos. intro e.
       assert (c := islim (e / 2)).
       assert (c' := islim' (e / 2)).
       strip_truncations; destruct c as [N close], c' as [N' close'].
@@ -282,34 +282,34 @@ Section convergence.
       : IsPseudoMetric prod_dist.
     Proof.
       snapply Build_IsPseudoMetric; unfold prod_dist.
-      - intros p q; apply nonneg_plus_compat; apply pseudometric_nonneg.
-      - intro p; rewrite 2 pseudometric_diag; apply plus_0_l.
+      - intros p q. apply nonneg_plus_compat; apply pseudometric_nonneg.
+      - intro p; rewrite 2 pseudometric_diag. apply plus_0_l.
       - intros p q; rewrite (pseudometric_symmetric (fst p)), (pseudometric_symmetric (snd p)).
         reflexivity.
       - intros p q r.
         refine (transitivity (plus_le_compat _ _ _ _ (pseudometric_triangle _ (fst q) _)
                   (pseudometric_triangle _ (snd q) _)) _).
         apply eq_le.
-        rewrite <- 2 plus_assoc; apply ap.
-        rewrite 2 plus_assoc; apply (ap (+ _)), plus_comm.
+        rewrite <- 2 plus_assoc. apply ap.
+        rewrite 2 plus_assoc. apply (ap (+ _)), plus_comm.
     Defined.
 
     (** If a sum of two nonnegative elements is zero, then so is the first summand. *)
     Local Lemma nonneg_plus_eq_0_l (u v : F) : 0 ≤ u -> 0 ≤ v -> u + v = 0 -> u = 0.
     Proof.
-      intros u0 v0 p; apply (antisymmetry (≤)); [|exact u0].
-      rewrite <- p; exact (fst (nonneg_plus_le_compat_r u v) v0).
+      intros u0 v0 p. apply (antisymmetry (≤)); [|exact u0].
+      rewrite <- p. exact (fst (nonneg_plus_le_compat_r u v) v0).
     Qed.
 
     #[export] Instance ismetric_prod `{!IsMetric dX} `{!IsMetric dY} : IsMetric prod_dist.
     Proof.
       snapply Build_IsMetric; [exact _|].
-      intros [x y] [x' y'] p; unfold prod_dist in p; cbn in p.
+      intros [x y] [x' y'] p. unfold prod_dist in p; cbn in p.
       assert (nx := pseudometric_nonneg (d:=dX) x x').
       assert (ny := pseudometric_nonneg (d:=dY) y y').
       apply path_prod; cbn; apply metric_separated.
       - exact (nonneg_plus_eq_0_l (dX x x') (dY y y') nx ny p).
-      - rewrite plus_comm in p; exact (nonneg_plus_eq_0_l (dY y y') (dX x x') ny nx p).
+      - rewrite plus_comm in p. exact (nonneg_plus_eq_0_l (dY y y') (dX x x') ny nx p).
     Defined.
 
   End products.
@@ -339,16 +339,16 @@ Section convergence.
           (metric_close (prod_dist dX' dY')) (functor_prod f g)
           (fun e => qpos_min (wf (e / 2)) (wg (e / 2))).
     Proof.
-      intros e [x y] [x' y'] c; unfold metric_close, prod_dist in *; cbn in *.
+      intros e [x y] [x' y'] c. unfold metric_close, prod_dist in *; cbn in *.
       assert (nx := pseudometric_nonneg (d:=dX) x x').
       assert (ny := pseudometric_nonneg (d:=dY) y y').
       rewrite (qinc_split2 e).
       apply plus_lt_compat.
-      - apply fw; unfold metric_close.
+      - apply fw. unfold metric_close.
         rapply le_lt_trans; [apply nonneg_plus_le_compat_r, ny|].
         rapply lt_le_trans; [exact c|].
         apply (order_preserving (cast Q F)), qpos_min_le_l.
-      - apply gw; unfold metric_close.
+      - apply gw. unfold metric_close.
         rapply le_lt_trans; [apply nonneg_plus_le_compat_l, nx|].
         rapply lt_le_trans; [exact c|].
         apply (order_preserving (cast Q F)), qpos_min_le_r.
@@ -360,8 +360,8 @@ Section convergence.
     : IsUniformModulus (metric_close d) (metric_close (prod_dist d d))
         (fun x => (x, x)) (fun e => e / 2).
   Proof.
-    intros e x y c; unfold metric_close, prod_dist in *; cbn.
-    rewrite (qinc_split2 e); apply plus_lt_compat; exact c.
+    intros e x y c. unfold metric_close, prod_dist in *; cbn.
+    rewrite (qinc_split2 e). apply plus_lt_compat; exact c.
   Qed.
 
   (** If [f] has modulus [w] and [g] on the product has modulus [v], then [fun x => g (x, f x)] is uniformly continuous with the modulus below. *)

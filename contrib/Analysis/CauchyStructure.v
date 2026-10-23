@@ -64,7 +64,7 @@ Section cauchy_structure.
       : x = y.
     Proof.
       apply (equiv_ap' issig_cauchyapproximation^-1 _ _).
-      apply path_sigma_hprop; funext e; exact (p e).
+      apply path_sigma_hprop. funext e; exact (p e).
     Defined.
 
   End approximation.
@@ -127,7 +127,7 @@ Section cauchy_structure.
       : f = g.
     Proof.
       apply (equiv_ap' issig_cauchystructurehom^-1 _ _).
-      apply path_sigma_hprop; funext u; exact (p u).
+      apply path_sigma_hprop. funext u; exact (p u).
     Defined.
 
     (** Hence the type of morphisms into a set is contractible exactly when there is a morphism and any two morphisms are pointwise equal. *)
@@ -136,9 +136,9 @@ Section cauchy_structure.
         <-> CauchyStructureHom R S * (forall f g : CauchyStructureHom R S, f == g).
     Proof.
       split.
-      - intros c; split; [exact (center _)|].
+      - intros c. split; [exact (center _)|].
         intros f g; exact (ap10 (ap (cshom_fun R S) (path_contr f g))).
-      - intros [f h]; apply (Build_Contr _ f); intro g.
+      - intros [f h]. apply (Build_Contr _ f). intro g.
         exact (path_cauchystructurehom f g (h f g)).
     Defined.
   End path_cshom.
@@ -179,8 +179,8 @@ Section cauchy_structure.
       set (h := d / 2 / 2).
       rewrite (qpos_plus_comm h (e0 + h)), <- (Qpos_plus_assoc e0 h h).
       rewrite <- 2 (Qpos_plus_assoc e0).
-      apply ap; rewrite <- (Qpos_plus_assoc (h + h) h h); unfold h.
-      rewrite <- (pos_split2 (d / 2)); exact (pos_split2 d).
+      apply ap. rewrite <- (Qpos_plus_assoc (h + h) h h). unfold h.
+      rewrite <- (pos_split2 (d / 2)). exact (pos_split2 d).
     Qed.
 
     (** Two Cauchy approximations whose terms are close up to [e0] and their indices have limits which are close up to [e0] and any positive rational. *)
@@ -188,7 +188,7 @@ Section cauchy_structure.
       (c : forall d n, cs_close S (d + (e0 + n)) (a d) (b n)) (d : Qpos Q)
       : cs_close S (e0 + d) (cs_lim S a) (cs_lim S b).
     Proof.
-      rewrite (qpos_split4 e0 d); apply cs_close_lim_lim, c.
+      rewrite (qpos_split4 e0 d). apply cs_close_lim_lim, c.
     Qed.
 
     (** Hence two Cauchy approximations whose terms are close up to any positive rational and their indices have the same limit. *)
@@ -196,7 +196,7 @@ Section cauchy_structure.
       (c : forall e d n, cs_close S (d + (e + n)) (a d) (b n))
       : cs_lim S a = cs_lim S b.
     Proof.
-      apply cs_eq; intro e; rewrite (pos_split2 e).
+      apply cs_eq. intro e; rewrite (pos_split2 e).
       apply cs_close_lim_lim_split, c.
     Qed.
   End compare_limits.
@@ -211,13 +211,13 @@ Section cauchy_structure.
 
     #[export] Instance ispremetric_field_close : IsPremetric Q (field_close Q (F:=F)).
     Proof.
-      intros e u v; unfold field_close; exact _.
+      intros e u v. unfold field_close; exact _.
     Defined.
 
     (** Closeness is reflexive. *)
     Lemma field_close_refl (e : Qpos Q) (u : F) : field_close Q e u u.
     Proof.
-      unfold field_close; rewrite plus_negate_r; split.
+      unfold field_close; rewrite plus_negate_r. split.
       - apply flip_pos_negate, (pos_rationals_to_field_qpos Q).
       - apply (pos_rationals_to_field_qpos Q).
     Qed.
@@ -225,8 +225,8 @@ Section cauchy_structure.
     (** An element of [F] below [b + e] for every positive rational [e] is at most [b]. *)
     Lemma le_lt_plus_qpos (a b : F) (lt : forall e : Qpos Q, a < b + ' (' e)) : a ≤ b.
     Proof.
-      apply flip_nonpos_minus, (nonpos_lt_qpos Q); intro e.
-      apply flip_lt_minus_l; rewrite plus_comm; exact (lt e).
+      apply flip_nonpos_minus, (nonpos_lt_qpos Q). intro e.
+      apply flip_lt_minus_l. rewrite plus_comm. exact (lt e).
     Qed.
 
     (** A limit [u] of [x] is [d]-close to [x d] in the weak sense [|x d - u| ≤ d]. *)
@@ -237,11 +237,11 @@ Section cauchy_structure.
       split.
       - rewrite <- (negate_involutive (x d - u)).
         apply (snd (flip_le_negate (- (x d - u)) (' (' d)))).
-        apply le_lt_plus_qpos; intro e.
+        apply le_lt_plus_qpos. intro e.
         apply flip_lt_negate_l.
         rewrite <- (preserves_plus (f:=cast Q F)).
         exact (fst (islim d e)).
-      - apply le_lt_plus_qpos; intro e.
+      - apply le_lt_plus_qpos. intro e.
         rewrite <- (preserves_plus (f:=cast Q F)).
         exact (snd (islim d e)).
     Qed.
@@ -323,7 +323,7 @@ Section cauchy_structure.
         exact (recip_succ_lt _ n (le_nat_max_r _ _)).
       - apply (field_close_triangle Q _ _ _ (x (recip_succ n))).
         + exact (iscauchyapproximation_approximation _ x _ _).
-        + apply field_close_symmetric; exact (close n (le_nat_max_l _ _)).
+        + apply field_close_symmetric. exact (close n (le_nat_max_l _ _)).
     Qed.
 
     (** In the other direction, [|field_lim x - x d| ≤ d]. *)
@@ -364,7 +364,7 @@ Section cauchy_structure.
 
     Lemma field_lim_const (y : F) : field_lim (const_approximation y) = y.
     Proof.
-      apply (field_close_eq Q); intro e; rewrite (pos_split2 e).
+      apply (field_close_eq Q). intro e; rewrite (pos_split2 e).
       exact (field_close_symmetric Q _ _ _
                (isapproximationlimit_field_lim (const_approximation y) (e / 2) (e / 2))).
     Qed.

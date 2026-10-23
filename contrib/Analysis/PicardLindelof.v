@@ -56,10 +56,10 @@ Section picard_lindelof.
     induction N as [|N IH].
     - rewrite plus_negate_r, abs_0, (preserves_0 (f:=nQ)), (preserves_0 (f:=cast Q F)).
       reflexivity.
-    - lhs' exact (pseudometric_triangle (d:=dF) _ (h (z N)) _); cbn beta.
+    - lhs' exact (pseudometric_triangle (d:=dF) _ (h (z N)) _). cbn beta.
       rewrite nat_to_semiring_succ, (preserves_plus (f:=cast Q F)).
       apply plus_le_compat.
-      + apply lt_le; exact (hw 1 _ _ (close N (leq_refl _))).
+      + apply lt_le. exact (hw 1 _ _ (close N (leq_refl _))).
       + exact (IH (fun k ltk => close k (leq_succ_r ltk))).
   Qed.
 
@@ -75,8 +75,8 @@ Section picard_lindelof.
   Local Lemma abs_mult_nonneg_le (s u : F) (s0 : 0 ≤ s) : abs (s * u) ≤ s * abs u.
   Proof.
     apply abs_le.
-    - rewrite negate_mult_distr_r; apply (order_preserving (s *.)).
-      apply flip_le_negate; rewrite negate_involutive; apply negate_le_abs.
+    - rewrite negate_mult_distr_r. apply (order_preserving (s *.)).
+      apply flip_le_negate. rewrite negate_involutive. apply negate_le_abs.
     - apply (order_preserving (s *.)), le_abs.
   Qed.
 
@@ -96,12 +96,12 @@ Section picard_lindelof.
 
       Local Lemma chain_0 : chain 0%nat = z.
       Proof.
-        unfold chain; rewrite 2 grid_point_0; apply eta_prod.
+        unfold chain; rewrite 2 grid_point_0. apply eta_prod.
       Qed.
 
       Local Lemma chain_last : chain (S N) = p.
       Proof.
-        unfold chain; rewrite 2 grid_point_last; apply eta_prod.
+        unfold chain; rewrite 2 grid_point_last. apply eta_prod.
       Qed.
 
       (** A step of the grid from [x] to [y] has length [|y - x| / (N + 1)]. *)
@@ -135,7 +135,7 @@ Section picard_lindelof.
       rewrite chain_0, chain_last in ch.
       rhs_V' apply (order_preserving (abs (g z) +)), ch.
       assert (e : abs (g p) = abs (g z + (g p - g z))) by apply ap, plus_conjugate_alt.
-      rewrite e; apply abs_triangle.
+      rewrite e. apply abs_triangle.
     Qed.
 
   End bound.
@@ -156,7 +156,7 @@ Section picard_lindelof.
   (** The inclusion of [[u - l, u + l]] in [[u - r, u + r]] for [l ≤ r]. *)
   Definition interval_incl (u l r : F) (lr : l ≤ r) (t : I (u - l) (u + l)) : I (u - r) (u + r).
   Proof.
-    exists t.1; split.
+    exists t.1. split.
     - rhs_V' exact (fst t.2).
       apply (order_preserving (u +)), (snd (flip_le_negate _ _)), lr.
     - lhs' exact (snd t.2).
@@ -204,8 +204,8 @@ Section picard_lindelof.
     Local Lemma abs_center_le (x : I (x0 - l) (x0 + l)) : abs (x.1 - x0) ≤ l.
     Proof.
       apply abs_le.
-      - apply flip_le_minus_r; rewrite plus_comm; exact (fst x.2).
-      - apply flip_le_minus_l; rewrite plus_comm; exact (snd x.2).
+      - apply flip_le_minus_r. rewrite plus_comm. exact (fst x.2).
+      - apply flip_le_minus_l. rewrite plus_comm. exact (snd x.2).
     Qed.
 
     Local Lemma abs_picard_integral_le (f : UL) (x : I (x0 - l) (x0 + l))
@@ -221,10 +221,10 @@ Section picard_lindelof.
     Proof.
       split.
       - assert (h : u - w ≤ r).
-        { rewrite negate_swap_r; exact (transitivity (negate_le_abs _) le). }
-        apply (fst (flip_le_minus_l _ _ _)) in h; rewrite plus_comm in h.
+        { rewrite negate_swap_r. exact (transitivity (negate_le_abs _) le). }
+        apply (fst (flip_le_minus_l _ _ _)) in h. rewrite plus_comm in h.
         exact (snd (flip_le_minus_l _ _ _) h).
-      - rewrite plus_comm; apply flip_le_minus_l.
+      - rewrite plus_comm. apply flip_le_minus_l.
         exact (transitivity (le_abs _) le).
     Qed.
 
@@ -242,7 +242,7 @@ Section picard_lindelof.
       { unfold picard_value; rewrite <- (integral_additive Q F _ _ c x' x).
         rewrite (plus_assoc y0), (plus_comm (y0 + _)), <- plus_assoc, plus_negate_r.
         apply plus_0_r. }
-      rewrite p; exact (integral_abs_le Q F _ _ x' x _ (fun t => gK _)).
+      rewrite p. exact (integral_abs_le Q F _ _ x' x _ (fun t => gK _)).
     Qed.
 
     Local Definition isuniformmodulus_picard_point (f : UL)
@@ -272,7 +272,7 @@ Section picard_lindelof.
     Proof.
       intros f f'.
       assert (D0 := ulmap_dist_nonneg f f').
-      apply (uniform_dist_le Q F _ _ _ _ leab); intro x.
+      apply (uniform_dist_le Q F _ _ _ _ leab). intro x.
       change (abs (picard_value f x - picard_value f' x) ≤ ' (/ 2 : Q) * dUL f f').
       set (fgu := isuniformlycontinuous_plus Q F _ _ _ (picard_integrand_uc f)
                     (isuniformlycontinuous_negate Q F _ _ (picard_integrand_uc f'))).
@@ -281,7 +281,7 @@ Section picard_lindelof.
       { rewrite (integral_minus Q F _ _ (picard_integrand_uc f) (picard_integrand_uc f')).
         unfold picard_value.
         rewrite negate_plus_distr, (plus_comm y0), <- plus_assoc, (plus_assoc y0 (- y0)).
-        rewrite plus_negate_r, plus_0_l; reflexivity. }
+        rewrite plus_negate_r, plus_0_l. reflexivity. }
       rewrite p.
       lhs' refine (integral_abs_le Q F _ _ c x (L * dUL f f') _).
       - intro t; lhs' apply gL.
@@ -300,8 +300,8 @@ Section picard_lindelof.
       pose (b0' := lt_le _ _ b0).
       snrefine {| ulmap := {| umap := fun _ => interval_center y0 b b0'; umap_modulus := idmap |};
                   ulmap_lifts := fun _ _ => ly0 |}.
-      intros e x y _; unfold metric_close, interval_dist; cbn.
-      rewrite plus_negate_r, abs_0; exact (pos_rationals_to_field_qpos Q e).
+      intros e x y _. unfold metric_close, interval_dist; cbn.
+      rewrite plus_negate_r, abs_0. exact (pos_rationals_to_field_qpos Q e).
     Defined.
 
     (* [half_pos] and [half_lt_1] in IntermediateValue.v state the same for [' (1 / 2 : Qpos Q)], with positivity in [F]; sharing them would mean using one representation of one half in both files. *)
@@ -327,7 +327,7 @@ Section picard_lindelof.
                   (uniform_dist_le Q F _ _ _ _ leab _ _ _
                      (fun x => transitivity (interval_dist_le _ _) leC)))
         as [f [p _]].
-      exists f; intro x.
+      exists f. intro x.
       exact (ap (fun h => (h x).1) (path_uniform_dist_zero Q F _ _ _ _ leab _ _ p))^.
     Defined.
 
@@ -353,13 +353,13 @@ Section picard_lindelof.
     set (N := ' S (grid_modulus Q B v 1) : Qpos Q).
     assert (absz : abs (g z) ≤ join (g z) (- g z)).
     { apply abs_le; [|apply join_ub_l].
-      apply flip_le_negate; rewrite negate_involutive; apply join_ub_r. }
+      apply flip_le_negate. rewrite negate_involutive. apply join_ub_r. }
     assert (lt : forall p, abs (g p) < ' (' (r + N))).
-    { intro p; rapply le_lt_trans; [exact (abs_le_uniform g v gv B (lt_le _ _ ltB) z p)|].
+    { intro p. rapply le_lt_trans; [exact (abs_le_uniform g v gv B (lt_le _ _ ltB) z p)|].
       rewrite (preserves_plus (f:=cast Q F)).
       apply (strictly_order_preserving (+ _)).
       rapply le_lt_trans; [exact absz|exact ltr]. }
-    exists (r + N); intros p; apply lt_le, lt.
+    exists (r + N). intros p; apply lt_le, lt.
   Defined.
 
   Local Notation K := picard_bound.1.
@@ -385,9 +385,10 @@ Section picard_lindelof.
   Local Lemma picard_length_K : ' (' K) * picard_length ≤ b.
   Proof.
     lhs' apply (order_preserving (' (' K) *.)), (transitivity (meet_lb_r _ _) (meet_lb_l _ _)).
-    apply eq_le; rewrite (mult_comm (' (' K))), <- mult_assoc, <- (preserves_mult (f:=cast Q F)).
+    apply eq_le.
+    rewrite (mult_comm (' (' K))), <- mult_assoc, <- (preserves_mult (f:=cast Q F)).
     rewrite (mult_comm (/ ' K)), dec_recip_inverse; [|apply lt_ne_flip, pos_is_pos].
-    rewrite (preserves_1 (f:=cast Q F)); apply mult_1_r.
+    rewrite (preserves_1 (f:=cast Q F)). apply mult_1_r.
   Qed.
 
   Local Lemma picard_length_L : L * picard_length ≤ ' (/ 2 : Q).
@@ -398,7 +399,7 @@ Section picard_lindelof.
       apply pos_dec_recip_compat, pos_is_pos. }
     lhs' apply (order_preserving (L *.)), (transitivity (meet_lb_r _ _) (meet_lb_r _ _)).
     lhs' apply (order_preserving (.* ' (/ ' rL / 2))), lt_le, (qpos_upper_bound Q F lL).2.
-    apply eq_le; rewrite <- (preserves_mult (f:=cast Q F)); apply ap.
+    apply eq_le. rewrite <- (preserves_mult (f:=cast Q F)). apply ap.
     rewrite mult_assoc, dec_recip_inverse; [apply mult_1_l|apply lt_ne_flip, pos_is_pos].
   Qed.
 
@@ -414,7 +415,7 @@ Section picard_lindelof.
     destruct (qpos_upper_bound Q F (locator_width y0 b ly0 lb)) as [C ltC].
     destruct (picard_solution K picard_bound.2 picard_length (lt_le _ _ picard_length_pos)
                 (meet_lb_l _ _) picard_length_K picard_length_L C (lt_le _ _ ltC)) as [f p].
-    exists f; intros x fu; rewrite p; unfold picard_value; apply ap.
+    exists f. intros x fu; rewrite p. unfold picard_value; apply ap.
     exact (ap (fun fu' => integral Q F _ fu' _ x) (path_ishprop _ _)).
   Defined.
 

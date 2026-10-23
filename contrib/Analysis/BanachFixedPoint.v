@@ -45,10 +45,10 @@ Section powers.
   Proof.
     intros c0 c1 lekn; induction lekn as [|n lekn IH].
     - reflexivity.
-    - rhs_V' exact IH; cbn.
+    - rhs_V' exact IH. cbn.
       pose proof (power_nonneg c n c0).
       lhs' exact (order_preserving (.* nat_iter n (mult c) 1) c 1 c1).
-      cbn; rewrite mult_1_l; reflexivity.
+      cbn; rewrite mult_1_l. reflexivity.
   Qed.
 
   (** A form of Bernoulli's inequality: [c^n (1 + n (1 - c)) ≤ 1] for [c] in [[0, 1]]. By induction, since [c (1 + X) + (1 - c) X = 1 + n (1 - c)] for [X = (n + 1) (1 - c) ≥ 0]. *)
@@ -63,14 +63,14 @@ Section powers.
     - rhs_V' exact IH.
       change (nat_iter (S n) (mult c) 1) with (c * nat_iter n (mult c) 1).
       rewrite nat_to_semiring_succ, (plus_mult_distr_r 1 (nR n) (1 - c)), (mult_1_l (1 - c)).
-      set (P := nat_iter n (mult c) 1); set (X := 1 - c + nR n * (1 - c)).
+      set (P := nat_iter n (mult c) 1). set (X := 1 - c + nR n * (1 - c)).
       rewrite (mult_comm c P), <- (mult_assoc P c).
       pose proof (power_nonneg c n c0).
       apply (order_preserving (P *.)).
       assert (p : c * (1 + X) + (1 - c) * X = 1 + nR n * (1 - c)).
       { rewrite plus_mult_distr_l, mult_1_r, <- plus_assoc, <- plus_mult_distr_r.
-        rewrite <- (plus_conjugate_alt 1 c), mult_1_l; unfold X.
-        rewrite plus_assoc, <- (plus_conjugate_alt 1 c); reflexivity. }
+        rewrite <- (plus_conjugate_alt 1 c), mult_1_l. unfold X.
+        rewrite plus_assoc, <- (plus_conjugate_alt 1 c). reflexivity. }
       rewrite <- p.
       apply nonneg_plus_le_compat_r, nonneg_mult_compat; [exact b0|].
       apply nonneg_plus_compat; [exact b0|].
@@ -145,7 +145,7 @@ Section lipschitz.
     : d x y = 0.
   Proof.
     apply (antisymmetry (≤)); [|apply pseudometric_nonneg].
-    apply not_lt_le_flip; intro dpos.
+    apply not_lt_le_flip. intro dpos.
     apply (irreflexivity (<) (d x y)).
     rapply (le_lt_trans _ (c * d x y)).
     - lhs' exact (pseudometric_triangle x (T x) y).
@@ -169,8 +169,8 @@ Section fixed_points.
     : IsHProp {x : X & T x = x}.
   Proof.
     pose proof (ishset_metric d).
-    apply hprop_allpath; intros [x p] [y q].
-    apply path_sigma_hprop; cbn.
+    apply hprop_allpath. intros [x p] [y q].
+    apply path_sigma_hprop. cbn.
     apply (metric_separated x y).
     apply (pseudo_fixed_point_unique d T c c1 Tc);
       [rewrite p | rewrite q]; apply pseudometric_diag.
@@ -206,8 +206,8 @@ Section lipschitz_uniform.
     rapply le_lt_trans; [exact (fc x y)|].
     assert (p : ' (' c) * ' (' (e / c)) = ' (' e)).
     { rewrite <- (preserves_mult (f:=cast Q F)).
-      apply (ap (cast Q F)); change (' (c * (e / c)) = ' e); apply ap.
-      rewrite (associativity c e (/ c)); apply pos_unconjugate. }
+      apply (ap (cast Q F)). change (' (c * (e / c)) = ' e). apply ap.
+      rewrite (associativity c e (/ c)). apply pos_unconjugate. }
     rewrite <- p.
     assert (PropHolds (0 < (' (' c) : F))) by exact (pos_rationals_to_field_qpos Q c).
     apply (strictly_order_preserving _), close.
@@ -224,7 +224,7 @@ Section lipschitz_uniform.
                    (fst (pos_plus_lt_compat_r c 1) lt_0_1)).
     strip_truncations; destruct r as [r [ltcr _]].
     assert (r0 : 0 < r).
-    { apply rationals_to_field_pos_iff; exact (transitivity c0 ltcr). }
+    { apply rationals_to_field_pos_iff. exact (transitivity c0 ltcr). }
     apply tr; exists (fun e => e / mkQpos r r0).
     apply isuniformmodulus_lipschitz.
     intros x y; lhs' exact (fc x y).
@@ -269,7 +269,7 @@ Section banach.
     : d (nat_iter (S j) T y) (nat_iter j T y) ≤ nat_iter j (mult (' c)) 1 * d (T y) y.
   Proof.
     induction j as [|j IH].
-    - apply eq_le; symmetry; apply mult_1_l.
+    - apply eq_le. symmetry. apply mult_1_l.
     - lhs' apply Tc.
       change (nat_iter (S j) (mult (' c)) 1) with (' c * nat_iter j (mult (' c)) 1).
       rewrite <- mult_assoc.
@@ -280,7 +280,7 @@ Section banach.
     : (1 - ' c) * d (nat_iter j T y) y ≤ (1 - nat_iter j (mult (' c)) 1) * d (T y) y.
   Proof.
     induction j as [|j IH].
-    - apply eq_le; cbn.
+    - apply eq_le. cbn.
       rewrite (pseudometric_diag (d:=d)), mult_0_r, plus_negate_r, mult_0_l.
       reflexivity.
     - set (P := nat_iter j (mult (' c)) 1).
@@ -292,7 +292,7 @@ Section banach.
       rewrite mult_assoc, <- plus_mult_distr_r.
       apply (ap (.* d (T y) y)).
       rewrite plus_mult_distr_r, mult_1_l, <- negate_mult_distr_l.
-      rewrite plus_comm, plus_assoc, minus_plus_cancel; reflexivity.
+      rewrite plus_comm, plus_assoc, minus_plus_cancel. reflexivity.
   Qed.
 
   (** The distance from a point to its iterates is bounded in terms of its distance to its image. *)
@@ -329,7 +329,7 @@ Section banach.
     rewrite <- (preserves_mult (f:=cast Q F)).
     apply (ap (cast Q F)).
     (* The positive rational [b] is [1 - c] by definition. *)
-    change (' (e * b / C * C) = ' (e * b)); apply ap.
+    change (' (e * b / C * C) = ' (e * b)). apply ap.
     rewrite (commutativity _ C), (associativity C _ (/ C)).
     apply pos_unconjugate.
   Qed.
@@ -385,7 +385,7 @@ Section banach.
       - exact (preservesmetriclimits_uniform Q (metric_close Q d) (metric_close Q d) T _
                  (isuniformmodulus_lipschitz Q d d T (mkQpos c c0) Tc) xs l islim).
       - exact (ismetriclimit_tail Q (metric_close Q d) xs l islim). }
-    exists l; split; [exact p|].
+    exists l. split; [exact p|].
     intros y py.
     exact (pseudo_fixed_point_unique d T (' c) c_lt_1 Tc l y p py).
   Defined.
