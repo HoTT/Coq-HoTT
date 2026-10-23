@@ -231,13 +231,15 @@ Section strict_ring_order.
 
   Lemma flip_lt_minus_swap_l (x y z : R) : y - x < z -> y - z < x.
   Proof.
-    intros E; apply (snd (flip_lt_minus_l z y x)); rewrite plus_comm.
+    intros E; apply (snd (flip_lt_minus_l z y x)).
+    rewrite plus_comm.
     exact (fst (flip_lt_minus_l x y z) E).
   Qed.
 
   Lemma flip_lt_minus_swap_r (x y z : R) : z < y - x -> x < y - z.
   Proof.
-    intros E; apply (snd (flip_lt_minus_r z y x)); rewrite plus_comm.
+    intros E; apply (snd (flip_lt_minus_r z y x)).
+    rewrite plus_comm.
     exact (fst (flip_lt_minus_r x y z) E).
   Qed.
 
@@ -290,15 +292,15 @@ Section strict_ring_order.
   Lemma between_iff_lt_minus (u v e : R) : u - e < v < u + e <-> - e < v - u < e.
   Proof.
     split; intros [lo hi]; split.
-    - apply (snd (flip_lt_minus_r u v (- e))); rewrite plus_comm; exact lo.
-    - apply (snd (flip_lt_minus_l u v e)); rewrite plus_comm; exact hi.
-    - rewrite plus_comm; exact (fst (flip_lt_minus_r u v (- e)) lo).
-    - rewrite plus_comm; exact (fst (flip_lt_minus_l u v e) hi).
+    - apply (snd (flip_lt_minus_r u v (- e))). rewrite plus_comm. exact lo.
+    - apply (snd (flip_lt_minus_l u v e)). rewrite plus_comm. exact hi.
+    - rewrite plus_comm. exact (fst (flip_lt_minus_r u v (- e)) lo).
+    - rewrite plus_comm. exact (fst (flip_lt_minus_l u v e) hi).
   Qed.
 
   Lemma between_minus_swap (u v e : R) : - e < v - u < e -> - e < u - v < e.
   Proof.
-    intros [lo hi]; rewrite (negate_swap_r u v); split.
+    intros [lo hi]. rewrite (negate_swap_r u v). split.
     - exact (snd (flip_lt_negate (v - u) e) hi).
     - exact (flip_lt_negate_l e (v - u) lo).
   Qed.
@@ -306,7 +308,7 @@ Section strict_ring_order.
   Lemma between_weaken (x y z : R) : - x < z < x -> x < y -> - y < z < y.
   Proof.
     intros [ltxz ltzx] ltxy; split.
-    - lhs' exact (snd (flip_lt_negate x y) ltxy); exact ltxz.
+    - lhs' exact (snd (flip_lt_negate x y) ltxy). exact ltxz.
     - exact (transitivity ltzx ltxy).
   Qed.
 
@@ -354,7 +356,7 @@ Section symmetric_bounds.
     : - S < s < S -> - T < t < T -> - (S * T) < s * t < S * T.
   Proof.
     intros [ltSs ltsS] ltt; split.
-    - apply flip_lt_negate_l; rewrite negate_mult_distr_l.
+    - apply flip_lt_negate_l. rewrite negate_mult_distr_l.
       apply mult_lt_bound_r; [split|exact ltt].
       + exact (snd (flip_lt_negate s S) ltsS).
       + exact (flip_lt_negate_l S s ltSs).
@@ -392,7 +394,7 @@ Section intervals.
     : a ≤ s ≤ b -> a ≤ t ≤ b -> b - a < d -> - d < s - t < d.
   Proof.
     intros sab tab lt; split.
-    - apply flip_lt_negate_l; rewrite <- negate_swap_r.
+    - apply flip_lt_negate_l. rewrite <- negate_swap_r.
       rapply le_lt_trans; [exact (interval_minus_le a b t s tab sab)|exact lt].
     - rapply le_lt_trans; [exact (interval_minus_le a b s t sab tab)|exact lt].
   Qed.
@@ -428,7 +430,7 @@ Section intervals.
     : a ≤ u -> u ≤ b -> a * v < r -> b * v < r -> u * v < r.
   Proof.
     intros leau leub ltar ltbr.
-    apply (fst (flip_lt_negate (u * v) r)); rewrite negate_mult_distr_r.
+    apply (fst (flip_lt_negate (u * v) r)). rewrite negate_mult_distr_r.
     apply (lt_mult_endpoints_l (- r) a b u (- v) leau leub); rewrite <- negate_mult_distr_r.
     - exact (snd (flip_lt_negate (a * v) r) ltar).
     - exact (snd (flip_lt_negate (b * v) r) ltbr).
@@ -441,8 +443,8 @@ Section intervals.
     intros leau leub lecw lewd ltac ltad ltbc ltbd.
     rewrite (mult_comm u w).
     apply (lt_mult_endpoints_l q c d w u lecw lewd).
-    - rewrite (mult_comm c u); apply (lt_mult_endpoints_l q a b u c leau leub); assumption.
-    - rewrite (mult_comm d u); apply (lt_mult_endpoints_l q a b u d leau leub); assumption.
+    - rewrite (mult_comm c u). apply (lt_mult_endpoints_l q a b u c leau leub); assumption.
+    - rewrite (mult_comm d u). apply (lt_mult_endpoints_l q a b u d leau leub); assumption.
   Qed.
 
   Lemma mult_corners_lt_r r a b c d u w
@@ -452,8 +454,8 @@ Section intervals.
     intros leau leub lecw lewd ltac ltad ltbc ltbd.
     rewrite (mult_comm u w).
     apply (mult_endpoints_lt_r r c d w u lecw lewd).
-    - rewrite (mult_comm c u); apply (mult_endpoints_lt_r r a b u c leau leub); assumption.
-    - rewrite (mult_comm d u); apply (mult_endpoints_lt_r r a b u d leau leub); assumption.
+    - rewrite (mult_comm c u). apply (mult_endpoints_lt_r r a b u c leau leub); assumption.
+    - rewrite (mult_comm d u). apply (mult_endpoints_lt_r r a b u d leau leub); assumption.
   Qed.
 
 End intervals.
@@ -474,8 +476,8 @@ Section abs.
   Local Lemma le_by_sign (x a b : R)
     : (0 ≤ x -> a ≤ b) -> (x ≤ 0 -> a ≤ b) -> a ≤ b.
   Proof.
-    intros nonneg nonpos; apply not_lt_le_flip; intro ltba.
-    apply (nonneg_or_nonpos_not_not x); intros [c|c].
+    intros nonneg nonpos. apply not_lt_le_flip. intro ltba.
+    apply (nonneg_or_nonpos_not_not x). intros [c|c].
     - exact (le_not_lt_flip b a (nonneg c) ltba).
     - exact (le_not_lt_flip b a (nonpos c) ltba).
   Qed.
@@ -483,8 +485,8 @@ Section abs.
   Local Lemma eq_by_sign (x a b : R)
     : (0 ≤ x -> a = b) -> (x ≤ 0 -> a = b) -> a = b.
   Proof.
-    intros nonneg nonpos; apply (fst (tight_apart a b)); intro apab.
-    apply (nonneg_or_nonpos_not_not x); intros [c|c].
+    intros nonneg nonpos. apply (fst (tight_apart a b)). intro apab.
+    apply (nonneg_or_nonpos_not_not x). intros [c|c].
     - exact (snd (tight_apart a b) (nonneg c) apab).
     - exact (snd (tight_apart a b) (nonpos c) apab).
   Qed.
@@ -498,8 +500,8 @@ Section abs.
   Lemma abs_nonneg (x : R) : 0 ≤ abs x.
   Proof.
     apply (le_by_sign x); intro c.
-    - rewrite (abs_of_nonneg x c); exact c.
-    - rewrite (abs_of_nonpos x c); exact (fst (flip_nonpos_negate x) c).
+    - rewrite (abs_of_nonneg x c). exact c.
+    - rewrite (abs_of_nonpos x c). exact (fst (flip_nonpos_negate x) c).
   Qed.
 
   Lemma abs_0 : abs 0 = 0 :> R.
@@ -520,36 +522,36 @@ Section abs.
   Lemma le_abs (x : R) : x ≤ abs x.
   Proof.
     apply (le_by_sign x); intro c.
-    - rewrite (abs_of_nonneg x c); reflexivity.
+    - rewrite (abs_of_nonneg x c). reflexivity.
     - rewrite (abs_of_nonpos x c).
       exact (transitivity c (fst (flip_nonpos_negate x) c)).
   Qed.
 
   Lemma negate_le_abs (x : R) : - x ≤ abs x.
   Proof.
-    rewrite <- (abs_negate x); apply le_abs.
+    rewrite <- (abs_negate x). apply le_abs.
   Qed.
 
   Lemma abs_le (x y : R) : - y ≤ x -> x ≤ y -> abs x ≤ y.
   Proof.
-    intros leyx lexy; apply (le_by_sign x); intro c.
-    - rewrite (abs_of_nonneg x c); exact lexy.
-    - rewrite (abs_of_nonpos x c); apply flip_le_negate.
-      rewrite negate_involutive; exact leyx.
+    intros leyx lexy. apply (le_by_sign x); intro c.
+    - rewrite (abs_of_nonneg x c). exact lexy.
+    - rewrite (abs_of_nonpos x c). apply flip_le_negate.
+      rewrite negate_involutive. exact leyx.
   Qed.
 
   (** Strict bounds are not stable under double negation, so we use cotransitivity instead. *)
   Lemma abs_lt (x y : R) : - y < x -> x < y -> abs x < y.
   Proof.
     intros ltyx ltxy.
-    assert (c := cotransitive ltxy (abs x)); strip_truncations.
+    assert (c := cotransitive ltxy (abs x)). strip_truncations.
     destruct c as [lt|lt]; [|exact lt].
     assert (nonpos : x ≤ 0).
-    { apply not_lt_le_flip; intro pos.
+    { apply not_lt_le_flip. intro pos.
       rewrite (abs_of_nonneg x (lt_le 0 x pos)) in lt.
       exact (irreflexivity (<) x lt). }
     rewrite (abs_of_nonpos x nonpos).
-    apply flip_lt_negate; rewrite negate_involutive; exact ltyx.
+    apply flip_lt_negate. rewrite negate_involutive. exact ltyx.
   Qed.
 
   Lemma abs_triangle (x y : R) : abs (x + y) ≤ abs x + abs y.
@@ -563,7 +565,7 @@ Section abs.
 
   Lemma abs_eq_0 (x : R) : abs x = 0 -> x = 0.
   Proof.
-    intro p; apply (eq_by_sign x); intro c.
+    intro p. apply (eq_by_sign x); intro c.
     - exact ((abs_of_nonneg x c)^ @ p).
     - rewrite <- (negate_involutive x), <- (abs_of_nonpos x c), p.
       apply negate_0.
@@ -571,7 +573,7 @@ Section abs.
 
   Lemma abs_minus_swap (x y : R) : abs (x - y) = abs (y - x).
   Proof.
-    rewrite (negate_swap_r x y); apply abs_negate.
+    rewrite (negate_swap_r x y). apply abs_negate.
   Qed.
 
 End abs.

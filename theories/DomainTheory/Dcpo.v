@@ -132,9 +132,9 @@ Section Directed.
     split.
     - exact (fst d).
     - intros i j.
-      specialize (snd d i j); apply Trunc_functor.
+      specialize (snd d i j). apply Trunc_functor.
       intros [k [p q]].
-      exists k; split; apply (order_preserving f); assumption.
+      exists k. split; apply (order_preserving f); assumption.
   Defined.
 
   Context `{!PreOrder Ale}.
@@ -290,12 +290,12 @@ Section Subsets.
     : IsDirected (@pr1 A (image_subset x)).
   Proof.
     split.
-    - pose proof (fst d) as i; strip_truncations.
+    - pose proof (fst d) as i. strip_truncations.
       exact (tr ((x i; tr (i; idpath)))).
     - intros [a p] [b q].
       strip_truncations.
       destruct p as [i []], q as [j []].
-      specialize (snd d i j); apply Trunc_functor.
+      specialize (snd d i j). apply Trunc_functor.
       intros [k r].
       exact ((x k; tr (k; idpath)); r).
   Defined.

@@ -26,8 +26,9 @@ Local Definition nat_add_cases (a b : nat)
   : {c : nat & (c + b)%nat = a} + {c : nat & (S c + a)%nat = b}.
 Proof.
   destruct (leq_dichotomy b a) as [l|l].
-  - left; exact (equiv_leq_add b a l).
-  - right; destruct (equiv_leq_add (S a) b l) as [c p].
+  - left. exact (equiv_leq_add b a l).
+  - right.
+    destruct (equiv_leq_add (S a) b l) as [c p].
     exact (c; (nat_add_succ_r c a)^ @ p).
 Defined.
 
@@ -41,15 +42,15 @@ Section nat_quotient_sign.
   Local Lemma nat_quotient_eq_l (c : nat) (p : (c + b)%nat = a) : y * nR (S m) = nR c.
   Proof.
     apply (right_cancellation (+) (nR b)).
-    rewrite E, <- p, (preserves_plus (f:=nR)); reflexivity.
+    rewrite E, <- p, (preserves_plus (f:=nR)). reflexivity.
   Qed.
 
   Local Lemma nat_quotient_eq_r (c : nat) (p : (S c + a)%nat = b)
     : y * nR (S m) = - nR (S c).
   Proof.
-    destruct p; apply (right_cancellation (+) (nR (S c) + nR a)).
+    destruct p. apply (right_cancellation (+) (nR (S c) + nR a)).
     rewrite (plus_assoc (- _)), plus_negate_l, plus_0_l.
-    rewrite <- (preserves_plus (f:=nR)); exact E.
+    rewrite <- (preserves_plus (f:=nR)). exact E.
   Qed.
 
   Context `{!PropHolds ((1 : R) ≶ 0)}.
@@ -64,14 +65,14 @@ Section nat_quotient_sign.
       destruct (irreflexivity (<) _ dpos).
     - rewrite (nat_quotient_eq_r c p) in dpos.
       destruct (irreflexivity (<) 0).
-      lhs' exact dpos; apply flip_pos_negate, nat_to_semiring_succ_pos.
+      lhs' exact dpos. apply flip_pos_negate, nat_to_semiring_succ_pos.
   Qed.
 
   Local Lemma nat_quotient_succ_pos (c : {c : nat & (S c + b)%nat = a}) : 0 < y.
   Proof.
     destruct c as [c p].
     apply (pos_mult_rev_l y (nR (S m))).
-    - rewrite (nat_quotient_eq_l (S c) p); apply nat_to_semiring_succ_pos.
+    - rewrite (nat_quotient_eq_l (S c) p). apply nat_to_semiring_succ_pos.
     - apply nat_to_semiring_succ_pos.
   Qed.
 End nat_quotient_sign.
@@ -98,14 +99,14 @@ Section nat_quotients.
   Local Lemma isnatquot_zero : IsNatQuot 0.
   Proof.
     apply tr; exists 0%nat, 0%nat, 0%nat.
-    rewrite mult_0_l; apply plus_0_l.
+    rewrite mult_0_l. apply plus_0_l.
   Qed.
 
   Local Lemma isnatquot_one : IsNatQuot 1.
   Proof.
     apply tr; exists 1%nat, 0%nat, 0%nat.
     change (1 * 1 + 0 = 1 :> F).
-    rewrite mult_1_l; apply plus_0_r.
+    rewrite mult_1_l. apply plus_0_r.
   Qed.
 
   Local Lemma plus_quotient_identity (x y d1 d2 c1 c2 : F)
@@ -143,8 +144,8 @@ Section nat_quotients.
     rewrite (plus_mult_distr_r u1 c1 c2), (plus_mult_distr_l c1 u2 c2).
     rewrite (plus_mult_distr_r u1 c1), (plus_mult_distr_l u1 u2 c2), (plus_mult_distr_l c1 u2 c2).
     rewrite <- (plus_assoc (u1 * u2 + u1 * c2)), <- (plus_assoc (u1 * u2)).
-    apply ap; rewrite <- !plus_assoc; apply ap.
-    rewrite plus_comm, <- plus_assoc; apply ap, plus_comm.
+    apply ap. rewrite <- !plus_assoc. apply ap.
+    rewrite plus_comm, <- plus_assoc. apply ap, plus_comm.
   Qed.
 
   Local Lemma isnatquot_mult (x y : F)
@@ -176,7 +177,7 @@ Section nat_quotients.
         apply mult_apart_zero; [exact p|].
         apply positive_apart_zero, nat_to_semiring_succ_pos.
       + exists (S m), 0%nat, c.
-        rewrite plus_0_r; exact (recip_mult (nF (S c)) Exd).
+        rewrite plus_0_r. exact (recip_mult (nF (S c)) Exd).
     - exists 0%nat, (S m), c.
       rewrite <- (negate_involutive (nF (S c))), <- negate_mult_distr_r,
         (recip_mult (- nF (S c)) (nat_quotient_eq_r x a b m E c q)).
@@ -283,7 +284,8 @@ Section nat_quotients.
       rewrite (rationals_initial (h := pr1 o rationals_to_field Q NatQuot) q).
       exact (rationals_to_field Q NatQuot q).2. }
     strip_truncations; destruct Hq as [a [b [m E]]].
-    apply tr; exists a, b, m; split; [|exact E].
+    apply tr; exists a, b, m.
+    split; [|exact E].
     apply (injective f).
     rewrite (preserves_plus (f:=f)), (preserves_mult (f:=f)), !rationals_to_field_nat.
     exact E.
@@ -308,7 +310,8 @@ Section nat_quotients.
     { rewrite mult_1_r, mult_0_r.
       exact (snd (apart_iff_total_lt q 0) (inr qpos)). }
     pose proof (strong_binary_extensionality (.*.) q 1 q 0 E1) as h.
-    unfold PropHolds; strip_truncations; destruct h as [h|h].
+    unfold PropHolds.
+    strip_truncations; destruct h as [h|h].
     - destruct (irreflexivity (≶) q h).
     - exact h.
   Qed.
@@ -317,7 +320,7 @@ Section nat_quotients.
     : StrictlyOrderPreserving (rationals_to_field Q F).
   Proof.
     intros x y E.
-    apply flip_pos_minus in E; apply flip_pos_minus.
+    apply flip_pos_minus in E. apply flip_pos_minus.
     rewrite <- preserves_minus.
     assert (PropHolds ((1 : Q) ≶ 0)) by exact (pos_apart_1_0 (y - x) E).
     exact (fst (rationals_to_field_pos_iff (y - x)) E).
@@ -328,7 +331,7 @@ Section nat_quotients.
     : StrictlyOrderReflecting (rationals_to_field Q F).
   Proof.
     intros x y E.
-    apply flip_pos_minus in E; apply flip_pos_minus.
+    apply flip_pos_minus in E. apply flip_pos_minus.
     rewrite <- preserves_minus in E.
     exact (snd (rationals_to_field_pos_iff (y - x)) E).
   Qed.
@@ -339,7 +342,7 @@ Section nat_quotients.
   Proof.
     split; [exact _|].
     intros x y E.
-    apply apart_iff_total_lt; apply apart_iff_total_lt in E.
+    apply apart_iff_total_lt. apply apart_iff_total_lt in E.
     destruct E; [left | right]; apply (strictly_order_reflecting f); assumption.
   Qed.
 End nat_quotients.

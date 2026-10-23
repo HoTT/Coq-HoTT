@@ -22,9 +22,10 @@ Local Definition nat_unpair_hit_diagonal (a b n : nat) (p : nat_unpair n = (a + 
   : {m : nat & nat_unpair m = (a, b)}.
 Proof.
   revert a p; induction b as [|b IH]; intros a p.
-  - exists n; rewrite p, nat_add_zero_r; reflexivity.
-  - destruct (IH (S a) (p @ ap (fun k => (k, 0)) (nat_add_succ_r a b))) as [m q].
-    exists (S m); cbn; rewrite q; reflexivity.
+  - rewrite nat_add_zero_r in p.  exact (n; p).
+  - rewrite nat_add_succ_r in p.
+    destruct (IH (S a) p) as [m q].
+    exists (S m). cbn; rewrite q. reflexivity.
 Defined.
 
 Local Definition nat_unpair_hit_axis (d : nat) : {n : nat & nat_unpair n = (d, 0)}.
@@ -32,7 +33,7 @@ Proof.
   induction d as [|d IH].
   - exact (0; idpath).
   - destruct (nat_unpair_hit_diagonal 0 d _ IH.2) as [n p].
-    exists (S n); cbn; rewrite p; reflexivity.
+    exists (S n). cbn; rewrite p. reflexivity.
 Defined.
 
 Definition nat_unpair_hit (a b : nat) : {n : nat & nat_unpair n = (a, b)}
@@ -50,5 +51,6 @@ Proof.
   pose proof (@center _ (t_surj y)) as b.
   strip_truncations; destruct a as [a p], b as [b q].
   destruct (nat_unpair_hit a b) as [n r].
-  apply tr; exists n; unfold nat_prod_enumerator; rewrite r; exact (path_prod' p q).
+  apply tr; exists n.
+  unfold nat_prod_enumerator; rewrite r. exact (path_prod' p q).
 Defined.

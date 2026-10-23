@@ -45,9 +45,10 @@ Section strict_field_order.
       assert (ltqyx : ' q - y < x) by exact (snd (flip_lt_minus_l y (' q) x) ltqxy).
       assert (hs := archimedean_property Q F (' q - y) x ltqyx).
       strip_truncations; destruct hs as [s [ltqys ltsx]].
-      apply tr; exists s; split; [exact ltsx|].
-      rewrite preserves_minus; apply flip_lt_minus_swap_l, ltqys.
-    - intros hs; strip_truncations; destruct hs as [s [ltsx ltqsy]].
+      apply tr; exists s.
+      split; [exact ltsx|].
+      rewrite preserves_minus. apply flip_lt_minus_swap_l, ltqys.
+    - intros hs. strip_truncations; destruct hs as [s [ltsx ltqsy]].
       rewrite (plus_conjugate_alt q s), (preserves_plus s (q - s)).
       apply plus_lt_compat; [exact ltsx|exact ltqsy].
   Qed.
@@ -60,9 +61,10 @@ Section strict_field_order.
       assert (ltxry : x < ' r - y) by exact (snd (flip_lt_minus_r y (' r) x) ltxyr).
       assert (ht := archimedean_property Q F x (' r - y) ltxry).
       strip_truncations; destruct ht as [t [ltxt lttry]].
-      apply tr; exists t; split; [exact ltxt|].
-      rewrite preserves_minus; apply flip_lt_minus_swap_r, lttry.
-    - intros ht; strip_truncations; destruct ht as [t [ltxt ltyrt]].
+      apply tr; exists t.
+      split; [exact ltxt|].
+      rewrite preserves_minus. apply flip_lt_minus_swap_r, lttry.
+    - intros ht. strip_truncations; destruct ht as [t [ltxt ltyrt]].
       rewrite (plus_conjugate_alt r t), (preserves_plus t (r - t)).
       apply plus_lt_compat; [exact ltxt|exact ltyrt].
   Qed.
@@ -81,11 +83,11 @@ Section strict_field_order.
       by (intros v lev; rapply le_lt_trans; [exact lev|exact lt]).
     refine ((_, _), (_, _)).
     - apply flip_lt_negate_l, ltZ.
-      lhs' apply join_ub_r; apply join_ub_l.
-    - apply ltZ; lhs' apply join_ub_l; apply join_ub_l.
+      lhs' apply join_ub_r. apply join_ub_l.
+    - apply ltZ. lhs' apply join_ub_l. apply join_ub_l.
     - apply flip_lt_negate_l, ltZ.
-      lhs' apply join_ub_r; apply join_ub_r.
-    - apply ltZ; lhs' apply join_ub_l; apply join_ub_r.
+      lhs' apply join_ub_r. apply join_ub_r.
+    - apply ltZ. lhs' apply join_ub_l. apply join_ub_r.
   Qed.
 
   Section times.
@@ -105,7 +107,8 @@ Section strict_field_order.
       assert (ha := archimedean_property Q F (join (x - D) (- Z)) x ltjx).
       assert (hb := archimedean_property Q F x (meet (x + D) Z) ltxm).
       strip_truncations; destruct ha as [a [ltja ltax]], hb as [b [ltxb ltbm]].
-      apply tr; exists (a, b); refine ((ltax, ltxb), _); intros u leau leub.
+      apply tr; exists (a, b).
+      refine ((ltax, ltxb), _). intros u leau leub.
       assert (ltju : join (x - D) (- Z) < u) by (rapply lt_le_trans; [exact ltja|exact leau]).
       assert (ltum : u < meet (x + D) Z) by (rapply le_lt_trans; [exact leub|exact ltbm]).
       split; [split|].
@@ -139,7 +142,7 @@ Section strict_field_order.
       assert (hx := merely_rational_bounds_close x D Z Dpos ltZx).
       assert (hy := merely_rational_bounds_close y D Z Dpos ltZy).
       strip_truncations; destruct hx as [[a b] [ltaxb boxx]], hy as [[c d] [ltcyd boxy]].
-      apply tr; exists ((a, b), (c, d)); refine (ltaxb, (ltcyd, _)).
+      apply tr; exists ((a, b), (c, d)). refine (ltaxb, (ltcyd, _)).
       intros u w leau leub lecw lewd.
       destruct (boxx u leau leub) as [_ closeu], (boxy w lecw lewd) as [ltZw closew].
       rewrite <- ZDDZ.
@@ -161,13 +164,14 @@ Section strict_field_order.
       : q < meet (meet (a * c) (a * d)) (meet (b * c) (b * d))
         <-> (' q < ' a * ' c) * (' q < ' a * ' d) * (' q < ' b * ' c) * (' q < ' b * ' d).
     Proof.
-      rewrite <- 4!(preserves_mult (f:=qinc)); split.
+      rewrite <- 4!(preserves_mult (f:=qinc)).
+      split.
       - intros lt; repeat split; apply (strictly_order_preserving qinc);
           (rapply lt_le_trans; [exact lt|]).
-        + lhs' apply meet_lb_l; apply meet_lb_l.
-        + lhs' apply meet_lb_l; apply meet_lb_r.
-        + lhs' apply meet_lb_r; apply meet_lb_l.
-        + lhs' apply meet_lb_r; apply meet_lb_r.
+        + lhs' apply meet_lb_l. apply meet_lb_l.
+        + lhs' apply meet_lb_l. apply meet_lb_r.
+        + lhs' apply meet_lb_r. apply meet_lb_l.
+        + lhs' apply meet_lb_r. apply meet_lb_r.
       - intros [[[ac ad] bc] bd].
         repeat apply meet_lt_l; apply (strictly_order_reflecting qinc); assumption.
     Qed.
@@ -176,13 +180,14 @@ Section strict_field_order.
       : join (join (a * c) (a * d)) (join (b * c) (b * d)) < r
         <-> (' a * ' c < ' r) * (' a * ' d < ' r) * (' b * ' c < ' r) * (' b * ' d < ' r).
     Proof.
-      rewrite <- 4!(preserves_mult (f:=qinc)); split.
+      rewrite <- 4!(preserves_mult (f:=qinc)).
+      split.
       - intros lt; repeat split; apply (strictly_order_preserving qinc);
           (rapply le_lt_trans; [|exact lt]).
-        + rhs_V' apply join_ub_l; apply join_ub_l.
-        + rhs_V' apply join_ub_l; apply join_ub_r.
-        + rhs_V' apply join_ub_r; apply join_ub_l.
-        + rhs_V' apply join_ub_r; apply join_ub_r.
+        + rhs_V' apply join_ub_l. apply join_ub_l.
+        + rhs_V' apply join_ub_l. apply join_ub_r.
+        + rhs_V' apply join_ub_r. apply join_ub_l.
+        + rhs_V' apply join_ub_r. apply join_ub_r.
       - intros [[[ac ad] bc] bd].
         repeat apply join_lt_r; apply (strictly_order_reflecting qinc); assumption.
     Qed.
@@ -208,10 +213,10 @@ Section strict_field_order.
         assert (pos : 0 < x * y - ' q) by exact (snd (flip_pos_minus (' q) (x * y)) ltqxy).
         assert (h := archimedean_mult_approx x y (x * y - ' q) pos).
         strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
-        apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
+        apply tr; exists ((a, b), (c, d)). refine (_, (ltaxb, ltcyd)).
         apply lt_meet_corners, (box_corners (fun z => ' q < z) a b c d x y ltaxb ltcyd).
         intros u w leau leub lecw lewd.
-        apply (lt_of_minus_lt_minus (x * y)); exact (snd (approx u w leau leub lecw lewd)).
+        apply (lt_of_minus_lt_minus (x * y)). exact (snd (approx u w leau leub lecw lewd)).
       - intros h; strip_truncations.
         destruct h as [[[a b] [c d]] [ltqm [[ltax ltxb] [ltcy ltyd]]]].
         destruct (fst (lt_meet_corners q a b c d) ltqm) as [[[ac ad] bc] bd].
@@ -235,10 +240,10 @@ Section strict_field_order.
         assert (pos : 0 < ' r - x * y) by exact (snd (flip_pos_minus (x * y) (' r)) ltxyr).
         assert (h := archimedean_mult_approx x y (' r - x * y) pos).
         strip_truncations; destruct h as [[[a b] [c d]] [ltaxb [ltcyd approx]]].
-        apply tr; exists ((a, b), (c, d)); refine (_, (ltaxb, ltcyd)).
+        apply tr; exists ((a, b), (c, d)). refine (_, (ltaxb, ltcyd)).
         apply join_corners_lt, (box_corners (fun z => z < ' r) a b c d x y ltaxb ltcyd).
         intros u w leau leub lecw lewd.
-        apply (lt_of_minus_lt_minus (x * y)); rewrite (negate_swap_r (x * y)).
+        apply (lt_of_minus_lt_minus (x * y)). rewrite (negate_swap_r (x * y)).
         exact (fst (approx u w leau leub lecw lewd)).
       - intros h; strip_truncations.
         destruct h as [[[a b] [c d]] [ltjr [[ltax ltxb] [ltcy ltyd]]]].
@@ -262,7 +267,7 @@ Section strict_field_order.
   Proof.
     assert (negwpos : 0 < - w) by exact (fst (flip_neg_negate w) wneg).
     apply (iff_compose (lt_iff_mult_pos_r (- w) negwpos a b)).
-    rewrite <- 2!negate_mult_distr_r; apply flip_lt_negate.
+    rewrite <- 2!negate_mult_distr_r. apply flip_lt_negate.
   Qed.
 
   Lemma char_recip_pos_left : forall (q : Q) (z : F) (nu : 0 < z),
@@ -306,7 +311,7 @@ Section strict_field_order.
     - intros ltqm; split; (rapply lt_le_trans; [exact ltqm|]).
       + apply meet_lb_l.
       + apply meet_lb_r.
-    - intros [ltqx ltqy]; apply meet_lt_l; assumption.
+    - intros [ltqx ltqy]. apply meet_lt_l; assumption.
   Qed.
 
   Lemma char_meet_right : forall (r : Q) (x y : F),
@@ -320,9 +325,9 @@ Section strict_field_order.
       destruct cx as [ltmx|ltxr]; [|exact (tr (inl ltxr))].
       destruct cy as [ltmy|ltyr]; [|exact (tr (inr ltyr))].
       destruct (irreflexivity (<) (meet x y) (meet_lt_l (meet x y) x y ltmx ltmy)).
-    - intros h; strip_truncations; destruct h as [ltxr|ltyr].
-      + apply meet_lt_r_l; assumption.
-      + apply meet_lt_r_r; assumption.
+    - intros h. strip_truncations; destruct h as [ltxr|ltyr].
+      + apply meet_lt_r_l. assumption.
+      + apply meet_lt_r_r. assumption.
   Qed.
 
   Lemma char_join_left : forall (q : Q) (x y : F),
@@ -336,9 +341,9 @@ Section strict_field_order.
       destruct cx as [ltqx|ltxj]; [exact (tr (inl ltqx))|].
       destruct cy as [ltqy|ltyj]; [exact (tr (inr ltqy))|].
       destruct (irreflexivity (<) (join x y) (join_lt_r x y (join x y) ltxj ltyj)).
-    - intros h; strip_truncations; destruct h as [ltqx|ltqy].
-      + apply join_lt_l_l; assumption.
-      + apply join_lt_l_r; assumption.
+    - intros h. strip_truncations; destruct h as [ltqx|ltqy].
+      + apply join_lt_l_l. assumption.
+      + apply join_lt_l_r. assumption.
   Qed.
 
   Lemma char_join_right : forall (r : Q) (x y : F),
@@ -348,7 +353,7 @@ Section strict_field_order.
     - intros ltjr; split; (rapply le_lt_trans; [|exact ltjr]).
       + apply join_ub_l.
       + apply join_ub_r.
-    - intros [ltxr ltyr]; apply join_lt_r; assumption.
+    - intros [ltxr ltyr]. apply join_lt_r; assumption.
   Qed.
 
 End strict_field_order.

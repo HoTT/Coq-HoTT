@@ -1225,7 +1225,7 @@ Section Reflective_Subuniverse.
     Proof.
       destruct (dec A) as [a|n].
       - exact (O_functor (fun b _ => b) (f a)).
-      - apply to; intro a; exact (Empty_rec (n a)).
+      - apply to. intro a; exact (Empty_rec (n a)).
     Defined.
 
   End Decidable.

@@ -19,10 +19,10 @@ Definition le_sig {A : Type} {Ale : Le A} (B : A -> Type) : Le (sig B)
 Proof.
   split.
   - exact _.
-  - intros a b; unfold le, le_sig; exact _.
+  - intros a b; unfold le, le_sig. exact _.
   - split.
-    + intros a; unfold le, le_sig; reflexivity.
-    + intros a b c; unfold le, le_sig; apply transitivity.
+    + intros a; unfold le, le_sig. reflexivity.
+    + intros a b c; unfold le, le_sig. apply transitivity.
   - intros a b p q.
     apply path_sigma_hprop.
     apply (antisymmetry Ale); [exact p|exact q].
@@ -63,7 +63,7 @@ Section Pointwise.
   Proof.
     split.
     - exact _.
-    - intros f g; unfold relation_pointwise; exact _.
+    - intros f g; unfold relation_pointwise. exact _.
     - split.
       + intros f a; exact (reflexivity (R:=Ble) (f a)).
       + intros f g h p q a; exact (transitivity (R:=Ble) (p a) (q a)).
@@ -149,7 +149,7 @@ Definition le_hprop@{i u | i < u} : Le@{u i} HProp@{i}
 Proof.
   split.
   - exact _.
-  - intros P Q; unfold le_hprop; exact _.
+  - intros P Q; unfold le_hprop. exact _.
   - split.
     + intros P; exact idmap.
     + intros P Q R p q; exact (q o p).

@@ -9,8 +9,8 @@ Section semigroup_props.
 
   Lemma sg_op_swap_middle (a b c d : G) : (a * b) * (c * d) = (a * c) * (b * d).
   Proof.
-    rewrite <- !simple_associativity; apply ap.
-    rewrite !simple_associativity; apply (ap (.* d)), commutativity.
+    rewrite <- !simple_associativity. apply ap.
+    rewrite !simple_associativity. apply (ap (.* d)), commutativity.
   Qed.
 
 End semigroup_props.

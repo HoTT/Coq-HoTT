@@ -106,10 +106,10 @@ Section InflationaryFixedPoint.
     pose (gs := dcpo_sup_pointwise Ale f d).
     split.
     - intros x y p.
-      apply (issup_least (gs x)); intro i.
+      apply (issup_least (gs x)). intro i.
       exact (transitivity (fst (fI i) x y p) (issup_upper (gs y) i)).
     - intro x.
-      pose proof (fst d) as i; strip_truncations.
+      pose proof (fst d) as i. strip_truncations.
       exact (transitivity (snd (fI i) x) (issup_upper (gs x) i)).
   Defined.
 
@@ -128,7 +128,7 @@ Section InflationaryFixedPoint.
     split.
     - exact (tr (idmap; (_, _))).
     - intros [f [mf If]] [g [mg Ig]].
-      apply tr; exists (f o g; (_, _)); split.
+      apply tr; exists (f o g; (_, _)). split.
       + intro x.
         apply mf, Ig.
       + intro x.
