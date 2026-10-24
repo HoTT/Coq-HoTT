@@ -215,7 +215,7 @@ Record PseudonaturalTransformation `{Funext} (X : PreCategory)
 
 Bind Scope pseudonatural_transformation_scope with PseudonaturalTransformation.
 
-Create HintDb pseuodnatural_transformation discriminated.
+Create HintDb pseudonatural_transformation discriminated.
 
 Arguments p_components_of {_} {X}%_category {F G}%_pseudofunctor T%_pseudonatural_transformation
           a%_object : rename, simpl nomatch.
