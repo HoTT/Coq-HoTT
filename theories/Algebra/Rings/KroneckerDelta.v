@@ -1,4 +1,4 @@
-Require Import Basics.Overture Basics.Decidable Spaces.Nat.
+Require Import Basics.Overture Basics.Decidable Spaces.Nat.Core.
 Require Import Algebra.Rings.Ring.
 Require Import Classes.interfaces.abstract_algebra.
 
