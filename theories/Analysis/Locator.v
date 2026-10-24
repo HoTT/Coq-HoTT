@@ -37,10 +37,6 @@ Section locator.
   Context {Fcomplete : IsComplete Q F}.
   Context {Qroundup : RoundUpStrict Q}.
 
-  Context `{Funext} `{Univalence}.
-
-  (* Assume we have enumerations of the rationals, and of pairs of ordered rationals. *)
-  Context (Q_eq : nat <~> Q).
   Context (QQpos_eq : nat <~> Q * Qpos Q).
 
   Instance qinc : Cast Q F := rationals_to_field Q F.
@@ -64,7 +60,7 @@ Section locator.
   Arguments locates_right_true  [x] _ [q] [r] _.
   Arguments locates_right_false [x] _ [q] [r] _.
 
-  Definition locates_left {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
+  Definition locates_left `{Funext} {x : F} (l : locator' x) {q r : Q} : q < r -> DHProp :=
     fun nu => Build_DHProp (Build_HProp (~ (locates_right l nu))) _.
 
   Section classical.
@@ -133,7 +129,7 @@ Section locator.
 
   Section logic2.
 
-    Context {x : F}.
+    Context `{Funext} `{Univalence} {x : F}.
 
     Coercion locator_locator' : locator >-> locator'.
 
@@ -215,88 +211,65 @@ Section locator.
     apply (pos_plus_lt_compat_r q ('eps)), eps.
   Qed.
 
+  Local Notation nQ := (naturals_to_semiring nat Q).
+
+  Definition locator_minus {x : F} (l : locator x) : locator (-x).
+  Proof.
+    intros q r ltqr.
+    destruct (l (- r) (- q) (snd (flip_lt_negate q r) ltqr)) as [ltrx|ltxq].
+    - right. apply char_minus_left. rewrite <- preserves_negate. exact ltrx.
+    - left. apply char_minus_right. rewrite <- preserves_negate. exact ltxq.
+  Qed.
+
+  (** ** Rational bounds *)
+
   Section bounds.
-    (* Given a real with a locator, we can find (integer) bounds. *)
-    Context {x : F}
-            (l : locator x).
+    Context {x : F} (l : locator x).
 
-    Local Definition ltN1 (q : Q) : q - 1 < q := ltQnegQ q 1.
+    (** To find a rational below [x], we apply the locator to [- n - 1 < - n] for [n = 0, 1, 2, ...], until we locate [- n - 1 < x]. *)
+    Local Definition lt_negate_nat (n : nat) : - nQ n - 1 < - nQ n
+      := fst (pos_minus_lt_compat_r _ 1) lt_0_1.
 
-    Local Definition P_lower (q : Q) : Type := locates_right l (ltN1 q).
+    Local Definition locates_above_negate_nat (n : nat) : DHProp
+      := locates_right l (lt_negate_nat n).
 
-    Definition P_lower_prop {k} : IsHProp (P_lower k).
+    (** This happens for some [n], since [x] lies above some rational, which lies above some [- n]. *)
+    Local Lemma merely_locates_above_negate_nat : hexists locates_above_negate_nat.
     Proof.
-      apply _.
-    Qed.
-
-    Local Definition ltxN1 : x - 1 < x := (fst (pos_minus_lt_compat_r x 1) lt_0_1).
-
-    Local Definition P_lower_inhab : hexists (fun q => P_lower q).
-    Proof.
-      assert (hqlt : hexists (fun q => ' q < x)).
-      {
-        assert (hex := archimedean_property Q F (x-1) x ltxN1).
-        refine (Trunc_rec _ hex); intros hex'.
-        apply tr.
-        destruct hex' as [q [ltx1q ltqx]]; exists q; assumption.
-      }
-      refine (Trunc_rec _ hqlt); intros hqlt'.
-      induction hqlt' as [q lt].
-      apply tr.
-      exists q.
-      unfold P_lower.
-      apply ltrx_locates_right; assumption.
+      assert (lt : x - 1 < x) by apply pos_minus_lt_compat_r, lt_0_1.
+      assert (h := archimedean_property Q F (x - 1) x lt).
+      strip_truncations.
+      destruct h as [q [_ ltqx]].
+      destruct (round_up_strict Q (- q)) as [n ltqn].
+      apply tr; exists n.
+      apply ltrx_locates_right.
+      rhs_V' exact ltqx.
+      apply (strictly_order_preserving (cast Q F)), flip_lt_negate_l, ltqn.
     Qed.
 
     Definition lower_bound : {q : Q | ' q < x}.
     Proof.
-      assert (qP_lower : {q : Q | P_lower q})
-        by exact (minimal_n_alt_type Q Q_eq P_lower _ P_lower_inhab).
-      destruct qP_lower as [q Pq].
-      exists (q - 1).
-      unfold P_lower in Pq. simpl in *.
-      exact (un_inl _ Pq).
+      destruct (minimal_n locates_above_negate_nat _ merely_locates_above_negate_nat)
+        as [n above].
+      exact (- nQ n - 1; locates_right_true l (lt_negate_nat n) above).
     Qed.
 
-    Local Definition lt1N (r : Q) : r < r + 1 := ltQposQ r 1.
+  End bounds.
 
-    Local Definition P_upper (r : Q) : DHProp := locates_left l (lt1N r).
+  Definition upper_bound {x : F} (l : locator x) : {r : Q | x < ' r}.
+  Proof.
+    destruct (lower_bound (locator_minus l)) as [q ltqx].
+    exists (- q).
+    rewrite (preserves_negate (f:=cast Q F)).
+    apply flip_lt_negate_r, ltqx.
+  Qed.
 
-    Definition P_upper_prop {k} : IsHProp (P_upper k).
-    Proof.
-      apply _.
-    Qed.
+  (** ** Tight bounds *)
 
-    Local Definition ltx1N : x < x + 1 := (fst (pos_plus_lt_compat_r x 1) lt_0_1).
+  Context `{Funext}.
 
-    Local Definition P_upper_inhab : hexists (fun r => P_upper r).
-    Proof.
-      assert (hqlt : hexists (fun r => x < ' r)).
-      {
-        assert (hex := archimedean_property Q F x (x+1) ltx1N).
-        refine (Trunc_rec _ hex); intros hex'.
-        apply tr.
-        destruct hex' as [r [ltxr ltrx1]]; exists r; assumption.
-      }
-      refine (Trunc_rec _ hqlt); intros hqlt'.
-      induction hqlt' as [r lt].
-      apply tr.
-      exists r.
-      unfold P_upper.
-      apply ltxq_locates_left; assumption.
-    Qed.
-
-    Definition upper_bound : {r : Q | x < ' r}.
-    Proof.
-      assert (rP_upper : {r : Q | P_upper r})
-        by exact (minimal_n_alt_type Q Q_eq P_upper _ P_upper_inhab).
-      destruct rP_upper as [r Pr].
-      exists (r + 1).
-      unfold P_upper in Pr. simpl in *.
-      destruct (l r (r + 1) (lt1N r)).
-      - simpl in Pr. destruct (Pr tt).
-      - assumption.
-    Qed.
+  Section tight_bound.
+    Context {x : F} (l : locator x).
 
     Instance inc_N_Q : Cast nat Q := naturals_to_semiring nat Q.
 
@@ -305,8 +278,8 @@ Section locator.
     Lemma tight_bound (epsilon : Qpos Q) : {u : Q | ' u < x < ' (u + ' epsilon)}.
     Proof.
       destruct
-        lower_bound as [q ltqx]
-      , upper_bound as [r ltxr]
+        (lower_bound l) as [q ltqx]
+      , (upper_bound l) as [r ltxr]
       , (round_up_strict Q ((3/'epsilon)*(r-q))) as [n lt3rqn].
       assert (lt0 : 0 < 'epsilon / 3).
       {
@@ -446,7 +419,9 @@ Section locator.
           exact lt_2_3.
     Qed.
 
-  End bounds.
+  End tight_bound.
+
+  (** ** The Archimedean structure *)
 
   Section arch_struct.
 
@@ -528,19 +503,12 @@ Section locator.
 
   End arch_struct.
 
+  (** ** Reciprocals *)
+
   Section unary_ops.
 
     Context {x : F}
             (l : locator x).
-
-    Definition locator_minus : locator (-x).
-    Proof.
-      intros q r ltqr.
-      assert (ltnrnq := snd (flip_lt_negate q r) ltqr : -r < -q).
-      destruct (l _ _ ltnrnq) as [ltnrx|ltxnq].
-      - apply inr. apply char_minus_left. rewrite <- preserves_negate. assumption.
-      - apply inl. apply char_minus_right. rewrite <- preserves_negate. assumption.
-    Qed.
 
     Section recip_pos.
       Context (xpos : 0 < x).
@@ -600,49 +568,29 @@ Section locator.
   End unary_ops.
 
   Section recip_neg.
-    Context {x : F}
-            (l : locator x)
-            (xneg : x < 0).
+    Context {x : F} (l : locator x) (xneg : x < 0).
 
     Local Definition recip_neg_nu := negative_apart_zero x xneg.
 
     Definition locator_recip_neg : locator (// (x ; recip_neg_nu)).
     Proof.
-      assert (negxpos : 0 < (-x))
-        by (apply flip_neg_negate; assumption).
+      assert (negxpos : 0 < - x) by exact (fst (flip_neg_negate x) xneg).
       assert (l' := locator_minus (locator_recip_pos (locator_minus l) negxpos)).
-      rewrite (recip_negate (-x)) in l'.
-      unfold negate_apart in l'.
-      rewrite
-        (recip_proper_alt
-           (- - x)
-           x
-           (apart_negate (- x) (positive_apart_zero (- x) negxpos)) recip_neg_nu)
-        in l'.
-      - assumption.
-      - apply negate_involutive.
+      refine (transport locator _ l').
+      rewrite recip_negate. apply recip_proper_alt, negate_involutive.
     Qed.
-
   End recip_neg.
 
-  Section unary_ops2.
+  Definition locator_recip {x : F} (l : locator x) (nu : x ≶ 0) : locator (// (x ; nu)).
+  Proof.
+    destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
+    - rewrite <- (recip_irrelevant x (recip_neg_nu xneg) nu).
+      exact (locator_recip_neg l xneg).
+    - rewrite <- (recip_irrelevant x (recip_nu xpos) nu).
+      exact (locator_recip_pos l xpos).
+  Qed.
 
-    Context {x : F}
-            (l : locator x)
-            (nu : x ≶ 0).
-
-    Definition locator_recip : locator (// (x ; nu)).
-    Proof.
-      destruct (fst (apart_iff_total_lt x 0) nu) as [xneg|xpos].
-      - set (l' := locator_recip_neg l xneg).
-        rewrite (recip_proper_alt x x (negative_apart_zero x xneg) nu) in l';
-          try reflexivity; exact l'.
-      - set (l' := locator_recip_pos l xpos).
-        rewrite (recip_proper_alt x x (positive_apart_zero x xpos) nu) in l';
-          try reflexivity; exact l'.
-    Qed.
-
-  End unary_ops2.
+  (** ** Binary operations *)
 
   Section binary_ops.
 
