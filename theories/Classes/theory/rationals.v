@@ -580,7 +580,7 @@ intros q r;destruct (le_or_lt r q).
 Qed.
 
 Section enumerable.
-Context `{Enumerable Q}.
+Context {Qenum : Enumerable Q}.
 
 Definition Qpos_enumerator : nat -> Q+.
 Proof.
@@ -590,7 +590,7 @@ destruct (le_or_lt (enumerator Q n) 0) as [E|E].
 - exists (enumerator Q n);trivial.
 Defined.
 
-Lemma Qpos_is_enumerator :
+#[export] Instance Qpos_is_enumerator :
   IsSurjection@{UQ} Qpos_enumerator.
 Proof.
 apply BuildIsSurjection.

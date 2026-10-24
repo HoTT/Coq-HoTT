@@ -25,7 +25,8 @@
 
 From HoTT Require Import Basics Types HProp HSet Projective
      TruncType Truncations Modalities.Notnot Modalities.Open Modalities.Closed
-     Misc.BoundedSearch Equiv.BiInv Spaces.Nat Spaces.Torus.TorusEquivCircles
+     Misc.BoundedSearch Equiv.BiInv Spaces.Nat.Core Spaces.Nat.Paths
+     Spaces.Torus.TorusEquivCircles
      Classes.implementations.peano_naturals Metatheory.Core Metatheory.FunextVarieties
      Metatheory.ImpredicativeTruncation Spaces.Finite.Fin ExcludedMiddle.
 
