@@ -119,5 +119,5 @@ Definition Contr_ind@{u v|} (A : Type@{u}) (P : Contr A -> Type@{v})
            end C0)
     with
     | Build_Contr center contr => H center contr
-    | istrunc_S _ _ => tt
+    | @istrunc_S _ _ _ => tt
     end.
