@@ -58,7 +58,7 @@ Section models.
     := nat_prod_enumerator enum_Qm
          (Qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
             (Qtrivialapart:=trivialapart_Qm) (Qenum:=enumerable_Qm)).
-  Definition issurj_enum_Qm_qpos : IsSurjection enum_Qm_qpos
+  Instance issurj_enum_Qm_qpos : IsSurjection enum_Qm_qpos
     := issurj_nat_prod_enumerator.
 
   (** The Dedekind reals are an Archimedean, Cauchy complete ordered field. *)
