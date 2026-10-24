@@ -438,6 +438,7 @@ Proof.
       split; assumption.
 Defined.
 
+(** This is an equivalent formulation, using an initial segment of the naturals instead of a finite type. *)
 Definition sperners_lemma_1d_nat (f : nat -> Type) {dprop : forall i, Decidable (f i)}
   (left_true : f 0%nat) (n : nat) (right_false : ~ f n)
   : {k : nat & f k /\ ~ f k.+1}.

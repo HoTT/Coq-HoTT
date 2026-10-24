@@ -1220,7 +1220,8 @@ Section Reflective_Subuniverse.
         exact (n (to O A a)).
     Defined.
 
-    Definition O_decidable_arrow (A B : Type) `{Decidable A} (f : A -> O B)
+    (** If [A] is decidable, then an arrow [f : A -> O B] gives a term in [O (A -> B)].  There is always a map in the other direction, but neither composite is the identity in general. *)
+    Definition O_decidable_arrow {A B : Type} `{Decidable A} (f : A -> O B)
     : O (A -> B).
     Proof.
       destruct (dec A) as [a|n].
