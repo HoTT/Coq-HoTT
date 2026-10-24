@@ -51,7 +51,7 @@ Section models.
 
   (** The surjections from [nat] onto the rationals and onto pairs of a rational and a positive rational. *)
   Definition enum_Qm := fracfield_enumerator Zm.
-  Definition issurj_enum_Qm : IsSurjection enum_Qm
+  Instance issurj_enum_Qm : IsSurjection enum_Qm
     := issurj_fracfield_enumerator Zm (Zdom:=NatPair.Z_integral_domain nat).
   Definition enumerable_Qm : Enumerable Qm := Build_Enumerable Qm enum_Qm issurj_enum_Qm.
   Definition enum_Qm_qpos
@@ -59,9 +59,7 @@ Section models.
          (Qpos_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
             (Qtrivialapart:=trivialapart_Qm) (Qenum:=enumerable_Qm)).
   Definition issurj_enum_Qm_qpos : IsSurjection enum_Qm_qpos
-    := issurj_nat_prod_enumerator (s_surj:=issurj_enum_Qm)
-         (t_surj:=Qpos_is_enumerator (Qrats:=rationals_Qm) (Qdec:=decidablepaths_Qm)
-                    (Qtrivialapart:=trivialapart_Qm) (Qenum:=enumerable_Qm)).
+    := issurj_nat_prod_enumerator.
 
   (** The Dedekind reals are an Archimedean, Cauchy complete ordered field. *)
   Definition orderedfield_Rm

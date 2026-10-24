@@ -497,6 +497,6 @@ Section limits.
   Proof.
     split.
     - intros h q r ltqr; exact (Trunc_functor _ (fun f => f ltqr) (h q r)).
-    - intros h q r; exact (O_decidable_arrow (Tr (-1)) _ _ (h q r)).
+    - intros h q r; exact (O_decidable_arrow (Tr (-1)) (h q r)).
   Qed.
 End limits.

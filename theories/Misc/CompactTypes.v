@@ -55,7 +55,7 @@ Proof.
     exact (fun u => r (a; u)).
 Defined.
 
-(** The weak limited principle of omniscience. *)
+(** The weak limited principle of omniscience.  We state this in one form, and then prove it is equivalent to the common form involving the universal quantifier. *)
 Definition WLPO
   := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
 

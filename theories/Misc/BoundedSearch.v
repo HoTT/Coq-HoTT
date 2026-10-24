@@ -10,11 +10,11 @@ Require Import Spaces.Nat.Core.
 Section bounded_search.
 
   Context (P : nat -> Type) (P_dec : forall n, Decidable (P n)).
-  
+
   (** We open [type_scope] again after [nat_scope] in order to use the product type notation. *)
   Local Open Scope nat_scope.
   Local Open Scope type_scope.
-  
+
   Local Definition minimal (n : nat) : Type := forall m : nat, P m -> n <= m.
 
   (** If we assume [Funext], then [minimal n] is a proposition.  But to avoid needing [Funext], we propositionally truncate it. *)
@@ -107,12 +107,13 @@ Section bounded_search_alt_type.
   (** Bounded search works for every type with a surjection from the naturals. *)
   Definition minimal_n_alt_type : {x : X & P x}.
   Proof.
-    assert (P'_inhab : hexists (P o e)).
+    pose (P' := P o e).
+    assert (P'_inhab : hexists P').
     { strip_truncations; destruct P_inhab as [x p].
       pose proof (@center _ (e_surj x)) as h.
       strip_truncations; destruct h as [n q].
       exact (tr (n; transport P q^ p)). }
-    destruct (minimal_n (P o e) (fun n => P_dec (e n)) P'_inhab) as [n p].
+    destruct (minimal_n P' (P_dec o e) P'_inhab) as [n p].
     exact (e n; p).
   Defined.
 
