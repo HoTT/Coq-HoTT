@@ -38,24 +38,65 @@ Proof.
   exact merely_inhabited_iff_inhabited_stable.
 Defined.
 
-(** A weaker definition: for any decidable family, the dependent function type is decidable. *)
+(** A weaker definition: a type is ∃-compact if for any decidable family, the propositional truncation of the Σ-type is decidable. *)
+Definition IsHExistsCompact (A : Type)
+  := forall P : A -> Type,
+      (forall a : A, Decidable (P a)) -> Decidable (hexists P).
+
+Definition ishprop_ishexistscompact `{Funext} (A : Type)
+  : IsHProp (IsHExistsCompact A) := _.
+
+Definition ishexistscompact_issigmacompact {A} (c : IsSigmaCompact A)
+  : IsHExistsCompact A.
+Proof.
+  intros P dP.
+  destruct (c P dP) as [l|r].
+  - left; exact (tr l).
+  - right; intros u; by strip_truncations.
+Defined.
+
+(** An even weaker definition: A type is Π-compact if for any decidable family, the dependent function type is decidable. *)
 Definition IsPiCompact (A : Type)
   := forall (P : A -> Type) (dP : forall a : A, Decidable (P a)),
       Decidable (forall a : A, P a).
 
-Definition ispicompact_issigmacompact {A : Type} (c : IsSigmaCompact A)
+Definition IsPiCompactProps (A : Type)
+  := forall P : A -> HProp,
+      (forall a, Decidable (P a)) -> Decidable (forall a, P a).
+
+Definition ishprop_ispicompactprops `{Funext} (A : Type)
+  : IsHProp (IsPiCompactProps A) := _.
+
+Definition ispicompactprops_ispicompact {A} (h : IsPiCompact A)
+  : IsPiCompactProps A := h.
+
+Definition ispicompact_ispicompactprops {A} (h : IsPiCompactProps A)
+  : IsPiCompact A.
+Proof.
+  intros P dP.
+  refine (decidable_iff _ (h (merely o P) _)); constructor.
+  2: exact (fun f a => tr (f a)).
+  intros f a.
+  apply merely_inhabited_iff_inhabited_stable; exact (f a).
+Defined.
+
+Definition ispicompact_ishexistscompact {A} (c : IsHExistsCompact A)
   : IsPiCompact A.
 Proof.
   intros P dP.
   destruct (c (not o P) _) as [l|r].
-  - right; exact (fun f => l.2 (f l.1)).
-  - left.
-    intro a.
+  - right; intro f; strip_truncations.
+    exact (l.2 (f l.1)).
+  - left; intro a.
     apply (stable_decidable (P a)).
-    exact (fun u => r (a; u)).
+    exact (fun u => r (tr (a; u))).
 Defined.
 
-(** The weak limited principle of omniscience.  We state this in one form, and then prove it is equivalent to the common form involving the universal quantifier. *)
+Definition ispicompact_issigmacompact {A} (c : IsSigmaCompact A)
+  : IsPiCompact A
+  := (ispicompact_ishexistscompact (ishexistscompact_issigmacompact c)).
+
+(** The weak limited principle of omniscience. We state this in one form, and then prove it is equivalent to the common form involving the universal quantifier. *)
 Definition WLPO
   := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
 
@@ -101,6 +142,22 @@ Proof.
   - right; intro a.
     exact (c2 (a; pt)).
 Defined.
+
+(** Any ∃-compact type has decidable propositional truncation. *)
+Definition decidable_tr_ishexistscompact {A : Type} (c : IsHExistsCompact A)
+  : Decidable (Tr (-1) A).
+Proof.
+  destruct (c (fun (_ : A) => Unit) _) as [c1|c2].
+  - left; strip_truncations; apply tr.
+    exact c1.1.
+  - right; intro a; strip_truncations.
+    exact (c2 (tr (a; pt))).
+Defined.
+
+(** The negation of any Π-compact type is decidable. *)
+Definition decidable_not_ispicompact {A} (h : IsPiCompact A)
+  : Decidable (~A)
+  := h (const False_hp) _.
 
 (** ** Equivalent definitions *)
 
