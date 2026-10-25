@@ -119,6 +119,12 @@ Section semiring_props.
   exact _.
   Qed.
 
+  Lemma plus_swap_middle (a b c d : R) : (a + b) + (c + d) = (a + c) + (b + d).
+  Proof. exact (groups.sg_op_swap_middle a b c d). Qed.
+
+  Lemma mult_swap_middle (a b c d : R) : (a * b) * (c * d) = (a * c) * (b * d).
+  Proof. exact (groups.sg_op_swap_middle a b c d). Qed.
+
   #[export] Instance: forall r : R, @IsMonoidPreserving R R (+) (+) 0 0 (r *.).
   Proof.
   repeat (constructor; try exact _).
@@ -270,6 +276,12 @@ Section ring_props.
 
   Lemma negate_plus_distr : forall x y, -(x + y) = -x + -y.
   Proof. exact groups.negate_sg_op_distr. Qed.
+
+  Lemma plus_minus_telescope x y z : (x - y) + (y - z) = x - z.
+  Proof. exact (groups.sg_op_inverse_telescope x y z). Qed.
+
+  Lemma plus_minus_plus_l x y z : (z + x) - (z + y) = x - y.
+  Proof. exact (groups.sg_op_negate_sg_op_l x y z). Qed.
 
   Lemma negate_mult_l x : -x = - 1 * x.
   Proof.
@@ -442,6 +454,12 @@ Section ring_props.
     rewrite (simple_associativity (f := (+))).
     apply plus_conjugate.
   Qed.
+
+  Lemma minus_plus_cancel x y : x - y + y = x.
+  Proof. exact (groups.sg_op_inverse_sg_op x y). Qed.
+
+  Lemma plus_minus_cancel x y : x + y - y = x.
+  Proof. exact (groups.sg_op_sg_op_inverse x y). Qed.
 End ring_props.
 
 Section integral_domain_props.

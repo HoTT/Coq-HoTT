@@ -1106,11 +1106,17 @@ Qed.
   := ltac:(first [exact Z_zero_product'@{Ularge Ularge}|
                   exact Z_zero_product'@{}]).
 
+#[export] Instance Z_integral_domain@{} : IsIntegralDomain Z.
+Proof.
+split; [exact _| |exact _].
+intros E. apply (naturals.nat_nontrivial (N:=N)), (injective (cast N Z)), E.
+Qed.
+
 End contents.
 
 Module Instances.
   Existing Instances
-    T_set inject Tle_hprop Tlt_hprop Tapart_hprop Z_of_pair Z_of_N R_dec Z0 Z1 Z_plus Z_mult Z_negate Z_of_N_injective Zle ishprop_Zle Zle_cast_embedding Z_order Zle_dec Zlt ishprop_Zlt Z_strict_srorder Zlt_dec Zapart ishprop_Zapart Z_trivial_apart Z_to_ring Z_integers Z_abs Z_zero_product Z_of_N_morphism.
+    T_set inject Tle_hprop Tlt_hprop Tapart_hprop Z_of_pair Z_of_N R_dec Z0 Z1 Z_plus Z_mult Z_negate Z_of_N_injective Zle ishprop_Zle Zle_cast_embedding Z_order Zle_dec Zlt ishprop_Zlt Z_strict_srorder Zlt_dec Zapart ishprop_Zapart Z_trivial_apart Z_to_ring Z_integers Z_abs Z_zero_product Z_integral_domain Z_of_N_morphism.
 End Instances.
 Export Instances.
 End NatPair.
