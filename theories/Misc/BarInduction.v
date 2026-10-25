@@ -5,7 +5,7 @@ Require Import Truncations.Core.
 Require Import Spaces.Nat.Core.
 Require Import Spaces.NatSeq.Core.
 Require Import Spaces.List.Core Spaces.List.Theory.
-Require Import BoundedSearch.
+Require Import Misc.CompactTypes BoundedSearch.
 
 Local Open Scope nat_scope.
 Local Open Scope type_scope.
@@ -311,18 +311,13 @@ Proof.
   - exact (h a).
 Defined.
 
-Definition issigcompact_barinduction {A : Type} (BI : BarInduction A)
+Definition issigmacompact_barinduction {A : Type} (BI : BarInduction A)
   (P : A -> Type) (dec : forall n : A, Decidable (P n))
   : Decidable {a : A & P a}
   := BI (BI_sig_family P)
           (isinductive_BI_sig_family P) (is_bar_BI_sig_family dec).
 
-(** Full bar induction for [nat] implies the limited principle of omniscience, i.e., for every sequence of natural numbers we can decide whether every term is zero or there exists a non-zero term. *)
+(** Corollary: full bar induction for [nat] implies the limited principle of omniscience. *)
 
-Definition LPO_barinduction {BI : BarInduction nat} (s : nat -> nat)
-  : (forall n : nat, s n = 0) + {n : nat & s n <> 0}.
-Proof.
-  destruct (issigcompact_barinduction BI (fun n => s n <> 0) _) as [l|r].
-  - right; exact l.
-  - left; exact (fun n => stable (fun z : s n <> 0 => r (n; z))).
-Defined.
+Definition lpo_barinduction (BI : BarInduction nat) : LPO
+ := ishexistscompact_issigmacompact (issigmacompact_barinduction BI).
