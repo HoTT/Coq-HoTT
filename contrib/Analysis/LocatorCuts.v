@@ -442,9 +442,6 @@ Section cuts.
   Section dedekind.
     Context `{Funext} `{Univalence}.
     Local Notation RD := (DedekindReals Q (Qlt:=Qlt)).
-    Local Instance archimedean_RD {c : FieldCharacteristic RD 0}
-      : ArchimedeanProperty Q RD (Achar:=c)
-      := archimedean_property_change_char Q RD _ c (archimedean_dedekindreals Q).
     Local Existing Instance qinc.
 
     (** The order of the Dedekind reals with the rationals is given by the cuts, so a locator in the sense of the ordered field [RD] is the structural counterpart of locatedness. *)
@@ -547,7 +544,6 @@ Section cuts.
   Section dedekind2.
     Context `{Funext} `{Univalence}.
     Local Notation RD := (DedekindReals Q (Qlt:=Qlt)).
-    Local Existing Instance archimedean_RD.
 
     (** Hence a cut which merely has the structure of a cut is a Cauchy real. *)
     Lemma iscauchyreal_merely_cutstructure {L U : Q -> HProp} (s : merely (CutStructure L U))
