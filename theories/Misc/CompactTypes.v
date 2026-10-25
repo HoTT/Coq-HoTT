@@ -194,6 +194,29 @@ Definition iff_iscompact_issigmacompact (A : Type)
   : IsCompact A <-> IsSigmaCompact A
   := iff_compose (iff_iscompact_iscompact' A) (iff_iscompact'_issigmacompact A).
 
+(** Being Π-compact is equivalent to the statement that for any decidable family, the negation of the Σ-type is decidable. *)
+
+Definition pi_not_equiv_not_sigma {A} (P : A -> Type)
+  (dP : forall a, Decidable (P a))
+  : (forall a, ~(P a)) <~> ~(sig P)
+  := equiv_sig_ind _.
+
+Definition iff_ispicompact_decidable_not_sigma (A : Type)
+  : IsPiCompact A <->
+    forall P : A -> Type,
+      (forall a, Decidable (P a)) -> Decidable (~(sig P)).
+Proof.
+  constructor.
+  1,2: intros c P dP.
+  1: exact (decidable_iff (pi_not_equiv_not_sigma _ _) (c _ _)).
+  destruct (c (not o P) _) as [l|r].
+  - left; refine (fun a => stable_decidable (P a) _).
+    intro n; exact (l (a; n)).
+  - right; intro f.
+    apply r; intros [a u].
+    exact (u (f a)).
+Defined.
+
 (** ** Basic definitions of searchable types *)
 
 (** A type is searchable if for every decidable predicate we can find a "universal witness" for whether the predicate is always true or not. *)
@@ -431,18 +454,8 @@ Definition WLPO
 
 Instance ishprop_wlpo `{Funext} : IsHProp WLPO := _.
 
-Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat.
-Proof.
-  split.
-  - intros w P dP.
-    destruct (w (not o P) _) as [l|r].
-    + left. intro n; exact (stable_decidable (P n) (fun u => l (n; u))).
-    + right. intro f; exact (r (fun u => u.2 (f u.1))).
-  - intros c P dP.
-    destruct (c (not o P) _) as [l|r].
-    + left. intro u; exact (l u.1 u.2).
-    + right. intro nu; exact (r (fun n p => nu (n; p))).
-Defined.
+Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat
+  := symmetric_iff _ _ (iff_ispicompact_decidable_not_sigma nat).
 
 Section Uniform_Search.
 
