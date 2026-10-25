@@ -3,11 +3,12 @@
 From HoTT Require Import Basics Types.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Spaces.Nat.Core Finite.Fin.
-Require Import Misc.UStructures.
+Require Import Misc.UStructures BoundedSearch.
 Require Import Spaces.NatSeq.Core Spaces.NatSeq.UStructure.
 Require Import Homotopy.Suspension.
 Require Import Pointed.Core.
 Require Import Universes.TruncType Universes.HProp.
+Require Import ExcludedMiddle Projective.
 
 Local Open Scope nat_scope.
 Local Open Scope pointed_scope.
@@ -446,6 +447,89 @@ Proof.
   apply (issigmacompact_sigma cA); cbn beta.
   intro a.
   rapply issigmacompact_decidable_hprop.
+Defined.
+
+(** ** Constructive taboos *)
+
+(** Assuming univalence and AC_(n,-1), every n-type is merely compact. Note that "all types are compact" would be equivalent to all types being decidable, and thus inconsistent with univalence. *)
+
+Definition merely_decidable_decidable_merely `{Funext} (A : Type)
+  (d : Decidable (merely A))
+  : merely (Decidable A).
+Proof.
+  destruct d as [a|f].
+  1: strip_truncations.
+  1,2: apply tr.
+  1: exact (inl a).
+  exact (inr (fun x => f (tr x))).
+Defined.
+
+(* We add LEM to the assumptions of these results, but this is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem. *)
+Definition merely_issigmacompact_choice `{Univalence} `{ExcludedMiddle}
+  {ac : forall X, IsHSet X -> HasChoice X} (A : Type)
+  : merely (IsSigmaCompactProps A).
+Proof.
+  rapply ac; intro P.
+  rapply ac; intro d.
+  apply merely_decidable_decidable_merely.
+  rapply LEM.
+Defined.
+
+Definition merely_issigmacompact_trchoice `{Univalence} `{ExcludedMiddle}
+  (n : nat) {ac : forall X, IsHSet X -> HasTrChoice n X}
+  (A : Type) `{IsTrunc n A}
+  : merely (IsSigmaCompactProps A).
+Proof.
+  rapply ac.
+  - intro; napply istrunc_forall.
+    shelve.
+  - intro P.
+    rapply ac.
+    + Unshelve.
+      all: intro; apply istrunc_sum; exact _.
+    + intro d.
+      apply merely_decidable_decidable_merely.
+      rapply LEM.
+Defined.
+
+(** From [decidable_tr_ishexistscompact], we can deduce that the statement "every type is ∃-compact" is equivalent to LEM. We now show that the statement "every type is Π-compact" is equivalent to weak LEM. *)
+
+(* The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
+Definition forall_not_not_not_not_forall {A} (P : A -> Type)
+  (u : ~~(forall a, P a))
+  : forall a, ~~(P a).
+Proof.
+  intros a n.
+  apply u; intro f.
+  exact (n (f a)).
+Defined.
+
+Definition stable_forall {A} (P : A -> Type) (s : forall a, Stable (P a))
+  : Stable (forall a, P a)
+  := functor_forall_id s o forall_not_not_not_not_forall P.
+
+Definition iff_wlem_ispicompact_all
+  : (forall A, Decidable (~A)) <->
+    forall A, IsPiCompact A.
+Proof.
+  constructor.
+  2: exact (fun c A => decidable_not_ispicompact (c A)).
+  intros wlem A P dP.
+  destruct (wlem (forall a, P a)) as [l|r].
+  1: right; exact l.
+  left; exact (stable_forall _ _ r).
+Defined.
+
+(** The limited principle of omniscience is equivalent to [nat] being compact. *)
+Definition LPO := IsHExistsCompact nat.
+
+Definition issigmacompact_nat_lpo (lpo : LPO)
+  : IsSigmaCompact nat.
+Proof.
+  intros P dP.
+  destruct (lpo P dP) as [l|r].
+  1: left; exact (minimal_n _ _ l).
+  right; exact (r o tr).
 Defined.
 
 (** The weak limited principle of omniscience. We state this in one form, and then prove it is equivalent to the common form involving the universal quantifier. *)
