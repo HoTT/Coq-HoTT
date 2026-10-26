@@ -213,14 +213,26 @@ Proof.
   symmetry; rapply trunc_inhabited_iff_inhabited_stable.
 Defined.
 
-Definition merely_decidable_decidable_merely (A : Type)
-  (d : Decidable (Tr (-1) A))
-  : Tr (-1) (Decidable A).
+(** If [Tr n A] is decidable, then [Tr n (Decidable A)]. *)
+Definition trunc_decidable_decidable_trunc (n : trunc_index) (A : Type)
+  (d : Decidable (Tr n A))
+  : Tr n (Decidable A).
 Proof.
   destruct d as [a|f].
   - strip_truncations; apply tr.
     exact (inl a).
   - exact (tr (inr (fun x => f (tr x)))).
+Defined.
+
+(** The converse is true for [n >= -1] assuming [Funext]. *)
+Definition decidable_trunc_trunc_decidable `{Funext}
+  (n : trunc_index) (A : Type) (d : Tr n.+1 (Decidable A))
+  : Decidable (Tr n.+1 A).
+Proof.
+  refine (@Trunc_rec _ _ (Decidable (Tr n.+1 A)) _ _ d).
+  destruct n.
+  1: exact _.
+  rapply istrunc_sum.
 Defined.
 
 (** ** A few special things about the (-2)-truncation *)

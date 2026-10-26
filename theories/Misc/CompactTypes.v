@@ -459,7 +459,7 @@ Definition merely_issigmacompact_choice `{Univalence} `{ExcludedMiddle}
 Proof.
   rapply ac; intro P.
   rapply ac; intro d.
-  apply merely_decidable_decidable_merely.
+  apply trunc_decidable_decidable_trunc.
   rapply LEM.
 Defined.
 
@@ -476,7 +476,7 @@ Proof.
     + Unshelve.
       all: intro; apply istrunc_sum; exact _.
     + intro d.
-      apply merely_decidable_decidable_merely.
+      apply trunc_decidable_decidable_trunc.
       rapply LEM.
 Defined.
 
