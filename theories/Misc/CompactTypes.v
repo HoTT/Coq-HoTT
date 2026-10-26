@@ -15,7 +15,7 @@ Local Open Scope pointed_scope.
 
 (** ** Basic definitions of compact types *)
 
-(** A type [A] is compact if for every decidable family over [A], the Σ-type is decidable. *)
+(** A type [A] is Sigma-compact if for every decidable family over [A], the Σ-type is decidable. We generally drop the "Sigma" from the name in prose. *)
 Definition IsSigmaCompact (A : Type)
   := forall P : A -> Type, (forall a : A, Decidable (P a)) -> Decidable (sig P).
 
@@ -47,6 +47,7 @@ Definition IsHExistsCompact (A : Type)
 Definition ishprop_ishexistscompact `{Funext} (A : Type)
   : IsHProp (IsHExistsCompact A) := _.
 
+(** Sigma-compactness implies exists-compactness. *)
 Definition ishexistscompact_issigmacompact {A} (c : IsSigmaCompact A)
   : IsHExistsCompact A.
 Proof.
@@ -56,11 +57,12 @@ Proof.
   - right; intros u; by strip_truncations.
 Defined.
 
-(** An even weaker definition: A type is Π-compact if for any decidable family, the dependent function type is decidable. *)
+(** An even weaker definition: a type is Π-compact if for any decidable family, the dependent function type is decidable. *)
 Definition IsPiCompact (A : Type)
   := forall (P : A -> Type) (dP : forall a : A, Decidable (P a)),
       Decidable (forall a : A, P a).
 
+(** It is enough to consider [HProp]-valued families. *)
 Definition IsPiCompactProps (A : Type)
   := forall P : A -> HProp,
       (forall a, Decidable (P a)) -> Decidable (forall a, P a).
@@ -81,6 +83,7 @@ Proof.
   apply merely_inhabited_iff_inhabited_stable; exact (f a).
 Defined.
 
+(** exists-compactness implies Pi-compactness. *)
 Definition ispicompact_ishexistscompact {A} (c : IsHExistsCompact A)
   : IsPiCompact A.
 Proof.
@@ -93,6 +96,7 @@ Proof.
     exact (fun u => r (tr (a; u))).
 Defined.
 
+(** Therefore, compactness implies Pi-compactness. *)
 Definition ispicompact_issigmacompact {A} (c : IsSigmaCompact A)
   : IsPiCompact A
   := (ispicompact_ishexistscompact (ishexistscompact_issigmacompact c)).
@@ -195,13 +199,13 @@ Definition iff_iscompact_issigmacompact (A : Type)
   : IsCompact A <-> IsSigmaCompact A
   := iff_compose (iff_iscompact_iscompact' A) (iff_iscompact'_issigmacompact A).
 
-(** Being Π-compact is equivalent to the statement that for any decidable family, the negation of the Σ-type is decidable. *)
-
+(** This wrapper for [equiv_sig_ind] will get used twice in the next proof, so we factor it out. *)
 Definition pi_not_equiv_not_sigma {A} (P : A -> Type)
   (dP : forall a, Decidable (P a))
   : (forall a, ~(P a)) <~> ~(sig P)
   := equiv_sig_ind _.
 
+(** Being Π-compact is equivalent to the statement that for any decidable family, the negation of the Σ-type is decidable. *)
 Definition iff_ispicompact_decidable_not_sigma (A : Type)
   : IsPiCompact A <->
     forall P : A -> Type,
@@ -464,7 +468,7 @@ Proof.
   exact (inr (fun x => f (tr x))).
 Defined.
 
-(* We add LEM to the assumptions of these results, but this is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem. *)
+(** We add LEM to the assumptions of these results, but this is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem. *)
 Definition merely_issigmacompact_choice `{Univalence} `{ExcludedMiddle}
   {ac : forall X, IsHSet X -> HasChoice X} (A : Type)
   : merely (IsSigmaCompactProps A).
@@ -494,7 +498,7 @@ Defined.
 
 (** From [decidable_tr_ishexistscompact], we can deduce that the statement "every type is ∃-compact" is equivalent to LEM. We now show that the statement "every type is Π-compact" is equivalent to weak LEM. *)
 
-(* The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
+(** The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
 Definition forall_not_not_not_not_forall {A} (P : A -> Type)
   (u : ~~(forall a, P a))
   : forall a, ~~(P a).
@@ -520,9 +524,10 @@ Proof.
   left; exact (stable_forall _ _ r).
 Defined.
 
-(** The limited principle of omniscience is equivalent to [nat] being compact. *)
+(** The limited principle of omniscience says that [nat] is exists-compact. *)
 Definition LPO := IsHExistsCompact nat.
 
+(** The limited principle of omniscience is equivalent to [nat] being compact. *)
 Definition issigmacompact_nat_lpo (lpo : LPO)
   : IsSigmaCompact nat.
 Proof.
