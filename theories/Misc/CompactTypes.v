@@ -457,10 +457,9 @@ Definition merely_decidable_decidable_merely (A : Type)
   : merely (Decidable A).
 Proof.
   destruct d as [a|f].
-  1: strip_truncations.
-  1,2: apply tr.
-  1: exact (inl a).
-  exact (inr (fun x => f (tr x))).
+  - strip_truncations; apply tr.
+    exact (inl a).
+  - exact (tr (inr (fun x => f (tr x)))).
 Defined.
 
 (** We add LEM to the assumptions of these results, but this is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem. *)
@@ -493,6 +492,9 @@ Defined.
 
 (** From [decidable_tr_ishexistscompact], we can deduce that the statement "every type is ∃-compact" is equivalent to LEM. We now show that the statement "every type is Π-compact" is equivalent to weak LEM. *)
 
+(** Weak LEM says that all negations are decidable.  *)
+Definition WLEM := forall A, Decidable (~A).
+
 (** The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
 Definition forall_not_not_not_not_forall {A} (P : A -> Type)
   (u : ~~(forall a, P a))
@@ -508,9 +510,9 @@ Definition stable_forall {A} (P : A -> Type) (s : forall a, Stable (P a))
   := functor_forall_id s o forall_not_not_not_not_forall P.
 
 Definition iff_wlem_ispicompact_all
-  : (forall A, Decidable (~A)) <-> forall A, IsPiCompact A.
+  : WLEM <-> forall A, IsPiCompact A.
 Proof.
-  constructor.
+  split.
   2: exact (fun c A => decidable_not_ispicompact (c A)).
   intros wlem A P dP.
   destruct (wlem (forall a, P a)) as [l|r].
