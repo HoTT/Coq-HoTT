@@ -452,16 +452,6 @@ Defined.
 
 (** Assuming univalence and AC_(n,-1), every n-type is merely compact. Note that "all types are compact" would be equivalent to all types being decidable, and thus inconsistent with univalence. *)
 
-Definition merely_decidable_decidable_merely (A : Type)
-  (d : Decidable (merely A))
-  : merely (Decidable A).
-Proof.
-  destruct d as [a|f].
-  - strip_truncations; apply tr.
-    exact (inl a).
-  - exact (tr (inr (fun x => f (tr x)))).
-Defined.
-
 (** We add LEM to the assumptions of these results, but this is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem. *)
 Definition merely_issigmacompact_choice `{Univalence} `{ExcludedMiddle}
   {ac : forall X, IsHSet X -> HasChoice X} (A : Type)
@@ -494,20 +484,6 @@ Defined.
 
 (** Weak LEM says that all negations are decidable.  *)
 Definition WLEM := forall A, Decidable (~A).
-
-(** The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
-Definition forall_not_not_not_not_forall {A} (P : A -> Type)
-  (u : ~~(forall a, P a))
-  : forall a, ~~(P a).
-Proof.
-  intros a n.
-  apply u; intro f.
-  exact (n (f a)).
-Defined.
-
-Definition stable_forall {A} (P : A -> Type) (s : forall a, Stable (P a))
-  : Stable (forall a, P a)
-  := functor_forall_id s o forall_not_not_not_not_forall P.
 
 Definition iff_wlem_ispicompact_all
   : WLEM <-> forall A, IsPiCompact A.

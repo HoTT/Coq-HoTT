@@ -213,6 +213,16 @@ Proof.
   symmetry; rapply trunc_inhabited_iff_inhabited_stable.
 Defined.
 
+Definition merely_decidable_decidable_merely (A : Type)
+  (d : Decidable (Tr (-1) A))
+  : Tr (-1) (Decidable A).
+Proof.
+  destruct d as [a|f].
+  - strip_truncations; apply tr.
+    exact (inl a).
+  - exact (tr (inr (fun x => f (tr x)))).
+Defined.
+
 (** ** A few special things about the (-2)-truncation *)
 
 (** The type of contractible types is contractible. *)
