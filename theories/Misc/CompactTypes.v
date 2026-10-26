@@ -77,7 +77,7 @@ Definition ispicompact_ispicompactprops {A} (h : IsPiCompactProps A)
   : IsPiCompact A.
 Proof.
   intros P dP.
-  refine (decidable_iff _ (h (merely o P) _)); constructor.
+  refine (decidable_iff _ (h (merely o P) _)); split.
   2: exact (fun f a => tr (f a)).
   intros f a.
   apply merely_inhabited_iff_inhabited_stable; exact (f a).
@@ -133,11 +133,9 @@ Defined.
 Definition decidable_tr_ishexistscompact {A : Type} (c : IsHExistsCompact A)
   : Decidable (Tr (-1) A).
 Proof.
-  destruct (c (fun (_ : A) => Unit) _) as [c1|c2].
-  - left; strip_truncations; apply tr.
-    exact c1.1.
-  - right; intro a; strip_truncations.
-    exact (c2 (tr (a; pt))).
+  refine (decidable_equiv' (hexists (fun _ => Unit)) _ (c _ _)).
+  apply Trunc_functor_equiv.
+  rapply equiv_sigma_contr.
 Defined.
 
 (** The negation of any Π-compact type is decidable. *)
@@ -201,7 +199,6 @@ Definition iff_iscompact_issigmacompact (A : Type)
 
 (** This wrapper for [equiv_sig_ind] will get used twice in the next proof, so we factor it out. *)
 Definition pi_not_equiv_not_sigma {A} (P : A -> Type)
-  (dP : forall a, Decidable (P a))
   : (forall a, ~(P a)) <~> ~(sig P)
   := equiv_sig_ind _.
 
@@ -211,15 +208,13 @@ Definition iff_ispicompact_decidable_not_sigma (A : Type)
     forall P : A -> Type,
       (forall a, Decidable (P a)) -> Decidable (~(sig P)).
 Proof.
-  constructor.
+  split.
   1,2: intros c P dP.
-  1: exact (decidable_iff (pi_not_equiv_not_sigma _ _) (c _ _)).
-  destruct (c (not o P) _) as [l|r].
-  - left; refine (fun a => stable_decidable (P a) _).
-    intro n; exact (l (a; n)).
-  - right; intro f.
-    apply r; intros [a u].
-    exact (u (f a)).
+  1: exact (decidable_equiv' _ (pi_not_equiv_not_sigma _) (c _ _)).
+  refine (decidable_iff _ (c (not o P) _)).
+  refine (iff_compose (pi_not_equiv_not_sigma _)^-1%equiv _).
+  apply iff_functor_forall; intro a.
+  rapply iff_stable.
 Defined.
 
 (** ** Basic definitions of searchable types *)
@@ -457,7 +452,7 @@ Defined.
 
 (** Assuming univalence and AC_(n,-1), every n-type is merely compact. Note that "all types are compact" would be equivalent to all types being decidable, and thus inconsistent with univalence. *)
 
-Definition merely_decidable_decidable_merely `{Funext} (A : Type)
+Definition merely_decidable_decidable_merely (A : Type)
   (d : Decidable (merely A))
   : merely (Decidable A).
 Proof.
@@ -513,8 +508,7 @@ Definition stable_forall {A} (P : A -> Type) (s : forall a, Stable (P a))
   := functor_forall_id s o forall_not_not_not_not_forall P.
 
 Definition iff_wlem_ispicompact_all
-  : (forall A, Decidable (~A)) <->
-    forall A, IsPiCompact A.
+  : (forall A, Decidable (~A)) <-> forall A, IsPiCompact A.
 Proof.
   constructor.
   2: exact (fun c A => decidable_not_ispicompact (c A)).
