@@ -229,7 +229,7 @@ Definition decidable_trunc_trunc_decidable `{Funext}
   (n : trunc_index) (A : Type) (d : Tr n.+1 (Decidable A))
   : Decidable (Tr n.+1 A).
 Proof.
-  refine (@Trunc_rec _ _ (Decidable (Tr n.+1 A)) _ _ d).
+  refine (Trunc_rec (@decidable_trunc_decidable n _) d).
   destruct n.
   1: exact _.
   rapply istrunc_sum.
