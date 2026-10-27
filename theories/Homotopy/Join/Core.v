@@ -871,9 +871,9 @@ Section JoinTrunc.
     - apply Trunc_rec, push.
   Defined.
 
-  (** Joins add connectivity *)
-  #[export] Instance isconnected_join `{Funext} {m n : trunc_index}
-         (A B : Type) `{IsConnected m A} `{IsConnected n B}
+  (** Joins add connectivity.  It's easy to generalize this to [A] and [B] in different universes, with the join in a supremum universe [w].  One just needs to add two lines of the form [change (IsConnected@{w} (Tr@{w} m) A) in ...] at the start of the proof, and adjust one annotation.  But then [w] is a free variable that adds to other universe variables when this is found by typeclass search, so for now we keep it this way. *)
+  #[export] Instance isconnected_join@{u} `{Funext} {m n : trunc_index}
+         (A B : Type@{u}) `{IsConnected m A} `{IsConnected n B}
     : IsConnected (m +2+ n) (Join A B).
   Proof.
     apply isconnected_from_elim; intros C ? k.
@@ -883,11 +883,11 @@ Section JoinTrunc.
       exact (ap k (jglue a b)). }
     assert (h : NullHomotopy f).
     { rapply (isconnected_elim m).
-      rapply (istrunc_extension_along_conn (n:=n)). }
+      rapply (istrunc_extension_along_conn@{u u u u} (n:=n)). }
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
     snapply Join_ind.
-    - intros a; cbn beta. exact (ap10 (h a)..1 tt).
+    - intros a; cbn beta. exact (ap10@{Set _ _} (h a)..1 tt).
     - intros b; cbn beta. exact (g b)^.
     - intros a b.
       transport_paths Fl.
