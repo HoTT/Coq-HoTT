@@ -450,9 +450,9 @@ Defined.
 
 (** ** Constructive taboos *)
 
-(** Assuming univalence and AC_(n,-1), every n-type is merely compact. Note that "all types are compact" would be equivalent to all types being decidable, and thus inconsistent with univalence. *)
+(** In the next two results, we assume some form of choice and LEM. This is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem, which is not currently part of the library.  *)
 
-(** We add LEM to the assumptions of these results, but this is redundant since LEM follows from AC_(0,-1) by the Diaconescu-Goodman-Myhill theorem. *)
+(** Assuming univalence and AC_(oo,-1), every type is merely compact. Note that "all types are compact" would be equivalent to all types being decidable, and thus inconsistent with univalence. *)
 Definition merely_issigmacompact_choice `{Univalence} `{ExcludedMiddle}
   {ac : forall X, IsHSet X -> HasChoice X} (A : Type)
   : merely (IsSigmaCompactProps A).
@@ -463,6 +463,7 @@ Proof.
   rapply LEM.
 Defined.
 
+(** Similarly, assuming univalence and AC_(n,-1), every n-type is merely compact. *)
 Definition merely_issigmacompact_trchoice `{Univalence} `{ExcludedMiddle}
   (n : nat) {ac : forall X, IsHSet X -> HasTrChoice n X}
   (A : Type) `{IsTrunc n A}
@@ -480,11 +481,21 @@ Proof.
       rapply LEM.
 Defined.
 
-(** From [decidable_tr_ishexistscompact], we can deduce that the statement "every type is ∃-compact" is equivalent to LEM. We now show that the statement "every type is Π-compact" is equivalent to weak LEM. *)
+(** The statement "every type is ∃-compact" is logically equivalent to LEM. *)
+Definition iff_lem_ishexistscompact_all
+  : ExcludedMiddle_type <-> forall A, IsHExistsCompact A.
+Proof.
+  split.
+  1: intros lem A P dP; rapply lem.
+  intros c P hP.
+  refine (decidable_equiv' _ _ (decidable_tr_ishexistscompact (c P))).
+  symmetry; rapply equiv_tr.
+Defined.
 
 (** Weak LEM says that all negations are decidable.  *)
 Definition WLEM := forall A, Decidable (~A).
 
+(** The statement "every type is Π-compact" is logically equivalent to weak LEM. *)
 Definition iff_wlem_ispicompact_all
   : WLEM <-> forall A, IsPiCompact A.
 Proof.
@@ -509,12 +520,13 @@ Proof.
   right; exact (r o tr).
 Defined.
 
-(** The weak limited principle of omniscience. We state this in one form, and then prove it is equivalent to the common form involving the universal quantifier. *)
+(** The weak limited principle of omniscience says that for any decidable family on [nat], the negation of the total type is decidable. *)
 Definition WLPO
   := forall (P : nat -> Type) (dP : forall n : nat, Decidable (P n)), Decidable (~ sig P).
 
 Instance ishprop_wlpo `{Funext} : IsHProp WLPO := _.
 
+(** The weak limited principle of omniscience is logically equivalent to [nat] being Π-compact. *)
 Definition iff_wlpo_ispicompact_nat : WLPO <-> IsPiCompact nat
   := symmetric_iff _ _ (iff_ispicompact_decidable_not_sigma nat).
 
