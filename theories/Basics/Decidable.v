@@ -137,9 +137,7 @@ Definition stable_equiv {A B} (f : A -> B) `{!IsEquiv f}
   : Stable A -> Stable B
   := stable_equiv' (Build_Equiv _ _ f _).
 
-(** For a family of stable types, the dependent function type is stable. *)
-
-(** The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
+(** This lemma is needed for the next result.  The converse to this is called double-negation shift and is equivalent to ¬¬LEM. *)
 Definition forall_not_not_not_not_forall {A} (P : A -> Type)
   (u : ~~(forall a, P a))
   : forall a, ~~(P a).
@@ -149,6 +147,7 @@ Proof.
   exact (n (f a)).
 Defined.
 
+(** For a family of stable types, the dependent function type is stable. *)
 Definition stable_forall {A} (P : A -> Type) (s : forall a, Stable (P a))
   : Stable (forall a, P a)
   := (fun f b => s _ (f b)) o forall_not_not_not_not_forall P.
